@@ -1,0 +1,496 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */; };
+		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
+		4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */; };
+		4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */; };
+		4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */; };
+		4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454C1F3225E600A6FF96 /* ChatsController.swift */; };
+		4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */; };
+		4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */; };
+		4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */; };
+		4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */; };
+		4B9498741F3244CA008DA07F /* CreateProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498731F3244CA008DA07F /* CreateProfileController.swift */; };
+		4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */; };
+		4B9498781F324919008DA07F /* OnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498771F324919008DA07F /* OnboardingController.swift */; };
+		4B94987A1F32498C008DA07F /* CountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498791F32498C008DA07F /* CountryCodeController.swift */; };
+		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
+		4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* PigeonPalette.swift */; };
+		4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498831F324EC6008DA07F /* GlobalVariables.swift */; };
+		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4B4F452B1F32230C00A6FF96 /* Pigeon-project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pigeon-project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4B4F453A1F32230C00A6FF96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		4B4F453C1F32230C00A6FF96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralTabBarController.swift; sourceTree = "<group>"; };
+		4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsController.swift; path = ContactsControllers/ContactsController.swift; sourceTree = "<group>"; };
+		4B4F454C1F3225E600A6FF96 /* ChatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatsController.swift; path = ChatsControllers/ChatsController.swift; sourceTree = "<group>"; };
+		4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsController.swift; path = SettingsControllers/SettingsController.swift; sourceTree = "<group>"; };
+		4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4B94986E1F323B76008DA07F /* Pigeon-project.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pigeon-project.entitlements"; sourceTree = "<group>"; };
+		4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhoneNumberController.swift; path = AuthenticationControllers/EnterPhoneNumberController.swift; sourceTree = "<group>"; };
+		4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationCodeController.swift; path = AuthenticationControllers/EnterVerificationCodeController.swift; sourceTree = "<group>"; };
+		4B9498731F3244CA008DA07F /* CreateProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateProfileController.swift; path = AuthenticationControllers/CreateProfileController.swift; sourceTree = "<group>"; };
+		4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhoneNumberContainerView.swift; path = AuthenticationControllers/EnterPhoneNumberContainerView.swift; sourceTree = "<group>"; };
+		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
+		4B9498791F32498C008DA07F /* CountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CountryCodeController.swift; path = AuthenticationControllers/CountryCodeController.swift; sourceTree = "<group>"; };
+		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
+		4B9498801F324C84008DA07F /* PigeonPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonPalette.swift; path = Support/PigeonPalette.swift; sourceTree = "<group>"; };
+		4B9498831F324EC6008DA07F /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalVariables.swift; path = Support/GlobalVariables.swift; sourceTree = "<group>"; };
+		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
+		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
+		A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pigeon_project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4B4F45281F32230C00A6FF96 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2AF4427B37282913090A248D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4B4F45221F32230C00A6FF96 = {
+			isa = PBXGroup;
+			children = (
+				4B4F452D1F32230C00A6FF96 /* Pigeon-project */,
+				4B4F452C1F32230C00A6FF96 /* Products */,
+				4B94987F1F324B00008DA07F /* Support */,
+				E788FC79B73E9599A409079F /* Pods */,
+				2AF4427B37282913090A248D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4B4F452C1F32230C00A6FF96 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4B4F452B1F32230C00A6FF96 /* Pigeon-project.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4B4F452D1F32230C00A6FF96 /* Pigeon-project */ = {
+			isa = PBXGroup;
+			children = (
+				4B94986E1F323B76008DA07F /* Pigeon-project.entitlements */,
+				4B94986D1F323AFF008DA07F /* Authentication */,
+				4B4F45501F3225F100A6FF96 /* Settings */,
+				4B4F45511F3225F700A6FF96 /* Chats */,
+				4B4F45521F32260100A6FF96 /* Contacts */,
+				4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */,
+				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
+				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
+				4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */,
+				4B4F453C1F32230C00A6FF96 /* Info.plist */,
+				4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */,
+			);
+			path = "Pigeon-project";
+			sourceTree = "<group>";
+		};
+		4B4F45501F3225F100A6FF96 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		4B4F45511F3225F700A6FF96 /* Chats */ = {
+			isa = PBXGroup;
+			children = (
+				4B4F454C1F3225E600A6FF96 /* ChatsController.swift */,
+			);
+			name = Chats;
+			sourceTree = "<group>";
+		};
+		4B4F45521F32260100A6FF96 /* Contacts */ = {
+			isa = PBXGroup;
+			children = (
+				4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */,
+			);
+			name = Contacts;
+			sourceTree = "<group>";
+		};
+		4B94986D1F323AFF008DA07F /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				4B94987B1F324A98008DA07F /* PhoneNumber */,
+				4B94987E1F324AC3008DA07F /* Onboarding */,
+				4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */,
+				4B9498731F3244CA008DA07F /* CreateProfileController.swift */,
+				4B9498791F32498C008DA07F /* CountryCodeController.swift */,
+			);
+			name = Authentication;
+			sourceTree = "<group>";
+		};
+		4B94987B1F324A98008DA07F /* PhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+				4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */,
+				4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */,
+			);
+			name = PhoneNumber;
+			sourceTree = "<group>";
+		};
+		4B94987E1F324AC3008DA07F /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				4B9498771F324919008DA07F /* OnboardingController.swift */,
+				4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */,
+			);
+			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		4B94987F1F324B00008DA07F /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
+				4B9498831F324EC6008DA07F /* GlobalVariables.swift */,
+			);
+			name = Support;
+			path = "Pigeon-project";
+			sourceTree = "<group>";
+		};
+		E788FC79B73E9599A409079F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */,
+				8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4B4F452A1F32230C00A6FF96 /* Pigeon-project */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B4F453F1F32230C00A6FF96 /* Build configuration list for PBXNativeTarget "Pigeon-project" */;
+			buildPhases = (
+				92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */,
+				4B4F45271F32230C00A6FF96 /* Sources */,
+				4B4F45281F32230C00A6FF96 /* Frameworks */,
+				4B4F45291F32230C00A6FF96 /* Resources */,
+				7EC59B7540CDC8D78F177BD4 /* [CP] Embed Pods Frameworks */,
+				085F04C9F8CEBD972C1F68B4 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pigeon-project";
+			productName = "Pigeon-project";
+			productReference = 4B4F452B1F32230C00A6FF96 /* Pigeon-project.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4B4F45231F32230C00A6FF96 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "Roman Mizin";
+				TargetAttributes = {
+					4B4F452A1F32230C00A6FF96 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = A3WPJ33XN8;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 4B4F45261F32230C00A6FF96 /* Build configuration list for PBXProject "Pigeon-project" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4B4F45221F32230C00A6FF96;
+			productRefGroup = 4B4F452C1F32230C00A6FF96 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4B4F452A1F32230C00A6FF96 /* Pigeon-project */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4B4F45291F32230C00A6FF96 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */,
+				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
+				4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		085F04C9F8CEBD972C1F68B4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7EC59B7540CDC8D78F177BD4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4B4F45271F32230C00A6FF96 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
+				4B9498741F3244CA008DA07F /* CreateProfileController.swift in Sources */,
+				4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */,
+				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
+				4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */,
+				4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */,
+				4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */,
+				4B94987A1F32498C008DA07F /* CountryCodeController.swift in Sources */,
+				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
+				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
+				4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */,
+				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,
+				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
+				4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B4F453A1F32230C00A6FF96 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4B4F453D1F32230C00A6FF96 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4B4F453E1F32230C00A6FF96 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4B4F45401F32230C00A6FF96 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Pigeon-project/Pigeon-project.entitlements";
+				DEVELOPMENT_TEAM = A3WPJ33XN8;
+				INFOPLIST_FILE = "Pigeon-project/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		4B4F45411F32230C00A6FF96 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Pigeon-project/Pigeon-project.entitlements";
+				DEVELOPMENT_TEAM = A3WPJ33XN8;
+				INFOPLIST_FILE = "Pigeon-project/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4B4F45261F32230C00A6FF96 /* Build configuration list for PBXProject "Pigeon-project" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B4F453D1F32230C00A6FF96 /* Debug */,
+				4B4F453E1F32230C00A6FF96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B4F453F1F32230C00A6FF96 /* Build configuration list for PBXNativeTarget "Pigeon-project" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B4F45401F32230C00A6FF96 /* Debug */,
+				4B4F45411F32230C00A6FF96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4B4F45231F32230C00A6FF96 /* Project object */;
+}
