@@ -16,10 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-    // Override point for customization after application launch.
-    
+  
      FirebaseApp.configure()
      Database.database().isPersistenceEnabled = true
     
@@ -34,13 +32,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       
       self.window?.rootViewController = navigationController
       self.window?.makeKeyAndVisible()
-  
+      navigationController.view.alpha = 0
     
-   
+    DispatchQueue.main.async {
+      if Auth.auth().currentUser == nil {
+        let destination = OnboardingController()
+        
+        
+        let newNavigationController = UINavigationController(rootViewController: destination)
+        UINavigationBar.appearance().shadowImage = UIImage()
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        mainController.modalPresentationStyle = .overCurrentContext
+        
+        mainController.present(newNavigationController, animated: false, completion: { 
+             navigationController.view.alpha = 1
+        })
+      } else {
+            navigationController.view.alpha = 1
+      }
+    }
 
-    
     return true
   }
+  
+ 
   
   func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
     // Pass device token to auth

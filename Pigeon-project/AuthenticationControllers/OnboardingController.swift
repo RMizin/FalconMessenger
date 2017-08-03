@@ -21,20 +21,8 @@ class OnboardingController: UIViewController {
        
     }
   
- 
-  
-
-
   
   func startMessagingDidTap () {
-    //    let navigationController = MainNavigationController(rootViewController: refactoredController)
-    //    navigationController.modalPresentationStyle = .custom
-    //    navigationController.transitioningDelegate = self.profileTransition
-    //    self.present(navigationController, animated: true, completion: nil)
-    //
-    //
-    //    let destination =
-    //    navigationController?.pushViewController(destination, animated: true)
     print("tapped")
     let destination = EnterPhoneNumberController()
     navigationController?.pushViewController(destination, animated: true)
