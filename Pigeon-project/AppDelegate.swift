@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       
       self.window?.rootViewController = navigationController
       self.window?.makeKeyAndVisible()
+      self.window?.backgroundColor = .white
       navigationController.view.alpha = 0
     
     DispatchQueue.main.async {
@@ -40,15 +41,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         let newNavigationController = UINavigationController(rootViewController: destination)
+        newNavigationController.navigationBar.backgroundColor = .white
+        let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
+        statusBar.backgroundColor = UIColor.white
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        mainController.modalPresentationStyle = .overCurrentContext
+        newNavigationController.modalTransitionStyle = .crossDissolve
         
-        mainController.present(newNavigationController, animated: false, completion: { 
-             navigationController.view.alpha = 1
+        mainController.present(newNavigationController, animated: false, completion: {
+          navigationController.view.alpha = 1
         })
       } else {
-            navigationController.view.alpha = 1
+          navigationController.view.alpha = 1
       }
     }
 

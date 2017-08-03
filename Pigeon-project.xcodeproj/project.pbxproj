@@ -20,10 +20,15 @@
 		4B9498741F3244CA008DA07F /* CreateProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498731F3244CA008DA07F /* CreateProfileController.swift */; };
 		4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */; };
 		4B9498781F324919008DA07F /* OnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498771F324919008DA07F /* OnboardingController.swift */; };
-		4B94987A1F32498C008DA07F /* CountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498791F32498C008DA07F /* CountryCodeController.swift */; };
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
 		4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* PigeonPalette.swift */; };
 		4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498831F324EC6008DA07F /* GlobalVariables.swift */; };
+		4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */; };
+		4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */; };
+		4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */; };
+		4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37F1F33B9070005B8E6 /* HidingNavigationBarManager.swift */; };
+		4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC3801F33B9070005B8E6 /* HidingViewController.swift */; };
+		4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC3841F33C0A10005B8E6 /* Country.swift */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
 
@@ -44,10 +49,15 @@
 		4B9498731F3244CA008DA07F /* CreateProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateProfileController.swift; path = AuthenticationControllers/CreateProfileController.swift; sourceTree = "<group>"; };
 		4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhoneNumberContainerView.swift; path = AuthenticationControllers/EnterPhoneNumberContainerView.swift; sourceTree = "<group>"; };
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
-		4B9498791F32498C008DA07F /* CountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CountryCodeController.swift; path = AuthenticationControllers/CountryCodeController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
 		4B9498801F324C84008DA07F /* PigeonPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonPalette.swift; path = Support/PigeonPalette.swift; sourceTree = "<group>"; };
 		4B9498831F324EC6008DA07F /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalVariables.swift; path = Support/GlobalVariables.swift; sourceTree = "<group>"; };
+		4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CallingCodes.plist; sourceTree = "<group>"; };
+		4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationContainerView.swift; path = AuthenticationControllers/EnterVerificationContainerView.swift; sourceTree = "<group>"; };
+		4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectCountryCodeController.swift; path = AuthenticationControllers/SelectCountryCodeController.swift; sourceTree = "<group>"; };
+		4BEDC37F1F33B9070005B8E6 /* HidingNavigationBarManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HidingNavigationBarManager.swift; sourceTree = "<group>"; };
+		4BEDC3801F33B9070005B8E6 /* HidingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HidingViewController.swift; sourceTree = "<group>"; };
+		4BEDC3841F33C0A10005B8E6 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Country.swift; path = AuthenticationControllers/Country.swift; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
 		A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pigeon_project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,6 +89,7 @@
 				4B4F452D1F32230C00A6FF96 /* Pigeon-project */,
 				4B4F452C1F32230C00A6FF96 /* Products */,
 				4B94987F1F324B00008DA07F /* Support */,
+				4BEDC37E1F33B8EE0005B8E6 /* New Group */,
 				E788FC79B73E9599A409079F /* Pods */,
 				2AF4427B37282913090A248D /* Frameworks */,
 			);
@@ -139,9 +150,8 @@
 			children = (
 				4B94987B1F324A98008DA07F /* PhoneNumber */,
 				4B94987E1F324AC3008DA07F /* Onboarding */,
-				4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */,
-				4B9498731F3244CA008DA07F /* CreateProfileController.swift */,
-				4B9498791F32498C008DA07F /* CountryCodeController.swift */,
+				4BEDC3761F337A1E0005B8E6 /* Verification */,
+				4BEDC3771F337A260005B8E6 /* Create profile */,
 			);
 			name = Authentication;
 			sourceTree = "<group>";
@@ -151,6 +161,9 @@
 			children = (
 				4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */,
 				4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */,
+				4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */,
+				4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */,
+				4BEDC3861F33C0A60005B8E6 /* Model */,
 			);
 			name = PhoneNumber;
 			sourceTree = "<group>";
@@ -167,11 +180,53 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */,
 				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
 				4B9498831F324EC6008DA07F /* GlobalVariables.swift */,
 			);
 			name = Support;
 			path = "Pigeon-project";
+			sourceTree = "<group>";
+		};
+		4BEDC3761F337A1E0005B8E6 /* Verification */ = {
+			isa = PBXGroup;
+			children = (
+				4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */,
+				4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */,
+			);
+			name = Verification;
+			sourceTree = "<group>";
+		};
+		4BEDC3771F337A260005B8E6 /* Create profile */ = {
+			isa = PBXGroup;
+			children = (
+				4B9498731F3244CA008DA07F /* CreateProfileController.swift */,
+			);
+			name = "Create profile";
+			sourceTree = "<group>";
+		};
+		4BEDC37E1F33B8EE0005B8E6 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
+			sourceTree = "<group>";
+		};
+		4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */ = {
+			isa = PBXGroup;
+			children = (
+				4BEDC37F1F33B9070005B8E6 /* HidingNavigationBarManager.swift */,
+				4BEDC3801F33B9070005B8E6 /* HidingViewController.swift */,
+			);
+			name = "Hiding navigation bar";
+			sourceTree = "<group>";
+		};
+		4BEDC3861F33C0A60005B8E6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4BEDC3841F33C0A10005B8E6 /* Country.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		E788FC79B73E9599A409079F /* Pods */ = {
@@ -254,6 +309,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */,
 				4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
 				4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */,
@@ -322,11 +378,15 @@
 				4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */,
 				4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */,
 				4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */,
-				4B94987A1F32498C008DA07F /* CountryCodeController.swift in Sources */,
+				4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */,
+				4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */,
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
+				4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */,
 				4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */,
 				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,
+				4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */,
+				4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */,
 				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
 				4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */,
 			);

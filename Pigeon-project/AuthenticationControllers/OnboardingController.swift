@@ -18,7 +18,6 @@ class OnboardingController: UIViewController {
         super.viewDidLoad()
      
       view.addSubview(onboardingContainerView)
-       
     }
   
   
@@ -27,6 +26,5 @@ class OnboardingController: UIViewController {
     let destination = EnterPhoneNumberController()
     navigationController?.pushViewController(destination, animated: true)
   }
-   
 
 }

@@ -8,9 +8,8 @@
 
 import UIKit
 
-class EnterPhoneNumberContainerView: UIView {
 
-  
+class EnterPhoneNumberContainerView: UIView {
   
   let title: UILabel = {
     let title = UILabel()
@@ -33,7 +32,6 @@ class EnterPhoneNumberContainerView: UIView {
     return instructions
   }()
   
-  
   let selectCountry: UIButton = {
     let selectCountry = UIButton()
     selectCountry.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +43,8 @@ class EnterPhoneNumberContainerView: UIView {
     selectCountry.contentVerticalAlignment = .center
     selectCountry.titleEdgeInsets = UIEdgeInsetsMake(0, 15.0, 0.0, 0.0)
     selectCountry.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-    
+    selectCountry.addTarget(self, action: #selector(EnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
+
     return selectCountry
   }()
   
@@ -60,11 +59,12 @@ class EnterPhoneNumberContainerView: UIView {
   
   let phoneNumber: UITextField = {
     let phoneNumber = UITextField()
-    phoneNumber.text = "(63) 653 64 62"
     phoneNumber.font = UIFont.systemFont(ofSize: 20)
     phoneNumber.translatesAutoresizingMaskIntoConstraints = false
     phoneNumber.textAlignment = .center
     phoneNumber.keyboardType = .numberPad
+    phoneNumber.placeholder = "Phone number"
+    phoneNumber.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
     
     return phoneNumber
   }()
@@ -87,6 +87,8 @@ class EnterPhoneNumberContainerView: UIView {
     addSubview(phoneNumber)
     addSubview(backgroundFrame)
     
+    phoneNumber.delegate = self
+   
     
     let countryCodeWidth = deviceScreen.width * 0.26
  
@@ -102,15 +104,12 @@ class EnterPhoneNumberContainerView: UIView {
       instructions.trailingAnchor.constraint(equalTo: title.trailingAnchor, constant: 0),
       instructions.heightAnchor.constraint(equalToConstant: 45),
       
-      
-      
-      
       selectCountry.topAnchor.constraint(equalTo: topAnchor, constant: 150),
       selectCountry.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
       selectCountry.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
       selectCountry.heightAnchor.constraint(equalToConstant: 70),
       
-      backgroundFrame.topAnchor.constraint(equalTo: selectCountry.bottomAnchor, constant: 0),
+      backgroundFrame.topAnchor.constraint(equalTo: selectCountry.bottomAnchor, constant: -8),
       backgroundFrame.leadingAnchor.constraint(equalTo: selectCountry.leadingAnchor, constant: 0),
       backgroundFrame.trailingAnchor.constraint(equalTo: selectCountry.trailingAnchor, constant: 0),
       backgroundFrame.heightAnchor.constraint(equalToConstant: 50),
@@ -126,13 +125,20 @@ class EnterPhoneNumberContainerView: UIView {
       phoneNumber.heightAnchor.constraint(equalTo: backgroundFrame.heightAnchor, constant: 0)
     ])
     
-    
-    
   }
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
   }
-  
+}
 
+
+
+extension EnterPhoneNumberContainerView: UITextFieldDelegate {
+  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    guard let text = textField.text else { return true }
+    
+    let newLength = text.utf16.count + string.utf16.count - range.length
+    return newLength <= 10 // Bool
+  }
 }
