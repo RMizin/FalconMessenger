@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B197EF01F348171008102E1 /* SharedVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B197EEF1F348171008102E1 /* SharedVariables.swift */; };
 		4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4B197EEF1F348171008102E1 /* SharedVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedVariables.swift; path = AuthenticationControllers/SharedVariables/SharedVariables.swift; sourceTree = "<group>"; };
 		4B4F452B1F32230C00A6FF96 /* Pigeon-project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pigeon-project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,6 +83,14 @@
 				A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4B197EF11F34817A008102E1 /* SharedVariables */ = {
+			isa = PBXGroup;
+			children = (
+				4B197EEF1F348171008102E1 /* SharedVariables.swift */,
+			);
+			name = SharedVariables;
 			sourceTree = "<group>";
 		};
 		4B4F45221F32230C00A6FF96 = {
@@ -163,6 +173,7 @@
 				4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */,
 				4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */,
 				4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */,
+				4B197EF11F34817A008102E1 /* SharedVariables */,
 				4BEDC3861F33C0A60005B8E6 /* Model */,
 			);
 			name = PhoneNumber;
@@ -388,6 +399,7 @@
 				4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */,
 				4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */,
 				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
+				4B197EF01F348171008102E1 /* SharedVariables.swift in Sources */,
 				4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

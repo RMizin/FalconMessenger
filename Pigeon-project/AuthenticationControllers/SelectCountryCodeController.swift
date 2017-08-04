@@ -13,6 +13,9 @@ protocol CountryPickerDelegate: class {
   func countryPicker(_ picker: SelectCountryCodeController, didSelectCountryWithName name: String, code: String, dialCode: String)
 }
 
+fileprivate var savedContentOffset = CGPoint(x: 0, y: -50)
+fileprivate var savedCountryCode = String()
+
 
 class SelectCountryCodeController: UIViewController {
 
@@ -29,7 +32,7 @@ class SelectCountryCodeController: UIViewController {
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
-      
+    
       view.addSubview(tableView)
       tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
       searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.height, width: view.frame.width, height: 50)
@@ -38,15 +41,17 @@ class SelectCountryCodeController: UIViewController {
       hidingNavBarManager?.addExtensionView(searchBar)
       
     }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     hidingNavBarManager?.viewWillAppear(animated)
+    tableView.setContentOffset(savedContentOffset, animated: false)
   }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     hidingNavBarManager?.viewWillDisappear(animated)
+    savedContentOffset = tableView.contentOffset
   }
   
   override func viewDidLayoutSubviews() {
@@ -79,10 +84,31 @@ extension SelectCountryCodeController: UITableViewDelegate, UITableViewDataSourc
     let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
     cell.textLabel?.text = filteredCountries[indexPath.row]["name"]! + " (" + filteredCountries[indexPath.row]["dial_code"]! + ")"
     
+    if countryCode == filteredCountries[indexPath.row]["code"]! {
+      cell.accessoryType = .checkmark
+    } else {
+      cell.accessoryType = .none
+    }
+    
     return cell
   }
   
+ fileprivate func resetCheckmark() {
+    for index in 0...filteredCountries.count {
+      let indexPath = IndexPath(row: index , section: 0)
+      let cell = tableView.cellForRow(at: indexPath)
+      
+       cell?.accessoryType = .none
+    }
+  }
+  
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+    resetCheckmark()
+    let cell = tableView.cellForRow(at: indexPath)
+    cell?.accessoryType = .checkmark
+    
+    countryCode = filteredCountries[indexPath.row]["code"]!
     delegate?.countryPicker(self, didSelectCountryWithName: filteredCountries[indexPath.row]["name"]!,
                                    code: filteredCountries[indexPath.row]["code"]!,
                                    dialCode: filteredCountries[indexPath.row]["dial_code"]!)

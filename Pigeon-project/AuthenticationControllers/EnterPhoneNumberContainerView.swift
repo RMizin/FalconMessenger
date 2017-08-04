@@ -48,8 +48,8 @@ class EnterPhoneNumberContainerView: UIView {
     return selectCountry
   }()
   
-  let countryCode: UILabel = {
-    let countryCode = UILabel()
+  var countryCode: UILabel = {
+    var countryCode = UILabel()
     countryCode.translatesAutoresizingMaskIntoConstraints = false
     countryCode.text = "+380"
     countryCode.textAlignment = .center
@@ -89,7 +89,6 @@ class EnterPhoneNumberContainerView: UIView {
     
     phoneNumber.delegate = self
    
-    
     let countryCodeWidth = deviceScreen.width * 0.26
  
     NSLayoutConstraint.activate([
@@ -124,14 +123,12 @@ class EnterPhoneNumberContainerView: UIView {
       phoneNumber.centerYAnchor.constraint(equalTo: backgroundFrame.centerYAnchor, constant: 0),
       phoneNumber.heightAnchor.constraint(equalTo: backgroundFrame.heightAnchor, constant: 0)
     ])
-    
   }
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
   }
 }
-
 
 
 extension EnterPhoneNumberContainerView: UITextFieldDelegate {

@@ -12,14 +12,25 @@ import FirebaseAuth
 class EnterPhoneNumberController: UIViewController {
   
   let phoneNumberContainerView = EnterPhoneNumberContainerView()
-
+  let countries = Country().countries
   
     override func viewDidLoad() {
         super.viewDidLoad()
       view.backgroundColor = UIColor.white
       configureNavigationBar()
       setConstraints()
+      setCountry()
     }
+  
+  
+  fileprivate func setCountry() {
+    for country in countries {
+      if  country["code"] == countryCode {
+        phoneNumberContainerView.countryCode.text = country["dial_code"]
+        phoneNumberContainerView.selectCountry.setTitle(country["name"], for: .normal)
+      }
+    }
+  }
   
   fileprivate func setConstraints() {
     
@@ -63,8 +74,9 @@ class EnterPhoneNumberController: UIViewController {
   
   func rightBarButtonDidTap () {
     let destination = EnterVerificationCodeController()
+    destination.enterVerificationContainerView.titleNumber.text = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
     navigationController?.pushViewController(destination, animated: true)
-    /*
+       /*
     PhoneAuthProvider.provider().verifyPhoneNumber("+380636536462") { (verificationID, error) in
       if let error = error {
       print(error.localizedDescription)

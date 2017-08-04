@@ -22,7 +22,6 @@ class OnboardingController: UIViewController {
   
   
   func startMessagingDidTap () {
-    print("tapped")
     let destination = EnterPhoneNumberController()
     navigationController?.pushViewController(destination, animated: true)
   }
