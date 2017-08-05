@@ -6,6 +6,7 @@
 //  Copyright © 2017 Roman Mizin. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public var countryCode = NSLocale.current.regionCode
+

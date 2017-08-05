@@ -40,8 +40,16 @@ class EnterVerificationCodeController: UIViewController {
   
   func rightBarButtonDidTap () {
     print("tapped")
-    let destination = CreateProfileController()
-    navigationController?.pushViewController(destination, animated: true)
+    
+    if enterVerificationContainerView.verificationCode.text == "" {
+      enterVerificationContainerView.verificationCode.shake()
+    } else {
+      let destination = CreateProfileController()
+      destination.createProfileContainerView.phone.text = enterVerificationContainerView.titleNumber.text
+      navigationController?.pushViewController(destination, animated: true)
+    }
+    
+   
   }
   
 }

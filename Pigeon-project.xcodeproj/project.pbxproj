@@ -16,6 +16,11 @@
 		4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454C1F3225E600A6FF96 /* ChatsController.swift */; };
 		4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */; };
 		4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */; };
+		4B91B8B01F34B2D10025C67F /* CreateProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* CreateProfileContainerView.swift */; };
+		4B91B8B61F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B51F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift */; };
+		4B91B8B81F34CB5E0025C67F /* CreateProfileController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B71F34CB5E0025C67F /* CreateProfileController+handlers.swift */; };
+		4B91B8BA1F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B91F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift */; };
+		4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8BB1F34E9D60025C67F /* Public.swift */; };
 		4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */; };
 		4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */; };
 		4B9498741F3244CA008DA07F /* CreateProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498731F3244CA008DA07F /* CreateProfileController.swift */; };
@@ -45,6 +50,11 @@
 		4B4F454C1F3225E600A6FF96 /* ChatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatsController.swift; path = ChatsControllers/ChatsController.swift; sourceTree = "<group>"; };
 		4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsController.swift; path = SettingsControllers/SettingsController.swift; sourceTree = "<group>"; };
 		4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4B91B8AF1F34B2D10025C67F /* CreateProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateProfileContainerView.swift; path = AuthenticationControllers/CreateProfileContainerView.swift; sourceTree = "<group>"; };
+		4B91B8B51F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CreateProfileController+RoundedEditLayer.swift"; path = "AuthenticationControllers/CreateProfileController+RoundedEditLayer.swift"; sourceTree = "<group>"; };
+		4B91B8B71F34CB5E0025C67F /* CreateProfileController+handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CreateProfileController+handlers.swift"; path = "AuthenticationControllers/CreateProfileController+handlers.swift"; sourceTree = "<group>"; };
+		4B91B8B91F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CreateProfileController+keyboardHandlers.swift"; path = "AuthenticationControllers/CreateProfileController+keyboardHandlers.swift"; sourceTree = "<group>"; };
+		4B91B8BB1F34E9D60025C67F /* Public.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Public.swift; path = Support/Public.swift; sourceTree = "<group>"; };
 		4B94986E1F323B76008DA07F /* Pigeon-project.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pigeon-project.entitlements"; sourceTree = "<group>"; };
 		4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhoneNumberController.swift; path = AuthenticationControllers/EnterPhoneNumberController.swift; sourceTree = "<group>"; };
 		4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationCodeController.swift; path = AuthenticationControllers/EnterVerificationCodeController.swift; sourceTree = "<group>"; };
@@ -194,6 +204,7 @@
 				4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */,
 				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
 				4B9498831F324EC6008DA07F /* GlobalVariables.swift */,
+				4B91B8BB1F34E9D60025C67F /* Public.swift */,
 			);
 			name = Support;
 			path = "Pigeon-project";
@@ -212,6 +223,10 @@
 			isa = PBXGroup;
 			children = (
 				4B9498731F3244CA008DA07F /* CreateProfileController.swift */,
+				4B91B8AF1F34B2D10025C67F /* CreateProfileContainerView.swift */,
+				4B91B8B51F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift */,
+				4B91B8B71F34CB5E0025C67F /* CreateProfileController+handlers.swift */,
+				4B91B8B91F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift */,
 			);
 			name = "Create profile";
 			sourceTree = "<group>";
@@ -382,9 +397,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B91B8B01F34B2D10025C67F /* CreateProfileContainerView.swift in Sources */,
+				4B91B8BA1F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
+				4B91B8B81F34CB5E0025C67F /* CreateProfileController+handlers.swift in Sources */,
 				4B9498741F3244CA008DA07F /* CreateProfileController.swift in Sources */,
 				4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */,
+				4B91B8B61F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */,
 				4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */,
@@ -392,6 +411,7 @@
 				4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */,
 				4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */,
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
+				4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
 				4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */,
 				4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */,
