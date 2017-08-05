@@ -32,7 +32,7 @@ class GeneralTabBarController: UITabBarController {
     
     let contactsController = ContactsController()
     let chatsController = ChatsController()
-    let settingsController = SettingsController()
+    let settingsController = SettingsViewControllersContainer()
     
     let contactsTabItem = UITabBarItem(title: contactsController.title, image: UIImage(named:"TabIconContacts"), selectedImage: UIImage(named:"TabIconContacts_Highlighted"))
     let chatsTabItem = UITabBarItem(title: chatsController.title, image: UIImage(named:"TabIconMessages"), selectedImage: UIImage(named:"TabIconMessages_Highlighted"))

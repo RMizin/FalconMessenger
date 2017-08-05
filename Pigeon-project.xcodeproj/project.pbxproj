@@ -8,6 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		4B197EF01F348171008102E1 /* SharedVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B197EEF1F348171008102E1 /* SharedVariables.swift */; };
+		4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */; };
+		4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */; };
+		4B48D30D1F35EAB70050C797 /* SettingsViewControllersContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */; };
+		4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */; };
+		4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3121F361E490050C797 /* ARSInfiniteLoader.swift */; };
+		4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3131F361E490050C797 /* ARSLineProgress.swift */; };
+		4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3141F361E490050C797 /* ARSLineProgressConstants.swift */; };
+		4B48D31F1F361E490050C797 /* ARSLineProgressCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3151F361E490050C797 /* ARSLineProgressCustomization.swift */; };
+		4B48D3201F361E490050C797 /* ARSLineProgressExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3161F361E490050C797 /* ARSLineProgressExtensions.swift */; };
+		4B48D3211F361E490050C797 /* ARSLineProgressHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3171F361E490050C797 /* ARSLineProgressHelpers.swift */; };
+		4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3181F361E490050C797 /* ARSLineProgressProtocols.swift */; };
+		4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3191F361E490050C797 /* ARSLineProgressTypeAliases.swift */; };
+		4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D31A1F361E490050C797 /* ARSProgressLoader.swift */; };
+		4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D31B1F361E490050C797 /* ARSStatus.swift */; };
 		4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */; };
@@ -40,6 +54,20 @@
 
 /* Begin PBXFileReference section */
 		4B197EEF1F348171008102E1 /* SharedVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedVariables.swift; path = AuthenticationControllers/SharedVariables/SharedVariables.swift; sourceTree = "<group>"; };
+		4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StorageTableViewController.swift; path = SettingsControllers/StorageTableViewController.swift; sourceTree = "<group>"; };
+		4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountSettingsTableViewCell.swift; path = SettingsControllers/AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewControllersContainer.swift; path = SettingsControllers/SettingsViewControllersContainer.swift; sourceTree = "<group>"; };
+		4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountSettingsController.swift; path = SettingsControllers/AccountSettingsController.swift; sourceTree = "<group>"; };
+		4B48D3121F361E490050C797 /* ARSInfiniteLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSInfiniteLoader.swift; path = Support/progressIndicator/ARSInfiniteLoader.swift; sourceTree = "<group>"; };
+		4B48D3131F361E490050C797 /* ARSLineProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSLineProgress.swift; path = Support/progressIndicator/ARSLineProgress.swift; sourceTree = "<group>"; };
+		4B48D3141F361E490050C797 /* ARSLineProgressConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSLineProgressConstants.swift; path = Support/progressIndicator/ARSLineProgressConstants.swift; sourceTree = "<group>"; };
+		4B48D3151F361E490050C797 /* ARSLineProgressCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSLineProgressCustomization.swift; path = Support/progressIndicator/ARSLineProgressCustomization.swift; sourceTree = "<group>"; };
+		4B48D3161F361E490050C797 /* ARSLineProgressExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSLineProgressExtensions.swift; path = Support/progressIndicator/ARSLineProgressExtensions.swift; sourceTree = "<group>"; };
+		4B48D3171F361E490050C797 /* ARSLineProgressHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSLineProgressHelpers.swift; path = Support/progressIndicator/ARSLineProgressHelpers.swift; sourceTree = "<group>"; };
+		4B48D3181F361E490050C797 /* ARSLineProgressProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSLineProgressProtocols.swift; path = Support/progressIndicator/ARSLineProgressProtocols.swift; sourceTree = "<group>"; };
+		4B48D3191F361E490050C797 /* ARSLineProgressTypeAliases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSLineProgressTypeAliases.swift; path = Support/progressIndicator/ARSLineProgressTypeAliases.swift; sourceTree = "<group>"; };
+		4B48D31A1F361E490050C797 /* ARSProgressLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSProgressLoader.swift; path = Support/progressIndicator/ARSProgressLoader.swift; sourceTree = "<group>"; };
+		4B48D31B1F361E490050C797 /* ARSStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSStatus.swift; path = Support/progressIndicator/ARSStatus.swift; sourceTree = "<group>"; };
 		4B4F452B1F32230C00A6FF96 /* Pigeon-project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pigeon-project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -103,13 +131,53 @@
 			name = SharedVariables;
 			sourceTree = "<group>";
 		};
+		4B48D3091F35C9E20050C797 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */,
+			);
+			name = Storage;
+			sourceTree = "<group>";
+		};
+		4B48D30A1F35C9FE0050C797 /* UserProfileViews */ = {
+			isa = PBXGroup;
+			children = (
+				4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */,
+			);
+			name = UserProfileViews;
+			sourceTree = "<group>";
+		};
+		4B48D30B1F35CA0D0050C797 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				4B48D3091F35C9E20050C797 /* Storage */,
+			);
+			name = Menu;
+			sourceTree = "<group>";
+		};
+		4B48D3111F361E300050C797 /* ProgressIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				4B48D3121F361E490050C797 /* ARSInfiniteLoader.swift */,
+				4B48D3131F361E490050C797 /* ARSLineProgress.swift */,
+				4B48D3141F361E490050C797 /* ARSLineProgressConstants.swift */,
+				4B48D3151F361E490050C797 /* ARSLineProgressCustomization.swift */,
+				4B48D3161F361E490050C797 /* ARSLineProgressExtensions.swift */,
+				4B48D3171F361E490050C797 /* ARSLineProgressHelpers.swift */,
+				4B48D3181F361E490050C797 /* ARSLineProgressProtocols.swift */,
+				4B48D3191F361E490050C797 /* ARSLineProgressTypeAliases.swift */,
+				4B48D31A1F361E490050C797 /* ARSProgressLoader.swift */,
+				4B48D31B1F361E490050C797 /* ARSStatus.swift */,
+			);
+			name = ProgressIndicator;
+			sourceTree = "<group>";
+		};
 		4B4F45221F32230C00A6FF96 = {
 			isa = PBXGroup;
 			children = (
 				4B4F452D1F32230C00A6FF96 /* Pigeon-project */,
 				4B4F452C1F32230C00A6FF96 /* Products */,
 				4B94987F1F324B00008DA07F /* Support */,
-				4BEDC37E1F33B8EE0005B8E6 /* New Group */,
 				E788FC79B73E9599A409079F /* Pods */,
 				2AF4427B37282913090A248D /* Frameworks */,
 			);
@@ -144,6 +212,10 @@
 		4B4F45501F3225F100A6FF96 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				4B48D30B1F35CA0D0050C797 /* Menu */,
+				4B48D30A1F35C9FE0050C797 /* UserProfileViews */,
+				4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */,
+				4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */,
 				4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */,
 			);
 			name = Settings;
@@ -201,6 +273,7 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4B48D3111F361E300050C797 /* ProgressIndicator */,
 				4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */,
 				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
 				4B9498831F324EC6008DA07F /* GlobalVariables.swift */,
@@ -229,13 +302,6 @@
 				4B91B8B91F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift */,
 			);
 			name = "Create profile";
-			sourceTree = "<group>";
-		};
-		4BEDC37E1F33B8EE0005B8E6 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "New Group";
 			sourceTree = "<group>";
 		};
 		4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */ = {
@@ -398,12 +464,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B91B8B01F34B2D10025C67F /* CreateProfileContainerView.swift in Sources */,
+				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
 				4B91B8B81F34CB5E0025C67F /* CreateProfileController+handlers.swift in Sources */,
+				4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */,
 				4B9498741F3244CA008DA07F /* CreateProfileController.swift in Sources */,
 				4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */,
+				4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */,
 				4B91B8B61F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift in Sources */,
+				4B48D3201F361E490050C797 /* ARSLineProgressExtensions.swift in Sources */,
+				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
+				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
+				4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */,
 				4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */,
@@ -411,16 +484,23 @@
 				4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */,
 				4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */,
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
+				4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */,
 				4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */,
+				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
+				4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */,
 				4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */,
 				4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */,
 				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,
 				4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */,
+				4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */,
 				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
 				4B197EF01F348171008102E1 /* SharedVariables.swift in Sources */,
+				4B48D31F1F361E490050C797 /* ARSLineProgressCustomization.swift in Sources */,
 				4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */,
+				4B48D30D1F35EAB70050C797 /* SettingsViewControllersContainer.swift in Sources */,
+				4B48D3211F361E490050C797 /* ARSLineProgressHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+
 
 class CreateProfileController: UIViewController {
   
@@ -23,10 +25,27 @@ class CreateProfileController: UIViewController {
         configureNavigationBar()
         setConstraints()
         configurePickerController()
-        hideKeyboardWhenTappedAround()
-       // setupKeyboardObservers()
         createProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
     }
+  
+  
+  typealias CompletionHandler = (_ success: Bool) -> Void
+  
+  func checkIfUserDataExists(completionHandler:@escaping CompletionHandler) {
+  
+    if Auth.auth().currentUser?.photoURL != nil && Auth.auth().currentUser?.displayName != nil {
+      createProfileContainerView.name.text = Auth.auth().currentUser?.displayName
+      createProfileContainerView.profileImageView.sd_setImage(with: Auth.auth().currentUser?.photoURL, placeholderImage: nil, options: [ .highPriority, .continueInBackground], completed: { (image, error, cacheType, url) in
+        completionHandler(true)
+      })
+      
+    } else if Auth.auth().currentUser?.photoURL == nil && Auth.auth().currentUser?.displayName != nil {
+      createProfileContainerView.name.text = Auth.auth().currentUser?.displayName
+      completionHandler(true)
+    } else {
+      completionHandler(true)
+    }
+  }
   
     fileprivate func setConstraints() {
       view.addSubview(createProfileContainerView)
@@ -56,9 +75,14 @@ class CreateProfileController: UIViewController {
       if createProfileContainerView.name.text == "" {
         createProfileContainerView.name.shake()
       } else {
-        dismiss(animated: true, completion: nil)
+        
+        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+        changeRequest?.displayName = self.createProfileContainerView.name.text
+        
+        changeRequest?.commitChanges(completion: { (error) in
+            self.dismiss(animated: true, completion: nil)
+        })
       }
-      
     }
   
     deinit {

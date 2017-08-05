@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class EnterVerificationCodeController: UIViewController {
 
@@ -37,19 +38,35 @@ class EnterVerificationCodeController: UIViewController {
     self.navigationItem.rightBarButtonItem = rightBarButton
   }
   
-  
   func rightBarButtonDidTap () {
     print("tapped")
-    
-    if enterVerificationContainerView.verificationCode.text == "" {
-      enterVerificationContainerView.verificationCode.shake()
-    } else {
-      let destination = CreateProfileController()
-      destination.createProfileContainerView.phone.text = enterVerificationContainerView.titleNumber.text
-      navigationController?.pushViewController(destination, animated: true)
-    }
-    
    
+    ARSLineProgress.ars_showOnView(self.view)
+    let verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
+    let verificationCode = enterVerificationContainerView.verificationCode.text
+
+      let credential = PhoneAuthProvider.provider().credential (
+        withVerificationID: verificationID!,
+        verificationCode: verificationCode!)
+      
+      Auth.auth().signIn(with: credential) { (user, error) in
+        if let error = error {
+           ARSLineProgress.showFail()
+           self.enterVerificationContainerView.verificationCode.shake()
+          print(error.localizedDescription, "it is error")
+          return
+        }
+      
+        let destination = CreateProfileController()
+        destination.createProfileContainerView.phone.text = self.enterVerificationContainerView.titleNumber.text
+        destination.checkIfUserDataExists(completionHandler: { (isCompleted) in
+          if isCompleted {
+            ARSLineProgress.hide()
+            self.navigationController?.pushViewController(destination, animated: true)
+            print("code is correct")
+          }
+        })
+      }
   }
   
 }

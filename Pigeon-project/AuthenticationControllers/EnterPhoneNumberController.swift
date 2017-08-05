@@ -72,24 +72,34 @@ class EnterPhoneNumberController: UIViewController {
   }
 
   
+  var isVerificationSent = false
+  
   func rightBarButtonDidTap () {
     let destination = EnterVerificationCodeController()
     destination.enterVerificationContainerView.titleNumber.text = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
     navigationController?.pushViewController(destination, animated: true)
-       /*
-    PhoneAuthProvider.provider().verifyPhoneNumber("+380636536462") { (verificationID, error) in
-      if let error = error {
-      print(error.localizedDescription)
-      //  self.showMessagePrompt(error.localizedDescription)
-        return
+    
+    if !isVerificationSent {
+      let phoneNumberForVerification = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
+      
+      PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification) { (verificationID, error) in
+        if let error = error {
+          print(error.localizedDescription)
+          //  self.showMessagePrompt(error.localizedDescription)
+          return
+        }
+        
+        print("verification sent")
+        self.isVerificationSent = true
+        UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+        
+        // Sign in using the verificationID and the code sent to the user
+        // ...
       }
-      
-      print("verification sent")
-      */
-      
-      // Sign in using the verificationID and the code sent to the user
-      // ...
-    //}
+    } else {
+      print("verification has already been sent once")
+    }
+    
   }
 }
 

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseStorage
+import FirebaseAuth
 
 extension CreateProfileController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
@@ -47,7 +49,20 @@ extension CreateProfileController: UIImagePickerControllerDelegate, UINavigation
   
   func deletePhoto() {
     //need to delete from firebase
-    createProfileContainerView.profileImageView.image = nil
+   
+    let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+    
+     createProfileContainerView.profileImageView.showActivityIndicator()
+      changeRequest?.photoURL = nil
+    changeRequest?.commitChanges(completion: { (error) in
+      if error != nil {
+        print(error!.localizedDescription, "errrrrrror")
+      } else {
+        print("changed successfully")
+         self.createProfileContainerView.profileImageView.image = nil
+      }
+       self.createProfileContainerView.profileImageView.hideActivityIndicator()
+    })
   }
   
   func openGallery() {
@@ -91,7 +106,27 @@ extension CreateProfileController: UIImagePickerControllerDelegate, UINavigation
     editLayer.removeFromSuperlayer()
     label.removeFromSuperview()
     dismiss(animated: true, completion: nil)
+    createProfileContainerView.profileImageView.showActivityIndicator()
+    updateUserProfile()
+  }
+  
+  func updateUserProfile() {
     
+    let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+    
+    uploadAvatarForUserToFirebaseStorageUsingImage(createProfileContainerView.profileImageView.image!, completion: { (imageURL) in
+      
+      changeRequest?.photoURL = URL(string: imageURL)
+      
+      changeRequest?.commitChanges { (error) in
+        self.createProfileContainerView.profileImageView.sd_setImage(with: Auth.auth().currentUser?.photoURL, placeholderImage: self.createProfileContainerView.profileImageView.image, options: [.highPriority, .continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
+          
+          print("load finished")
+        })
+        
+        self.createProfileContainerView.profileImageView.hideActivityIndicator()
+      }
+    })
   }
   
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

@@ -8,8 +8,7 @@
 
 import UIKit
 
-class CreateProfileContainerView: UIView {
-  
+class CreateProfileContainerView: UIView, UITextFieldDelegate {
   
   lazy var profileImageView: UIImageView = {
     let profileImageView = UIImageView()
@@ -24,7 +23,6 @@ class CreateProfileContainerView: UIView {
     return profileImageView
   }()
   
-  
   let addPhotoLabel: UILabel = {
     let addPhotoLabel = UILabel()
     addPhotoLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +33,6 @@ class CreateProfileContainerView: UIView {
     
     return addPhotoLabel
   }()
-  
   
   let subtitleLabel: UILabel = {
     let subtitleLabel = UILabel()
@@ -50,8 +47,7 @@ class CreateProfileContainerView: UIView {
     return subtitleLabel
   }()
   
-  
-  let name: UITextField = {
+ lazy var name: UITextField = {
     let name = UITextField()
     name.font = UIFont.systemFont(ofSize: 20)
     name.translatesAutoresizingMaskIntoConstraints = false
@@ -59,11 +55,12 @@ class CreateProfileContainerView: UIView {
     //name.keyboardType = .numberPad
     name.placeholder = "Enter name"
     name.borderStyle = .roundedRect
+    name.delegate = self
+    name.returnKeyType = .done
     //verificationCode.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
     
     return name
   }()
-  
   
   let phone: UITextField = {
     let phone = UITextField()
@@ -106,6 +103,11 @@ class CreateProfileContainerView: UIView {
 //    return placeholderLabel
 //  }()
   
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    return true
+  }
+
   
   override init(frame: CGRect) {
     super.init(frame: frame)
