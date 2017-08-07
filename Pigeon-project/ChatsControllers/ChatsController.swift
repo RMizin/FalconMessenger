@@ -12,11 +12,7 @@ class ChatsController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-      self.title = "Chats"
-      view.backgroundColor = .white
-      tabBarController?.selectedIndex = tabs.chats.rawValue
-      tabBarController?.title = self.title
-      
+        view.backgroundColor = .white
     }
 
     override func didReceiveMemoryWarning() {

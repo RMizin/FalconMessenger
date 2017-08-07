@@ -9,14 +9,13 @@
 import UIKit
 import FirebaseAuth
 
+
 class AccountSettingsController: UIViewController {
 
   let accountSettingsTableView: UITableView = UITableView(frame: CGRect.zero, style: .grouped)
   
   let accountSettingsCellId = "userProfileCell"
-  
-  
-  
+
   var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and sounds", controller: SettingsController() as Any ),
                       ( icon: UIImage(named: "ChangeNumber") , title: "Change number", controller: SettingsController() as Any)]
   
@@ -24,8 +23,6 @@ class AccountSettingsController: UIViewController {
   var secondSection = [/* ( icon: UIImage(named: "language") , title: "Язык", controller: nil), */
     ( icon: UIImage(named: "Storage") , title: "Data and storage", controller: StorageTableViewController()),
     ( icon: UIImage(named: "Logout") , title: "Log out", controller: nil)]
-  
-  
   
   
   override func viewDidLoad() {
@@ -42,6 +39,8 @@ class AccountSettingsController: UIViewController {
     accountSettingsTableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
     setConstraints()
   }
+  
+  
   
   
   fileprivate func setConstraints() {
@@ -65,14 +64,18 @@ class AccountSettingsController: UIViewController {
       print ("Error signing out: %@", signOutError)
     }
     
-     let destination = OnboardingController()
+    let destination = OnboardingController()
     
     let newNavigationController = UINavigationController(rootViewController: destination)
-    newNavigationController.navigationBar.backgroundColor = .white
     let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
+    
+    newNavigationController.navigationBar.backgroundColor = .white
     statusBar.backgroundColor = UIColor.white
-    UINavigationBar.appearance().shadowImage = UIImage()
-    UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+    
+    newNavigationController.navigationBar.shadowImage = UIImage()
+    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+    
+    newNavigationController.navigationBar.isTranslucent = false
     newNavigationController.modalTransitionStyle = .coverVertical
     
     self.present(newNavigationController, animated: true, completion: nil)
@@ -114,14 +117,14 @@ extension AccountSettingsController: UITableViewDataSource {
     
     if indexPath.section == 0 {
       
-      let destination = firstSection[indexPath.row].controller//MessagesController()
+      let destination = firstSection[indexPath.row].controller
       
       self.navigationController?.pushViewController(destination as! UIViewController, animated: true)
     }
     
     if indexPath.section == 1 {
       
-      let destination = secondSection[indexPath.row].controller//MessagesController()
+      let destination = secondSection[indexPath.row].controller
       
       if destination != nil {
         self.navigationController?.pushViewController(destination!  , animated: true)

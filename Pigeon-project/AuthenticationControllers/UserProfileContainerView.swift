@@ -1,5 +1,5 @@
 //
-//  CreateProfileContainerView.swift
+//  UserProfileContainerView.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/4/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateProfileContainerView: UIView, UITextFieldDelegate {
+class UserProfileContainerView: UIView, UITextFieldDelegate {
   
   lazy var profileImageView: UIImageView = {
     let profileImageView = UIImageView()
@@ -56,7 +56,8 @@ class CreateProfileContainerView: UIView, UITextFieldDelegate {
     name.placeholder = "Enter name"
     name.borderStyle = .roundedRect
     name.delegate = self
-    name.returnKeyType = .done
+    //name.returnKeyType = .done
+    name.autocorrectionType = .no
     //verificationCode.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
     
     return name
@@ -103,10 +104,10 @@ class CreateProfileContainerView: UIView, UITextFieldDelegate {
 //    return placeholderLabel
 //  }()
   
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    textField.resignFirstResponder()
-    return true
-  }
+//  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+//    textField.resignFirstResponder()
+//    return true
+//  }
 
   
   override init(frame: CGRect) {
@@ -141,14 +142,7 @@ class CreateProfileContainerView: UIView, UITextFieldDelegate {
       subtitleLabel.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 0),
       subtitleLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
       subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-    //  subtitleLabel.widthAnchor.constraint(equalToConstant: 150),
-     // subtitleLabel.heightAnchor.constraint(equalToConstant: 150),
-      
-      
-      
-      
-      
-      
+  
       name.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
       name.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
       name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),

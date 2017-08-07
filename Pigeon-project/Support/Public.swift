@@ -8,8 +8,8 @@
 
 import UIKit
 import FirebaseStorage
-import ObjectiveC
-import Foundation
+import Firebase
+
 
 public extension UIView {
   
@@ -55,68 +55,54 @@ func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, completion
 
 
 
-private var activityIndicatorAssociationKey: UInt8 = 0
-
-
-
-let backgroundView: UIView = {
+private var backgroundView: UIView = {
   let backgroundView = UIView()
   backgroundView.backgroundColor = UIColor.black
   backgroundView.alpha = 0.8
   backgroundView.layer.cornerRadius = 0
   backgroundView.layer.masksToBounds = true
+  backgroundView.frame = CGRect(origin: CGPoint(x: 0 , y: 0), size: CGSize(width: 100, height: 100))
+  
   return backgroundView
+}()
+
+private var activityIndicator: UIActivityIndicatorView = {
+  var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+  activityIndicator.hidesWhenStopped = true
+  activityIndicator.frame = CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0);
+  activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
+  activityIndicator.autoresizingMask = [.flexibleLeftMargin , .flexibleRightMargin , .flexibleTopMargin , .flexibleBottomMargin]
+  activityIndicator.isUserInteractionEnabled = false
+  
+  return activityIndicator
 }()
 
 
 extension UIImageView {
-  var activityIndicator: UIActivityIndicatorView! {
-    get {
-      return objc_getAssociatedObject(self, &activityIndicatorAssociationKey) as? UIActivityIndicatorView
-    }
-    set(newValue) {
-      objc_setAssociatedObject(self, &activityIndicatorAssociationKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
-    }
-  }
-  
   
   func showActivityIndicator() {
     
- 
+    self.addSubview(backgroundView)
+    self.addSubview(activityIndicator)
+    
+    activityIndicator.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
+    backgroundView.center = activityIndicator.center
 
-    self.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    DispatchQueue.main.async {
+      activityIndicator.startAnimating()
+    }
     
-    self.activityIndicator.hidesWhenStopped = true
-    self.activityIndicator.frame = CGRect(x:0.0, y:0.0, width: 40.0, height:40.0);
-    self.activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
-    self.activityIndicator.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2);
-    self.activityIndicator.autoresizingMask = [.flexibleLeftMargin , .flexibleRightMargin , .flexibleTopMargin , .flexibleBottomMargin]
-    self.activityIndicator.isUserInteractionEnabled = false
-    
-    backgroundView.frame = CGRect(origin: self.activityIndicator.frame.origin, size: CGSize(width: 100, height: 100))// = image?.size
-    backgroundView.center = self.activityIndicator.center
-    
-    print(self.activityIndicator.frame.size)
-   // if self.activityIndicator == nil {
-      
-      OperationQueue.main.addOperation({ () -> Void in
-        self.addSubview(backgroundView)
-        self.addSubview(self.activityIndicator)
-        self.activityIndicator.startAnimating()
-      })
-   // } else {
-    //  self.activityIndicator.startAnimating()
-      //print("not nillll")
-   // }
   }
   
   
   func hideActivityIndicator() {
-    OperationQueue.main.addOperation({ () -> Void in
-      self.activityIndicator.stopAnimating()
-      self.activityIndicator.removeFromSuperview()
+    DispatchQueue.main.async {
+      activityIndicator.stopAnimating()
+    }
+    
+      activityIndicator.removeFromSuperview()
       backgroundView.removeFromSuperview()
-    })
   }
+  
 }
 

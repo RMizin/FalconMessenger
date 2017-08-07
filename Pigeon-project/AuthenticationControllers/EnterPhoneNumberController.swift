@@ -17,8 +17,9 @@ class EnterPhoneNumberController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       view.backgroundColor = UIColor.white
+      view.addSubview(phoneNumberContainerView)
+      phoneNumberContainerView.frame = view.bounds
       configureNavigationBar()
-      setConstraints()
       setCountry()
     }
   
@@ -32,17 +33,7 @@ class EnterPhoneNumberController: UIViewController {
     }
   }
   
-  fileprivate func setConstraints() {
-    
-    view.addSubview(phoneNumberContainerView)
-    phoneNumberContainerView.translatesAutoresizingMaskIntoConstraints = false
-    phoneNumberContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: navigationController!.navigationBar.frame.height).isActive = true
-    phoneNumberContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-    phoneNumberContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-    phoneNumberContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-  }
-  
-  
+
   fileprivate func configureNavigationBar () {
     let rightBarButton = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(rightBarButtonDidTap))
     self.navigationItem.rightBarButtonItem = rightBarButton
@@ -51,7 +42,6 @@ class EnterPhoneNumberController: UIViewController {
   
   
   func openCountryCodesList () {
-    
     let picker = SelectCountryCodeController()
     picker.delegate = self
     navigationController?.pushViewController(picker, animated: true)
@@ -92,14 +82,10 @@ class EnterPhoneNumberController: UIViewController {
         print("verification sent")
         self.isVerificationSent = true
         UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
-        
-        // Sign in using the verificationID and the code sent to the user
-        // ...
       }
     } else {
       print("verification has already been sent once")
     }
-    
   }
 }
 

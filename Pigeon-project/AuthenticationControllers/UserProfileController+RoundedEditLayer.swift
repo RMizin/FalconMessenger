@@ -9,7 +9,7 @@
 import UIKit
 
 
-extension CreateProfileController {
+extension UserProfileController {
   
   func pictureCaptured() {
     addRoundedEditLayer(to: picker , forCamera: true)

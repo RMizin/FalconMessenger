@@ -57,9 +57,7 @@ class EnterVerificationContainerView: UIView {
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-    
-    //verificationCode.delegate = self
-    
+  
     addSubview(titleNumber)
     addSubview(subtitleText)
     addSubview(verificationCode)
@@ -92,6 +90,6 @@ class EnterVerificationContainerView: UIView {
     super.init(coder: aDecoder)!
   }
 }
-//extension EnterVerificationContainerView: UITextFieldDelegate {}
+
 
  

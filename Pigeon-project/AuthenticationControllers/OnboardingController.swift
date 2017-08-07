@@ -12,12 +12,13 @@ class OnboardingController: UIViewController {
 
   
   
-  let onboardingContainerView = OnboardingContainerView(frame: CGRect(x: 0, y: 0, width: deviceScreen.width , height: deviceScreen.height))
+  let onboardingContainerView = OnboardingContainerView()
   
     override func viewDidLoad() {
         super.viewDidLoad()
      
       view.addSubview(onboardingContainerView)
+      onboardingContainerView.frame = view.bounds
     }
   
   

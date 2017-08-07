@@ -9,8 +9,9 @@
 import UIKit
 import FirebaseStorage
 import FirebaseAuth
+import Firebase
 
-extension CreateProfileController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension UserProfileController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
     // Image picker in edit mode
@@ -24,6 +25,8 @@ extension CreateProfileController: UIImagePickerControllerDelegate, UINavigation
   
   func handleSelectProfileImageView() {
     
+    
+    
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
       self.openCamera()
@@ -33,7 +36,7 @@ extension CreateProfileController: UIImagePickerControllerDelegate, UINavigation
       self.openGallery()
     }))
     
-   if createProfileContainerView.profileImageView.image != nil {
+   if userProfileContainerView.profileImageView.image != nil {
       alert.addAction(UIAlertAction(title: "Delete photo", style: .destructive, handler: { _ in
         self.deletePhoto()
       }))
@@ -48,22 +51,35 @@ extension CreateProfileController: UIImagePickerControllerDelegate, UINavigation
   
   
   func deletePhoto() {
-    //need to delete from firebase
-   
-    let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
     
-     createProfileContainerView.profileImageView.showActivityIndicator()
-      changeRequest?.photoURL = nil
-    changeRequest?.commitChanges(completion: { (error) in
+    userProfileContainerView.profileImageView.showActivityIndicator()
+   
+    
+    let userPhotoURL = UserDefaults.standard.string(forKey: "userPhotoURL")
+    
+    let imageRef = Storage.storage().reference(forURL: userPhotoURL!)
+    
+    imageRef.delete { (error) in
       if error != nil {
-        print(error!.localizedDescription, "errrrrrror")
-      } else {
-        print("changed successfully")
-         self.createProfileContainerView.profileImageView.image = nil
+        print("error removig image from firebse storage")
       }
-       self.createProfileContainerView.profileImageView.hideActivityIndicator()
-    })
+      
+      print("removing completed begining removing URLS")
+      
+      
+      let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
+      userReference.updateChildValues(["photoURL" : ""], withCompletionBlock: { (error, referene) in
+        if error != nil {
+          print("error deleting url from firebase")
+        }
+        
+        self.userProfileContainerView.profileImageView.image = nil
+        UserDefaults.standard.set("", forKey: "userPhotoURL")
+        self.userProfileContainerView.profileImageView.hideActivityIndicator()
+      })
+    }
   }
+  
   
   func openGallery() {
     picker.allowsEditing = true
@@ -77,6 +93,7 @@ extension CreateProfileController: UIImagePickerControllerDelegate, UINavigation
       
       picker.sourceType = UIImagePickerControllerSourceType.camera
       picker.allowsEditing = true
+      
       self.present(picker, animated: true, completion: nil)
       
     } else {
@@ -92,43 +109,44 @@ extension CreateProfileController: UIImagePickerControllerDelegate, UINavigation
     
     var selectedImageFromPicker: UIImage?
     
-    if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+    
+    if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
       selectedImageFromPicker = editedImage
-    } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+      
+    } else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
       
       selectedImageFromPicker = originalImage
     }
     
+    
     if let selectedImage = selectedImageFromPicker {
-      createProfileContainerView.profileImageView.image = selectedImage
+          self.userProfileContainerView.profileImageView.image = selectedImage
+          updateUserProfile(with:  self.userProfileContainerView.profileImageView.image!)
     }
     
     editLayer.removeFromSuperlayer()
     label.removeFromSuperview()
     dismiss(animated: true, completion: nil)
-    createProfileContainerView.profileImageView.showActivityIndicator()
-    updateUserProfile()
+    userProfileContainerView.profileImageView.showActivityIndicator()
   }
   
-  func updateUserProfile() {
+
+  func updateUserProfile(with image: UIImage) {
     
-    let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-    
-    uploadAvatarForUserToFirebaseStorageUsingImage(createProfileContainerView.profileImageView.image!, completion: { (imageURL) in
+    uploadAvatarForUserToFirebaseStorageUsingImage(image, completion: { (imageURL) in
       
-      changeRequest?.photoURL = URL(string: imageURL)
-      
-      changeRequest?.commitChanges { (error) in
-        self.createProfileContainerView.profileImageView.sd_setImage(with: Auth.auth().currentUser?.photoURL, placeholderImage: self.createProfileContainerView.profileImageView.image, options: [.highPriority, .continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
+      self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: imageURL), placeholderImage: image, options: [.highPriority, .continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
           
-          print("load finished")
+        let reference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
+        reference.updateChildValues(["photoURL" : String(describing: url!)], withCompletionBlock: { (error, ref) in
+          
+           UserDefaults.standard.set(String(describing: url!), forKey: "userPhotoURL")
+           self.userProfileContainerView.profileImageView.hideActivityIndicator()
         })
-        
-        self.createProfileContainerView.profileImageView.hideActivityIndicator()
-      }
+      })
     })
   }
-  
+
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
     print("canceled picker")
     dismiss(animated: true, completion: nil)

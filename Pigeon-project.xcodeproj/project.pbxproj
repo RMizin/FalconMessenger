@@ -30,19 +30,20 @@
 		4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454C1F3225E600A6FF96 /* ChatsController.swift */; };
 		4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */; };
 		4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */; };
-		4B91B8B01F34B2D10025C67F /* CreateProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* CreateProfileContainerView.swift */; };
-		4B91B8B61F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B51F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift */; };
-		4B91B8B81F34CB5E0025C67F /* CreateProfileController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B71F34CB5E0025C67F /* CreateProfileController+handlers.swift */; };
-		4B91B8BA1F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B91F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift */; };
+		4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */; };
+		4B91B8B61F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B51F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift */; };
+		4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */; };
+		4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */; };
 		4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8BB1F34E9D60025C67F /* Public.swift */; };
 		4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */; };
 		4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */; };
-		4B9498741F3244CA008DA07F /* CreateProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498731F3244CA008DA07F /* CreateProfileController.swift */; };
+		4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498731F3244CA008DA07F /* UserProfileController.swift */; };
 		4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */; };
 		4B9498781F324919008DA07F /* OnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498771F324919008DA07F /* OnboardingController.swift */; };
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
 		4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* PigeonPalette.swift */; };
 		4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498831F324EC6008DA07F /* GlobalVariables.swift */; };
+		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
 		4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */; };
 		4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */; };
 		4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */; };
@@ -78,20 +79,21 @@
 		4B4F454C1F3225E600A6FF96 /* ChatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatsController.swift; path = ChatsControllers/ChatsController.swift; sourceTree = "<group>"; };
 		4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsController.swift; path = SettingsControllers/SettingsController.swift; sourceTree = "<group>"; };
 		4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		4B91B8AF1F34B2D10025C67F /* CreateProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateProfileContainerView.swift; path = AuthenticationControllers/CreateProfileContainerView.swift; sourceTree = "<group>"; };
-		4B91B8B51F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CreateProfileController+RoundedEditLayer.swift"; path = "AuthenticationControllers/CreateProfileController+RoundedEditLayer.swift"; sourceTree = "<group>"; };
-		4B91B8B71F34CB5E0025C67F /* CreateProfileController+handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CreateProfileController+handlers.swift"; path = "AuthenticationControllers/CreateProfileController+handlers.swift"; sourceTree = "<group>"; };
-		4B91B8B91F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CreateProfileController+keyboardHandlers.swift"; path = "AuthenticationControllers/CreateProfileController+keyboardHandlers.swift"; sourceTree = "<group>"; };
+		4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileContainerView.swift; path = AuthenticationControllers/UserProfileContainerView.swift; sourceTree = "<group>"; };
+		4B91B8B51F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+RoundedEditLayer.swift"; path = "AuthenticationControllers/UserProfileController+RoundedEditLayer.swift"; sourceTree = "<group>"; };
+		4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+handlers.swift"; path = "AuthenticationControllers/UserProfileController+handlers.swift"; sourceTree = "<group>"; };
+		4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+keyboardHandlers.swift"; path = "AuthenticationControllers/UserProfileController+keyboardHandlers.swift"; sourceTree = "<group>"; };
 		4B91B8BB1F34E9D60025C67F /* Public.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Public.swift; path = Support/Public.swift; sourceTree = "<group>"; };
 		4B94986E1F323B76008DA07F /* Pigeon-project.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pigeon-project.entitlements"; sourceTree = "<group>"; };
 		4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhoneNumberController.swift; path = AuthenticationControllers/EnterPhoneNumberController.swift; sourceTree = "<group>"; };
 		4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationCodeController.swift; path = AuthenticationControllers/EnterVerificationCodeController.swift; sourceTree = "<group>"; };
-		4B9498731F3244CA008DA07F /* CreateProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateProfileController.swift; path = AuthenticationControllers/CreateProfileController.swift; sourceTree = "<group>"; };
+		4B9498731F3244CA008DA07F /* UserProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileController.swift; path = AuthenticationControllers/UserProfileController.swift; sourceTree = "<group>"; };
 		4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhoneNumberContainerView.swift; path = AuthenticationControllers/EnterPhoneNumberContainerView.swift; sourceTree = "<group>"; };
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
 		4B9498801F324C84008DA07F /* PigeonPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonPalette.swift; path = Support/PigeonPalette.swift; sourceTree = "<group>"; };
 		4B9498831F324EC6008DA07F /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalVariables.swift; path = Support/GlobalVariables.swift; sourceTree = "<group>"; };
+		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
 		4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CallingCodes.plist; sourceTree = "<group>"; };
 		4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationContainerView.swift; path = AuthenticationControllers/EnterVerificationContainerView.swift; sourceTree = "<group>"; };
 		4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectCountryCodeController.swift; path = AuthenticationControllers/SelectCountryCodeController.swift; sourceTree = "<group>"; };
@@ -139,12 +141,13 @@
 			name = Storage;
 			sourceTree = "<group>";
 		};
-		4B48D30A1F35C9FE0050C797 /* UserProfileViews */ = {
+		4B48D30A1F35C9FE0050C797 /* SettingsViews */ = {
 			isa = PBXGroup;
 			children = (
+				4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */,
 				4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */,
 			);
-			name = UserProfileViews;
+			name = SettingsViews;
 			sourceTree = "<group>";
 		};
 		4B48D30B1F35CA0D0050C797 /* Menu */ = {
@@ -199,6 +202,7 @@
 				4B4F45501F3225F100A6FF96 /* Settings */,
 				4B4F45511F3225F700A6FF96 /* Chats */,
 				4B4F45521F32260100A6FF96 /* Contacts */,
+				4BCE1ABB1F3714A600C0EBF7 /* Models */,
 				4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */,
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
@@ -212,10 +216,9 @@
 		4B4F45501F3225F100A6FF96 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				4B48D30B1F35CA0D0050C797 /* Menu */,
-				4B48D30A1F35C9FE0050C797 /* UserProfileViews */,
 				4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */,
-				4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */,
+				4B48D30B1F35CA0D0050C797 /* Menu */,
+				4B48D30A1F35C9FE0050C797 /* SettingsViews */,
 				4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */,
 			);
 			name = Settings;
@@ -243,7 +246,7 @@
 				4B94987B1F324A98008DA07F /* PhoneNumber */,
 				4B94987E1F324AC3008DA07F /* Onboarding */,
 				4BEDC3761F337A1E0005B8E6 /* Verification */,
-				4BEDC3771F337A260005B8E6 /* Create profile */,
+				4BEDC3771F337A260005B8E6 /* User profile */,
 			);
 			name = Authentication;
 			sourceTree = "<group>";
@@ -283,6 +286,14 @@
 			path = "Pigeon-project";
 			sourceTree = "<group>";
 		};
+		4BCE1ABB1F3714A600C0EBF7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4BCE1AB91F3714A000C0EBF7 /* User.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		4BEDC3761F337A1E0005B8E6 /* Verification */ = {
 			isa = PBXGroup;
 			children = (
@@ -292,16 +303,16 @@
 			name = Verification;
 			sourceTree = "<group>";
 		};
-		4BEDC3771F337A260005B8E6 /* Create profile */ = {
+		4BEDC3771F337A260005B8E6 /* User profile */ = {
 			isa = PBXGroup;
 			children = (
-				4B9498731F3244CA008DA07F /* CreateProfileController.swift */,
-				4B91B8AF1F34B2D10025C67F /* CreateProfileContainerView.swift */,
-				4B91B8B51F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift */,
-				4B91B8B71F34CB5E0025C67F /* CreateProfileController+handlers.swift */,
-				4B91B8B91F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift */,
+				4B9498731F3244CA008DA07F /* UserProfileController.swift */,
+				4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */,
+				4B91B8B51F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift */,
+				4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */,
+				4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */,
 			);
-			name = "Create profile";
+			name = "User profile";
 			sourceTree = "<group>";
 		};
 		4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */ = {
@@ -463,16 +474,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B91B8B01F34B2D10025C67F /* CreateProfileContainerView.swift in Sources */,
+				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
 				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
-				4B91B8BA1F34D80F0025C67F /* CreateProfileController+keyboardHandlers.swift in Sources */,
+				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
-				4B91B8B81F34CB5E0025C67F /* CreateProfileController+handlers.swift in Sources */,
+				4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */,
 				4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */,
-				4B9498741F3244CA008DA07F /* CreateProfileController.swift in Sources */,
+				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
 				4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */,
 				4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */,
-				4B91B8B61F34C9DC0025C67F /* CreateProfileController+RoundedEditLayer.swift in Sources */,
+				4B91B8B61F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift in Sources */,
 				4B48D3201F361E490050C797 /* ARSLineProgressExtensions.swift in Sources */,
 				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
@@ -489,6 +500,7 @@
 				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
 				4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */,
+				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
 				4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */,
 				4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */,
 				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,

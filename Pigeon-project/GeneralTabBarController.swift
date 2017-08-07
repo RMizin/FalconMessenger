@@ -19,37 +19,7 @@ enum tabs: Int {
 
 class GeneralTabBarController: UITabBarController {
 
-  
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-      delegate = self
-      setTabs()
     }
-  
-  
-  fileprivate func setTabs () {
-    
-    let contactsController = ContactsController()
-    let chatsController = ChatsController()
-    let settingsController = SettingsViewControllersContainer()
-    
-    let contactsTabItem = UITabBarItem(title: contactsController.title, image: UIImage(named:"TabIconContacts"), selectedImage: UIImage(named:"TabIconContacts_Highlighted"))
-    let chatsTabItem = UITabBarItem(title: chatsController.title, image: UIImage(named:"TabIconMessages"), selectedImage: UIImage(named:"TabIconMessages_Highlighted"))
-    let settingsTabItem = UITabBarItem(title: settingsController.title, image: UIImage(named:"TabIconSettings"), selectedImage: UIImage(named:"TabIconSettings_Highlighted"))
-    contactsController.tabBarItem = contactsTabItem
-    chatsController.tabBarItem = chatsTabItem
-    settingsController.tabBarItem = settingsTabItem
-    
-    let tabBarControllers = [contactsController, chatsController, settingsController]
-    setViewControllers(tabBarControllers, animated: false)
-  }
-}
-
-
-extension GeneralTabBarController: UITabBarControllerDelegate {
-
-  override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-    self.title = item.title
-  }
 }

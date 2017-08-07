@@ -44,7 +44,6 @@ class AccountSettingsTableViewCell: UITableViewCell {
     accessoryView?.backgroundColor = backgroundColor
     accessoryType = .disclosureIndicator
    
-   
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
@@ -62,7 +61,6 @@ class AccountSettingsTableViewCell: UITableViewCell {
     separator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
     separator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15).isActive = true
     separator.heightAnchor.constraint(equalToConstant: 0.4).isActive = true
-    
   }
   
   
