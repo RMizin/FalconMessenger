@@ -25,8 +25,6 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   
   func handleSelectProfileImageView() {
     
-    
-    
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
       self.openCamera()
@@ -132,6 +130,18 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   
 
   func updateUserProfile(with image: UIImage) {
+    let compressedImage = compressImage(image)
+    
+    uploadAvatarForUserToFirebaseStorageUsingImage(compressedImage) { (thumbnailImageURL) in
+      
+      let reference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
+      reference.updateChildValues(["thumbnailPhotoURL" : String(describing: thumbnailImageURL)], withCompletionBlock: { (error, ref) in
+        
+        UserDefaults.standard.set(String(describing: thumbnailImageURL), forKey: "thumbnailUserPhotoURL")
+      })
+    }
+    
+    
     
     uploadAvatarForUserToFirebaseStorageUsingImage(image, completion: { (imageURL) in
       

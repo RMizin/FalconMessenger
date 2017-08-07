@@ -11,6 +11,85 @@ import FirebaseStorage
 import Firebase
 
 
+
+extension String {
+  
+  var digits: String {
+    return components(separatedBy: CharacterSet.decimalDigits.inverted)
+      .joined()
+  }
+}
+
+
+func setOnlineStatus()  {
+  
+  if Auth.auth().currentUser != nil {
+    let myConnectionsRef = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("OnlineStatus")
+    
+    let connectedRef = Database.database().reference(withPath: ".info/connected")
+    
+    
+    connectedRef.observe(.value, with: { (snapshot) in
+      guard let connected = snapshot.value as? Bool, connected else {
+        return
+      }
+      
+      let con = myConnectionsRef
+      con.setValue("Online", withCompletionBlock: { (error, ref) in
+        
+      })
+      
+      
+      // when this device disconnects, remove it
+      // con.onDisconnectRemoveValue()
+      
+      let date = Date()
+      let formatter = DateFormatter()
+      
+      formatter.dateFormat = "dd.MM.yyyy HH:mm"
+      
+      let result = formatter.string(from: date)
+      con.onDisconnectSetValue("Last seen" + " " + result)
+      
+    })
+    
+  }
+}
+//
+//func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage {
+//  let oldWidth = sourceImage.size.width
+//  let scaleFactor = scaledToWidth / oldWidth
+//  
+//  let newHeight = sourceImage.size.height * scaleFactor
+//  let newWidth = oldWidth * scaleFactor
+//  
+//  UIGraphicsBeginImageContext(CGSize(width:newWidth, height:newHeight))
+//  sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
+//  let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//  UIGraphicsEndImageContext()
+//  return newImage!
+//}
+
+
+func compressImage (_ image: UIImage) -> UIImage {
+  
+  let actualHeight:CGFloat = image.size.height
+  let actualWidth:CGFloat = image.size.width
+  let imgRatio:CGFloat = actualWidth/actualHeight
+  let maxWidth:CGFloat = 100.0
+  let resizedHeight:CGFloat = maxWidth/imgRatio
+  let compressionQuality:CGFloat = 0.2
+  
+  let rect:CGRect = CGRect(x: 0, y: 0, width: maxWidth, height: resizedHeight)
+  UIGraphicsBeginImageContext(rect.size)
+  image.draw(in: rect)
+  let img: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+  let imageData:Data = UIImageJPEGRepresentation(img, compressionQuality)!
+  UIGraphicsEndImageContext()
+  
+  return UIImage(data: imageData)!
+}
+
 public extension UIView {
   
   func shake(count : Float? = nil,for duration : TimeInterval? = nil,withTranslation translation : Float? = nil) {
@@ -52,7 +131,6 @@ func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, completion
     })
   }
 }
-
 
 
 private var backgroundView: UIView = {

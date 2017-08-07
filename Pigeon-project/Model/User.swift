@@ -15,6 +15,7 @@ class User: NSObject {
   var name: String?
   var photoURL: String?
   var phoneNumber: String?
+  var onlineStatus: String?
   
   
   init(dictionary: [String: AnyObject]) {
@@ -22,6 +23,9 @@ class User: NSObject {
     self.name = dictionary["name"] as? String
     self.photoURL = dictionary["photoURL"] as? String
     self.phoneNumber = dictionary["phoneNumber"] as? String
+    self.onlineStatus = dictionary["OnlineStatus"] as? String
   
   }
+  
+  
 }

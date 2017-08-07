@@ -83,6 +83,7 @@ extension UserProfileController {  /* only during authentication */
       userProfileContainerView.name.shake()
     } else {
       updateUserData()
+      setOnlineStatus()
     }
   }
   

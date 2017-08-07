@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseAuth
+import Firebase
 
 
 enum tabs: Int {
@@ -21,5 +22,7 @@ class GeneralTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+      setOnlineStatus()
     }
 }

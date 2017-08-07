@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4B197EF01F348171008102E1 /* SharedVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B197EEF1F348171008102E1 /* SharedVariables.swift */; };
+		4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */; };
+		4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */; };
 		4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */; };
 		4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */; };
 		4B48D30D1F35EAB70050C797 /* SettingsViewControllersContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */; };
@@ -55,6 +57,8 @@
 
 /* Begin PBXFileReference section */
 		4B197EEF1F348171008102E1 /* SharedVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedVariables.swift; path = AuthenticationControllers/SharedVariables/SharedVariables.swift; sourceTree = "<group>"; };
+		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
+		4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsTableViewCell.swift; path = ContactsControllers/ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StorageTableViewController.swift; path = SettingsControllers/StorageTableViewController.swift; sourceTree = "<group>"; };
 		4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountSettingsTableViewCell.swift; path = SettingsControllers/AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewControllersContainer.swift; path = SettingsControllers/SettingsViewControllersContainer.swift; sourceTree = "<group>"; };
@@ -131,6 +135,13 @@
 				4B197EEF1F348171008102E1 /* SharedVariables.swift */,
 			);
 			name = SharedVariables;
+			sourceTree = "<group>";
+		};
+		4B32F8511F38879300807FFB /* PhoneNumber parser */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "PhoneNumber parser";
 			sourceTree = "<group>";
 		};
 		4B48D3091F35C9E20050C797 /* Storage */ = {
@@ -236,6 +247,8 @@
 			isa = PBXGroup;
 			children = (
 				4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */,
+				4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */,
+				4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */,
 			);
 			name = Contacts;
 			sourceTree = "<group>";
@@ -276,6 +289,7 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4B32F8511F38879300807FFB /* PhoneNumber parser */,
 				4B48D3111F361E300050C797 /* ProgressIndicator */,
 				4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */,
 				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
@@ -481,6 +495,7 @@
 				4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */,
 				4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */,
 				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
+				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
 				4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */,
 				4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */,
 				4B91B8B61F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift in Sources */,
@@ -498,6 +513,7 @@
 				4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */,
 				4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */,
 				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
+				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
 				4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */,
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
