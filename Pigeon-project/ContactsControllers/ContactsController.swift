@@ -21,24 +21,39 @@ class ContactsController: UITableViewController {
   
   var contacts = [CNContact]()
   
+  var filteredContacts = [CNContact]()
+  
   var localPhones = [String]()
   
   var users = [User]()
   
+  var filteredUsers = [User]()
+  
   let contactsCellID = "contactsCellID"
+  
+  let pigeonUsersCellID = "pigeonUsersCellID"
+  
+  private let reloadAnimation = UITableViewRowAnimation.none
+  
+  var searchBar = UISearchBar()
   
 
     override func viewDidLoad() {
         super.viewDidLoad()
       view.backgroundColor = .white
       tableView.register(ContactsTableViewCell.self, forCellReuseIdentifier: contactsCellID)
+      tableView.register(PigeonUsersTableViewCell.self, forCellReuseIdentifier: pigeonUsersCellID)
       tableView.separatorStyle = .none
       fetchContacts()
       tableView.prefetchDataSource = self
+      searchBar.delegate = self
+      searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+      tableView.tableHeaderView = searchBar
+      
     }
   
 
-  func fetchContacts () {
+ fileprivate func fetchContacts () {
     
     let status = CNContactStore.authorizationStatus(for: .contacts)
     if status == .denied || status == .restricted {
@@ -67,6 +82,7 @@ class ContactsController: UITableViewController {
       }
       
       self.localPhones.removeAll()
+      self.filteredContacts = self.contacts
 
       for contact in self.contacts {
        
@@ -81,7 +97,30 @@ class ContactsController: UITableViewController {
   }
   
   
-  func fetchPigeonUsers() {
+ fileprivate func rearrangeUsers() { /* Moves Online users to the top  */
+    for index in 0...self.users.count - 1 {
+      if self.users[index].onlineStatus == statusOnline {
+        self.users = rearrange(array: self.users, fromIndex: index, toIndex: 0)
+      }
+    }
+  }
+  
+ fileprivate func rearrangeFilteredUsers() { /* Moves Online users to the top  */
+    for index in 0...self.filteredUsers.count - 1 {
+      if self.filteredUsers[index].onlineStatus == statusOnline {
+        self.filteredUsers = rearrange(array: self.filteredUsers, fromIndex: index, toIndex: 0)
+      }
+    }
+  }
+  
+ fileprivate func sortUsers() { /* Sort users by las online date  */
+    self.users.sort(by: { (user1, user2) -> Bool in
+     return (user1.onlineStatus ?? "", user1.phoneNumber ?? "") > (user2.onlineStatus ?? "", user2.phoneNumber ?? "") // sort
+    })
+  }
+
+  
+ fileprivate func fetchPigeonUsers() {
   
     var preparedNumber = String()
     users.removeAll()
@@ -92,35 +131,23 @@ class ContactsController: UITableViewController {
         let countryCode = try self.phoneNumberKit.parse(number).countryCode
         let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
         preparedNumber = "+" + String(countryCode) + String(nationalNumber)
+        
       
       } catch {
-        print("Generic parser error")
+       // print("Generic parser error")
       }
 
       var userRef: DatabaseQuery = Database.database().reference().child("users")
    
       userRef = userRef.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber )
       userRef.observeSingleEvent(of: .value, with: { (snapshot) in
-      
+      userRef.keepSynced(true)
+        
         if snapshot.exists() {
          
-          userRef.observe(.childChanged, with: { (snap) in
-            
-            guard var dictionary = snap.value as? [String: AnyObject] else {
-              return
-            }
-            
-            dictionary.updateValue(snap.key as AnyObject, forKey: "id")
-            
-            for index in 0...self.users.count - 1 {
-              if self.users[index].id == snap.key {
-                self.users[index] = User(dictionary: dictionary)
-                 self.tableView.reloadData()
-              }
-            }
-          })
+          self.startObservingUserChanges(at: userRef)
          
-          
+          // Initial load
           for child in snapshot.children.allObjects as! [DataSnapshot]  {
   
             guard var dictionary = child.value as? [String: AnyObject] else {
@@ -128,7 +155,14 @@ class ContactsController: UITableViewController {
             }
             
             dictionary.updateValue(child.key as AnyObject, forKey: "id")
+            
             self.users.append(User(dictionary: dictionary))
+            
+            self.sortUsers()
+            
+            self.rearrangeUsers()
+
+            self.filteredUsers = self.users
             
             DispatchQueue.main.async {
               self.tableView.reloadData()
@@ -141,9 +175,92 @@ class ContactsController: UITableViewController {
       })
     }
   }
-  
+
  
-  func presentSettingsActionSheet() {
+  fileprivate func userStatusChangedDuringSearch(snap: DataSnapshot) {
+    
+    guard var dictionary = snap.value as? [String: AnyObject] else {
+      return
+    }
+    
+    dictionary.updateValue(snap.key as AnyObject, forKey: "id")
+    
+    for index in 0...self.filteredUsers.count - 1  {
+      
+      if self.filteredUsers[index].id == snap.key {
+        
+        self.filteredUsers[index] = User(dictionary: dictionary)
+      
+        rearrangeUsers()
+        
+        rearrangeFilteredUsers()
+
+        self.tableView.beginUpdates()
+        
+        for indexOfIndexPath in 0...self.filteredUsers.count - 1 {
+          self.tableView.reloadRows(at: [IndexPath(row: indexOfIndexPath, section: 0)], with: self.reloadAnimation)
+        }
+        
+        self.tableView.endUpdates()
+      }
+    }
+  }
+  
+  
+ fileprivate func startObservingUserChanges(at userRef: DatabaseQuery) {
+    
+    // user updates observer
+    userRef.observe(.childChanged, with: { (snap) in
+      
+      guard var dictionary = snap.value as? [String: AnyObject] else {
+        return
+      }
+      
+      dictionary.updateValue(snap.key as AnyObject, forKey: "id")
+      
+      for index in 0...self.users.count - 1 {
+        
+        
+        if self.users[index].id == snap.key {
+          
+          self.users[index] = User(dictionary: dictionary)
+          
+          self.sortUsers()
+          
+          
+          if self.users[index].onlineStatus == statusOnline {
+            self.users = rearrange(array: self.users, fromIndex: index, toIndex: 0)
+          }
+          
+          
+          if self.searchBar.text != "" && self.filteredUsers.count != 0 {
+            
+            self.userStatusChangedDuringSearch(snap: snap)
+            
+          } else if self.filteredUsers.count == 0 {
+          } else {
+            
+            self.sortUsers()
+            
+            self.rearrangeUsers()
+            
+            self.filteredUsers = self.users
+            
+            self.tableView.beginUpdates()
+            
+            for indexOfIndexPath in 0...self.filteredUsers.count - 1 {
+              self.tableView.reloadRows(at: [IndexPath(row: indexOfIndexPath, section: 0)], with: self.reloadAnimation)
+            }
+            
+            self.tableView.endUpdates()
+          }
+        }
+      }
+    })
+  }
+  
+  
+ fileprivate func presentSettingsActionSheet() {
     let alert = UIAlertController(title: "Permission to Contacts", message: "This app needs access to contacts in order to ...", preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Go to Settings", style: .default) { _ in
       let url = URL(string: UIApplicationOpenSettingsURLString)!
@@ -153,7 +270,6 @@ class ContactsController: UITableViewController {
     present(alert, animated: true)
   }
 
-  
 
     // MARK: - Table view data source
 
@@ -164,9 +280,9 @@ class ContactsController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
       
       if section == 0 {
-        return users.count
+        return filteredUsers.count
       } else {
-         return contacts.count
+         return filteredContacts.count
       }
     }
   
@@ -177,7 +293,7 @@ class ContactsController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
       if section == 0 {
       
-        if users.count == 0 {
+        if filteredUsers.count == 0 {
           return ""
         } else {
           return "Pigeon contacts"
@@ -189,50 +305,76 @@ class ContactsController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      let cell = tableView.dequeueReusableCell(withIdentifier: contactsCellID, for: indexPath) as! ContactsTableViewCell
+    
+     return selectCell(for: indexPath)!
+    }
+  
+  
+  func selectCell(for indexPath: IndexPath) -> UITableViewCell? {
+    
+    if indexPath.section == 0 {
       
-      if indexPath.section == 0 {
+      let cell = tableView.dequeueReusableCell(withIdentifier: pigeonUsersCellID, for: indexPath) as! PigeonUsersTableViewCell
       
-        if let name = users[indexPath.row].name, let status = users[indexPath.row].onlineStatus {
-          
-            cell.title.text = name + " " + status
+        if let name = filteredUsers[indexPath.row].name {
+        
+          cell.title.text = name
+        }
+      
+        if let status = filteredUsers[indexPath.row].onlineStatus {
+          if status == statusOnline {
+            cell.subtitle.textColor = PigeonPalette.pigeonPaletteBlue
+            cell.subtitle.text = status
+            
+          } else {
+            cell.subtitle.textColor = UIColor.lightGray
+            cell.subtitle.text = "Last seen " + status.doubleValue.getDateStringFromUTC()
+          }
         } else {
           
-           cell.title.text = users[indexPath.row].name
+          cell.subtitle.text = ""
         }
-    
+      
+      
+        if let url = filteredUsers[indexPath.row].photoURL {
         
-        if let url = users[indexPath.row].photoURL {
-          
           cell.icon.sd_setImage(with: URL(string: url),
                                 placeholderImage: UIImage(named: "UserpicIcon"),
                                 options: [.progressiveDownload, .continueInBackground, .highPriority])
-          }
-        
-        
-      } else if indexPath.section == 1 {
-        
-        cell.icon.image = UIImage(named: "UserpicIcon")
-        cell.title.text = contacts[indexPath.row].givenName + " " + contacts[indexPath.row].familyName
-      }
-        return cell
+        }
+      
+      return cell
+      
+    } else if indexPath.section == 1 {
+      
+      let cell = tableView.dequeueReusableCell(withIdentifier: contactsCellID, for: indexPath) as! ContactsTableViewCell
+      
+      cell.icon.image = UIImage(named: "UserpicIcon")
+      cell.title.text = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
+      
+      return cell
     }
+    
+    return nil
+  }
+  
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
       if indexPath.section == 0 {
       
-        let destination = ContactsDetailController()
-        destination.contactName = "HERE IS GONNE BE CHAT LOG WINDOW"
+        let destination = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        destination.hidesBottomBarWhenPushed = true
+        destination.user = filteredUsers[indexPath.row]
         self.navigationController?.pushViewController(destination, animated: true)
       }
     
       if indexPath.section == 1 {
         let destination = ContactsDetailController()
-        destination.contactName = contacts[indexPath.row].givenName + " " + contacts[indexPath.row].familyName
+        destination.contactName = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
         destination.contactPhoneNumbers.removeAll()
         
-        for phoneNumber in contacts[indexPath.row].phoneNumbers {
+        for phoneNumber in filteredContacts[indexPath.row].phoneNumbers {
           destination.contactPhoneNumbers.append(phoneNumber.value.stringValue)
         }
         self.navigationController?.pushViewController(destination, animated: true)
@@ -247,6 +389,34 @@ extension ContactsController: UITableViewDataSourcePrefetching {
     let urls = users.map { $0.photoURL! }
     SDWebImagePrefetcher.shared().prefetchURLs(urls)
     
+  }
+}
+
+
+extension ContactsController: UISearchBarDelegate {
+  
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    
+    filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
+      return User.name!.lowercased().contains(searchText.lowercased())
+    })
+    
+    filteredContacts = searchText.isEmpty ? contacts : contacts.filter({ (CNContact) -> Bool in
+      return CNContact.givenName.lowercased().contains(searchText.lowercased())
+    })
+
+    tableView.reloadData()
+  }
+}
+
+extension ContactsController { /* hiding keyboard */
+  
+  override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    searchBar.resignFirstResponder()
+  }
+  
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    self.searchBar.endEditing(true)
   }
 }
 

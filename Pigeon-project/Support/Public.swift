@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseStorage
 import Firebase
+import SystemConfiguration
 
 
 
@@ -21,6 +22,38 @@ extension String {
 }
 
 
+extension String {
+  var doubleValue: Double {
+    return Double(self) ?? 0
+  }
+}
+
+
+extension Double {
+  func getDateStringFromUTC() -> String {
+    let date = Date(timeIntervalSince1970: self)
+    
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .medium
+    dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
+    
+    return dateFormatter.string(from: date)
+  }
+}
+
+
+public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array<T>{
+  var arr = array
+  let element = arr.remove(at: fromIndex)
+  arr.insert(element, at: toIndex)
+  
+  return arr
+}
+
+
+public let statusOnline = "Online"
+public let userMessagesFirebaseFolder = "userMessages"
+
 func setOnlineStatus()  {
   
   if Auth.auth().currentUser != nil {
@@ -28,28 +61,19 @@ func setOnlineStatus()  {
     
     let connectedRef = Database.database().reference(withPath: ".info/connected")
     
-    
     connectedRef.observe(.value, with: { (snapshot) in
       guard let connected = snapshot.value as? Bool, connected else {
         return
       }
       
       let con = myConnectionsRef
-      con.setValue("Online", withCompletionBlock: { (error, ref) in
+      con.setValue(statusOnline, withCompletionBlock: { (error, ref) in
         
       })
       
-      
-      // when this device disconnects, remove it
-      // con.onDisconnectRemoveValue()
-      
       let date = Date()
-      let formatter = DateFormatter()
-      
-      formatter.dateFormat = "dd.MM.yyyy HH:mm"
-      
-      let result = formatter.string(from: date)
-      con.onDisconnectSetValue("Last seen" + " " + result)
+      let result = String(describing: date.timeIntervalSince1970)
+      con.onDisconnectSetValue(result)
       
     })
     
@@ -180,6 +204,61 @@ extension UIImageView {
     
       activityIndicator.removeFromSuperview()
       backgroundView.removeFromSuperview()
+  }
+  
+}
+
+
+
+protocol Utilities {}
+
+extension NSObject: Utilities {
+  
+  enum ReachabilityStatus {
+    case notReachable
+    case reachableViaWWAN
+    case reachableViaWiFi
+  }
+  
+  
+  var currentReachabilityStatus: ReachabilityStatus {
+    
+    var zeroAddress = sockaddr_in()
+    zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+    zeroAddress.sin_family = sa_family_t(AF_INET)
+    
+    guard let defaultRouteReachability = withUnsafePointer(to: &zeroAddress, {
+      $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+        SCNetworkReachabilityCreateWithAddress(nil, $0)
+      }
+    }) else {
+      return .notReachable
+    }
+    
+    var flags: SCNetworkReachabilityFlags = []
+    if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+      return .notReachable
+    }
+    
+    if flags.contains(.reachable) == false {
+      // The target host is not reachable.
+      return .notReachable
+    }
+    else if flags.contains(.isWWAN) == true {
+      // WWAN connections are OK if the calling application is using the CFNetwork APIs.
+      return .reachableViaWWAN
+    }
+    else if flags.contains(.connectionRequired) == false {
+      // If the target host is reachable and no connection is required then we'll assume that you're on Wi-Fi...
+      return .reachableViaWiFi
+    }
+    else if (flags.contains(.connectionOnDemand) == true || flags.contains(.connectionOnTraffic) == true) && flags.contains(.interventionRequired) == false {
+      // The connection is on-demand (or on-traffic) if the calling application is using the CFSocketStream or higher APIs and no [user] intervention is needed
+      return .reachableViaWiFi
+    }
+    else {
+      return .notReachable
+    }
   }
   
 }

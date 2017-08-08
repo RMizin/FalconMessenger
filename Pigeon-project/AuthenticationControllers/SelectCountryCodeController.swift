@@ -126,6 +126,11 @@ extension SelectCountryCodeController: UISearchBarDelegate {
  
     tableView.reloadData()
   }
+  
+  
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    self.searchBar.endEditing(true)
+  }
 }
 
 
@@ -136,5 +141,7 @@ extension SelectCountryCodeController: UIScrollViewDelegate {
     }
   }
 }
+
+
 
 

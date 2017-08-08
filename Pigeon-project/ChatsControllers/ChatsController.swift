@@ -2,7 +2,7 @@
 //  ChatsController.swift
 //  Pigeon-project
 //
-//  Created by Roman Mizin on 8/2/17.
+//  Created by Roman Mizin on 8/8/17.
 //  Copyright © 2017 Roman Mizin. All rights reserved.
 //
 
@@ -12,14 +12,9 @@ class ChatsController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+  
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -29,7 +24,7 @@ class ChatsController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return  0
+        return 0
     }
 
     /*

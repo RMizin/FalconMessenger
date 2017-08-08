@@ -29,9 +29,12 @@
 		4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */; };
 		4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */; };
 		4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */; };
-		4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454C1F3225E600A6FF96 /* ChatsController.swift */; };
 		4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */; };
 		4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */; };
+		4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */; };
+		4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */; };
+		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
+		4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */; };
 		4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */; };
 		4B91B8B61F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B51F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift */; };
 		4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */; };
@@ -45,7 +48,14 @@
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
 		4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* PigeonPalette.swift */; };
 		4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498831F324EC6008DA07F /* GlobalVariables.swift */; };
+		4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */; };
+		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
+		4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC26B231F3A22890093A9D2 /* typingIndicator.gif */; };
+		4BC26B291F3A234A0093A9D2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B261F3A234A0093A9D2 /* Message.swift */; };
+		4BC26B2E1F3A24E70093A9D2 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */; };
+		4BC26B321F3A27750093A9D2 /* ChatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B311F3A27750093A9D2 /* ChatsController.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
+		4BEB13F31F39CE3E0048A984 /* PigeonUsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */; };
 		4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */; };
 		4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */; };
 		4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */; };
@@ -80,9 +90,12 @@
 		4B4F453C1F32230C00A6FF96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralTabBarController.swift; sourceTree = "<group>"; };
 		4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsController.swift; path = ContactsControllers/ContactsController.swift; sourceTree = "<group>"; };
-		4B4F454C1F3225E600A6FF96 /* ChatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatsController.swift; path = ChatsControllers/ChatsController.swift; sourceTree = "<group>"; };
 		4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsController.swift; path = SettingsControllers/SettingsController.swift; sourceTree = "<group>"; };
 		4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMessageCell.swift; path = ChatsControllers/BaseMessageCell.swift; sourceTree = "<group>"; };
+		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
+		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
+		4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoSizingCollectionViewFlowLayout.swift; path = ChatsControllers/AutoSizingCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileContainerView.swift; path = AuthenticationControllers/UserProfileContainerView.swift; sourceTree = "<group>"; };
 		4B91B8B51F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+RoundedEditLayer.swift"; path = "AuthenticationControllers/UserProfileController+RoundedEditLayer.swift"; sourceTree = "<group>"; };
 		4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+handlers.swift"; path = "AuthenticationControllers/UserProfileController+handlers.swift"; sourceTree = "<group>"; };
@@ -97,7 +110,14 @@
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
 		4B9498801F324C84008DA07F /* PigeonPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonPalette.swift; path = Support/PigeonPalette.swift; sourceTree = "<group>"; };
 		4B9498831F324EC6008DA07F /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalVariables.swift; path = Support/GlobalVariables.swift; sourceTree = "<group>"; };
+		4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatInputContainerView.swift; path = ChatsControllers/ChatInputContainerView.swift; sourceTree = "<group>"; };
+		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
+		4BC26B231F3A22890093A9D2 /* typingIndicator.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingIndicator.gif; path = ChatsControllers/Media/typingIndicator.gif; sourceTree = "<group>"; };
+		4BC26B261F3A234A0093A9D2 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = ChatsControllers/Message.swift; sourceTree = "<group>"; };
+		4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatLogController.swift; path = ChatsControllers/ChatLogController.swift; sourceTree = "<group>"; };
+		4BC26B311F3A27750093A9D2 /* ChatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatsController.swift; path = ChatsControllers/ChatsController.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
+		4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonUsersTableViewCell.swift; path = ContactsControllers/PigeonUsersTableViewCell.swift; sourceTree = "<group>"; };
 		4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CallingCodes.plist; sourceTree = "<group>"; };
 		4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationContainerView.swift; path = AuthenticationControllers/EnterVerificationContainerView.swift; sourceTree = "<group>"; };
 		4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectCountryCodeController.swift; path = AuthenticationControllers/SelectCountryCodeController.swift; sourceTree = "<group>"; };
@@ -238,7 +258,10 @@
 		4B4F45511F3225F700A6FF96 /* Chats */ = {
 			isa = PBXGroup;
 			children = (
-				4B4F454C1F3225E600A6FF96 /* ChatsController.swift */,
+				4BC26B2C1F3A236A0093A9D2 /* Model */,
+				4BC26B251F3A22B80093A9D2 /* MessengerViews */,
+				4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */,
+				4BC26B311F3A27750093A9D2 /* ChatsController.swift */,
 			);
 			name = Chats;
 			sourceTree = "<group>";
@@ -249,8 +272,19 @@
 				4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */,
 				4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */,
 				4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */,
+				4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */,
 			);
 			name = Contacts;
+			sourceTree = "<group>";
+		};
+		4B7ACCB71F3A3C74000606E1 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */,
+				4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */,
+				4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */,
+			);
+			name = Cells;
 			sourceTree = "<group>";
 		};
 		4B94986D1F323AFF008DA07F /* Authentication */ = {
@@ -298,6 +332,34 @@
 			);
 			name = Support;
 			path = "Pigeon-project";
+			sourceTree = "<group>";
+		};
+		4BC26B221F3A227E0093A9D2 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				4BC26B231F3A22890093A9D2 /* typingIndicator.gif */,
+			);
+			name = Media;
+			sourceTree = "<group>";
+		};
+		4BC26B251F3A22B80093A9D2 /* MessengerViews */ = {
+			isa = PBXGroup;
+			children = (
+				4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */,
+				4B7ACCB71F3A3C74000606E1 /* Cells */,
+				4BC26B221F3A227E0093A9D2 /* Media */,
+				4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */,
+				4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */,
+			);
+			name = MessengerViews;
+			sourceTree = "<group>";
+		};
+		4BC26B2C1F3A236A0093A9D2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4BC26B261F3A234A0093A9D2 /* Message.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		4BCE1ABB1F3714A600C0EBF7 /* Models */ = {
@@ -430,6 +492,7 @@
 				4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
 				4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */,
+				4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,10 +551,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */,
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
 				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
+				4BC26B321F3A27750093A9D2 /* ChatsController.swift in Sources */,
 				4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */,
 				4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */,
 				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
@@ -505,6 +570,8 @@
 				4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */,
+				4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */,
+				4BC26B291F3A234A0093A9D2 /* Message.swift in Sources */,
 				4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */,
 				4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */,
 				4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */,
@@ -512,15 +579,18 @@
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
 				4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */,
 				4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */,
+				4BEB13F31F39CE3E0048A984 /* PigeonUsersTableViewCell.swift in Sources */,
 				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
 				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
+				4BC26B2E1F3A24E70093A9D2 /* ChatLogController.swift in Sources */,
+				4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
 				4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */,
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
 				4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */,
-				4B4F454D1F3225E600A6FF96 /* ChatsController.swift in Sources */,
 				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,
 				4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */,
+				4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */,
 				4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */,
 				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
@@ -528,6 +598,8 @@
 				4B48D31F1F361E490050C797 /* ARSLineProgressCustomization.swift in Sources */,
 				4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */,
 				4B48D30D1F35EAB70050C797 /* SettingsViewControllersContainer.swift in Sources */,
+				4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */,
+				4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */,
 				4B48D3211F361E490050C797 /* ARSLineProgressHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
