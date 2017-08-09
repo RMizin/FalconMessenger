@@ -16,7 +16,6 @@ import SDWebImage
 
 class ContactsController: UITableViewController {
   
-
   let phoneNumberKit = PhoneNumberKit()
   
   var contacts = [CNContact]()
@@ -358,15 +357,17 @@ class ContactsController: UITableViewController {
     return nil
   }
   
+    var chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
       if indexPath.section == 0 {
       
-        let destination = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-        destination.hidesBottomBarWhenPushed = true
-        destination.user = filteredUsers[indexPath.row]
-        self.navigationController?.pushViewController(destination, animated: true)
+        let newDestination = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+        chatLogController = newDestination
+        chatLogController.delegate = self
+        chatLogController.user = filteredUsers[indexPath.row]
+        chatLogController.hidesBottomBarWhenPushed = true
       }
     
       if indexPath.section == 1 {
@@ -417,6 +418,33 @@ extension ContactsController { /* hiding keyboard */
   
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     self.searchBar.endEditing(true)
+  }
+}
+
+extension ContactsController: MessagesLoaderDelegate {
+
+  func messagesLoader(_ chatLogController: ChatLogController, didFinishLoadingWith messages: [Message]) {
+    
+    chatLogController.messages = messages
+    
+    var indexPaths = [IndexPath]()
+    
+      if messages.count - 1 >= 0 {
+        for index in 0...messages.count - 1 {
+          
+          indexPaths.append(IndexPath(item: index, section: 0))
+        }
+        
+        UIView.performWithoutAnimation {
+          chatLogController.collectionView?.reloadItems(at:indexPaths)
+        }
+      }
+    
+        chatLogController.startCollectionViewAtBottom()
+        let autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
+        chatLogController.collectionView?.collectionViewLayout = autoSizingCollectionViewFlowLayout
+        autoSizingCollectionViewFlowLayout.minimumLineSpacing = 5
+        navigationController?.pushViewController( chatLogController, animated: true)
   }
 }
 

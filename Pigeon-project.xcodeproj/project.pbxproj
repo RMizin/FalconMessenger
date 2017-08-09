@@ -65,7 +65,22 @@
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		1911D135D064C2C51C2A63E8 /* Pods-OneSignalNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationService.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationService/Pods-OneSignalNotificationService.release.xcconfig"; sourceTree = "<group>"; };
+		300E5D5B472CD9150969282B /* Pods-OneSignalNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationService/Pods-OneSignalNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4B197EEF1F348171008102E1 /* SharedVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedVariables.swift; path = AuthenticationControllers/SharedVariables/SharedVariables.swift; sourceTree = "<group>"; };
 		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
 		4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsTableViewCell.swift; path = ContactsControllers/ContactsTableViewCell.swift; sourceTree = "<group>"; };
@@ -124,6 +139,7 @@
 		4BEDC37F1F33B9070005B8E6 /* HidingNavigationBarManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HidingNavigationBarManager.swift; sourceTree = "<group>"; };
 		4BEDC3801F33B9070005B8E6 /* HidingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HidingViewController.swift; sourceTree = "<group>"; };
 		4BEDC3841F33C0A10005B8E6 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Country.swift; path = AuthenticationControllers/Country.swift; sourceTree = "<group>"; };
+		72EDAFBC8CDCBEAA8A409D0B /* libPods-OneSignalNotificationService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
 		A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pigeon_project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */,
+				72EDAFBC8CDCBEAA8A409D0B /* libPods-OneSignalNotificationService.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -413,6 +430,8 @@
 			children = (
 				9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */,
 				8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */,
+				300E5D5B472CD9150969282B /* Pods-OneSignalNotificationService.debug.xcconfig */,
+				1911D135D064C2C51C2A63E8 /* Pods-OneSignalNotificationService.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -430,6 +449,7 @@
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				7EC59B7540CDC8D78F177BD4 /* [CP] Embed Pods Frameworks */,
 				085F04C9F8CEBD972C1F68B4 /* [CP] Copy Pods Resources */,
+				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -715,6 +735,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Pigeon-project/Pigeon-project.entitlements";
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
@@ -730,6 +751,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Pigeon-project/Pigeon-project.entitlements";
 				DEVELOPMENT_TEAM = A3WPJ33XN8;

@@ -15,28 +15,467 @@ private let incomingTextMessageCellID = "incomingTextMessageCellID"
 private let outgoingTextMessageCellID = "outgoingTextMessageCellID"
 
 
-class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+protocol MessagesLoaderDelegate: class {
+  func messagesLoader(_ chatLogController: ChatLogController, didFinishLoadingWith messages: [Message] )
+}
+
+extension Array {
+  
+  func shift(withDistance distance: Int = 1) -> Array<Element> {
+    let offsetIndex = distance >= 0 ?
+      self.index(startIndex, offsetBy: distance, limitedBy: endIndex) :
+      self.index(endIndex, offsetBy: distance, limitedBy: startIndex)
+    
+    guard let index = offsetIndex else { return self }
+    return Array(self[index ..< endIndex] + self[startIndex ..< index])
+  }
+  
+  mutating func shiftInPlace(withDistance distance: Int = 1) {
+    self = shift(withDistance: distance)
+  }
+}
+
+
+let typingIndicatorID = "typingIndicator"
+
+let typingIndicatorKeyID = "Is typing"
+
+private var sentMessageDataToId = ""
+
+private var snapStatus = ""
+
+private var messageStatus: UILabel = {
+  let messageStatus = UILabel()
+  
+  messageStatus.frame = CGRect(x: 10, y: 10, width: 200, height: 20)
+  messageStatus.text = ""
+  messageStatus.font = UIFont.systemFont(ofSize: 10)
+  messageStatus.textColor = UIColor.darkGray
+  
+  return messageStatus
+}()
+
+
+class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+  
   
   var user: User? {
     didSet {
-     // loadMessages()
+      loadMessages()
       self.title = user?.name
-      //setNavifationTitle(username: user?.name)
     }
   }
-
-
+  
+  let typingIndicatorID = "typingIndicatorID"
+  
   var messages = [Message]()
   
   var sections = ["Messages"]
   
-  fileprivate var refreshControlCanRefresh = true
+  var finishKey = [String]()
   
-  fileprivate var isScrollViewAtTheBottom = true
+  var newMessage = false
+  
+  var startKey: String? = nil
+  
+  var endKey: String? = nil
+  
+  var messageIdArray = [String]()
+  
+  let messagesToLoad = 50
+  
+  weak var delegate: MessagesLoaderDelegate?
   
   
+  func startCollectionViewAtBottom () {
+    
+    let collectionViewInsets: CGFloat = (collectionView!.contentInset.bottom + collectionView!.contentInset.top)// + inputContainerView.inputTextView.frame.height
+    
+    let contentSize = self.collectionView?.collectionViewLayout.collectionViewContentSize
+    if Double(contentSize!.height) > Double(self.collectionView!.bounds.size.height) {
+      let targetContentOffset = CGPoint(x: 0.0, y: contentSize!.height - (self.collectionView!.bounds.size.height - collectionViewInsets))
+      self.collectionView?.contentOffset = targetContentOffset
+    }
+  }
   
-  var containerViewBottomAnchor: NSLayoutConstraint?
+  
+  var messagesIds = [String]()
+  var appendingMessages = [Message]()
+  
+  var newOutboxMessage = false
+  var newInboxMessage = false
+  
+  typealias CompletionHandler = (_ success: Bool) -> Void
+  
+  func loadMessages() {
+    
+    guard let uid = Auth.auth().currentUser?.uid,let toId = user?.id else {
+      return
+    }
+    
+    let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
+    
+    
+   
+    userMessagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+      if snapshot.exists() {
+        print("extists")
+        print(snapshot)
+
+        
+    userMessagesRef.keepSynced(true)
+    userMessagesRef.observe( .childAdded, with: { (snapshot) in
+      self.messagesIds.append(snapshot.key)
+      
+      let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
+      messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+        
+        guard let dictionary = snapshot.value as? [String: AnyObject] else {
+          print("returning")
+          return
+        }
+        
+        switch true {
+          
+        case self.newOutboxMessage:
+          self.updateMessageStatus(messagesRef: messagesRef)
+          self.observeMessageStatus(messageId: snapshot.key)
+          self.newOutboxMessage = false
+          
+          break
+          
+        case self.newInboxMessage:
+          
+          self.collectionView?.performBatchUpdates({
+            
+            self.messages.append(Message(dictionary: dictionary))
+            let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+            self.collectionView?.insertItems(at: [indexPath])
+            
+            if self.messages.count - 2 >= 0 {
+              self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
+            }
+            
+          }, completion: { (true) in
+            self.updateMessageStatus(messagesRef: messagesRef)
+            self.observeMessageStatus(messageId: snapshot.key)
+            let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+            
+            if self.messages.count - 1 > 0 && self.isScrollViewAtTheBottom {
+              self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            }
+            
+          })
+          
+          break
+          
+        default:
+          
+          self.appendingMessages.append(Message(dictionary: dictionary))
+          
+          if self.appendingMessages.count == self.messagesIds.count {
+            
+            self.appendingMessages.sort(by: { (message1, message2) -> Bool in
+              
+              return message1.timestamp!.int32Value < message2.timestamp!.int32Value
+            })
+            
+            self.delegate?.messagesLoader(self, didFinishLoadingWith: self.appendingMessages)
+            
+            DispatchQueue.main.async {
+              self.newInboxMessage = true
+              self.observeTypingIndicator()
+              self.updateMessageStatus(messagesRef: messagesRef)
+              self.observeMessageStatus(messageId: snapshot.key)
+            }
+
+            break
+          }
+        }
+        
+      }, withCancel: { (error) in
+        print("error loading message")
+      })
+      
+    }, withCancel: { (error) in
+      print("error loading message iDS")
+    })
+        
+      } else {
+        print("not exists")
+        self.delegate?.messagesLoader(self, didFinishLoadingWith: self.messages)
+      }
+    })
+  }
+  
+
+  
+  var queryStartingID = String()
+  var queryEndingID = String()
+  
+  func loadPreviousMessages() {
+    
+    let numberOfMessagesToLoad = messages.count + messagesToLoad
+    let nextMessageIndex = messages.count + 1
+    
+    guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+      return
+    }
+    
+    let startingIDRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(numberOfMessagesToLoad))
+    startingIDRef.observeSingleEvent(of: .childAdded, with: { (snapshot) in
+      
+      if snapshot.exists() {
+        self.queryStartingID = snapshot.key
+        print(self.queryStartingID)
+      }
+      
+      let endingIDRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(nextMessageIndex))
+      endingIDRef.observeSingleEvent(of: .childAdded, with: { (snapshot) in
+        self.queryEndingID = snapshot.key
+        print(self.queryEndingID)
+        
+        if self.queryStartingID == self.queryEndingID {
+          self.refreshControl.endRefreshing()
+          print("ALL messages downloaded")
+          return
+        }
+        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryOrderedByKey()
+        userMessagesRef.queryStarting(atValue: self.queryStartingID).queryEnding(atValue: self.queryEndingID).observe(.childAdded, with: { (snapshot) in
+          self.messagesIds.append(snapshot.key)
+          
+          let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
+          messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+              return
+            }
+            
+            self.messages.append(Message(dictionary: dictionary))
+            
+            if self.messages.count == self.messagesIds.count {
+              
+              var arrayWithShiftedMessages = self.messages
+              
+              let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messagesIds.count )
+              print(-shiftingIndex, "shifting index")
+              
+              arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
+              
+              self.messages = arrayWithShiftedMessages
+              
+              contentSizeWhenInsertingToTop = self.collectionView?.contentSize
+              isInsertingCellsToTop = true
+              self.refreshControl.endRefreshing()
+              DispatchQueue.main.async {
+                self.collectionView?.reloadData()
+              }
+              
+            } // if self.messages.count == numberOfMessagesToLoad
+            
+          }, withCancel: { (error) in
+            
+            print("error loading messages (Message)")
+            
+          }) // messagesRef
+          
+        }) { (error) in
+          
+          print("error loading user-messages (ID's)")
+          
+        } // error
+        
+      }) // endingIDRef
+    })  // startingIDRef
+  }
+  
+  
+  private var localTyping = false
+  
+  var isTyping: Bool {
+    get {
+      return localTyping
+    }
+    
+    set {
+      localTyping = newValue
+      
+      let typingData: NSDictionary = [typingIndicatorKeyID : newValue]
+      
+      sendTypingStatus(data: typingData)
+    }
+  }
+  
+  
+  func sendTypingStatus(data: NSDictionary) {
+    
+    guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+      return
+    }
+    
+    let userIsTypingRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorID)
+    userIsTypingRef.setValue(data)
+  }
+  
+  
+  func observeTypingIndicator () {
+    
+    guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+      return
+    }
+    
+    let typingIndicatorRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorID)
+    typingIndicatorRef.onDisconnectRemoveValue()
+    
+    let userTypingToRef = Database.database().reference().child("user-messages").child(toId).child(uid).child(typingIndicatorID).child(typingIndicatorKeyID)
+    userTypingToRef.onDisconnectRemoveValue()
+    userTypingToRef.observe( .value, with: { (isTyping) in
+      
+      if let isUserTypingToYou = isTyping.value! as? Bool {
+        
+        if isUserTypingToYou {
+          self.handleTypingIndicatorAppearance(isEnabled: true)
+          
+        } else {
+          self.handleTypingIndicatorAppearance(isEnabled: false)
+        }
+      } else { /* if typing indicator not exist */
+        self.handleTypingIndicatorAppearance(isEnabled: false)
+      }
+    })
+  }
+  
+  
+  fileprivate func handleTypingIndicatorAppearance(isEnabled: Bool) {
+    
+    let sectionsIndexSet: IndexSet = [1]
+    
+    if isEnabled {
+      self.collectionView?.performBatchUpdates({
+        self.sections = ["Messages", "TypingIndicator"]
+        self.collectionView?.insertSections(sectionsIndexSet)
+      }, completion: { (true) in
+        
+        let indexPath = IndexPath(row: 0, section: 1)
+        
+        let isIndexPathValid = self.indexPathIsValid(indexPath: indexPath as NSIndexPath)
+        
+        if isIndexPathValid && self.isScrollViewAtTheBottom {
+          self.collectionView?.scrollToItem(at: indexPath , at: .bottom, animated: true)
+        } else {
+          return
+        }
+      })
+      
+    } else {
+      
+      self.collectionView?.performBatchUpdates({
+        self.sections = ["Messages"]
+        if self.collectionView!.numberOfSections > 1 {
+          self.collectionView?.deleteSections(sectionsIndexSet)
+        }
+        
+        
+      }, completion: nil)
+    }
+  }
+  
+  
+  func indexPathIsValid(indexPath: NSIndexPath) -> Bool {
+    if indexPath.section >= self.numberOfSections(in: collectionView!) {
+      return false
+    }
+    if indexPath.row >= collectionView!.numberOfItems(inSection: indexPath.section) {
+      return false
+    }
+    return true
+  }
+  
+  
+  fileprivate func updateMessageStatus(messagesRef: DatabaseReference) {
+    if currentReachabilityStatus != .notReachable {
+      messagesRef.child("toId").observeSingleEvent(of: .value, with: { (snapshot) in
+        
+        if snapshot.exists() {
+          sentMessageDataToId = snapshot.value as! String
+        }
+        
+        if (Auth.auth().currentUser?.uid)! == sentMessageDataToId {
+          
+          if self.navigationController?.visibleViewController is ChatLogController {
+            
+            print("Read")
+            messagesRef.updateChildValues(["status" : "Прочитано"])
+            
+          } else {
+            print("Delivered")
+            messagesRef.updateChildValues(["status" : "Доставлено"])
+          }
+          
+        } else {
+          sentMessageDataToId = ""
+        }
+        
+      })
+      
+      
+      messagesRef.observe(.childChanged, with: { (snapshot) in
+        
+        if Auth.auth().currentUser?.uid != sentMessageDataToId {
+          
+          print("\n\n\n child CHANGED")
+          print("\n\n\\n",snapshot.value!)
+          
+          
+          if snapshot.value != nil {
+            snapStatus = snapshot.value as! String
+            messageStatus.text = snapStatus
+            self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section:0)])
+          }
+        }
+        
+      })
+    }
+  }
+  
+  
+  func observeMessageStatus(messageId: String) {
+    if currentReachabilityStatus != .notReachable {
+      let messagesRef = Database.database().reference().child("messages").child(messageId).child("status")
+      
+      messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+        print("\n\n",snapshot.value!, "\n\n")
+        
+        if snapshot.value != nil {
+          messageStatus.text = (snapshot.value as! String)
+          self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section:0)])
+        }
+      })
+    }
+  }
+  
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    setupCollectionView()
+    
+    setupKeyboardObservers()
+  }
+  
+
+  fileprivate func setupCollectionView () {
+    
+    collectionView?.keyboardDismissMode = .interactive
+    collectionView?.backgroundColor = UIColor.white
+    collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 20, right: 0)
+    collectionView?.alwaysBounceVertical = true
+    collectionView?.addSubview(refreshControl)
+    collectionView?.register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
+    collectionView?.register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)
+    collectionView?.register(TypingIndicatorCell.self, forCellWithReuseIdentifier: typingIndicatorID)
+  }
+    
   
   lazy var inputContainerView: ChatInputContainerView = {
     var chatInputContainerView = ChatInputContainerView(frame: CGRect.zero)
@@ -48,76 +487,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     return chatInputContainerView
   }()
   
-  let refreshControl: UIRefreshControl = {
-    let refreshControl = UIRefreshControl()
-    refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
-    refreshControl.addTarget(self, action: #selector(performRefresh), for: .valueChanged)
-    
-    return refreshControl
-    
-  }()
   
+  var canRefresh = true
   
-  func performRefresh () {}
-  
-
-  override func viewDidLoad() {
-      super.viewDidLoad()
-   
-    setupCollectionView()
-    setupKeyboardObservers()
-    
-  }
-  
-  
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    
-    NotificationCenter.default.removeObserver(self)
-    //isTyping = false
-  }
-  
-  
-  override var inputAccessoryView: UIView? {
-    get {
-      return inputContainerView
-    }
-  }
-  
-  override var canBecomeFirstResponder : Bool {
-    return true
-  }
-  
-  
-  fileprivate func setupCollectionView () {
-    
-   let autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-    collectionView?.collectionViewLayout = autoSizingCollectionViewFlowLayout
-    autoSizingCollectionViewFlowLayout.minimumLineSpacing = 5
-    
-    collectionView?.keyboardDismissMode = .interactive
-    collectionView?.backgroundColor = UIColor.white
-    collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 20, right: 0)
-    collectionView?.alwaysBounceVertical = true
-    collectionView?.addSubview(refreshControl)
-    
-    collectionView?.register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
-    collectionView?.register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)
-
-  }
-  
-  fileprivate func setNavifationTitle (username: String?) {
-    let titleLabel = UILabel(frame: CGRect(x:0, y:0, width: 200, height: 40))
-    titleLabel.text = username
-    titleLabel.textColor = UIColor.black
-    titleLabel.font = UIFont.boldSystemFont(ofSize: 17)
-    titleLabel.backgroundColor = UIColor.clear
-    titleLabel.adjustsFontSizeToFitWidth = true
-    titleLabel.textAlignment = .center
-    self.navigationItem.titleView = titleLabel
-  }
-  
-  
+  fileprivate var isScrollViewAtTheBottom = true
   
   override func scrollViewDidScroll(_ scrollView: UIScrollView) {
     
@@ -129,13 +502,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if scrollView.contentOffset.y < 0 { //change 100 to whatever you want
       
       if collectionView!.contentSize.height < UIScreen.main.bounds.height - 50 {
-        refreshControlCanRefresh = false
+        canRefresh = false
         refreshControl.endRefreshing()
       }
       
-      if refreshControlCanRefresh && !refreshControl.isRefreshing {
+      if canRefresh && !refreshControl.isRefreshing {
         
-        refreshControlCanRefresh = false
+        canRefresh = false
         
         refreshControl.beginRefreshing()
         
@@ -143,10 +516,169 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }
       
     } else if scrollView.contentOffset.y >= 0 {
-      refreshControlCanRefresh = true
+      canRefresh = true
     }
   }
   
+  
+  let refreshControl: UIRefreshControl = {
+    let refreshControl = UIRefreshControl()
+    refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+    refreshControl.addTarget(self, action: #selector(performRefresh), for: .valueChanged)
+    
+    return refreshControl
+  }()
+  
+  
+  func performRefresh () {
+    loadPreviousMessages()
+  }
+  
+  
+//  func setupCallBarButtonItem () {
+//    
+//    let callBarButtonItem = UIBarButtonItem(image: UIImage(named: "call"), style: .plain, target: self, action: #selector(makeACall))
+//    self.navigationItem.rightBarButtonItem  = callBarButtonItem
+//  }
+//  
+//  
+//  func makeACall () {
+//    
+//    let number = user?.phoneNumber
+//    let phoneCallURL:URL = URL(string: "tel://\(number!)")!
+//    UIApplication.shared.open(phoneCallURL, options: [:], completionHandler: nil)
+//  }
+//  
+//  
+//  func handleUploadTap() {
+//    
+//    let imagePickerController = UIImagePickerController()
+//    
+//    imagePickerController.allowsEditing = true
+//    imagePickerController.delegate = self
+//    imagePickerController.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
+//    
+//    present(imagePickerController, animated: true, completion: nil)
+//  }
+//  
+//  
+//  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+//    
+//    if let videoUrl = info[UIImagePickerControllerMediaURL] as? URL {
+//      //we selected a video
+//      handleVideoSelectedForUrl(videoUrl)
+//    } else {
+//      //we selected an image
+//      handleImageSelectedForInfo(info as [String : AnyObject])
+//    }
+//    
+//    dismiss(animated: true, completion: nil)
+//  }
+//  
+//  
+//  fileprivate func handleVideoSelectedForUrl(_ url: URL) {
+//    let filename = UUID().uuidString + ".mov"
+//    let uploadTask = Storage.storage().reference().child("message_movies").child(filename).putFile(from: url, metadata: nil, completion: { (metadata, error) in
+//      
+//      if error != nil {
+//        print("Failed upload of video:", error as Any)
+//        return
+//      }
+//      
+//      if let videoUrl = metadata?.downloadURL()?.absoluteString {
+//        if let thumbnailImage = self.thumbnailImageForFileUrl(url) {
+//          
+//          self.uploadToFirebaseStorageUsingImage(thumbnailImage, completion: { (imageUrl) in
+//            let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": thumbnailImage.size.width as AnyObject, "imageHeight": thumbnailImage.size.height as AnyObject, "videoUrl": videoUrl as AnyObject]
+//            self.sendMessageWithProperties(properties)
+//            
+//          })
+//        }
+//      }
+//    })
+//    
+//    uploadTask.observe(.progress) { (snapshot) in
+//      if let completedUnitCount = snapshot.progress?.completedUnitCount {
+//        self.navigationItem.title = String(completedUnitCount)
+//      }
+//    }
+//    
+//    uploadTask.observe(.success) { (snapshot) in
+//      self.navigationItem.title = self.user?.name
+//    }
+//  }
+//  
+//  
+//  fileprivate func thumbnailImageForFileUrl(_ fileUrl: URL) -> UIImage? {
+//    let asset = AVAsset(url: fileUrl)
+//    let imageGenerator = AVAssetImageGenerator(asset: asset)
+//    
+//    do {
+//      
+//      let thumbnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(1, 60), actualTime: nil)
+//      return UIImage(cgImage: thumbnailCGImage)
+//      
+//    } catch let err {
+//      print(err)
+//    }
+//    
+//    return nil
+//  }
+//  
+//  
+//  fileprivate func handleImageSelectedForInfo(_ info: [String: AnyObject]) {
+//    var selectedImageFromPicker: UIImage?
+//    
+//    if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+//      selectedImageFromPicker = editedImage
+//    } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+//      
+//      selectedImageFromPicker = originalImage
+//    }
+//    
+//    if let selectedImage = selectedImageFromPicker {
+//      uploadToFirebaseStorageUsingImage(selectedImage, completion: { (imageUrl) in
+//        self.sendMessageWithImageUrl(imageUrl, image: selectedImage)
+//      })
+//    }
+//  }
+//  
+//  
+//  fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
+//    let imageName = UUID().uuidString
+//    let ref = Storage.storage().reference().child("message_images").child(imageName)
+//    
+//    if let uploadData = UIImageJPEGRepresentation(image, 0.2) {
+//      ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+//        
+//        if error != nil {
+//          print("Failed to upload image:", error as Any)
+//          return
+//        }
+//        
+//        if let imageUrl = metadata?.downloadURL()?.absoluteString {
+//          completion(imageUrl)
+//        }
+//        
+//      })
+//    }
+//  }
+//  
+//  
+//  func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+//    dismiss(animated: true, completion: nil)
+//  }
+  
+  override var inputAccessoryView: UIView? {
+    get {
+      return inputContainerView
+    }
+  }
+  
+  
+  override var canBecomeFirstResponder : Bool {
+    return true
+  }
   
   func setupKeyboardObservers() {
     NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
@@ -161,6 +693,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    NotificationCenter.default.removeObserver(self)
+    isTyping = false
+  }
   
   
   func handleKeyboardWillShow(_ notification: Notification) {
@@ -184,11 +723,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       self.view.layoutIfNeeded()
     })
   }
-
-
   
-    // MARK: UICollectionViewDataSource
-
   override func numberOfSections(in collectionView: UICollectionView) -> Int {
     return sections.count
   }
@@ -202,56 +737,186 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
   }
-
-
+  
+  
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-   // if indexPath.section == 0 {
-      //return selectCell(for: indexPath)!
-   // } else {
-      //return showTypingIndicator(indexPath: indexPath)!
-   // }
-    return selectCell(for: indexPath)!
+    if indexPath.section == 0 {
+      return selectCell(for: indexPath)!
+    } else {
+      return showTypingIndicator(indexPath: indexPath)!
+    }
+    
+  }
+  
+  
+  fileprivate func showTypingIndicator(indexPath: IndexPath) -> UICollectionViewCell? {
+    let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: typingIndicatorID, for: indexPath) as! TypingIndicatorCell
+    return cell
   }
   
   
   fileprivate func selectCell(for indexPath: IndexPath) -> UICollectionViewCell? {
     
-     let message = messages[indexPath.item]
+    let message = messages[indexPath.item]
     
-      if let messageText = message.text { /* If current message is a text message */
+    if let messageText = message.text { /* If current message is a text message */
       
-        if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
-          
+      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
+        
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
         
-         cell.textView.text = messageText
-          
-         cell.bubbleView.frame = CGRect(x: view.frame.width - estimateFrameForText(messageText).width - 35,
-                                         y: 0,
-                                         width: estimateFrameForText(messageText).width + 30,
-                                         height: cell.frame.size.height).integral
-          
-        return cell
-          
-        } else {/* Incoming message with grey bubble */
-          let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
-          
-          cell.bubbleView.frame = CGRect(x: 10,
-                                         y: 0,
-                                         width: estimateFrameForText(messageText).width + 30,
-                                         height: cell.frame.size.height).integral
+        cell.textView.text = messageText
+        
+        cell.bubbleView.frame = CGRect(x: view.frame.width - estimateFrameForText(messageText).width - 35,
+                                       y: 0,
+                                       width: estimateFrameForText(messageText).width + 30,
+                                       height: cell.frame.size.height).integral
+        
+        cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
+                                          height: cell.bubbleView.frame.height)
 
+        if indexPath.row == messages.count - 1 {
           
-          cell.textView.text = messageText
+                    cell.deliveryStatus.isHidden = false
           
-          return cell
-        }
+                    cell.deliveryStatus.text = messageStatus.text
+          
+                  } else {
+          
+                    cell.deliveryStatus.isHidden = true
+                  }
+
+        
+        return cell
+        
+      } else { /* Incoming message with grey bubble */
+        
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
+        
+        cell.textView.text = messageText
+        
+        cell.bubbleView.frame = CGRect(x: 10,
+                                       y: 0,
+                                       width: estimateFrameForText(messageText).width + 30,
+                                       height: cell.frame.size.height).integral
+        
+        cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
+                                          height: cell.bubbleView.frame.height)
+
+        
+        cell.deliveryStatus.isHidden = true
+        
+        return cell
       }
-    
-    
+    }
     return nil
   }
- 
+//  fileprivate func selectCell(for indexPath: IndexPath) -> UICollectionViewCell? {
+//    
+//    let message = messages[indexPath.item]
+//    
+//    if let messageText = message.text { /* If current message is a text message */
+//      
+//      let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: textMessageCellID, for: indexPath) as! TextMessageCell
+//      
+//      cell.textView.text = messageText
+//      
+//      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
+//        
+//        
+//        if indexPath.row == messages.count-1  {
+//          
+//          cell.deliveryStatus.isHidden = false
+//          cell.deliveryStatus.text = messageStatus.text
+//        } else {
+//          
+//          cell.deliveryStatus.isHidden = true
+//        }
+//        
+//        cell.bubbleView.image = BaseMessageCell.blueBubbleImage
+//        
+//        cell.textView.textColor = UIColor.white
+//        
+//        cell.textView.textContainerInset.left = 7
+//        
+//        cell.bubbleView.frame = CGRect(x: view.frame.width - estimateFrameForText(messageText).width - 35,
+//                                       y: 0,
+//                                       width: estimateFrameForText(messageText).width + 30,
+//                                       height: cell.frame.size.height).integral
+//        
+//        
+//        cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
+//                                          height: cell.bubbleView.frame.height)
+//        
+//      } else { /* Incoming message with grey bubble */
+//        
+//        cell.deliveryStatus.isHidden = true
+//        
+//        cell.bubbleView.image = BaseMessageCell.grayBubbleImage
+//        
+//        cell.textView.textColor = UIColor.darkText
+//        
+//        cell.textView.textContainerInset.left = 12
+//        
+//        cell.bubbleView.frame = CGRect(x: 10,
+//                                       y: 0,
+//                                       width: estimateFrameForText(messageText).width + 30,
+//                                       height: cell.frame.size.height).integral
+//        
+//        cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
+//                                          height: cell.bubbleView.frame.height)
+//      }
+//      
+//      return cell
+//      
+//    } else if message.imageUrl != nil { /* If current message is a photo/video message */
+//      
+//      let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
+//      
+//      cell.chatLogController = self
+//      cell.message = message
+//      
+//      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
+//        
+//        if indexPath.row == messages.count-1  {
+//          
+//          cell.deliveryStatus.isHidden = false
+//          cell.deliveryStatus.text = messageStatus.text
+//        } else {
+//          
+//          cell.deliveryStatus.isHidden = true
+//        }
+//        
+//        cell.bubbleView.frame = CGRect(x: view.frame.width - 210, y: 0, width: 200, height: cell.frame.size.height).integral
+//        
+//      } else { /* Incoming message with grey bubble */
+//        
+//        cell.deliveryStatus.isHidden = true
+//        
+//        cell.bubbleView.frame = CGRect(x: 10, y: 0, width: 200, height: cell.frame.size.height).integral
+//      }
+//      
+//      DispatchQueue.global(qos: .default).async(execute: {() -> Void in
+//        if let messageImageUrl = message.imageUrl {
+//          cell.messageImageView.loadImageUsingCacheWithUrlString(messageImageUrl)
+//        }
+//      })
+//      
+//      cell.playButton.isHidden = message.videoUrl == nil
+//      
+//      
+//      return cell
+//    } else {
+//      return nil
+//    }
+//    
+//  }
+  
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    collectionView?.collectionViewLayout.invalidateLayout()
+  }
+  
   
   fileprivate var cellHeight: CGFloat = 80
   
@@ -278,7 +943,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  
   func estimateFrameForText(_ text: String) -> CGRect {
     let size = CGSize(width: 200, height: 1000)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
@@ -286,10 +950,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  
-  
-  
-  
+  var containerViewBottomAnchor: NSLayoutConstraint?
   
   func handleSend() {
     
@@ -297,9 +958,35 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let properties = ["text": inputContainerView.inputTextView.text!]
     sendMessageWithProperties(properties as [String : AnyObject])
     
-  //  isTyping = false
+    isTyping = false
     inputContainerView.placeholderLabel.isHidden = false
     inputContainerView.invalidateIntrinsicContentSize()
+  }
+  
+  
+  fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage) {
+    let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
+    sendMessageWithProperties(properties)
+  }
+  
+  
+  fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
+    
+    
+    self.collectionView?.performBatchUpdates({
+      self.messages.append(Message(dictionary: values ))
+      let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+      self.collectionView?.insertItems(at: [indexPath])
+      
+      if self.messages.count - 2 >= 0 {
+        self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
+      }
+      messageStatus.text = ""
+      
+    }, completion: { (true) in
+      let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+      self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+    })
   }
   
   
@@ -338,7 +1025,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
       
-      //self.newOutboxMessage = true
+      self.newOutboxMessage = true
       
       userMessagesRef.updateChildValues([messageId: 1])
       
@@ -349,24 +1036,69 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
+  /*
+  var startingFrame: CGRect?
+  var blackBackgroundView: UIView?
+  var startingImageView: UIImageView?
+  
+  
+  func performZoomInForStartingImageView(_ startingImageView: UIImageView) {
+    print("tapped")
+    self.startingImageView = startingImageView
+    self.startingImageView?.isHidden = true
     
+    startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
     
-    self.collectionView?.performBatchUpdates({
-      self.messages.append(Message(dictionary: values ))
-      let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-      self.collectionView?.insertItems(at: [indexPath])
+    let zoomingImageView = UIImageView(frame: startingFrame!)
+    zoomingImageView.backgroundColor = UIColor.red
+    zoomingImageView.image = startingImageView.image
+    zoomingImageView.isUserInteractionEnabled = true
+    zoomingImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
+    
+    if let keyWindow = UIApplication.shared.keyWindow {
+      blackBackgroundView = UIView(frame: keyWindow.frame)
+      blackBackgroundView?.backgroundColor = UIColor.black
+      blackBackgroundView?.alpha = 0
+      keyWindow.addSubview(blackBackgroundView!)
+      keyWindow.addSubview(zoomingImageView)
       
-      if self.messages.count - 2 >= 0 {
-        self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
-      }
-     // messageStatus.text = ""
-      
-    }, completion: { (true) in
-      let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-      self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
-    })
+      UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        
+        self.blackBackgroundView?.alpha = 1
+        self.inputContainerView.alpha = 0
+        
+        // math?
+        // h2 / w1 = h1 / w1
+        // h2 = h1 / w1 * w1
+        let height = self.startingFrame!.height / self.startingFrame!.width * keyWindow.frame.width
+        
+        zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+        
+        zoomingImageView.center = keyWindow.center
+        
+      }, completion: { (completed) in
+        // do nothing
+      })
+    }
   }
+  
+  
+  func handleZoomOut(_ tapGesture: UITapGestureRecognizer) {
+    if let zoomOutImageView = tapGesture.view {
+      //need to animate back out to controller
+      zoomOutImageView.layer.cornerRadius = 16
+      zoomOutImageView.clipsToBounds = true
+      
+      UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        
+        zoomOutImageView.frame = self.startingFrame!
+        self.blackBackgroundView?.alpha = 0
+        self.inputContainerView.alpha = 1
+        
+      }, completion: { (completed) in
+        zoomOutImageView.removeFromSuperview()
+        self.startingImageView?.isHidden = false
+      })
+    }
+  }*/
 }
-
-

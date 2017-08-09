@@ -61,7 +61,6 @@ class SettingsViewControllersContainer: UIViewController {
     let userName = UserDefaults.standard.string(forKey: "userName")
     let userPhoneNumber = UserDefaults.standard.string(forKey: "userPhoneNumber")
     let userPhotoURL = UserDefaults.standard.string(forKey: "userPhotoURL") //?? ""
-   // print(UserDefaults.standard.string(forKey: "userPhotoURL")   , "\n\n")
   
     if  userPhotoURL != nil {
       if userDataController.userProfileContainerView.profileImageView.image == nil || lastProfileURL != URL(string: userPhotoURL!) {

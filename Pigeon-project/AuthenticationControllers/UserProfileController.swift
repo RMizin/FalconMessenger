@@ -66,6 +66,7 @@ extension UserProfileController { /* setting user data to database and to privat
                                         
       UserDefaults.standard.set(self.userProfileContainerView.name.text!, forKey: "userName")
       UserDefaults.standard.set(self.userProfileContainerView.phone.text!, forKey: "userPhoneNumber")
+                                        
       ARSLineProgress.hide()
                 
       self.dismiss(animated: true, completion: nil)
@@ -103,11 +104,10 @@ extension UserProfileController {  /* only during authentication */
     photoReference.observe(.value, with: { (snapshot) in
       
       if snapshot.exists() {
-        
         let urlString:String = snapshot.value as! String
         self.userProfileContainerView.profileImageView.sd_setImage(with:  URL(string: urlString) , placeholderImage: nil, options: [ .highPriority, .continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
-          UserDefaults.standard.set(URL(string: urlString), forKey: "userPhotoURL")
-         
+          UserDefaults.standard.set( urlString, forKey: "userPhotoURL")
+        
            completionHandler(true)
         })
       } else {

@@ -20,7 +20,7 @@ class IncomingTextMessageCell: BaseMessageCell {
     textView.dataDetectorTypes = .all
     textView.textColor = UIColor.darkText
     textView.linkTextAttributes = [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue]
-    textView.translatesAutoresizingMaskIntoConstraints = false
+ 
     return textView
   }()
   
@@ -29,18 +29,9 @@ class IncomingTextMessageCell: BaseMessageCell {
     addSubview(bubbleView)
     bubbleView.addSubview(textView)
     bubbleView.addSubview(deliveryStatus)
-    bubbleView.image = BaseMessageCell.grayBubbleImage
-    
-//    textView.frame.size = CGSize(width: bubbleView.frame.width,
-//                                 height: bubbleView.frame.height)
-    
+    bubbleView.image = BaseMessageCell.grayBubbleImage    
   
     NSLayoutConstraint.activate([
-      
-      textView.topAnchor.constraint(equalTo: bubbleView.topAnchor),
-      textView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor),
-      textView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor),
-      textView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor),
       
       deliveryStatus.topAnchor.constraint(equalTo: bottomAnchor),
       deliveryStatus.heightAnchor.constraint(equalToConstant: 20),

@@ -54,7 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
   
   
-  
   func setTabs(mainController : UITabBarController) {
     
     let contactsController = ContactsController()
