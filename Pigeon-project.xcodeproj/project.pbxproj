@@ -54,6 +54,7 @@
 		4BC26B291F3A234A0093A9D2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B261F3A234A0093A9D2 /* Message.swift */; };
 		4BC26B2E1F3A24E70093A9D2 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */; };
 		4BC26B321F3A27750093A9D2 /* ChatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B311F3A27750093A9D2 /* ChatsController.swift */; };
+		4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC2C58C1F40545200B5C825 /* UserCell.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
 		4BEB13F31F39CE3E0048A984 /* PigeonUsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */; };
 		4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */; };
@@ -131,6 +132,7 @@
 		4BC26B261F3A234A0093A9D2 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = ChatsControllers/Message.swift; sourceTree = "<group>"; };
 		4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatLogController.swift; path = ChatsControllers/ChatLogController.swift; sourceTree = "<group>"; };
 		4BC26B311F3A27750093A9D2 /* ChatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatsController.swift; path = ChatsControllers/ChatsController.swift; sourceTree = "<group>"; };
+		4BC2C58C1F40545200B5C825 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = ChatsControllers/UserCell.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
 		4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonUsersTableViewCell.swift; path = ContactsControllers/PigeonUsersTableViewCell.swift; sourceTree = "<group>"; };
 		4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CallingCodes.plist; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 		4B7ACCB71F3A3C74000606E1 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				4BC2C58C1F40545200B5C825 /* UserCell.swift */,
 				4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */,
 				4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */,
 				4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */,
@@ -609,6 +612,7 @@
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
 				4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */,
 				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,
+				4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */,
 				4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */,
 				4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */,
 				4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */,

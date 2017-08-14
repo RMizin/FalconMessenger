@@ -10,6 +10,7 @@ import UIKit
 import FirebaseStorage
 import Firebase
 import SystemConfiguration
+import SDWebImage
 
 
 
@@ -30,6 +31,20 @@ extension String {
 
 
 extension Double {
+  func getShortDateStringFromUTC() -> String {
+    let date = Date(timeIntervalSince1970: self)
+    
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .medium
+    dateFormatter.dateFormat = "dd/MM/yy HH:mm a"
+    dateFormatter.amSymbol = "AM"
+    dateFormatter.pmSymbol = "PM"
+    
+    return dateFormatter.string(from: date)
+  }
+}
+
+extension Double {
   func getDateStringFromUTC() -> String {
     let date = Date(timeIntervalSince1970: self)
     
@@ -41,6 +56,22 @@ extension Double {
   }
 }
 
+extension Array {
+  
+  func shift(withDistance distance: Int = 1) -> Array<Element> {
+    let offsetIndex = distance >= 0 ?
+      self.index(startIndex, offsetBy: distance, limitedBy: endIndex) :
+      self.index(endIndex, offsetBy: distance, limitedBy: startIndex)
+    
+    guard let index = offsetIndex else { return self }
+    return Array(self[index ..< endIndex] + self[startIndex ..< index])
+  }
+  
+  mutating func shiftInPlace(withDistance distance: Int = 1) {
+    self = shift(withDistance: distance)
+  }
+}
+
 
 public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array<T>{
   var arr = array
@@ -48,6 +79,40 @@ public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array
   arr.insert(element, at: toIndex)
   
   return arr
+}
+
+
+extension UIScrollView {
+  
+  // Scroll to a specific view so that it's top is at the top our scrollview
+  func scrollToView(view:UIView, animated: Bool) {
+    if let origin = view.superview {
+      // Get the Y position of your child view
+      let childStartPoint = origin.convert(view.frame.origin, to: self)
+      // Scroll to a rectangle starting at the Y of your subview, with a height of the scrollview
+      self.scrollRectToVisible(CGRect(x:0, y:childStartPoint.y, width: 1, height: self.frame.height), animated: animated)
+    }
+  }
+  
+  // Bonus: Scroll to top
+  func scrollToTop(animated: Bool) {
+    let topOffset = CGPoint(x: 0, y: -contentInset.top)
+    setContentOffset(topOffset, animated: animated)
+  }
+  
+  // Bonus: Scroll to bottom
+  func scrollToBottom() {
+    let bottomOffset = CGPoint(x: 0, y: contentSize.height - bounds.size.height + contentInset.bottom)
+    if(bottomOffset.y + 50 > 0) {
+      
+      DispatchQueue.main.async {
+        UIView.animate(withDuration: 0.15, delay: 0, options: [UIViewAnimationOptions.curveLinear, ], animations: {
+          self.contentOffset = bottomOffset
+          
+        }, completion: nil)
+      }
+    }
+  }
 }
 
 
@@ -178,6 +243,8 @@ private var activityIndicator: UIActivityIndicatorView = {
   
   return activityIndicator
 }()
+
+
 
 
 extension UIImageView {

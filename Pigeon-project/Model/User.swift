@@ -10,7 +10,6 @@ import UIKit
 
 class User: NSObject {
 
-  
   var id: String?
   var name: String?
   var photoURL: String?
@@ -26,6 +25,4 @@ class User: NSObject {
     self.onlineStatus = dictionary["OnlineStatus"] as? String
   
   }
-  
-  
 }

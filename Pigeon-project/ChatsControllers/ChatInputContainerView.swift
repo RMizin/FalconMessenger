@@ -15,12 +15,15 @@ class ChatInputContainerView: UIView, UITextViewDelegate {
   weak var chatLogController: ChatLogController? {
     didSet {
       sendButton.addTarget(chatLogController, action: #selector(ChatLogController.handleSend), for: .touchUpInside)
-    //  uploadImageView.addGestureRecognizer(UITapGestureRecognizer(target: chatLogController, action: #selector(ChatLogController.handleUploadTap)))
+      //uploadImageView.addGestureRecognizer(UITapGestureRecognizer(target: chatLogController, action: #selector(ChatLogController.handleUploadTap)))
     }
   }
   
+  func textViewDidBeginEditing(_ textView: UITextView) {
+    chatLogController?.collectionView?.scrollToBottom()
+  }
   
-  var maxTextViewHeight:CGFloat = 0.0
+  var maxTextViewHeight: CGFloat = 0.0
   
   override var intrinsicContentSize: CGSize {
     get {
@@ -30,17 +33,15 @@ class ChatInputContainerView: UIView, UITextViewDelegate {
         inputTextView.isScrollEnabled = true
       } else {
         inputTextView.isScrollEnabled = false
-        maxTextViewHeight = textSize.height + 12
+        maxTextViewHeight = textSize.height +  12
       }
-      
+          
       return CGSize(width: self.bounds.width, height: maxTextViewHeight )
     }
   }
   
   
   func textViewDidChange(_ textView: UITextView) {
-    
-    self.invalidateIntrinsicContentSize()
     
     placeholderLabel.isHidden = !textView.text.isEmpty
     
@@ -54,6 +55,9 @@ class ChatInputContainerView: UIView, UITextViewDelegate {
     if textView.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty {
       sendButton.isEnabled = false
     }
+    
+    self.invalidateIntrinsicContentSize()
+    chatLogController?.collectionView?.scrollToBottom()
   }
   
   
@@ -68,6 +72,7 @@ class ChatInputContainerView: UIView, UITextViewDelegate {
     textView.layer.borderWidth = 0.3
     textView.layer.cornerRadius = 16
     textView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
+    textView.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
     
     return textView
   }()
@@ -93,6 +98,7 @@ class ChatInputContainerView: UIView, UITextViewDelegate {
   }()
   
   let sendButton = UIButton(type: .system)
+  
   
   
   override init(frame: CGRect) {

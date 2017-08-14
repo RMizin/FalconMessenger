@@ -15,7 +15,6 @@ enum tabs: Int {
   case contacts = 0
   case chats = 1
   case settings = 2
-  
 }
 
 class GeneralTabBarController: UITabBarController {
@@ -23,6 +22,15 @@ class GeneralTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
+      self.view.alpha = 0
       setOnlineStatus()
     }
+}
+
+extension GeneralTabBarController: ManageAppearance {
+  func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool) {
+    if state {
+      self.view.alpha = 1
+    }
+  }
 }

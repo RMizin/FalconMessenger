@@ -16,7 +16,7 @@ class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
   
   override func prepare() {
     super.prepare()
-  
+    
     if isInsertingCellsToTop == true {
       if let collectionView = collectionView, let oldContentSize = contentSizeWhenInsertingToTop {
         let newContentSize = collectionViewContentSize

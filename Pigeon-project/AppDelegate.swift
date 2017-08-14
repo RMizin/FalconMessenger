@@ -31,28 +31,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      self.window?.makeKeyAndVisible()
      self.window?.backgroundColor = .white
     
-     if Auth.auth().currentUser == nil {
-        
-        let destination = OnboardingController()
-        let newNavigationController = UINavigationController(rootViewController: destination)
-        let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
-        
-        newNavigationController.navigationBar.backgroundColor = .white
-        statusBar.backgroundColor = UIColor.white
-        
-        newNavigationController.navigationBar.shadowImage = UIImage()
-        newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        
-        newNavigationController.modalTransitionStyle = .crossDissolve
-        newNavigationController.navigationBar.isTranslucent = false
+    let userDefaults = UserDefaults.standard
+    
+    if userDefaults.bool(forKey: "hasRunBefore") == false {
+  
+      do {
+        try Auth.auth().signOut()
+      } catch {}
       
-        mainController.present(newNavigationController, animated: false, completion: {
-        })
-      }
-
+      userDefaults.set(true, forKey: "hasRunBefore")
+      userDefaults.synchronize()
+      
+      presentController(with: mainController)
+    } else {
+     presentController(with: mainController)
+    }
+    
     return true
   }
   
+  
+  func presentController(with mainController: UITabBarController) {
+    if Auth.auth().currentUser == nil {
+      
+      let destination = OnboardingController()
+      let newNavigationController = UINavigationController(rootViewController: destination)
+      let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
+      
+      newNavigationController.navigationBar.backgroundColor = .white
+      statusBar.backgroundColor = UIColor.white
+      
+      newNavigationController.navigationBar.shadowImage = UIImage()
+      newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+      
+      newNavigationController.modalTransitionStyle = .crossDissolve
+      newNavigationController.navigationBar.isTranslucent = false
+      
+      mainController.present(newNavigationController, animated: false, completion: {
+      })
+    }
+  }
   
   func setTabs(mainController : UITabBarController) {
     
@@ -62,6 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     
     let chatsController = ChatsController()
+    chatsController.delegate = mainController as? ManageAppearance
     _ = chatsController.view
     chatsController.title = "Chats"
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)

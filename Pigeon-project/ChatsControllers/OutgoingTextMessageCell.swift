@@ -28,15 +28,15 @@ class OutgoingTextMessageCell: BaseMessageCell {
     
     addSubview(bubbleView)
     bubbleView.addSubview(textView)
-    bubbleView.addSubview(deliveryStatus)
+    addSubview(deliveryStatus)
     bubbleView.image = BaseMessageCell.blueBubbleImage
     
-    NSLayoutConstraint.activate([
-      
-      deliveryStatus.topAnchor.constraint(equalTo: bottomAnchor),
-      deliveryStatus.heightAnchor.constraint(equalToConstant: 20),
-      deliveryStatus.rightAnchor.constraint(equalTo: rightAnchor, constant: -10)
-      ])
+//    NSLayoutConstraint.activate([
+//      
+//      deliveryStatus.topAnchor.constraint(equalTo: bottomAnchor),
+//      deliveryStatus.heightAnchor.constraint(equalToConstant: 20),
+//      deliveryStatus.rightAnchor.constraint(equalTo: rightAnchor, constant: -10)
+//      ])
   }
   
   override func prepareViewsForReuse() {
