@@ -19,6 +19,11 @@ class UserProfileController: UIViewController {
   var label: UILabel!
   typealias CompletionHandler = (_ success: Bool) -> Void
   
+  var startingFrame: CGRect?
+  var blackBackgroundView = ImageViewBackgroundView()
+  var startingImageView: UIImageView?
+   let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
+  
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,9 +34,9 @@ class UserProfileController: UIViewController {
       
         configureNavigationBar()
         configurePickerController()
-        userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
+        userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlerImageViewSelection)))
     }
-  
+
   
     fileprivate func configurePickerController() {
       picker.delegate = self

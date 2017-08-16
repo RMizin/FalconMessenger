@@ -43,7 +43,7 @@ extension UserProfileController {
     editLayer.fillColor = UIColor.black.cgColor
     editLayer.opacity = 0.5
     viewController.view.layer.addSublayer(editLayer)
-    
+ 
     // Move and Scale label
     label = UILabel(frame: CGRect(x: 0, y: 10, width: viewWidth, height: 50))
     label.text = "Move and Scale"

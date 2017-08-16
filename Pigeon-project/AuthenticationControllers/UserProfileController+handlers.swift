@@ -10,6 +10,7 @@ import UIKit
 import FirebaseStorage
 import FirebaseAuth
 import Firebase
+import Photos
 
 extension UserProfileController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
@@ -23,19 +24,193 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   }
   
   
+  func configureImageViewBackgroundView() {
+    blackBackgroundView.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit  ", style: .done, target: self, action: #selector(UserProfileController.handleSelectProfileImageView))
+    blackBackgroundView.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(UserProfileController.handleZoomOut))
+    blackBackgroundView.navigationItem.leftBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 15)
+     blackBackgroundView.navigationBar.setItems([blackBackgroundView.navigationItem], animated: true)
+  }
+  
+  func handlerImageViewSelection() {
+    if userProfileContainerView.profileImageView.image != nil {
+      performZoomInForStartingImageView(userProfileContainerView.profileImageView)
+    } else {
+      handleSelectProfileImageView()
+    }
+  }
+  
+  
+  func performZoomInForStartingImageView(_ initialImageView: UIImageView) {
+   
+    self.startingImageView = initialImageView
+    
+    self.startingImageView?.isHidden = true
+    
+    self.startingFrame = initialImageView.superview?.convert(initialImageView.frame, to: nil)
+    
+    let zoomingImageView = UIImageView(frame: self.startingFrame!)
+    
+    zoomingImageView.image = startingImageView?.image
+    
+    zoomingImageView.isUserInteractionEnabled = true
+    
+    zoomingImageView.addGestureRecognizer(zoomOutGesture)
+    
+    
+    if let keyWindow = UIApplication.shared.keyWindow {
+      self.blackBackgroundView = ImageViewBackgroundView(frame: keyWindow.frame)
+      self.blackBackgroundView.alpha = 0
+      
+      keyWindow.addSubview(self.blackBackgroundView)
+      keyWindow.addSubview(zoomingImageView)
+      configureImageViewBackgroundView()
+      configureToolbar()
+      
+      let scaledImage = imageWithImage(sourceImage: zoomingImageView.image!, scaledToWidth: deviceScreen.width)
+      let centerY = blackBackgroundView.center.y - (scaledImage.size.height/2)
+      
+      UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
+        
+        self.blackBackgroundView.alpha = 1
+      
+        zoomingImageView.frame = CGRect(x: 0, y: centerY , width: scaledImage.size.width, height: scaledImage.size.height)
+        
+      }, completion: { (completed) in
+        // do nothing
+      })
+    }
+  }
+  
+  func handleZoomOut() {
+    if let zoomOutImageView = zoomOutGesture.view {
+      //need to animate back out to controller
+      zoomOutImageView.layer.masksToBounds = true
+      
+      UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        
+        zoomOutImageView.frame = self.startingFrame!
+        
+        self.blackBackgroundView.alpha = 0
+        
+        zoomOutImageView.layer.cornerRadius = 48
+        zoomOutImageView.contentMode = .scaleAspectFill
+        zoomOutImageView.layer.borderColor = UIColor.lightGray.cgColor
+        zoomOutImageView.layer.borderWidth = 1
+        
+      }, completion: { (completed) in
+        
+        zoomOutImageView.removeFromSuperview()
+        
+        self.startingImageView?.isHidden = false
+      })
+    }
+  }
+  
+  
+  func configureToolbar() {
+    let item1 = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action: #selector(self.toolbarTouchHandler))
+    
+    item1.imageInsets = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 15)
+    blackBackgroundView.toolbar.setItems([item1], animated: true)
+  }
+
+  
+  func failedToSaveImageToGallery() {
+    
+    let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+    alertWindow.rootViewController = UIViewController()
+    alertWindow.windowLevel = UIWindowLevelAlert + 1;
+    alertWindow.makeKeyAndVisible()
+    
+    let alert = UIAlertController(title: "Error",
+                                  message: "This app does not have access to your photos or videos. You can enable access in Privacy Settings.",
+                                  preferredStyle: UIAlertControllerStyle.alert)
+    
+    alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.default) { UIAlertAction in
+      
+      alertWindow.rootViewController?.dismiss(animated: true, completion: nil)
+    })
+    
+    self.view.isUserInteractionEnabled = true
+      alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
+    
+  }
+  
+  func toolbarTouchHandler() {
+    let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+    alert.addAction(UIAlertAction(title: "Save image", style: .default, handler: { _ in
+     
+      if let image = self.userProfileContainerView.profileImageView.image {
+        
+        // Get the current authorization state.
+        let status = PHPhotoLibrary.authorizationStatus()
+        
+        if (status == PHAuthorizationStatus.authorized) {
+          // Access has been granted.
+          UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+          
+          ARSLineProgress.showSuccess()
+        }
+          
+        else if (status == PHAuthorizationStatus.denied) {
+          // Access has been denied.
+          ARSLineProgress.showFail()
+          self.failedToSaveImageToGallery()
+        }
+          
+        else if (status == PHAuthorizationStatus.notDetermined) {
+          
+          // Access has not been determined.
+          PHPhotoLibrary.requestAuthorization({ (newStatus) in
+            
+            if (newStatus == PHAuthorizationStatus.authorized) {
+              UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+              
+              ARSLineProgress.showSuccess()
+            } else {
+              self.failedToSaveImageToGallery()
+            }
+          })
+        }
+          
+        else if (status == PHAuthorizationStatus.restricted) {
+          // Restricted access - normally won't happen.
+          self.failedToSaveImageToGallery()
+        }
+
+      }
+      
+    }))
+    
+    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+      
+    }))
+    
+    let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+    alertWindow.rootViewController = UIViewController()
+    alertWindow.windowLevel = UIWindowLevelAlert + 1;
+    alertWindow.makeKeyAndVisible()
+    alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
+    
+    
+  }
+  
   func handleSelectProfileImageView() {
     
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
+      self.handleZoomOut()
       self.openCamera()
     }))
     
     alert.addAction(UIAlertAction(title: "Choose photo", style: .default, handler: { _ in
+      self.handleZoomOut()
       self.openGallery()
     }))
     
    if userProfileContainerView.profileImageView.image != nil {
       alert.addAction(UIAlertAction(title: "Delete photo", style: .destructive, handler: { _ in
+        self.handleZoomOut()
         self.deletePhoto()
       }))
 
@@ -43,8 +218,11 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     
     
     alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
-    
-    self.present(alert, animated: true, completion: nil)
+    let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+    alertWindow.rootViewController = UIViewController()
+    alertWindow.windowLevel = UIWindowLevelAlert + 1;
+    alertWindow.makeKeyAndVisible()
+    alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
   }
   
   
@@ -81,6 +259,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   
   func openGallery() {
     picker.allowsEditing = true
+  
     picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
     present(picker, animated: true, completion: nil)
   }
@@ -88,7 +267,6 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   
   func openCamera() {
     if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
-      
       picker.sourceType = UIImagePickerControllerSourceType.camera
       picker.allowsEditing = true
       
@@ -106,13 +284,13 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     
     var selectedImageFromPicker: UIImage?
+  
     
     
     if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
       selectedImageFromPicker = editedImage
       
     } else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-      
       selectedImageFromPicker = originalImage
     }
     
@@ -140,8 +318,6 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
         UserDefaults.standard.set(String(describing: thumbnailImageURL), forKey: "thumbnailUserPhotoURL")
       })
     }
-    
-    
     
     uploadAvatarForUserToFirebaseStorageUsingImage(image, completion: { (imageURL) in
       
