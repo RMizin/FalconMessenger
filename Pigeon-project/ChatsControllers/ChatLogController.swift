@@ -19,19 +19,7 @@ private let typingIndicatorDatabaseID = "typingIndicator"
 
 private let typingIndicatorStateDatabaseKeyID = "Is typing"
 
-private var sentMessageDataToId = ""
-
-private var snapStatus = ""
-
-private var messageStatus: UILabel = {
-  let messageStatus = UILabel()
-  messageStatus.frame = CGRect(x: 10, y: 10, width: 200, height: 20)
-  messageStatus.text = ""
-  messageStatus.font = UIFont.systemFont(ofSize: 10)
-  messageStatus.textColor = UIColor.darkGray
-  
-  return messageStatus
-}()
+private var messageStatus = String()
 
 protocol MessagesLoaderDelegate: class {
   func messagesLoader(_ chatLogController: ChatLogController, didFinishLoadingWith messages: [Message] )
@@ -85,79 +73,81 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
-    
-    
-   
-    userMessagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-      if snapshot.exists() {
-  
     userMessagesRef.keepSynced(true)
-    userMessagesRef.observe( .childAdded, with: { (snapshot) in
+    userMessagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+      
+    if snapshot.exists() {
+  
+   
+      userMessagesRef.observe( .childAdded, with: { (snapshot) in
       self.messagesIds.append(snapshot.key)
       
-      let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
-      messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+        let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
+        messagesRef.keepSynced(true)
+        messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
         
-        guard let dictionary = snapshot.value as? [String: AnyObject] else {
-          print("returning")
-          return
-        }
+          guard let dictionary = snapshot.value as? [String: AnyObject] else {
+            print("returning")
+            return
+          }
         
-        switch true {
+          switch true {
           
-        case self.newOutboxMessage:
-          self.updateMessageStatus(messagesRef: messagesRef)
-          self.observeMessageStatus(messageId: snapshot.key)
-          self.newOutboxMessage = false
+            case self.newOutboxMessage:
           
-          break
-          
-        case self.newInboxMessage:
-          
-          self.collectionView?.performBatchUpdates({
-            
-            self.messages.append(Message(dictionary: dictionary))
-            let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-            self.collectionView?.insertItems(at: [indexPath])
-            
-            if self.messages.count - 2 >= 0 {
-              self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
-            }
-            
-          }, completion: { (true) in
-            self.updateMessageStatus(messagesRef: messagesRef)
-            self.observeMessageStatus(messageId: snapshot.key)
-            let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-            
-            if self.messages.count - 1 > 0 && self.isScrollViewAtTheBottom {
-              self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
-            }
-            
-          })
-          
-          break
-          
-        default:
-          
-          self.appendingMessages.append(Message(dictionary: dictionary))
-          
-          if self.appendingMessages.count == self.messagesIds.count {
-            
-            self.appendingMessages.sort(by: { (message1, message2) -> Bool in
-              
-              return message1.timestamp!.int32Value < message2.timestamp!.int32Value
-            })
-            
-            self.delegate?.messagesLoader(self, didFinishLoadingWith: self.appendingMessages)
-            
-            DispatchQueue.main.async {
-              self.newInboxMessage = true
-              self.observeTypingIndicator()
               self.updateMessageStatus(messagesRef: messagesRef)
-              self.observeMessageStatus(messageId: snapshot.key)
-            }
-
+              self.newOutboxMessage = false
+          
             break
+          
+            case self.newInboxMessage:
+          
+              self.collectionView?.performBatchUpdates ({
+            
+                self.messages.append(Message(dictionary: dictionary))
+                let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+                self.collectionView?.insertItems(at: [indexPath])
+            
+                if self.messages.count - 2 >= 0 {
+          
+                //DispatchQueue.global(qos: .default).async {
+                  self.collectionView?.reloadItems(at: [IndexPath (row: self.messages.count - 2, section: 0)])
+                //}
+                }
+                
+                let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)
+            
+                if self.messages.count - 1 > 0 && self.isScrollViewAtTheBottom {
+                  DispatchQueue.main.async {
+                    self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
+                  }
+                }
+              }, completion: { (true) in
+                self.updateMessageStatus(messagesRef: messagesRef)
+              })
+          
+            break
+          
+          default:
+          
+            self.appendingMessages.append(Message(dictionary: dictionary))
+          
+            if self.appendingMessages.count == self.messagesIds.count {
+            
+              self.appendingMessages.sort(by: { (message1, message2) -> Bool in
+              
+                return message1.timestamp!.int32Value < message2.timestamp!.int32Value
+              })
+            
+              self.delegate?.messagesLoader(self, didFinishLoadingWith: self.appendingMessages)
+            
+              DispatchQueue.main.async {
+                self.newInboxMessage = true
+                self.observeTypingIndicator()
+                self.updateMessageStatus(messagesRef: messagesRef)
+              }
+
+              break
           }
         }
         
@@ -175,7 +165,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     })
   }
   
-
   
   var queryStartingID = String()
   var queryEndingID = String()
@@ -253,7 +242,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         } // error
         
       }) // endingIDRef
-    })  // startingIDRef
+    }) // startingIDRef
   }
   
   
@@ -306,6 +295,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         } else {
           self.handleTypingIndicatorAppearance(isEnabled: false)
         }
+        
       } else { /* if typing indicator not exist */
         self.handleTypingIndicatorAppearance(isEnabled: false)
       }
@@ -318,9 +308,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     let sectionsIndexSet: IndexSet = [1]
     
     if isEnabled {
-      self.collectionView?.performBatchUpdates({
+      self.collectionView?.performBatchUpdates ({
+        
         self.sections = ["Messages", "TypingIndicator"]
+        
         self.collectionView?.insertSections(sectionsIndexSet)
+        
       }, completion: { (true) in
         
         let indexPath = IndexPath(row: 0, section: 1)
@@ -328,16 +321,23 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let isIndexPathValid = self.indexPathIsValid(indexPath: indexPath as NSIndexPath)
         
         if isIndexPathValid && self.isScrollViewAtTheBottom {
-          self.collectionView?.scrollToItem(at: indexPath , at: .bottom, animated: true)
+          
+          DispatchQueue.main.async {
+            self.collectionView?.scrollToItem(at: indexPath , at: .bottom, animated: true)
+          }
+          
         } else {
+          
           return
         }
       })
       
     } else {
       
-      self.collectionView?.performBatchUpdates({
+      self.collectionView?.performBatchUpdates ({
+        
         self.sections = ["Messages"]
+        
         if self.collectionView!.numberOfSections > 1 {
           self.collectionView?.deleteSections(sectionsIndexSet)
         }
@@ -358,72 +358,54 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
   
   
   fileprivate func updateMessageStatus(messagesRef: DatabaseReference) {
+    
     if currentReachabilityStatus != .notReachable {
+      
+      var recieverID = String()
+      
       messagesRef.child("toId").observeSingleEvent(of: .value, with: { (snapshot) in
         
         if snapshot.exists() {
-          sentMessageDataToId = snapshot.value as! String
+
+          recieverID = snapshot.value as! String
         }
         
-        if (Auth.auth().currentUser?.uid)! == sentMessageDataToId {
-          
+        if (Auth.auth().currentUser?.uid)! == recieverID {
           if self.navigationController?.visibleViewController is ChatLogController {
-            
-            print("Read")
-            messagesRef.updateChildValues(["status" : "Read"])
-            
-          } else {
-            print("Delivered")
-            messagesRef.updateChildValues(["status" : "Delivered"])
+          
+            messagesRef.updateChildValues(["seen" : true])
           }
           
         } else {
-          sentMessageDataToId = ""
+
+            recieverID = ""
         }
-        
       })
-      
+    
+      messagesRef.child("status") .observe(.value, with: { (messageStatusValue) in
+        
+        if let lastMessageStatus = messageStatusValue.value as? String {
+          messageStatus = lastMessageStatus
+          
+          if self.messages.count - 1 >= 0 {
+             self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section: 0)])
+          }
+          
+        }
+      })
       
       messagesRef.observe(.childChanged, with: { (snapshot) in
         
-        if Auth.auth().currentUser?.uid != sentMessageDataToId {
+        if Auth.auth().currentUser?.uid != self.user!.id {
           
-          //print("\n\n\n child CHANGED")
-          //print("\n\n\\n",snapshot.value!)
-          
-          if snapshot.value != nil {
-            snapStatus = snapshot.value as! String
-            messageStatus.text = snapStatus
-            UIView.performWithoutAnimation {
-              DispatchQueue.main.async {
-                 self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section:0)])
-              }
-             
-            }
+          if snapshot.value != nil && snapshot.key == "status" {
             
+            let status = snapshot.value as! String
+            
+            messageStatus = status
+    
+            self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section:0)])
           }
-        }
-        
-      })
-    }
-  }
-  
-  
-  func observeMessageStatus(messageId: String) {
-    if currentReachabilityStatus != .notReachable {
-      let messagesRef = Database.database().reference().child("messages").child(messageId).child("status")
-      
-      messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-        print("\n\n",snapshot.value!, "\n\n")
-        
-        if snapshot.value != nil {
-          messageStatus.text = (snapshot.value as! String)
-          UIView.performWithoutAnimation {
-            DispatchQueue.main.async {
-              self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section:0)])
-            }
-          }
-          
         }
       })
     }
@@ -440,6 +422,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
   fileprivate func setupCollectionView () {
     
     view.backgroundColor = .white
+    collectionView?.delaysContentTouches = false
     collectionView?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height)
     collectionView?.keyboardDismissMode = .interactive
     collectionView?.backgroundColor = UIColor.white
@@ -468,7 +451,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
   
   override func scrollViewDidScroll(_ scrollView: UIScrollView) {
     
-    if collectionView!.contentOffset.y >= (collectionView!.contentSize.height - collectionView!.frame.size.height) {
+    if collectionView!.contentOffset.y >= (collectionView!.contentSize.height - collectionView!.frame.size.height - 200) {
       isScrollViewAtTheBottom = true
     } else {
       isScrollViewAtTheBottom = false
@@ -645,7 +628,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
       super.viewDidDisappear(animated)
   
       isTyping = false
-      messageStatus.text = ""
+      messageStatus = ""
     }
 
   
@@ -706,7 +689,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         switch indexPath.row == self.messages.count - 1 {
           
           case true:
-            cell.deliveryStatus.text = messageStatus.text
+            cell.deliveryStatus.text = messageStatus
             cell.deliveryStatus.isHidden = false
           break
           
@@ -903,20 +886,29 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
   fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
     
     
-    self.collectionView?.performBatchUpdates({
+    self.collectionView?.performBatchUpdates ({
+      
       self.messages.append(Message(dictionary: values ))
+      
       let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+      
+      messageStatus = messageStatusSending
+      
       self.collectionView?.insertItems(at: [indexPath])
       
       if self.messages.count - 2 >= 0 {
-        self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
+        
+          self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
       }
-      messageStatus.text = ""
       
-    }, completion: { (true) in
-      let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-      self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
-    })
+      let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)
+      
+      DispatchQueue.main.async {
+        
+        self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
+      }
+      
+    }, completion: nil)
   }
   
   
@@ -928,7 +920,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     let childRef = ref.childByAutoId()
     
-    let defaultMessageStatus = "Delivered"
+    let defaultMessageStatus = messageStatusSent
     
     let toId = user!.id!
     
@@ -937,7 +929,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
     
-    var values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "fromId": fromId as AnyObject, "timestamp": timestamp]
+    var values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
     
     properties.forEach({values[$0] = $1})
     

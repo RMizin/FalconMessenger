@@ -228,16 +228,24 @@ class ChatsController: UITableViewController {
         }
       }
       
-      
-      if finalUserCellData[indexPath.row].0.status != "Read" && finalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
+      if finalUserCellData[indexPath.row].0.seen != nil {
         
-        cell.newMessageIndicator.isHidden = false
+        let seen = finalUserCellData[indexPath.row].0.seen!
+        
+        if !seen && finalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
+          
+          cell.newMessageIndicator.isHidden = false
+          
+        } else {
+          
+          cell.newMessageIndicator.isHidden = true
+        }
         
       } else {
         
-        cell.newMessageIndicator.isHidden = true
+         cell.newMessageIndicator.isHidden = true
       }
-      
+    
         return cell
     }
   

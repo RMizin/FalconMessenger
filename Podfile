@@ -14,5 +14,6 @@ pod 'Firebase/Auth'
 pod 'Firebase/Storage'
 pod 'SDWebImage', '~>3.8'
 pod 'PhoneNumberKit'
+pod 'Firebase/Messaging'
 
 end

@@ -14,6 +14,11 @@ import SDWebImage
 
 
 
+public let messageStatusRead = "Read"
+public let messageStatusSent = "Sent"
+public let messageStatusSending = "Sending"
+public let messageStatusDelivered = "Delivered"
+
 extension String {
   
   var digits: String {
@@ -243,8 +248,6 @@ private var activityIndicator: UIActivityIndicatorView = {
   
   return activityIndicator
 }()
-
-
 
 
 extension UIImageView {

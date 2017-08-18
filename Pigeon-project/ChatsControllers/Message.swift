@@ -17,7 +17,8 @@ class Message:  NSObject  {
     var toId: String?
   
     var status: String?
-    
+    var seen: Bool?
+  
     var imageUrl: String?
     var imageHeight: NSNumber?
     var imageWidth: NSNumber?
@@ -37,6 +38,7 @@ class Message:  NSObject  {
         toId = dictionary["toId"] as? String
       
         status = dictionary["status"] as? String
+        seen = dictionary["seen"] as? Bool
         
         imageUrl = dictionary["imageUrl"] as? String
         imageHeight = dictionary["imageHeight"] as? NSNumber

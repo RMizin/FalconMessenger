@@ -89,10 +89,13 @@ extension UserProfileController {  /* only during authentication */
       userProfileContainerView.name.shake()
     } else {
       updateUserData()
+      if Messaging.messaging().fcmToken != nil {
+         setUserNotificationToken(token: Messaging.messaging().fcmToken!)
+      }
+     
       setOnlineStatus()
     }
   }
-  
   
   func checkIfUserDataExists(completionHandler: @escaping CompletionHandler) {
     
@@ -100,7 +103,6 @@ extension UserProfileController {  /* only during authentication */
     nameReference.observe(.value, with: { (snapshot) in
       if snapshot.exists() {
         self.userProfileContainerView.name.text = (snapshot.value as! String)
-       
       }
     })
     
@@ -124,6 +126,12 @@ extension UserProfileController {  /* only during authentication */
 }
 
 
+func setUserNotificationToken(token: String) {
+  
+  let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("notificationTokens")
+ 
+    userReference.updateChildValues([token : true])
+}
 
 
 

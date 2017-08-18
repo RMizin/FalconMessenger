@@ -32,6 +32,7 @@
 		4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */; };
 		4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */; };
 		4B56B3651F4435EF008F4F27 /* ImageViewBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56B3641F4435EF008F4F27 /* ImageViewBackgroundView.swift */; };
+		4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */; };
 		4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */; };
 		4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */; };
 		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
@@ -110,6 +111,7 @@
 		4B4F454E1F3225EE00A6FF96 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsController.swift; path = SettingsControllers/SettingsController.swift; sourceTree = "<group>"; };
 		4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B56B3641F4435EF008F4F27 /* ImageViewBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageViewBackgroundView.swift; path = Support/ImageViewOpener/ImageViewBackgroundView.swift; sourceTree = "<group>"; };
+		4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+MediaPickerHandlers.swift"; path = "ChatsControllers/ChatLogController+MediaPickerHandlers.swift"; sourceTree = "<group>"; };
 		4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMessageCell.swift; path = ChatsControllers/BaseMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				4BC26B251F3A22B80093A9D2 /* MessengerViews */,
 				4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */,
 				4BC26B311F3A27750093A9D2 /* ChatsController.swift */,
+				4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */,
 			);
 			name = Chats;
 			sourceTree = "<group>";
@@ -589,6 +592,7 @@
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
 				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
+				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
 				4BC26B321F3A27750093A9D2 /* ChatsController.swift in Sources */,
 				4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */,

@@ -8,6 +8,9 @@ PODS:
   - Firebase/Database (4.0.4):
     - Firebase/Core
     - FirebaseDatabase (= 4.0.0)
+  - Firebase/Messaging (4.0.4):
+    - Firebase/Core
+    - FirebaseMessaging (= 2.0.0)
   - Firebase/Storage (4.0.4):
     - Firebase/Core
     - FirebaseStorage (= 2.0.0)
@@ -26,6 +29,12 @@ PODS:
     - FirebaseAnalytics (~> 4.0)
   - FirebaseInstanceID (2.0.0):
     - FirebaseCore (~> 4.0)
+  - FirebaseMessaging (2.0.0):
+    - FirebaseAnalytics (~> 4.0)
+    - FirebaseCore (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - Protobuf (~> 3.1)
   - FirebaseStorage (2.0.0):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
@@ -33,6 +42,8 @@ PODS:
   - GoogleToolboxForMac/DebugUtils (2.1.1):
     - GoogleToolboxForMac/Defines (= 2.1.1)
   - GoogleToolboxForMac/Defines (2.1.1)
+  - GoogleToolboxForMac/Logger (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
   - GoogleToolboxForMac/NSData+zlib (2.1.1):
     - GoogleToolboxForMac/Defines (= 2.1.1)
   - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.1):
@@ -52,6 +63,7 @@ PODS:
   - PhoneNumberKit/PhoneNumberKitCore (1.2.3)
   - PhoneNumberKit/UIKit (1.2.3):
     - PhoneNumberKit/PhoneNumberKitCore
+  - Protobuf (3.3.0)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
@@ -60,6 +72,7 @@ DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
+  - Firebase/Messaging
   - Firebase/Storage
   - PhoneNumberKit
   - SDWebImage (~> 3.8)
@@ -71,13 +84,15 @@ SPEC CHECKSUMS:
   FirebaseCore: cfc042628ef9f20debe09c0eb683135fcd404cb4
   FirebaseDatabase: d829b3a8c3e2ac7a16773c5df226966b0805dfc2
   FirebaseInstanceID: 9fbf536668f4d3f0880e7438456dabd1376e294b
+  FirebaseMessaging: 227406c05b0dc9290702d2e9f18ab5528f0c2cf2
   FirebaseStorage: 8110a1ed2034c8fbfd83890d2acc9cdbbd99afec
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
   GTMSessionFetcher: 5ad62e8200fa00ed011fe5e08d27fef72c5b1429
   nanopb: 22bc080fa3955e2116b6ff3ee6c2cb3c15ab97cb
   PhoneNumberKit: 1e5cca669113fc361a8c82ec1ee559c62b8cd0f7
+  Protobuf: d582fecf68201eac3d79ed61369ef45734394b9c
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
-PODFILE CHECKSUM: 33f32a601a6e0bc48d7fd2097158e79aeecdb2d0
+PODFILE CHECKSUM: eb26aeacf69ea62b41fb2fd58d68d97724a21277
 
 COCOAPODS: 1.1.1
