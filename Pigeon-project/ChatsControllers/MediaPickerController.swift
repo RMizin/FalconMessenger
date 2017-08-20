@@ -17,9 +17,7 @@ class MediaPickerController: UIViewController {
   let customMediaPickerView = ImagePickerTrayController()
   
   weak var inputContainerView: ChatInputContainerView?
-  
-  var selectedImages = [PHAsset]()
-  
+
   
   public init() {
     super.init(nibName: nil, bundle: nil)
@@ -73,14 +71,34 @@ class MediaPickerController: UIViewController {
 
 extension MediaPickerController: ImagePickerTrayControllerDelegate {
   
-  
   func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset) {
+
+    let image = uiImageFromAsset(phAsset: asset)
     
-    selectedImages.append(asset)
+    let data = compressImage(image: image!)
+    
+    inputContainerView?.selectedMedia.append(data)
+    
+    if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
+      
+      self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+      
+    } else {
+      
+       self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0)])
+    }
+   
+    expandCollection()
+  }
   
-    self.inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 110, left: 8, bottom: 8, right: 30)
+  
+  func expandCollection() {
     
-    self.inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: 300, height: 100)
+    inputContainerView?.attachedImages.scrollToItem(at: IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0), at: .right, animated: true)
+    
+    inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 175, left: 8, bottom: 8, right: 30)
+    
+    inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 165)
     
     inputContainerView?.separator.isHidden = false
     
@@ -93,37 +111,64 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
   
   
   func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage) {
+    
+    let data = compressImage(image: image)
+    
+    inputContainerView?.selectedMedia.append(data)
+    
+    if inputContainerView!.selectedMedia.count - 1 >= 0 {
+      
+       self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+      
+    } else {
+      
+      self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0) ])
+    }
+    
+    expandCollection()
   }
-  
-  
+
+ 
   func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset) {
     
-    selectedImages.removeLast()
+    let image = uiImageFromAsset(phAsset: asset)
     
-    if selectedImages.count == 0 {
-      
-      inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
-      
-      inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: 300, height: 0)
-      
-      inputContainerView?.separator.isHidden = true
-      
-      inputContainerView?.placeholderLabel.text = "Message"
-      
-      if inputContainerView?.inputTextView.text == "" {
+    let data = compressImage(image: image!)
+  
+        for index in 0...self.inputContainerView!.selectedMedia.count - 1 {
+          
+          if self.inputContainerView!.selectedMedia[index] == data && self.inputContainerView!.selectedMedia.indices.contains(index) {
+            
+            print("equals")
+            self.inputContainerView?.selectedMedia.remove(at: index)
+            self.inputContainerView?.attachedImages.deleteItems(at: [IndexPath(item: index, section: 0)])
+            break
+          }
+        }
         
-        inputContainerView?.sendButton.isEnabled = false
-      }
-     
-      
-      let textBeforeUpdate = inputContainerView!.inputTextView.text
-      
-      inputContainerView!.inputTextView.text = " "
-      
-      inputContainerView?.invalidateIntrinsicContentSize()
-      
-      inputContainerView!.inputTextView.text = textBeforeUpdate
-    }
+        if self.inputContainerView?.selectedMedia.count == 0 {
+          
+          inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
+          
+          inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 0)
+          
+          inputContainerView?.separator.isHidden = true
+          
+          inputContainerView?.placeholderLabel.text = "Message"
+          
+            if inputContainerView?.inputTextView.text == "" {
+            
+              inputContainerView?.sendButton.isEnabled = false
+            }
+          
+          let textBeforeUpdate = inputContainerView!.inputTextView.text
+          
+          inputContainerView!.inputTextView.text = " "
+          
+          inputContainerView?.invalidateIntrinsicContentSize()
+          
+          inputContainerView!.inputTextView.text = textBeforeUpdate
+        }
   }
   
 }

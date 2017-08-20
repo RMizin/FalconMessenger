@@ -11,6 +11,7 @@ import FirebaseStorage
 import Firebase
 import SystemConfiguration
 import SDWebImage
+import Photos
 
 
 
@@ -76,6 +77,22 @@ extension Array {
     self = shift(withDistance: distance)
   }
 }
+
+extension UIImage {
+  var asJPEGData: Data? {
+    return UIImageJPEGRepresentation(self, 1)   // QUALITY min = 0 / max = 1
+  }
+  var asPNGData: Data? {
+    return UIImagePNGRepresentation(self)
+  }
+}
+
+extension Data {
+  var asUIImage: UIImage? {
+    return UIImage(data: self)
+  }
+}
+
 
 
 public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array<T>{
@@ -164,8 +181,21 @@ func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage {
   return newImage!
 }
 
+func imageWithImageHeight (sourceImage:UIImage, scaledToHeight: CGFloat) -> UIImage {
+  let oldHeight = sourceImage.size.height
+  let scaleFactor = scaledToHeight / oldHeight
+  
+  let newWidth = sourceImage.size.width * scaleFactor
+  let newHeight = oldHeight * scaleFactor
+  
+  UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+  sourceImage.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+  let newImage = UIGraphicsGetImageFromCurrentImageContext()
+  UIGraphicsEndImageContext()
+  return newImage!
+}
 
-func compressImage (_ image: UIImage) -> UIImage {
+func createImageThumbnail (_ image: UIImage) -> UIImage {
   
   let actualHeight:CGFloat = image.size.height
   let actualWidth:CGFloat = image.size.width
@@ -183,6 +213,88 @@ func compressImage (_ image: UIImage) -> UIImage {
   
   return UIImage(data: imageData)!
 }
+
+
+func compressImage(image: UIImage) -> Data {
+  // Reducing file size to a 10th
+  
+  var actualHeight : CGFloat = image.size.height
+  var actualWidth : CGFloat = image.size.width
+  let maxHeight : CGFloat = 1136.0
+  let maxWidth : CGFloat = 640.0
+  var imgRatio : CGFloat = actualWidth/actualHeight
+  let maxRatio : CGFloat = maxWidth/maxHeight
+  var compressionQuality : CGFloat = 0.5
+  
+  if (actualHeight > maxHeight || actualWidth > maxWidth) {
+    
+    if (imgRatio < maxRatio) {
+      
+      //adjust width according to maxHeight
+      imgRatio = maxHeight / actualHeight;
+      actualWidth = imgRatio * actualWidth;
+      actualHeight = maxHeight;
+    } else if (imgRatio > maxRatio) {
+      
+      //adjust height according to maxWidth
+      imgRatio = maxWidth / actualWidth;
+      actualHeight = imgRatio * actualHeight;
+      actualWidth = maxWidth;
+      
+    } else {
+      
+      actualHeight = maxHeight;
+      actualWidth = maxWidth;
+      compressionQuality = 1;
+    }
+  }
+  
+  let rect = CGRect(x:0.0, y:0.0, width:actualWidth, height:actualHeight);
+  UIGraphicsBeginImageContext(rect.size);
+  image.draw(in: rect)
+  let img = UIGraphicsGetImageFromCurrentImageContext();
+  let imageData = UIImageJPEGRepresentation(img!, compressionQuality);
+  UIGraphicsEndImageContext();
+  
+  return imageData!
+}
+
+func uiImageFromAsset(phAsset: PHAsset) -> UIImage? {
+  
+  var img: UIImage?
+  let manager = PHImageManager.default()
+  let options = PHImageRequestOptions()
+  options.version = .original
+  options.deliveryMode = .fastFormat
+  options.resizeMode = .fast
+  options.isSynchronous = true
+  manager.requestImageData(for: phAsset, options: options) { data, _, _, _ in
+    
+    if let data = data {
+      img = UIImage(data: data)
+    }
+  }
+  return img
+}
+
+func dataFromAsset(asset: PHAsset) -> Data? {
+  
+  var finalData: Data?
+  let manager = PHImageManager.default()
+  let options = PHImageRequestOptions()
+  options.version = .original
+  options.deliveryMode = .fastFormat
+  options.isSynchronous = true
+  options.resizeMode = .fast
+  options.normalizedCropRect = CGRect(x: 0, y: 0, width: 1000, height: 1000)
+  manager.requestImageData(for: asset, options: options) { data, _, _, _ in
+    
+    finalData = data
+  }
+  
+  return finalData
+}
+
 
 public extension UIView {
   

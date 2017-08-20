@@ -308,7 +308,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   
 
   func updateUserProfile(with image: UIImage) {
-    let compressedImage = compressImage(image)
+    let compressedImage = createImageThumbnail(image)
     
     uploadAvatarForUserToFirebaseStorageUsingImage(compressedImage) { (thumbnailImageURL) in
       

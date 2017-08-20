@@ -10,7 +10,14 @@
 import UIKit
 
 
-class ChatInputContainerView: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
+class ChatInputContainerView: UIView {
+  
+  
+  let centeredCollectionViewFlowLayout = CenteredCollectionViewFlowLayout()
+  
+  var selectedMedia = [Data]()
+  
+  var maxTextViewHeight: CGFloat = 0.0
   
   weak var chatLogController: ChatLogController? {
     didSet {
@@ -19,26 +26,13 @@ class ChatInputContainerView: UIView, UITextViewDelegate, UIGestureRecognizerDel
     }
   }
   
-  func textViewDidBeginEditing(_ textView: UITextView) {
-    print("didbegin editing")
-    chatLogController?.collectionView?.scrollToBottom()
-    
-  }
-  
-  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-    
-    return true
-  }
-
-  var maxTextViewHeight: CGFloat = 0.0
-  
   override var intrinsicContentSize: CGSize {
     get {
       let textSize = self.inputTextView.sizeThatFits(CGSize(width: self.inputTextView.bounds.width, height: CGFloat.greatestFiniteMagnitude))
       
           
-      if textSize.height > 200 {
-        maxTextViewHeight = 200
+      if textSize.height > 220 {
+        maxTextViewHeight = 220
         inputTextView.isScrollEnabled = true
       } else {
         inputTextView.isScrollEnabled = false
@@ -49,30 +43,6 @@ class ChatInputContainerView: UIView, UITextViewDelegate, UIGestureRecognizerDel
       return CGSize(width: self.bounds.width, height: maxTextViewHeight )
     }
   }
-  
-  func textViewDidChange(_ textView: UITextView) {
-    
-    placeholderLabel.isHidden = !textView.text.isEmpty
-    
-    if textView.text == nil || textView.text == "" {
-      sendButton.isEnabled = false
-    } else {
-      sendButton.isEnabled = true
-    }
-    chatLogController?.isTyping = textView.text != ""
-    
-    if textView.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty {
-      sendButton.isEnabled = false
-    }
-    
-    self.invalidateIntrinsicContentSize()
-    chatLogController?.collectionView?.scrollToBottom()
-  }
-  
-  func textViewDidEndEditing(_ textView: UITextView) {
-    attachButton.isSelected = false
-  }
-
   
   lazy var inputTextView: UITextView = {
     let textView = UITextView()
@@ -112,10 +82,9 @@ class ChatInputContainerView: UIView, UITextViewDelegate, UIGestureRecognizerDel
   
   let sendButton = UIButton(type: .system)
   
-  let attachedImages: UICollectionView = {
-    let attachedImages = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    attachedImages.backgroundColor = .clear
-
+  var attachedImages: UICollectionView = {
+    var attachedImages = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+  
     return attachedImages
   }()
   
@@ -131,7 +100,8 @@ class ChatInputContainerView: UIView, UITextViewDelegate, UIGestureRecognizerDel
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-       
+    
+    attachedImages = UICollectionView(centeredCollectionViewFlowLayout: centeredCollectionViewFlowLayout)
     backgroundColor = .white
     self.autoresizingMask = UIViewAutoresizing.flexibleHeight
     self.inputTextView.delegate = self
@@ -174,6 +144,8 @@ class ChatInputContainerView: UIView, UITextViewDelegate, UIGestureRecognizerDel
     sendButton.bottomAnchor.constraint(equalTo:  inputTextView.bottomAnchor, constant: -5).isActive = true
     sendButton.widthAnchor.constraint(equalToConstant: 27).isActive = true
     sendButton.heightAnchor.constraint(equalToConstant: 27).isActive = true
+    
+    configureAttachedImagesCollection()
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -181,11 +153,42 @@ class ChatInputContainerView: UIView, UITextViewDelegate, UIGestureRecognizerDel
   }
 }
 
-extension ChatInputContainerView: UITextFieldDelegate {
+
+extension ChatInputContainerView: UIGestureRecognizerDelegate {
   
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    chatLogController?.handleSend()
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     return true
+  }
+}
+
+
+extension ChatInputContainerView: UITextViewDelegate {
+ 
+  func textViewDidBeginEditing(_ textView: UITextView) {
+    chatLogController?.collectionView?.scrollToBottom()
+  }
+  
+  func textViewDidChange(_ textView: UITextView) {
+    
+    placeholderLabel.isHidden = !textView.text.isEmpty
+    
+    if textView.text == nil || textView.text == "" {
+      sendButton.isEnabled = false
+    } else {
+      sendButton.isEnabled = true
+    }
+    chatLogController?.isTyping = textView.text != ""
+    
+    if textView.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty {
+      sendButton.isEnabled = false
+    }
+    
+    self.invalidateIntrinsicContentSize()
+    chatLogController?.collectionView?.scrollToBottom()
+  }
+  
+  func textViewDidEndEditing(_ textView: UITextView) {
+    attachButton.isSelected = false
   }
   
 }

@@ -86,7 +86,7 @@ public class ImagePickerTrayController: UIViewController {
     fileprivate var assets = [PHAsset]()
     fileprivate lazy var requestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .highQualityFormat
+        options.deliveryMode = .fastFormat
         options.resizeMode = .fast
         
         return options
@@ -202,7 +202,7 @@ public class ImagePickerTrayController: UIViewController {
     }
     
     fileprivate func requestImage(for asset: PHAsset, completion: @escaping (_ image: UIImage?) -> ()) {
-        requestOptions.isSynchronous = false
+        requestOptions.isSynchronous = true
         let size = scale(imageSize: imageSize)
         
         // Workaround because PHImageManager.requestImageForAsset doesn't work for burst images
@@ -210,6 +210,7 @@ public class ImagePickerTrayController: UIViewController {
           DispatchQueue.main.async {
             self.imageManager.requestImageData(for: asset, options: self.requestOptions) { data, _, _, _ in
               let image = data.flatMap { UIImage(data: $0) }
+             // image = compressImage(image!)
               completion(image)
             }
           }
@@ -317,24 +318,42 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
         guard indexPath.section == sections.count - 1 else {
             return false
         }
-        
-        delegate?.controller?(self, willSelectAsset: assets[indexPath.item])
-        
+      
+        if assets.count > indexPath.item {
+          delegate?.controller?(self, willSelectAsset: assets[indexPath.item])
+        }
+      
         return true
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.controller?(self, didSelectAsset: assets[indexPath.item])
+      
+      if assets.count > indexPath.item {
+         delegate?.controller?(self, didSelectAsset: assets[indexPath.item])
+      }
+      
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+       if assets.count > indexPath.item {
         delegate?.controller?(self, willDeselectAsset: assets[indexPath.item])
-        
+      }
+      
         return true
     }
-    
+    /*
+   NSArray *selectedIndexPaths =  [collectionView  indexPathsForSelectedItems];
+   
+   if (selectedIndexPaths.count > 4)
+   {
+   // Show alert
+   }
+   
+   */
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+       if assets.count > indexPath.item {
         delegate?.controller?(self, didDeselectAsset: assets[indexPath.item])
+      }
     }
     
 }
