@@ -59,6 +59,17 @@
 		4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC2C58C1F40545200B5C825 /* UserCell.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
 		4BEB13F31F39CE3E0048A984 /* PigeonUsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */; };
+		4BED6EB01F476A2F004EF2E0 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EAB1F476A2F004EF2E0 /* AnimationController.swift */; };
+		4BED6EB11F476A2F004EF2E0 /* ImagePickerAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EAC1F476A2F004EF2E0 /* ImagePickerAction.swift */; };
+		4BED6EB21F476A2F004EF2E0 /* ImagePickerTrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EAE1F476A2F004EF2E0 /* ImagePickerTrayController.swift */; };
+		4BED6EB31F476A2F004EF2E0 /* TransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EAF1F476A2F004EF2E0 /* TransitionController.swift */; };
+		4BED6EB61F476A3A004EF2E0 /* UIEdgeInsetsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EB41F476A3A004EF2E0 /* UIEdgeInsetsExtensions.swift */; };
+		4BED6EB71F476A3A004EF2E0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EB51F476A3A004EF2E0 /* UIImageExtensions.swift */; };
+		4BED6EBC1F476A46004EF2E0 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EB81F476A46004EF2E0 /* ActionCell.swift */; };
+		4BED6EBD1F476A46004EF2E0 /* CameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EB91F476A46004EF2E0 /* CameraCell.swift */; };
+		4BED6EBE1F476A46004EF2E0 /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EBA1F476A46004EF2E0 /* CameraOverlayView.swift */; };
+		4BED6EBF1F476A46004EF2E0 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EBB1F476A46004EF2E0 /* ImageCell.swift */; };
+		4BED6EC11F48AAFA004EF2E0 /* MediaPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EC01F48AAFA004EF2E0 /* MediaPickerController.swift */; };
 		4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */; };
 		4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */; };
 		4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */; };
@@ -139,6 +150,18 @@
 		4BC2C58C1F40545200B5C825 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = ChatsControllers/UserCell.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
 		4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonUsersTableViewCell.swift; path = ContactsControllers/PigeonUsersTableViewCell.swift; sourceTree = "<group>"; };
+		4BED6EAB1F476A2F004EF2E0 /* AnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimationController.swift; path = Support/PickerTrayController/AnimationController.swift; sourceTree = "<group>"; };
+		4BED6EAC1F476A2F004EF2E0 /* ImagePickerAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImagePickerAction.swift; path = Support/PickerTrayController/ImagePickerAction.swift; sourceTree = "<group>"; };
+		4BED6EAD1F476A2F004EF2E0 /* ImagePickerTrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImagePickerTrayController.h; path = Support/PickerTrayController/ImagePickerTrayController.h; sourceTree = "<group>"; };
+		4BED6EAE1F476A2F004EF2E0 /* ImagePickerTrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImagePickerTrayController.swift; path = Support/PickerTrayController/ImagePickerTrayController.swift; sourceTree = "<group>"; };
+		4BED6EAF1F476A2F004EF2E0 /* TransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransitionController.swift; path = Support/PickerTrayController/TransitionController.swift; sourceTree = "<group>"; };
+		4BED6EB41F476A3A004EF2E0 /* UIEdgeInsetsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIEdgeInsetsExtensions.swift; path = Support/PickerTrayController/Helpers/UIEdgeInsetsExtensions.swift; sourceTree = "<group>"; };
+		4BED6EB51F476A3A004EF2E0 /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIImageExtensions.swift; path = Support/PickerTrayController/Helpers/UIImageExtensions.swift; sourceTree = "<group>"; };
+		4BED6EB81F476A46004EF2E0 /* ActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ActionCell.swift; path = Support/PickerTrayController/Cells/ActionCell.swift; sourceTree = "<group>"; };
+		4BED6EB91F476A46004EF2E0 /* CameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraCell.swift; path = Support/PickerTrayController/Cells/CameraCell.swift; sourceTree = "<group>"; };
+		4BED6EBA1F476A46004EF2E0 /* CameraOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraOverlayView.swift; path = Support/PickerTrayController/Cells/CameraOverlayView.swift; sourceTree = "<group>"; };
+		4BED6EBB1F476A46004EF2E0 /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCell.swift; path = Support/PickerTrayController/Cells/ImageCell.swift; sourceTree = "<group>"; };
+		4BED6EC01F48AAFA004EF2E0 /* MediaPickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaPickerController.swift; path = ChatsControllers/MediaPickerController.swift; sourceTree = "<group>"; };
 		4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CallingCodes.plist; sourceTree = "<group>"; };
 		4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationContainerView.swift; path = AuthenticationControllers/EnterVerificationContainerView.swift; sourceTree = "<group>"; };
 		4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectCountryCodeController.swift; path = AuthenticationControllers/SelectCountryCodeController.swift; sourceTree = "<group>"; };
@@ -286,6 +309,7 @@
 				4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */,
 				4BC26B311F3A27750093A9D2 /* ChatsController.swift */,
 				4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */,
+				4BED6EC01F48AAFA004EF2E0 /* MediaPickerController.swift */,
 			);
 			name = Chats;
 			sourceTree = "<group>";
@@ -356,6 +380,7 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4BED6EA81F47697D004EF2E0 /* PickerTrayController */,
 				4B56B3631F443591008F4F27 /* ImageView opener */,
 				4B32F8511F38879300807FFB /* PhoneNumber parser */,
 				4B48D3111F361E300050C797 /* ProgressIndicator */,
@@ -402,6 +427,40 @@
 				4BCE1AB91F3714A000C0EBF7 /* User.swift */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		4BED6EA81F47697D004EF2E0 /* PickerTrayController */ = {
+			isa = PBXGroup;
+			children = (
+				4BED6EAB1F476A2F004EF2E0 /* AnimationController.swift */,
+				4BED6EAC1F476A2F004EF2E0 /* ImagePickerAction.swift */,
+				4BED6EAD1F476A2F004EF2E0 /* ImagePickerTrayController.h */,
+				4BED6EAE1F476A2F004EF2E0 /* ImagePickerTrayController.swift */,
+				4BED6EAF1F476A2F004EF2E0 /* TransitionController.swift */,
+				4BED6EAA1F476A1F004EF2E0 /* Helpers */,
+				4BED6EA91F476A17004EF2E0 /* Cells */,
+			);
+			name = PickerTrayController;
+			sourceTree = "<group>";
+		};
+		4BED6EA91F476A17004EF2E0 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				4BED6EB81F476A46004EF2E0 /* ActionCell.swift */,
+				4BED6EB91F476A46004EF2E0 /* CameraCell.swift */,
+				4BED6EBA1F476A46004EF2E0 /* CameraOverlayView.swift */,
+				4BED6EBB1F476A46004EF2E0 /* ImageCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		4BED6EAA1F476A1F004EF2E0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				4BED6EB41F476A3A004EF2E0 /* UIEdgeInsetsExtensions.swift */,
+				4BED6EB51F476A3A004EF2E0 /* UIImageExtensions.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 		4BEDC3761F337A1E0005B8E6 /* Verification */ = {
@@ -591,9 +650,11 @@
 				4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */,
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
 				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
+				4BED6EB71F476A3A004EF2E0 /* UIImageExtensions.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
+				4BED6EB01F476A2F004EF2E0 /* AnimationController.swift in Sources */,
 				4BC26B321F3A27750093A9D2 /* ChatsController.swift in Sources */,
 				4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */,
 				4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */,
@@ -602,11 +663,15 @@
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
 				4B4F454F1F3225EE00A6FF96 /* SettingsController.swift in Sources */,
 				4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */,
+				4BED6EB31F476A2F004EF2E0 /* TransitionController.swift in Sources */,
+				4BED6EB21F476A2F004EF2E0 /* ImagePickerTrayController.swift in Sources */,
 				4B91B8B61F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift in Sources */,
 				4B48D3201F361E490050C797 /* ARSLineProgressExtensions.swift in Sources */,
 				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
+				4BED6EBC1F476A46004EF2E0 /* ActionCell.swift in Sources */,
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
 				4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */,
+				4BED6EC11F48AAFA004EF2E0 /* MediaPickerController.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */,
 				4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */,
@@ -623,15 +688,19 @@
 				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
 				4BC26B2E1F3A24E70093A9D2 /* ChatLogController.swift in Sources */,
 				4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */,
+				4BED6EB61F476A3A004EF2E0 /* UIEdgeInsetsExtensions.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
 				4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */,
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
 				4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */,
 				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,
+				4BED6EBE1F476A46004EF2E0 /* CameraOverlayView.swift in Sources */,
+				4BED6EBF1F476A46004EF2E0 /* ImageCell.swift in Sources */,
 				4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */,
 				4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */,
 				4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */,
 				4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */,
+				4BED6EBD1F476A46004EF2E0 /* CameraCell.swift in Sources */,
 				4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */,
 				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
 				4B197EF01F348171008102E1 /* SharedVariables.swift in Sources */,
@@ -639,6 +708,7 @@
 				4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */,
 				4B48D30D1F35EAB70050C797 /* SettingsViewControllersContainer.swift in Sources */,
 				4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */,
+				4BED6EB11F476A2F004EF2E0 /* ImagePickerAction.swift in Sources */,
 				4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */,
 				4B48D3211F361E490050C797 /* ARSLineProgressHelpers.swift in Sources */,
 			);
