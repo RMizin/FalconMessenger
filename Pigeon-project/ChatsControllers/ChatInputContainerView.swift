@@ -15,7 +15,11 @@ class ChatInputContainerView: UIView {
   
   let centeredCollectionViewFlowLayout = CenteredCollectionViewFlowLayout()
   
-  var selectedMedia = [Data]()
+  var trayDelegate: ImagePickerTrayControllerDelegate?
+  
+  var selectedMedia = [MediaObject]()
+  
+  var mediaPickerController: MediaPickerController?
   
   var maxTextViewHeight: CGFloat = 0.0
   
@@ -153,6 +157,38 @@ class ChatInputContainerView: UIView {
   }
 }
 
+
+extension ChatInputContainerView {
+  
+  func resetChatInputConntainerViewSettings () {
+    
+    if selectedMedia.count == 0 {
+      
+      inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
+      
+      attachedImages.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
+      
+      separator.isHidden = true
+      
+      placeholderLabel.text = "Message"
+      
+      if inputTextView.text == "" {
+        
+        sendButton.isEnabled = false
+      }
+      
+      let textBeforeUpdate = inputTextView.text
+      
+      inputTextView.text = " "
+      
+      invalidateIntrinsicContentSize()
+      
+      inputTextView.text = textBeforeUpdate
+    }
+  }
+  
+ 
+}
 
 extension ChatInputContainerView: UIGestureRecognizerDelegate {
   

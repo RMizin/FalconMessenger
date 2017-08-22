@@ -38,13 +38,44 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     
     attachedImages.autoresizesSubviews = false
   }
+  
+  func removeButtonDidTap(sender: UIButton) {
+    
+    guard let cell = sender.superview as? SelectedMediaCollectionCell else {
+      return
+    }
+    
+    let indexPath = attachedImages.indexPath(for: cell)
+    
+    let row = indexPath?.row
+  
+    if selectedMedia[row!].imageSource == imageSourcePhotoLibrary {
+      
+      if let selectedIndexPath = selectedMedia[row!].indexPath {
+        
+          self.mediaPickerController?.customMediaPickerView.collectionView.deselectItem(at: selectedIndexPath , animated: false)
+        
+          self.mediaPickerController?.customMediaPickerView.delegate?.controller?(self.mediaPickerController!.customMediaPickerView,
+                                                                                  didDeselectAsset: self.selectedMedia[row!].phAsset!,
+                                                                                  at: selectedIndexPath)
+        }
+       
+    } else {
+      
+        selectedMedia.remove(at: row!)
+        attachedImages.deleteItems(at: [indexPath!])
+        resetChatInputConntainerViewSettings()
+    }
+   
+  }
+
  
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = attachedImages.dequeueReusableCell(withReuseIdentifier: selectedMediaCollectionCellID, for: indexPath) as! SelectedMediaCollectionCell
     
     DispatchQueue.main.async {
-      cell.image.image = self.selectedMedia[indexPath.item].asUIImage
+      cell.image.image = self.selectedMedia[indexPath.item].object?.asUIImage
     }
     
     return cell
@@ -65,15 +96,14 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-      let oldHeight = self.selectedMedia[indexPath.row].asUIImage!.size.height
+      let oldHeight = self.selectedMedia[indexPath.row].object?.asUIImage!.size.height
     
-      let scaleFactor = selectedMediaCollectionCellHeight / oldHeight
+      let scaleFactor = selectedMediaCollectionCellHeight / oldHeight!
       
-      let newWidth = self.selectedMedia[indexPath.row].asUIImage!.size.width * scaleFactor
+      let newWidth = self.selectedMedia[indexPath.row].object!.asUIImage!.size.width * scaleFactor
     
-      let newHeight = oldHeight * scaleFactor
+      let newHeight = oldHeight! * scaleFactor
       
       return CGSize(width: newWidth , height: newHeight)
   }
-  
 }

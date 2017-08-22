@@ -29,6 +29,8 @@ extension ChatLogController {
       
       mediaPickerController.inputContainerView = inputContainerView
       
+      inputContainerView.mediaPickerController = mediaPickerController
+      
       inputContainerView.inputTextView.inputView = mediaPickerController.view
       
       inputContainerView.inputTextView.reloadInputViews()

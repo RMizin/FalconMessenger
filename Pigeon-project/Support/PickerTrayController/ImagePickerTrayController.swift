@@ -20,13 +20,13 @@ public enum ImagePickerMediaType {
 
 @objc public protocol ImagePickerTrayControllerDelegate {
     
-    @objc optional func controller(_ controller: ImagePickerTrayController, willSelectAsset asset: PHAsset)
-    @objc optional func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset)
+  @objc optional func controller(_ controller: ImagePickerTrayController, willSelectAsset asset: PHAsset, at indexPath: IndexPath)
+    @objc optional func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath)
     
-    @objc optional func controller(_ controller: ImagePickerTrayController, willDeselectAsset asset: PHAsset)
-    @objc optional func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset)
+    @objc optional func controller(_ controller: ImagePickerTrayController, willDeselectAsset asset: PHAsset, at indexPath: IndexPath)
+    @objc optional func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset, at indexPath: IndexPath)
     
-    @objc optional func controller(_ controller: ImagePickerTrayController, didTakeImage image:UIImage)
+    @objc optional func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage)
     
 }
 
@@ -83,10 +83,10 @@ public class ImagePickerTrayController: UIViewController {
     }()
     
     fileprivate let imageManager = PHCachingImageManager()
-    fileprivate var assets = [PHAsset]()
+    var assets = [PHAsset]()
     fileprivate lazy var requestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
+        options.deliveryMode = .highQualityFormat
         options.resizeMode = .fast
         
         return options
@@ -202,7 +202,7 @@ public class ImagePickerTrayController: UIViewController {
     }
     
     fileprivate func requestImage(for asset: PHAsset, completion: @escaping (_ image: UIImage?) -> ()) {
-        requestOptions.isSynchronous = true
+        requestOptions.isSynchronous = false
         let size = scale(imageSize: imageSize)
         
         // Workaround because PHImageManager.requestImageForAsset doesn't work for burst images
@@ -215,8 +215,7 @@ public class ImagePickerTrayController: UIViewController {
             }
           }
           
-        }
-        else {
+        } else {
           DispatchQueue.main.async {
             self.imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: self.requestOptions) { image, _ in
               completion(image)
@@ -278,7 +277,8 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sections[section]
     }
-    
+  
+
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
@@ -298,9 +298,16 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
             let asset = assets[indexPath.item]
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ImageCell.self), for: indexPath) as! ImageCell
-            cell.isVideo = (asset.mediaType == .video)
-            cell.isRemote = (asset.sourceType != .typeUserLibrary)
-            requestImage(for: asset) { cell.imageView.image = $0 }
+            
+              if assets.count > indexPath.item {
+                
+                cell.isVideo = (asset.mediaType == .video)
+                cell.isRemote = (asset.sourceType != .typeUserLibrary)
+            
+                self.requestImage(for: asset) { cell.imageView.image = $0 }
+              }
+        
+           
             
             return cell
         default:
@@ -320,7 +327,8 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
         }
       
         if assets.count > indexPath.item {
-          delegate?.controller?(self, willSelectAsset: assets[indexPath.item])
+          delegate?.controller?(self, willSelectAsset: assets[indexPath.item], at: indexPath)
+        //  delegate?.controller?(self, willSelectAsset: assets[indexPath.item], a )
         }
       
         return true
@@ -329,14 +337,14 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
       
       if assets.count > indexPath.item {
-         delegate?.controller?(self, didSelectAsset: assets[indexPath.item])
+         delegate?.controller?(self, didSelectAsset: assets[indexPath.item], at: indexPath)
       }
       
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
        if assets.count > indexPath.item {
-        delegate?.controller?(self, willDeselectAsset: assets[indexPath.item])
+        delegate?.controller?(self, willDeselectAsset: assets[indexPath.item], at: indexPath)
       }
       
         return true
@@ -352,7 +360,7 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
    */
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
        if assets.count > indexPath.item {
-        delegate?.controller?(self, didDeselectAsset: assets[indexPath.item])
+        delegate?.controller?(self, didDeselectAsset: assets[indexPath.item], at: indexPath)
       }
     }
     

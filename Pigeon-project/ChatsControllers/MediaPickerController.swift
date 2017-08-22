@@ -10,6 +10,11 @@ import UIKit
 import Photos
 
 
+public let imageSourcePhotoLibrary = "imageSourcePhotoLibrary"
+
+public let imageSourceCamera = "imageSourceCamera"
+
+
 class MediaPickerController: UIViewController {
   
   let container = UIView()
@@ -26,7 +31,6 @@ class MediaPickerController: UIViewController {
     
     configureCustomMediaPickerView()
   }
-  
   
   public required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -71,13 +75,18 @@ class MediaPickerController: UIViewController {
 
 extension MediaPickerController: ImagePickerTrayControllerDelegate {
   
-  func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset) {
+  func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath) {
 
     let image = uiImageFromAsset(phAsset: asset)
     
     let data = compressImage(image: image!)
     
-    inputContainerView?.selectedMedia.append(data)
+    let mediaObject = ["object": data,
+                       "indexPath": indexPath,
+                       "imageSource": imageSourcePhotoLibrary,
+                       "phAsset": asset] as [String: AnyObject]
+    
+    inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
     
     if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
       
@@ -114,7 +123,10 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     
     let data = compressImage(image: image)
     
-    inputContainerView?.selectedMedia.append(data)
+    let mediaObject = ["object": data as AnyObject,
+                       "imageSource": imageSourceCamera] as [String: AnyObject]
+    
+    inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
     
     if inputContainerView!.selectedMedia.count - 1 >= 0 {
       
@@ -129,15 +141,11 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
   }
 
  
-  func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset) {
+  func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset, at indexPath: IndexPath) {
     
-    let image = uiImageFromAsset(phAsset: asset)
-    
-    let data = compressImage(image: image!)
-  
         for index in 0...self.inputContainerView!.selectedMedia.count - 1 {
           
-          if self.inputContainerView!.selectedMedia[index] == data && self.inputContainerView!.selectedMedia.indices.contains(index) {
+          if self.inputContainerView!.selectedMedia[index].indexPath == indexPath {
             
             print("equals")
             self.inputContainerView?.selectedMedia.remove(at: index)
@@ -145,30 +153,10 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
             break
           }
         }
+    
+    inputContainerView?.resetChatInputConntainerViewSettings()
         
-        if self.inputContainerView?.selectedMedia.count == 0 {
-          
-          inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
-          
-          inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 0)
-          
-          inputContainerView?.separator.isHidden = true
-          
-          inputContainerView?.placeholderLabel.text = "Message"
-          
-            if inputContainerView?.inputTextView.text == "" {
-            
-              inputContainerView?.sendButton.isEnabled = false
-            }
-          
-          let textBeforeUpdate = inputContainerView!.inputTextView.text
-          
-          inputContainerView!.inputTextView.text = " "
-          
-          inputContainerView?.invalidateIntrinsicContentSize()
-          
-          inputContainerView!.inputTextView.text = textBeforeUpdate
-        }
+    
   }
   
 }

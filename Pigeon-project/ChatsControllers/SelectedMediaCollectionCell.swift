@@ -21,6 +21,15 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     return image
   }()
   
+  var remove: UIButton = {
+    var remove = UIButton()
+    remove.translatesAutoresizingMaskIntoConstraints = false
+    remove.setImage(UIImage(named: "remove"), for: .normal)
+    remove.addTarget(self, action: #selector(ChatInputContainerView.removeButtonDidTap), for: .touchUpInside)
+   
+    return remove
+  }()
+  
   var isHeightCalculated: Bool = false
   
  override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
@@ -45,13 +54,19 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     super.init(frame: frame)
   
     addSubview(image)
+    addSubview(remove)
     
     NSLayoutConstraint.activate([
     
       image.leadingAnchor.constraint(equalTo: leadingAnchor),
       image.topAnchor.constraint(equalTo: topAnchor),
       image.trailingAnchor.constraint(equalTo: trailingAnchor),
-      image.bottomAnchor.constraint(equalTo: bottomAnchor)
+      image.bottomAnchor.constraint(equalTo: bottomAnchor),
+      
+      remove.topAnchor.constraint(equalTo: topAnchor, constant: 2),
+      remove.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2),
+      remove.widthAnchor.constraint(equalToConstant: 25),
+      remove.heightAnchor.constraint(equalToConstant: 25)
     ])
   }
   

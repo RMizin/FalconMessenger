@@ -44,7 +44,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
   
   let messagesToLoad = 50
   
-  let mediaPickerController = MediaPickerController()
+  var mediaPickerController = MediaPickerController()
   
   var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
 
