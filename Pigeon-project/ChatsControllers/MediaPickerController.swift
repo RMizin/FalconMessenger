@@ -22,6 +22,8 @@ class MediaPickerController: UIViewController {
   let customMediaPickerView = ImagePickerTrayController()
   
   weak var inputContainerView: ChatInputContainerView?
+  
+  let imagePicker = UIImagePickerController()
 
   
   public init() {
@@ -30,6 +32,12 @@ class MediaPickerController: UIViewController {
     configureContainerView()
     
     configureCustomMediaPickerView()
+    
+    imagePicker.delegate = self
+    
+    imagePicker.allowsEditing = false
+    
+    imagePicker.mediaTypes = ["public.image", "public.movie"]
   }
   
   public required init?(coder aDecoder: NSCoder) {
@@ -64,27 +72,82 @@ class MediaPickerController: UIViewController {
     
     customMediaPickerView.add(action: .cameraAction { _ in
       print("Show Camera")
+      self.openCamera()
       })
     
     customMediaPickerView.add(action: .libraryAction { _ in
       print("Show Library")
+      self.openPhotoLibrary()
       })
+  }
+}
+
+extension PHAsset {
+  
+  var originalFilename: String? {
+    
+    var fname:String?
+    
+    if #available(iOS 9.0, *) {
+      let resources = PHAssetResource.assetResources(for: self)
+      if let resource = resources.first {
+        fname = resource.originalFilename
+      }
+    }
+    
+    if fname == nil {
+      // this is an undocumented workaround that works as of iOS 9.1
+      fname = self.value(forKey: "filename") as? String
+    }
+    
+    return fname
   }
 }
 
 
 extension MediaPickerController: ImagePickerTrayControllerDelegate {
   
+  func controller(_ controller: ImagePickerTrayController, didRecordVideoAsset asset: PHAsset) {
+    
+    let filename = asset.originalFilename!
+    let data = dataFromAsset(asset: asset)
+    
+    let mediaObject = ["object": data!,
+                       "imageSource": imageSourceCamera,
+                       "phAsset": asset,
+                       "filename": filename] as [String: AnyObject]
+    
+    inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
+    
+    if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
+      DispatchQueue.main.async {
+
+      self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+      }
+    } else {
+      DispatchQueue.main.async {
+         self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0)])
+      }
+    }
+    
+    DispatchQueue.main.async {
+      self.expandCollection()
+    }
+  }
+  
   func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath) {
 
     let image = uiImageFromAsset(phAsset: asset)
+    
+    let filename = asset.originalFilename!
     
     let data = compressImage(image: image!)
     
     let mediaObject = ["object": data,
                        "indexPath": indexPath,
                        "imageSource": imageSourcePhotoLibrary,
-                       "phAsset": asset] as [String: AnyObject]
+                       "phAsset": asset,
+                       "filename": filename] as [String: AnyObject]
     
     inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
     
@@ -100,24 +163,48 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     expandCollection()
   }
   
-  
   func expandCollection() {
-    
-    inputContainerView?.attachedImages.scrollToItem(at: IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0), at: .right, animated: true)
-    
-    inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 175, left: 8, bottom: 8, right: 30)
-    
-    inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 165)
-    
-    inputContainerView?.separator.isHidden = false
-    
-    inputContainerView?.placeholderLabel.text = "Add comment or Send"
-    
-    inputContainerView?.sendButton.isEnabled = true
-    
-    inputContainerView?.invalidateIntrinsicContentSize()
+  
+      inputContainerView?.attachedImages.scrollToItem(at: IndexPath(item: inputContainerView!.selectedMedia.count - 1 , section: 0), at: .right, animated: true)
+      
+      inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 175, left: 8, bottom: 8, right: 30)
+      
+      inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 165)
+      
+      inputContainerView?.separator.isHidden = false
+      
+      inputContainerView?.placeholderLabel.text = "Add comment or Send"
+      
+      inputContainerView?.sendButton.isEnabled = true
+      
+      inputContainerView?.invalidateIntrinsicContentSize()   
   }
   
+  func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage, with asset: PHAsset) {
+    let filename = asset.originalFilename!
+    let data = dataFromAsset(asset: asset)
+    
+    let mediaObject = ["object": data!,
+                       "imageSource": imageSourceCamera,
+                       "phAsset": asset,
+                       "filename": filename] as [String: AnyObject]
+    
+    inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
+    
+    if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
+      DispatchQueue.main.async {
+        
+        self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+      }
+    } else {
+      DispatchQueue.main.async {
+        self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0)])
+      }
+    }
+    DispatchQueue.main.async {
+      self.expandCollection()
+    }
+  }
   
   func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage) {
     
@@ -139,13 +226,14 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     
     expandCollection()
   }
-
  
   func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset, at indexPath: IndexPath) {
     
+    if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
+    
         for index in 0...self.inputContainerView!.selectedMedia.count - 1 {
           
-          if self.inputContainerView!.selectedMedia[index].indexPath == indexPath {
+          if self.inputContainerView!.selectedMedia[index].filename == asset.originalFilename {
             
             print("equals")
             self.inputContainerView?.selectedMedia.remove(at: index)
@@ -153,10 +241,12 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
             break
           }
         }
+    } else {
+      self.inputContainerView?.selectedMedia.remove(at: 0)
+      self.inputContainerView?.attachedImages.deleteItems(at: [IndexPath(item: 0, section: 0)])
+    }
     
     inputContainerView?.resetChatInputConntainerViewSettings()
-        
-    
   }
-  
 }
+

@@ -26,7 +26,7 @@ protocol MessagesLoaderDelegate: class {
 }
 
 
-class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
   
   
   weak var delegate: MessagesLoaderDelegate?
@@ -371,7 +371,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
           recieverID = snapshot.value as! String
         }
         
-        if (Auth.auth().currentUser?.uid)! == recieverID {
+        if (Auth.auth().currentUser?.uid)! == recieverID && (Auth.auth().currentUser?.uid != nil)  {
           if self.navigationController?.visibleViewController is ChatLogController {
           
             messagesRef.updateChildValues(["seen" : true])

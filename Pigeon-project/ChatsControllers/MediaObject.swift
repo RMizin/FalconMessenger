@@ -14,6 +14,7 @@ class MediaObject: NSObject {
   var indexPath: IndexPath?
   var imageSource: String?
   var phAsset: PHAsset?
+  var filename: String?
   
   
   init(dictionary: [String: AnyObject]) {
@@ -23,7 +24,7 @@ class MediaObject: NSObject {
     indexPath = dictionary["indexPath"] as? IndexPath
     imageSource = dictionary["imageSource"] as? String
     phAsset = dictionary["phAsset"] as? PHAsset
+    filename = dictionary["filename"] as? String
    
   }
-
 }

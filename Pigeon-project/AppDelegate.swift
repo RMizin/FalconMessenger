@@ -15,7 +15,6 @@ import UserNotifications
 import FirebaseInstanceID
 
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
@@ -77,14 +76,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       
       let destination = OnboardingController()
       let newNavigationController = UINavigationController(rootViewController: destination)
-      let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
-      
+  
       newNavigationController.navigationBar.backgroundColor = .white
-      statusBar.backgroundColor = UIColor.white
-      
       newNavigationController.navigationBar.shadowImage = UIImage()
       newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-      
       newNavigationController.modalTransitionStyle = .crossDissolve
       newNavigationController.navigationBar.isTranslucent = false
       

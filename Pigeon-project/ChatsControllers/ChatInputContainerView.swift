@@ -195,6 +195,13 @@ extension ChatInputContainerView: UIGestureRecognizerDelegate {
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     return true
   }
+  
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    if attachedImages.bounds.contains(touch.location(in: attachedImages)) {
+      return false
+    }
+    return true
+  }
 }
 
 

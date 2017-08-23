@@ -13,6 +13,8 @@ class OnboardingContainerView: UIView {
   let logoImageView: UIImageView = {
     let logoImageView = UIImageView()
     logoImageView.translatesAutoresizingMaskIntoConstraints = false
+    logoImageView.image = UIImage(named: "roundedPigeon")
+    logoImageView.contentMode = .scaleAspectFit
     return logoImageView
   }()
   
@@ -48,8 +50,8 @@ class OnboardingContainerView: UIView {
     
     NSLayoutConstraint.activate([
     logoImageView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-    logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-    logoImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+    logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50),
+    logoImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -50),
     logoImageView.heightAnchor.constraint(equalToConstant: deviceScreen.width),
     
     startMessaging.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -100),

@@ -17,6 +17,7 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     image.layer.masksToBounds = true
     image.layer.cornerRadius = 10
     image.backgroundColor = .clear
+    image.isUserInteractionEnabled = true
     
     return image
   }()
@@ -30,7 +31,15 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     return remove
   }()
   
+  let videoIndicatorView: UIImageView = {
+    let videoIndicatorView = UIImageView(image: UIImage(bundledName: "ImageCell-Video"))
+    videoIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+    videoIndicatorView.backgroundColor = .clear
+    return videoIndicatorView
+  }()
+  
   var isHeightCalculated: Bool = false
+  
   
  override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
   
@@ -49,13 +58,31 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     return layoutAttributes
   }
   
+  var isVideo = false {
+    didSet {
+      reloadAccessoryViews()
+    }
+  }
+  
+  fileprivate func reloadAccessoryViews() {
+    videoIndicatorView.isHidden = !isVideo
+  }
+
+  override func prepareForReuse() {
+    super.prepareForReuse()
+
+      isVideo = false
+  }
+  
+  
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-  
+   
     addSubview(image)
     addSubview(remove)
-    
+    addSubview(videoIndicatorView)
+  
     NSLayoutConstraint.activate([
     
       image.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -66,7 +93,13 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
       remove.topAnchor.constraint(equalTo: topAnchor, constant: 2),
       remove.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2),
       remove.widthAnchor.constraint(equalToConstant: 25),
-      remove.heightAnchor.constraint(equalToConstant: 25)
+      remove.heightAnchor.constraint(equalToConstant: 25),
+      
+      videoIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
+      videoIndicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+      videoIndicatorView.widthAnchor.constraint(equalToConstant: videoIndicatorView.image!.size.width),
+      videoIndicatorView.heightAnchor.constraint(equalToConstant: videoIndicatorView.image!.size.height)
+      
     ])
   }
   

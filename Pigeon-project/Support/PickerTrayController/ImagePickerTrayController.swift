@@ -27,6 +27,8 @@ public enum ImagePickerMediaType {
     @objc optional func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset, at indexPath: IndexPath)
     
     @objc optional func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage)
+    @objc optional func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage, with asset: PHAsset)
+    @objc optional func controller(_ controller: ImagePickerTrayController, didRecordVideoAsset asset: PHAsset)
     
 }
 
@@ -186,11 +188,47 @@ public class ImagePickerTrayController: UIViewController {
     
     // MARK: - Images
     
-    fileprivate func prepareAssets() {
-        fetchAssets()
+   
+  typealias CompletionHandler = (_ success: Bool) -> Void
+  
+  func reFetchAssets(completionHandler: @escaping CompletionHandler) {
+    self.assets.removeAll()
+    let options = PHFetchOptions()
+    options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+    options.fetchLimit = 100
+    
+    let result = PHAsset.fetchAssets(with: options)
+    result.enumerateObjects({ asset, index, stop in
+      self.assets.append(asset)
+    })
+    
+   let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems
+    
+  var newSelectedIndexPaths = [IndexPath]()
+    
+    for newIndexPath in selectedIndexPaths! {
+      
+      let indexPath = IndexPath(item: newIndexPath.item + 1 , section: newIndexPath.section)
+      
+      newSelectedIndexPaths.append(indexPath)
     }
     
+    self.collectionView.reloadData()
+    
+    for indexPathForSelection in newSelectedIndexPaths {
+      UIView.performWithoutAnimation {
+         self.collectionView.selectItem(at: indexPathForSelection, animated: false, scrollPosition: UICollectionViewScrollPosition.bottom )
+      }
+     
+    }
+    self.collectionView.selectItem(at: IndexPath(item: 0, section: 2), animated: false, scrollPosition: .bottom)
+   
+    completionHandler(true)
+  }
+  
+  
     fileprivate func fetchAssets() {
+      
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         options.fetchLimit = 100

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
 
 
 class AccountSettingsController: UIViewController {
@@ -41,8 +41,6 @@ class AccountSettingsController: UIViewController {
   }
   
   
-  
-  
   fileprivate func setConstraints() {
     accountSettingsTableView.translatesAutoresizingMaskIntoConstraints = false
     accountSettingsTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
@@ -52,14 +50,23 @@ class AccountSettingsController: UIViewController {
   }
   
   
+  func removeUserNotificationToken() {
+    
+    let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("notificationTokens")
+    
+    userReference.removeValue()// updateChildValues([token : true])
+  }
   func logoutButtonTapped () {
     
     
     self.tabBarController?.selectedIndex = tabs.chats.rawValue
-    
+    removeUserNotificationToken()
     let firebaseAuth = Auth.auth()
     do {
       try firebaseAuth.signOut()
+      
+      
+
     } catch let signOutError as NSError {
       print ("Error signing out: %@", signOutError)
     }

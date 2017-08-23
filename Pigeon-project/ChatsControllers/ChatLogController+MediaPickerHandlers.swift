@@ -48,9 +48,9 @@ extension ChatLogController {
       inputContainerView.inputTextView.removeGestureRecognizer(inputTextViewTapGestureRecognizer)
     }
   }
-  
-  
-  
+}
+
+
 //  func handleUploadTap() {
 //
 //    let imagePickerController = ImagePickerTrayController()
@@ -183,6 +183,4 @@ extension ChatLogController {
 //  func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
 //    dismiss(animated: true, completion: nil)
 //  }
-  
 
-}
