@@ -22,7 +22,7 @@ class UserProfileController: UIViewController {
   var startingFrame: CGRect?
   var blackBackgroundView = ImageViewBackgroundView()
   var startingImageView: UIImageView?
-   let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
+  let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
   
 
     override func viewDidLoad() {
@@ -69,9 +69,6 @@ extension UserProfileController { /* setting user data to database and to privat
       userReference.updateChildValues(["name" : userProfileContainerView.name.text! ,
                                        "phoneNumber" : userProfileContainerView.phone.text! ]) { (error, reference) in
                                         
-      UserDefaults.standard.set(self.userProfileContainerView.name.text!, forKey: "userName")
-      UserDefaults.standard.set(self.userProfileContainerView.phone.text!, forKey: "userPhoneNumber")
-                                        
       ARSLineProgress.hide()
                 
       self.dismiss(animated: true, completion: nil)
@@ -88,7 +85,9 @@ extension UserProfileController {  /* only during authentication */
        userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
       userProfileContainerView.name.shake()
     } else {
+      
       updateUserData()
+      
       if Messaging.messaging().fcmToken != nil {
          setUserNotificationToken(token: Messaging.messaging().fcmToken!)
       }
@@ -113,11 +112,11 @@ extension UserProfileController {  /* only during authentication */
       if snapshot.exists() {
         let urlString:String = snapshot.value as! String
         self.userProfileContainerView.profileImageView.sd_setImage(with:  URL(string: urlString) , placeholderImage: nil, options: [ .highPriority, .continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
-          UserDefaults.standard.set( urlString, forKey: "userPhotoURL")
-        
+    
            completionHandler(true)
         })
       } else {
+        
          completionHandler(true)
       }
       

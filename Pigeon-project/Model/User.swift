@@ -13,6 +13,7 @@ class User: NSObject {
   var id: String?
   var name: String?
   var photoURL: String?
+  var thumbnailPhotoURL: String?
   var phoneNumber: String?
   var onlineStatus: String?
   
@@ -21,6 +22,7 @@ class User: NSObject {
     self.id = dictionary["id"] as? String
     self.name = dictionary["name"] as? String
     self.photoURL = dictionary["photoURL"] as? String
+    self.thumbnailPhotoURL = dictionary["thumbnailPhotoURL"] as? String
     self.phoneNumber = dictionary["phoneNumber"] as? String
     self.onlineStatus = dictionary["OnlineStatus"] as? String
   

@@ -19,6 +19,7 @@ class UserCell: UITableViewCell {
       imageView.layer.cornerRadius = 27
       imageView.layer.masksToBounds = true
       imageView.contentMode = .scaleAspectFill
+      imageView.image = UIImage(named: "UserpicIcon")
       
       return imageView
     }()
@@ -103,4 +104,16 @@ class UserCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+   // if profileImageView.image == nil {
+       profileImageView.image = UIImage(named: "UserpicIcon")
+    //}
+   
+    nameLabel.text = ""
+    messageLabel.text = nil
+    timeLabel.text = nil
+    //newMessageIndicator.image = UIImage(named: "Oval")
+  }
 }

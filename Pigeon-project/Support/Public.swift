@@ -200,9 +200,9 @@ func createImageThumbnail (_ image: UIImage) -> UIImage {
   let actualHeight:CGFloat = image.size.height
   let actualWidth:CGFloat = image.size.width
   let imgRatio:CGFloat = actualWidth/actualHeight
-  let maxWidth:CGFloat = 100.0
+  let maxWidth:CGFloat = 150.0
   let resizedHeight:CGFloat = maxWidth/imgRatio
-  let compressionQuality:CGFloat = 0.2
+  let compressionQuality:CGFloat = 0.5
   
   let rect:CGRect = CGRect(x: 0, y: 0, width: maxWidth, height: resizedHeight)
   UIGraphicsBeginImageContext(rect.size)
@@ -317,20 +317,21 @@ public extension UIView {
   }
 }
 
-func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
+func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, quality: CGFloat, completion: @escaping (_  imageUrl: String, _ path: String) -> ()) {
   let imageName = UUID().uuidString
-  let ref = Storage.storage().reference().child("message_images").child(imageName)
+  let ref = Storage.storage().reference().child("userProfilePictures").child(imageName)
   
-  if let uploadData = UIImageJPEGRepresentation(image, 0.2) {
+  if let uploadData = UIImageJPEGRepresentation(image, quality) {
     ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
       
       if error != nil {
         print("Failed to upload image:", error as Any)
         return
       }
+   
       
       if let imageUrl = metadata?.downloadURL()?.absoluteString {
-        completion(imageUrl)
+        completion(imageUrl, metadata!.name!)
         
       }
       

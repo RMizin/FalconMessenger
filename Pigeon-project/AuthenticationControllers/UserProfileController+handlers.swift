@@ -12,7 +12,24 @@ import FirebaseAuth
 import Firebase
 import Photos
 
+
+private let deletionErrorMessage = "There was a problem when deleting. Try again later."
+private let cameraNotExistsMessage = "You don't have camera"
+private let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
+private let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
+private let noInternetError = "Internet connection is not available. Try again later"
+
 extension UserProfileController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+  
+  
+  fileprivate func basicErrorAlertWith (message: String) {
+    
+    self.userProfileContainerView.profileImageView.hideActivityIndicator()
+    let alert = UIAlertController(title: "Error", message: message, preferredStyle: UIAlertControllerStyle.alert)
+    alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
+    self.present(alert, animated: true, completion: nil)
+  }
+  
   
   func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
     // Image picker in edit mode
@@ -154,7 +171,6 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
           
         else if (status == PHAuthorizationStatus.denied) {
           // Access has been denied.
-          ARSLineProgress.showFail()
           self.failedToSaveImageToGallery()
         }
           
@@ -211,11 +227,20 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
    if userProfileContainerView.profileImageView.image != nil {
       alert.addAction(UIAlertAction(title: "Delete photo", style: .destructive, handler: { _ in
         self.handleZoomOut()
-        self.deletePhoto()
+        self.deleteCurrentPhoto(completion: { (isDeleted) in
+          if isDeleted {
+            
+          } else {
+            
+            self.userProfileContainerView.profileImageView.hideActivityIndicator()
+            self.basicErrorAlertWith(message: deletionErrorMessage)
+          }
+        
+        })
+        
       }))
 
     }
-    
     
     alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
     let alertWindow = UIWindow(frame: UIScreen.main.bounds)
@@ -226,38 +251,90 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   }
   
   
-  func deletePhoto() {
+  
+  
+ fileprivate typealias currentPictureDeletionCompletionHandler = (_ success: Bool) -> Void
+  
+ fileprivate func deleteCurrentPhoto(completion: @escaping currentPictureDeletionCompletionHandler) {
+  
+  if currentReachabilityStatus == .notReachable {
+    basicErrorAlertWith(message: noInternetError)
+    completion(false)
+    return
+  }
     
-    userProfileContainerView.profileImageView.showActivityIndicator()
-   
+  
     
-    let userPhotoURL = UserDefaults.standard.string(forKey: "userPhotoURL")
-    
-    let imageRef = Storage.storage().reference(forURL: userPhotoURL!)
-    
-    imageRef.delete { (error) in
-      if error != nil {
-        print("error removig image from firebse storage")
-      }
+    if let currentUser = Auth.auth().currentUser?.uid {
       
-      print("removing completed begining removing URLS")
+      userProfileContainerView.profileImageView.showActivityIndicator()
       
-      
-      let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
-      userReference.updateChildValues(["photoURL" : ""], withCompletionBlock: { (error, referene) in
-        if error != nil {
-          print("error deleting url from firebase")
-        }
+      let userRef = Database.database().reference().child("users").child(currentUser)
+      userRef.observeSingleEvent(of: .value, with: { (snapshot) in
+        let userData = snapshot.value as? NSDictionary
         
-        self.userProfileContainerView.profileImageView.image = nil
-        UserDefaults.standard.set("", forKey: "userPhotoURL")
-        self.userProfileContainerView.profileImageView.hideActivityIndicator()
+        if let userPhotoURLPath = userData?["photoURLPath"] as? String, let userThumbnailPhotoURLPath = userData?["thumbnailPhotoURLPath"] as? String {
+          
+          if userThumbnailPhotoURLPath != "" {
+            let imageRef = Storage.storage().reference(withPath: "userProfilePictures/\(userPhotoURLPath)")
+            let thumbnailImageRef = Storage.storage().reference(withPath: "userProfilePictures/\(userThumbnailPhotoURLPath)")
+            
+            
+            thumbnailImageRef.delete(completion: { (error) in
+              
+              if error != nil {
+                print("error removig image from firebse storage")
+                completion(false)
+                
+                return
+              }
+              
+              imageRef.delete(completion: { (error) in
+                
+                if error != nil {
+                  print("error removig image from firebse storage")
+                  completion(false)
+                  
+                  return
+                }
+                
+                userRef.removeAllObservers()
+                
+                let userReference = Database.database().reference().child("users").child(currentUser)
+                userReference.updateChildValues(["photoURL" : "", "thumbnailPhotoURL" : "", "thumbnailPhotoURLPath" : "", "photoURLPath" : ""], withCompletionBlock: { (error, referene) in
+                  
+                  if error != nil {
+                    print("error deleting url from firebase")
+                    completion(false)
+                  }
+                  
+                  self.userProfileContainerView.profileImageView.hideActivityIndicator()
+                  userReference.removeAllObservers()
+                  completion(true)
+                })
+              })
+            })
+          } else {
+            completion(true)
+          }
+        } else {
+          completion(true)
+        }
+      }, withCancel: { (error) in
+       self.basicErrorAlertWith(message: noInternetError)
+        return
       })
-    }
+   }
   }
   
   
   func openGallery() {
+    
+    if currentReachabilityStatus == .notReachable {
+      basicErrorAlertWith(message: noInternetError)
+      return
+    }
+    
     picker.allowsEditing = true
   
     picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
@@ -266,6 +343,12 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   
   
   func openCamera() {
+    
+    if currentReachabilityStatus == .notReachable {
+      basicErrorAlertWith(message: noInternetError)
+      return
+    }
+    
     if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
       picker.sourceType = UIImagePickerControllerSourceType.camera
       picker.allowsEditing = true
@@ -273,10 +356,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
       self.present(picker, animated: true, completion: nil)
       
     } else {
-      
-      let alert = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
-      alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-      self.present(alert, animated: true, completion: nil)
+      basicErrorAlertWith(message: cameraNotExistsMessage)
     }
   }
   
@@ -296,37 +376,58 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     
     
     if let selectedImage = selectedImageFromPicker {
-          self.userProfileContainerView.profileImageView.image = selectedImage
-          updateUserProfile(with:  self.userProfileContainerView.profileImageView.image!)
+      
+      if currentReachabilityStatus == .notReachable {
+        basicErrorAlertWith(message: noInternetError)
+        return
+      }
+      
+          deleteCurrentPhoto(completion: { (isDeleted) in
+            if isDeleted {
+              self.userProfileContainerView.profileImageView.image = selectedImage
+              self.updateUserProfile(with:  self.userProfileContainerView.profileImageView.image!)
+            } else {
+              self.basicErrorAlertWith(message: deletionErrorMessage)
+            }
+          })
+      
     }
     
     editLayer.removeFromSuperlayer()
     label.removeFromSuperview()
     dismiss(animated: true, completion: nil)
+   
     userProfileContainerView.profileImageView.showActivityIndicator()
   }
   
 
   func updateUserProfile(with image: UIImage) {
-    let compressedImage = createImageThumbnail(image)
+    let thumbnailImage = createImageThumbnail(image)
+    //let compressedImage = compressImage(image: image).asUIImage
     
-    uploadAvatarForUserToFirebaseStorageUsingImage(compressedImage) { (thumbnailImageURL) in
+    uploadAvatarForUserToFirebaseStorageUsingImage(thumbnailImage, quality: 0.2) { (thumbnailImageURL, path) in
       
       let reference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
-      reference.updateChildValues(["thumbnailPhotoURL" : String(describing: thumbnailImageURL)], withCompletionBlock: { (error, ref) in
-        
-        UserDefaults.standard.set(String(describing: thumbnailImageURL), forKey: "thumbnailUserPhotoURL")
+      reference.updateChildValues(["thumbnailPhotoURL" : String(describing: thumbnailImageURL), "thumbnailPhotoURLPath" : path], withCompletionBlock: { (error, ref) in
+        if error != nil {
+          self.basicErrorAlertWith(message: thumbnailUploadError )
+          return
+        }
+       
       })
     }
     
-    uploadAvatarForUserToFirebaseStorageUsingImage(image, completion: { (imageURL) in
+    uploadAvatarForUserToFirebaseStorageUsingImage(image, quality: 0.5, completion: { (imageURL, path) in
       
-      self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: imageURL), placeholderImage: image, options: [.highPriority, .continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
+      self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: imageURL), placeholderImage: image, options: [.highPriority, .continueInBackground], completed: { (image, error, cacheType, url) in
           
         let reference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
-        reference.updateChildValues(["photoURL" : String(describing: url!)], withCompletionBlock: { (error, ref) in
+        reference.updateChildValues(["photoURL" : String(describing: imageURL), "photoURLPath" : path], withCompletionBlock: { (error, ref) in
           
-           UserDefaults.standard.set(String(describing: url!), forKey: "userPhotoURL")
+          if error != nil {
+            self.basicErrorAlertWith(message: fullsizePictureUploadError)
+          }
+          
            self.userProfileContainerView.profileImageView.hideActivityIndicator()
         })
       })

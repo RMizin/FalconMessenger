@@ -9,7 +9,7 @@
 
 import UIKit
 import FirebaseAuth
-import  Firebase
+import Firebase
 
 
 class SettingsViewControllersContainer: UIViewController {
@@ -21,22 +21,61 @@ class SettingsViewControllersContainer: UIViewController {
   let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
   let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
   
+  var currentName = String()
+  
  
     override func viewDidLoad() {
         super.viewDidLoad()
-
+      
         view.backgroundColor = .white
         configureScrollView()
         configureContainedViewControllers()
-        configureContainedViewControllersData()
+      
         userDataController.userProfileContainerView.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
         userDataController.userProfileContainerView.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
+      
+        listenChanges()
     }
   
     override func viewDidLayoutSubviews() {
       super.viewDidLayoutSubviews()
       scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: userDataController.view.frame.height + accountSettingsController.view.frame.height)
     }
+  
+  
+  
+  func listenChanges() {
+    
+    if let currentUser = Auth.auth().currentUser?.uid {
+      
+      let photoURLReference = Database.database().reference().child("users").child(currentUser).child("photoURL")
+      photoURLReference.observe(.value, with: { (snapshot) in
+        if let url = snapshot.value as? String {
+          self.userDataController.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url) , placeholderImage: nil, options: [.highPriority, .continueInBackground], completed: {(image, error, cacheType, url) in
+          })
+        }
+        
+      })
+      
+      
+       let nameReference = Database.database().reference().child("users").child(currentUser).child("name")
+       nameReference.observe(.value, with: { (snapshot) in
+        if let name = snapshot.value as? String {
+          self.userDataController.userProfileContainerView.name.text = name
+          self.currentName = name
+        }
+      })
+      
+      
+       let phoneNumberReference = Database.database().reference().child("users").child(currentUser).child("phoneNumber")
+       phoneNumberReference.observe(.value, with: { (snapshot) in
+        if let phoneNumber = snapshot.value as? String {
+          self.userDataController.userProfileContainerView.phone.text = phoneNumber
+        }
+      })
+
+    }
+  }
   
     fileprivate func configureScrollView() {
     
@@ -50,38 +89,17 @@ class SettingsViewControllersContainer: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    configureContainedViewControllersData()
+
+    listenChanges()
   }
   
-  
-  fileprivate var lastProfileURL:URL? = nil
-  
-  fileprivate func configureContainedViewControllersData() {
-    
-    let userName = UserDefaults.standard.string(forKey: "userName")
-    let userPhoneNumber = UserDefaults.standard.string(forKey: "userPhoneNumber")
-    let userPhotoURL = UserDefaults.standard.string(forKey: "userPhotoURL") //?? ""
-  
-    if  userPhotoURL != nil {
-      if userDataController.userProfileContainerView.profileImageView.image == nil || lastProfileURL != URL(string: userPhotoURL!) {
-        
-        userDataController.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: userPhotoURL!), placeholderImage: nil, options: [.progressiveDownload, .highPriority, .continueInBackground], completed: { (image, error, cacheType, url) in
-          self.lastProfileURL = url
-          
-        })
-      }
-    }
-    
-    userDataController.userProfileContainerView.name.text = userName
-    userDataController.userProfileContainerView.phone.text = userPhoneNumber
-  }
-  
+
     fileprivate func configureContainedViewControllers() {
       
       addChildViewController(userDataController)
       addChildViewController(accountSettingsController)
       
-      userDataController.view.frame = CGRect(x: 0, y: 0/*-navigationController!.navigationBar.frame.height*/, width: deviceScreen.width, height: 300)
+      userDataController.view.frame = CGRect(x: 0, y: 0, width: deviceScreen.width, height: 300)
       accountSettingsController.view.frame = CGRect(x: 0, y: 255, width: deviceScreen.width, height: 270)
      
       scrollView.addSubview(userDataController.view)
@@ -123,13 +141,11 @@ extension SettingsViewControllersContainer { /* user name editing */
   
   
   func cancelBarButtonPressed() {
-    let userName = UserDefaults.standard.string(forKey: "userName")
-    userDataController.userProfileContainerView.name.text = userName
+    
+    userDataController.userProfileContainerView.name.text = currentName
     userDataController.userProfileContainerView.name.resignFirstResponder()
     navigationItem.leftBarButtonItem = nil
     navigationItem.rightBarButtonItem = nil
-    
-    
   }
   
   func doneBarButtonPressed() {
@@ -148,7 +164,6 @@ extension SettingsViewControllersContainer { /* user name editing */
         self.view.isUserInteractionEnabled = true
       }
       
-      UserDefaults.standard.set(self.userDataController.userProfileContainerView.name.text!, forKey: "userName")
       ARSLineProgress.showSuccess()
       self.view.isUserInteractionEnabled = true
     }

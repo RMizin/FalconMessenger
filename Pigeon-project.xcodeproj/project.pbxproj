@@ -133,6 +133,7 @@
 		4BED6EBE1F476A46004EF2E0 /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EBA1F476A46004EF2E0 /* CameraOverlayView.swift */; };
 		4BED6EBF1F476A46004EF2E0 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EBB1F476A46004EF2E0 /* ImageCell.swift */; };
 		4BED6EC11F48AAFA004EF2E0 /* MediaPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EC01F48AAFA004EF2E0 /* MediaPickerController.swift */; };
+		4BED9B8A1F4EDE81007A1631 /* EnterVerificationContainerView+timerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED9B891F4EDE81007A1631 /* EnterVerificationContainerView+timerHandlers.swift */; };
 		4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */; };
 		4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */; };
 		4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */; };
@@ -288,6 +289,7 @@
 		4BED6EBA1F476A46004EF2E0 /* CameraOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraOverlayView.swift; path = Support/PickerTrayController/Cells/CameraOverlayView.swift; sourceTree = "<group>"; };
 		4BED6EBB1F476A46004EF2E0 /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCell.swift; path = Support/PickerTrayController/Cells/ImageCell.swift; sourceTree = "<group>"; };
 		4BED6EC01F48AAFA004EF2E0 /* MediaPickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaPickerController.swift; path = ChatsControllers/MediaPickerController.swift; sourceTree = "<group>"; };
+		4BED9B891F4EDE81007A1631 /* EnterVerificationContainerView+timerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "EnterVerificationContainerView+timerHandlers.swift"; path = "AuthenticationControllers/EnterVerificationContainerView+timerHandlers.swift"; sourceTree = "<group>"; };
 		4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CallingCodes.plist; sourceTree = "<group>"; };
 		4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationContainerView.swift; path = AuthenticationControllers/EnterVerificationContainerView.swift; sourceTree = "<group>"; };
 		4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectCountryCodeController.swift; path = AuthenticationControllers/SelectCountryCodeController.swift; sourceTree = "<group>"; };
@@ -703,6 +705,7 @@
 			children = (
 				4B9498711F3244B1008DA07F /* EnterVerificationCodeController.swift */,
 				4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */,
+				4BED9B891F4EDE81007A1631 /* EnterVerificationContainerView+timerHandlers.swift */,
 			);
 			name = Verification;
 			sourceTree = "<group>";
@@ -955,6 +958,7 @@
 				4BE5715B1F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift in Sources */,
 				4BED6EC11F48AAFA004EF2E0 /* MediaPickerController.swift in Sources */,
 				4BE571631F4D87A4009D9AB4 /* StickersViewController.swift in Sources */,
+				4BED9B8A1F4EDE81007A1631 /* EnterVerificationContainerView+timerHandlers.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */,
 				4BE571651F4D87A4009D9AB4 /* UIImage+Size.swift in Sources */,

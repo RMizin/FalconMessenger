@@ -72,4 +72,8 @@ class ContactsTableViewCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    title.text = ""
+  }
 }

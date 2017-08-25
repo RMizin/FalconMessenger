@@ -161,7 +161,7 @@ extension ChatLogController {
 //  
 ////  fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
 ////    let imageName = UUID().uuidString
-////    let ref = Storage.storage().reference().child("message_images").child(imageName)
+////    let ref = Storage.storage().reference().child("userProfilePictures").child(imageName)
 ////    
 ////    if let uploadData = UIImageJPEGRepresentation(image, 0.2) {
 ////      ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in

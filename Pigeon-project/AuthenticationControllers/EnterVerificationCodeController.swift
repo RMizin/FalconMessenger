@@ -9,10 +9,12 @@
 import UIKit
 import FirebaseAuth
 
+
+
 class EnterVerificationCodeController: UIViewController {
 
   let enterVerificationContainerView = EnterVerificationContainerView()
-  
+
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +22,8 @@ class EnterVerificationCodeController: UIViewController {
       view.backgroundColor = UIColor.white
       view.addSubview(enterVerificationContainerView)
       enterVerificationContainerView.frame = view.bounds
+      enterVerificationContainerView.resend.addTarget(self, action: #selector(sendSMSConfirmation), for: .touchUpInside)
+      enterVerificationContainerView.enterVerificationCodeController = self
       configureNavigationBar()
   }
   
@@ -27,8 +31,33 @@ class EnterVerificationCodeController: UIViewController {
   fileprivate func configureNavigationBar () {
     let rightBarButton = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(rightBarButtonDidTap))
     self.navigationItem.rightBarButtonItem = rightBarButton
+    self.navigationItem.hidesBackButton = true
   }
   
+  
+  @objc fileprivate func sendSMSConfirmation () {
+    
+    enterVerificationContainerView.resend.isEnabled = false
+    print("tappped sms confirmation")
+    
+    let phoneNumberForVerification = enterVerificationContainerView.titleNumber.text!
+    
+    PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification) { (verificationID, error) in
+    
+      if let error = error {
+        print(error.localizedDescription)
+        ARSLineProgress.showFail()
+        return
+      }
+    
+      print("verification sent")
+      self.enterVerificationContainerView.resend.isEnabled = false
+          
+      UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+      self.enterVerificationContainerView.runTimer()
+    }
+  }
+ 
   
   func rightBarButtonDidTap () {
     print("tapped")
@@ -37,6 +66,11 @@ class EnterVerificationCodeController: UIViewController {
     let verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
     let verificationCode = enterVerificationContainerView.verificationCode.text
 
+    if verificationID == nil {
+      ARSLineProgress.showFail()
+      self.enterVerificationContainerView.verificationCode.shake()
+      return
+    }
       let credential = PhoneAuthProvider.provider().credential (
         withVerificationID: verificationID!,
         verificationCode: verificationCode!)

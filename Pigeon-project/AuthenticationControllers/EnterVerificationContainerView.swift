@@ -38,7 +38,6 @@ class EnterVerificationContainerView: UIView {
     verificationCode.keyboardType = .numberPad
     verificationCode.placeholder = "Code"
     verificationCode.borderStyle = .roundedRect
-    //verificationCode.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
     
     return verificationCode
   }()
@@ -51,7 +50,28 @@ class EnterVerificationContainerView: UIView {
     resend.contentHorizontalAlignment = .center
     resend.setTitleColor(PigeonPalette.pigeonPaletteBlue, for: .normal)
     resend.setTitleColor(PigeonPalette.pigeonPaletteUiViewGray, for: .highlighted)
+    resend.setTitleColor(UIColor.lightGray, for: .disabled )
+    
     return resend
+  }()
+  
+  
+  weak var enterVerificationCodeController: EnterVerificationCodeController?
+  
+  var seconds = 120
+  
+  var timer = Timer()
+  
+  var timerLabel: UILabel = {
+    var timerLabel = UILabel()
+    timerLabel.textColor = UIColor.lightGray
+    timerLabel.font = UIFont.systemFont(ofSize: 13)
+    timerLabel.translatesAutoresizingMaskIntoConstraints = false
+    timerLabel.textAlignment = .center
+    timerLabel.sizeToFit()
+    timerLabel.numberOfLines = 0
+    
+    return timerLabel
   }()
   
   
@@ -62,6 +82,7 @@ class EnterVerificationContainerView: UIView {
     addSubview(subtitleText)
     addSubview(verificationCode)
     addSubview(resend)
+    addSubview(timerLabel)
   
     NSLayoutConstraint.activate([
       titleNumber.topAnchor.constraint(equalTo: topAnchor),
@@ -82,7 +103,12 @@ class EnterVerificationContainerView: UIView {
       resend.topAnchor.constraint(equalTo: verificationCode.bottomAnchor, constant: 30),
       resend.leadingAnchor.constraint(equalTo: leadingAnchor),
       resend.trailingAnchor.constraint(equalTo: trailingAnchor),
-      resend.heightAnchor.constraint(equalToConstant: 50)
+      resend.heightAnchor.constraint(equalToConstant: 50),
+      
+      timerLabel.topAnchor.constraint(equalTo: resend.bottomAnchor, constant: 10),
+      timerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+      timerLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+      timerLabel.heightAnchor.constraint(equalToConstant: 35)
     ])
   }
   

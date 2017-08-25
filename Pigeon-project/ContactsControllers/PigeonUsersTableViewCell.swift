@@ -17,6 +17,7 @@ class PigeonUsersTableViewCell: UITableViewCell {
     
     icon.layer.cornerRadius = 20
     icon.layer.masksToBounds = true
+    icon.image = UIImage(named: "UserpicIcon")
     
     
     return icon
@@ -86,6 +87,14 @@ class PigeonUsersTableViewCell: UITableViewCell {
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+   
+    icon.image = UIImage(named: "UserpicIcon")
+    title.text = ""
+    subtitle.text = ""
   }
 
 }

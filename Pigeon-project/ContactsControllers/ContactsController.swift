@@ -335,11 +335,20 @@ class ContactsController: UITableViewController {
         }
       
       
-        if let url = filteredUsers[indexPath.row].photoURL {
-        
-          cell.icon.sd_setImage(with: URL(string: url),
-                                placeholderImage: UIImage(named: "UserpicIcon"),
-                                options: [.progressiveDownload, .continueInBackground, .highPriority])
+        if let url = filteredUsers[indexPath.row].thumbnailPhotoURL {          
+          cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
+            if image != nil {
+              if (cacheType != SDImageCacheType.memory && cacheType != SDImageCacheType.disk) {
+                cell.icon.alpha = 0
+                UIView.animate(withDuration: 0.25, animations: {
+                  cell.icon.alpha = 1
+                })
+              } else {
+                cell.icon.alpha = 1
+              }
+            }
+
+          })
         }
       
       return cell

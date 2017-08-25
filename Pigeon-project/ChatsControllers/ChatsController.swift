@@ -209,24 +209,25 @@ class ChatsController: UITableViewController {
       cell.messageLabel.text = finalUserCellData[indexPath.row].0.text
       cell.timeLabel.text = finalUserCellData[indexPath.row].0.timestamp?.doubleValue.getShortDateStringFromUTC()
       
-      DispatchQueue.main.async {
-        if let url = self.finalUserCellData[indexPath.row].1.photoURL {
+     // DispatchQueue.main.async {
+        if let url = self.finalUserCellData[indexPath.row].1.thumbnailPhotoURL {
           cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
             if image != nil {
-              if (cacheType != SDImageCacheType.memory) {
+              if (cacheType != SDImageCacheType.memory && cacheType != SDImageCacheType.disk) {
                 cell.profileImageView.alpha = 0
-                UIView.animate(withDuration: 0.2, animations: {
+                UIView.animate(withDuration: 0.25, animations: {
                   cell.profileImageView.alpha = 1
                 })
               } else {
                 cell.profileImageView.alpha = 1
               }
-            } else {
-              cell.profileImageView.image = UIImage(named: "UserpicIcon")
             }
+            //else {
+             // cell.profileImageView.image = UIImage(named: "UserpicIcon")
+            //}
           })
         }
-      }
+      //}
       
       if finalUserCellData[indexPath.row].0.seen != nil {
         
@@ -235,15 +236,18 @@ class ChatsController: UITableViewController {
         if !seen && finalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
           
           cell.newMessageIndicator.isHidden = false
+         // cell.newMessageIndicator.image = UIImage(named: "Oval")
           
         } else {
           
           cell.newMessageIndicator.isHidden = true
+          //cell.newMessageIndicator.image = nil
         }
         
       } else {
         
          cell.newMessageIndicator.isHidden = true
+         //cell.newMessageIndicator.image = nil
       }
     
         return cell
