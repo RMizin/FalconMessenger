@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import FirebaseStorage
-import FirebaseAuth
 import Firebase
 import Photos
 
@@ -229,7 +227,8 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
         self.handleZoomOut()
         self.deleteCurrentPhoto(completion: { (isDeleted) in
           if isDeleted {
-            
+            self.userProfileContainerView.profileImageView.hideActivityIndicator()
+            print("deleted")
           } else {
             
             self.userProfileContainerView.profileImageView.hideActivityIndicator()
@@ -257,74 +256,53 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   
  fileprivate func deleteCurrentPhoto(completion: @escaping currentPictureDeletionCompletionHandler) {
   
-  if currentReachabilityStatus == .notReachable {
-    basicErrorAlertWith(message: noInternetError)
-    completion(false)
-    return
-  }
-    
+    if currentReachabilityStatus == .notReachable {
+      basicErrorAlertWith(message: noInternetError)
+      return
+    }
   
-    
-    if let currentUser = Auth.auth().currentUser?.uid {
+    guard let currentUser = Auth.auth().currentUser?.uid else {
+      completion(false)
+      return
+    }
+  
+    userProfileContainerView.profileImageView.showActivityIndicator()
       
-      userProfileContainerView.profileImageView.showActivityIndicator()
+    let userRef = Database.database().reference().child("users").child(currentUser)
+    userRef.observeSingleEvent(of: .value, with: { (snapshot) in
       
-      let userRef = Database.database().reference().child("users").child(currentUser)
-      userRef.observeSingleEvent(of: .value, with: { (snapshot) in
-        let userData = snapshot.value as? NSDictionary
+      let userData = snapshot.value as? NSDictionary
         
-        if let userPhotoURLPath = userData?["photoURLPath"] as? String, let userThumbnailPhotoURLPath = userData?["thumbnailPhotoURLPath"] as? String {
-          
-          if userThumbnailPhotoURLPath != "" {
-            let imageRef = Storage.storage().reference(withPath: "userProfilePictures/\(userPhotoURLPath)")
-            let thumbnailImageRef = Storage.storage().reference(withPath: "userProfilePictures/\(userThumbnailPhotoURLPath)")
-            
-            
-            thumbnailImageRef.delete(completion: { (error) in
-              
-              if error != nil {
-                print("error removig image from firebse storage")
-                completion(false)
-                
-                return
-              }
-              
-              imageRef.delete(completion: { (error) in
-                
-                if error != nil {
-                  print("error removig image from firebse storage")
-                  completion(false)
-                  
-                  return
-                }
-                
-                userRef.removeAllObservers()
-                
-                let userReference = Database.database().reference().child("users").child(currentUser)
-                userReference.updateChildValues(["photoURL" : "", "thumbnailPhotoURL" : "", "thumbnailPhotoURLPath" : "", "photoURLPath" : ""], withCompletionBlock: { (error, referene) in
-                  
-                  if error != nil {
-                    print("error deleting url from firebase")
-                    completion(false)
-                  }
-                  
-                  self.userProfileContainerView.profileImageView.hideActivityIndicator()
-                  userReference.removeAllObservers()
-                  completion(true)
-                })
-              })
-            })
-          } else {
-            completion(true)
-          }
-        } else {
-          completion(true)
-        }
-      }, withCancel: { (error) in
-       self.basicErrorAlertWith(message: noInternetError)
+      guard let userPhotoURLPath = userData?["photoURLPath"] as? String, let userThumbnailPhotoURLPath = userData?["thumbnailPhotoURLPath"] as? String else {
+        completion(false)
         return
-      })
-   }
+      }
+      
+      if userThumbnailPhotoURLPath != "" || userPhotoURLPath != "" {
+            
+        let imageRef = Storage.storage().reference().child("/userProfilePictures/\(userPhotoURLPath)")
+        let thumbnailImageRef = Storage.storage().reference().child("/userProfilePictures/\(userThumbnailPhotoURLPath)")
+          
+        thumbnailImageRef.delete(completion: nil)
+        imageRef.delete(completion: nil)
+        
+        let userReference = Database.database().reference().child("users").child(currentUser)
+        userReference.updateChildValues(["photoURL" : "", "thumbnailPhotoURL" : "", "thumbnailPhotoURLPath" : "", "photoURLPath" : ""], withCompletionBlock: { (error, referene) in
+                  
+          if error != nil {
+            print("error deleting url from firebase")
+            completion(false)
+            return
+          }
+          
+          completion(true)
+        })
+      } else {
+        completion(true)
+      }
+    }, withCancel: { (error) in
+      self.basicErrorAlertWith(message: noInternetError)
+    })
   }
   
   
@@ -389,7 +367,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
             } else {
               self.basicErrorAlertWith(message: deletionErrorMessage)
             }
-          })
+         })
       
     }
     
@@ -403,8 +381,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
 
   func updateUserProfile(with image: UIImage) {
     let thumbnailImage = createImageThumbnail(image)
-    //let compressedImage = compressImage(image: image).asUIImage
-    
+   
     uploadAvatarForUserToFirebaseStorageUsingImage(thumbnailImage, quality: 0.2) { (thumbnailImageURL, path) in
       
       let reference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)

@@ -53,12 +53,6 @@ class ChatsController: UITableViewController {
       super.viewDidLoad()
     
     configureTableView()
-  }
-  
-  
-  override func viewWillAppear(_ animated: Bool) {
-      super.viewWillAppear(animated)
-    
     fetchConversations()
   }
   
@@ -66,7 +60,7 @@ class ChatsController: UITableViewController {
   fileprivate func configureTableView() {
     
     tableView.register(UserCell.self, forCellReuseIdentifier: userCellID)
-    tableView.allowsMultipleSelectionDuringEditing = true
+    tableView.allowsMultipleSelectionDuringEditing = false
     tableView.backgroundColor = UIColor.white
     navigationItem.leftBarButtonItem = editButtonItem
   }
@@ -119,7 +113,8 @@ class ChatsController: UITableViewController {
   func fetchMessageWithMessageId(_ messageId: String) {
     
     let messagesReference = Database.database().reference().child("messages").child(messageId)
-    messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
+    messagesReference.keepSynced(true)
+    messagesReference.observe( .value, with: { (snapshot) in
       
       if let dictionary = snapshot.value as? [String: AnyObject] {
         
@@ -134,30 +129,36 @@ class ChatsController: UITableViewController {
   
   
   func fetchUserDataWithUserID(_ userID: String, for message: Message) {
-   
-    if let id = message.chatPartnerId() {
+    
+    
+    let ref = Database.database().reference().child("users").child(userID)
+    ref.keepSynced(true)
+    ref.observe(.value, with: { (snapshot) in
       
-      let ref = Database.database().reference().child("users").child(id)
-      
-      ref.observeSingleEvent(of: .value, with: { (snapshot) in
+      guard var dictionary = snapshot.value as? [String: AnyObject] else {
+        return
+      }
+          
+      dictionary.updateValue(userID as AnyObject, forKey: "id")
         
-        if var dictionary = snapshot.value as? [String: AnyObject] {
+      let user = User(dictionary: dictionary)
+      if user.id == Auth.auth().currentUser?.uid {
+        print("\n\n  TRUE  \n\n")
+      }
+      self.messagesDictionary[userID] = (message, user)
+      self.userIDs = self.messagesDictionary.keys.sorted()
           
-          dictionary.updateValue(id as AnyObject, forKey: "id")
-          print(snapshot.key)
-          let user = User(dictionary: dictionary)
-          
-          self.messagesDictionary[id] = (message, user)
-          self.userIDs = self.messagesDictionary.keys.sorted()
-          
-          if self.userIDs.count == self.userConversations {
-             self.handleReloadTable()
-          }
-          
-        }
-      }, withCancel: nil)
-    }
+      if self.userIDs.count == self.userConversations {
+        self.handleReloadTable()
+      }
+      
+    }, withCancel: { (error) in
+      print("\n", error.localizedDescription, "error\n")
+    })
+
+   
   }
+
   
     // MARK: - Table view data source
   
@@ -167,28 +168,28 @@ class ChatsController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     
-    guard let uid = Auth.auth().currentUser?.uid else {
+    guard let uid = Auth.auth().currentUser?.uid  else {
       return
     }
-    
-    let message = self.finalUserCellData[indexPath.row]
-    
-    if let chatPartnerId = message.0.chatPartnerId() {
-      Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(userMessagesFirebaseFolder).removeValue(completionBlock: { (error, ref) in
-        
-        if error != nil {
-          print("Failed to delete message:", error as Any)
-          return
-        }
-        
-        self.messagesDictionary.removeValue(forKey: chatPartnerId)
-        self.handleReloadTable()
-        
-      })
-    }
+      
+      let message = self.finalUserCellData[indexPath.row]
+      
+      if let chatPartnerId = message.0.chatPartnerId() {
+        Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(userMessagesFirebaseFolder).removeValue(completionBlock: { (error, ref) in
+          
+          if error != nil {
+            print("Failed to delete message:", error as Any)
+            return
+          }
+          
+          self.messagesDictionary.removeValue(forKey: chatPartnerId)
+          self.handleReloadTable()
+          
+        })
+      }
   }
-
   
+ 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       return 80
     }
@@ -209,7 +210,6 @@ class ChatsController: UITableViewController {
       cell.messageLabel.text = finalUserCellData[indexPath.row].0.text
       cell.timeLabel.text = finalUserCellData[indexPath.row].0.timestamp?.doubleValue.getShortDateStringFromUTC()
       
-     // DispatchQueue.main.async {
         if let url = self.finalUserCellData[indexPath.row].1.thumbnailPhotoURL {
           cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
             if image != nil {
@@ -222,12 +222,8 @@ class ChatsController: UITableViewController {
                 cell.profileImageView.alpha = 1
               }
             }
-            //else {
-             // cell.profileImageView.image = UIImage(named: "UserpicIcon")
-            //}
           })
         }
-      //}
       
       if finalUserCellData[indexPath.row].0.seen != nil {
         
@@ -236,18 +232,15 @@ class ChatsController: UITableViewController {
         if !seen && finalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
           
           cell.newMessageIndicator.isHidden = false
-         // cell.newMessageIndicator.image = UIImage(named: "Oval")
           
         } else {
           
           cell.newMessageIndicator.isHidden = true
-          //cell.newMessageIndicator.image = nil
         }
         
       } else {
         
          cell.newMessageIndicator.isHidden = true
-         //cell.newMessageIndicator.image = nil
       }
     
         return cell
@@ -258,8 +251,8 @@ class ChatsController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-     let user = finalUserCellData[indexPath.row].1
-     showChatControllerForUser(user)
+      let user = finalUserCellData[indexPath.row].1
+      showChatControllerForUser(user)
   }
   
   
