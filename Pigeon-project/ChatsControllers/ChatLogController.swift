@@ -8,12 +8,15 @@
 
 import UIKit
 import Firebase
+import Photos
 
 private let incomingTextMessageCellID = "incomingTextMessageCellID"
 
 private let outgoingTextMessageCellID = "outgoingTextMessageCellID"
 
 private let typingIndicatorCellID = "typingIndicatorCellID"
+
+private let photoMessageCellID = "photoMessageCellID"
 
 private let typingIndicatorDatabaseID = "typingIndicator"
 
@@ -37,6 +40,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       self.title = user?.name
     }
   }
+  
+  var startingFrame: CGRect?
+  var blackBackgroundView = ImageViewBackgroundView()
+  var startingImageView: UIImageView?
+  let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
+
   
   var messages = [Message]()
   
@@ -97,11 +106,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           switch true {
           
             case self.newOutboxMessage:
-          
+              
               self.updateMessageStatus(messagesRef: messagesRef)
-              self.newOutboxMessage = false
-          
-            break
+              
+              if Message(dictionary: dictionary).text != nil {
+                self.newOutboxMessage = false
+              }
+              
+              
+              if Message(dictionary: dictionary).fromId == uid {
+                break
+              }
+            
           
             case self.newInboxMessage:
           
@@ -419,21 +435,25 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     setupCollectionView()
   }
   
- 
+
   fileprivate func setupCollectionView () {
     inputTextViewTapGestureRecognizer = UITapGestureRecognizer(target: inputContainerView.chatLogController, action: #selector(ChatLogController.toggleTextView))
     inputTextViewTapGestureRecognizer.delegate = inputContainerView
     view.backgroundColor = .white
     collectionView?.delaysContentTouches = false
-    collectionView?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height)
+    collectionView?.frame = CGRect(x: 0, y: 64, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height - 64)
     collectionView?.keyboardDismissMode = .interactive
     collectionView?.backgroundColor = UIColor.white
-    collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 20, right: 0)
+    collectionView?.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
+    automaticallyAdjustsScrollViewInsets = false
     collectionView?.alwaysBounceVertical = true
+    
     collectionView?.addSubview(refreshControl)
     collectionView?.register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
     collectionView?.register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)
     collectionView?.register(TypingIndicatorCell.self, forCellWithReuseIdentifier: typingIndicatorCellID)
+    collectionView?.register(PhotoMessageCell.self, forCellWithReuseIdentifier: photoMessageCellID)
+    collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
   }
     
   
@@ -527,7 +547,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     } else {
       return 1
     }
-    
   }
   
   
@@ -535,7 +554,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if indexPath.section == 0 {
       return selectCell(for: indexPath)!
     } else {
-      return showTypingIndicator(indexPath: indexPath)!
+      return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell
     }
     
   }
@@ -547,165 +566,246 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  fileprivate func selectCell(for indexPath: IndexPath) -> UICollectionViewCell? {
+  fileprivate func selectCell(for indexPath: IndexPath) -> RevealableCollectionViewCell? {
     
     let message = messages[indexPath.item]
     
     if let messageText = message.text { /* If current message is a text message */
       
       if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
-        
+      
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
         
-        cell.textView.text = messageText
-        
-        cell.bubbleView.frame = CGRect(x: view.frame.width - estimateFrameForText(messageText).width - 35,
-                                       y: 0,
-                                       width: estimateFrameForText(messageText).width + 30,
-                                       height: cell.frame.size.height).integral
-        
-        cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
-                                          height: cell.bubbleView.frame.height)
-        
-        cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height+2, width: 70, height: 10)
-
-      
-        switch indexPath.row == self.messages.count - 1 {
+        UIView.performWithoutAnimation {
           
-          case true:
-            cell.deliveryStatus.text = messageStatus
-            cell.deliveryStatus.isHidden = false
-          break
+          cell.textView.text = messageText
           
-          default:
-            cell.deliveryStatus.isHidden = true
-          break
+          cell.bubbleView.frame = CGRect(x: view.frame.width - estimateFrameForText(messageText).width - 35,
+                                         y: 0,
+                                         width: estimateFrameForText(messageText).width + 30,
+                                         height: cell.frame.size.height).integral
+        
+         
+          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
+                                            height: cell.bubbleView.frame.height)
+            
+           DispatchQueue.main.async {
+            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10)
+            
+            switch indexPath.row == self.messages.count - 1 {
+              
+            case true:
+              cell.deliveryStatus.text = messageStatus
+              cell.deliveryStatus.isHidden = false
+              break
+              
+            default:
+              cell.deliveryStatus.isHidden = true
+              break
+            }
+          
+            if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+          
+              view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+          
+              cell.setRevealableView(view, style: .slide, direction: .left)
+            }
+          }
         }
         
         return cell
-        
-      } else { /* Incoming message with grey bubble */
+      
+        } else { /* Incoming message with grey bubble */
         
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
         
-        cell.textView.text = messageText
+          UIView.performWithoutAnimation {
+            
+           
+            cell.textView.text = messageText
         
-        cell.bubbleView.frame = CGRect(x: 10,
-                                       y: 0,
-                                       width: estimateFrameForText(messageText).width + 30,
-                                       height: cell.frame.size.height).integral
-        
-        cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
-                                          height: cell.bubbleView.frame.height)
-
-        return cell
-      }
-    }
-    return nil
-  }
-  
-  
-  /*
-  fileprivate func selectCell(for indexPath: IndexPath) -> UICollectionViewCell? {
-    
-    let message = messages[indexPath.item]
-    
-    if let messageText = message.text { /* If current message is a text message */
-      
-      let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: textMessageCellID, for: indexPath) as! TextMessageCell
-      
-      cell.textView.text = messageText
-      
-      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
-        
-        
-        if indexPath.row == messages.count-1  {
+            cell.bubbleView.frame.size = CGSize(width: estimateFrameForText(messageText).width + 30,
+                                          height: cell.frame.size.height)//.integral
           
-          cell.deliveryStatus.isHidden = false
-          cell.deliveryStatus.text = messageStatus.text
-        } else {
-          
-          cell.deliveryStatus.isHidden = true
+            cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
+                                              height: cell.bubbleView.frame.height)
+            
+            DispatchQueue.main.async {
+              if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+              
+                view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+            
+                cell.setRevealableView(view, style: .over , direction: .left)
+              }
+            }
+          }
+        
+          return cell
         }
-        
-        cell.bubbleView.image = BaseMessageCell.blueBubbleImage
-        
-        cell.textView.textColor = UIColor.white
-        
-        cell.textView.textContainerInset.left = 7
-        
-        cell.bubbleView.frame = CGRect(x: view.frame.width - estimateFrameForText(messageText).width - 35,
-                                       y: 0,
-                                       width: estimateFrameForText(messageText).width + 30,
-                                       height: cell.frame.size.height).integral
-        
-        
-        cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
-                                          height: cell.bubbleView.frame.height)
-        
-      } else { /* Incoming message with grey bubble */
-        
-        cell.deliveryStatus.isHidden = true
-        
-        cell.bubbleView.image = BaseMessageCell.grayBubbleImage
-        
-        cell.textView.textColor = UIColor.darkText
-        
-        cell.textView.textContainerInset.left = 12
-        
-        cell.bubbleView.frame = CGRect(x: 10,
-                                       y: 0,
-                                       width: estimateFrameForText(messageText).width + 30,
-                                       height: cell.frame.size.height).integral
-        
-        cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
-                                          height: cell.bubbleView.frame.height)
-      }
       
-      return cell
       
-    } else if message.imageUrl != nil { /* If current message is a photo/video message */
+    } else if message.imageUrl != nil || message.localImage != nil { /* If current message is a photo/video message */
       
       let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
       
       cell.chatLogController = self
+      
       cell.message = message
       
       if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
         
-        if indexPath.row == messages.count-1  {
-          
-          cell.deliveryStatus.isHidden = false
-          cell.deliveryStatus.text = messageStatus.text
-        } else {
-          
-          cell.deliveryStatus.isHidden = true
-        }
+        cell.progressView.trackFillColor = .white
+        
+        cell.progressView.trackBorderColor = .white
+        
+        cell.progressView.trackBorderWidth = 2
+        
+        cell.bubbleView.image = BaseMessageCell.blueBubbleImage
         
         cell.bubbleView.frame = CGRect(x: view.frame.width - 210, y: 0, width: 200, height: cell.frame.size.height).integral
         
+    
+        DispatchQueue.main.async {
+          
+          cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10)
+          
+          switch indexPath.row == self.messages.count - 1 {
+            
+          case true:
+            cell.deliveryStatus.text = messageStatus
+            cell.deliveryStatus.isHidden = false
+            break
+            
+          default:
+            cell.deliveryStatus.isHidden = true
+            break
+          }
+
+          
+          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+            
+            view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+            
+            cell.setRevealableView(view, style: .slide , direction: .left)
+          }
+        }
+        
       } else { /* Incoming message with grey bubble */
+        
+        cell.progressView.trackFillColor = .darkGray
+        
+        cell.progressView.trackBorderColor = .darkGray
+        
+        cell.progressView.trackBorderWidth = 2
+        
+        cell.bubbleView.image = BaseMessageCell.grayBubbleImage
         
         cell.deliveryStatus.isHidden = true
         
         cell.bubbleView.frame = CGRect(x: 10, y: 0, width: 200, height: cell.frame.size.height).integral
+        
+        
+        DispatchQueue.main.async {
+          
+          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+            
+            view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+            
+            cell.setRevealableView(view, style: .over , direction: .left)
+          }
+        }
       }
       
-      DispatchQueue.global(qos: .default).async(execute: {() -> Void in
-        if let messageImageUrl = message.imageUrl {
-          cell.messageImageView.loadImageUsingCacheWithUrlString(messageImageUrl)
+        cell.messageImageView.isUserInteractionEnabled = false
+      
+        if let image = message.localImage {
+        
+          cell.messageImageView.image = image
+           cell.progressView.isHidden = true
+           cell.messageImageView.isUserInteractionEnabled = true
+          return cell
         }
-      })
+      
+        if let messageImageUrl = message.imageUrl {
+          cell.progressView.isHidden = false
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize) in
+           
+            let progress = Double(100 * downloadedSize/expectedSize)
+           
+            cell.progressView.setProgress(progress * 0.01, animated: false)
+            
+          }, completed: { (image, error, cacheType, url) in
+            cell.progressView.isHidden = true
+            cell.messageImageView.isUserInteractionEnabled = true
+            
+          })
+      }
       
       cell.playButton.isHidden = message.videoUrl == nil
       
       
       return cell
+      
     } else {
+      
       return nil
     }
-    
-  } */
+  }
+  
+  
+  /*
+   
+   
+   
+   func downloadPreview(_ initialImageView: UIImageView, progressView: UIProgressView, progresslabel: UILabel) {
+   let loadedImageView = UIImageView()
+   
+   // var progress = Int()
+   progressView.isHidden = false
+   
+   loadedImageView.sd_setImage(with: URL(string: self.layoutURL), placeholderImage: nil, options: [.continueInBackground], progress: { (downloadedSize, expectedSize) in
+   
+   //   progress =  ((downloadedSize * 100) / (expectedSize * 100) )
+   
+   //   print(100 * downloadedSize/expectedSize)
+   let progress = Double(100 * downloadedSize/expectedSize)
+   
+   print("Downloading progress:", progress * 0.01 , "%")
+   // let progress =
+   
+   DispatchQueue.main.async {
+   progressView.setProgress( Float(progress * 0.01), animated: true)
+   progresslabel.text = "\(100 * downloadedSize/expectedSize) %"//"\(100 * downloadedSize/expectedSize) %"
+   
+   }
+   
+   
+   
+   
+   }) { (image, error, cacheType, url) in
+   
+   
+   if error == nil {
+   progressView.removeFromSuperview()
+   
+   self.fullSizeOpeningImage = loadedImageView.image!
+   
+   initialImageView.image = imageWithImage(sourceImage: loadedImageView.image!, scaledToWidth: screenSize.width - 20)
+   
+   self.tableView.reloadData()
+   } else {
+   progresslabel.font = UIFont.systemFont(ofSize: 14)
+   progresslabel.text = "Ошибка, проверьте подключение к интернету"
+   
+   }
+   
+   
+   }
+   
+   
+   }
+   
+   */
   
   
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -753,18 +853,328 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     inputContainerView.invalidateIntrinsicContentSize()
 
     inputContainerView.sendButton.isEnabled = false
-    let properties = ["text": inputContainerView.inputTextView.text!]
-    sendMessageWithProperties(properties as [String : AnyObject])
+    
+    if inputContainerView.inputTextView.text != "" {
+      let properties = ["text": inputContainerView.inputTextView.text!]
+      sendMessageWithProperties(properties as [String : AnyObject])
+
+    }
     
     isTyping = false
     inputContainerView.placeholderLabel.isHidden = false
+    
+    handleMediaMessageSending()
   }
   
+  
+  
+ 
+  
+  
+  /*
+   
+   
+   
+   fileprivate func handleVideoSelectedForUrl(_ url: URL) {
+   let filename = UUID().uuidString + ".mov"
+   let uploadTask = Storage.storage().reference().child("messageMovies").child(filename).putFile(from: url, metadata: nil, completion: { (metadata, error) in
+   
+   if error != nil {
+   print("Failed upload of video:", error as Any)
+   return
+   }
+   
+   if let videoUrl = metadata?.downloadURL()?.absoluteString {
+   if let thumbnailImage = self.thumbnailImageForFileUrl(url) {
+   
+   self.uploadToFirebaseStorageUsingImage(thumbnailImage, completion: { (imageUrl) in
+   let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": thumbnailImage.size.width as AnyObject, "imageHeight": thumbnailImage.size.height as AnyObject, "videoUrl": videoUrl as AnyObject]
+   self.sendMessageWithProperties(properties)
+   
+   })
+   }
+   }
+   })
+   
+   uploadTask.observe(.progress) { (snapshot) in
+   if let completedUnitCount = snapshot.progress?.completedUnitCount {
+   self.navigationItem.title = String(completedUnitCount)
+   }
+   }
+   
+   uploadTask.observe(.success) { (snapshot) in
+   self.navigationItem.title = self.user?.name
+   }
+   }
+   
+   
+   fileprivate func thumbnailImageForFileUrl(_ fileUrl: URL) -> UIImage? {
+   let asset = AVAsset(url: fileUrl)
+   let imageGenerator = AVAssetImageGenerator(asset: asset)
+   
+   do {
+   
+   let thumbnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(1, 60), actualTime: nil)
+   return UIImage(cgImage: thumbnailCGImage)
+   
+   } catch let err {
+   print(err)
+   }
+   
+   return nil
+   }
+
+   
+   
+   */
+  
+  
+  /*
+  
+  func removeButtonDidTap(sender: UIButton) {
+    
+    guard let cell = sender.superview as? SelectedMediaCollectionCell else {
+      return
+    }
+    
+    let indexPath = attachedImages.indexPath(for: cell)
+    
+    let row = indexPath!.row
+    
+    if selectedMedia[row].imageSource == imageSourcePhotoLibrary {
+      
+      if mediaPickerController!.customMediaPickerView.assets.contains(selectedMedia[row].phAsset!) {
+        deselectAsset(row: row)
+      }
+      
+    } else {
+      
+      if selectedMedia[row].phAsset != nil && mediaPickerController!.customMediaPickerView.assets.contains(selectedMedia[row].phAsset!) {
+        deselectAsset(row: row)
+      } else {
+        
+        selectedMedia.remove(at: row)
+        attachedImages.deleteItems(at: [indexPath!])
+        resetChatInputConntainerViewSettings()
+      }
+    }
+  }
+  
+  
+  */
+  
+  
+//  func clearSelectedMedia(row : Int) {
+//  
+//    let indexPath = IndexPath(item: row, section: 0)
+//    
+//    if inputContainerView.selectedMedia[row].imageSource == imageSourcePhotoLibrary {
+//      
+//      if inputContainerView.selectedMedia[row].phAsset != nil && mediaPickerController.customMediaPickerView.assets.contains(inputContainerView.selectedMedia[row].phAsset!)
+//      {
+//        inputContainerView.deselectAsset(row: row)
+//      }
+//      
+//    } else {
+//      
+//      if inputContainerView.selectedMedia[row].phAsset != nil && mediaPickerController.customMediaPickerView.assets.contains(inputContainerView.selectedMedia[row].phAsset!)
+//       {
+//        inputContainerView.deselectAsset(row: row)
+//      } else {
+//        
+//        inputContainerView.selectedMedia.remove(at: row)
+//        inputContainerView.attachedImages.deleteItems(at: [indexPath])
+//        inputContainerView.resetChatInputConntainerViewSettings()
+//      }
+//    }
+//
+//    
+//    
+//  }
+  
+  func handleMediaMessageSending () {
+    
+    if !inputContainerView.selectedMedia.isEmpty {
+      let selectedMedia = inputContainerView.selectedMedia
+      
+      let selected = mediaPickerController.customMediaPickerView.collectionView.indexPathsForSelectedItems
+      
+      
+      for indexPath in selected!  {
+        mediaPickerController.customMediaPickerView.collectionView.deselectItem(at: indexPath, animated: false)
+      }
+   
+     
+      
+      if self.inputContainerView.selectedMedia.count - 1 >= 0 {
+        
+        for index in 0...self.inputContainerView.selectedMedia.count - 1 {
+          
+          if index <= -1 {
+            break
+          }
+         
+          print("equals")
+          self.inputContainerView.selectedMedia.remove(at: 0)
+          self.inputContainerView.attachedImages.deleteItems(at: [IndexPath(item: 0, section: 0)])
+       
+        }
+      } else {
+        self.inputContainerView.selectedMedia.remove(at: 0)
+        self.inputContainerView.attachedImages.deleteItems(at: [IndexPath(item: 0, section: 0)])
+      }
+      
+      inputContainerView.resetChatInputConntainerViewSettings()
+      
+      
+      
+      for selectedMedia in selectedMedia {
+        
+        
+        if selectedMedia.phAsset?.mediaType == PHAssetMediaType.image || selectedMedia.phAsset == nil {
+          
+          let defaultMessageStatus = messageStatusSent
+          
+          let toId = user!.id!
+          
+          let fromId = Auth.auth().currentUser!.uid
+          
+          self.newOutboxMessage = true
+          
+          let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
+          
+          
+          let values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject]
+          
+          
+          reloadCollectionViewAfterSending(values: values)
+          
+          print("began loading")
+          uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageURL) in
+            self.sendMessageWithImageUrl(imageURL, image: selectedMedia.object!.asUIImage!)
+          })
+
+        }
+        
+        if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video {
+          
+        }
+        
+        
+        
+        
+        
+      }
+      
+  }
+    
+  }
   
   fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage) {
-    let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
-    sendMessageWithProperties(properties)
+    
+   let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
+    sendMediaMessageWithProperties(properties)
   }
+  
+  
+  func sendMediaMessageWithProperties(_ properties: [String: AnyObject]) {
+    
+    self.inputContainerView.inputTextView.text = nil
+    
+    let ref = Database.database().reference().child("messages")
+    
+    let childRef = ref.childByAutoId()
+    
+    let defaultMessageStatus = messageStatusSent
+    
+    let toId = user!.id!
+    
+    let fromId = Auth.auth().currentUser!.uid
+    
+    let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
+    
+    
+    var values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
+    
+    properties.forEach({values[$0] = $1})
+    
+   // self.reloadCollectionViewAfterSending(values: values)
+    
+    childRef.updateChildValues(values) { (error, ref) in
+      
+      if error != nil {
+        print(error as Any)
+        // here need to notify user that message has not been sent
+        return
+      }
+      
+      let messageId = childRef.key
+      
+      let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
+      
+      self.newOutboxMessage = true
+      
+      userMessagesRef.updateChildValues([messageId: 1])
+      
+      let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(userMessagesFirebaseFolder)
+      
+      recipientUserMessagesRef.updateChildValues([messageId: 1])
+    }
+    
+  }
+  
+  // sendMediaMessageWithProperties(properties)
+  
+  
+  
+//  fileprivate func handleImageSelectedForInfo(_ info: [String: AnyObject]) {
+//    var selectedImageFromPicker: UIImage?
+//    
+//    if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+//      selectedImageFromPicker = editedImage
+//    } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+//      
+//      selectedImageFromPicker = originalImage
+//    }
+//    
+//    if let selectedImage = selectedImageFromPicker {
+//      uploadToFirebaseStorageUsingImage(selectedImage, completion: { (imageUrl) in
+//        self.sendMessageWithImageUrl(imageUrl, image: selectedImage)
+//      })
+//    }
+//  }
+//  
+  
+  fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
+    let imageName = UUID().uuidString
+    let ref = Storage.storage().reference().child("messageImages").child(imageName)
+    
+    if let uploadData = UIImageJPEGRepresentation(image, 1) {
+      ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+        
+        if error != nil {
+          print("Failed to upload image:", error as Any)
+          return
+        }
+        
+        if let imageUrl = metadata?.downloadURL()?.absoluteString {
+          completion(imageUrl)
+        }
+        
+      
+        
+      })
+      
+      
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
   
   
   fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {

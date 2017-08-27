@@ -81,7 +81,9 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
       configureImageViewBackgroundView()
       configureToolbar()
       
-      let scaledImage = imageWithImage(sourceImage: zoomingImageView.image!, scaledToWidth: deviceScreen.width)
+      guard let scaledImage = imageWithImage(sourceImage: zoomingImageView.image!, scaledToWidth: deviceScreen.width) else {
+        return
+      }
       let centerY = blackBackgroundView.center.y - (scaledImage.size.height/2)
       
       UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: .curveEaseOut, animations: {

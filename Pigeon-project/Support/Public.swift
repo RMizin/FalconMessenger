@@ -51,6 +51,20 @@ extension Double {
 }
 
 extension Double {
+  func getTimeStringFromUTC() -> String {
+    let date = Date(timeIntervalSince1970: self)
+    
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .medium
+    dateFormatter.dateFormat = "HH:mm a"
+    dateFormatter.amSymbol = "AM"
+    dateFormatter.pmSymbol = "PM"
+    
+    return dateFormatter.string(from: date)
+  }
+}
+
+extension Double {
   func getDateStringFromUTC() -> String {
     let date = Date(timeIntervalSince1970: self)
     
@@ -167,7 +181,7 @@ func setOnlineStatus()  {
   }
 }
 
-func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage {
+func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage? {
   let oldWidth = sourceImage.size.width
   let scaleFactor = scaledToWidth / oldWidth
   
@@ -178,7 +192,7 @@ func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage {
   sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
   let newImage = UIGraphicsGetImageFromCurrentImageContext()
   UIGraphicsEndImageContext()
-  return newImage!
+  return newImage
 }
 
 func imageWithImageHeight (sourceImage:UIImage, scaledToHeight: CGFloat) -> UIImage {

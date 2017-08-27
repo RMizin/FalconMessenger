@@ -26,24 +26,9 @@ class IncomingTextMessageCell: BaseMessageCell {
   
   override func setupViews() {
     
-    addSubview(bubbleView)
+    contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
-    //bubbleView.addSubview(deliveryStatus)
     bubbleView.image = BaseMessageCell.grayBubbleImage
-    
-  
-//  
-//    NSLayoutConstraint.activate([
-//      
-//      deliveryStatus.topAnchor.constraint(equalTo: bottomAnchor),
-//      deliveryStatus.heightAnchor.constraint(equalToConstant: 20),
-//      deliveryStatus.rightAnchor.constraint(equalTo: rightAnchor, constant: -10)
-//      ])
+    bubbleView.frame.origin = CGPoint(x: 10, y: 0)
   }
-  
-  override func prepareViewsForReuse() {
-   // textView.text = nil
-   // bubbleView.image = nil
-  }
-    
 }

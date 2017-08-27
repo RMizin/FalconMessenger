@@ -22,7 +22,9 @@ class Message:  NSObject  {
     var imageUrl: String?
     var imageHeight: NSNumber?
     var imageWidth: NSNumber?
-    
+  
+  var localImage: UIImage?
+  
     var videoUrl: String?
       
     func chatPartnerId() -> String? {
@@ -45,5 +47,7 @@ class Message:  NSObject  {
         imageWidth = dictionary["imageWidth"] as? NSNumber
         
         videoUrl = dictionary["videoUrl"] as? String
+      
+        localImage = dictionary["localImage"] as? UIImage
     }
 }

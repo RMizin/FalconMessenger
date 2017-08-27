@@ -207,7 +207,14 @@ class ChatsController: UITableViewController {
 
       
       cell.nameLabel.text = finalUserCellData[indexPath.row].1.name
-      cell.messageLabel.text = finalUserCellData[indexPath.row].0.text
+      if finalUserCellData[indexPath.row].0.imageUrl != nil || finalUserCellData[indexPath.row].0.localImage != nil {
+        cell.messageLabel.text = "Attachment: Image"
+      } else if finalUserCellData[indexPath.row].0.videoUrl != nil {
+        cell.messageLabel.text = "Attachment: Video"
+      } else {
+         cell.messageLabel.text = finalUserCellData[indexPath.row].0.text
+      }
+    
       cell.timeLabel.text = finalUserCellData[indexPath.row].0.timestamp?.doubleValue.getShortDateStringFromUTC()
       
         if let url = self.finalUserCellData[indexPath.row].1.thumbnailPhotoURL {

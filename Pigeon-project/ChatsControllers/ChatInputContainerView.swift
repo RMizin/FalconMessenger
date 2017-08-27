@@ -102,6 +102,11 @@ class ChatInputContainerView: UIView {
   }()
   
   
+  func reloadCollectionViewWithCleaning() {
+    selectedMedia.removeAll()
+    attachedImages.reloadData()
+  }
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     

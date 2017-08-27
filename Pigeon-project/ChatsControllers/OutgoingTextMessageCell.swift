@@ -8,11 +8,12 @@
 
 import UIKit
 
+
 class OutgoingTextMessageCell: BaseMessageCell {
   
   let textView: UITextView = {
     let textView = UITextView()
-    textView.font = UIFont.systemFont(ofSize: 14)
+    textView.font = UIFont.systemFont(ofSize: 13.5)
     textView.backgroundColor = UIColor.clear
     textView.isEditable = false
     textView.isScrollEnabled = false
@@ -26,22 +27,9 @@ class OutgoingTextMessageCell: BaseMessageCell {
   
   override func setupViews() {
     
-    addSubview(bubbleView)
+    contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
-    addSubview(deliveryStatus)
+    contentView.addSubview(deliveryStatus)
     bubbleView.image = BaseMessageCell.blueBubbleImage
-    
-//    NSLayoutConstraint.activate([
-//      
-//      deliveryStatus.topAnchor.constraint(equalTo: bottomAnchor),
-//      deliveryStatus.heightAnchor.constraint(equalToConstant: 20),
-//      deliveryStatus.rightAnchor.constraint(equalTo: rightAnchor, constant: -10)
-//      ])
   }
-  
-  override func prepareViewsForReuse() {
-    // textView.text = nil
-    // bubbleView.image = nil
-  }
-    
 }
