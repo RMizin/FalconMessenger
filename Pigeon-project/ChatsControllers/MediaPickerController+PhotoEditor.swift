@@ -7,7 +7,8 @@
 //
 
 import UIKit
-
+import Photos
+import AVKit
 
 extension ChatLogController: PhotoEditorDelegate {
   
@@ -37,6 +38,23 @@ extension ChatLogController: PhotoEditorDelegate {
     inputContainerView.inputTextView.resignFirstResponder()
     
     present(photoEditor, animated: true, completion: nil)
+  }
+  
+  
+  
+  func presentVideoPlayer(forUrlAt indexPath: IndexPath) {
+    
+    let videoURL = URL(string: inputContainerView.selectedMedia[indexPath.item].fileURL!)
+    
+    let player = AVPlayer(url: videoURL!)
+    
+    let playerViewController = AVPlayerViewController()
+    
+    playerViewController.player = player
+    
+    inputContainerView.inputTextView.resignFirstResponder()
+    
+    present(playerViewController, animated: true, completion: nil)
   }
 }
 

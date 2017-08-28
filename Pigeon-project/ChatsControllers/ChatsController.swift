@@ -305,7 +305,9 @@ extension ChatsController: MessagesLoaderDelegate {
       }
       
       UIView.performWithoutAnimation {
-        chatLogController.collectionView?.reloadItems(at:indexPaths)
+        DispatchQueue.main.async {
+          chatLogController.collectionView?.reloadItems(at:indexPaths)
+        }
       }
     }
     

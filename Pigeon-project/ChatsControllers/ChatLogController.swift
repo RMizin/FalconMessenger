@@ -22,7 +22,6 @@ private let typingIndicatorDatabaseID = "typingIndicator"
 
 private let typingIndicatorStateDatabaseKeyID = "Is typing"
 
-private var messageStatus = String()
 
 protocol MessagesLoaderDelegate: class {
   func messagesLoader(_ chatLogController: ChatLogController, didFinishLoadingWith messages: [Message] )
@@ -30,7 +29,6 @@ protocol MessagesLoaderDelegate: class {
 
 
 class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-  
   
   weak var delegate: MessagesLoaderDelegate?
   
@@ -56,6 +54,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var mediaPickerController = MediaPickerController()
   
   var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
+  
+  let messageSendingProgressBar = UIProgressView(progressViewStyle: .bar)
+  
 
   func startCollectionViewAtBottom () {
     
@@ -73,11 +74,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var appendingMessages = [Message]()
   
-  var newOutboxMessage = false
-  
-  var newInboxMessage = false
-  
  
+  fileprivate var isInitialLoad = true
+  
   func loadMessages() {
     
     guard let uid = Auth.auth().currentUser?.uid,let toId = user?.id else {
@@ -99,75 +98,78 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
         
           guard let dictionary = snapshot.value as? [String: AnyObject] else {
-            print("returning")
             return
           }
-        
-          switch true {
           
-            case self.newOutboxMessage:
-              
-              self.updateMessageStatus(messagesRef: messagesRef)
-              
-              if Message(dictionary: dictionary).text != nil {
-                self.newOutboxMessage = false
-              }
-              
-              
-              if Message(dictionary: dictionary).fromId == uid {
-                break
-              }
+          
+          if self.isInitialLoad {
+            print("initial load")
             
+            self.appendingMessages.append(Message(dictionary: dictionary))
+            
+            if self.appendingMessages.count == self.messagesIds.count {
+              
+              self.appendingMessages.sort(by: { (message1, message2) -> Bool in
+                
+                return message1.timestamp!.int32Value < message2.timestamp!.int32Value
+              })
+              
+              self.delegate?.messagesLoader(self, didFinishLoadingWith: self.appendingMessages)
+              
+              DispatchQueue.main.async {
+            
+                self.observeTypingIndicator()
+                self.updateMessageStatus(messagesRef: messagesRef)
+              }
+              self.isInitialLoad = false
+              return
+            }
+          } else {
           
-            case self.newInboxMessage:
+            if Message(dictionary: dictionary).fromId == uid || Message(dictionary: dictionary).fromId == Message(dictionary:dictionary).toId { /* outbox */
+                self.updateMessageStatus(messagesRef: messagesRef)
+                print("outbox or self")
+              return
+            }
           
+          
+            if Message(dictionary: dictionary).toId == uid { /* inbox */
+              print("inbox")
+            
               self.collectionView?.performBatchUpdates ({
-            
+              
                 self.messages.append(Message(dictionary: dictionary))
-                let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-                self.collectionView?.insertItems(at: [indexPath])
-            
+              
+                if self.messages.count - 1 >= 0 {
+                
+                  let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+                  
+                  self.collectionView?.insertItems(at: [indexPath])
+                
+                } else {
+                  
+                  return
+                }
+             
                 if self.messages.count - 2 >= 0 {
-          
+                
                   self.collectionView?.reloadItems(at: [IndexPath (row: self.messages.count - 2, section: 0)])
                 }
-                
-                let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)
             
-                if self.messages.count - 1 > 0 && self.isScrollViewAtTheBottom {
+                if self.messages.count - 1 >= 0 && self.isScrollViewAtTheBottom {
+                
+                  let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+                
                   DispatchQueue.main.async {
-                    self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
+                    self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
                   }
                 }
               }, completion: { (true) in
                 self.updateMessageStatus(messagesRef: messagesRef)
+                return
               })
-          
-            break
-          
-          default:
-          
-            self.appendingMessages.append(Message(dictionary: dictionary))
-          
-            if self.appendingMessages.count == self.messagesIds.count {
-            
-              self.appendingMessages.sort(by: { (message1, message2) -> Bool in
-              
-                return message1.timestamp!.int32Value < message2.timestamp!.int32Value
-              })
-            
-              self.delegate?.messagesLoader(self, didFinishLoadingWith: self.appendingMessages)
-            
-              DispatchQueue.main.async {
-                self.newInboxMessage = true
-                self.observeTypingIndicator()
-                self.updateMessageStatus(messagesRef: messagesRef)
-              }
-
-              break
+            }
           }
-        }
-        
       }, withCancel: { (error) in
         print("error loading message")
       })
@@ -402,7 +404,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       messagesRef.child("status") .observe(.value, with: { (messageStatusValue) in
         
         if let lastMessageStatus = messageStatusValue.value as? String {
-          messageStatus = lastMessageStatus
+          
+           self.messages[self.messages.count-1].status = lastMessageStatus
           
           if self.messages.count - 1 >= 0 {
              self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section: 0)])
@@ -418,8 +421,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           if snapshot.value != nil && snapshot.key == "status" {
             
             let status = snapshot.value as! String
-            
-            messageStatus = status
+          
+            self.messages[self.messages.count-1].status = status
     
             self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section:0)])
           }
@@ -433,6 +436,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     super.viewDidLoad()
     
     setupCollectionView()
+    setupProgressBar()
+  }
+  
+  func setupProgressBar() {
+  
+    let pSetY = CGFloat(64)
+    messageSendingProgressBar.frame = CGRect(x: 0, y: pSetY, width: deviceScreen.width, height: 5)
+    self.view.addSubview(messageSendingProgressBar)
   }
   
 
@@ -531,9 +542,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     super.viewDidDisappear(animated)
   
     isTyping = false
-    messageStatus = ""
   }
-
+  
   
   override func numberOfSections(in collectionView: UICollectionView) -> Int {
     return sections.count
@@ -556,7 +566,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     } else {
       return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell
     }
-    
   }
   
   
@@ -595,7 +604,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             switch indexPath.row == self.messages.count - 1 {
               
             case true:
-              cell.deliveryStatus.text = messageStatus
+              cell.deliveryStatus.text = self.messages[indexPath.row].status
               cell.deliveryStatus.isHidden = false
               break
               
@@ -643,7 +652,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           return cell
         }
       
-      
     } else if message.imageUrl != nil || message.localImage != nil { /* If current message is a photo/video message */
       
       let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
@@ -672,7 +680,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           switch indexPath.row == self.messages.count - 1 {
             
           case true:
-            cell.deliveryStatus.text = messageStatus
+            cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
             cell.deliveryStatus.isHidden = false
             break
             
@@ -753,61 +761,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  /*
-   
-   
-   
-   func downloadPreview(_ initialImageView: UIImageView, progressView: UIProgressView, progresslabel: UILabel) {
-   let loadedImageView = UIImageView()
-   
-   // var progress = Int()
-   progressView.isHidden = false
-   
-   loadedImageView.sd_setImage(with: URL(string: self.layoutURL), placeholderImage: nil, options: [.continueInBackground], progress: { (downloadedSize, expectedSize) in
-   
-   //   progress =  ((downloadedSize * 100) / (expectedSize * 100) )
-   
-   //   print(100 * downloadedSize/expectedSize)
-   let progress = Double(100 * downloadedSize/expectedSize)
-   
-   print("Downloading progress:", progress * 0.01 , "%")
-   // let progress =
-   
-   DispatchQueue.main.async {
-   progressView.setProgress( Float(progress * 0.01), animated: true)
-   progresslabel.text = "\(100 * downloadedSize/expectedSize) %"//"\(100 * downloadedSize/expectedSize) %"
-   
-   }
-   
-   
-   
-   
-   }) { (image, error, cacheType, url) in
-   
-   
-   if error == nil {
-   progressView.removeFromSuperview()
-   
-   self.fullSizeOpeningImage = loadedImageView.image!
-   
-   initialImageView.image = imageWithImage(sourceImage: loadedImageView.image!, scaledToWidth: screenSize.width - 20)
-   
-   self.tableView.reloadData()
-   } else {
-   progresslabel.font = UIFont.systemFont(ofSize: 14)
-   progresslabel.text = "Ошибка, проверьте подключение к интернету"
-   
-   }
-   
-   
-   }
-   
-   
-   }
-   
-   */
-  
-  
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
     collectionView?.collectionViewLayout.invalidateLayout()
@@ -857,7 +810,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if inputContainerView.inputTextView.text != "" {
       let properties = ["text": inputContainerView.inputTextView.text!]
       sendMessageWithProperties(properties as [String : AnyObject])
-
     }
     
     isTyping = false
@@ -866,15 +818,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     handleMediaMessageSending()
   }
   
-  
-  
- 
-  
-  
+
   /*
-   
-   
-   
    fileprivate func handleVideoSelectedForUrl(_ url: URL) {
    let filename = UUID().uuidString + ".mov"
    let uploadTask = Storage.storage().reference().child("messageMovies").child(filename).putFile(from: url, metadata: nil, completion: { (metadata, error) in
@@ -923,75 +868,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
    
    return nil
    }
-
-   
-   
    */
   
-  
-  /*
-  
-  func removeButtonDidTap(sender: UIButton) {
-    
-    guard let cell = sender.superview as? SelectedMediaCollectionCell else {
-      return
-    }
-    
-    let indexPath = attachedImages.indexPath(for: cell)
-    
-    let row = indexPath!.row
-    
-    if selectedMedia[row].imageSource == imageSourcePhotoLibrary {
-      
-      if mediaPickerController!.customMediaPickerView.assets.contains(selectedMedia[row].phAsset!) {
-        deselectAsset(row: row)
-      }
-      
-    } else {
-      
-      if selectedMedia[row].phAsset != nil && mediaPickerController!.customMediaPickerView.assets.contains(selectedMedia[row].phAsset!) {
-        deselectAsset(row: row)
-      } else {
-        
-        selectedMedia.remove(at: row)
-        attachedImages.deleteItems(at: [indexPath!])
-        resetChatInputConntainerViewSettings()
-      }
-    }
-  }
-  
-  
-  */
-  
-  
-//  func clearSelectedMedia(row : Int) {
-//  
-//    let indexPath = IndexPath(item: row, section: 0)
-//    
-//    if inputContainerView.selectedMedia[row].imageSource == imageSourcePhotoLibrary {
-//      
-//      if inputContainerView.selectedMedia[row].phAsset != nil && mediaPickerController.customMediaPickerView.assets.contains(inputContainerView.selectedMedia[row].phAsset!)
-//      {
-//        inputContainerView.deselectAsset(row: row)
-//      }
-//      
-//    } else {
-//      
-//      if inputContainerView.selectedMedia[row].phAsset != nil && mediaPickerController.customMediaPickerView.assets.contains(inputContainerView.selectedMedia[row].phAsset!)
-//       {
-//        inputContainerView.deselectAsset(row: row)
-//      } else {
-//        
-//        inputContainerView.selectedMedia.remove(at: row)
-//        inputContainerView.attachedImages.deleteItems(at: [indexPath])
-//        inputContainerView.resetChatInputConntainerViewSettings()
-//      }
-//    }
-//
-//    
-//    
-//  }
-  
+
   func handleMediaMessageSending () {
     
     if !inputContainerView.selectedMedia.isEmpty {
@@ -1004,8 +883,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         mediaPickerController.customMediaPickerView.collectionView.deselectItem(at: indexPath, animated: false)
       }
    
-     
-      
       if self.inputContainerView.selectedMedia.count - 1 >= 0 {
         
         for index in 0...self.inputContainerView.selectedMedia.count - 1 {
@@ -1017,7 +894,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           print("equals")
           self.inputContainerView.selectedMedia.remove(at: 0)
           self.inputContainerView.attachedImages.deleteItems(at: [IndexPath(item: 0, section: 0)])
-       
         }
       } else {
         self.inputContainerView.selectedMedia.remove(at: 0)
@@ -1026,7 +902,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       inputContainerView.resetChatInputConntainerViewSettings()
       
+      let uploadingMediaCount = selectedMedia.count
+      var percentCompleted: CGFloat = 0.0
       
+       UIView.animate(withDuration: 3, delay: 0, options: [.curveEaseOut], animations: {
+        self.messageSendingProgressBar.setProgress(0.25, animated: true)
+       
+       }, completion: nil)
       
       for selectedMedia in selectedMedia {
         
@@ -1039,36 +921,35 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           let fromId = Auth.auth().currentUser!.uid
           
-          self.newOutboxMessage = true
-          
           let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-          
           
           let values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject]
           
-          
           reloadCollectionViewAfterSending(values: values)
           
-          print("began loading")
           uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageURL) in
             self.sendMessageWithImageUrl(imageURL, image: selectedMedia.object!.asUIImage!)
+            
+            percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
+           
+            self.messageSendingProgressBar.setProgress(Float(percentCompleted), animated: true)
+            
+            if percentCompleted == 1.0 {
+              DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                self.messageSendingProgressBar.setProgress(0.0, animated: false)
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+              })
+            }
           })
-
         }
         
         if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video {
-          
         }
-        
-        
-        
-        
-        
       }
-      
+    }
   }
-    
-  }
+  
   
   fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage) {
     
@@ -1098,8 +979,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     properties.forEach({values[$0] = $1})
     
-   // self.reloadCollectionViewAfterSending(values: values)
-    
     childRef.updateChildValues(values) { (error, ref) in
       
       if error != nil {
@@ -1112,38 +991,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
       
-      self.newOutboxMessage = true
-      
       userMessagesRef.updateChildValues([messageId: 1])
       
       let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(userMessagesFirebaseFolder)
       
       recipientUserMessagesRef.updateChildValues([messageId: 1])
     }
-    
   }
   
-  // sendMediaMessageWithProperties(properties)
-  
-  
-  
-//  fileprivate func handleImageSelectedForInfo(_ info: [String: AnyObject]) {
-//    var selectedImageFromPicker: UIImage?
-//    
-//    if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-//      selectedImageFromPicker = editedImage
-//    } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-//      
-//      selectedImageFromPicker = originalImage
-//    }
-//    
-//    if let selectedImage = selectedImageFromPicker {
-//      uploadToFirebaseStorageUsingImage(selectedImage, completion: { (imageUrl) in
-//        self.sendMessageWithImageUrl(imageUrl, image: selectedImage)
-//      })
-//    }
-//  }
-//  
   
   fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
     let imageName = UUID().uuidString
@@ -1160,33 +1015,20 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         if let imageUrl = metadata?.downloadURL()?.absoluteString {
           completion(imageUrl)
         }
-        
-      
-        
       })
-      
-      
     }
   }
   
-  
-  
-  
-  
-  
-  
-  
-  
+
   fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
-    
     
     self.collectionView?.performBatchUpdates ({
       
       self.messages.append(Message(dictionary: values ))
       
       let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-      
-      messageStatus = messageStatusSending
+   
+      self.messages[indexPath.item].status = messageStatusSending
       
       self.collectionView?.insertItems(at: [indexPath])
       
@@ -1241,8 +1083,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
       
-      self.newOutboxMessage = true
-      
       userMessagesRef.updateChildValues([messageId: 1])
       
       let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(userMessagesFirebaseFolder)
@@ -1250,70 +1090,4 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       recipientUserMessagesRef.updateChildValues([messageId: 1])
     }
   }
-  
-  /*
-  var startingFrame: CGRect?
-  var blackBackgroundView: UIView?
-  var startingImageView: UIImageView?
-  
-  
-  func performZoomInForStartingImageView(_ startingImageView: UIImageView) {
-    print("tapped")
-    self.startingImageView = startingImageView
-    self.startingImageView?.isHidden = true
-    
-    startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
-    
-    let zoomingImageView = UIImageView(frame: startingFrame!)
-    zoomingImageView.backgroundColor = UIColor.red
-    zoomingImageView.image = startingImageView.image
-    zoomingImageView.isUserInteractionEnabled = true
-    zoomingImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
-    
-    if let keyWindow = UIApplication.shared.keyWindow {
-      blackBackgroundView = UIView(frame: keyWindow.frame)
-      blackBackgroundView?.backgroundColor = UIColor.black
-      blackBackgroundView?.alpha = 0
-      keyWindow.addSubview(blackBackgroundView!)
-      keyWindow.addSubview(zoomingImageView)
-      
-      UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-        
-        self.blackBackgroundView?.alpha = 1
-        self.inputContainerView.alpha = 0
-        
-        // math?
-        // h2 / w1 = h1 / w1
-        // h2 = h1 / w1 * w1
-        let height = self.startingFrame!.height / self.startingFrame!.width * keyWindow.frame.width
-        
-        zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
-        
-        zoomingImageView.center = keyWindow.center
-        
-      }, completion: { (completed) in
-        // do nothing
-      })
-    }
-  }
-  
-  
-  func handleZoomOut(_ tapGesture: UITapGestureRecognizer) {
-    if let zoomOutImageView = tapGesture.view {
-      //need to animate back out to controller
-      zoomOutImageView.layer.cornerRadius = 16
-      zoomOutImageView.clipsToBounds = true
-      
-      UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-        
-        zoomOutImageView.frame = self.startingFrame!
-        self.blackBackgroundView?.alpha = 0
-        self.inputContainerView.alpha = 1
-        
-      }, completion: { (completed) in
-        zoomOutImageView.removeFromSuperview()
-        self.startingImageView?.isHidden = false
-      })
-    }
-  }*/
 }

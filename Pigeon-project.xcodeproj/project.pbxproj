@@ -581,6 +581,7 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4BC9297C1F52CFAA006F1960 /* NavigationController+ProgressBar */,
 				4B8D0B7D1F523A6B00E9252A /* CircleProgressView */,
 				4B2142E91F51B77200F7A4B8 /* RevealableCell */,
 				4BE571321F4D86E2009D9AB4 /* PhotoEditor */,
@@ -623,6 +624,13 @@
 				4BC26B261F3A234A0093A9D2 /* Message.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		4BC9297C1F52CFAA006F1960 /* NavigationController+ProgressBar */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "NavigationController+ProgressBar";
 			sourceTree = "<group>";
 		};
 		4BCE1ABB1F3714A600C0EBF7 /* Models */ = {

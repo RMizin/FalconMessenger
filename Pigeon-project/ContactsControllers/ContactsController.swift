@@ -10,7 +10,6 @@ import UIKit
 import Contacts
 import PhoneNumberKit
 import Firebase
-import FirebaseAuth
 import SDWebImage
 
 
@@ -137,7 +136,6 @@ class ContactsController: UITableViewController {
       }
 
       var userRef: DatabaseQuery = Database.database().reference().child("users")
-   
       userRef = userRef.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber )
       userRef.observeSingleEvent(of: .value, with: { (snapshot) in
       userRef.keepSynced(true)
@@ -219,24 +217,22 @@ class ContactsController: UITableViewController {
       
       for index in 0...self.users.count - 1 {
         
-        
         if self.users[index].id == snap.key {
           
           self.users[index] = User(dictionary: dictionary)
           
           self.sortUsers()
           
-          
           if self.users[index].onlineStatus == statusOnline {
             self.users = rearrange(array: self.users, fromIndex: index, toIndex: 0)
           }
-          
           
           if self.searchBar.text != "" && self.filteredUsers.count != 0 {
             
             self.userStatusChangedDuringSearch(snap: snap)
             
           } else if self.filteredUsers.count == 0 {
+            
           } else {
             
             self.sortUsers()
@@ -445,7 +441,9 @@ extension ContactsController: MessagesLoaderDelegate {
         }
         
         UIView.performWithoutAnimation {
-          chatLogController.collectionView?.reloadItems(at:indexPaths)
+          DispatchQueue.main.async {
+            chatLogController.collectionView?.reloadItems(at:indexPaths)
+          }
         }
       }
     
