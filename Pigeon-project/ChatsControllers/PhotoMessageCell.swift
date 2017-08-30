@@ -53,18 +53,11 @@ class PhotoMessageCell: BaseMessageCell {
   
   var progressView: CircleProgressView = {
     let progressView = CircleProgressView()
-    progressView.translatesAutoresizingMaskIntoConstraints = false
-  //  progressView.isHidden = true
- //   progressView.trackFillColor = .clear
     progressView.trackWidth = 4
     progressView.backgroundColor = .clear
     progressView.centerFillColor = .clear
     progressView.trackBackgroundColor = .clear
-   
-   // progressView.trackBackgroundC
-    
-    
-  
+
     return progressView
   }()
   

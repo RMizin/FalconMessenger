@@ -53,7 +53,7 @@ class ChatsController: UITableViewController {
       super.viewDidLoad()
     
     configureTableView()
-    fetchConversations()
+    managePresense()
   }
   
   
@@ -64,22 +64,67 @@ class ChatsController: UITableViewController {
     tableView.backgroundColor = UIColor.white
     navigationItem.leftBarButtonItem = editButtonItem
   }
- 
   
+  
+  fileprivate var activityIndicatorIsShown = false
+  
+  func showActivityIndicator(title: String) {
+    activityIndicatorIsShown = true
+    let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
+    activityIndicatorView.frame = CGRect(x: 0, y: 0, width: 14, height: 14)
+    activityIndicatorView.color = UIColor.black
+    activityIndicatorView.startAnimating()
+    
+    let titleLabel = UILabel()
+    titleLabel.text = title
+    titleLabel.font = UIFont.systemFont(ofSize: 14)
+    
+    let fittingSize = titleLabel.sizeThatFits(CGSize(width:200.0, height: activityIndicatorView.frame.size.height))
+    titleLabel.frame = CGRect(x: activityIndicatorView.frame.origin.x + activityIndicatorView.frame.size.width + 8, y: activityIndicatorView.frame.origin.y, width: fittingSize.width, height: fittingSize.height)
+    
+    let titleView = UIView(frame: CGRect(  x: (( activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width) / 2), y: ((activityIndicatorView.frame.size.height) / 2), width:(activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width), height: ( activityIndicatorView.frame.size.height)))
+    titleView.addSubview(activityIndicatorView)
+    titleView.addSubview(titleLabel)
+    
+    self.navigationItem.titleView = titleView
+  }
+  
+  func hideActivityIndicator() {
+    activityIndicatorIsShown = false
+    self.navigationItem.titleView = nil
+  }
+ 
+ 
   fileprivate var userConversations = 0
+  
+  func managePresense() {
+    showActivityIndicator(title: "Connecting...")
+    let connectedRef = Database.database().reference(withPath: ".info/connected")
+    connectedRef.observe(.value, with: { snapshot in
+      if snapshot.value as? Bool ?? false {
+        self.fetchConversations()
+      } else {
+        self.fetchConversations()
+      }
+    })
+  }
+  
   
   func fetchConversations() {
     
     userConversations = 0
-    
+  
     guard let uid = Auth.auth().currentUser?.uid else {
       return
     }
     
+    showActivityIndicator(title: "Updating...")
+    
     let currentUserConversationsReference = Database.database().reference().child("user-messages").child(uid)
     currentUserConversationsReference.keepSynced(true)
-    
     currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
+      
+      self.showActivityIndicator(title: "Updating...")
       
       let otherUserID = snapshot.key
       
@@ -109,7 +154,7 @@ class ChatsController: UITableViewController {
     }, withCancel: nil)
   }
   
-
+  
   func fetchMessageWithMessageId(_ messageId: String) {
     
     let messagesReference = Database.database().reference().child("messages").child(messageId)
@@ -121,6 +166,7 @@ class ChatsController: UITableViewController {
         let message = Message(dictionary: dictionary)
         
         if let chatPartnerId = message.chatPartnerId() {
+        
           self.fetchUserDataWithUserID(chatPartnerId, for: message)
         }
       }
@@ -130,9 +176,9 @@ class ChatsController: UITableViewController {
   
   func fetchUserDataWithUserID(_ userID: String, for message: Message) {
     
-    
     let ref = Database.database().reference().child("users").child(userID)
     ref.keepSynced(true)
+    
     ref.observe(.value, with: { (snapshot) in
       
       guard var dictionary = snapshot.value as? [String: AnyObject] else {
@@ -142,10 +188,9 @@ class ChatsController: UITableViewController {
       dictionary.updateValue(userID as AnyObject, forKey: "id")
         
       let user = User(dictionary: dictionary)
-      if user.id == Auth.auth().currentUser?.uid {
-        print("\n\n  TRUE  \n\n")
-      }
+      
       self.messagesDictionary[userID] = (message, user)
+      
       self.userIDs = self.messagesDictionary.keys.sorted()
           
       if self.userIDs.count == self.userConversations {
@@ -238,8 +283,7 @@ class ChatsController: UITableViewController {
         
         if !seen && finalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
           
-          cell.newMessageIndicator.isHidden = false
-          
+          cell.newMessageIndicator.isHidden = false          
         } else {
           
           cell.newMessageIndicator.isHidden = true
@@ -286,6 +330,11 @@ class ChatsController: UITableViewController {
     })
     
     self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { 
+      self.hideActivityIndicator()
+    }
+    
   }
 }
 

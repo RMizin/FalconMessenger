@@ -65,6 +65,21 @@ class UserCell: UITableViewCell {
     
       return label
     }()
+  
+//  let badgeLabel: UILabel = {
+//    let badgeLabel = UILabel()
+//    badgeLabel.translatesAutoresizingMaskIntoConstraints = false
+//    badgeLabel.backgroundColor = PigeonPalette.pigeonPaletteBlue
+//    badgeLabel.layer.cornerRadius = 7
+//    badgeLabel.text = "1"
+//    badgeLabel.isHidden = true
+//    badgeLabel.textColor = .white
+//    badgeLabel.textAlignment = .center
+//    badgeLabel.layer.masksToBounds = true
+//    badgeLabel.font = UIFont.systemFont(ofSize: 10)
+//
+//    return badgeLabel
+//  }()
 
   
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -75,6 +90,7 @@ class UserCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(messageLabel)
         contentView.addSubview(timeLabel)
+       // contentView.addSubview(badgeLabel)
       
         profileImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 26).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
@@ -98,6 +114,13 @@ class UserCell: UITableViewCell {
         timeLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor).isActive = true
         timeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
         timeLabel.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 5).isActive = true
+      
+//        badgeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -5).isActive = true
+//        badgeLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//      badgeLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
+//     //   badgeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3).isActive = true
+      
     }
   
   
