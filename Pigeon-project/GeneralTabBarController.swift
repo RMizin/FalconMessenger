@@ -22,15 +22,33 @@ class GeneralTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      self.view.alpha = 0
+      //self.view.alpha = 0
       setOnlineStatus()
     }
+   let splash = UIImageView(frame: UIScreen.main.bounds)
+  
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    var onceToken = 0
+    if onceToken == 0 {
+    
+     
+      splash.image = UIImage(named: "splash")
+      view.addSubview(splash)
+    }
+    onceToken = 1
+  }
+  
+  
 }
 
 extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool) {
     if state {
-      self.view.alpha = 1
+      //self.view.alpha = 1
+      splash.removeFromSuperview()
     }
   }
 }

@@ -18,7 +18,7 @@ public enum ImagePickerMediaType {
     case imageAndVideo
 }
 
-@objc public protocol ImagePickerTrayControllerDelegate {
+@objc public protocol ImagePickerTrayControllerDelegate: class {
     
   @objc optional func controller(_ controller: ImagePickerTrayController, willSelectAsset asset: PHAsset, at indexPath: IndexPath)
     @objc optional func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath)
@@ -119,7 +119,7 @@ public class ImagePickerTrayController: UIViewController {
         return [actionSection, cameraSection, assetSection]
     }
     
-    public var delegate: ImagePickerTrayControllerDelegate?
+    public weak var delegate: ImagePickerTrayControllerDelegate?
 
     /// If set to `true` the tray can be dragged down in order to dismiss it
     /// Defaults to `true`

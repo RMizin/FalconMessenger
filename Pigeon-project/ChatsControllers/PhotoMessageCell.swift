@@ -14,7 +14,7 @@ class PhotoMessageCell: BaseMessageCell {
   
   var message: Message?
   
-  var chatLogController: ChatLogController?
+  weak var chatLogController: ChatLogController?
   
   var playerLayer: AVPlayerLayer?
   
@@ -57,6 +57,7 @@ class PhotoMessageCell: BaseMessageCell {
     progressView.backgroundColor = .clear
     progressView.centerFillColor = .clear
     progressView.trackBackgroundColor = .clear
+    progressView.translatesAutoresizingMaskIntoConstraints = false
 
     return progressView
   }()

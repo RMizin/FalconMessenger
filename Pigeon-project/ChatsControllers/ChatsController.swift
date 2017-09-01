@@ -42,11 +42,11 @@ class ChatsController: UITableViewController {
   
   weak var delegate: ManageAppearance?
   
-  var messagesDictionary = [String: (Message, User)]()
+  var messagesDictionary = [String: (Message, User, ChatMetaData)]()
   
   var userIDs = [String]()
   
-  var finalUserCellData = Array<(Message, User)>()
+  var finalUserCellData = Array<(Message, User, ChatMetaData)>()
 
   
   override func viewDidLoad() {
@@ -97,16 +97,32 @@ class ChatsController: UITableViewController {
  
   fileprivate var userConversations = 0
   
+  
+  override func viewWillAppear(_ animated: Bool) {
+    self.fetchConversations()
+  }
+  
+  
   func managePresense() {
     showActivityIndicator(title: "Connecting...")
+    
     let connectedRef = Database.database().reference(withPath: ".info/connected")
-    connectedRef.observe(.value, with: { snapshot in
-      if snapshot.value as? Bool ?? false {
-        self.fetchConversations()
-      } else {
-        self.fetchConversations()
-      }
-    })
+    
+    connectedRef.observe(.value, with: { (snapshot) in
+      
+      //self.hideActivityIndicator()
+      self.showActivityIndicator(title: "Updating...")
+      
+    }) { (error) in
+        print(error.localizedDescription)
+     // self.hideActivityIndicator()
+      //self.showActivityIndicator(title: "Updating...")
+    }
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    print("did dissapear")
   }
   
   
@@ -117,14 +133,10 @@ class ChatsController: UITableViewController {
     guard let uid = Auth.auth().currentUser?.uid else {
       return
     }
-    
-    showActivityIndicator(title: "Updating...")
-    
+  
     let currentUserConversationsReference = Database.database().reference().child("user-messages").child(uid)
     currentUserConversationsReference.keepSynced(true)
     currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
-      
-      self.showActivityIndicator(title: "Updating...")
       
       let otherUserID = snapshot.key
       
@@ -166,15 +178,30 @@ class ChatsController: UITableViewController {
         let message = Message(dictionary: dictionary)
         
         if let chatPartnerId = message.chatPartnerId() {
-        
-          self.fetchUserDataWithUserID(chatPartnerId, for: message)
+          
+          guard let uid = Auth.auth().currentUser?.uid else {
+            return
+          }
+          
+          let metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
+          metadataRef.keepSynced(true)
+          metadataRef.removeAllObservers()
+          metadataRef.observe( .value, with: { (snapshot) in
+            
+            guard let metaDictionary = snapshot.value as? [String: Int] else {
+              return
+            }
+            
+            self.fetchUserDataWithUserID(chatPartnerId, for: message, metaData: metaDictionary)
+            
+          })
         }
       }
     }, withCancel: nil)
   }
   
   
-  func fetchUserDataWithUserID(_ userID: String, for message: Message) {
+  func fetchUserDataWithUserID(_ userID: String, for message: Message, metaData: [String: Int]) {
     
     let ref = Database.database().reference().child("users").child(userID)
     ref.keepSynced(true)
@@ -184,27 +211,32 @@ class ChatsController: UITableViewController {
       guard var dictionary = snapshot.value as? [String: AnyObject] else {
         return
       }
-          
+    
       dictionary.updateValue(userID as AnyObject, forKey: "id")
-        
+      
       let user = User(dictionary: dictionary)
       
-      self.messagesDictionary[userID] = (message, user)
-      
+      let meta = ChatMetaData(dictionary: metaData)
+        
+      self.messagesDictionary[userID]  = (message, user, meta)
+        
       self.userIDs = self.messagesDictionary.keys.sorted()
-          
+        
       if self.userIDs.count == self.userConversations {
+          
         self.handleReloadTable()
       }
-      
+     
     }, withCancel: { (error) in
       print("\n", error.localizedDescription, "error\n")
     })
 
    
   }
-
   
+  
+
+ 
     // MARK: - Table view data source
   
   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -283,37 +315,38 @@ class ChatsController: UITableViewController {
         
         if !seen && finalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
           
-          cell.newMessageIndicator.isHidden = false          
+          cell.newMessageIndicator.isHidden = false
+          cell.badgeLabel.text = finalUserCellData[indexPath.row].2.badge?.toString()
+          cell.badgeLabel.isHidden = false
+          
         } else {
           
           cell.newMessageIndicator.isHidden = true
+          cell.badgeLabel.isHidden = true
+          cell.badgeLabel.text = finalUserCellData[indexPath.row].2.badge?.toString()
         }
         
       } else {
         
          cell.newMessageIndicator.isHidden = true
+         cell.badgeLabel.isHidden = true
+         cell.badgeLabel.text = finalUserCellData[indexPath.row].2.badge?.toString()
       }
     
         return cell
     }
   
   
-  var chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+  var chatLogController:ChatLogController? = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-      let user = finalUserCellData[indexPath.row].1
-      showChatControllerForUser(user)
-  }
-  
-  
-  func showChatControllerForUser(_ user: User) {
+    let user = finalUserCellData[indexPath.row].1
+    chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+    chatLogController?.delegate = self
+    chatLogController?.user = user
+    chatLogController?.hidesBottomBarWhenPushed = true
     
-    let newDestination = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
-    chatLogController = newDestination
-    chatLogController.delegate = self
-    chatLogController.user = user
-    chatLogController.hidesBottomBarWhenPushed = true
   }
   
   
@@ -321,7 +354,7 @@ class ChatsController: UITableViewController {
     
     finalUserCellData = Array(self.messagesDictionary.values)
     
-    finalUserCellData.sort { (dic1: (Message, User), dic2: (Message, User)) -> Bool in
+    finalUserCellData.sort { (dic1: (Message, User, ChatMetaData), dic2: (Message, User, ChatMetaData)) -> Bool in
       return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
     }
     
@@ -331,7 +364,7 @@ class ChatsController: UITableViewController {
     
     self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { 
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
       self.hideActivityIndicator()
     }
     
@@ -341,9 +374,9 @@ class ChatsController: UITableViewController {
 
 extension ChatsController: MessagesLoaderDelegate {
   
-  func messagesLoader(_ chatLogController: ChatLogController, didFinishLoadingWith messages: [Message]) {
+  func messagesLoader( didFinishLoadingWith messages: [Message]) {
     
-    chatLogController.messages = messages
+    self.chatLogController?.messages = messages
     
     var indexPaths = [IndexPath]()
     
@@ -355,16 +388,20 @@ extension ChatsController: MessagesLoaderDelegate {
       
       UIView.performWithoutAnimation {
         DispatchQueue.main.async {
-          chatLogController.collectionView?.reloadItems(at:indexPaths)
+          self.chatLogController?.collectionView?.reloadItems(at:indexPaths)
         }
       }
     }
     
-    chatLogController.startCollectionViewAtBottom()
+    self.chatLogController?.startCollectionViewAtBottom()
     let autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-    chatLogController.collectionView?.collectionViewLayout = autoSizingCollectionViewFlowLayout
+    self.chatLogController?.collectionView?.collectionViewLayout = autoSizingCollectionViewFlowLayout
     autoSizingCollectionViewFlowLayout.minimumLineSpacing = 5
-    navigationController?.pushViewController( chatLogController, animated: true)
+    if let destination = self.chatLogController {
+       navigationController?.pushViewController( destination, animated: true)
+      self.chatLogController = nil
+    }
+   
   }
 }
 

@@ -64,6 +64,7 @@
 		4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498831F324EC6008DA07F /* GlobalVariables.swift */; };
 		4B9CD8691F4B2B6800EF8AB0 /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */; };
 		4B9CD86B1F4C3D4800EF8AB0 /* MediaPickerController+imagePickerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CD86A1F4C3D4800EF8AB0 /* MediaPickerController+imagePickerHandlers.swift */; };
+		4BB775A51F59E74200BFEEB8 /* ChatMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */; };
 		4BBE9A1D1F4D8A2C00053935 /* stickers.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1A1F4D8A2C00053935 /* stickers.png */; };
 		4BBE9A1E1F4D8A2C00053935 /* stickers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1B1F4D8A2C00053935 /* stickers@2x.png */; };
 		4BBE9A1F1F4D8A2C00053935 /* stickers@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1C1F4D8A2C00053935 /* stickers@3x.png */; };
@@ -230,6 +231,7 @@
 		4B9498831F324EC6008DA07F /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalVariables.swift; path = Support/GlobalVariables.swift; sourceTree = "<group>"; };
 		4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = ChatsControllers/MediaObject.swift; sourceTree = "<group>"; };
 		4B9CD86A1F4C3D4800EF8AB0 /* MediaPickerController+imagePickerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MediaPickerController+imagePickerHandlers.swift"; path = "ChatsControllers/MediaPickerController+imagePickerHandlers.swift"; sourceTree = "<group>"; };
+		4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatMetaData.swift; path = ChatsControllers/ChatMetaData.swift; sourceTree = "<group>"; };
 		4BBE9A1A1F4D8A2C00053935 /* stickers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stickers.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers.png"; sourceTree = "<group>"; };
 		4BBE9A1B1F4D8A2C00053935 /* stickers@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stickers@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers@2x.png"; sourceTree = "<group>"; };
 		4BBE9A1C1F4D8A2C00053935 /* stickers@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stickers@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers@3x.png"; sourceTree = "<group>"; };
@@ -621,6 +623,7 @@
 		4BC26B2C1F3A236A0093A9D2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */,
 				4BC26B261F3A234A0093A9D2 /* Message.swift */,
 			);
 			name = Model;
@@ -1012,6 +1015,7 @@
 				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
 				4BED6EBC1F476A46004EF2E0 /* ActionCell.swift in Sources */,
 				4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */,
+				4BB775A51F59E74200BFEEB8 /* ChatMetaData.swift in Sources */,
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
 				4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */,
 				4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */,

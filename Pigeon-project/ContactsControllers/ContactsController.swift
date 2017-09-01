@@ -362,17 +362,16 @@ class ContactsController: UITableViewController {
     return nil
   }
   
-    var chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+    var chatLogController:ChatLogController? = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
       if indexPath.section == 0 {
       
-        let newDestination = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
-        chatLogController = newDestination
-        chatLogController.delegate = self
-        chatLogController.user = filteredUsers[indexPath.row]
-        chatLogController.hidesBottomBarWhenPushed = true
+        chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+        chatLogController?.delegate = self
+        chatLogController?.user = filteredUsers[indexPath.row]
+        chatLogController?.hidesBottomBarWhenPushed = true
       }
     
       if indexPath.section == 1 {
@@ -427,31 +426,36 @@ extension ContactsController { /* hiding keyboard */
 }
 
 extension ContactsController: MessagesLoaderDelegate {
-
-  func messagesLoader(_ chatLogController: ChatLogController, didFinishLoadingWith messages: [Message]) {
+  
+  func messagesLoader( didFinishLoadingWith messages: [Message]) {
     
-    chatLogController.messages = messages
+    self.chatLogController?.messages = messages
     
     var indexPaths = [IndexPath]()
     
-      if messages.count - 1 >= 0 {
-        for index in 0...messages.count - 1 {
-          
-          indexPaths.append(IndexPath(item: index, section: 0))
-        }
+    if messages.count - 1 >= 0 {
+      for index in 0...messages.count - 1 {
         
-        UIView.performWithoutAnimation {
-          DispatchQueue.main.async {
-            chatLogController.collectionView?.reloadItems(at:indexPaths)
-          }
+        indexPaths.append(IndexPath(item: index, section: 0))
+      }
+      
+      UIView.performWithoutAnimation {
+        DispatchQueue.main.async {
+          self.chatLogController?.collectionView?.reloadItems(at:indexPaths)
         }
       }
+    }
     
-        chatLogController.startCollectionViewAtBottom()
-        let autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-        chatLogController.collectionView?.collectionViewLayout = autoSizingCollectionViewFlowLayout
-        autoSizingCollectionViewFlowLayout.minimumLineSpacing = 5
-        navigationController?.pushViewController( chatLogController, animated: true)
+    self.chatLogController?.startCollectionViewAtBottom()
+    let autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
+    self.chatLogController?.collectionView?.collectionViewLayout = autoSizingCollectionViewFlowLayout
+    autoSizingCollectionViewFlowLayout.minimumLineSpacing = 5
+    if let destination = self.chatLogController {
+      navigationController?.pushViewController( destination, animated: true)
+      self.chatLogController = nil
+    }
+    
   }
 }
+
 

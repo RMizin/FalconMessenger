@@ -69,7 +69,7 @@ import UIKit
         didSet { setNeedsDisplay() }
     }
 
-    @IBInspectable open var centerFillColor: UIColor = UIColor.clear {
+    @IBInspectable open var centerFillColor: UIColor = UIColor.black {
         didSet { setNeedsDisplay() }
     }
 

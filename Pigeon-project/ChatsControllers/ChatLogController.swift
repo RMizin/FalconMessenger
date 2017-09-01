@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import Photos
 
+
 private let incomingTextMessageCellID = "incomingTextMessageCellID"
 
 private let outgoingTextMessageCellID = "outgoingTextMessageCellID"
@@ -24,7 +25,7 @@ private let typingIndicatorStateDatabaseKeyID = "Is typing"
 
 
 protocol MessagesLoaderDelegate: class {
-  func messagesLoader(_ chatLogController: ChatLogController, didFinishLoadingWith messages: [Message] )
+  func messagesLoader( didFinishLoadingWith messages: [Message] )
 }
 
 
@@ -32,7 +33,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   weak var delegate: MessagesLoaderDelegate?
   
-  var user: User? {
+   var user: User? {
     didSet {
       loadMessages()
       self.title = user?.name
@@ -43,7 +44,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var blackBackgroundView = ImageViewBackgroundView()
   var startingImageView: UIImageView?
   let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
-
+  
+  var userMessagesLoadingReference: DatabaseQuery!
+  
+  var messagesLoadingReference: DatabaseReference!
+  
+  var typingIndicatorReference: DatabaseReference!
   
   var messages = [Message]()
   
@@ -83,23 +89,25 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
     
-    let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
-    userMessagesRef.keepSynced(true)
-    userMessagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+    userMessagesLoadingReference = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
+    userMessagesLoadingReference?.keepSynced(true)
+    userMessagesLoadingReference?.observeSingleEvent(of: .value, with: { (snapshot) in
       
     if snapshot.exists() {
   
-   
-      userMessagesRef.observe( .childAdded, with: { (snapshot) in
-      self.messagesIds.append(snapshot.key)
-      
-        let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
-        messagesRef.keepSynced(true)
-        messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+      self.userMessagesLoadingReference?.observe( .childAdded, with: { (snapshot) in
         
-          guard let dictionary = snapshot.value as? [String: AnyObject] else {
+        self.messagesIds.append(snapshot.key)
+        let messageUID = snapshot.key
+    
+        self.messagesLoadingReference = Database.database().reference().child("messages").child(snapshot.key)
+        self.messagesLoadingReference.keepSynced(true)
+        self.messagesLoadingReference.observeSingleEvent(of: .value, with: { (snapshot) in
+        
+          guard var dictionary = snapshot.value as? [String: AnyObject] else {
             return
           }
+          dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
           
           
           if self.isInitialLoad {
@@ -114,27 +122,47 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 return message1.timestamp!.int32Value < message2.timestamp!.int32Value
               })
               
-              self.delegate?.messagesLoader(self, didFinishLoadingWith: self.appendingMessages)
+              self.delegate?.messagesLoader(didFinishLoadingWith: self.appendingMessages)
               
               DispatchQueue.main.async {
             
                 self.observeTypingIndicator()
-                self.updateMessageStatus(messagesRef: messagesRef)
+                self.updateMessageStatus(messageRef: self.messagesLoadingReference)
+                self.updateMessageStatusUI(dictionary: dictionary)
+                self.resetBadgeForReciever()
               }
+              
               self.isInitialLoad = false
               return
             }
           } else {
           
             if Message(dictionary: dictionary).fromId == uid || Message(dictionary: dictionary).fromId == Message(dictionary:dictionary).toId { /* outbox */
-                self.updateMessageStatus(messagesRef: messagesRef)
-                print("outbox or self")
+              
+              print("outbox or self")
+              
+              self.updateMessageStatus(messageRef: self.messagesLoadingReference)
+              
+              self.updateMessageStatusUI(dictionary: dictionary)
+              
+              if self.navigationController?.visibleViewController is ChatLogController {
+                
+                self.resetBadgeForReciever()
+              }
+             
               return
             }
           
           
             if Message(dictionary: dictionary).toId == uid { /* inbox */
+              
               print("inbox")
+              
+              if self.navigationController?.visibleViewController is ChatLogController {
+                
+               self.resetBadgeForReciever()
+              }
+
             
               self.collectionView?.performBatchUpdates ({
               
@@ -161,11 +189,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                   let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
                 
                   DispatchQueue.main.async {
+                    
                     self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
                   }
                 }
               }, completion: { (true) in
-                self.updateMessageStatus(messagesRef: messagesRef)
+                
+                  self.updateMessageStatus(messageRef: self.messagesLoadingReference)
+                
+                  self.updateMessageStatusUI(dictionary: dictionary)
+                
                 return
               })
             }
@@ -179,7 +212,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     })
         
       } else {
-        self.delegate?.messagesLoader(self, didFinishLoadingWith: self.messages)
+        self.delegate?.messagesLoader(didFinishLoadingWith: self.messages)
       }
     })
   }
@@ -215,8 +248,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           print("ALL messages downloaded")
           return
         }
-        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryOrderedByKey()
-        userMessagesRef.queryStarting(atValue: self.queryStartingID).queryEnding(atValue: self.queryEndingID).observe(.childAdded, with: { (snapshot) in
+        var userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryOrderedByKey()
+          userMessagesRef = userMessagesRef.queryStarting(atValue: self.queryStartingID).queryEnding(atValue: self.queryEndingID)
+          userMessagesRef.observe(.childAdded, with: { (snapshot) in
           self.messagesIds.append(snapshot.key)
           
           let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
@@ -238,6 +272,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
               
               self.messages = arrayWithShiftedMessages
+              userMessagesRef.removeAllObservers()
               
               contentSizeWhenInsertingToTop = self.collectionView?.contentSize
               isInsertingCellsToTop = true
@@ -299,12 +334,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
     
-    let typingIndicatorRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorDatabaseID)
-    typingIndicatorRef.onDisconnectRemoveValue()
+    let internalTypingIndicatorRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorDatabaseID)
+    internalTypingIndicatorRef.onDisconnectRemoveValue()
     
-    let userTypingToRef = Database.database().reference().child("user-messages").child(toId).child(uid).child(typingIndicatorDatabaseID).child(typingIndicatorStateDatabaseKeyID)
-    userTypingToRef.onDisconnectRemoveValue()
-    userTypingToRef.observe( .value, with: { (isTyping) in
+    typingIndicatorReference = Database.database().reference().child("user-messages").child(toId).child(uid).child(typingIndicatorDatabaseID).child(typingIndicatorStateDatabaseKeyID)
+    typingIndicatorReference.onDisconnectRemoveValue()
+    typingIndicatorReference.observe( .value, with: { (isTyping) in
       
       if let isUserTypingToYou = isTyping.value! as? Bool {
         
@@ -375,14 +410,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     return true
   }
   
-  
-  fileprivate func updateMessageStatus(messagesRef: DatabaseReference) {
+
+  fileprivate func updateMessageStatus(messageRef: DatabaseReference) {
     
     if currentReachabilityStatus != .notReachable {
       
       var recieverID = String()
       
-      messagesRef.child("toId").observeSingleEvent(of: .value, with: { (snapshot) in
+      messageRef.child("toId").observeSingleEvent(of: .value, with: { (snapshot) in
         
         if snapshot.exists() {
 
@@ -390,45 +425,49 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         if (Auth.auth().currentUser?.uid)! == recieverID && (Auth.auth().currentUser?.uid != nil)  {
+          
           if self.navigationController?.visibleViewController is ChatLogController {
           
-            messagesRef.updateChildValues(["seen" : true])
+             messageRef.updateChildValues(["seen" : true])
           }
           
         } else {
-
-            recieverID = ""
-        }
-      })
-    
-      messagesRef.child("status") .observe(.value, with: { (messageStatusValue) in
-        
-        if let lastMessageStatus = messageStatusValue.value as? String {
           
-           self.messages[self.messages.count-1].status = lastMessageStatus
-          
-          if self.messages.count - 1 >= 0 {
-             self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section: 0)])
-          }
-          
-        }
-      })
-      
-      messagesRef.observe(.childChanged, with: { (snapshot) in
-        
-        if Auth.auth().currentUser?.uid != self.user!.id {
-          
-          if snapshot.value != nil && snapshot.key == "status" {
-            
-            let status = snapshot.value as! String
-          
-            self.messages[self.messages.count-1].status = status
-    
-            self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section:0)])
-          }
+           recieverID = ""
         }
       })
     }
+  }
+  
+  
+  func updateMessageStatusUI(dictionary: [String : AnyObject]) {
+    
+    if let lastMessageStatus = dictionary["status"] as? String {
+      
+      self.messages[self.messages.count - 1].status = lastMessageStatus
+      
+      if self.messages.count - 1 >= 0 {
+        
+        self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section: 0)])
+        print("value")
+      }
+    }
+  }
+  
+  
+  override init(collectionViewLayout layout: UICollectionViewLayout) {
+    super.init(collectionViewLayout: layout)
+    print("\n  INIT  \n")
+  }
+  
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  
+  deinit {
+    print("\n DEINIT \n")
   }
   
   
@@ -438,6 +477,26 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     setupCollectionView()
     setupProgressBar()
   }
+  
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    if userMessagesLoadingReference != nil {
+      userMessagesLoadingReference.removeAllObservers()
+    }
+   
+    if messagesLoadingReference != nil {
+      messagesLoadingReference.removeAllObservers()
+    }
+   
+    if typingIndicatorReference != nil {
+      typingIndicatorReference.removeAllObservers()
+    }
+  
+    isTyping = false
+  }
+  
   
   func setupProgressBar() {
   
@@ -538,13 +597,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
 
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-  
-    isTyping = false
-  }
-  
-  
   override func numberOfSections(in collectionView: UICollectionView) -> Int {
     return sections.count
   }
@@ -688,7 +740,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             cell.deliveryStatus.isHidden = true
             break
           }
-
           
           if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
             
@@ -996,6 +1047,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(userMessagesFirebaseFolder)
       
       recipientUserMessagesRef.updateChildValues([messageId: 1])
+      
+      self.incrementBadgeForReciever()
     }
   }
   
@@ -1058,7 +1111,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let defaultMessageStatus = messageStatusSent
     
-    let toId = user!.id!
+    guard let toId = user?.id else {
+      return
+    }
     
     let fromId = Auth.auth().currentUser!.uid
     
@@ -1088,6 +1143,65 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(userMessagesFirebaseFolder)
       
       recipientUserMessagesRef.updateChildValues([messageId: 1])
+      
+      self.incrementBadgeForReciever()
     }
+  }
+  
+  
+  func resetBadgeForReciever() {
+    
+    let toId = user!.id!
+    
+    let fromId = Auth.auth().currentUser!.uid
+    
+    let badgeRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(messageMetaDataFirebaseFolder).child("badge")
+    
+    badgeRef.runTransactionBlock({ (mutableData) -> TransactionResult in
+      var value = mutableData.value as? Int
+      
+      value = 0
+      
+      mutableData.value = value!
+      return TransactionResult.success(withValue: mutableData)
+    })
+    
+  }
+  
+  
+  func incrementBadgeForReciever() {
+    
+    let toId = user!.id!
+    
+    let fromId = Auth.auth().currentUser!.uid
+    
+    var ref = Database.database().reference().child("user-messages").child(toId).child(fromId)
+    ref.observeSingleEvent(of: .value, with: { (snapshot) in
+      
+      
+      if snapshot.hasChild(messageMetaDataFirebaseFolder) {
+        
+        print("true rooms exist")
+        
+        ref = ref.child(messageMetaDataFirebaseFolder).child("badge")
+        ref.runTransactionBlock({ (mutableData) -> TransactionResult in
+          var value = mutableData.value as? Int
+          if value == nil  {
+            value = 0
+          }
+          mutableData.value = value! + 1
+          return TransactionResult.success(withValue: mutableData)
+        })
+        
+      } else {
+        
+        print("false room doesn't exist")
+        
+        ref = ref.child(messageMetaDataFirebaseFolder)
+        ref.updateChildValues(["badge": 1], withCompletionBlock: { (error, reference) in
+          
+        })
+      }
+    })
   }
 }

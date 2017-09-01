@@ -28,6 +28,13 @@ extension String {
   }
 }
 
+extension Int {
+  func toString() -> String {
+    let myString = String(self)
+    return myString
+  }
+}
+
 
 extension String {
   var doubleValue: Double {
@@ -178,6 +185,7 @@ extension UIScrollView {
 
 public let statusOnline = "Online"
 public let userMessagesFirebaseFolder = "userMessages"
+public let messageMetaDataFirebaseFolder = "metaData"
 
 func setOnlineStatus()  {
   

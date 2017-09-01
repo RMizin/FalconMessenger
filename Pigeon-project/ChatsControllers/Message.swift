@@ -10,6 +10,8 @@ import UIKit
 import Firebase
 
 class Message:  NSObject  {
+  
+  var messageUID: String?
 
     var fromId: String?
     var text: String?
@@ -33,7 +35,8 @@ class Message:  NSObject  {
   
     init(dictionary: [String: AnyObject]) {
         super.init()
-        
+      
+        messageUID = dictionary["messageUID"] as? String
         fromId = dictionary["fromId"] as? String
         text = dictionary["text"] as? String
         timestamp = dictionary["timestamp"] as? NSNumber
