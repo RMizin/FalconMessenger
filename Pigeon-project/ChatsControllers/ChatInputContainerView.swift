@@ -15,11 +15,11 @@ class ChatInputContainerView: UIView {
   
   let centeredCollectionViewFlowLayout = CenteredCollectionViewFlowLayout()
   
-  var trayDelegate: ImagePickerTrayControllerDelegate?
+  weak var trayDelegate: ImagePickerTrayControllerDelegate?
   
   var selectedMedia = [MediaObject]()
   
-  var mediaPickerController: MediaPickerController?
+  weak var mediaPickerController: MediaPickerController?
   
   var maxTextViewHeight: CGFloat = 0.0
   

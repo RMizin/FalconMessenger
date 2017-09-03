@@ -111,7 +111,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           
           if self.isInitialLoad {
-            print("initial load")
             
             self.appendingMessages.append(Message(dictionary: dictionary))
             
@@ -139,8 +138,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
             if Message(dictionary: dictionary).fromId == uid || Message(dictionary: dictionary).fromId == Message(dictionary:dictionary).toId { /* outbox */
               
-              print("outbox or self")
-              
               self.updateMessageStatus(messageRef: self.messagesLoadingReference)
               
               self.updateMessageStatusUI(dictionary: dictionary)
@@ -154,9 +151,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           
           
-            if Message(dictionary: dictionary).toId == uid { /* inbox */
-              
-              print("inbox")
+            if Message(dictionary: dictionary).toId == uid {
               
               if self.navigationController?.visibleViewController is ChatLogController {
                 
@@ -455,29 +450,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  override init(collectionViewLayout layout: UICollectionViewLayout) {
-    super.init(collectionViewLayout: layout)
-    print("\n  INIT  \n")
-  }
-  
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-  
-  
-  deinit {
-    print("\n DEINIT \n")
-  }
-  
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     setupCollectionView()
     setupProgressBar()
   }
-  
+
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)

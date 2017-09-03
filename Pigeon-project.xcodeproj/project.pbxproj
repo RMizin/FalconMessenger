@@ -82,8 +82,7 @@
 		4BC26B321F3A27750093A9D2 /* ChatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B311F3A27750093A9D2 /* ChatsController.swift */; };
 		4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC2C58C1F40545200B5C825 /* UserCell.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
-		4BE5712D1F4D652D009D9AB4 /* MediaPickerController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* MediaPickerController+PhotoEditor.swift */; };
-		4BE571341F4D86FE009D9AB4 /* LICENSE.md in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571331F4D86FE009D9AB4 /* LICENSE.md */; };
+		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
 		4BE571501F4D87A4009D9AB4 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */; };
 		4BE571511F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571391F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift */; };
 		4BE571521F4D87A4009D9AB4 /* CropRectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5713A1F4D87A4009D9AB4 /* CropRectView.swift */; };
@@ -249,8 +248,7 @@
 		4BC26B311F3A27750093A9D2 /* ChatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatsController.swift; path = ChatsControllers/ChatsController.swift; sourceTree = "<group>"; };
 		4BC2C58C1F40545200B5C825 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = ChatsControllers/UserCell.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
-		4BE5712C1F4D652D009D9AB4 /* MediaPickerController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MediaPickerController+PhotoEditor.swift"; path = "ChatsControllers/MediaPickerController+PhotoEditor.swift"; sourceTree = "<group>"; };
-		4BE571331F4D86FE009D9AB4 /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = LICENSE.md; path = Support/iOSPhotoEditor/LICENSE.md; sourceTree = "<group>"; };
+		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
 		4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorCollectionViewCell.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/ColorCollectionViewCell.swift"; sourceTree = "<group>"; };
 		4BE571391F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorsCollectionViewDelegate.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/ColorsCollectionViewDelegate.swift"; sourceTree = "<group>"; };
 		4BE5713A1F4D87A4009D9AB4 /* CropRectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CropRectView.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/CropRectView.swift"; sourceTree = "<group>"; };
@@ -389,13 +387,6 @@
 			name = RevealableCell;
 			sourceTree = "<group>";
 		};
-		4B32F8511F38879300807FFB /* PhoneNumber parser */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "PhoneNumber parser";
-			sourceTree = "<group>";
-		};
 		4B48D3091F35C9E20050C797 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -498,7 +489,7 @@
 				4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */,
 				4BED6EC01F48AAFA004EF2E0 /* MediaPickerController.swift */,
 				4B9CD86A1F4C3D4800EF8AB0 /* MediaPickerController+imagePickerHandlers.swift */,
-				4BE5712C1F4D652D009D9AB4 /* MediaPickerController+PhotoEditor.swift */,
+				4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */,
 			);
 			name = Chats;
 			sourceTree = "<group>";
@@ -590,7 +581,6 @@
 				4B1A36941F498DAD00B4AA0A /* CenteredCollectionViewFlowLayout */,
 				4BED6EA81F47697D004EF2E0 /* PickerTrayController */,
 				4B56B3631F443591008F4F27 /* ImageView opener */,
-				4B32F8511F38879300807FFB /* PhoneNumber parser */,
 				4B48D3111F361E300050C797 /* ProgressIndicator */,
 				4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */,
 				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
@@ -650,7 +640,6 @@
 				4BE571371F4D8790009D9AB4 /* Core */,
 				4BE571361F4D8789009D9AB4 /* Recources */,
 				4BE571351F4D8781009D9AB4 /* Images */,
-				4BE571331F4D86FE009D9AB4 /* LICENSE.md */,
 			);
 			name = PhotoEditor;
 			sourceTree = "<group>";
@@ -1054,7 +1043,7 @@
 				4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */,
 				4BEB13F31F39CE3E0048A984 /* PigeonUsersTableViewCell.swift in Sources */,
 				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
-				4BE5712D1F4D652D009D9AB4 /* MediaPickerController+PhotoEditor.swift in Sources */,
+				4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */,
 				4B8D0B831F523AA800E9252A /* CircleProgressView.swift in Sources */,
 				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
 				4BE571551F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift in Sources */,
@@ -1073,7 +1062,6 @@
 				4BE571621F4D87A4009D9AB4 /* StickerCollectionViewCell.swift in Sources */,
 				4BED6EBF1F476A46004EF2E0 /* ImageCell.swift in Sources */,
 				4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */,
-				4BE571341F4D86FE009D9AB4 /* LICENSE.md in Sources */,
 				4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */,
 				4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */,
 				4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */,

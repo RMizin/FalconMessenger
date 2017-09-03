@@ -125,6 +125,26 @@ class ChatsController: UITableViewController {
     print("did dissapear")
   }
   
+  func setTabBarBadge() {
+    
+    let tabItems = self.tabBarController?.tabBar.items as NSArray!
+    var badge = 0
+    
+    for meta in finalUserCellData {
+   
+      let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
+    
+      badge += meta.2.badge!
+      
+      if badge <= 0 {
+        tabItem.badgeValue = nil
+      } else {
+        tabItem.badgeValue = badge.toString()
+      }
+      
+    }
+  }
+  
   
   func fetchConversations() {
     
@@ -230,14 +250,8 @@ class ChatsController: UITableViewController {
     }, withCancel: { (error) in
       print("\n", error.localizedDescription, "error\n")
     })
-
-   
   }
   
-  
-
- 
-    // MARK: - Table view data source
   
   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     return true
@@ -337,16 +351,18 @@ class ChatsController: UITableViewController {
     }
   
   
-  var chatLogController:ChatLogController? = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+  var chatLogController:ChatLogController? = nil
+  var autoSizingCollectionViewFlowLayout:AutoSizingCollectionViewFlowLayout? = nil
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+  
     let user = finalUserCellData[indexPath.row].1
-    chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+    autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
+    autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
+    chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
     chatLogController?.delegate = self
     chatLogController?.user = user
     chatLogController?.hidesBottomBarWhenPushed = true
-    
   }
   
   
@@ -359,6 +375,7 @@ class ChatsController: UITableViewController {
     }
     
     DispatchQueue.main.async(execute: {
+          self.setTabBarBadge()
           self.tableView.reloadData()
     })
     
@@ -394,12 +411,11 @@ extension ChatsController: MessagesLoaderDelegate {
     }
     
     self.chatLogController?.startCollectionViewAtBottom()
-    let autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-    self.chatLogController?.collectionView?.collectionViewLayout = autoSizingCollectionViewFlowLayout
-    autoSizingCollectionViewFlowLayout.minimumLineSpacing = 5
+  
     if let destination = self.chatLogController {
-       navigationController?.pushViewController( destination, animated: true)
+      navigationController?.pushViewController( destination, animated: true)
       self.chatLogController = nil
+      self.autoSizingCollectionViewFlowLayout = nil
     }
    
   }

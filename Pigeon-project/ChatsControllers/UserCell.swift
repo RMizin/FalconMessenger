@@ -109,18 +109,16 @@ class UserCell: UITableViewCell {
       
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         messageLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true
-        messageLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
+        messageLabel.rightAnchor.constraint(equalTo: badgeLabel.leftAnchor, constant: -5).isActive = true
   
         timeLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor).isActive = true
         timeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
         timeLabel.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 5).isActive = true
       
-        badgeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -5).isActive = true
+        badgeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
         badgeLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
         badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         badgeLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-//     //   badgeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3).isActive = true
-      
     }
   
   
@@ -137,6 +135,5 @@ class UserCell: UITableViewCell {
     nameLabel.text = ""
     messageLabel.text = nil
     timeLabel.text = nil
-    //newMessageIndicator.image = UIImage(named: "Oval")
   }
 }

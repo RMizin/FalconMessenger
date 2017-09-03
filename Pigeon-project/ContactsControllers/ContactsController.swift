@@ -362,13 +362,16 @@ class ContactsController: UITableViewController {
     return nil
   }
   
-    var chatLogController:ChatLogController? = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+    var chatLogController:ChatLogController? = nil
+    var autoSizingCollectionViewFlowLayout:AutoSizingCollectionViewFlowLayout? = nil
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
       if indexPath.section == 0 {
-      
-        chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+        
+        autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
+        autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
+        chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
         chatLogController?.delegate = self
         chatLogController?.user = filteredUsers[indexPath.row]
         chatLogController?.hidesBottomBarWhenPushed = true
@@ -447,12 +450,10 @@ extension ContactsController: MessagesLoaderDelegate {
     }
     
     self.chatLogController?.startCollectionViewAtBottom()
-    let autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-    self.chatLogController?.collectionView?.collectionViewLayout = autoSizingCollectionViewFlowLayout
-    autoSizingCollectionViewFlowLayout.minimumLineSpacing = 5
     if let destination = self.chatLogController {
       navigationController?.pushViewController( destination, animated: true)
       self.chatLogController = nil
+      self.autoSizingCollectionViewFlowLayout = nil
     }
     
   }

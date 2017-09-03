@@ -54,8 +54,8 @@ public final class PhotoEditorViewController: UIViewController {
      */
     public var colors  : [UIColor] = []
     
-    public var photoEditorDelegate: PhotoEditorDelegate?
-    var colorsCollectionViewDelegate: ColorsCollectionViewDelegate!
+    public weak var photoEditorDelegate: PhotoEditorDelegate?
+    var colorsCollectionViewDelegate: ColorsCollectionViewDelegate?
     
     // list of controls to be hidden
     public var hiddenControls : [control] = []
@@ -73,6 +73,11 @@ public final class PhotoEditorViewController: UIViewController {
     var activeTextView: UITextView?
     var imageViewToPan: UIImageView?
     var isTyping: Bool = false
+  
+  
+  deinit {
+    print("\n  DEINIT OF PHOTO EDITOR \n")
+  }
     
     
     var stickersViewController: StickersViewController!
@@ -83,6 +88,12 @@ public final class PhotoEditorViewController: UIViewController {
       textView.frame = CGRect(x: 0, y: canvasImageView.center.y,
                                width: UIScreen.main.bounds.width, height: 50)
     }
+  
+  public override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    NotificationCenter.default.removeObserver(self)
+  }
+  
   
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -117,9 +128,9 @@ public final class PhotoEditorViewController: UIViewController {
         layout.minimumLineSpacing = 0
         colorsCollectionView.collectionViewLayout = layout
         colorsCollectionViewDelegate = ColorsCollectionViewDelegate()
-        colorsCollectionViewDelegate.colorDelegate = self
+        colorsCollectionViewDelegate?.colorDelegate = self
         if !colors.isEmpty {
-            colorsCollectionViewDelegate.colors = colors
+            colorsCollectionViewDelegate?.colors = colors
         }
         colorsCollectionView.delegate = colorsCollectionViewDelegate
         colorsCollectionView.dataSource = colorsCollectionViewDelegate

@@ -20,7 +20,7 @@ public enum ImagePickerMediaType {
 
 @objc public protocol ImagePickerTrayControllerDelegate: class {
     
-  @objc optional func controller(_ controller: ImagePickerTrayController, willSelectAsset asset: PHAsset, at indexPath: IndexPath)
+    @objc optional func controller(_ controller: ImagePickerTrayController, willSelectAsset asset: PHAsset, at indexPath: IndexPath)
     @objc optional func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath)
     
     @objc optional func controller(_ controller: ImagePickerTrayController, willDeselectAsset asset: PHAsset, at indexPath: IndexPath)
@@ -29,7 +29,6 @@ public enum ImagePickerMediaType {
     @objc optional func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage)
     @objc optional func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage, with asset: PHAsset)
     @objc optional func controller(_ controller: ImagePickerTrayController, didRecordVideoAsset asset: PHAsset)
-    
 }
 
 public let ImagePickerTrayWillShow: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayWillShow")
@@ -102,7 +101,17 @@ public class ImagePickerTrayController: UIViewController {
             }
         }
     }
+
+  deinit {
+    print("\n TRAY CONTROLLER DEINIT \n")
+  }
+  
+  public override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
     
+    NotificationCenter.default.removeObserver(self)
+  }
+  
     fileprivate var imageSize: CGSize = .zero
     let trayHeight: CGFloat
 
@@ -139,7 +148,7 @@ public class ImagePickerTrayController: UIViewController {
         self.trayHeight = 216
         
         super.init(nibName: nil, bundle: nil)
-        
+        print("\n  TRAY INIT  \n")
         transitionController = TransitionController(trayController: self)
         modalPresentationStyle = .custom
         transitioningDelegate = transitionController

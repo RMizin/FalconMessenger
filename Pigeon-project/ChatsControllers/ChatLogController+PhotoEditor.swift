@@ -1,5 +1,5 @@
 //
-//  MediaPickerController+PhotoEditor.swift
+//  ChatLogController+PhotoEditor.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/23/17.
@@ -31,7 +31,7 @@ extension ChatLogController: PhotoEditorDelegate {
     
     photoEditor.hiddenControls = [.text]
     
-    photoEditor.modalTransitionStyle = .coverVertical
+    photoEditor.modalPresentationStyle = .overCurrentContext
     
     photoEditor.sentIndexPath = indexPath
     
@@ -49,6 +49,8 @@ extension ChatLogController: PhotoEditorDelegate {
     let player = AVPlayer(url: videoURL!)
     
     let playerViewController = AVPlayerViewController()
+    
+    playerViewController.modalPresentationStyle = .overCurrentContext
     
     playerViewController.player = player
     

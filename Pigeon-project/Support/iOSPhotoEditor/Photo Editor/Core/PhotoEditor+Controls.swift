@@ -26,7 +26,7 @@ extension PhotoEditorViewController {
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
         photoEditorDelegate?.canceledEditing()
-      
+        
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -35,6 +35,7 @@ extension PhotoEditorViewController {
         controller.delegate = self
         controller.image = image
         let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .overCurrentContext
         present(navController, animated: true, completion: nil)
     }
 
