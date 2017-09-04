@@ -13,7 +13,7 @@ class OutgoingTextMessageCell: BaseMessageCell {
   
   let textView: UITextView = {
     let textView = UITextView()
-    textView.font = UIFont.systemFont(ofSize: 13.5)
+    textView.font = UIFont.systemFont(ofSize: 13)
     textView.backgroundColor = UIColor.clear
     textView.isEditable = false
     textView.isScrollEnabled = false
@@ -31,5 +31,6 @@ class OutgoingTextMessageCell: BaseMessageCell {
     bubbleView.addSubview(textView)
     contentView.addSubview(deliveryStatus)
     bubbleView.image = BaseMessageCell.blueBubbleImage
+   
   }
 }

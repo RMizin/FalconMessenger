@@ -23,6 +23,8 @@ private let typingIndicatorDatabaseID = "typingIndicator"
 
 private let typingIndicatorStateDatabaseKeyID = "Is typing"
 
+private let incomingPhotoMessageCellID = "incomingPhotoMessageCellID"
+
 
 protocol MessagesLoaderDelegate: class {
   func messagesLoader( didFinishLoadingWith messages: [Message] )
@@ -41,7 +43,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   var startingFrame: CGRect?
-  var blackBackgroundView = ImageViewBackgroundView()
+  var blackBackgroundView:ImageViewBackgroundView! = nil
   var startingImageView: UIImageView?
   let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
   
@@ -52,7 +54,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var typingIndicatorReference: DatabaseReference!
   
   var messages = [Message]()
-  
+  var mediaMessages = [Message]()
   var sections = ["Messages"]
   
   let messagesToLoad = 50
@@ -62,8 +64,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
   
   let messageSendingProgressBar = UIProgressView(progressViewStyle: .bar)
-  
 
+  
   func startCollectionViewAtBottom () {
     
     let collectionViewInsets: CGFloat = (collectionView!.contentInset.bottom + collectionView!.contentInset.top)// + inputContainerView.inputTextView.frame.height
@@ -114,6 +116,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
             self.appendingMessages.append(Message(dictionary: dictionary))
             
+            if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
+              self.mediaMessages.append(Message(dictionary: dictionary))
+            }
+            
             if self.appendingMessages.count == self.messagesIds.count {
               
               self.appendingMessages.sort(by: { (message1, message2) -> Bool in
@@ -162,6 +168,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               self.collectionView?.performBatchUpdates ({
               
                 self.messages.append(Message(dictionary: dictionary))
+                
+                if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
+                  self.mediaMessages.append(Message(dictionary: dictionary))
+                }
               
                 if self.messages.count - 1 >= 0 {
                 
@@ -256,6 +266,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
             
             self.messages.append(Message(dictionary: dictionary))
+            
+            if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
+              self.mediaMessages.append(Message(dictionary: dictionary))
+            }
             
             if self.messages.count == self.messagesIds.count {
               
@@ -502,6 +516,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)
     collectionView?.register(TypingIndicatorCell.self, forCellWithReuseIdentifier: typingIndicatorCellID)
     collectionView?.register(PhotoMessageCell.self, forCellWithReuseIdentifier: photoMessageCellID)
+    collectionView?.register(IncomingPhotoMessageCell.self, forCellWithReuseIdentifier: incomingPhotoMessageCellID)
     collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
   }
     
@@ -626,11 +641,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                                          height: cell.frame.size.height).integral
         
          
-          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
-                                            height: cell.bubbleView.frame.height)
+          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(),
+                                            height: cell.bubbleView.frame.height.rounded())
             
            DispatchQueue.main.async {
-            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10)
+            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
             
             switch indexPath.row == self.messages.count - 1 {
               
@@ -665,10 +680,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             cell.textView.text = messageText
         
             cell.bubbleView.frame.size = CGSize(width: estimateFrameForText(messageText).width + 30,
-                                          height: cell.frame.size.height)//.integral
+                                          height: cell.frame.size.height.rounded())//.integral
           
-            cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width,
-                                              height: cell.bubbleView.frame.height)
+            cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(),
+                                              height: cell.bubbleView.frame.height.rounded())
             
             DispatchQueue.main.async {
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
@@ -685,28 +700,19 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
     } else if message.imageUrl != nil || message.localImage != nil { /* If current message is a photo/video message */
       
-      let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
-      
-      cell.chatLogController = self
-      
-      cell.message = message
-      
+     
       if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
         
-        cell.progressView.trackFillColor = .white
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
         
-        cell.progressView.trackBorderColor = .white
+        cell.chatLogController = self
         
-        cell.progressView.trackBorderWidth = 2
-        
-        cell.bubbleView.image = BaseMessageCell.blueBubbleImage
-        
-        cell.bubbleView.frame = CGRect(x: view.frame.width - 210, y: 0, width: 200, height: cell.frame.size.height).integral
-        
+        cell.message = message
+        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
     
         DispatchQueue.main.async {
           
-          cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10)
+          cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
           
           switch indexPath.row == self.messages.count - 1 {
             
@@ -728,20 +734,45 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           }
         }
         
+        cell.messageImageView.isUserInteractionEnabled = false
+        
+        if let image = message.localImage {
+          
+          cell.messageImageView.image = image
+          cell.progressView.isHidden = true
+          cell.messageImageView.isUserInteractionEnabled = true
+          return cell
+        }
+        
+        if let messageImageUrl = message.imageUrl {
+          cell.progressView.isHidden = false
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize) in
+            
+            let progress = Double(100 * downloadedSize/expectedSize)
+            
+            cell.progressView.setProgress(progress * 0.01, animated: false)
+            
+          }, completed: { (image, error, cacheType, url) in
+            cell.progressView.isHidden = true
+            cell.messageImageView.isUserInteractionEnabled = true
+            
+          })
+        }
+        
+        cell.playButton.isHidden = message.videoUrl == nil
+        
+        
+        return cell
+        
       } else { /* Incoming message with grey bubble */
         
-        cell.progressView.trackFillColor = .darkGray
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
         
-        cell.progressView.trackBorderColor = .darkGray
+        cell.chatLogController = self
         
-        cell.progressView.trackBorderWidth = 2
+        cell.message = message
         
-        cell.bubbleView.image = BaseMessageCell.grayBubbleImage
-        
-        cell.deliveryStatus.isHidden = true
-        
-        cell.bubbleView.frame = CGRect(x: 10, y: 0, width: 200, height: cell.frame.size.height).integral
-        
+        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         
         DispatchQueue.main.async {
           
@@ -752,44 +783,48 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             cell.setRevealableView(view, style: .over , direction: .left)
           }
         }
-      }
-      
-        cell.messageImageView.isUserInteractionEnabled = false
-      
-        if let image = message.localImage {
         
+        cell.messageImageView.isUserInteractionEnabled = false
+        
+        if let image = message.localImage {
+          
           cell.messageImageView.image = image
-           cell.progressView.isHidden = true
-           cell.messageImageView.isUserInteractionEnabled = true
+          cell.progressView.isHidden = true
+          cell.messageImageView.isUserInteractionEnabled = true
           return cell
         }
-      
+        
         if let messageImageUrl = message.imageUrl {
           cell.progressView.isHidden = false
           cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize) in
-           
+            
             let progress = Double(100 * downloadedSize/expectedSize)
-           
+            
             cell.progressView.setProgress(progress * 0.01, animated: false)
             
           }, completed: { (image, error, cacheType, url) in
-            cell.progressView.isHidden = true
-            cell.messageImageView.isUserInteractionEnabled = true
             
+            cell.progressView.isHidden = true
+            
+            cell.messageImageView.isUserInteractionEnabled = true
+          
           })
+        }
+        
+        cell.playButton.isHidden = message.videoUrl == nil
+        
+        return cell
       }
-      
-      cell.playButton.isHidden = message.videoUrl == nil
-      
-      
-      return cell
-      
+    
     } else {
       
       return nil
     }
   }
   
+  deinit {
+    print("\n chatlog controller deinit \n")
+  }
   
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
@@ -810,7 +845,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
       } else if let imageWidth = message.imageWidth?.floatValue, let imageHeight = message.imageHeight?.floatValue {
         
-        cellHeight = CGFloat(imageHeight / imageWidth * 200)
+        cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
       }
       
       return CGSize(width: deviceScreen.width, height: cellHeight)
@@ -823,9 +858,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   
   func estimateFrameForText(_ text: String) -> CGRect {
-    let size = CGSize(width: 200, height: 1000)
+    let size = CGSize(width: 200, height: 10000)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)], context: nil)
+    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 13)], context: nil).integral
   }
   
   

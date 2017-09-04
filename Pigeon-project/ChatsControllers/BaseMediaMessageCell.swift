@@ -1,16 +1,16 @@
 //
-//  PhotoMessageCell.swift
-//  Avalon-Print
+//  BaseMediaMessageCell.swift
+//  Pigeon-project
 //
-//  Created by Roman Mizin on 7/16/17.
+//  Created by Roman Mizin on 9/4/17.
 //  Copyright © 2017 Roman Mizin. All rights reserved.
 //
-
 
 import UIKit
 import AVFoundation
 
-class PhotoMessageCell: BaseMessageCell {
+
+class BaseMediaMessageCell: BaseMessageCell {
   
   var message: Message?
   
@@ -19,7 +19,7 @@ class PhotoMessageCell: BaseMessageCell {
   var playerLayer: AVPlayerLayer?
   
   var player: AVPlayer?
- 
+  
   let activityIndicatorView: UIActivityIndicatorView = {
     let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     aiv.translatesAutoresizingMaskIntoConstraints = false
@@ -58,52 +58,18 @@ class PhotoMessageCell: BaseMessageCell {
     progressView.centerFillColor = .clear
     progressView.trackBackgroundColor = .clear
     progressView.translatesAutoresizingMaskIntoConstraints = false
-
+    
     return progressView
   }()
-  
-  
-  override func setupViews() {
-  
-  contentView.addSubview(bubbleView)
-    bubbleView.addSubview(messageImageView)
-    messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
-    messageImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor).isActive = true
-    messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
-    messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
+
+  override func prepareForReuse() {
+    super.prepareForReuse()
     
-    bubbleView.addSubview(playButton)
-    playButton.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
-    playButton.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-    playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-    playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    
-    bubbleView.addSubview(activityIndicatorView)
-    activityIndicatorView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
-    activityIndicatorView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-    activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-    activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    
-    contentView.addSubview(deliveryStatus)
-    
-    bubbleView.addSubview(progressView)
-    progressView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
-    progressView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-    progressView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-    progressView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-    
-  
-  }
-  
-  
-  override func prepareViewsForReuse() {
     playerLayer?.removeFromSuperlayer()
     player?.pause()
     activityIndicatorView.stopAnimating()
     messageImageView.image = nil
-    bubbleView.image = nil
- 
-    
+
   }
   
   
@@ -132,5 +98,6 @@ class PhotoMessageCell: BaseMessageCell {
       self.chatLogController?.performZoomInForStartingImageView(imageView)
     }
   }
-  
+
+    
 }

@@ -10,9 +10,9 @@ import UIKit
 
 class BaseMessageCell: RevealableCollectionViewCell {
   
-  static let grayBubbleImage = UIImage(named: "PigeonBubbleIncomingFull")?.resizableImage(withCapInsets: UIEdgeInsetsMake(15, 20, 15, 20))
+  static let grayBubbleImage = UIImage(named: "PigeonBubbleIncomingFull")?.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
   
-  static let blueBubbleImage = UIImage(named: "PigeonBubbleOutgoingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(15, 20, 15, 20))
+  static let blueBubbleImage = UIImage(named: "PigeonBubbleOutgoingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
   
   
   let bubbleView: UIImageView = {
@@ -36,7 +36,7 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   
   override init(frame: CGRect) {
-    super.init(frame: frame)
+    super.init(frame: frame.integral)
     
     setupViews()
   }

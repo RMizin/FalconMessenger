@@ -42,14 +42,48 @@ extension ChatLogController {
   }
 
 
+  /*
+   
+   let imageNames = ["","","","",""]
+   
+   
+   
+   var currentImage = 0
+   
+   */
+  
+//  func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+//    var currentImage = 0
+//    if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+//      
+//      
+//      switch swipeGesture.direction {
+//      case UISwipeGestureRecognizerDirection.left:
+//        if currentImage == mediaMessages.count - 1 {
+//          currentImage = 0
+//          
+//        }else{
+//          currentImage += 1
+//        }
+//        zoomingImageView.sd_setImage(with: URL(string: mediaMessages[currentImage].imageUrl!))
+//        
+//      case UISwipeGestureRecognizerDirection.right:
+//        if currentImage == 0 {
+//          currentImage = mediaMessages.count - 1
+//        }else{
+//          currentImage -= 1
+//        }
+//        zoomingImageView.sd_setImage(with: URL(string: mediaMessages[currentImage].imageUrl!))
+//      default:
+//        break
+//      }
+//    }
+//  }
   
   func performZoomInForStartingImageView(_ initialImageView: UIImageView) {
-    
    
     inputContainerViewWasFirstResponder = false
   
-    
-    
     self.startingImageView = initialImageView
     
     self.startingImageView?.isHidden = true
@@ -71,10 +105,23 @@ extension ChatLogController {
       
       keyWindow.addSubview(self.blackBackgroundView)
       keyWindow.addSubview(zoomingImageView)
+      
+      
       configureImageViewBackgroundView()
       configureToolbar()
-     
-      guard let scaledImage = imageWithImage(sourceImage: zoomingImageView.image!, scaledToWidth: deviceScreen.width) else {
+
+//      let swipeRight = UISwipeGestureRecognizer(target: self.blackBackgroundView, action: #selector(respondToSwipeGesture(gesture:)))
+//      swipeRight.direction = UISwipeGestureRecognizerDirection.right
+//      self.blackBackgroundView.addGestureRecognizer(swipeRight)
+//      
+//      let swipeLeft = UISwipeGestureRecognizer(target: self.blackBackgroundView, action:  #selector(respondToSwipeGesture(gesture:)))
+//      swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+//      self.blackBackgroundView.addGestureRecognizer(swipeLeft)
+      
+      guard let zoomingImage = zoomingImageView.image else {
+        return
+      }
+      guard let scaledImage = imageWithImage(sourceImage: zoomingImage, scaledToWidth: deviceScreen.width) else {
         return
       }
       let centerY = blackBackgroundView.center.y - (scaledImage.size.height/2)
@@ -104,7 +151,6 @@ extension ChatLogController {
         } else {
            zoomingImageView.frame = CGRect(x: 0, y: centerY+5 , width: scaledImage.size.width, height: scaledImage.size.height)
         }
-       
         
       }, completion: { (completed) in
         // do nothing
@@ -113,10 +159,9 @@ extension ChatLogController {
   }
   
   func handleZoomOut() {
-    
-    // self.inputContainerView.inputTextView.becomeFirstResponder()
+  
     if let zoomOutImageView = zoomOutGesture.view {
-      //need to animate back out to controller
+    
       zoomOutImageView.layer.masksToBounds = true
       
       UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
@@ -129,17 +174,15 @@ extension ChatLogController {
         
         zoomOutImageView.layer.cornerRadius = 16
         zoomOutImageView.contentMode = .scaleAspectFill
-        //zoomOutImageView.layer.borderColor = UIColor.lightGray.cgColor
-        //zoomOutImageView.layer.borderWidth = 1
         
         if inputContainerViewWasFirstResponder {
            self.inputContainerView.inputTextView.becomeFirstResponder()
         }
         
-        
       }, completion: { (completed) in
         
         zoomOutImageView.removeFromSuperview()
+        self.blackBackgroundView = nil
        
         
         self.startingImageView?.isHidden = false
