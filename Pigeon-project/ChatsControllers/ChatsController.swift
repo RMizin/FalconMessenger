@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import SDWebImage
+import AudioToolbox
 
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -54,6 +55,7 @@ class ChatsController: UITableViewController {
     
     configureTableView()
     managePresense()
+    fetchConversations()
   }
   
   
@@ -98,9 +100,9 @@ class ChatsController: UITableViewController {
   fileprivate var userConversations = 0
   
   
-  override func viewWillAppear(_ animated: Bool) {
-    self.fetchConversations()
-  }
+  //override func viewWillAppear(_ animated: Bool) {
+//    self.fetchConversations()
+ // }
   
   
   func managePresense() {
@@ -123,29 +125,41 @@ class ChatsController: UITableViewController {
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     print("did dissapear")
+    
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    if let testSelected = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: testSelected, animated: true)
+    }
+    super.viewDidAppear(animated)
   }
   
   func setTabBarBadge() {
     
     let tabItems = self.tabBarController?.tabBar.items as NSArray!
     var badge = 0
-    
+   // var once = false
     for meta in finalUserCellData {
    
       let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
     
-      badge += meta.2.badge!
       
-      if badge <= 0 {
-        tabItem.badgeValue = nil
-      } else {
-        tabItem.badgeValue = badge.toString()
+      if meta.0.fromId != Auth.auth().currentUser!.uid {
+        
+        badge += meta.2.badge!
+        
+        if badge <= 0 {
+          tabItem.badgeValue = nil
+        } else {
+          tabItem.badgeValue = badge.toString()
+        }
       }
       
     }
   }
   
-  
+  fileprivate var isInitialLoad = true
   func fetchConversations() {
     
     userConversations = 0
@@ -191,6 +205,7 @@ class ChatsController: UITableViewController {
     
     let messagesReference = Database.database().reference().child("messages").child(messageId)
     messagesReference.keepSynced(true)
+    print("\n before \n")
     messagesReference.observe( .value, with: { (snapshot) in
       
       if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -203,6 +218,14 @@ class ChatsController: UITableViewController {
             return
           }
           
+          if !self.isInitialLoad && message.fromId != uid {
+            if self.navigationController?.visibleViewController is ChatsController {
+              SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
+              print("\n in notification\n ")
+              
+            }
+          }
+          
           let metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
           metadataRef.keepSynced(true)
           metadataRef.removeAllObservers()
@@ -213,7 +236,6 @@ class ChatsController: UITableViewController {
             }
             
             self.fetchUserDataWithUserID(chatPartnerId, for: message, metaData: metaDictionary)
-            
           })
         }
       }
@@ -378,7 +400,7 @@ class ChatsController: UITableViewController {
           self.setTabBarBadge()
           self.tableView.reloadData()
     })
-    
+    isInitialLoad = false
     self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
     
     DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
@@ -417,9 +439,5 @@ extension ChatsController: MessagesLoaderDelegate {
       self.chatLogController = nil
       self.autoSizingCollectionViewFlowLayout = nil
     }
-   
   }
 }
-
-
-

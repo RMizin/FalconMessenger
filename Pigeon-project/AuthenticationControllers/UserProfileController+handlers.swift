@@ -316,7 +316,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     }
     
     picker.allowsEditing = true
-  
+    picker.modalPresentationStyle = .overFullScreen
     picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
     present(picker, animated: true, completion: nil)
   }
@@ -332,7 +332,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
       picker.sourceType = UIImagePickerControllerSourceType.camera
       picker.allowsEditing = true
-      
+      picker.modalPresentationStyle = .overFullScreen
       self.present(picker, animated: true, completion: nil)
       
     } else {

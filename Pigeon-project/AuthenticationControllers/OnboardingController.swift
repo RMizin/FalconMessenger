@@ -10,8 +10,6 @@ import UIKit
 
 class OnboardingController: UIViewController {
 
-  
-  
   let onboardingContainerView = OnboardingContainerView()
   
     override func viewDidLoad() {

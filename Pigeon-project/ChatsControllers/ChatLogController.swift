@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import Photos
+import AudioToolbox
 
 
 private let incomingTextMessageCellID = "incomingTextMessageCellID"
@@ -39,12 +40,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     didSet {
       loadMessages()
       self.title = user?.name
+      configureTitileViewWithOnlineStatus()
     }
   }
   
   var startingFrame: CGRect?
   var blackBackgroundView:ImageViewBackgroundView! = nil
   var startingImageView: UIImageView?
+  var zoomingImageView: UIImageView!
   let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
   
   var userMessagesLoadingReference: DatabaseQuery!
@@ -53,8 +56,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var typingIndicatorReference: DatabaseReference!
   
+  var userStatusReference: DatabaseReference!
+  
   var messages = [Message]()
-  var mediaMessages = [Message]()
+  
+  //var mediaMessages = [Message]()
+  
   var sections = ["Messages"]
   
   let messagesToLoad = 50
@@ -116,9 +123,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
             self.appendingMessages.append(Message(dictionary: dictionary))
             
-            if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
-              self.mediaMessages.append(Message(dictionary: dictionary))
-            }
+//            if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
+//              self.mediaMessages.append(Message(dictionary: dictionary))
+//            }
             
             if self.appendingMessages.count == self.messagesIds.count {
               
@@ -152,6 +159,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 
                 self.resetBadgeForReciever()
               }
+              SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
              
               return
             }
@@ -169,9 +177,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               
                 self.messages.append(Message(dictionary: dictionary))
                 
-                if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
-                  self.mediaMessages.append(Message(dictionary: dictionary))
-                }
+//                if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
+//                  self.mediaMessages.append(Message(dictionary: dictionary))
+//                }
               
                 if self.messages.count - 1 >= 0 {
                 
@@ -267,9 +275,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
             self.messages.append(Message(dictionary: dictionary))
             
-            if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
-              self.mediaMessages.append(Message(dictionary: dictionary))
-            }
+//            if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
+//              self.mediaMessages.append(Message(dictionary: dictionary))
+//            }
             
             if self.messages.count == self.messagesIds.count {
               
@@ -469,6 +477,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     setupCollectionView()
     setupProgressBar()
+    setRightBarButtonItem()
   }
 
   
@@ -485,6 +494,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
    
     if typingIndicatorReference != nil {
       typingIndicatorReference.removeAllObservers()
+    }
+    
+    if userStatusReference != nil {
+      userStatusReference.removeAllObservers()
     }
   
     isTyping = false
@@ -519,7 +532,44 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.register(IncomingPhotoMessageCell.self, forCellWithReuseIdentifier: incomingPhotoMessageCellID)
     collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
   }
+  
+  
+ 
+  func configureTitileViewWithOnlineStatus() {
+    userStatusReference = Database.database().reference().child("users").child(user!.id!).child("OnlineStatus")
+    userStatusReference.observe(.value, with: { (snapshot) in
+      
+      guard let uid = Auth.auth().currentUser?.uid,let toId = self.user?.id else {
+        return
+      }
+      
+      if uid == toId {
+         self.navigationItem.setTitle(title: self.user!.name!, subtitle: "You")
+        return
+      }
+      
+      if snapshot.exists() {
+        if snapshot.value as! String == "Online" {
+          self.navigationItem.setTitle(title: self.user!.name!, subtitle: "Online")
+        } else {
+          self.navigationItem.setTitle(title: self.user!.name!, subtitle: ("Last seen " + (snapshot.value as! String).doubleValue.getDateStringFromUTC()))
+        }
+      }
+    })
+  }
+  
+  
+  func setRightBarButtonItem () {
     
+    let infoButton = UIButton(type: .infoLight)
+    
+   // infoButton.addTarget(self, action: #selector(getInfoAction), for: .touchUpInside)
+    
+    let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
+
+    navigationItem.rightBarButtonItem = infoBarButtonItem
+  }
+  
   
   lazy var inputContainerView: ChatInputContainerView = {
     var chatInputContainerView = ChatInputContainerView(frame: CGRect.zero)
@@ -881,6 +931,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     inputContainerView.placeholderLabel.isHidden = false
     
     handleMediaMessageSending()
+    
+//    SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
   }
   
 

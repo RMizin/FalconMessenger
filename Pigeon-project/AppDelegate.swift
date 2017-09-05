@@ -8,11 +8,8 @@
 
 import UIKit
 import Firebase
-import FirebaseDatabase
-import FirebaseAuth
-import FirebaseMessaging
 import UserNotifications
-import FirebaseInstanceID
+
 
 
 @UIApplicationMain

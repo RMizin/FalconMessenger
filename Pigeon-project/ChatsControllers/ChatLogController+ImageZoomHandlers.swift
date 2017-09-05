@@ -17,22 +17,12 @@ extension ChatLogController {
   
   
   func configureImageViewBackgroundView() {
-    blackBackgroundView.navigationItem.title = "1 of 1"
-   // blackBackgroundView.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit  ", style: .done, target: self, action: #selector(UserProfileController.handleSelectProfileImageView))
+    blackBackgroundView.navigationItem.title = "Media"
     blackBackgroundView.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "   Done", style: .done, target: self, action: #selector(UserProfileController.handleZoomOut))
-      
-   //   UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(UserProfileController.handleZoomOut))
     blackBackgroundView.navigationItem.leftBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 15)
     blackBackgroundView.navigationBar.setItems([blackBackgroundView.navigationItem], animated: true)
   }
-//  
-//  func handlerImageViewSelection() {
-//    if userProfileContainerView.profileImageView.image != nil {
-//      performZoomInForStartingImageView(userProfileContainerView.profileImageView)
-//    } else {
-//      handleSelectProfileImageView()
-//    }
-//  }
+
   
   func configureToolbar() {
     let item1 = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action:nil)
@@ -40,45 +30,7 @@ extension ChatLogController {
     item1.imageInsets = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 15)
     blackBackgroundView.toolbar.setItems([item1], animated: true)
   }
-
-
-  /*
-   
-   let imageNames = ["","","","",""]
-   
-   
-   
-   var currentImage = 0
-   
-   */
   
-//  func respondToSwipeGesture(gesture: UIGestureRecognizer) {
-//    var currentImage = 0
-//    if let swipeGesture = gesture as? UISwipeGestureRecognizer {
-//      
-//      
-//      switch swipeGesture.direction {
-//      case UISwipeGestureRecognizerDirection.left:
-//        if currentImage == mediaMessages.count - 1 {
-//          currentImage = 0
-//          
-//        }else{
-//          currentImage += 1
-//        }
-//        zoomingImageView.sd_setImage(with: URL(string: mediaMessages[currentImage].imageUrl!))
-//        
-//      case UISwipeGestureRecognizerDirection.right:
-//        if currentImage == 0 {
-//          currentImage = mediaMessages.count - 1
-//        }else{
-//          currentImage -= 1
-//        }
-//        zoomingImageView.sd_setImage(with: URL(string: mediaMessages[currentImage].imageUrl!))
-//      default:
-//        break
-//      }
-//    }
-//  }
   
   func performZoomInForStartingImageView(_ initialImageView: UIImageView) {
    
@@ -90,7 +42,7 @@ extension ChatLogController {
     
     self.startingFrame = initialImageView.superview?.convert(initialImageView.frame, to: nil)
     
-    let zoomingImageView = UIImageView(frame: self.startingFrame!)
+    zoomingImageView = UIImageView(frame: self.startingFrame!)
     
     zoomingImageView.image = startingImageView?.image
     
@@ -102,22 +54,12 @@ extension ChatLogController {
     if let keyWindow = UIApplication.shared.keyWindow {
       self.blackBackgroundView = ImageViewBackgroundView(frame: keyWindow.frame)
       self.blackBackgroundView.alpha = 0
-      
       keyWindow.addSubview(self.blackBackgroundView)
       keyWindow.addSubview(zoomingImageView)
-      
       
       configureImageViewBackgroundView()
       configureToolbar()
 
-//      let swipeRight = UISwipeGestureRecognizer(target: self.blackBackgroundView, action: #selector(respondToSwipeGesture(gesture:)))
-//      swipeRight.direction = UISwipeGestureRecognizerDirection.right
-//      self.blackBackgroundView.addGestureRecognizer(swipeRight)
-//      
-//      let swipeLeft = UISwipeGestureRecognizer(target: self.blackBackgroundView, action:  #selector(respondToSwipeGesture(gesture:)))
-//      swipeLeft.direction = UISwipeGestureRecognizerDirection.left
-//      self.blackBackgroundView.addGestureRecognizer(swipeLeft)
-      
       guard let zoomingImage = zoomingImageView.image else {
         return
       }
@@ -147,9 +89,9 @@ extension ChatLogController {
           let centerX = self.blackBackgroundView.center.x - (image.size.width/2)
           
           
-           zoomingImageView.frame = CGRect(x: centerX, y: centerY+7 , width: image.size.width, height: image.size.height)
+           self.zoomingImageView.frame = CGRect(x: centerX, y: centerY+7 , width: image.size.width, height: image.size.height)
         } else {
-           zoomingImageView.frame = CGRect(x: 0, y: centerY+5 , width: scaledImage.size.width, height: scaledImage.size.height)
+           self.zoomingImageView.frame = CGRect(x: 0, y: centerY+5 , width: scaledImage.size.width, height: scaledImage.size.height)
         }
         
       }, completion: { (completed) in
