@@ -11,7 +11,7 @@ import Firebase
 
 class Message:  NSObject  {
   
-  var messageUID: String?
+    var messageUID: String?
 
     var fromId: String?
     var text: String?
@@ -25,7 +25,9 @@ class Message:  NSObject  {
     var imageHeight: NSNumber?
     var imageWidth: NSNumber?
   
-  var localImage: UIImage?
+    var localImage: UIImage?
+  
+    var localVideoUrl: String?
   
     var videoUrl: String?
       
@@ -52,5 +54,6 @@ class Message:  NSObject  {
         videoUrl = dictionary["videoUrl"] as? String
       
         localImage = dictionary["localImage"] as? UIImage
+        localVideoUrl = dictionary["localVideoUrl"] as? String
     }
 }

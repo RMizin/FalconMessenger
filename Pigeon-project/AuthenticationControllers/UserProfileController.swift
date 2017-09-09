@@ -69,7 +69,7 @@ extension UserProfileController { /* setting user data to database and to privat
                                        "phoneNumber" : userProfileContainerView.phone.text! ]) { (error, reference) in
                                         
       ARSLineProgress.hide()
-                
+      
       self.dismiss(animated: true, completion: nil)
     }
   }

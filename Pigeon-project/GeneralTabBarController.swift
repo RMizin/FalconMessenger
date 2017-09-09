@@ -26,15 +26,17 @@ class GeneralTabBarController: UITabBarController {
     }
    let splash = UIImageView(frame: UIScreen.main.bounds)
   
+   var onceToken = 0
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    var onceToken = 0
+   
     if onceToken == 0 {
     
      
       splash.image = UIImage(named: "splash")
+      splash.tag = 13
       view.addSubview(splash)
     }
     onceToken = 1
@@ -47,6 +49,7 @@ extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool) {
     if state {
       //self.view.alpha = 1
+      print("\n did finished loading protocol \n")
       splash.removeFromSuperview()
     }
   }

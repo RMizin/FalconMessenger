@@ -11,6 +11,7 @@ import Photos
 
 class MediaObject: NSObject {
   var object: Data?
+  var videoObject: Data?
   var indexPath: IndexPath?
   var imageSource: String?
   var phAsset: PHAsset?
@@ -22,6 +23,7 @@ class MediaObject: NSObject {
     super.init()
     
     object = dictionary["object"] as? Data
+    videoObject = dictionary["videoObject"] as? Data
     indexPath = dictionary["indexPath"] as? IndexPath
     imageSource = dictionary["imageSource"] as? String
     phAsset = dictionary["phAsset"] as? PHAsset

@@ -70,14 +70,12 @@ class MediaPickerController: UIViewController {
     customMediaPickerView.delegate = self
     
     customMediaPickerView.add(action: .cameraAction { _ in
-      print("Show Camera")
       self.openCamera()
-      })
+    })
     
     customMediaPickerView.add(action: .libraryAction { _ in
-      print("Show Library")
       self.openPhotoLibrary()
-      })
+    })
   }
 }
 
@@ -106,41 +104,50 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
   func controller(_ controller: ImagePickerTrayController, didRecordVideoAsset asset: PHAsset) {
     
     let filename = asset.originalFilename!
+    
     let data = dataFromAsset(asset: asset)
     
+    let manager = PHImageManager.default()
     
-    var fileURL = String()
-    
-    getUrlFor(asset: asset) { (url, completed) in
-      if completed {
-        fileURL = url
-        
-        print("after  ", fileURL)
-        
-        let mediaObject = ["object": data!,
-                           "imageSource": imageSourceCamera,
-                           "phAsset": asset,
-                           "filename": filename,
-                           "fileURL" : fileURL] as [String: AnyObject]
-        
-        self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
-        
-        if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
-          DispatchQueue.main.async {
-            
-            self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
-          }
-        } else {
-          DispatchQueue.main.async {
-            self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0)])
-          }
+    manager.requestAVAsset(forVideo: asset, options: nil, resultHandler: { (avasset, audio, info) in
+      
+      if let avassetURL = avasset as? AVURLAsset {
+  
+        guard let video = try? Data(contentsOf: avassetURL.url) else {
+          return
         }
         
-        DispatchQueue.main.async {
-          self.expandCollection()
+        self.getUrlFor(asset: asset) { (url, completed) in
+          
+          if completed {
+           
+            let mediaObject = ["object": data!,
+                               "videoObject": video,
+                               "imageSource": imageSourceCamera,
+                               "phAsset": asset,
+                               "filename": filename,
+                               "fileURL" : url] as [String: AnyObject]
+            
+            self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
+            
+            if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
+              DispatchQueue.main.async {
+                
+                self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+              }
+            } else {
+              DispatchQueue.main.async {
+                self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0)])
+              }
+            }
+            
+            DispatchQueue.main.async {
+              self.expandCollection()
+            }
+          }
         }
       }
-    }
+    })
   }
   
   
@@ -150,22 +157,95 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     
     let filename = asset.originalFilename!
     
-    let data = compressImage(image: image!)
+    let imageData = compressImage(image: image!)
+    
+    if asset.mediaType == .image {
+     
+      self.handleAssetSelection(imageData: imageData,  videoData: nil, indexPath: indexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+      
+    } else if asset.mediaType == .video {
   
-    var fileURL = String()
+      let manager = PHImageManager.default()
+      
+      manager.requestAVAsset(forVideo: asset, options: nil, resultHandler: { (avasset, audio, info) in
+   
+        if let avassetURL = avasset as? AVURLAsset {
+          
+          guard let video = try? Data(contentsOf: avassetURL.url) else {
+            return
+          }
+          
+          self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: indexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+   
+        } else if avasset is AVComposition {
+          
+          let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+          
+          let documentsDirectory: NSString? = paths.first as NSString?
+          
+          if documentsDirectory != nil {
+            
+            let random = Int(arc4random() % 1000)
+            let pathToAppend = String(format: "mergeSlowMoVideo-%d.mov", random)
+            let myPathDocs = documentsDirectory!.strings(byAppendingPaths: [pathToAppend])
+            let myPath = myPathDocs.first
+            
+            if myPath != nil {
+              
+              let url = URL(fileURLWithPath: myPath!)
+              let exporter = AVAssetExportSession(asset: avasset!, presetName: AVAssetExportPresetHighestQuality)
+              
+              if exporter != nil {
+                
+                exporter!.outputURL = url
+                exporter!.outputFileType = AVFileTypeQuickTimeMovie
+                exporter!.shouldOptimizeForNetworkUse = true
+                
+                exporter!.exportAsynchronously(completionHandler: {
+                  
+                  guard let url = exporter!.outputURL else {
+                    return
+                  }
+                
+                  guard let video = try? Data(contentsOf: url) else {
+                    return
+                  }
+                  
+                  self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: indexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+                })
+              }
+            }
+          }
+        }
+      })
+    }
+  }
+  
+  fileprivate func handleAssetSelection(imageData: Data, videoData: Data?, indexPath: IndexPath, imageSource: String, asset: PHAsset, filename: String) {
     
     getUrlFor(asset: asset) { (url, completed) in
       if completed {
-        fileURL = url
+
+        var mediaObject = [String: AnyObject]()
         
-        print("after  ", fileURL)
-        
-        let mediaObject = ["object": data,
-                           "indexPath": indexPath,
-                           "imageSource": imageSourcePhotoLibrary,
-                           "phAsset": asset,
-                           "filename": filename,
-                           "fileURL" : fileURL] as [String: AnyObject]
+        if videoData == nil {
+          
+          mediaObject = ["object": imageData,
+                         "indexPath": indexPath,
+                         "imageSource": imageSource,
+                         "phAsset": asset,
+                         "filename": filename,
+                         "fileURL" : url] as [String: AnyObject]
+        } else {
+          
+          mediaObject = ["object": imageData,
+                         "videoObject": videoData! ,
+                         "indexPath": indexPath,
+                         "imageSource": imageSource,
+                         "phAsset": asset,
+                         "filename": filename,
+                         "fileURL" : url] as [String: AnyObject]
+        }
         
         self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
         

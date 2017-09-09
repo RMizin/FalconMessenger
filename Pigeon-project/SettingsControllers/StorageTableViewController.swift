@@ -47,35 +47,6 @@ class StorageTableViewController: UITableViewController {
     
   }
   
-  func clearDocumentsAndData() {
-    let fileManager = FileManager.default
-    let documentsUrl =  FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first! as NSURL
-    let documentsPath = documentsUrl.path
-    
-    do {
-      if let documentPath = documentsPath
-      {
-        let fileNames = try fileManager.contentsOfDirectory(atPath: "\(documentPath)")
-        print("all files in cache: \(fileNames)")
-        for fileName in fileNames {
-          
-         // if (fileName.hasSuffix(".png"))
-          //{
-            let filePathName = "\(documentPath)/\(fileName)"
-            try fileManager.removeItem(atPath: filePathName)
-          //}
-        }
-        
-        let files = try fileManager.contentsOfDirectory(atPath: "\(documentPath)")
-        print("all files in cache after deleting images: \(files)")
-      }
-      
-    } catch {
-      print("Could not clear temp folder: \(error)")
-    }
-  }
-
-  
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       
       let identifier = "cell"
@@ -109,8 +80,6 @@ class StorageTableViewController: UITableViewController {
       if indexPath.row == 1 {
        cell.textLabel?.text = "Clear app's Documents and Data"
       }
-      
-     
   
         return cell
     }
@@ -139,11 +108,12 @@ class StorageTableViewController: UITableViewController {
       tableView.deselectRow(at: indexPath, animated: true)
 
     }
+    
     if indexPath.row == 1 {
        let alert = UIAlertController(title: "Ary you shure?", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
       let okAction = UIAlertAction(title: "Confirm", style: .default) { (action) in
-        
-        self.clearDocumentsAndData()
+   
+        FileManager.default.clearTemp()
         tableView.reloadData()
         ARSLineProgress.showSuccess()
         

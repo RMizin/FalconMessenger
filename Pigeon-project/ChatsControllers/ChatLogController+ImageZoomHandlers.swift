@@ -7,14 +7,14 @@
 //
 
 import UIKit
+import AVFoundation
+import AVKit
 
 
 private var inputContainerViewWasFirstResponder = false
 
 
 extension ChatLogController {
-  
-  
   
   func configureImageViewBackgroundView() {
     blackBackgroundView.navigationItem.title = "Media"
@@ -29,6 +29,26 @@ extension ChatLogController {
     
     item1.imageInsets = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 15)
     blackBackgroundView.toolbar.setItems([item1], animated: true)
+  }
+  
+  
+  func performZoomInForVideo( url: URL) {
+  
+    let player = AVPlayer(url: url)
+    
+    let inBubblePlayerViewController = AVPlayerViewController()
+  
+    inBubblePlayerViewController.player = player
+    
+    inBubblePlayerViewController.modalTransitionStyle = .crossDissolve
+    
+    inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
+    
+    if self.inputContainerView.inputTextView.isFirstResponder {
+      self.inputContainerView.inputTextView.resignFirstResponder()
+    }
+  
+    present(inBubblePlayerViewController, animated: true, completion: nil)
   }
   
   
@@ -115,7 +135,7 @@ extension ChatLogController {
           self.inputContainerView.isHidden = false
         
         zoomOutImageView.layer.cornerRadius = 16
-        zoomOutImageView.contentMode = .scaleAspectFill
+       // zoomOutImageView.contentMode = .scaleAspectFill
         
         if inputContainerViewWasFirstResponder {
            self.inputContainerView.inputTextView.becomeFirstResponder()

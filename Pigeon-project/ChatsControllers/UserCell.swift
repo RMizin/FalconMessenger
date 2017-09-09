@@ -135,5 +135,6 @@ class UserCell: UITableViewCell {
     nameLabel.text = ""
     messageLabel.text = nil
     timeLabel.text = nil
+    badgeLabel.isHidden = true
   }
 }

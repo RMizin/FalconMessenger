@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 import SDWebImage
-import AudioToolbox
 
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -23,6 +22,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
+
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -32,7 +32,9 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
+
 private let userCellID = "userCellID"
+
 
 protocol ManageAppearance: class {
   func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool )
@@ -48,6 +50,13 @@ class ChatsController: UITableViewController {
   var userIDs = [String]()
   
   var finalUserCellData = Array<(Message, User, ChatMetaData)>()
+  
+  fileprivate var connectedRef: DatabaseReference!
+  fileprivate var currentUserConversationsReference: DatabaseReference!
+  fileprivate var lastMessageForConverstaionRef: DatabaseReference!
+  fileprivate var messagesReference: DatabaseReference!
+  fileprivate var metadataRef: DatabaseReference!
+  fileprivate var usersRef: DatabaseReference!
 
   
   override func viewDidLoad() {
@@ -55,7 +64,50 @@ class ChatsController: UITableViewController {
     
     configureTableView()
     managePresense()
-    fetchConversations()
+  }
+  
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    print("\n chatsController will appear \n")
+    self.fetchConversations()
+  }
+  
+  
+  override func viewDidAppear(_ animated: Bool) {
+    
+    if let testSelected = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: testSelected, animated: true)
+    }
+    super.viewDidAppear(animated)
+  }
+  
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    print("\n chatsController did dissapear \n")
+    
+//    if currentUserConversationsReference != nil {
+//      currentUserConversationsReference.removeAllObservers()
+//    }
+//    
+//    if lastMessageForConverstaionRef != nil {
+//      lastMessageForConverstaionRef.removeAllObservers()
+//    }
+//    
+//    if messagesReference != nil {
+//      messagesReference.removeAllObservers()
+//    }
+//    
+//    if metadataRef != nil {
+//      metadataRef.removeAllObservers()
+//    }
+//    
+//    if usersRef != nil {
+//      usersRef.removeAllObservers()
+//    }
   }
   
   
@@ -66,12 +118,10 @@ class ChatsController: UITableViewController {
     tableView.backgroundColor = UIColor.white
     navigationItem.leftBarButtonItem = editButtonItem
   }
-  
-  
-  fileprivate var activityIndicatorIsShown = false
+
   
   func showActivityIndicator(title: String) {
-    activityIndicatorIsShown = true
+ 
     let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
     activityIndicatorView.frame = CGRect(x: 0, y: 0, width: 14, height: 14)
     activityIndicatorView.color = UIColor.black
@@ -91,61 +141,49 @@ class ChatsController: UITableViewController {
     self.navigationItem.titleView = titleView
   }
   
+  
   func hideActivityIndicator() {
-    activityIndicatorIsShown = false
     self.navigationItem.titleView = nil
   }
- 
- 
-  fileprivate var userConversations = 0
   
-  
-  //override func viewWillAppear(_ animated: Bool) {
-//    self.fetchConversations()
- // }
-  
-  
+
   func managePresense() {
-    showActivityIndicator(title: "Connecting...")
     
-    let connectedRef = Database.database().reference(withPath: ".info/connected")
+    if currentReachabilityStatus == .notReachable {
+      showActivityIndicator(title: "Connecting...")
+    }
+    
+    connectedRef = Database.database().reference(withPath: ".info/connected")
     
     connectedRef.observe(.value, with: { (snapshot) in
-      
-      //self.hideActivityIndicator()
-      self.showActivityIndicator(title: "Updating...")
+   
+      if self.currentReachabilityStatus != .notReachable {
+         self.hideActivityIndicator()
+      } else {
+        self.showActivityIndicator(title: "No internet connection...")
+      }
       
     }) { (error) in
         print(error.localizedDescription)
-     // self.hideActivityIndicator()
-      //self.showActivityIndicator(title: "Updating...")
     }
   }
   
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    print("did dissapear")
+  
+  func convigureTabBarBadge() {
     
-  }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    if let testSelected = tableView.indexPathForSelectedRow {
-      tableView.deselectRow(at: testSelected, animated: true)
+    guard let uid = Auth.auth().currentUser?.uid else {
+      return
     }
-    super.viewDidAppear(animated)
-  }
-  
-  func setTabBarBadge() {
     
     let tabItems = self.tabBarController?.tabBar.items as NSArray!
+    
     var badge = 0
-   // var once = false
+
     for meta in finalUserCellData {
    
       let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
-    
       
-      if meta.0.fromId != Auth.auth().currentUser!.uid {
+      if meta.0.fromId != uid {
         
         badge += meta.2.badge!
         
@@ -155,11 +193,12 @@ class ChatsController: UITableViewController {
           tabItem.badgeValue = badge.toString()
         }
       }
-      
     }
   }
   
-  fileprivate var isInitialLoad = true
+  
+  fileprivate var userConversations = 0
+  
   func fetchConversations() {
     
     userConversations = 0
@@ -167,8 +206,8 @@ class ChatsController: UITableViewController {
     guard let uid = Auth.auth().currentUser?.uid else {
       return
     }
-  
-    let currentUserConversationsReference = Database.database().reference().child("user-messages").child(uid)
+    
+    currentUserConversationsReference = Database.database().reference().child("user-messages").child(uid)
     currentUserConversationsReference.keepSynced(true)
     currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
       
@@ -181,9 +220,9 @@ class ChatsController: UITableViewController {
         }
       }
 
-      let lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(uid).child(otherUserID).child(userMessagesFirebaseFolder)
-      lastMessageForConverstaionRef.keepSynced(true)
-      lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
+      self.lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(uid).child(otherUserID).child(userMessagesFirebaseFolder)
+      self.lastMessageForConverstaionRef.keepSynced(true)
+      self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
         
         let lastMessageID = snapshot.key
         self.fetchMessageWithMessageId(lastMessageID)
@@ -203,9 +242,8 @@ class ChatsController: UITableViewController {
   
   func fetchMessageWithMessageId(_ messageId: String) {
     
-    let messagesReference = Database.database().reference().child("messages").child(messageId)
+    messagesReference = Database.database().reference().child("messages").child(messageId)
     messagesReference.keepSynced(true)
-    print("\n before \n")
     messagesReference.observe( .value, with: { (snapshot) in
       
       if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -218,18 +256,10 @@ class ChatsController: UITableViewController {
             return
           }
           
-          if !self.isInitialLoad && message.fromId != uid {
-            if self.navigationController?.visibleViewController is ChatsController {
-              SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
-              print("\n in notification\n ")
-              
-            }
-          }
-          
-          let metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
-          metadataRef.keepSynced(true)
-          metadataRef.removeAllObservers()
-          metadataRef.observe( .value, with: { (snapshot) in
+          self.metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
+          self.metadataRef.keepSynced(true)
+          self.metadataRef.removeAllObservers()
+          self.metadataRef.observe( .value, with: { (snapshot) in
             
             guard let metaDictionary = snapshot.value as? [String: Int] else {
               return
@@ -245,10 +275,9 @@ class ChatsController: UITableViewController {
   
   func fetchUserDataWithUserID(_ userID: String, for message: Message, metaData: [String: Int]) {
     
-    let ref = Database.database().reference().child("users").child(userID)
-    ref.keepSynced(true)
-    
-    ref.observe(.value, with: { (snapshot) in
+    usersRef = Database.database().reference().child("users").child(userID)
+    usersRef.keepSynced(true)
+    usersRef.observe(.value, with: { (snapshot) in
       
       guard var dictionary = snapshot.value as? [String: AnyObject] else {
         return
@@ -279,6 +308,7 @@ class ChatsController: UITableViewController {
     return true
   }
   
+  
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     
     guard let uid = Auth.auth().currentUser?.uid  else {
@@ -307,22 +337,24 @@ class ChatsController: UITableViewController {
       return 80
     }
 
+  
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
+  
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userIDs.count
     }
 
+  
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
 
-      
       cell.nameLabel.text = finalUserCellData[indexPath.row].1.name
-      if finalUserCellData[indexPath.row].0.imageUrl != nil || finalUserCellData[indexPath.row].0.localImage != nil {
+      if (finalUserCellData[indexPath.row].0.imageUrl != nil || finalUserCellData[indexPath.row].0.localImage != nil) && finalUserCellData[indexPath.row].0.videoUrl == nil  {
         cell.messageLabel.text = "Attachment: Image"
-      } else if finalUserCellData[indexPath.row].0.videoUrl != nil {
+      } else if (finalUserCellData[indexPath.row].0.imageUrl != nil || finalUserCellData[indexPath.row].0.localImage != nil) && finalUserCellData[indexPath.row].0.videoUrl != nil {
         cell.messageLabel.text = "Attachment: Video"
       } else {
          cell.messageLabel.text = finalUserCellData[indexPath.row].0.text
@@ -345,6 +377,7 @@ class ChatsController: UITableViewController {
           })
         }
       
+      
       if finalUserCellData[indexPath.row].0.seen != nil {
         
         let seen = finalUserCellData[indexPath.row].0.seen!
@@ -353,7 +386,14 @@ class ChatsController: UITableViewController {
           
           cell.newMessageIndicator.isHidden = false
           cell.badgeLabel.text = finalUserCellData[indexPath.row].2.badge?.toString()
-          cell.badgeLabel.isHidden = false
+          
+          if Int(cell.badgeLabel.text!)! > 0 {
+            cell.badgeLabel.isHidden = false
+          } else {
+            cell.badgeLabel.text = "1"
+            cell.badgeLabel.isHidden = false
+          }
+          
           
         } else {
           
@@ -373,8 +413,9 @@ class ChatsController: UITableViewController {
     }
   
   
-  var chatLogController:ChatLogController? = nil
-  var autoSizingCollectionViewFlowLayout:AutoSizingCollectionViewFlowLayout? = nil
+  var chatLogController: ChatLogController? = nil
+  
+  var autoSizingCollectionViewFlowLayout: AutoSizingCollectionViewFlowLayout? = nil
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
   
@@ -388,6 +429,8 @@ class ChatsController: UITableViewController {
   }
   
   
+  fileprivate var appIsLoaded = false
+  
   func handleReloadTable() {
     
     finalUserCellData = Array(self.messagesDictionary.values)
@@ -397,16 +440,14 @@ class ChatsController: UITableViewController {
     }
     
     DispatchQueue.main.async(execute: {
-          self.setTabBarBadge()
+          self.convigureTabBarBadge()
           self.tableView.reloadData()
     })
-    isInitialLoad = false
-    self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
-      self.hideActivityIndicator()
+    if !appIsLoaded {
+       self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
+       appIsLoaded = true
     }
-    
   }
 }
 

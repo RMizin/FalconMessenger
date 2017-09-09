@@ -44,12 +44,6 @@ class PhotoMessageCell: BaseMediaMessageCell {
     playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
     playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     
-    bubbleView.addSubview(activityIndicatorView)
-    activityIndicatorView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
-    activityIndicatorView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-    activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-    activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    
     bubbleView.addSubview(progressView)
     progressView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
     progressView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true

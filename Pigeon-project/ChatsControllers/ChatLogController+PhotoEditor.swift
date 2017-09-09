@@ -44,7 +44,11 @@ extension ChatLogController: PhotoEditorDelegate {
   
   func presentVideoPlayer(forUrlAt indexPath: IndexPath) {
     
-    let videoURL = URL(string: inputContainerView.selectedMedia[indexPath.item].fileURL!)
+    guard let pathURL = inputContainerView.selectedMedia[indexPath.item].fileURL else {
+      return
+    }
+    
+    let videoURL = URL(string: pathURL)
     
     let player = AVPlayer(url: videoURL!)
     

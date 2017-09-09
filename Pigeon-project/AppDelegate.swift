@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import UserNotifications
+import AudioToolbox
 
 
 
@@ -85,6 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
   }
   
+ let chatsController = ChatsController()
   func setTabs(mainController : UITabBarController) {
     
     let contactsController = ContactsController()
@@ -92,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     contactsController.title = "Contacts"
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     
-    let chatsController = ChatsController()
+    
     chatsController.delegate = mainController as? ManageAppearance
     _ = chatsController.view
     chatsController.title = "Chats"
@@ -111,15 +113,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     chatsController.tabBarItem = chatsTabItem
     settingsController.tabBarItem = settingsTabItem
     
-    let tabBarControllers = [contactsNavigationController, chatsNavigationController, settingsNavigationController]
-    mainController.setViewControllers(tabBarControllers, animated: false)
+    let tabBarControllers = [contactsNavigationController, chatsNavigationController as UIViewController, settingsNavigationController]
+    mainController.setViewControllers((tabBarControllers), animated: false)
     mainController.selectedIndex = tabs.chats.rawValue
   }
   
-  func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-   UIApplication.shared.applicationIconBadgeNumber += 1
+  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    
+    if ( UIApplication.shared.applicationState == UIApplicationState.active) {
+      if self.chatsController.navigationController?.visibleViewController is ChatLogController {
+        print("yep")
+      } else {
+        print("NOPE")
+         SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
+      }
+    }
   }
-
+  
   func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
     print("Firebase registration token: \(fcmToken)")
     setUserNotificationToken(token: fcmToken)
@@ -153,7 +163,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
-    UIApplication.shared.applicationIconBadgeNumber = 0
+   // UIApplication.shared.applicationIconBadgeNumber = 0
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
   }
 

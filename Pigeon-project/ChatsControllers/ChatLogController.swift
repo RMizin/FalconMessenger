@@ -141,7 +141,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 self.observeTypingIndicator()
                 self.updateMessageStatus(messageRef: self.messagesLoadingReference)
                 self.updateMessageStatusUI(dictionary: dictionary)
-                self.resetBadgeForReciever()
               }
               
               self.isInitialLoad = false
@@ -154,11 +153,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               self.updateMessageStatus(messageRef: self.messagesLoadingReference)
               
               self.updateMessageStatusUI(dictionary: dictionary)
-              
-              if self.navigationController?.visibleViewController is ChatLogController {
-                
-                self.resetBadgeForReciever()
-              }
+            
               SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
              
               return
@@ -167,12 +162,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
             if Message(dictionary: dictionary).toId == uid {
               
-              if self.navigationController?.visibleViewController is ChatLogController {
-                
-               self.resetBadgeForReciever()
-              }
-
-            
               self.collectionView?.performBatchUpdates ({
               
                 self.messages.append(Message(dictionary: dictionary))
@@ -200,7 +189,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 if self.messages.count - 1 >= 0 && self.isScrollViewAtTheBottom {
                 
                   let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-                
+                  
                   DispatchQueue.main.async {
                     
                     self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
@@ -445,7 +434,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           if self.navigationController?.visibleViewController is ChatLogController {
           
-             messageRef.updateChildValues(["seen" : true])
+             messageRef.updateChildValues(["seen" : true], withCompletionBlock: { (error, reference) in
+              self.resetBadgeForReciever()
+             }) //updateChildValues(["seen" : true])
           }
           
         } else {
@@ -534,7 +525,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
- 
   func configureTitileViewWithOnlineStatus() {
     userStatusReference = Database.database().reference().child("users").child(user!.id!).child("OnlineStatus")
     userStatusReference.observe(.value, with: { (snapshot) in
@@ -627,7 +617,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     loadPreviousMessages()
   }
   
-  //handle upload tap
   
   override var inputAccessoryView: UIView? {
     get {
@@ -791,6 +780,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           cell.messageImageView.image = image
           cell.progressView.isHidden = true
           cell.messageImageView.isUserInteractionEnabled = true
+          
+          cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
+          
           return cell
         }
         
@@ -805,11 +797,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           }, completed: { (image, error, cacheType, url) in
             cell.progressView.isHidden = true
             cell.messageImageView.isUserInteractionEnabled = true
+            cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
             
           })
         }
         
-        cell.playButton.isHidden = message.videoUrl == nil
+       
         
         
         return cell
@@ -841,6 +834,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           cell.messageImageView.image = image
           cell.progressView.isHidden = true
           cell.messageImageView.isUserInteractionEnabled = true
+          
+          cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
+          
           return cell
         }
         
@@ -857,11 +853,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             cell.progressView.isHidden = true
             
             cell.messageImageView.isUserInteractionEnabled = true
+            
+             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
           
           })
         }
         
-        cell.playButton.isHidden = message.videoUrl == nil
+       
         
         return cell
       }
@@ -931,61 +929,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     inputContainerView.placeholderLabel.isHidden = false
     
     handleMediaMessageSending()
-    
-//    SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
   }
-  
-
-  /*
-   fileprivate func handleVideoSelectedForUrl(_ url: URL) {
-   let filename = UUID().uuidString + ".mov"
-   let uploadTask = Storage.storage().reference().child("messageMovies").child(filename).putFile(from: url, metadata: nil, completion: { (metadata, error) in
-   
-   if error != nil {
-   print("Failed upload of video:", error as Any)
-   return
-   }
-   
-   if let videoUrl = metadata?.downloadURL()?.absoluteString {
-   if let thumbnailImage = self.thumbnailImageForFileUrl(url) {
-   
-   self.uploadToFirebaseStorageUsingImage(thumbnailImage, completion: { (imageUrl) in
-   let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": thumbnailImage.size.width as AnyObject, "imageHeight": thumbnailImage.size.height as AnyObject, "videoUrl": videoUrl as AnyObject]
-   self.sendMessageWithProperties(properties)
-   
-   })
-   }
-   }
-   })
-   
-   uploadTask.observe(.progress) { (snapshot) in
-   if let completedUnitCount = snapshot.progress?.completedUnitCount {
-   self.navigationItem.title = String(completedUnitCount)
-   }
-   }
-   
-   uploadTask.observe(.success) { (snapshot) in
-   self.navigationItem.title = self.user?.name
-   }
-   }
-   
-   
-   fileprivate func thumbnailImageForFileUrl(_ fileUrl: URL) -> UIImage? {
-   let asset = AVAsset(url: fileUrl)
-   let imageGenerator = AVAssetImageGenerator(asset: asset)
-   
-   do {
-   
-   let thumbnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(1, 60), actualTime: nil)
-   return UIImage(cgImage: thumbnailCGImage)
-   
-   } catch let err {
-   print(err)
-   }
-   
-   return nil
-   }
-   */
   
 
   func handleMediaMessageSending () {
@@ -1027,18 +971,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
        
        }, completion: nil)
       
+      let defaultMessageStatus = messageStatusSent
+      
+      let toId = user!.id!
+      
+      let fromId = Auth.auth().currentUser!.uid
+      
+      let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
+      
       for selectedMedia in selectedMedia {
         
-        
         if selectedMedia.phAsset?.mediaType == PHAssetMediaType.image || selectedMedia.phAsset == nil {
-          
-          let defaultMessageStatus = messageStatusSent
-          
-          let toId = user!.id!
-          
-          let fromId = Auth.auth().currentUser!.uid
-          
-          let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
           
           let values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject]
           
@@ -1062,6 +1005,39 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video {
+
+          guard let path = selectedMedia.fileURL else {
+            print("no file url returning")
+            return
+          }
+          
+          let valuesForVideo: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject, "localVideoUrl" : path as AnyObject]
+          
+          self.reloadCollectionViewAfterSending(values: valuesForVideo)
+          
+          uploadToFirebaseStorageUsingVideo(selectedMedia.videoObject!, completion: { (videoURL) in
+            
+            self.uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageUrl) in
+              
+              print("\n UPLOAD COMPLETED \n")
+              
+              let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": selectedMedia.object!.asUIImage?.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage?.size.height as AnyObject, "videoUrl": videoURL as AnyObject]
+              
+              self.sendMediaMessageWithProperties(properties)
+              
+              percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
+              
+              self.messageSendingProgressBar.setProgress(Float(percentCompleted), animated: true)
+              
+              if percentCompleted == 1.0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                  self.messageSendingProgressBar.setProgress(0.0, animated: false)
+                  self.view.setNeedsLayout()
+                  self.view.layoutIfNeeded()
+                })
+              }
+            })
+          })
         }
       }
     }
@@ -1136,6 +1112,24 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
       })
     }
+  }
+  
+  fileprivate func uploadToFirebaseStorageUsingVideo(_ uploadData: Data, completion: @escaping (_ videoUrl: String) -> ()) {
+    let videoName = UUID().uuidString + ".mov"
+    
+    let ref = Storage.storage().reference().child("messageMovies").child(videoName)
+    
+      ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+        
+        if error != nil {
+          print("Failed to upload image:", error as Any)
+          return
+        }
+        
+        if let videoUrl = metadata?.downloadURL()?.absoluteString {
+          completion(videoUrl)
+        }
+      })
   }
   
 

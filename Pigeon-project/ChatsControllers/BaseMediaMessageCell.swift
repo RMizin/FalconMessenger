@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import AVFoundation
-
 
 class BaseMediaMessageCell: BaseMessageCell {
   
@@ -16,23 +14,12 @@ class BaseMediaMessageCell: BaseMessageCell {
   
   weak var chatLogController: ChatLogController?
   
-  var playerLayer: AVPlayerLayer?
-  
-  var player: AVPlayer?
-  
-  let activityIndicatorView: UIActivityIndicatorView = {
-    let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-    aiv.translatesAutoresizingMaskIntoConstraints = false
-    aiv.hidesWhenStopped = true
-    
-    return aiv
-  }()
-  
   lazy var playButton: UIButton = {
     let button = UIButton(type: .system)
     button.translatesAutoresizingMaskIntoConstraints = false
     let image = UIImage(named: "play")
     button.tintColor = UIColor.white
+    button.isHidden = true
     button.setImage(image, for: UIControlState())
     button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
     
@@ -44,8 +31,9 @@ class BaseMediaMessageCell: BaseMessageCell {
     messageImageView.translatesAutoresizingMaskIntoConstraints = false
     messageImageView.layer.cornerRadius = 15
     messageImageView.layer.masksToBounds = true
-    messageImageView.contentMode = .scaleAspectFill
+    //messageImageView.contentMode = .scaleAspectFill
     messageImageView.isUserInteractionEnabled = true
+    
     messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:  #selector(handleZoomTap)))
     
     return messageImageView
@@ -64,37 +52,42 @@ class BaseMediaMessageCell: BaseMessageCell {
 
   override func prepareForReuse() {
     super.prepareForReuse()
-    
-    playerLayer?.removeFromSuperlayer()
-    player?.pause()
-    activityIndicatorView.stopAnimating()
+  
     messageImageView.image = nil
-
+    playButton.isHidden = true
   }
   
   
   func handlePlay() {
-    if let videoUrlString = message?.videoUrl, let url = URL(string: videoUrlString) {
-      player = AVPlayer(url: url)
-      
-      playerLayer = AVPlayerLayer(player: player)
-      playerLayer?.frame = bubbleView.bounds
-      bubbleView.layer.addSublayer(playerLayer!)
-      
-      player?.play()
-      activityIndicatorView.startAnimating()
-      playButton.isHidden = true
+    
+    var url: URL! = nil
+    
+    if message?.localVideoUrl != nil {
+      let videoUrlString = message?.localVideoUrl
+      url = URL(string: videoUrlString!)
+      self.chatLogController?.performZoomInForVideo( url: url)
+      return
+    }
+    
+    if message?.videoUrl != nil {
+      let videoUrlString = message?.videoUrl
+      url =  URL(string: videoUrlString!)
+      self.chatLogController?.performZoomInForVideo( url: url)
+      return
     }
   }
   
   
   func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
-    if message?.videoUrl != nil {
+    
+    if message?.videoUrl != nil || message?.localVideoUrl != nil {
+      
+     handlePlay()
+      
       return
     }
     
     if let imageView = tapGesture.view as? UIImageView {
-      //PRO Tip: don't perform a lot of custom logic inside of a view class
       self.chatLogController?.performZoomInForStartingImageView(imageView)
     }
   }

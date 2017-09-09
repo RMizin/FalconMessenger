@@ -186,6 +186,19 @@ extension Data {
   }
 }
 
+extension FileManager {
+  func clearTemp() {
+    do {
+      let tmpDirectory = try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory())
+      try tmpDirectory.forEach { file in
+        let path = String.init(format: "%@%@", NSTemporaryDirectory(), file)
+        try FileManager.default.removeItem(atPath: path)
+      }
+    } catch {
+      print(error)
+    }
+  }
+}
 
 
 public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array<T>{
