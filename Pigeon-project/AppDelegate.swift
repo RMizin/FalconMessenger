@@ -94,16 +94,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     contactsController.title = "Contacts"
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     
+    contactsNavigationController.view.backgroundColor = UIColor.white
+    contactsNavigationController.navigationBar.backgroundColor = UIColor.white
+    contactsNavigationController.navigationBar.isTranslucent = false
+    
+  //  UINavigationBar.appearance().shadowImage = UIImage()
+   // UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+  
+    
     
     chatsController.delegate = mainController as? ManageAppearance
     _ = chatsController.view
     chatsController.title = "Chats"
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)
+    chatsNavigationController.view.backgroundColor = UIColor.white
+    chatsNavigationController.navigationBar.backgroundColor = UIColor.white
+    chatsNavigationController.navigationBar.isTranslucent = false
     
     let settingsController = SettingsViewControllersContainer()
     _ = settingsController.view
     settingsController.title = "Settings"
     let settingsNavigationController = UINavigationController(rootViewController: settingsController)
+    settingsNavigationController.view.backgroundColor = UIColor.white
+    settingsNavigationController.navigationBar.backgroundColor = UIColor.white
+    settingsNavigationController.navigationBar.isTranslucent = false
     
     
     let contactsTabItem = UITabBarItem(title: contactsController.title, image: UIImage(named:"TabIconContacts"), selectedImage: UIImage(named:"TabIconContacts_Highlighted"))

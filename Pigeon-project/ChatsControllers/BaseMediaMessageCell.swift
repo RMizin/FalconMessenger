@@ -79,7 +79,7 @@ class BaseMediaMessageCell: BaseMessageCell {
   
   
   func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
-    
+  
     if message?.videoUrl != nil || message?.localVideoUrl != nil {
       
      handlePlay()
@@ -88,7 +88,11 @@ class BaseMediaMessageCell: BaseMessageCell {
     }
     
     if let imageView = tapGesture.view as? UIImageView {
-      self.chatLogController?.performZoomInForStartingImageView(imageView)
+      guard  let indexPath = chatLogController?.collectionView?.indexPath(for: self) else {
+        return
+      }
+      
+      self.chatLogController?.performZoomInForStartingImageView(imageView, indexPath: indexPath)
     }
   }
 

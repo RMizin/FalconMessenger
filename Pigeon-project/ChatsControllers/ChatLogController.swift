@@ -60,7 +60,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var messages = [Message]()
   
-  //var mediaMessages = [Message]()
+  var mediaMessages = [Message]()
   
   var sections = ["Messages"]
   
@@ -123,9 +123,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
             self.appendingMessages.append(Message(dictionary: dictionary))
             
-//            if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
-//              self.mediaMessages.append(Message(dictionary: dictionary))
-//            }
+            if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
+              if Message(dictionary: dictionary).localVideoUrl == nil {
+                self.mediaMessages.append(Message(dictionary: dictionary))
+              }
+            }
             
             if self.appendingMessages.count == self.messagesIds.count {
               
@@ -134,6 +136,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 return message1.timestamp!.int32Value < message2.timestamp!.int32Value
               })
               
+              
               self.delegate?.messagesLoader(didFinishLoadingWith: self.appendingMessages)
               
               DispatchQueue.main.async {
@@ -141,6 +144,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 self.observeTypingIndicator()
                 self.updateMessageStatus(messageRef: self.messagesLoadingReference)
                 self.updateMessageStatusUI(dictionary: dictionary)
+                self.photocCounter()
               }
               
               self.isInitialLoad = false
@@ -166,10 +170,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               
                 self.messages.append(Message(dictionary: dictionary))
                 
-//                if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
-//                  self.mediaMessages.append(Message(dictionary: dictionary))
-//                }
-              
+                if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
+                  if Message(dictionary: dictionary).localVideoUrl == nil {
+                    self.mediaMessages.append(Message(dictionary: dictionary))
+                  }
+                }
+                
+                self.photocCounter()
+                
                 if self.messages.count - 1 >= 0 {
                 
                   let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
@@ -219,6 +227,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     })
   }
   
+  var photosCount = 0
+  fileprivate func photocCounter() {
+    photosCount = 0
+    for message in messages {
+      if message.imageUrl != nil && message.videoUrl == nil {
+        photosCount += 1
+      }
+    }
+  }
   
   var queryStartingID = String()
   var queryEndingID = String()
@@ -227,6 +244,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let numberOfMessagesToLoad = messages.count + messagesToLoad
     let nextMessageIndex = messages.count + 1
+    let mediaMessagesCount = mediaMessages.count
     
     guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
       return
@@ -264,9 +282,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
             self.messages.append(Message(dictionary: dictionary))
             
-//            if Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).videoUrl != nil {
-//              self.mediaMessages.append(Message(dictionary: dictionary))
-//            }
+            if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
+              if Message(dictionary: dictionary).localVideoUrl == nil {
+                self.mediaMessages.append(Message(dictionary: dictionary))
+              }
+            }
             
             if self.messages.count == self.messagesIds.count {
               
@@ -276,6 +296,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               print(-shiftingIndex, "shifting index")
               
               arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
+              self.mediaMessages.shiftInPlace(withDistance: mediaMessagesCount - self.mediaMessages.count)
               
               self.messages = arrayWithShiftedMessages
               userMessagesRef.removeAllObservers()
@@ -283,6 +304,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               contentSizeWhenInsertingToTop = self.collectionView?.contentSize
               isInsertingCellsToTop = true
               self.refreshControl.endRefreshing()
+              
+              self.photocCounter()
               DispatchQueue.main.async {
                 self.collectionView?.reloadData()
               }
@@ -300,7 +323,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           print("error loading user-messages (ID's)")
           
         } // error
-        
       }) // endingIDRef
     }) // startingIDRef
   }
@@ -508,11 +530,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     inputTextViewTapGestureRecognizer.delegate = inputContainerView
     view.backgroundColor = .white
     collectionView?.delaysContentTouches = false
-    collectionView?.frame = CGRect(x: 0, y: 64, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height - 64)
+    collectionView?.frame = CGRect(x: 0, y: 64, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height - 64 )
     collectionView?.keyboardDismissMode = .interactive
     collectionView?.backgroundColor = UIColor.white
     collectionView?.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
     automaticallyAdjustsScrollViewInsets = false
+    extendedLayoutIncludesOpaqueBars = true
     collectionView?.alwaysBounceVertical = true
     
     collectionView?.addSubview(refreshControl)
@@ -1148,6 +1171,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if self.messages.count - 2 >= 0 {
         
           self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
+      }
+      
+      if (self.messages[indexPath.item].imageUrl != nil || self.messages[indexPath.item].localImage != nil) && self.messages[indexPath.item].videoUrl == nil {
+        if self.messages[indexPath.item].localVideoUrl == nil {
+          self.mediaMessages.append(self.messages[indexPath.item])
+        }
       }
       
       let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)

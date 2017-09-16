@@ -42,6 +42,7 @@ PODS:
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
     - GTMSessionFetcher/Core (~> 1.1)
+  - FLAnimatedImage (1.0.12)
   - GoogleToolboxForMac/DebugUtils (2.1.1):
     - GoogleToolboxForMac/Defines (= 2.1.1)
   - GoogleToolboxForMac/Defines (2.1.1)
@@ -61,6 +62,13 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - NYTPhotoViewer (1.1.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
+    - NYTPhotoViewer/Core (= 1.1.0)
+  - NYTPhotoViewer/AnimatedGifSupport (1.1.0):
+    - FLAnimatedImage (~> 1.0.8)
+    - NYTPhotoViewer/Core
+  - NYTPhotoViewer/Core (1.1.0)
   - PhoneNumberKit (1.3.0):
     - PhoneNumberKit/PhoneNumberKitCore (= 1.3.0)
     - PhoneNumberKit/UIKit (= 1.3.0)
@@ -78,6 +86,7 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Messaging
   - Firebase/Storage
+  - NYTPhotoViewer (~> 1.1.0)
   - PhoneNumberKit
   - SDWebImage (~> 3.8)
 
@@ -90,14 +99,16 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: c4c7fca62c7b7330caee5da04f19a37ea37bb1c1
   FirebaseMessaging: 85af6c27188538b3a6f7dfd0b3b0596358cb0c39
   FirebaseStorage: 661fc1f8d4131891d256b62e82a45ace8b3f0c3b
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
   GTMSessionFetcher: 5ad62e8200fa00ed011fe5e08d27fef72c5b1429
   leveldb-library: 10fb39c39e243db4af1828441162405bbcec1404
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   PhoneNumberKit: 08aaf1968ea41a114327e9223cbb0391d76ae145
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
-PODFILE CHECKSUM: f7f44a409e843c3f6432c0fcbd2aaed53841d1a8
+PODFILE CHECKSUM: d5df334ff0cdffe3d4b76d9e4e18b6c8435c53b1
 
 COCOAPODS: 1.1.1

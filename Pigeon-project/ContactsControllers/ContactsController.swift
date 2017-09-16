@@ -45,6 +45,7 @@ class ContactsController: UITableViewController {
       fetchContacts()
       tableView.prefetchDataSource = self
       searchBar.delegate = self
+      searchBar.searchBarStyle = .minimal
       searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
       tableView.tableHeaderView = searchBar
       
@@ -299,6 +300,10 @@ class ContactsController: UITableViewController {
       }
     }
 
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+      view.tintColor = .white
+    }
+  
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
      return selectCell(for: indexPath)!

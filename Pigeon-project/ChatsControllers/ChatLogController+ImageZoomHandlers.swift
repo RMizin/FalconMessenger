@@ -52,8 +52,11 @@ extension ChatLogController {
   }
   
   
-  func performZoomInForStartingImageView(_ initialImageView: UIImageView) {
+  func performZoomInForStartingImageView(_ initialImageView: UIImageView, indexPath: IndexPath) {
+  
+   setupPhotos(indexPath: indexPath)
    
+    /*
     inputContainerViewWasFirstResponder = false
   
     self.startingImageView = initialImageView
@@ -118,6 +121,9 @@ extension ChatLogController {
         // do nothing
       })
     }
+    
+    
+    */
   }
   
   func handleZoomOut() {

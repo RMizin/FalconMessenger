@@ -23,6 +23,8 @@ class GeneralTabBarController: UITabBarController {
       
       //self.view.alpha = 0
       setOnlineStatus()
+      tabBar.isTranslucent = false
+      tabBar.backgroundColor = .white
     }
    let splash = UIImageView(frame: UIScreen.main.bounds)
   
@@ -35,7 +37,7 @@ class GeneralTabBarController: UITabBarController {
     if onceToken == 0 {
     
      
-      splash.image = UIImage(named: "splash")
+      splash.image = UIImage(named: "whiteSplash")
       splash.tag = 13
       view.addSubview(splash)
     }
