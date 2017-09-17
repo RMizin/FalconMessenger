@@ -41,10 +41,9 @@ class BaseMediaMessageCell: BaseMessageCell {
   
   var progressView: CircleProgressView = {
     let progressView = CircleProgressView()
-    progressView.trackWidth = 4
+    progressView.trackWidth = 5
     progressView.backgroundColor = .clear
-    progressView.centerFillColor = .clear
-    progressView.trackBackgroundColor = .clear
+
     progressView.translatesAutoresizingMaskIntoConstraints = false
     
     return progressView
@@ -94,7 +93,5 @@ class BaseMediaMessageCell: BaseMessageCell {
       
       self.chatLogController?.performZoomInForStartingImageView(imageView, indexPath: indexPath)
     }
-  }
-
-    
+  }    
 }

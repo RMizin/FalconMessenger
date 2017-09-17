@@ -27,6 +27,8 @@ class SettingsViewControllersContainer: UIViewController {
         super.viewDidLoad()
       
         view.backgroundColor = .white
+        extendedLayoutIncludesOpaqueBars = true
+      
         configureScrollView()
         configureContainedViewControllers()
       

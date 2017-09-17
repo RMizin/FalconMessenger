@@ -137,8 +137,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     if ( UIApplication.shared.applicationState == UIApplicationState.active) {
       if self.chatsController.navigationController?.visibleViewController is ChatLogController {
         print("yep")
+         print(notification.request.content )
+        
       } else {
         print("NOPE")
+    
          SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
       }
     }
@@ -160,6 +163,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let token = Messaging.messaging().fcmToken
         print("FCM token: \(token ?? "")")
   }
+  
+  
+//  var orientationLock = UIInterfaceOrientationMask.all
+//  
+//  func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+//    return self.orientationLock
+//  }
   
   func applicationWillResignActive(_ application: UIApplication) {
     

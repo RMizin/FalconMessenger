@@ -24,9 +24,9 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     
     progressView.trackFillColor = .darkGray
     
-    progressView.trackBorderColor = .darkGray
+    progressView.trackBackgroundColor = UIColor(red:0.78, green:0.78, blue:0.80, alpha:1.0)
     
-    progressView.trackBorderWidth = 2
+    progressView.centerFillColor = UIColor(red:0.94, green:0.94, blue:0.94, alpha:1.0)
     
     bubbleView.image = BaseMessageCell.grayBubbleImage
 
@@ -44,7 +44,7 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     bubbleView.addSubview(progressView)
     progressView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
     progressView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-    progressView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-    progressView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+    progressView.widthAnchor.constraint(equalToConstant: 75).isActive = true
+    progressView.heightAnchor.constraint(equalToConstant: 75).isActive = true
   }
 }

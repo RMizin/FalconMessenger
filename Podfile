@@ -12,7 +12,7 @@ pod 'Firebase/Database'
 pod 'Firebase/Auth'
 pod 'Firebase/Storage'
 pod 'Firebase/Messaging'
-pod 'SDWebImage', '~>3.8'
+pod 'SDWebImage'
 pod 'PhoneNumberKit'
 pod 'NYTPhotoViewer', '~> 1.1.0'
 

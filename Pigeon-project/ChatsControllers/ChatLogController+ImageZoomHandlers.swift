@@ -126,35 +126,35 @@ extension ChatLogController {
     */
   }
   
-  func handleZoomOut() {
-  
-    if let zoomOutImageView = zoomOutGesture.view {
-    
-      zoomOutImageView.layer.masksToBounds = true
-      
-      UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-        
-        zoomOutImageView.frame = self.startingFrame!
-        
-        self.blackBackgroundView.alpha = 0
-        self.inputContainerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
-          self.inputContainerView.isHidden = false
-        
-        zoomOutImageView.layer.cornerRadius = 16
-       // zoomOutImageView.contentMode = .scaleAspectFill
-        
-        if inputContainerViewWasFirstResponder {
-           self.inputContainerView.inputTextView.becomeFirstResponder()
-        }
-        
-      }, completion: { (completed) in
-        
-        zoomOutImageView.removeFromSuperview()
-        self.blackBackgroundView = nil
-       
-        
-        self.startingImageView?.isHidden = false
-      })
-    }
-  }
+//  func handleZoomOut() {
+//  
+//    if let zoomOutImageView = zoomOutGesture.view {
+//    
+//      zoomOutImageView.layer.masksToBounds = true
+//      
+//      UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+//        
+//        zoomOutImageView.frame = self.startingFrame!
+//        
+//        self.blackBackgroundView.alpha = 0
+//        self.inputContainerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
+//          self.inputContainerView.isHidden = false
+//        
+//        zoomOutImageView.layer.cornerRadius = 16
+//       // zoomOutImageView.contentMode = .scaleAspectFill
+//        
+//        if inputContainerViewWasFirstResponder {
+//           self.inputContainerView.inputTextView.becomeFirstResponder()
+//        }
+//        
+//      }, completion: { (completed) in
+//        
+//        zoomOutImageView.removeFromSuperview()
+//        self.blackBackgroundView = nil
+//       
+//        
+//        self.startingImageView?.isHidden = false
+//      })
+//    }
+//  }
 }

@@ -384,7 +384,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   func updateUserProfile(with image: UIImage) {
     let thumbnailImage = createImageThumbnail(image)
    
-    uploadAvatarForUserToFirebaseStorageUsingImage(thumbnailImage, quality: 0.2) { (thumbnailImageURL, path) in
+    uploadAvatarForUserToFirebaseStorageUsingImage(thumbnailImage, quality: 1) { (thumbnailImageURL, path) in
       
       let reference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
       reference.updateChildValues(["thumbnailPhotoURL" : String(describing: thumbnailImageURL), "thumbnailPhotoURLPath" : path], withCompletionBlock: { (error, ref) in

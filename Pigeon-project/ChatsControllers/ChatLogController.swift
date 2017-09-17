@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import Photos
 import AudioToolbox
+import FLAnimatedImage
 
 
 private let incomingTextMessageCellID = "incomingTextMessageCellID"
@@ -48,7 +49,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var blackBackgroundView:ImageViewBackgroundView! = nil
   var startingImageView: UIImageView?
   var zoomingImageView: UIImageView!
-  let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
+  //let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
   
   var userMessagesLoadingReference: DatabaseQuery!
   
@@ -116,6 +117,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           guard var dictionary = snapshot.value as? [String: AnyObject] else {
             return
           }
+          
           dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
           
           
@@ -400,18 +402,35 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         let indexPath = IndexPath(row: 0, section: 1)
         
-        let isIndexPathValid = self.indexPathIsValid(indexPath: indexPath as NSIndexPath)
-        
-        if isIndexPathValid && self.isScrollViewAtTheBottom {
-          
-          DispatchQueue.main.async {
-            self.collectionView?.scrollToItem(at: indexPath , at: .bottom, animated: true)
-          }
-          
-        } else {
-          
+        guard let cell = self.collectionView?.cellForItem(at: indexPath) as? TypingIndicatorCell else {
           return
         }
+        
+        guard let gifURL = Bundle.main.url(forResource: "typingIndicator", withExtension: "gif") else {
+          return
+        }
+        
+        guard let gifData = NSData(contentsOf: gifURL) else {
+          return
+        }
+        
+        
+        cell.typingIndicator.animatedImage = FLAnimatedImage(animatedGIFData: gifData as Data)
+    
+       // let isIndexPathValid = self.indexPathIsValid(indexPath: indexPath as NSIndexPath)
+        
+//        if !self.isScrollViewAtTheBottom {
+//          return
+//        }
+        
+        //  DispatchQueue.main.async {
+         //   self.collectionView?.scrollToItem(at: indexPath , at: .bottom, animated: true)
+         // }
+          
+       // } else {
+          
+         // return
+       // }
       })
       
     } else {
@@ -421,25 +440,36 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         self.sections = ["Messages"]
         
         if self.collectionView!.numberOfSections > 1 {
+          
           self.collectionView?.deleteSections(sectionsIndexSet)
+          
+          guard let cell = self.collectionView?.cellForItem(at: IndexPath(item: 0, section: 1 ) ) as? TypingIndicatorCell else {
+            return
+          }
+          
+          cell.typingIndicator.animatedImage = nil
         }
       }, completion: nil)
     }
   }
   
   
-  func indexPathIsValid(indexPath: NSIndexPath) -> Bool {
-    if indexPath.section >= self.numberOfSections(in: collectionView!) {
-      return false
-    }
-    if indexPath.row >= collectionView!.numberOfItems(inSection: indexPath.section) {
-      return false
-    }
-    return true
-  }
+//  func indexPathIsValid(indexPath: NSIndexPath) -> Bool {
+//    if indexPath.section >= self.numberOfSections(in: collectionView!) {
+//      return false
+//    }
+//    if indexPath.row >= collectionView!.numberOfItems(inSection: indexPath.section) {
+//      return false
+//    }
+//    return true
+//  }
   
 
   fileprivate func updateMessageStatus(messageRef: DatabaseReference) {
+    
+    guard let uid = Auth.auth().currentUser?.uid else {
+      return
+    }
     
     if currentReachabilityStatus != .notReachable {
       
@@ -452,7 +482,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           recieverID = snapshot.value as! String
         }
         
-        if (Auth.auth().currentUser?.uid)! == recieverID && (Auth.auth().currentUser?.uid != nil)  {
+        if uid == recieverID  {
           
           if self.navigationController?.visibleViewController is ChatLogController {
           
@@ -552,7 +582,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     userStatusReference = Database.database().reference().child("users").child(user!.id!).child("OnlineStatus")
     userStatusReference.observe(.value, with: { (snapshot) in
       
-      guard let uid = Auth.auth().currentUser?.uid,let toId = self.user?.id else {
+      guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else {
         return
       }
       
@@ -810,12 +840,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         if let messageImageUrl = message.imageUrl {
+          
           cell.progressView.isHidden = false
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize) in
-            
+          
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize, url) in
             let progress = Double(100 * downloadedSize/expectedSize)
             
-            cell.progressView.setProgress(progress * 0.01, animated: false)
+            DispatchQueue.main.async {
+              cell.progressView.setProgress(progress * 0.01, animated: false)
+              cell.progressView.setNeedsLayout()
+              cell.progressView.layoutIfNeeded()
+            }
             
           }, completed: { (image, error, cacheType, url) in
             cell.progressView.isHidden = true
@@ -824,9 +859,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
           })
         }
-        
-       
-        
         
         return cell
         
@@ -865,11 +897,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         if let messageImageUrl = message.imageUrl {
           cell.progressView.isHidden = false
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize) in
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize, url) in
             
             let progress = Double(100 * downloadedSize/expectedSize)
             
-            cell.progressView.setProgress(progress * 0.01, animated: false)
+            DispatchQueue.main.async {
+              cell.progressView.setProgress(progress * 0.01, animated: false)
+              cell.progressView.setNeedsLayout()
+              cell.progressView.layoutIfNeeded()
+            }
             
           }, completed: { (image, error, cacheType, url) in
             
@@ -878,11 +914,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             cell.messageImageView.isUserInteractionEnabled = true
             
              cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
-          
           })
         }
-        
-       
         
         return cell
       }
@@ -996,9 +1029,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       let defaultMessageStatus = messageStatusSent
       
-      let toId = user!.id!
-      
-      let fromId = Auth.auth().currentUser!.uid
+      guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
+        return
+      }
       
       let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
       
@@ -1076,17 +1109,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   func sendMediaMessageWithProperties(_ properties: [String: AnyObject]) {
     
-    self.inputContainerView.inputTextView.text = nil
-    
     let ref = Database.database().reference().child("messages")
     
     let childRef = ref.childByAutoId()
     
     let defaultMessageStatus = messageStatusSent
     
-    let toId = user!.id!
+    guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
+      return
+    }
     
-    let fromId = Auth.auth().currentUser!.uid
+    self.inputContainerView.inputTextView.text = nil
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
@@ -1192,19 +1225,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   fileprivate func sendMessageWithProperties(_ properties: [String: AnyObject]) {
     
-    self.inputContainerView.inputTextView.text = nil
-    
     let ref = Database.database().reference().child("messages")
     
     let childRef = ref.childByAutoId()
     
     let defaultMessageStatus = messageStatusSent
     
-    guard let toId = user?.id else {
+    guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
       return
     }
     
-    let fromId = Auth.auth().currentUser!.uid
+    self.inputContainerView.inputTextView.text = nil
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
@@ -1240,9 +1271,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   func resetBadgeForReciever() {
     
-    let toId = user!.id!
-    
-    let fromId = Auth.auth().currentUser!.uid
+    guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
+      return
+    }
     
     let badgeRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(messageMetaDataFirebaseFolder).child("badge")
     
@@ -1260,9 +1291,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   func incrementBadgeForReciever() {
     
-    let toId = user!.id!
-    
-    let fromId = Auth.auth().currentUser!.uid
+    guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
+      return
+    }
     
     var ref = Database.database().reference().child("user-messages").child(toId).child(fromId)
     ref.observeSingleEvent(of: .value, with: { (snapshot) in

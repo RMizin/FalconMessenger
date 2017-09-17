@@ -76,9 +76,9 @@ PODS:
   - PhoneNumberKit/UIKit (1.3.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.4.0)
-  - SDWebImage (3.8.2):
-    - SDWebImage/Core (= 3.8.2)
-  - SDWebImage/Core (3.8.2)
+  - SDWebImage (4.1.0):
+    - SDWebImage/Core (= 4.1.0)
+  - SDWebImage/Core (4.1.0)
 
 DEPENDENCIES:
   - Firebase/Auth
@@ -88,7 +88,7 @@ DEPENDENCIES:
   - Firebase/Storage
   - NYTPhotoViewer (~> 1.1.0)
   - PhoneNumberKit
-  - SDWebImage (~> 3.8)
+  - SDWebImage
 
 SPEC CHECKSUMS:
   Firebase: 052c0de688fc87b414996eea13e223dd9fee3fa2
@@ -107,8 +107,8 @@ SPEC CHECKSUMS:
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   PhoneNumberKit: 08aaf1968ea41a114327e9223cbb0391d76ae145
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
-  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
 
-PODFILE CHECKSUM: d5df334ff0cdffe3d4b76d9e4e18b6c8435c53b1
+PODFILE CHECKSUM: faad86354a71ff68ea119c101e6242f7ab891853
 
 COCOAPODS: 1.1.1

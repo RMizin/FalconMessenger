@@ -10,21 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "650"
-            endingLineNumber = "650">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "651"
@@ -38,7 +24,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "652"
@@ -52,7 +38,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "653"
@@ -66,7 +52,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "654"
@@ -80,21 +66,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "656"
-            endingLineNumber = "656">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "655"
@@ -108,7 +80,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "657"
@@ -122,7 +94,21 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "656"
+            endingLineNumber = "656">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "658"
@@ -136,7 +122,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "659"
@@ -150,7 +136,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "660"
@@ -164,7 +150,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "661"
@@ -178,7 +164,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "662"
@@ -192,7 +178,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "663"
@@ -206,11 +192,25 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
-            timestampString = "526643027.422621"
+            timestampString = "527281628.702663"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "664"
             endingLineNumber = "664">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pigeon-project/ChatsControllers/ChatsController.swift"
+            timestampString = "527281628.702663"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "665"
+            endingLineNumber = "665">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -16,7 +16,7 @@ class UserCell: UITableViewCell {
     let profileImageView: UIImageView = {
       let imageView = UIImageView()
       imageView.translatesAutoresizingMaskIntoConstraints = false
-      imageView.layer.cornerRadius = 27
+      imageView.layer.cornerRadius = 30
       imageView.layer.masksToBounds = true
       imageView.contentMode = .scaleAspectFill
       imageView.image = UIImage(named: "UserpicIcon")
@@ -94,8 +94,8 @@ class UserCell: UITableViewCell {
       
         profileImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 26).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 54).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 54).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
       
         newMessageIndicator.rightAnchor.constraint(equalTo: profileImageView.leftAnchor, constant: -7).isActive = true
         newMessageIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
