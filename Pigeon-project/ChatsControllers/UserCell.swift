@@ -81,7 +81,6 @@ class UserCell: UITableViewCell {
     return badgeLabel
   }()
 
-  
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
       

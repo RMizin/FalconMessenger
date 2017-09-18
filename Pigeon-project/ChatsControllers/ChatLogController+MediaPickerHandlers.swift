@@ -23,13 +23,19 @@ extension ChatLogController {
   
   func togglePhoto () {
     
+    if mediaPickerController == nil {
+        mediaPickerController = MediaPickerController()
+    }
+  
     inputContainerView.attachButton.isSelected = !inputContainerView.attachButton.isSelected
     
     if inputContainerView.attachButton.isSelected {
       
       mediaPickerController.inputContainerView = inputContainerView
       
-      inputContainerView.mediaPickerController = mediaPickerController
+      if inputContainerView.mediaPickerController == nil {
+        inputContainerView.mediaPickerController = mediaPickerController
+      }
       
       inputContainerView.inputTextView.inputView = mediaPickerController.view
       

@@ -17,19 +17,22 @@ public let imageSourceCamera = "imageSourceCamera"
 
 class MediaPickerController: UIViewController {
   
-  let container = UIView()
+  var container:UIView! = nil
   
-  let customMediaPickerView = ImagePickerTrayController()
+  var customMediaPickerView: ImagePickerTrayController! = nil
   
   weak var inputContainerView: ChatInputContainerView?
   
-  let imagePicker = UIImagePickerController()
+  var imagePicker: UIImagePickerController! = UIImagePickerController()
 
   
   public init() {
     super.init(nibName: nil, bundle: nil)
+    print("MEDIA PICKER CONTROLLER INIT")
     
-    configureContainerView()
+    if customMediaPickerView == nil {
+      customMediaPickerView = ImagePickerTrayController()
+    }
     
     configureCustomMediaPickerView()
     
@@ -45,7 +48,17 @@ class MediaPickerController: UIViewController {
   }
   
   
-  fileprivate func configureContainerView() {
+  deinit {
+     print("\nMEDIA PICKER CONTROLLER DE!!!! INIT\n")
+    imagePicker = nil
+  }
+  
+
+  fileprivate func configureCustomMediaPickerView() {
+    
+    if container == nil {
+      container = UIView()
+    }
     
     view.addSubview(container)
     container.translatesAutoresizingMaskIntoConstraints = false
@@ -53,10 +66,7 @@ class MediaPickerController: UIViewController {
     container.heightAnchor.constraint(equalToConstant: 216).isActive = true
     container.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
     container.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-  }
-  
-  
-  fileprivate func configureCustomMediaPickerView() {
+
     
     addChildViewController(customMediaPickerView)
     container.addSubview(customMediaPickerView.view)

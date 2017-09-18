@@ -36,7 +36,7 @@ class CameraOverlayView: UIButton {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        initialize()
+      //  initialize()
     }
     
     fileprivate func initialize() {
@@ -100,15 +100,20 @@ fileprivate class ShutterButtonView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+      
+      print("\n CAMERA controller init \n")
         initialize()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        initialize()
+     //   initialize()
     }
+  
+  deinit {
+    print("\n CAMERA controller DE init \n")
+  }
     
     fileprivate func initialize() {
         layer.addSublayer(bezelLayer)

@@ -361,7 +361,7 @@ class ChatsController: UITableViewController {
       }
     
       cell.timeLabel.text = finalUserCellData[indexPath.row].0.timestamp?.doubleValue.getShortDateStringFromUTC()
-      
+    
         if let url = self.finalUserCellData[indexPath.row].1.thumbnailPhotoURL {
           cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
             if image != nil {

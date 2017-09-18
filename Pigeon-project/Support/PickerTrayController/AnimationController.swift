@@ -17,10 +17,13 @@ class AnimationController: NSObject {
     }
     
     fileprivate let transition: Transition
-    
+  deinit {
+    print("\n animation controller DE init \n")
+  }
     init(transition: Transition) {
         self.transition = transition
         super.init()
+      print("\n animation controller init \n")
     }
     
 }

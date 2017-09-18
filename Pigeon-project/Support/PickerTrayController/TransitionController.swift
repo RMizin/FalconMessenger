@@ -18,10 +18,17 @@ class TransitionController: NSObject {
     fileprivate let gestureRecognizer = UIPanGestureRecognizer()
     fileprivate var interactiveTransition: UIPercentDrivenInteractiveTransition?
     fileprivate var panDirection: CGFloat = 0
+  
+  
+  deinit {
+    print("\n transition controller DE init \n")
+  }
     
     init(trayController: ImagePickerTrayController) {
         self.trayController = trayController
         super.init()
+      
+      print("\n transition controller INIT \n")
         
         gestureRecognizer.addTarget(self, action: #selector(didRecognizePan(gestureRecognizer:)))
         gestureRecognizer.delegate = self

@@ -13,7 +13,7 @@ import UIKit
 class ChatInputContainerView: UIView {
   
   
-  let centeredCollectionViewFlowLayout = CenteredCollectionViewFlowLayout()
+  var centeredCollectionViewFlowLayout: CenteredCollectionViewFlowLayout! = nil
   
   weak var trayDelegate: ImagePickerTrayControllerDelegate?
   
@@ -107,8 +107,17 @@ class ChatInputContainerView: UIView {
     attachedImages.reloadData()
   }
   
+  deinit {
+    print("\nCHAT INPUT CONTAINER VIEW DE!!!! INIT\n")
+  }
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
+    
+    print("\nCHAT INPUT CONTAINER VIEW INIT\n")
+    if centeredCollectionViewFlowLayout == nil {
+      centeredCollectionViewFlowLayout = CenteredCollectionViewFlowLayout()
+    }
     
     attachedImages = UICollectionView(centeredCollectionViewFlowLayout: centeredCollectionViewFlowLayout)
     backgroundColor = .white

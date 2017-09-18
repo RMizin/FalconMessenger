@@ -12,9 +12,8 @@ import FLAnimatedImage
 class TypingIndicatorCell: UICollectionViewCell {
   
   var typingIndicator: FLAnimatedImageView = {
-    var typingIndicator =  FLAnimatedImageView()
+    var typingIndicator = FLAnimatedImageView()
   
-    typingIndicator.frame = CGRect(x: 10, y: 0, width: 65, height: 40).integral
     typingIndicator.backgroundColor = .white
   
     return typingIndicator
@@ -25,6 +24,7 @@ class TypingIndicatorCell: UICollectionViewCell {
     super.init(frame: frame.integral)
    
     addSubview(typingIndicator)
+    typingIndicator.frame = CGRect(x: 10, y: 0, width: 65, height: 40).integral
   }
   
   

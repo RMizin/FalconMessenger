@@ -83,7 +83,7 @@ public class ImagePickerTrayController: UIViewController {
         return controller
     }()
     
-    fileprivate let imageManager = PHCachingImageManager()
+  fileprivate var imageManager:PHCachingImageManager! = PHCachingImageManager()
     var assets = [PHAsset]()
     fileprivate lazy var requestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
@@ -103,6 +103,11 @@ public class ImagePickerTrayController: UIViewController {
     }
 
   deinit {
+    imageManager = nil
+    cameraController.removeFromParentViewController()
+    cameraController.cameraOverlayView = nil
+    
+    collectionView.removeFromSuperview()
     print("\n TRAY CONTROLLER DEINIT \n")
   }
   
@@ -254,20 +259,20 @@ public class ImagePickerTrayController: UIViewController {
         
         // Workaround because PHImageManager.requestImageForAsset doesn't work for burst images
         if asset.representsBurst {
-          DispatchQueue.main.async {
+         // DispatchQueue.main.async {
             self.imageManager.requestImageData(for: asset, options: self.requestOptions) { data, _, _, _ in
               let image = data.flatMap { UIImage(data: $0) }
              // image = compressImage(image!)
               completion(image)
             }
-          }
+         // }
           
         } else {
-          DispatchQueue.main.async {
+        //  DispatchQueue.main.async {
             self.imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: self.requestOptions) { image, _ in
               completion(image)
             }
-          }
+         // }
           
         }
     }

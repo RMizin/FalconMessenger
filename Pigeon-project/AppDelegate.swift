@@ -120,9 +120,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     settingsNavigationController.navigationBar.isTranslucent = false
     
     
-    let contactsTabItem = UITabBarItem(title: contactsController.title, image: UIImage(named:"TabIconContacts"), selectedImage: UIImage(named:"TabIconContacts_Highlighted"))
-    let chatsTabItem = UITabBarItem(title: chatsController.title, image: UIImage(named:"TabIconMessages"), selectedImage: UIImage(named:"TabIconMessages_Highlighted"))
-    let settingsTabItem = UITabBarItem(title: settingsController.title, image: UIImage(named:"TabIconSettings"), selectedImage: UIImage(named:"TabIconSettings_Highlighted"))
+    let contactsTabItem = UITabBarItem(title: contactsController.title, image: UIImage(named:"user"), selectedImage: UIImage(named:""))
+    let chatsTabItem = UITabBarItem(title: chatsController.title, image: UIImage(named:"chat"), selectedImage: UIImage(named:""))
+    let settingsTabItem = UITabBarItem(title: settingsController.title, image: UIImage(named:"settings"), selectedImage: UIImage(named:""))
     contactsController.tabBarItem = contactsTabItem
     chatsController.tabBarItem = chatsTabItem
     settingsController.tabBarItem = settingsTabItem

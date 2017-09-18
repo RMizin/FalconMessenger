@@ -67,7 +67,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   let messagesToLoad = 50
   
-  var mediaPickerController = MediaPickerController()
+  var mediaPickerController: MediaPickerController! = nil
   
   var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
   
@@ -542,7 +542,20 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if userStatusReference != nil {
       userStatusReference.removeAllObservers()
     }
-  
+    
+    if self.mediaPickerController != nil && self.mediaPickerController.customMediaPickerView != nil  {
+      
+      if self.mediaPickerController.container != nil && self.mediaPickerController.container.isDescendant( of: self.mediaPickerController.view) {
+        
+        self.mediaPickerController.container.removeFromSuperview()
+        self.mediaPickerController.container = nil
+      }
+      
+      self.mediaPickerController.customMediaPickerView.removeFromParentViewController()
+      self.mediaPickerController.customMediaPickerView = nil
+    }
+   
+      
     isTyping = false
   }
   
