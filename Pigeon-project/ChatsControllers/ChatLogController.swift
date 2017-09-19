@@ -565,6 +565,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let pSetY = CGFloat(64)
     messageSendingProgressBar.frame = CGRect(x: 0, y: pSetY, width: deviceScreen.width, height: 5)
     self.view.addSubview(messageSendingProgressBar)
+    //self.view.bringSubview(toFront: messageSendingProgressBar)
   }
   
 
@@ -608,7 +609,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         if snapshot.value as! String == "Online" {
           self.navigationItem.setTitle(title: self.user!.name!, subtitle: "Online")
         } else {
-          self.navigationItem.setTitle(title: self.user!.name!, subtitle: ("Last seen " + (snapshot.value as! String).doubleValue.getDateStringFromUTC()))
+           let date = NSDate(timeIntervalSince1970:  (snapshot.value as! String).doubleValue )
+           self.navigationItem.setTitle(title: self.user!.name!, subtitle: ("Last seen " + timeAgoSinceDate(date: date, timeinterval: (snapshot.value as! String).doubleValue, numericDates: false)))
         }
       }
     })

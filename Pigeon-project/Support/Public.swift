@@ -49,7 +49,7 @@ extension Double {
     
     let dateFormatter = DateFormatter()
     dateFormatter.dateStyle = .medium
-    dateFormatter.dateFormat = "dd/MM/yy HH:mm a"
+    dateFormatter.dateFormat = "dd/MM/yy hh:mm a"
     dateFormatter.amSymbol = "AM"
     dateFormatter.pmSymbol = "PM"
     
@@ -63,7 +63,7 @@ extension Double {
     
     let dateFormatter = DateFormatter()
     dateFormatter.dateStyle = .medium
-    dateFormatter.dateFormat = "HH:mm a"
+    dateFormatter.dateFormat = "hh:mm a"
     dateFormatter.amSymbol = "AM"
     dateFormatter.pmSymbol = "PM"
     
@@ -77,7 +77,7 @@ extension Double {
     
     let dateFormatter = DateFormatter()
     dateFormatter.dateStyle = .medium
-    dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
+    dateFormatter.dateFormat = "dd.MM.yyyy hh:mm a"
     
     return dateFormatter.string(from: date)
   }
@@ -110,16 +110,79 @@ extension SystemSoundID {
   }
 }
 
+func timeAgoSinceDate(date:NSDate, timeinterval: Double, numericDates:Bool) -> String {
+  let calendar = NSCalendar.current
+  let unitFlags: Set<Calendar.Component> = [.minute, .hour, .day, .weekOfYear, .month, .year, .second]
+  let now = NSDate()
+  let earliest = now.earlierDate(date as Date)
+  let latest = (earliest == now as Date) ? date : now
+  let components = calendar.dateComponents(unitFlags, from: earliest as Date,  to: latest as Date)
+  
+  if (components.year! >= 2) {
+    return timeinterval.getShortDateStringFromUTC()//"\(components.year!) years ago"
+  } else if (components.year! >= 1){
+    if (numericDates){
+      return timeinterval.getShortDateStringFromUTC()//"1 year ago"
+    } else {
+      return timeinterval.getShortDateStringFromUTC()//"last year"
+    }
+  } else if (components.month! >= 2) {
+    return timeinterval.getShortDateStringFromUTC()//"\(components.month!) months ago"
+  } else if (components.month! >= 1){
+    if (numericDates){
+      return timeinterval.getShortDateStringFromUTC()//"1 month ago"
+    } else {
+      return timeinterval.getShortDateStringFromUTC()
+    }
+  } else if (components.weekOfYear! >= 2) {
+    return "\(components.weekOfYear!) weeks ago"
+  } else if (components.weekOfYear! >= 1){
+    if (numericDates){
+      return "1 week ago"
+    } else {
+      return "last week"
+    }
+  } else if (components.day! >= 2) {
+    return "\(components.day!) days ago"
+  } else if (components.day! >= 1){
+    if (numericDates){
+      return "1 day ago"
+    } else {
+      return "yesterday"
+    }
+  } else if (components.hour! >= 2) {
+    return "\(components.hour!) hours ago"
+  } else if (components.hour! >= 1){
+    if (numericDates){
+      return "1 hour ago"
+    } else {
+      return "an hour ago"
+    }
+  } else if (components.minute! >= 2) {
+    return "\(components.minute!) minutes ago"
+  } else if (components.minute! >= 1){
+    if (numericDates){
+      return "1 minute ago"
+    } else {
+      return "a minute ago"
+    }
+  } else if (components.second! >= 30) {
+    return "\(components.second!) seconds ago"
+  } else {
+    return "just now"
+  }
+  
+}
 
 //struct AppUtility {
-//  
+//
 //  static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
-//    
+//
 //    if let delegate = UIApplication.shared.delegate as? AppDelegate {
 //      delegate.orientationLock = orientation
 //    }
 //  }
-//  
+//
 //  /// OPTIONAL Added method to adjust lock and rotate to the desired orientation
 //  static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
 //    

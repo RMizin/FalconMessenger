@@ -40,7 +40,10 @@ extension ChatLogController: NYTPhotosViewControllerDelegate {
         }
         
         let title = NSAttributedString(string: titleString , attributes: [NSForegroundColorAttributeName: UIColor.white])
-        let timestamp = self.mediaMessages[photoIndex].timestamp?.doubleValue.getShortDateStringFromUTC() ?? ""
+        
+        let date = NSDate(timeIntervalSince1970:  self.mediaMessages[photoIndex].timestamp!.doubleValue )
+        let timestamp = timeAgoSinceDate(date: date, timeinterval: self.mediaMessages[photoIndex].timestamp!.doubleValue, numericDates: false) 
+        
         let status = mediaMessages[photoIndex].fromId == uid ? self.mediaMessages[photoIndex].status ?? "" : ""
         let attributedCaptionSummary = NSAttributedString(string: timestamp, attributes: [NSForegroundColorAttributeName: UIColor.lightGray])
         let attributedCaptionCredit = NSAttributedString(string: status, attributes: [NSForegroundColorAttributeName: UIColor.gray])

@@ -360,7 +360,8 @@ class ChatsController: UITableViewController {
          cell.messageLabel.text = finalUserCellData[indexPath.row].0.text
       }
     
-      cell.timeLabel.text = finalUserCellData[indexPath.row].0.timestamp?.doubleValue.getShortDateStringFromUTC()
+      let date = NSDate(timeIntervalSince1970:  finalUserCellData[indexPath.row].0.timestamp as! TimeInterval)
+      cell.timeLabel.text = timeAgoSinceDate(date: date, timeinterval: finalUserCellData[indexPath.row].0.timestamp!.doubleValue, numericDates: false)
     
         if let url = self.finalUserCellData[indexPath.row].1.thumbnailPhotoURL {
           cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in

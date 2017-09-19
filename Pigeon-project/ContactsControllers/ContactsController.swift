@@ -327,8 +327,9 @@ class ContactsController: UITableViewController {
             cell.subtitle.text = status
             
           } else {
+            let date = NSDate(timeIntervalSince1970:  status.doubleValue )
             cell.subtitle.textColor = UIColor.lightGray
-            cell.subtitle.text = "Last seen " + status.doubleValue.getDateStringFromUTC()
+            cell.subtitle.text = "last seen " + timeAgoSinceDate(date: date, timeinterval: status.doubleValue, numericDates: false)
           }
         } else {
           
@@ -371,22 +372,25 @@ class ContactsController: UITableViewController {
     var autoSizingCollectionViewFlowLayout:AutoSizingCollectionViewFlowLayout? = nil
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+      
+      
+      
       if indexPath.section == 0 {
         
         autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
         autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
         chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
         chatLogController?.delegate = self
-        chatLogController?.user = filteredUsers[indexPath.row]
         chatLogController?.hidesBottomBarWhenPushed = true
+        chatLogController?.user = filteredUsers[indexPath.row]
+      
       }
     
       if indexPath.section == 1 {
         let destination = ContactsDetailController()
         destination.contactName = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
         destination.contactPhoneNumbers.removeAll()
-        
+        destination .hidesBottomBarWhenPushed = true
         for phoneNumber in filteredContacts[indexPath.row].phoneNumbers {
           destination.contactPhoneNumbers.append(phoneNumber.value.stringValue)
         }

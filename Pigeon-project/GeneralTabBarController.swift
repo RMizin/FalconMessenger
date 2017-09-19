@@ -43,8 +43,6 @@ class GeneralTabBarController: UITabBarController {
     }
     onceToken = 1
   }
-  
-  
 }
 
 extension GeneralTabBarController: ManageAppearance {

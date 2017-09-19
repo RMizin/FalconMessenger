@@ -134,6 +134,7 @@ extension AccountSettingsController: UITableViewDataSource {
       let destination = secondSection[indexPath.row].controller
       
       if destination != nil {
+        destination?.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(destination!  , animated: true)
       }
       
