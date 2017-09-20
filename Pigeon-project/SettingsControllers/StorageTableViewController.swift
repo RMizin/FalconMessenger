@@ -26,6 +26,11 @@ class StorageTableViewController: UITableViewController {
       self.title = "Data and storage"
       tableView = UITableView(frame: self.tableView.frame, style: .grouped)
       tableView.backgroundColor = UIColor.white
+      
+      if #available(iOS 11.0, *) {
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.largeTitleDisplayMode = .never
+      }
     }
   
     override func numberOfSections(in tableView: UITableView) -> Int {

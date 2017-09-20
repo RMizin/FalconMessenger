@@ -28,7 +28,7 @@ class SettingsViewControllersContainer: UIViewController {
       
         view.backgroundColor = .white
         extendedLayoutIncludesOpaqueBars = true
-      
+        
         configureScrollView()
         configureContainedViewControllers()
       
@@ -117,12 +117,12 @@ extension SettingsViewControllersContainer: UIScrollViewDelegate {}
 
 extension SettingsViewControllersContainer { /* user name editing */
   
-  func nameDidBeginEditing() {
+  @objc func nameDidBeginEditing() {
     setEditingBarButtons()
   }
   
   
-  func nameEditingChanged() {
+  @objc func nameEditingChanged() {
 
     if userDataController.userProfileContainerView.name.text!.characters.count == 0 ||
        userDataController.userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
@@ -141,7 +141,7 @@ extension SettingsViewControllersContainer { /* user name editing */
   }
   
   
-  func cancelBarButtonPressed() {
+  @objc func cancelBarButtonPressed() {
     
     userDataController.userProfileContainerView.name.text = currentName
     userDataController.userProfileContainerView.name.resignFirstResponder()
@@ -149,7 +149,7 @@ extension SettingsViewControllersContainer { /* user name editing */
     navigationItem.rightBarButtonItem = nil
   }
   
-  func doneBarButtonPressed() {
+  @objc func doneBarButtonPressed() {
     ARSLineProgress.ars_showOnView(self.view)
     self.view.isUserInteractionEnabled = false
     navigationItem.leftBarButtonItem = nil

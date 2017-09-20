@@ -12,6 +12,8 @@ import UserNotifications
 import AudioToolbox
 
 
+public let deviceScreen = UIScreen.main.bounds
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -97,7 +99,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     contactsNavigationController.view.backgroundColor = UIColor.white
     contactsNavigationController.navigationBar.backgroundColor = UIColor.white
     contactsNavigationController.navigationBar.isTranslucent = false
-    
+    if #available(iOS 11.0, *) {
+      contactsNavigationController.navigationBar.prefersLargeTitles = true
+    }
+    //UINavigationItem.largeTitleDisplayMode.
   //  UINavigationBar.appearance().shadowImage = UIImage()
    // UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
   
@@ -110,6 +115,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     chatsNavigationController.view.backgroundColor = UIColor.white
     chatsNavigationController.navigationBar.backgroundColor = UIColor.white
     chatsNavigationController.navigationBar.isTranslucent = false
+    if #available(iOS 11.0, *) {
+      chatsNavigationController.navigationBar.prefersLargeTitles = true
+    }
     
     let settingsController = SettingsViewControllersContainer()
     _ = settingsController.view
@@ -118,6 +126,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     settingsNavigationController.view.backgroundColor = UIColor.white
     settingsNavigationController.navigationBar.backgroundColor = UIColor.white
     settingsNavigationController.navigationBar.isTranslucent = false
+    if #available(iOS 11.0, *) {
+      settingsNavigationController.navigationBar.prefersLargeTitles = true
+    }
     
     
     let contactsTabItem = UITabBarItem(title: contactsController.title, image: UIImage(named:"user"), selectedImage: UIImage(named:""))

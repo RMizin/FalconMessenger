@@ -589,6 +589,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.register(PhotoMessageCell.self, forCellWithReuseIdentifier: photoMessageCellID)
     collectionView?.register(IncomingPhotoMessageCell.self, forCellWithReuseIdentifier: incomingPhotoMessageCellID)
     collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
+    
+    if #available(iOS 11.0, *) {
+      self.navigationController?.navigationBar.prefersLargeTitles = false
+      self.navigationItem.largeTitleDisplayMode = .never
+    }
   }
   
   
@@ -681,7 +686,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }()
   
   
-  func performRefresh () {
+  @objc func performRefresh () {
     loadPreviousMessages()
   }
   
@@ -979,13 +984,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   func estimateFrameForText(_ text: String) -> CGRect {
     let size = CGSize(width: 200, height: 10000)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 13)], context: nil).integral
+    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13)], context: nil).integral
   }
   
   
   var containerViewBottomAnchor: NSLayoutConstraint?
   
-  func handleSend() {
+  @objc func handleSend() {
     inputContainerView.inputTextView.isScrollEnabled = false
     inputContainerView.invalidateIntrinsicContentSize()
 

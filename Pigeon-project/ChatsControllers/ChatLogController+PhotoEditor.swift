@@ -13,7 +13,8 @@ import AVKit
 extension ChatLogController: PhotoEditorDelegate {
   
   func doneEditing(image: UIImage, indexPath: IndexPath) {
-    inputContainerView.selectedMedia[indexPath.row].setValue(UIImageJPEGRepresentation(image, 1), forKey: "object")
+  
+    inputContainerView.selectedMedia[indexPath.row].object = UIImageJPEGRepresentation(image, 1)
     inputContainerView.attachedImages.reloadItems(at: [indexPath])
   }
   

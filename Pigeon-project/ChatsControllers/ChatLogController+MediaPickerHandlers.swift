@@ -11,7 +11,7 @@ import UIKit
 
 extension ChatLogController {
   
-  func toggleTextView () {
+  @objc func toggleTextView () {
     
     inputContainerView.inputTextView.inputView = nil
     
@@ -21,7 +21,7 @@ extension ChatLogController {
   }
   
   
-  func togglePhoto () {
+  @objc func togglePhoto () {
     
     if mediaPickerController == nil {
         mediaPickerController = MediaPickerController()

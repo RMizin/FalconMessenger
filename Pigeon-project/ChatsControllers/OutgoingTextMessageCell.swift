@@ -20,7 +20,7 @@ class OutgoingTextMessageCell: BaseMessageCell {
     textView.textContainerInset = UIEdgeInsetsMake(10, 7, 10, 7)
     textView.dataDetectorTypes = .all
     textView.textColor = UIColor.white
-    textView.linkTextAttributes = [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue]
+    textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
   
     return textView
   }()

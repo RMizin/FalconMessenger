@@ -29,14 +29,14 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   }
   
   
-  func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-    // Image picker in edit mode
-    if let imageVC = NSClassFromString("PUUIImageViewController") {
-      if viewController.isKind(of: imageVC) {
-        addRoundedEditLayer(to: viewController, forCamera: false)
-      }
-    }
-  }
+//  func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+//    // Image picker in edit mode
+//    if let imageVC = NSClassFromString("PUUIImageViewController") {
+//      if viewController.isKind(of: imageVC) {
+//        addRoundedEditLayer(to: viewController, forCamera: false)
+//      }
+//    }
+//  }
   
   
   func configureImageViewBackgroundView() {
@@ -46,7 +46,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
      blackBackgroundView.navigationBar.setItems([blackBackgroundView.navigationItem], animated: true)
   }
   
-  func handlerImageViewSelection() {
+ @objc func handlerImageViewSelection() {
     if userProfileContainerView.profileImageView.image != nil {
       performZoomInForStartingImageView(userProfileContainerView.profileImageView)
     } else {
@@ -98,7 +98,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     }
   }
   
-  func handleZoomOut() {
+@objc func handleZoomOut() {
     if let zoomOutImageView = zoomOutGesture.view {
       //need to animate back out to controller
       zoomOutImageView.layer.masksToBounds = true
@@ -127,7 +127,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   func configureToolbar() {
     let item1 = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action: #selector(self.toolbarTouchHandler))
     
-    item1.imageInsets = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 15)
+    item1.imageInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
     blackBackgroundView.toolbar.setItems([item1], animated: true)
   }
 
@@ -153,7 +153,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     
   }
   
-  func toolbarTouchHandler() {
+ @objc func toolbarTouchHandler() {
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Save image", style: .default, handler: { _ in
      
@@ -211,7 +211,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     
   }
   
-  func handleSelectProfileImageView() {
+  @objc func handleSelectProfileImageView() {
     
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
@@ -373,11 +373,12 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
       
     }
     
-    editLayer.removeFromSuperlayer()
-    label.removeFromSuperview()
+   // editLayer.removeFromSuperlayer()
+   // label.removeFromSuperview()
     dismiss(animated: true, completion: nil)
    
     userProfileContainerView.profileImageView.showActivityIndicator()
+  
   }
   
 

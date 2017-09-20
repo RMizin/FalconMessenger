@@ -57,7 +57,7 @@ class BaseMediaMessageCell: BaseMessageCell {
   }
   
   
-  func handlePlay() {
+  @objc func handlePlay() {
     
     var url: URL! = nil
     
@@ -77,7 +77,7 @@ class BaseMediaMessageCell: BaseMessageCell {
   }
   
   
-  func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
+  @objc func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
   
     if message?.videoUrl != nil || message?.localVideoUrl != nil {
       

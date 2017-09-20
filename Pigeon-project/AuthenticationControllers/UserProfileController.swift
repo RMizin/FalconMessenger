@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 
-
 class UserProfileController: UIViewController {
   
   let userProfileContainerView = UserProfileContainerView()
@@ -22,15 +21,14 @@ class UserProfileController: UIViewController {
   var blackBackgroundView = ImageViewBackgroundView()
   var startingImageView: UIImageView?
   let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
-  
 
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+
         view.backgroundColor = .white
         view.addSubview(userProfileContainerView)
         userProfileContainerView.frame = view.bounds
-      
+        extendedLayoutIncludesOpaqueBars = true
         configureNavigationBar()
         configurePickerController()
         userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlerImageViewSelection)))
@@ -39,9 +37,10 @@ class UserProfileController: UIViewController {
   
     fileprivate func configurePickerController() {
       picker.delegate = self
-      navigationController?.delegate = self
-      NotificationCenter.default.addObserver(self, selector: #selector(pictureCaptured), name: NSNotification.Name(rawValue: "_UIImagePickerControllerUserDidCaptureItem"), object: nil)
-      NotificationCenter.default.addObserver(self, selector: #selector(pictureRejected), name: NSNotification.Name(rawValue: "_UIImagePickerControllerUserDidRejectItem"), object: nil)
+    //  navigationController?.delegate = self
+      
+   //   NotificationCenter.default.addObserver(self, selector: #selector(pictureCaptured), name: NSNotification.Name(rawValue: "_UIImagePickerControllerUserDidCaptureItem"), object: nil)
+   //   NotificationCenter.default.addObserver(self, selector: #selector(pictureRejected), name: NSNotification.Name(rawValue: "_UIImagePickerControllerUserDidRejectItem"), object: nil)
     }
 
   
@@ -54,7 +53,7 @@ class UserProfileController: UIViewController {
   
   
     deinit {
-      NotificationCenter.default.removeObserver(self)
+      //NotificationCenter.default.removeObserver(self)
     }
 }
 
@@ -78,7 +77,7 @@ extension UserProfileController { /* setting user data to database and to privat
 
 extension UserProfileController {  /* only during authentication */
   
-  func rightBarButtonDidTap () {
+  @objc func rightBarButtonDidTap () {
     
     if userProfileContainerView.name.text?.characters.count == 0 ||
        userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {

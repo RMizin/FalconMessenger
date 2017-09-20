@@ -5,17 +5,17 @@
 //  Created by Roman Mizin on 8/4/17.
 //  Copyright © 2017 Roman Mizin. All rights reserved.
 //
-
+/*
 import UIKit
 
 
 extension UserProfileController {
   
-  func pictureCaptured() {
+ @objc func pictureCaptured() {
     addRoundedEditLayer(to: picker , forCamera: true)
   }
   
-  func pictureRejected() {
+ @objc func pictureRejected() {
     editLayer.removeFromSuperlayer()
     label.removeFromSuperview()
   }
@@ -70,3 +70,4 @@ extension UserProfileController {
   }
 
 }
+*/

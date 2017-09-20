@@ -208,7 +208,7 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
               if exporter != nil {
                 
                 exporter!.outputURL = url
-                exporter!.outputFileType = AVFileTypeQuickTimeMovie
+                exporter!.outputFileType = AVFileType.mov
                 exporter!.shouldOptimizeForNetworkUse = true
                 
                 exporter!.exportAsynchronously(completionHandler: {

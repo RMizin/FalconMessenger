@@ -19,7 +19,7 @@ class IncomingTextMessageCell: BaseMessageCell {
     textView.textContainerInset = UIEdgeInsetsMake(10, 12, 10, 7)
     textView.dataDetectorTypes = .all
     textView.textColor = UIColor.darkText
-    textView.linkTextAttributes = [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue]
+    textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
  
     return textView
   }()

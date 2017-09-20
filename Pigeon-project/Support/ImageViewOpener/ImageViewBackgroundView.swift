@@ -14,6 +14,8 @@ class ImageViewBackgroundView: UIView {
   
   var navigationBar : UINavigationBar = {
     var navigationBar = UINavigationBar()
+    navigationBar.isTranslucent = false
+    navigationBar.backgroundColor = .white
     
     return navigationBar
   }()
@@ -45,7 +47,7 @@ class ImageViewBackgroundView: UIView {
     alpha = 0
    
     addSubview(navigationBar)
-    navigationBar.frame = CGRect(x: 0, y: 0, width: deviceScreen.width, height: 64)
+    navigationBar.frame = CGRect(x: 0, y: 20, width: deviceScreen.width, height: 44)
     
     
     addSubview(toolbar)

@@ -16,20 +16,20 @@ private var inputContainerViewWasFirstResponder = false
 
 extension ChatLogController {
   
-  func configureImageViewBackgroundView() {
-    blackBackgroundView.navigationItem.title = "Media"
-    blackBackgroundView.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "   Done", style: .done, target: self, action: #selector(UserProfileController.handleZoomOut))
-    blackBackgroundView.navigationItem.leftBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 15)
-    blackBackgroundView.navigationBar.setItems([blackBackgroundView.navigationItem], animated: true)
-  }
+//  func configureImageViewBackgroundView() {
+////    blackBackgroundView.navigationItem.title = "Media"
+////    blackBackgroundView.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "   Done", style: .done, target: self, action: #selector(UserProfileController.handleZoomOut))
+////    blackBackgroundView.navigationItem.leftBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 15)
+////    blackBackgroundView.navigationBar.setItems([blackBackgroundView.navigationItem], animated: true)
+//  }
 
   
-  func configureToolbar() {
-    let item1 = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action:nil)
-    
-    item1.imageInsets = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 15)
-    blackBackgroundView.toolbar.setItems([item1], animated: true)
-  }
+//  func configureToolbar() {
+////    let item1 = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action:nil)
+////
+////    item1.imageInsets = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 15)
+////    blackBackgroundView.toolbar.setItems([item1], animated: true)
+//  }
   
   
   func performZoomInForVideo( url: URL) {

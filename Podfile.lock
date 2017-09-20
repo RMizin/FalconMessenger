@@ -69,11 +69,11 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
-  - PhoneNumberKit (1.3.0):
-    - PhoneNumberKit/PhoneNumberKitCore (= 1.3.0)
-    - PhoneNumberKit/UIKit (= 1.3.0)
-  - PhoneNumberKit/PhoneNumberKitCore (1.3.0)
-  - PhoneNumberKit/UIKit (1.3.0):
+  - PhoneNumberKit (2.0.0):
+    - PhoneNumberKit/PhoneNumberKitCore (= 2.0.0)
+    - PhoneNumberKit/UIKit (= 2.0.0)
+  - PhoneNumberKit/PhoneNumberKitCore (2.0.0)
+  - PhoneNumberKit/UIKit (2.0.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.4.0)
   - SDWebImage (4.1.0):
@@ -105,10 +105,10 @@ SPEC CHECKSUMS:
   leveldb-library: 10fb39c39e243db4af1828441162405bbcec1404
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  PhoneNumberKit: 08aaf1968ea41a114327e9223cbb0391d76ae145
+  PhoneNumberKit: 073b3cef30c2a64ddcd623ea5953bc84bb5b3fc4
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
   SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
 
-PODFILE CHECKSUM: faad86354a71ff68ea119c101e6242f7ab891853
+PODFILE CHECKSUM: 200c46bc8569703f7e2e7f021d620ee458f9644b
 
 COCOAPODS: 1.1.1

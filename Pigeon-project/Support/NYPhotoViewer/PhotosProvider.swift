@@ -39,14 +39,14 @@ extension ChatLogController: NYTPhotosViewControllerDelegate {
           titleString = "You"
         }
         
-        let title = NSAttributedString(string: titleString , attributes: [NSForegroundColorAttributeName: UIColor.white])
+        let title = NSAttributedString(string: titleString , attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
         
         let date = NSDate(timeIntervalSince1970:  self.mediaMessages[photoIndex].timestamp!.doubleValue )
         let timestamp = timeAgoSinceDate(date: date, timeinterval: self.mediaMessages[photoIndex].timestamp!.doubleValue, numericDates: false) 
         
         let status = mediaMessages[photoIndex].fromId == uid ? self.mediaMessages[photoIndex].status ?? "" : ""
-        let attributedCaptionSummary = NSAttributedString(string: timestamp, attributes: [NSForegroundColorAttributeName: UIColor.lightGray])
-        let attributedCaptionCredit = NSAttributedString(string: status, attributes: [NSForegroundColorAttributeName: UIColor.gray])
+        let attributedCaptionSummary = NSAttributedString(string: timestamp, attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+        let attributedCaptionCredit = NSAttributedString(string: status, attributes: [NSAttributedStringKey.foregroundColor: UIColor.gray])
         
         if let downloadURL = self.mediaMessages[photoIndex].imageUrl {
           

@@ -18,7 +18,7 @@ extension EnterVerificationContainerView {
     timer = Timer.scheduledTimer(timeInterval: 1, target: self,  selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
   }
   
-  func updateTimer() {
+  @objc func updateTimer() {
     if seconds < 1 {
       
       resetTimer()

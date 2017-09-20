@@ -41,14 +41,14 @@ class EnterPhoneNumberController: UIViewController {
   }
   
   
-  func openCountryCodesList () {
+  @objc func openCountryCodesList () {
     let picker = SelectCountryCodeController()
     picker.delegate = self
     navigationController?.pushViewController(picker, animated: true)
   }
   
   
-  func textFieldDidChange(_ textField: UITextField) {
+  @objc func textFieldDidChange(_ textField: UITextField) {
       setRightBarButtonStatus()
   }
   
@@ -64,7 +64,7 @@ class EnterPhoneNumberController: UIViewController {
   
   var isVerificationSent = false
   
-  func rightBarButtonDidTap () {
+  @objc func rightBarButtonDidTap () {
     
     let destination = EnterVerificationCodeController()
     

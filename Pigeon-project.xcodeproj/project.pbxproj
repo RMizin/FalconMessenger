@@ -52,7 +52,6 @@
 		4B8D0B821F523AA800E9252A /* CircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D0B801F523AA800E9252A /* CircleProgressView.m */; };
 		4B8D0B831F523AA800E9252A /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D0B811F523AA800E9252A /* CircleProgressView.swift */; };
 		4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */; };
-		4B91B8B61F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B51F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift */; };
 		4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */; };
 		4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */; };
 		4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8BB1F34E9D60025C67F /* Public.swift */; };
@@ -63,7 +62,6 @@
 		4B9498781F324919008DA07F /* OnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498771F324919008DA07F /* OnboardingController.swift */; };
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
 		4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* PigeonPalette.swift */; };
-		4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498831F324EC6008DA07F /* GlobalVariables.swift */; };
 		4B9CD8691F4B2B6800EF8AB0 /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */; };
 		4B9CD86B1F4C3D4800EF8AB0 /* MediaPickerController+imagePickerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CD86A1F4C3D4800EF8AB0 /* MediaPickerController+imagePickerHandlers.swift */; };
 		4BB775A51F59E74200BFEEB8 /* ChatMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */; };
@@ -86,6 +84,7 @@
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
+		4BCF140C1F71D7EF00AE298B /* UserProfileController+RoundedEditLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF140B1F71D7EF00AE298B /* UserProfileController+RoundedEditLayer.swift */; };
 		4BD967571F6C4D14007C5441 /* NYTPhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD967551F6C4D14007C5441 /* NYTPhotoModel.swift */; };
 		4BD967581F6C4D14007C5441 /* PhotosProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD967561F6C4D14007C5441 /* PhotosProvider.swift */; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
@@ -152,8 +151,6 @@
 		4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */; };
 		4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */; };
 		4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */; };
-		4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37F1F33B9070005B8E6 /* HidingNavigationBarManager.swift */; };
-		4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC3801F33B9070005B8E6 /* HidingViewController.swift */; };
 		4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC3841F33C0A10005B8E6 /* Country.swift */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
@@ -223,7 +220,6 @@
 		4B8D0B801F523AA800E9252A /* CircleProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircleProgressView.m; path = Support/CircleProgressView/CircleProgressView.m; sourceTree = "<group>"; };
 		4B8D0B811F523AA800E9252A /* CircleProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CircleProgressView.swift; path = Support/CircleProgressView/CircleProgressView.swift; sourceTree = "<group>"; };
 		4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileContainerView.swift; path = AuthenticationControllers/UserProfileContainerView.swift; sourceTree = "<group>"; };
-		4B91B8B51F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+RoundedEditLayer.swift"; path = "AuthenticationControllers/UserProfileController+RoundedEditLayer.swift"; sourceTree = "<group>"; };
 		4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+handlers.swift"; path = "AuthenticationControllers/UserProfileController+handlers.swift"; sourceTree = "<group>"; };
 		4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+keyboardHandlers.swift"; path = "AuthenticationControllers/UserProfileController+keyboardHandlers.swift"; sourceTree = "<group>"; };
 		4B91B8BB1F34E9D60025C67F /* Public.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Public.swift; path = Support/Public.swift; sourceTree = "<group>"; };
@@ -235,7 +231,6 @@
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
 		4B9498801F324C84008DA07F /* PigeonPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonPalette.swift; path = Support/PigeonPalette.swift; sourceTree = "<group>"; };
-		4B9498831F324EC6008DA07F /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalVariables.swift; path = Support/GlobalVariables.swift; sourceTree = "<group>"; };
 		4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = ChatsControllers/MediaObject.swift; sourceTree = "<group>"; };
 		4B9CD86A1F4C3D4800EF8AB0 /* MediaPickerController+imagePickerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MediaPickerController+imagePickerHandlers.swift"; path = "ChatsControllers/MediaPickerController+imagePickerHandlers.swift"; sourceTree = "<group>"; };
 		4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatMetaData.swift; path = ChatsControllers/ChatMetaData.swift; sourceTree = "<group>"; };
@@ -258,6 +253,7 @@
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
+		4BCF140B1F71D7EF00AE298B /* UserProfileController+RoundedEditLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+RoundedEditLayer.swift"; path = "AuthenticationControllers/UserProfileController+RoundedEditLayer.swift"; sourceTree = "<group>"; };
 		4BD967551F6C4D14007C5441 /* NYTPhotoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NYTPhotoModel.swift; path = Support/NYPhotoViewer/NYTPhotoModel.swift; sourceTree = "<group>"; };
 		4BD967561F6C4D14007C5441 /* PhotosProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotosProvider.swift; path = Support/NYPhotoViewer/PhotosProvider.swift; sourceTree = "<group>"; };
 		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
@@ -325,8 +321,6 @@
 		4BEDC3721F335E2B0005B8E6 /* CallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CallingCodes.plist; sourceTree = "<group>"; };
 		4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationContainerView.swift; path = AuthenticationControllers/EnterVerificationContainerView.swift; sourceTree = "<group>"; };
 		4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectCountryCodeController.swift; path = AuthenticationControllers/SelectCountryCodeController.swift; sourceTree = "<group>"; };
-		4BEDC37F1F33B9070005B8E6 /* HidingNavigationBarManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HidingNavigationBarManager.swift; sourceTree = "<group>"; };
-		4BEDC3801F33B9070005B8E6 /* HidingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HidingViewController.swift; sourceTree = "<group>"; };
 		4BEDC3841F33C0A10005B8E6 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Country.swift; path = AuthenticationControllers/Country.swift; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
@@ -607,9 +601,7 @@
 				4BED6EA81F47697D004EF2E0 /* PickerTrayController */,
 				4B56B3631F443591008F4F27 /* ImageView opener */,
 				4B48D3111F361E300050C797 /* ProgressIndicator */,
-				4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */,
 				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
-				4B9498831F324EC6008DA07F /* GlobalVariables.swift */,
 				4B91B8BB1F34E9D60025C67F /* Public.swift */,
 			);
 			name = Support;
@@ -795,22 +787,13 @@
 		4BEDC3771F337A260005B8E6 /* User profile */ = {
 			isa = PBXGroup;
 			children = (
+				4BCF140B1F71D7EF00AE298B /* UserProfileController+RoundedEditLayer.swift */,
 				4B9498731F3244CA008DA07F /* UserProfileController.swift */,
 				4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */,
-				4B91B8B51F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift */,
 				4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */,
 				4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */,
 			);
 			name = "User profile";
-			sourceTree = "<group>";
-		};
-		4BEDC3831F33B9100005B8E6 /* Hiding navigation bar */ = {
-			isa = PBXGroup;
-			children = (
-				4BEDC37F1F33B9070005B8E6 /* HidingNavigationBarManager.swift */,
-				4BEDC3801F33B9070005B8E6 /* HidingViewController.swift */,
-			);
-			name = "Hiding navigation bar";
 			sourceTree = "<group>";
 		};
 		4BEDC3861F33C0A60005B8E6 /* Model */ = {
@@ -869,7 +852,7 @@
 					4B4F452A1F32230C00A6FF96 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = A3WPJ33XN8;
-						LastSwiftMigration = 0830;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1005,6 +988,7 @@
 			files = (
 				4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */,
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
+				4BCF140C1F71D7EF00AE298B /* UserProfileController+RoundedEditLayer.swift in Sources */,
 				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
 				4BED6EB71F476A3A004EF2E0 /* UIImageExtensions.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
@@ -1029,7 +1013,6 @@
 				4BE571611F4D87A4009D9AB4 /* ResizeControl.swift in Sources */,
 				4BED6EB31F476A2F004EF2E0 /* TransitionController.swift in Sources */,
 				4BED6EB21F476A2F004EF2E0 /* ImagePickerTrayController.swift in Sources */,
-				4B91B8B61F34C9DC0025C67F /* UserProfileController+RoundedEditLayer.swift in Sources */,
 				4B48D3201F361E490050C797 /* ARSLineProgressExtensions.swift in Sources */,
 				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
 				4BED6EBC1F476A46004EF2E0 /* ActionCell.swift in Sources */,
@@ -1048,7 +1031,6 @@
 				4BE571631F4D87A4009D9AB4 /* StickersViewController.swift in Sources */,
 				4BED9B8A1F4EDE81007A1631 /* EnterVerificationContainerView+timerHandlers.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
-				4B9498841F324EC6008DA07F /* GlobalVariables.swift in Sources */,
 				4BE571651F4D87A4009D9AB4 /* UIImage+Size.swift in Sources */,
 				4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */,
 				4BC26B291F3A234A0093A9D2 /* Message.swift in Sources */,
@@ -1085,7 +1067,6 @@
 				4B2143081F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift in Sources */,
 				4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */,
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
-				4BEDC3821F33B9070005B8E6 /* HidingViewController.swift in Sources */,
 				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,
 				4B2143041F51C76F00F7A4B8 /* TimestampView.swift in Sources */,
 				4BED6EBE1F476A46004EF2E0 /* CameraOverlayView.swift in Sources */,
@@ -1093,7 +1074,6 @@
 				4BE571621F4D87A4009D9AB4 /* StickerCollectionViewCell.swift in Sources */,
 				4BED6EBF1F476A46004EF2E0 /* ImageCell.swift in Sources */,
 				4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */,
-				4BEDC3811F33B9070005B8E6 /* HidingNavigationBarManager.swift in Sources */,
 				4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */,
 				4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BED6EBD1F476A46004EF2E0 /* CameraCell.swift in Sources */,
@@ -1235,7 +1215,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1252,7 +1233,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

@@ -23,7 +23,7 @@ class SelectCountryCodeController: UIViewController {
   var filteredCountries = [[String:String]]()
   var searchBar = UISearchBar()
   let tableView = UITableView()
-  var hidingNavBarManager: HidingNavigationBarManager?
+
   weak var delegate: CountryPickerDelegate?
   
     override func viewDidLoad() {
@@ -32,37 +32,24 @@ class SelectCountryCodeController: UIViewController {
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
-    
-      view.addSubview(tableView)
-      tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
-      searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.height, width: view.frame.width, height: 50)
-      hidingNavBarManager = HidingNavigationBarManager(viewController: self, scrollView: tableView)
-      filteredCountries = countries
-      hidingNavBarManager?.addExtensionView(searchBar)
       
+      searchBar.searchBarStyle = .minimal
+      searchBar.backgroundColor = .white
+      view.addSubview(tableView)
+      view.addSubview(searchBar)
+      tableView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height - 114)
+      searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+      filteredCountries = countries
     }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    hidingNavBarManager?.viewWillAppear(animated)
     tableView.setContentOffset(savedContentOffset, animated: false)
   }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-    hidingNavBarManager?.viewWillDisappear(animated)
     savedContentOffset = tableView.contentOffset
-  }
-  
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    hidingNavBarManager?.viewDidLayoutSubviews()
-  }
-  
-  func scrollViewShouldScrollToTop(scrollView: UIScrollView) -> Bool {
-    hidingNavBarManager?.shouldScrollToTop()
-    
-    return true
   }
 }
 

@@ -59,7 +59,7 @@ class EnterVerificationCodeController: UIViewController {
   }
  
   
-  func rightBarButtonDidTap () {
+  @objc func rightBarButtonDidTap () {
     print("tapped")
    
     ARSLineProgress.ars_showOnView(self.view)

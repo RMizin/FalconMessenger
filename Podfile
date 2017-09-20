@@ -15,5 +15,10 @@ pod 'Firebase/Messaging'
 pod 'SDWebImage'
 pod 'PhoneNumberKit'
 pod 'NYTPhotoViewer', '~> 1.1.0'
+#pod 'RSKImageCropper'
+#pod 'SimpleImageViewer'
+#pod 'ZoomTransitioning'
+#pod 'ZoomInteractiveTransition'
+#pod 'Hero'
 
 end

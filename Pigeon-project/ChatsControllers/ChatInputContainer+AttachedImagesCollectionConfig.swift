@@ -40,7 +40,7 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     attachedImages.autoresizesSubviews = false
   }
   
-  func removeButtonDidTap(sender: UIButton) {
+ @objc func removeButtonDidTap(sender: UIButton) {
     
     guard let cell = sender.superview as? SelectedMediaCollectionCell else {
       return

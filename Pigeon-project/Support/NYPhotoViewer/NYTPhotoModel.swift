@@ -18,8 +18,8 @@ class NYTPhotoModel: NSObject, NYTPhoto {
     var imageData: Data?
     var placeholderImage: UIImage?
     let attributedCaptionTitle: NSAttributedString?
-    var attributedCaptionSummary: NSAttributedString? = NSAttributedString(string: "", attributes: [NSForegroundColorAttributeName: UIColor.gray])
-    var attributedCaptionCredit: NSAttributedString? = NSAttributedString(string: "", attributes: [NSForegroundColorAttributeName: UIColor.darkGray])
+    var attributedCaptionSummary: NSAttributedString? = NSAttributedString(string: "", attributes: [NSAttributedStringKey.foregroundColor: UIColor.gray])
+    var attributedCaptionCredit: NSAttributedString? = NSAttributedString(string: "", attributes: [NSAttributedStringKey.foregroundColor: UIColor.darkGray])
 
   init(image: UIImage? = nil, imageData: NSData? = nil, attributedCaptionTitle: NSAttributedString, attributedCaptionSummary: NSAttributedString, attributedCaptionCredit: NSAttributedString) {
         self.image = image

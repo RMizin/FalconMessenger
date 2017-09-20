@@ -55,7 +55,7 @@ extension UICollectionView: UIGestureRecognizerDelegate {
         }
     }
   
-    func handleRevealPan(_ gesture: UIPanGestureRecognizer) {
+    @objc func handleRevealPan(_ gesture: UIPanGestureRecognizer) {
         switch gesture.state {
         case .began:
          

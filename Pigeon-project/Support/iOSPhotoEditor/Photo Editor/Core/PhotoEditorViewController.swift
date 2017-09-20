@@ -106,13 +106,13 @@ public final class PhotoEditorViewController: UIViewController {
         
      
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow),
-                                               name: .UIKeyboardDidShow, object: nil)
+       //  NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow),
+                                           //    name: .UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
                                                name: .UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(keyboardWillChangeFrame(_:)),
                                                name: .UIKeyboardWillChangeFrame, object: nil)
-      NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
         
         
         configureCollectionView()
