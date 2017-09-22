@@ -1,1 +1,1 @@
-# PigeonMessenger-project
+# Pigeon messenger
