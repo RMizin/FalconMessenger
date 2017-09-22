@@ -39,6 +39,8 @@ class ContactsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       view.backgroundColor = .white
+      extendedLayoutIncludesOpaqueBars = true
+      edgesForExtendedLayout = UIRectEdge.top
       tableView.register(ContactsTableViewCell.self, forCellReuseIdentifier: contactsCellID)
       tableView.register(PigeonUsersTableViewCell.self, forCellReuseIdentifier: pigeonUsersCellID)
       tableView.separatorStyle = .none
@@ -283,7 +285,7 @@ class ContactsController: UITableViewController {
     }
   
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      return 60
+      return 65
     }
   
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -315,7 +317,7 @@ class ContactsController: UITableViewController {
     if indexPath.section == 0 {
       
       let cell = tableView.dequeueReusableCell(withIdentifier: pigeonUsersCellID, for: indexPath) as! PigeonUsersTableViewCell
-      
+    
         if let name = filteredUsers[indexPath.row].name {
         
           cell.title.text = name

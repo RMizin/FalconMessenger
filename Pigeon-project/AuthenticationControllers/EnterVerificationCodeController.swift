@@ -10,12 +10,10 @@ import UIKit
 import FirebaseAuth
 
 
-
 class EnterVerificationCodeController: UIViewController {
 
   let enterVerificationContainerView = EnterVerificationContainerView()
 
-  
     override func viewDidLoad() {
         super.viewDidLoad()
       
@@ -59,6 +57,16 @@ class EnterVerificationCodeController: UIViewController {
   }
  
   
+//  @objc func rightBarButtonDidTap () { /* DEBUG VERSION */
+//    print("tapped")
+//    
+//    
+//    let destination = UserProfileController()
+//    destination.userProfileContainerView.phone.text = self.enterVerificationContainerView.titleNumber.text
+//    self.navigationController?.pushViewController(destination, animated: true)
+//    
+//  }
+  
   @objc func rightBarButtonDidTap () {
     print("tapped")
    
@@ -100,5 +108,4 @@ class EnterVerificationCodeController: UIViewController {
         })
       }
   }
-  
 }

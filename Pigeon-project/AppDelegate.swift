@@ -77,7 +77,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       let destination = OnboardingController()
       let newNavigationController = UINavigationController(rootViewController: destination)
   
-      newNavigationController.navigationBar.backgroundColor = .white
       newNavigationController.navigationBar.shadowImage = UIImage()
       newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
       newNavigationController.modalTransitionStyle = .crossDissolve
@@ -96,24 +95,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     contactsController.title = "Contacts"
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     
-    contactsNavigationController.view.backgroundColor = UIColor.white
-    contactsNavigationController.navigationBar.backgroundColor = UIColor.white
     contactsNavigationController.navigationBar.isTranslucent = false
     if #available(iOS 11.0, *) {
       contactsNavigationController.navigationBar.prefersLargeTitles = true
     }
-    //UINavigationItem.largeTitleDisplayMode.
-  //  UINavigationBar.appearance().shadowImage = UIImage()
-   // UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-  
-    
     
     chatsController.delegate = mainController as? ManageAppearance
     _ = chatsController.view
     chatsController.title = "Chats"
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)
-    chatsNavigationController.view.backgroundColor = UIColor.white
-    chatsNavigationController.navigationBar.backgroundColor = UIColor.white
+  
     chatsNavigationController.navigationBar.isTranslucent = false
     if #available(iOS 11.0, *) {
       chatsNavigationController.navigationBar.prefersLargeTitles = true
@@ -123,13 +114,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     _ = settingsController.view
     settingsController.title = "Settings"
     let settingsNavigationController = UINavigationController(rootViewController: settingsController)
-    settingsNavigationController.view.backgroundColor = UIColor.white
-    settingsNavigationController.navigationBar.backgroundColor = UIColor.white
+
     settingsNavigationController.navigationBar.isTranslucent = false
     if #available(iOS 11.0, *) {
       settingsNavigationController.navigationBar.prefersLargeTitles = true
     }
-    
     
     let contactsTabItem = UITabBarItem(title: contactsController.title, image: UIImage(named:"user"), selectedImage: UIImage(named:""))
     let chatsTabItem = UITabBarItem(title: chatsController.title, image: UIImage(named:"chat"), selectedImage: UIImage(named:""))
@@ -205,7 +194,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   func applicationWillTerminate(_ application: UIApplication) {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
   }
-
-
 }
 

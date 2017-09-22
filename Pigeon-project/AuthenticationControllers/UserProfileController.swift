@@ -17,6 +17,9 @@ class UserProfileController: UIViewController {
   var label: UILabel!
   typealias CompletionHandler = (_ success: Bool) -> Void
   
+  
+  weak var settingsContainer: SettingsViewControllersContainer?
+  
   var startingFrame: CGRect?
   var blackBackgroundView = ImageViewBackgroundView()
   var startingImageView: UIImageView?
@@ -28,7 +31,6 @@ class UserProfileController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(userProfileContainerView)
         userProfileContainerView.frame = view.bounds
-        extendedLayoutIncludesOpaqueBars = true
         configureNavigationBar()
         configurePickerController()
         userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlerImageViewSelection)))

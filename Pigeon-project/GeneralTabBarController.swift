@@ -20,7 +20,7 @@ class GeneralTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+      tabBar.unselectedItemTintColor = UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0)
       //self.view.alpha = 0
       setOnlineStatus()
       tabBar.isTranslucent = false

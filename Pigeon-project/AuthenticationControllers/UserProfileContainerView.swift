@@ -49,7 +49,7 @@ class UserProfileContainerView: UIView, UITextFieldDelegate {
   
  lazy var name: UITextField = {
     let name = UITextField()
-    name.font = UIFont.systemFont(ofSize: 20)
+    name.font = UIFont.systemFont(ofSize: 21)
     name.translatesAutoresizingMaskIntoConstraints = false
     name.textAlignment = .center
     //name.keyboardType = .numberPad
@@ -65,7 +65,7 @@ class UserProfileContainerView: UIView, UITextFieldDelegate {
   
   let phone: UITextField = {
     let phone = UITextField()
-    phone.font = UIFont.systemFont(ofSize: 20)
+    phone.font = UIFont.systemFont(ofSize: 21)
     phone.translatesAutoresizingMaskIntoConstraints = false
     phone.textAlignment = .center
     phone.keyboardType = .numberPad

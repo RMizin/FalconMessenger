@@ -49,9 +49,9 @@ extension Double {
     
     let dateFormatter = DateFormatter()
     dateFormatter.dateStyle = .medium
-    dateFormatter.dateFormat = "dd/MM/yy hh:mm a"
-    dateFormatter.amSymbol = "AM"
-    dateFormatter.pmSymbol = "PM"
+    dateFormatter.dateFormat = "dd/MM/yy"
+   // dateFormatter.amSymbol = "AM"
+   // dateFormatter.pmSymbol = "PM"
     
     return dateFormatter.string(from: date)
   }
@@ -516,6 +516,7 @@ func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, quality: C
       
       if error != nil {
         print("Failed to upload image:", error as Any)
+        completion("", "")
         return
       }
    

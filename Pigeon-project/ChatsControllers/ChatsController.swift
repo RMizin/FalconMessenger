@@ -117,6 +117,9 @@ class ChatsController: UITableViewController {
     tableView.allowsMultipleSelectionDuringEditing = false
     tableView.backgroundColor = UIColor.white
     navigationItem.leftBarButtonItem = editButtonItem
+    extendedLayoutIncludesOpaqueBars = true
+    edgesForExtendedLayout = UIRectEdge.top
+    tableView.separatorStyle = . none
   }
 
   
@@ -334,7 +337,8 @@ class ChatsController: UITableViewController {
   
  
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      return 80
+      return 85
+      
     }
 
   

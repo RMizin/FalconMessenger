@@ -27,9 +27,13 @@ class SettingsViewControllersContainer: UIViewController {
         super.viewDidLoad()
       
         view.backgroundColor = .white
+      
         extendedLayoutIncludesOpaqueBars = true
+
+        userDataController.settingsContainer = self
         
         configureScrollView()
+      
         configureContainedViewControllers()
       
         userDataController.userProfileContainerView.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
@@ -38,13 +42,23 @@ class SettingsViewControllersContainer: UIViewController {
         listenChanges()
     }
   
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    if userDataController.userProfileContainerView.phone.text == "" {
+      print("will appear")
+      listenChanges()
+    }
+    
+  }
+  
     override func viewDidLayoutSubviews() {
       super.viewDidLayoutSubviews()
+      
       scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: userDataController.view.frame.height + accountSettingsController.view.frame.height)
     }
   
-  
-  
+
   func listenChanges() {
     
     if let currentUser = Auth.auth().currentUser?.uid {
@@ -53,9 +67,11 @@ class SettingsViewControllersContainer: UIViewController {
       photoURLReference.observe(.value, with: { (snapshot) in
         if let url = snapshot.value as? String {
           self.userDataController.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url) , placeholderImage: nil, options: [.highPriority, .continueInBackground], completed: {(image, error, cacheType, url) in
+            if error != nil {
+              print("\nSHIIIIIIIIIIIIT\n")
+            }
           })
         }
-        
       })
       
       
@@ -74,26 +90,19 @@ class SettingsViewControllersContainer: UIViewController {
           self.userDataController.userProfileContainerView.phone.text = phoneNumber
         }
       })
-
     }
   }
   
     fileprivate func configureScrollView() {
     
       view.addSubview(scrollView)
-      let scrollViewHeight = view.frame.height
+      let scrollViewHeight = view.frame.height - 50
       scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: scrollViewHeight )
       scrollView.delegate = self
       scrollView.alwaysBounceVertical = true
       scrollView.backgroundColor = .white
     }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
 
-    listenChanges()
-  }
-  
 
     fileprivate func configureContainedViewControllers() {
       
@@ -101,7 +110,7 @@ class SettingsViewControllersContainer: UIViewController {
       addChildViewController(accountSettingsController)
       
       userDataController.view.frame = CGRect(x: 0, y: 0, width: deviceScreen.width, height: 300)
-      accountSettingsController.view.frame = CGRect(x: 0, y: 255, width: deviceScreen.width, height: 270)
+      accountSettingsController.view.frame = CGRect(x: 0, y: 255, width: deviceScreen.width, height: 280)
      
       scrollView.addSubview(userDataController.view)
       scrollView.addSubview(accountSettingsController.view)

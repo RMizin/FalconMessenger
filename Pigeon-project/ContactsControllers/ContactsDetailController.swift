@@ -18,7 +18,9 @@ class ContactsDetailController: UITableViewController {
   
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+      title = "Info"
+      view.backgroundColor = .white
+      extendedLayoutIncludesOpaqueBars = true
       tableView.separatorStyle = .none
     }
 

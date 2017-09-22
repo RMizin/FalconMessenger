@@ -37,7 +37,7 @@ class UserCell: UITableViewCell {
   
     let timeLabel: UILabel = {
       let label = UILabel()
-      label.font = UIFont.systemFont(ofSize: 10)
+      label.font = UIFont.systemFont(ofSize: 12)
       label.textColor = UIColor.lightGray
       label.translatesAutoresizingMaskIntoConstraints = false
       label.sizeToFit()
@@ -48,7 +48,7 @@ class UserCell: UITableViewCell {
   
     let nameLabel: UILabel = {
       let label = UILabel()
-      label.font = UIFont.boldSystemFont(ofSize: 15)
+      label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.semibold) 
       label.translatesAutoresizingMaskIntoConstraints = false
       label.sizeToFit()
     

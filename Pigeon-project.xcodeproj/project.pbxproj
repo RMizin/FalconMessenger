@@ -49,6 +49,7 @@
 		4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */; };
 		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
 		4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */; };
+		4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D05341F739B00001735BC /* NotificationsAndSoundsTableViewController.swift */; };
 		4B8D0B821F523AA800E9252A /* CircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D0B801F523AA800E9252A /* CircleProgressView.m */; };
 		4B8D0B831F523AA800E9252A /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D0B811F523AA800E9252A /* CircleProgressView.swift */; };
 		4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */; };
@@ -215,6 +216,7 @@
 		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoSizingCollectionViewFlowLayout.swift; path = ChatsControllers/AutoSizingCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		4B8D05341F739B00001735BC /* NotificationsAndSoundsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationsAndSoundsTableViewController.swift; path = SettingsControllers/NotificationsAndSoundsTableViewController.swift; sourceTree = "<group>"; };
 		4B8D0B7E1F523AA800E9252A /* CircleProgressView-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CircleProgressView-Bridging-Header.h"; path = "Support/CircleProgressView/CircleProgressView-Bridging-Header.h"; sourceTree = "<group>"; };
 		4B8D0B7F1F523AA800E9252A /* CircleProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircleProgressView.h; path = Support/CircleProgressView/CircleProgressView.h; sourceTree = "<group>"; };
 		4B8D0B801F523AA800E9252A /* CircleProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircleProgressView.m; path = Support/CircleProgressView/CircleProgressView.m; sourceTree = "<group>"; };
@@ -423,6 +425,8 @@
 		4B48D30B1F35CA0D0050C797 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				4B8D05331F738FBB001735BC /* NotificationsAndSounds */,
+				4B8D05321F738FB6001735BC /* ChangeNumber */,
 				4B48D3091F35C9E20050C797 /* Storage */,
 			);
 			name = Menu;
@@ -544,6 +548,21 @@
 				4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		4B8D05321F738FB6001735BC /* ChangeNumber */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ChangeNumber;
+			sourceTree = "<group>";
+		};
+		4B8D05331F738FBB001735BC /* NotificationsAndSounds */ = {
+			isa = PBXGroup;
+			children = (
+				4B8D05341F739B00001735BC /* NotificationsAndSoundsTableViewController.swift */,
+			);
+			name = NotificationsAndSounds;
 			sourceTree = "<group>";
 		};
 		4B8D0B7D1F523A6B00E9252A /* CircleProgressView */ = {
@@ -1028,6 +1047,7 @@
 				4BE571661F4D87A4009D9AB4 /* UIImageView+Alpha.swift in Sources */,
 				4BE5715B1F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift in Sources */,
 				4BED6EC11F48AAFA004EF2E0 /* MediaPickerController.swift in Sources */,
+				4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */,
 				4BE571631F4D87A4009D9AB4 /* StickersViewController.swift in Sources */,
 				4BED9B8A1F4EDE81007A1631 /* EnterVerificationContainerView+timerHandlers.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,

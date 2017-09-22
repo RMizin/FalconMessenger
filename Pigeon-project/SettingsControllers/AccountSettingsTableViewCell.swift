@@ -21,7 +21,7 @@ class AccountSettingsTableViewCell: UITableViewCell {
   var title: UILabel = {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
-    title.font = UIFont.systemFont(ofSize: 16)
+    title.font = UIFont.systemFont(ofSize: 18)
   
     return title
   }()
@@ -30,7 +30,7 @@ class AccountSettingsTableViewCell: UITableViewCell {
   let separator: UIView = {
     let separator = UIView()
     separator.translatesAutoresizingMaskIntoConstraints = false
-    separator.backgroundColor = UIColor.lightGray
+    separator.backgroundColor = UIColor.clear
     
     return separator
   }()

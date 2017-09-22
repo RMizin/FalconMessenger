@@ -20,44 +20,40 @@ extension Double {
 
 class StorageTableViewController: UITableViewController {
 
+  
+  deinit {
+    print("STORAGE DID DEINIT")
+  }
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      self.title = "Data and storage"
+      title = "Data and storage"
       tableView = UITableView(frame: self.tableView.frame, style: .grouped)
       tableView.backgroundColor = UIColor.white
-      
-      if #available(iOS 11.0, *) {
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationItem.largeTitleDisplayMode = .never
-      }
+      tableView.separatorStyle = .none
+      extendedLayoutIncludesOpaqueBars = true
     }
   
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
+      
         return 1
     }
   
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
+      
         return 2
     }
 
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    
-    print("appear")
-    tableView.reloadData()
-    
-  }
-  
+ 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       
       let identifier = "cell"
       
       let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
       
+      cell.accessoryType = .disclosureIndicator
+      cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
       
       if indexPath.row == 0 {
         let cachedSize = SDImageCache.shared().getSize()
@@ -66,7 +62,7 @@ class StorageTableViewController: UITableViewController {
         
         print(cachedSize, cachedSizeInMegabyes)
         
-        cell.accessoryType = .disclosureIndicator
+       
         
         if cachedSize > 0 {
           
@@ -83,7 +79,7 @@ class StorageTableViewController: UITableViewController {
       }
       
       if indexPath.row == 1 {
-       cell.textLabel?.text = "Clear app's Documents and Data"
+       cell.textLabel?.text = "Clear documents and data"
       }
   
         return cell
@@ -92,7 +88,7 @@ class StorageTableViewController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if indexPath.row == 0 {
-      let oversizeAlert = UIAlertController(title: "Are you shure?", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
+      let oversizeAlert = UIAlertController(title: "", message: "Are you shure?", preferredStyle: UIAlertControllerStyle.actionSheet)
       
       let cachedSize = SDImageCache.shared().getSize()
       
@@ -115,7 +111,7 @@ class StorageTableViewController: UITableViewController {
     }
     
     if indexPath.row == 1 {
-       let alert = UIAlertController(title: "Ary you shure?", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
+       let alert = UIAlertController(title: "", message: "Are you shure?", preferredStyle: UIAlertControllerStyle.actionSheet)
       let okAction = UIAlertAction(title: "Confirm", style: .default) { (action) in
    
         FileManager.default.clearTemp()
@@ -134,6 +130,9 @@ class StorageTableViewController: UITableViewController {
     
      }
   
+  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 55
+  }
   
   override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     return 65

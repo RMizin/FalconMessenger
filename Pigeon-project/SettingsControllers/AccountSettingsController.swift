@@ -16,13 +16,13 @@ class AccountSettingsController: UIViewController {
   
   let accountSettingsCellId = "userProfileCell"
 
-  var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and sounds", controller: SettingsController() as Any ),
-                      ( icon: UIImage(named: "ChangeNumber") , title: "Change number", controller: SettingsController() as Any)]
+  var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and sounds" ),
+                      ( icon: UIImage(named: "ChangeNumber") , title: "Change number")]
   
   
   var secondSection = [/* ( icon: UIImage(named: "language") , title: "Язык", controller: nil), */
-    ( icon: UIImage(named: "Storage") , title: "Data and storage", controller: StorageTableViewController()),
-    ( icon: UIImage(named: "Logout") , title: "Log out", controller: nil)]
+    ( icon: UIImage(named: "Storage") , title: "Data and storage"),
+    ( icon: UIImage(named: "Logout") , title: "Log out")]
   
   
   override func viewDidLoad() {
@@ -74,16 +74,11 @@ class AccountSettingsController: UIViewController {
     let destination = OnboardingController()
     
     let newNavigationController = UINavigationController(rootViewController: destination)
-    let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
-    
-    newNavigationController.navigationBar.backgroundColor = .white
-    statusBar.backgroundColor = UIColor.white
-    
     newNavigationController.navigationBar.shadowImage = UIImage()
     newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
     
     newNavigationController.navigationBar.isTranslucent = false
-    newNavigationController.modalTransitionStyle = .coverVertical
+    newNavigationController.modalTransitionStyle = .crossDissolve
     
     self.present(newNavigationController, animated: true, completion: nil)
     
@@ -124,23 +119,28 @@ extension AccountSettingsController: UITableViewDataSource {
     
     if indexPath.section == 0 {
       
-      let destination = firstSection[indexPath.row].controller
-      
-      self.navigationController?.pushViewController(destination as! UIViewController, animated: true)
+      if indexPath.row == 0 {
+        
+        let destination = NotificationsAndSoundsTableViewController()
+        destination.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(destination  , animated: true)
+      }
     }
+    
     
     if indexPath.section == 1 {
       
-      let destination = secondSection[indexPath.row].controller
-      
-      if destination != nil {
-        destination?.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination!  , animated: true)
+      if indexPath.row == 0 {
+        
+         let destination = StorageTableViewController()
+         destination.hidesBottomBarWhenPushed = true
+         self.navigationController?.pushViewController(destination  , animated: true)
       }
       
+      
       if indexPath.row == secondSection.count - 1 {
-        logoutButtonTapped()
         
+        logoutButtonTapped()
       }
     }
     
@@ -150,6 +150,11 @@ extension AccountSettingsController: UITableViewDataSource {
   
   func numberOfSections(in tableView: UITableView) -> Int {
     return 2
+  }
+  
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 55
   }
   
   
