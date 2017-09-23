@@ -50,7 +50,6 @@ class ContactsController: UITableViewController {
       searchBar.searchBarStyle = .minimal
       searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
       tableView.tableHeaderView = searchBar
-      
     }
   
 
@@ -338,7 +337,6 @@ class ContactsController: UITableViewController {
           cell.subtitle.text = ""
         }
       
-      
         if let url = filteredUsers[indexPath.row].thumbnailPhotoURL {          
           cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
             if image != nil {
@@ -370,12 +368,11 @@ class ContactsController: UITableViewController {
     return nil
   }
   
+  
     var chatLogController:ChatLogController? = nil
     var autoSizingCollectionViewFlowLayout:AutoSizingCollectionViewFlowLayout? = nil
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-      
-      
       
       if indexPath.section == 0 {
         
@@ -385,7 +382,6 @@ class ContactsController: UITableViewController {
         chatLogController?.delegate = self
         chatLogController?.hidesBottomBarWhenPushed = true
         chatLogController?.user = filteredUsers[indexPath.row]
-      
       }
     
       if indexPath.section == 1 {

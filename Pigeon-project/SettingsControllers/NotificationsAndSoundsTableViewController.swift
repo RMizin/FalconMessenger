@@ -10,18 +10,47 @@ import UIKit
 
 class NotificationsAndSoundsTableViewController: UITableViewController {
   
-   var accessorySwich = UISwitch()
-
+   let accessorySwich = UISwitch()
+  
+  
     override func viewDidLoad() {
         super.viewDidLoad()
-      title = "Notifications"
       
+      configureController()
+      configureUISwith()
+    }
+  
+  
+    fileprivate func configureController() {
+     
       tableView = UITableView(frame: self.tableView.frame, style: .grouped)
       tableView.separatorStyle = .none
+      
+      title = "Notifications"
       extendedLayoutIncludesOpaqueBars = true
       view.backgroundColor = .white
       navigationController?.navigationBar.backgroundColor = .white
     }
+  
+  
+    fileprivate func configureUISwith () {
+      
+      accessorySwich.addTarget(self, action: #selector(switchStateChanged), for: .valueChanged)
+      accessorySwich.setOn(UserDefaults.standard.bool(forKey: "In-AppSounds"), animated: false)
+    }
+  
+  
+    @objc func switchStateChanged() {
+     
+      if accessorySwich.isOn {
+        UserDefaults.standard.set(true, forKey: "In-AppSounds")
+      } else {
+        UserDefaults.standard.set(false, forKey: "In-AppSounds")
+      }
+      
+      UserDefaults.standard.synchronize()
+    }
+  
   
     deinit {
       print("Notifications And Sounds DID DEINIT")
@@ -36,26 +65,24 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
         return 1
     }
 
-  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    let identifier = "cell"
+      let identifier = "cell"
     
-    let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
+      let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
     
-    cell.accessoryView = accessorySwich
-    cell.textLabel?.text = "In-App Sounds"
-    cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
+      cell.accessoryView = accessorySwich
+      cell.textLabel?.text = "In-App Sounds"
+      cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
     
-    return cell
-  }
+      return cell
+    }
   
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 55
-  }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+      return 55
+    }
   
-  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return 65
-  }
-  
-  
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+      return 65
+    }
 }

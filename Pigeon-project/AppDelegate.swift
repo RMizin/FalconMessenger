@@ -67,6 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      presentController(with: mainController)
     }
     
+    setDeaultsForSettings()
+    
     return true
   }
   
@@ -141,8 +143,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
       } else {
         print("NOPE")
-    
-         SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
+        if UserDefaults.standard.bool(forKey: "In-AppSounds")  {
+          SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
+        }
       }
     }
   }
@@ -162,6 +165,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
         let token = Messaging.messaging().fcmToken
         print("FCM token: \(token ?? "")")
+  }
+  
+  func setDeaultsForSettings() {
+    if UserDefaults.standard.object(forKey: "In-AppSounds") == nil {
+      UserDefaults.standard.set(true, forKey: "In-AppSounds")
+    }
   }
   
   

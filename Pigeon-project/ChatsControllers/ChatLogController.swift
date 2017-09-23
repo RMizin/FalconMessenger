@@ -104,7 +104,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     userMessagesLoadingReference?.observeSingleEvent(of: .value, with: { (snapshot) in
       
     if snapshot.exists() {
-  
+      
       self.userMessagesLoadingReference?.observe( .childAdded, with: { (snapshot) in
         
         self.messagesIds.append(snapshot.key)
@@ -119,7 +119,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           }
           
           dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
-          
           
           if self.isInitialLoad {
             
@@ -137,7 +136,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 
                 return message1.timestamp!.int32Value < message2.timestamp!.int32Value
               })
-              
               
               self.delegate?.messagesLoader(didFinishLoadingWith: self.appendingMessages)
               
@@ -157,11 +155,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             if Message(dictionary: dictionary).fromId == uid || Message(dictionary: dictionary).fromId == Message(dictionary:dictionary).toId { /* outbox */
               
               self.updateMessageStatus(messageRef: self.messagesLoadingReference)
-              
               self.updateMessageStatusUI(dictionary: dictionary)
-            
-              SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
-             
+              
+              if UserDefaults.standard.bool(forKey: "In-AppSounds") {
+                SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
+              }
+                
               return
             }
           
@@ -414,23 +413,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           return
         }
         
-        
         cell.typingIndicator.animatedImage = FLAnimatedImage(animatedGIFData: gifData as Data)
-    
-       // let isIndexPathValid = self.indexPathIsValid(indexPath: indexPath as NSIndexPath)
-        
-//        if !self.isScrollViewAtTheBottom {
-//          return
-//        }
-        
-        //  DispatchQueue.main.async {
-         //   self.collectionView?.scrollToItem(at: indexPath , at: .bottom, animated: true)
-         // }
-          
-       // } else {
-          
-         // return
-       // }
       })
       
     } else {
@@ -452,17 +435,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }, completion: nil)
     }
   }
-  
-  
-//  func indexPathIsValid(indexPath: NSIndexPath) -> Bool {
-//    if indexPath.section >= self.numberOfSections(in: collectionView!) {
-//      return false
-//    }
-//    if indexPath.row >= collectionView!.numberOfItems(inSection: indexPath.section) {
-//      return false
-//    }
-//    return true
-//  }
   
 
   fileprivate func updateMessageStatus(messageRef: DatabaseReference) {
@@ -543,7 +515,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       userStatusReference.removeAllObservers()
     }
     
-    if self.mediaPickerController != nil && self.mediaPickerController.customMediaPickerView != nil  {
+    if self.mediaPickerController != nil && self.mediaPickerController.customMediaPickerView != nil {
       
       if self.mediaPickerController.container != nil && self.mediaPickerController.container.isDescendant( of: self.mediaPickerController.view) {
         
@@ -554,7 +526,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       self.mediaPickerController.customMediaPickerView.removeFromParentViewController()
       self.mediaPickerController.customMediaPickerView = nil
     }
-   
       
     isTyping = false
   }
@@ -565,7 +536,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let pSetY = CGFloat(64)
     messageSendingProgressBar.frame = CGRect(x: 0, y: pSetY, width: deviceScreen.width, height: 5)
     self.view.addSubview(messageSendingProgressBar)
-    //self.view.bringSubview(toFront: messageSendingProgressBar)
   }
   
 

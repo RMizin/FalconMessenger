@@ -137,7 +137,6 @@ extension AccountSettingsController: UITableViewDataSource {
          self.navigationController?.pushViewController(destination  , animated: true)
       }
       
-      
       if indexPath.row == secondSection.count - 1 {
         
         logoutButtonTapped()
