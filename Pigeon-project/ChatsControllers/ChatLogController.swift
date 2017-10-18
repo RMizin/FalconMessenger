@@ -341,7 +341,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       let typingData: NSDictionary = [typingIndicatorStateDatabaseKeyID : newValue]
       
-      sendTypingStatus(data: typingData)
+      if localTyping {
+        sendTypingStatus(data: typingData)
+        
+      } else {
+        
+        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+          return
+        }
+        
+        let userIsTypingRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorDatabaseID)
+        userIsTypingRef.removeValue()
+      }
     }
   }
   
@@ -1137,6 +1148,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       recipientUserMessagesRef.updateChildValues([messageId: 1])
       
       self.incrementBadgeForReciever()
+      self.setupMetadataForSender()
     }
   }
   
@@ -1255,6 +1267,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       recipientUserMessagesRef.updateChildValues([messageId: 1])
       
       self.incrementBadgeForReciever()
+      self.setupMetadataForSender()
     }
   }
   
@@ -1278,6 +1291,37 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
   }
   
+  
+  func setupMetadataForSender() {
+    
+    guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
+      return
+    }
+    
+    var ref = Database.database().reference().child("user-messages").child(fromId).child(toId)
+    ref.observeSingleEvent(of: .value, with: { (snapshot) in
+      
+      
+      if snapshot.hasChild(messageMetaDataFirebaseFolder) {
+        
+        print("SENDER true rooms exist")
+       
+        return
+        
+      } else {
+        
+        print("SENDER false room doesn't exist")
+        
+        ref = ref.child(messageMetaDataFirebaseFolder)
+        ref.updateChildValues(["badge": 0], withCompletionBlock: { (error, reference) in
+          
+          if error != nil {
+            return
+          }
+        })
+      }
+    })
+  }
   
   func incrementBadgeForReciever() {
     

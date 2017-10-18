@@ -86,8 +86,7 @@ class EnterPhoneNumberController: UIViewController {
     
     let phoneNumberForVerification = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
     
-    PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification) { (verificationID, error) in
-      
+    PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
       if let error = error {
         print(error.localizedDescription)
         return
@@ -98,7 +97,6 @@ class EnterPhoneNumberController: UIViewController {
       UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
     }
   }
-  
 }
 
 

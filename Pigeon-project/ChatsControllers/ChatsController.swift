@@ -45,11 +45,11 @@ class ChatsController: UITableViewController {
   
   weak var delegate: ManageAppearance?
   
-  var messagesDictionary = [String: (Message, User, ChatMetaData)]()
+  var messagesDictionary = [String: (Message, User, ChatMetaData?)]()
   
   var userIDs = [String]()
   
-  var finalUserCellData = Array<(Message, User, ChatMetaData)>()
+  var finalUserCellData = Array<(Message, User, ChatMetaData?)>()
   
   fileprivate var connectedRef: DatabaseReference!
   fileprivate var currentUserConversationsReference: DatabaseReference!
@@ -119,7 +119,7 @@ class ChatsController: UITableViewController {
     navigationItem.leftBarButtonItem = editButtonItem
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
-    tableView.separatorStyle = . none
+    tableView.separatorStyle = .none
   }
 
   
@@ -188,7 +188,7 @@ class ChatsController: UITableViewController {
       
       if meta.0.fromId != uid {
         
-        badge += meta.2.badge!
+        badge += meta.2?.badge ?? 0
         
         if badge <= 0 {
           tabItem.badgeValue = nil
@@ -317,22 +317,43 @@ class ChatsController: UITableViewController {
     guard let uid = Auth.auth().currentUser?.uid  else {
       return
     }
+    
+    if currentReachabilityStatus == .notReachable {
+      return
+    }
+    
+    if (editingStyle == UITableViewCellEditingStyle.delete) {
       
       let message = self.finalUserCellData[indexPath.row]
       
       if let chatPartnerId = message.0.chatPartnerId() {
-        Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(userMessagesFirebaseFolder).removeValue(completionBlock: { (error, ref) in
+        
+        self.tableView.beginUpdates()
+        
+        self.messagesDictionary.removeValue(forKey: chatPartnerId)
+        self.finalUserCellData = Array(self.messagesDictionary.values)
+        
+        if self.userIDs.contains(chatPartnerId) {
+          self.userIDs.remove(at: self.userIDs.index(of: chatPartnerId)!)
+        }
+          self.tableView.deleteRows(at: [indexPath], with: .left)
+        
+        self.tableView.endUpdates()
+        
+        Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue(completionBlock: { (error, ref) in
           
           if error != nil {
             print("Failed to delete message:", error as Any)
             return
           }
+          DispatchQueue.main.async {
+             self.convigureTabBarBadge()
+          }
           
-          self.messagesDictionary.removeValue(forKey: chatPartnerId)
-          self.handleReloadTable()
-          
+
         })
       }
+    }
   }
   
  
@@ -348,13 +369,13 @@ class ChatsController: UITableViewController {
 
   
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userIDs.count
+        return messagesDictionary.count
     }
 
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
-
+    //  print(finalUserCellData[indexPath.row], indexPath.row)
       cell.nameLabel.text = finalUserCellData[indexPath.row].1.name
       if (finalUserCellData[indexPath.row].0.imageUrl != nil || finalUserCellData[indexPath.row].0.localImage != nil) && finalUserCellData[indexPath.row].0.videoUrl == nil  {
         cell.messageLabel.text = "Attachment: Image"
@@ -390,7 +411,7 @@ class ChatsController: UITableViewController {
         if !seen && finalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
           
           cell.newMessageIndicator.isHidden = false
-          cell.badgeLabel.text = finalUserCellData[indexPath.row].2.badge?.toString()
+          cell.badgeLabel.text = finalUserCellData[indexPath.row].2?.badge?.toString()
           
           if Int(cell.badgeLabel.text!)! > 0 {
             cell.badgeLabel.isHidden = false
@@ -404,14 +425,14 @@ class ChatsController: UITableViewController {
           
           cell.newMessageIndicator.isHidden = true
           cell.badgeLabel.isHidden = true
-          cell.badgeLabel.text = finalUserCellData[indexPath.row].2.badge?.toString()
+          cell.badgeLabel.text = finalUserCellData[indexPath.row].2?.badge?.toString()
         }
         
       } else {
         
          cell.newMessageIndicator.isHidden = true
          cell.badgeLabel.isHidden = true
-         cell.badgeLabel.text = finalUserCellData[indexPath.row].2.badge?.toString()
+        cell.badgeLabel.text = finalUserCellData[indexPath.row].2?.badge?.toString()
       }
     
         return cell
@@ -440,12 +461,13 @@ class ChatsController: UITableViewController {
     
     finalUserCellData = Array(self.messagesDictionary.values)
     
-    finalUserCellData.sort { (dic1: (Message, User, ChatMetaData), dic2: (Message, User, ChatMetaData)) -> Bool in
+    finalUserCellData.sort { (dic1: (Message, User, ChatMetaData?), dic2: (Message, User, ChatMetaData?)) -> Bool in
       return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
     }
+     self.convigureTabBarBadge()
     
     DispatchQueue.main.async(execute: {
-          self.convigureTabBarBadge()
+      
           self.tableView.reloadData()
     })
     
@@ -454,7 +476,26 @@ class ChatsController: UITableViewController {
        appIsLoaded = true
     }
   }
+  
+  func reloadTableAfterDeletion() {
+    
+    
+    
+   
+//
+//    self.tableView.deleteRows(at: <#T##[IndexPath]#>, with: <#T##UITableViewRowAnimation#>)
+    
+    self.convigureTabBarBadge()
+    
+    DispatchQueue.main.async(execute: {
+      
+      self.tableView.reloadData()
+    })
+  }
+  
 }
+
+
 
 
 extension ChatsController: MessagesLoaderDelegate {

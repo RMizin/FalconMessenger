@@ -40,22 +40,20 @@ class EnterVerificationCodeController: UIViewController {
     
     let phoneNumberForVerification = enterVerificationContainerView.titleNumber.text!
     
-    PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification) { (verificationID, error) in
-    
+    PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
       if let error = error {
         print(error.localizedDescription)
         ARSLineProgress.showFail()
         return
       }
-    
+      
       print("verification sent")
       self.enterVerificationContainerView.resend.isEnabled = false
-          
+      
       UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
       self.enterVerificationContainerView.runTimer()
     }
   }
- 
   
 //  @objc func rightBarButtonDidTap () { /* DEBUG VERSION */
 //    print("tapped")

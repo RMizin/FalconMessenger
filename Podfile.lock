@@ -1,74 +1,73 @@
 PODS:
-  - Firebase/Auth (4.1.1):
+  - Firebase/Auth (4.4.0):
     - Firebase/Core
-    - FirebaseAuth (= 4.1.1)
-  - Firebase/Core (4.1.1):
-    - FirebaseAnalytics (= 4.0.3)
-    - FirebaseCore (= 4.0.6)
-  - Firebase/Database (4.1.1):
+    - FirebaseAuth (= 4.3.0)
+  - Firebase/Core (4.4.0):
+    - FirebaseAnalytics (= 4.0.4)
+    - FirebaseCore (= 4.0.9)
+  - Firebase/Database (4.4.0):
     - Firebase/Core
-    - FirebaseDatabase (= 4.0.2)
-  - Firebase/Messaging (4.1.1):
+    - FirebaseDatabase (= 4.1.1)
+  - Firebase/Messaging (4.4.0):
     - Firebase/Core
-    - FirebaseMessaging (= 2.0.2)
-  - Firebase/Storage (4.1.1):
+    - FirebaseMessaging (= 2.0.5)
+  - Firebase/Storage (4.4.0):
     - Firebase/Core
-    - FirebaseStorage (= 2.0.1)
-  - FirebaseAnalytics (4.0.3):
+    - FirebaseStorage (= 2.0.2)
+  - FirebaseAnalytics (4.0.4):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.1.1):
+  - FirebaseAuth (4.3.0):
     - FirebaseAnalytics (~> 4.0)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.6):
+  - FirebaseCore (4.0.9):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseDatabase (4.0.2):
+  - FirebaseDatabase (4.1.1):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
     - leveldb-library (~> 1.18)
-  - FirebaseInstanceID (2.0.2):
-    - FirebaseCore (~> 4.0)
-  - FirebaseMessaging (2.0.2):
+  - FirebaseInstanceID (2.0.5)
+  - FirebaseMessaging (2.0.5):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
     - Protobuf (~> 3.1)
-  - FirebaseStorage (2.0.1):
+  - FirebaseStorage (2.0.2):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
     - GTMSessionFetcher/Core (~> 1.1)
   - FLAnimatedImage (1.0.12)
-  - GoogleToolboxForMac/DebugUtils (2.1.1):
-    - GoogleToolboxForMac/Defines (= 2.1.1)
-  - GoogleToolboxForMac/Defines (2.1.1)
-  - GoogleToolboxForMac/Logger (2.1.1):
-    - GoogleToolboxForMac/Defines (= 2.1.1)
-  - GoogleToolboxForMac/NSData+zlib (2.1.1):
-    - GoogleToolboxForMac/Defines (= 2.1.1)
-  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.1):
-    - GoogleToolboxForMac/DebugUtils (= 2.1.1)
-    - GoogleToolboxForMac/Defines (= 2.1.1)
-    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)
-  - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
-  - GTMSessionFetcher/Core (1.1.11)
+  - GoogleToolboxForMac/DebugUtils (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/Defines (2.1.3)
+  - GoogleToolboxForMac/Logger (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/NSData+zlib (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3):
+    - GoogleToolboxForMac/DebugUtils (= 2.1.3)
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
+  - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
+  - GTMSessionFetcher/Core (1.1.12)
   - leveldb-library (1.18.3)
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - NYTPhotoViewer (1.1.0):
-    - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
-    - NYTPhotoViewer/Core (= 1.1.0)
-  - NYTPhotoViewer/AnimatedGifSupport (1.1.0):
-    - FLAnimatedImage (~> 1.0.8)
+  - NYTPhotoViewer (1.2.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 1.2.0)
+    - NYTPhotoViewer/Core (= 1.2.0)
+  - NYTPhotoViewer/AnimatedGifSupport (1.2.0):
+    - FLAnimatedImage (~> 1.0.12)
     - NYTPhotoViewer/Core
-  - NYTPhotoViewer/Core (1.1.0)
+  - NYTPhotoViewer/Core (1.2.0)
   - PhoneNumberKit (2.0.0):
     - PhoneNumberKit/PhoneNumberKitCore (= 2.0.0)
     - PhoneNumberKit/UIKit (= 2.0.0)
@@ -76,9 +75,9 @@ PODS:
   - PhoneNumberKit/UIKit (2.0.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.4.0)
-  - SDWebImage (4.1.0):
-    - SDWebImage/Core (= 4.1.0)
-  - SDWebImage/Core (4.1.0)
+  - SDWebImage (4.1.2):
+    - SDWebImage/Core (= 4.1.2)
+  - SDWebImage/Core (4.1.2)
 
 DEPENDENCIES:
   - Firebase/Auth
@@ -86,29 +85,29 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Messaging
   - Firebase/Storage
-  - NYTPhotoViewer (~> 1.1.0)
+  - NYTPhotoViewer
   - PhoneNumberKit
   - SDWebImage
 
 SPEC CHECKSUMS:
-  Firebase: 052c0de688fc87b414996eea13e223dd9fee3fa2
-  FirebaseAnalytics: 76f754d37ca5b04f36856729b6af3ca0152d1069
-  FirebaseAuth: f8b07aa83de60d606b4eadd81484b3ac2097ea3e
-  FirebaseCore: 28def3c643989c97ea5a69ea5000f5fa9902b9fd
-  FirebaseDatabase: 4d1a10639a42cae26e094296951b53c689e5e191
-  FirebaseInstanceID: c4c7fca62c7b7330caee5da04f19a37ea37bb1c1
-  FirebaseMessaging: 85af6c27188538b3a6f7dfd0b3b0596358cb0c39
-  FirebaseStorage: 661fc1f8d4131891d256b62e82a45ace8b3f0c3b
+  Firebase: 3e92884a63e8f76d107c43a67d2ab9071e1eda10
+  FirebaseAnalytics: 722b53c7b32bfc7806b06e0093a2f5180d4f2c5a
+  FirebaseAuth: e0087d479709b20b9613b804704a928d6eafb052
+  FirebaseCore: ebe73f64302705e693b1de9919a76edbdd17a19d
+  FirebaseDatabase: 2e6e8e110b93b9a6e7aac71774c769a363035cb1
+  FirebaseInstanceID: f2b688c66b972f30d7fa9f5f9f91455454a03b47
+  FirebaseMessaging: e25dc87045e76dfe9e920a5741dc3fe7e3ef2268
+  FirebaseStorage: 0cca42d9b889a0227c3a50121f45a4469fc9eb27
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
-  GTMSessionFetcher: 5ad62e8200fa00ed011fe5e08d27fef72c5b1429
+  GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
+  GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
   leveldb-library: 10fb39c39e243db4af1828441162405bbcec1404
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
+  NYTPhotoViewer: 323217e4590a1586eb3c9674b3fefb0fb8b57896
   PhoneNumberKit: 073b3cef30c2a64ddcd623ea5953bc84bb5b3fc4
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
-  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
+  SDWebImage: cb6f9f266a9977741efcbc21e618e8be3734c774
 
-PODFILE CHECKSUM: 200c46bc8569703f7e2e7f021d620ee458f9644b
+PODFILE CHECKSUM: 94d73f638ca7995b0d48508b4e9438e8baf43524
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.3.1

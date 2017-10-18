@@ -12,10 +12,10 @@ class ChatMetaData:  NSObject  {
   
   var badge: Int?
   
-  init(dictionary: [String: Int]) {
+  init(dictionary: [String: Int]?) {
     super.init()
     
-    badge = dictionary["badge"] //as? Int
+    badge = dictionary?["badge"] //as? Int
     
   }
 }
