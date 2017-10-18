@@ -49,7 +49,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var blackBackgroundView:ImageViewBackgroundView! = nil
   var startingImageView: UIImageView?
   var zoomingImageView: UIImageView!
-  //let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
   
   var userMessagesLoadingReference: DatabaseQuery!
   
@@ -588,12 +587,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       if uid == toId {
          self.navigationItem.setTitle(title: self.user!.name!, subtitle: "You")
+       
         return
       }
       
       if snapshot.exists() {
         if snapshot.value as! String == "Online" {
           self.navigationItem.setTitle(title: self.user!.name!, subtitle: "Online")
+         
         } else {
            let date = NSDate(timeIntervalSince1970:  (snapshot.value as! String).doubleValue )
            self.navigationItem.setTitle(title: self.user!.name!, subtitle: ("Last seen " + timeAgoSinceDate(date: date, timeinterval: (snapshot.value as! String).doubleValue, numericDates: false)))
@@ -607,11 +608,22 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let infoButton = UIButton(type: .infoLight)
     
-   // infoButton.addTarget(self, action: #selector(getInfoAction), for: .touchUpInside)
+    infoButton.addTarget(self, action: #selector(getInfoAction), for: .touchUpInside)
     
     let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 
     navigationItem.rightBarButtonItem = infoBarButtonItem
+  }
+  
+  @objc func getInfoAction() {
+    
+    let destination = UserInfoTableViewController()
+    destination.contactName = user!.name!
+    destination.contactPhoneNumbers = [user!.phoneNumber!]
+    destination.contactPhoto = NSURL(string: user!.photoURL!) ?? nil
+    destination.user = user
+    
+    self.navigationController?.pushViewController(destination, animated: true)
   }
   
   

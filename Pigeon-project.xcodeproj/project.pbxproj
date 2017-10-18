@@ -44,6 +44,9 @@
 		4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */; };
 		4B56B3651F4435EF008F4F27 /* ImageViewBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56B3641F4435EF008F4F27 /* ImageViewBackgroundView.swift */; };
 		4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */; };
+		4B63646B1F977AAC00A5D3BF /* UserInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */; };
+		4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */; };
+		4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */; };
 		4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */; };
 		4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */; };
 		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
@@ -210,6 +213,9 @@
 		4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B56B3641F4435EF008F4F27 /* ImageViewBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageViewBackgroundView.swift; path = Support/ImageViewOpener/ImageViewBackgroundView.swift; sourceTree = "<group>"; };
 		4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+MediaPickerHandlers.swift"; path = "ChatsControllers/ChatLogController+MediaPickerHandlers.swift"; sourceTree = "<group>"; };
+		4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoTableViewController.swift; path = ChatsControllers/UserInfoTableViewController.swift; sourceTree = "<group>"; };
+		4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserinfoHeaderTableViewCell.swift; path = ChatsControllers/UserinfoHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UserInfoTableViewController+handlers.swift"; path = "ChatsControllers/UserInfoTableViewController+handlers.swift"; sourceTree = "<group>"; };
 		4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMessageCell.swift; path = ChatsControllers/BaseMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
@@ -535,6 +541,9 @@
 		4B6364691F97441300A5D3BF /* UserInfoViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */,
+				4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */,
+				4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */,
 			);
 			name = UserInfoViewControllers;
 			sourceTree = "<group>";
@@ -1039,6 +1048,7 @@
 				4BED6EB71F476A3A004EF2E0 /* UIImageExtensions.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
 				4BE571581F4D87A4009D9AB4 /* PhotoEditor+Controls.swift in Sources */,
+				4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
 				4BE571501F4D87A4009D9AB4 /* ColorCollectionViewCell.swift in Sources */,
 				4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */,
@@ -1054,6 +1064,7 @@
 				4B56B3651F4435EF008F4F27 /* ImageViewBackgroundView.swift in Sources */,
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
 				4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */,
+				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
 				4BE571611F4D87A4009D9AB4 /* ResizeControl.swift in Sources */,
 				4BED6EB31F476A2F004EF2E0 /* TransitionController.swift in Sources */,
@@ -1110,6 +1121,7 @@
 				4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */,
 				4BED6EB61F476A3A004EF2E0 /* UIEdgeInsetsExtensions.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
+				4B63646B1F977AAC00A5D3BF /* UserInfoTableViewController.swift in Sources */,
 				4B2143081F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift in Sources */,
 				4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */,
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,

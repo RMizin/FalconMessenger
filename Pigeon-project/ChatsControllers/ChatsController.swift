@@ -192,8 +192,11 @@ class ChatsController: UITableViewController {
         
         if badge <= 0 {
           tabItem.badgeValue = nil
+           UIApplication.shared.applicationIconBadgeNumber = 0
         } else {
           tabItem.badgeValue = badge.toString()
+          
+          UIApplication.shared.applicationIconBadgeNumber = badge
         }
       }
     }
@@ -349,8 +352,6 @@ class ChatsController: UITableViewController {
           DispatchQueue.main.async {
              self.convigureTabBarBadge()
           }
-          
-
         })
       }
     }
@@ -375,7 +376,7 @@ class ChatsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
-    //  print(finalUserCellData[indexPath.row], indexPath.row)
+  
       cell.nameLabel.text = finalUserCellData[indexPath.row].1.name
       if (finalUserCellData[indexPath.row].0.imageUrl != nil || finalUserCellData[indexPath.row].0.localImage != nil) && finalUserCellData[indexPath.row].0.videoUrl == nil  {
         cell.messageLabel.text = "Attachment: Image"
@@ -476,23 +477,6 @@ class ChatsController: UITableViewController {
        appIsLoaded = true
     }
   }
-  
-  func reloadTableAfterDeletion() {
-    
-    
-    
-   
-//
-//    self.tableView.deleteRows(at: <#T##[IndexPath]#>, with: <#T##UITableViewRowAnimation#>)
-    
-    self.convigureTabBarBadge()
-    
-    DispatchQueue.main.async(execute: {
-      
-      self.tableView.reloadData()
-    })
-  }
-  
 }
 
 
@@ -522,6 +506,7 @@ extension ChatsController: MessagesLoaderDelegate {
     self.chatLogController?.startCollectionViewAtBottom()
   
     if let destination = self.chatLogController {
+      
       navigationController?.pushViewController( destination, animated: true)
       self.chatLogController = nil
       self.autoSizingCollectionViewFlowLayout = nil
