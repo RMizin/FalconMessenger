@@ -131,8 +131,3 @@ func setUserNotificationToken(token: String) {
  
     userReference.updateChildValues([token : true])
 }
-
-
-
-
-
