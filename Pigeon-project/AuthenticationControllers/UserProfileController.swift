@@ -81,7 +81,7 @@ extension UserProfileController {  /* only during authentication */
   
   @objc func rightBarButtonDidTap () {
     
-    if userProfileContainerView.name.text?.characters.count == 0 ||
+    if userProfileContainerView.name.text?.count == 0 ||
        userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
       userProfileContainerView.name.shake()
     } else {

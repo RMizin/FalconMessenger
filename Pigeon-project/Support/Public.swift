@@ -310,20 +310,6 @@ extension UIScrollView {
     let topOffset = CGPoint(x: 0, y: -contentInset.top)
     setContentOffset(topOffset, animated: animated)
   }
-  
-  // Bonus: Scroll to bottom
-  func scrollToBottom() {
-    let bottomOffset = CGPoint(x: 0, y: contentSize.height - bounds.size.height + contentInset.bottom)
-    if(bottomOffset.y + 50 > 0) {
-      
-      DispatchQueue.main.async {
-        UIView.animate(withDuration: 0.15, delay: 0, options: [UIViewAnimationOptions.curveLinear, ], animations: {
-          self.contentOffset = bottomOffset
-          
-        }, completion: nil)
-      }
-    }
-  }
 }
 
 

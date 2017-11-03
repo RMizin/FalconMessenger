@@ -85,6 +85,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
+  func scrollToBottom() {
+    
+    let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+    
+    DispatchQueue.main.async {
+      self.collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
+    }
+  }
+  
+  
   var messagesIds = [String]()
   
   var appendingMessages = [Message]()
@@ -639,7 +649,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var canRefresh = true
   
-  fileprivate var isScrollViewAtTheBottom = true
+  var isScrollViewAtTheBottom = true
   
   override func scrollViewDidScroll(_ scrollView: UIScrollView) {
     

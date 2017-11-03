@@ -12,7 +12,6 @@ import UIKit
 
 class ChatInputContainerView: UIView {
   
-  
   var centeredCollectionViewFlowLayout: CenteredCollectionViewFlowLayout! = nil
   
   weak var trayDelegate: ImagePickerTrayControllerDelegate?
@@ -200,8 +199,6 @@ extension ChatInputContainerView {
       inputTextView.text = textBeforeUpdate
     }
   }
-  
- 
 }
 
 extension ChatInputContainerView: UIGestureRecognizerDelegate {
@@ -222,8 +219,10 @@ extension ChatInputContainerView: UIGestureRecognizerDelegate {
 extension ChatInputContainerView: UITextViewDelegate {
  
   func textViewDidBeginEditing(_ textView: UITextView) {
-    chatLogController?.collectionView?.scrollToBottom()
+  
+    chatLogController?.scrollToBottom()
   }
+  
   
   func textViewDidChange(_ textView: UITextView) {
     
@@ -240,14 +239,23 @@ extension ChatInputContainerView: UITextViewDelegate {
       sendButton.isEnabled = false
     }
     
-    self.invalidateIntrinsicContentSize()
-    chatLogController?.collectionView?.scrollToBottom()
   }
   
   func textViewDidEndEditing(_ textView: UITextView) {
     attachButton.isSelected = false
   }
   
+  func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    if text == "\n" {
+      print("new fucking line")
+      if chatLogController!.collectionView!.contentOffset.y >= (chatLogController!.collectionView!.contentSize.height - chatLogController!.collectionView!.frame.size.height + 250) {
+        print("at the bottom")
+        chatLogController?.scrollToBottom()
+      }
+    }
+    return true
+  }
+
 }
 
 extension UIColor {

@@ -133,7 +133,7 @@ extension SettingsViewControllersContainer { /* user name editing */
   
   @objc func nameEditingChanged() {
 
-    if userDataController.userProfileContainerView.name.text!.characters.count == 0 ||
+    if userDataController.userProfileContainerView.name.text!.count == 0 ||
        userDataController.userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
       
       doneBarButton.isEnabled = false

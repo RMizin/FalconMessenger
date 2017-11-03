@@ -421,7 +421,6 @@ class ChatsController: UITableViewController {
             cell.badgeLabel.isHidden = false
           }
           
-          
         } else {
           
           cell.newMessageIndicator.isHidden = true
@@ -433,7 +432,7 @@ class ChatsController: UITableViewController {
         
          cell.newMessageIndicator.isHidden = true
          cell.badgeLabel.isHidden = true
-        cell.badgeLabel.text = finalUserCellData[indexPath.row].2?.badge?.toString()
+         cell.badgeLabel.text = finalUserCellData[indexPath.row].2?.badge?.toString()
       }
     
         return cell
@@ -478,8 +477,6 @@ class ChatsController: UITableViewController {
     }
   }
 }
-
-
 
 
 extension ChatsController: MessagesLoaderDelegate {

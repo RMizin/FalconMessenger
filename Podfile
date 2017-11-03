@@ -15,5 +15,6 @@ pod 'Firebase/Messaging'
 pod 'SDWebImage'
 pod 'PhoneNumberKit'
 pod 'NYTPhotoViewer'
+#pod 'DTPhotoViewerController'
 
 end
