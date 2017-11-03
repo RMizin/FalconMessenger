@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 
+
 class UserProfileController: UIViewController {
   
   let userProfileContainerView = UserProfileContainerView()
@@ -16,7 +17,6 @@ class UserProfileController: UIViewController {
   var editLayer: CAShapeLayer!
   var label: UILabel!
   typealias CompletionHandler = (_ success: Bool) -> Void
-  
   
   weak var settingsContainer: SettingsViewControllersContainer?
   
@@ -83,7 +83,7 @@ extension UserProfileController {  /* only during authentication */
     
     if userProfileContainerView.name.text?.count == 0 ||
        userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
-      userProfileContainerView.name.shake()
+       userProfileContainerView.name.shake()
     } else {
       
       updateUserData()

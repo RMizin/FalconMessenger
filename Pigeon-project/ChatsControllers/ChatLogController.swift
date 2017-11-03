@@ -87,6 +87,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   func scrollToBottom() {
     
+    if self.messages.count - 1 <= 0 {
+      return
+    }
+    
     let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
     
     DispatchQueue.main.async {

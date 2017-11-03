@@ -71,7 +71,12 @@ class ChatsController: UITableViewController {
     super.viewWillAppear(animated)
     
     print("\n chatsController will appear \n")
-    self.fetchConversations()
+    
+    if Auth.auth().currentUser?.uid != nil && !areConversationsLoaded {
+      print("YES USER - FETCHING")
+      fetchConversations()
+      areConversationsLoaded = true
+    } 
   }
   
   
@@ -204,12 +209,14 @@ class ChatsController: UITableViewController {
   
   
   fileprivate var userConversations = 0
+  fileprivate var areConversationsLoaded = false
   
   func fetchConversations() {
     
     userConversations = 0
   
     guard let uid = Auth.auth().currentUser?.uid else {
+      print("NO USER - RETURNING")
       return
     }
     
