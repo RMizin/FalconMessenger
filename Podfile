@@ -3,6 +3,7 @@
 
 target 'Pigeon-project' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  platform :ios, '8.0'
   use_frameworks!
   
   # Pods for Pigeon-project
@@ -12,7 +13,7 @@ pod 'Firebase/Database'
 pod 'Firebase/Auth'
 pod 'Firebase/Storage'
 pod 'Firebase/Messaging'
-pod 'SDWebImage'
+pod 'SDWebImage', '4.0'
 pod 'PhoneNumberKit'
 pod 'NYTPhotoViewer'
 #pod 'DTPhotoViewerController'
