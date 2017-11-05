@@ -46,10 +46,12 @@ class ChatsController: UITableViewController {
   weak var delegate: ManageAppearance?
   
   var messagesDictionary = [String: (Message, User, ChatMetaData?)]()
+  var filteredMessagesDictionary = [String: (Message, User, ChatMetaData?)]()
   
   var userIDs = [String]()
   
   var finalUserCellData = Array<(Message, User, ChatMetaData?)>()
+  var filteredFinalUserCellData = Array<(Message, User, ChatMetaData?)>()
   
   fileprivate var connectedRef: DatabaseReference!
   fileprivate var currentUserConversationsReference: DatabaseReference!
@@ -57,6 +59,9 @@ class ChatsController: UITableViewController {
   fileprivate var messagesReference: DatabaseReference!
   fileprivate var metadataRef: DatabaseReference!
   fileprivate var usersRef: DatabaseReference!
+    
+  var searchBar: UISearchBar?
+  var searchChatsController:UISearchController?
 
   
   override func viewDidLoad() {
@@ -64,6 +69,7 @@ class ChatsController: UITableViewController {
     
     configureTableView()
     managePresense()
+    setupSearchController()
   }
   
   
@@ -125,6 +131,28 @@ class ChatsController: UITableViewController {
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
     tableView.separatorStyle = .none
+  }
+    
+  fileprivate func setupSearchController() {
+        
+      if #available(iOS 11.0, *) {
+            
+        searchChatsController = UISearchController(searchResultsController: nil)
+        searchChatsController?.searchResultsUpdater = self
+        searchChatsController?.obscuresBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        searchChatsController?.searchBar.delegate = self
+        navigationItem.searchController = searchChatsController
+            
+      } else {
+            
+        searchBar = UISearchBar()
+        searchBar?.delegate = self
+        searchBar?.searchBarStyle = .minimal
+        searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+        tableView.tableHeaderView = searchBar
+        tableView.contentOffset = CGPoint(x: 0.0, y: 44.0)
+      }
   }
 
   
@@ -334,14 +362,14 @@ class ChatsController: UITableViewController {
     
     if (editingStyle == UITableViewCellEditingStyle.delete) {
       
-      let message = self.finalUserCellData[indexPath.row]
+      let message = self.filteredFinalUserCellData[indexPath.row]
       
       if let chatPartnerId = message.0.chatPartnerId() {
         
         self.tableView.beginUpdates()
         
-        self.messagesDictionary.removeValue(forKey: chatPartnerId)
-        self.finalUserCellData = Array(self.messagesDictionary.values)
+        self.filteredMessagesDictionary.removeValue(forKey: chatPartnerId)
+        self.filteredFinalUserCellData = Array(self.filteredMessagesDictionary.values)
         
         if self.userIDs.contains(chatPartnerId) {
           self.userIDs.remove(at: self.userIDs.index(of: chatPartnerId)!)
@@ -377,26 +405,26 @@ class ChatsController: UITableViewController {
 
   
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messagesDictionary.count
+        return filteredMessagesDictionary.count
     }
 
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
   
-      cell.nameLabel.text = finalUserCellData[indexPath.row].1.name
-      if (finalUserCellData[indexPath.row].0.imageUrl != nil || finalUserCellData[indexPath.row].0.localImage != nil) && finalUserCellData[indexPath.row].0.videoUrl == nil  {
+      cell.nameLabel.text = filteredFinalUserCellData[indexPath.row].1.name
+      if (filteredFinalUserCellData[indexPath.row].0.imageUrl != nil || filteredFinalUserCellData[indexPath.row].0.localImage != nil) && filteredFinalUserCellData[indexPath.row].0.videoUrl == nil  {
         cell.messageLabel.text = "Attachment: Image"
-      } else if (finalUserCellData[indexPath.row].0.imageUrl != nil || finalUserCellData[indexPath.row].0.localImage != nil) && finalUserCellData[indexPath.row].0.videoUrl != nil {
+      } else if (filteredFinalUserCellData[indexPath.row].0.imageUrl != nil || filteredFinalUserCellData[indexPath.row].0.localImage != nil) && filteredFinalUserCellData[indexPath.row].0.videoUrl != nil {
         cell.messageLabel.text = "Attachment: Video"
       } else {
-         cell.messageLabel.text = finalUserCellData[indexPath.row].0.text
+         cell.messageLabel.text = filteredFinalUserCellData[indexPath.row].0.text
       }
     
-      let date = NSDate(timeIntervalSince1970:  finalUserCellData[indexPath.row].0.timestamp as! TimeInterval)
-      cell.timeLabel.text = timeAgoSinceDate(date: date, timeinterval: finalUserCellData[indexPath.row].0.timestamp!.doubleValue, numericDates: false)
+      let date = NSDate(timeIntervalSince1970:  filteredFinalUserCellData[indexPath.row].0.timestamp as! TimeInterval)
+      cell.timeLabel.text = timeAgoSinceDate(date: date, timeinterval: filteredFinalUserCellData[indexPath.row].0.timestamp!.doubleValue, numericDates: false)
     
-        if let url = self.finalUserCellData[indexPath.row].1.thumbnailPhotoURL {
+        if let url = self.filteredFinalUserCellData[indexPath.row].1.thumbnailPhotoURL {
           cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
             if image != nil {
               if (cacheType != SDImageCacheType.memory && cacheType != SDImageCacheType.disk) {
@@ -412,14 +440,14 @@ class ChatsController: UITableViewController {
         }
       
       
-      if finalUserCellData[indexPath.row].0.seen != nil {
+      if filteredFinalUserCellData[indexPath.row].0.seen != nil {
         
-        let seen = finalUserCellData[indexPath.row].0.seen!
+        let seen = filteredFinalUserCellData[indexPath.row].0.seen!
         
-        if !seen && finalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
+        if !seen && filteredFinalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
           
           cell.newMessageIndicator.isHidden = false
-          cell.badgeLabel.text = finalUserCellData[indexPath.row].2?.badge?.toString()
+          cell.badgeLabel.text = filteredFinalUserCellData[indexPath.row].2?.badge?.toString()
           
           if Int(cell.badgeLabel.text!)! > 0 {
             cell.badgeLabel.isHidden = false
@@ -432,14 +460,14 @@ class ChatsController: UITableViewController {
           
           cell.newMessageIndicator.isHidden = true
           cell.badgeLabel.isHidden = true
-          cell.badgeLabel.text = finalUserCellData[indexPath.row].2?.badge?.toString()
+          cell.badgeLabel.text = filteredFinalUserCellData[indexPath.row].2?.badge?.toString()
         }
         
       } else {
         
          cell.newMessageIndicator.isHidden = true
          cell.badgeLabel.isHidden = true
-         cell.badgeLabel.text = finalUserCellData[indexPath.row].2?.badge?.toString()
+         cell.badgeLabel.text = filteredFinalUserCellData[indexPath.row].2?.badge?.toString()
       }
     
         return cell
@@ -452,7 +480,7 @@ class ChatsController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
   
-    let user = finalUserCellData[indexPath.row].1
+    let user = filteredFinalUserCellData[indexPath.row].1
     autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
     autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
     chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
@@ -466,12 +494,16 @@ class ChatsController: UITableViewController {
   
   func handleReloadTable() {
     
-    finalUserCellData = Array(self.messagesDictionary.values)
+    filteredMessagesDictionary =  messagesDictionary
+    
+    finalUserCellData = Array(self.filteredMessagesDictionary.values)
     
     finalUserCellData.sort { (dic1: (Message, User, ChatMetaData?), dic2: (Message, User, ChatMetaData?)) -> Bool in
       return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
     }
      self.convigureTabBarBadge()
+    
+    filteredFinalUserCellData = finalUserCellData
     
     DispatchQueue.main.async(execute: {
       
@@ -516,4 +548,74 @@ extension ChatsController: MessagesLoaderDelegate {
       self.autoSizingCollectionViewFlowLayout = nil
     }
   }
+}
+
+
+extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {}
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
+        searchBar.text = nil
+        filteredMessagesDictionary = messagesDictionary
+        
+        handleReloadTable()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        filteredMessagesDictionary = searchText.isEmpty ? messagesDictionary : messagesDictionary.filter({ (key, value) -> Bool in
+            
+            return  value.1.name!.lowercased().contains(searchText.lowercased())
+        })
+        
+        handleReloadTableAfterSearch()
+    }
+    
+    func handleReloadTableAfterSearch() {
+        
+        finalUserCellData = Array(self.filteredMessagesDictionary.values)
+        
+        finalUserCellData.sort { (dic1: (Message, User, ChatMetaData?), dic2: (Message, User, ChatMetaData?)) -> Bool in
+            return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
+        }
+        self.convigureTabBarBadge()
+        
+        filteredFinalUserCellData = finalUserCellData
+        
+        DispatchQueue.main.async(execute: {
+            
+            self.tableView.reloadData()
+        })
+        
+        if !appIsLoaded {
+            self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
+            appIsLoaded = true
+        }
+    }
+}
+
+
+extension ChatsController { /* hiding keyboard */
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        if #available(iOS 11.0, *) {
+            searchChatsController?.resignFirstResponder()
+            searchChatsController?.searchBar.resignFirstResponder()
+        } else {
+            searchBar?.resignFirstResponder()
+        }
+    }
+    
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        if #available(iOS 11.0, *) {
+            searchChatsController?.searchBar.endEditing(true)
+        } else {
+            self.searchBar?.endEditing(true)
+        }
+    }
 }
