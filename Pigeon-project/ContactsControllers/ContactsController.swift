@@ -33,23 +33,52 @@ class ContactsController: UITableViewController {
   
   private let reloadAnimation = UITableViewRowAnimation.none
   
-  var searchBar = UISearchBar()
+  var searchBar: UISearchBar?
+    
+  var searchContactsController: UISearchController?
   
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
       view.backgroundColor = .white
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
-      tableView.register(ContactsTableViewCell.self, forCellReuseIdentifier: contactsCellID)
-      tableView.register(PigeonUsersTableViewCell.self, forCellReuseIdentifier: pigeonUsersCellID)
-      tableView.separatorStyle = .none
+     
+      setupTableView()
       fetchContacts()
-      tableView.prefetchDataSource = self
-      searchBar.delegate = self
-      searchBar.searchBarStyle = .minimal
-      searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-      tableView.tableHeaderView = searchBar
+      setupSearchController()
+    }
+    
+    
+    fileprivate func setupTableView() {
+        
+        tableView.register(ContactsTableViewCell.self, forCellReuseIdentifier: contactsCellID)
+        tableView.register(PigeonUsersTableViewCell.self, forCellReuseIdentifier: pigeonUsersCellID)
+        tableView.separatorStyle = .none
+        tableView.prefetchDataSource = self
+    }
+    
+    fileprivate func setupSearchController() {
+        
+        if #available(iOS 11.0, *) {
+            
+            searchContactsController = UISearchController(searchResultsController: nil)
+            searchContactsController?.searchResultsUpdater = self
+            searchContactsController?.obscuresBackgroundDuringPresentation = false
+            definesPresentationContext = true
+            searchContactsController?.searchBar.delegate = self
+            navigationItem.searchController = searchContactsController
+            
+        } else {
+            
+            searchBar = UISearchBar()
+            searchBar?.delegate = self
+            searchBar?.searchBarStyle = .minimal
+            searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+            tableView.tableHeaderView = searchBar
+            tableView.contentOffset = CGPoint(x: 0.0, y: 44.0)
+        }
     }
   
 
@@ -228,8 +257,17 @@ class ContactsController: UITableViewController {
           if self.users[index].onlineStatus == statusOnline {
             self.users = rearrange(array: self.users, fromIndex: index, toIndex: 0)
           }
+            var searchBar: UISearchBar?
+            
+            if #available(iOS 11.0, *) {
+                searchBar = self.searchContactsController?.searchBar
+            
+            } else {
+                searchBar = self.searchBar
+            }
+            
           
-          if self.searchBar.text != "" && self.filteredUsers.count != 0 {
+            if searchBar?.text != "" && self.filteredUsers.count != 0 {
             
             self.userStatusChangedDuringSearch(snap: snap)
             
@@ -407,9 +445,20 @@ extension ContactsController: UITableViewDataSourcePrefetching {
 }
 
 
-extension ContactsController: UISearchBarDelegate {
+extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {}
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+     
+        searchBar.text = nil
+        filteredUsers = users
+        
+        tableView.reloadData()
+    }
+    
   
-  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     
     filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
       return User.name!.lowercased().contains(searchText.lowercased())
@@ -426,11 +475,23 @@ extension ContactsController: UISearchBarDelegate {
 extension ContactsController { /* hiding keyboard */
   
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-    searchBar.resignFirstResponder()
+    
+    if #available(iOS 11.0, *) {
+        searchContactsController?.resignFirstResponder()
+        searchContactsController?.searchBar.resignFirstResponder()
+    } else {
+         searchBar?.resignFirstResponder()
+    }
   }
+    
   
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    self.searchBar.endEditing(true)
+    
+    if #available(iOS 11.0, *) {
+        searchContactsController?.searchBar.endEditing(true)
+    } else {
+        self.searchBar?.endEditing(true)
+    }
   }
 }
 
