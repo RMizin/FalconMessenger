@@ -96,7 +96,15 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   }
   
   func numberOfSections(in collectionView: UICollectionView) -> Int {
-    attachedImages.collectionViewLayout.invalidateLayout()
+    let status = libraryAccessChecking()
+    if !status {
+      DispatchQueue.main.async {
+         self.attachedImages.collectionViewLayout.invalidateLayout()
+      }
+    } else {
+       attachedImages.collectionViewLayout.invalidateLayout()
+    }
+   
     return 1
   }
   

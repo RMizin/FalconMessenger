@@ -632,9 +632,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   @objc func getInfoAction() {
     
     let destination = UserInfoTableViewController()
-    destination.contactName = user!.name!
-    destination.contactPhoneNumbers = [user!.phoneNumber!]
-    destination.contactPhoto = NSURL(string: user!.photoURL!) ?? nil
+    destination.contactName = user?.name ?? ""
+    destination.contactPhoneNumbers = [user?.phoneNumber ?? ""]
+    destination.contactPhoto = NSURL(string: user?.photoURL ?? "")
     destination.user = user
     
     self.navigationController?.pushViewController(destination, animated: true)

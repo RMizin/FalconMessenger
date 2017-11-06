@@ -333,6 +333,7 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
   func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage) {
     
     let data = compressImage(image: image)
+    let status = libraryAccessChecking()
     
     let mediaObject = ["object": data as AnyObject,
                        "imageSource": imageSourceCamera] as [String: AnyObject]
@@ -340,15 +341,26 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
     
     if inputContainerView!.selectedMedia.count - 1 >= 0 {
-      
-       self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+      if status {
+          self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+      } else {
+        DispatchQueue.main.async {
+           self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+        }
+      }
       
     } else {
       
       self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0) ])
     }
     
-    expandCollection()
+    if status {
+        self.expandCollection()
+    } else {
+      DispatchQueue.main.async {
+        self.expandCollection()
+      }
+    }
   }
  
   

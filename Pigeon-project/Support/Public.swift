@@ -20,6 +20,17 @@ public let messageStatusSent = "Sent"
 public let messageStatusSending = "Sending"
 public let messageStatusDelivered = "Delivered"
 
+let cameraAccessDeniedMessage = "Pigeon needs access to your camera to take photos and videos.\n\nPlease go to Settings –– Privacy –– Camera –– and set Pigeon to ON."
+let photoLibraryAccessDeniedMessage = "Pigeon needs access to your photo library to send photos and videos.\n\nPlease go to Settings –– Privacy –– Photos –– and set Pigeon to ON."
+
+let cameraAccessDeniedMessageProfilePicture = "Pigeon needs access to your camera to take photo for your profile.\n\nPlease go to Settings –– Privacy –– Camera –– and set Pigeon to ON."
+let photoLibraryAccessDeniedMessageProfilePicture = "Pigeon needs access to your photo library to select photo for your profile.\n\nPlease go to Settings –– Privacy –– Photos –– and set Pigeon to ON."
+
+let videoRecordedButLibraryUnavailableError = "To send a recorded video, it has to be saved to your photo library first. Please go to Settings –– Privacy –– Photos –– and set Pigeon to ON."
+
+let basicErrorTitleForAlert = "Error"
+let basicTitleForAccessError = "Please Allow Access"
+
 extension String {
   
   var digits: String {
@@ -109,6 +120,34 @@ extension SystemSoundID {
     }
   }
 }
+func libraryAccessChecking() -> Bool {
+  
+  let status = PHPhotoLibrary.authorizationStatus()
+  
+  switch status {
+  case .authorized:
+    return true
+    
+  case .denied, .restricted :
+    return false
+    
+  case .notDetermined:
+    return false
+  }
+}
+
+func cameraAccessChecking() -> Bool  {
+  
+  if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
+    
+    return true
+    
+  } else {
+    
+    return false
+  }
+}
+
 
 func timeAgoSinceDate(date:NSDate, timeinterval: Double, numericDates:Bool) -> String {
   let calendar = NSCalendar.current

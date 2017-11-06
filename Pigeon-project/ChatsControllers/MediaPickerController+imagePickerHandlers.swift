@@ -15,6 +15,14 @@ import AVFoundation
 
 extension MediaPickerController: UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
   
+  
+  fileprivate func basicErrorAlertWith (title:String, message: String) {
+  
+    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+    self.present(alert, animated: true, completion: nil)
+  }
+  
   func openPhotoLibrary() {
     imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
     presentImagePicker()
@@ -23,7 +31,7 @@ extension MediaPickerController: UIImagePickerControllerDelegate, UINavigationCo
   
   func openCamera() {
     
-    if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
+if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
       imagePicker.sourceType = UIImagePickerControllerSourceType.camera
       
       presentImagePicker()
@@ -78,6 +86,10 @@ extension MediaPickerController: UIImagePickerControllerDelegate, UINavigationCo
                     self.dismissImagePicker()
                   }
                 })
+              } else {
+                
+                self.customMediaPickerView.delegate?.controller?(self.customMediaPickerView, didTakeImage: originalImage)
+                self.dismissImagePicker()
               }
             })
           }
@@ -107,6 +119,12 @@ extension MediaPickerController: UIImagePickerControllerDelegate, UINavigationCo
                           self.dismissImagePicker()
                         }
                       })
+                    } else {
+                     
+                      let alertMessage = videoRecordedButLibraryUnavailableError
+                      self.dismissImagePicker()
+                      self.basicErrorAlertWith(title: basicTitleForAccessError, message: alertMessage)
+                    
                     }
                   }
           }

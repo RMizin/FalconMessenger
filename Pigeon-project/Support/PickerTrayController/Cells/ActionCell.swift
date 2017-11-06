@@ -8,11 +8,25 @@
 
 import Foundation
 import UIKit
+import AVFoundation
+import Photos
 
 let spacing = CGPoint(x: 26, y: 14)
 fileprivate let stackViewOffset: CGFloat = 6
 
 class ActionCell: UICollectionViewCell {
+  
+  weak var imagePickerTrayController:ImagePickerTrayController?
+  
+  fileprivate func basicErrorAlertWith (title:String, message: String) {
+    
+   
+    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+    imagePickerTrayController?.present(alert, animated: true, completion: nil)
+  }
+  
+  
 
     fileprivate let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -89,15 +103,34 @@ class ActionCell: UICollectionViewCell {
         chevronImageView.center = CGPoint(x: chevronCenterX, y: bounds.midY)
     }
     
-    // MARK: -
-    
+
     @objc fileprivate func callAction(sender: UIButton) {
         if let index = stackView.arrangedSubviews.index(of: sender) {
-            actions[index].call()
-        }
+          
+          if index == 0 { /* camera */
+            
+            let status = cameraAccessChecking()
+            
+            if status {
+               actions[index].call()
+            } else {
+              
+              basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage)
+            }
+          } else {
+            let status = libraryAccessChecking()
+            
+            if status {
+              actions[index].call()
+            } else {
+              
+              basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessage)
+            }
+          }
+       }
     }
-
 }
+
 
 fileprivate class ActionButton: UIButton {
     

@@ -43,6 +43,14 @@ public let ImagePickerTrayAnimationDurationUserInfoKey = "ImagePickerTrayAnimati
 fileprivate let animationDuration: TimeInterval = 0.2
 
 public class ImagePickerTrayController: UIViewController {
+  
+  fileprivate func basicErrorAlertWith (title: String, message: String) {
+    
+    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+    self.present(alert, animated: true, completion: nil)
+  }
+  
     
     fileprivate(set) lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -69,7 +77,7 @@ public class ImagePickerTrayController: UIViewController {
     
     fileprivate lazy var cameraController: UIImagePickerController = {
         let controller = UIImagePickerController()
-        controller.delegate =  self
+        controller.delegate = self
         controller.sourceType = .camera
         controller.showsCameraControls = false
         controller.allowsEditing = false
@@ -83,7 +91,8 @@ public class ImagePickerTrayController: UIViewController {
         return controller
     }()
     
-  fileprivate var imageManager:PHCachingImageManager! = PHCachingImageManager()
+  fileprivate var imageManager: PHCachingImageManager?
+  
     var assets = [PHAsset]()
     fileprivate lazy var requestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
@@ -103,12 +112,16 @@ public class ImagePickerTrayController: UIViewController {
     }
 
   deinit {
-    imageManager = nil
+    
+    if imageManager != nil {
+      imageManager = nil
+    }
+    
     cameraController.removeFromParentViewController()
     cameraController.cameraOverlayView = nil
     
     collectionView.removeFromSuperview()
-    print("\n TRAY CONTROLLER DEINIT \n")
+    print("\n TRAY CONTROLLER DID DEINIT \n")
   }
   
   public override func viewDidDisappear(_ animated: Bool) {
@@ -153,6 +166,15 @@ public class ImagePickerTrayController: UIViewController {
         self.trayHeight = 216
         
         super.init(nibName: nil, bundle: nil)
+      
+      let status = libraryAccessChecking()
+      
+      if status {
+        imageManager = PHCachingImageManager()
+      } else {
+        imageManager = nil
+      }
+      
         print("\n  TRAY INIT  \n")
         transitionController = TransitionController(trayController: self)
         modalPresentationStyle = .custom
@@ -201,7 +223,6 @@ public class ImagePickerTrayController: UIViewController {
     }
     
     // MARK: - Images
-    
    
   typealias CompletionHandler = (_ success: Bool) -> Void
   
@@ -260,7 +281,7 @@ public class ImagePickerTrayController: UIViewController {
         // Workaround because PHImageManager.requestImageForAsset doesn't work for burst images
         if asset.representsBurst {
          // DispatchQueue.main.async {
-            self.imageManager.requestImageData(for: asset, options: self.requestOptions) { data, _, _, _ in
+          self.imageManager?.requestImageData(for: asset, options: self.requestOptions) { data, _, _, _ in
               let image = data.flatMap { UIImage(data: $0) }
              // image = compressImage(image!)
               completion(image)
@@ -269,7 +290,7 @@ public class ImagePickerTrayController: UIViewController {
           
         } else {
         //  DispatchQueue.main.async {
-            self.imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: self.requestOptions) { image, _ in
+          self.imageManager?.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: self.requestOptions) { image, _ in
               completion(image)
             }
          // }
@@ -279,7 +300,7 @@ public class ImagePickerTrayController: UIViewController {
     
     fileprivate func prefetchImages(for asset: PHAsset) {
         let size = scale(imageSize: imageSize)
-        imageManager.startCachingImages(for: [asset], targetSize: size, contentMode: .aspectFill, options: requestOptions)
+      imageManager?.startCachingImages(for: [asset], targetSize: size, contentMode: .aspectFill, options: requestOptions)
     }
     
     fileprivate func scale(imageSize size: CGSize) -> CGSize {
@@ -294,10 +315,14 @@ public class ImagePickerTrayController: UIViewController {
     }
     
     @objc fileprivate func takePicture() {
+      
+      if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
         cameraController.takePicture()
+      } else {
+        self.basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage)
+      }
     }
-    
-    // MARK: -
+
     
     fileprivate func reloadActionCellDisclosureProgress() {
         if sections[0] > 0 {
@@ -335,6 +360,7 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ActionCell.self), for: indexPath) as! ActionCell
+            cell.imagePickerTrayController = self
             cell.actions = actions
             actionCell = cell
             reloadActionCellDisclosureProgress()
@@ -359,14 +385,11 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
                 self.requestImage(for: asset) { cell.imageView.image = $0 }
               }
         
-           
-            
             return cell
         default:
             fatalError("More than 3 sections is invalid.")
         }
     }
-    
 }
 
 // MARK: - UICollectionViewDelegate

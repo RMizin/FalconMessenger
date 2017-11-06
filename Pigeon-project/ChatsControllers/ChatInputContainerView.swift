@@ -107,7 +107,7 @@ class ChatInputContainerView: UIView {
   }
   
   deinit {
-    print("\nCHAT INPUT CONTAINER VIEW DE!!!! INIT\n")
+    print("\nCHAT INPUT CONTAINER VIEW DID DEINIT\n")
   }
   
   override init(frame: CGRect) {

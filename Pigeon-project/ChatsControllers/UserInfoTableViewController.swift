@@ -46,11 +46,11 @@ class UserInfoTableViewController: UITableViewController {
   
   func configureTitleViewWithOnlineStatus() {
     
-   Database.database().reference().child("users").child(user!.id!).child("OnlineStatus").observe(.value, with: { (snapshot) in
-      
-      guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else {
-        return
-      }
+    guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else {
+      return
+    }
+    
+   Database.database().reference().child("users").child(toId).child("OnlineStatus").observe(.value, with: { (snapshot) in
       
       if uid == toId {
         self.onlineStatus = "You"

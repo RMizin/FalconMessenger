@@ -79,7 +79,7 @@ class StorageTableViewController: UITableViewController {
       }
       
       if indexPath.row == 1 {
-       cell.textLabel?.text = "Clear documents and data"
+       cell.textLabel?.text = "Clear temporary docs and data"
       }
   
         return cell

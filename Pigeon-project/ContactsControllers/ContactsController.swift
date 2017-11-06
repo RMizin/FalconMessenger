@@ -48,8 +48,35 @@ class ContactsController: UITableViewController {
       setupTableView()
       fetchContacts()
       setupSearchController()
+      checkContactsAuthorizationStatus()
     }
-    
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+      checkContactsAuthorizationStatus()
+  }
+  
+  
+    fileprivate func checkContactsAuthorizationStatus() {
+      
+      let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+      let contactsAuthorizationDeniedContainer:ContactsAuthorizationDeniedContainer! = ContactsAuthorizationDeniedContainer()
+      
+      switch contactsAuthorityCheck {
+        case .denied, .notDetermined, .restricted:
+          self.view.addSubview(contactsAuthorizationDeniedContainer)
+          contactsAuthorizationDeniedContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        
+        case .authorized:
+        
+          for subview in self.view.subviews {
+            if subview is ContactsAuthorizationDeniedContainer {
+              subview.removeFromSuperview()
+            }
+        }
+      }
+    }
+      
     
     fileprivate func setupTableView() {
         
@@ -461,11 +488,16 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     
     filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
+      
       return User.name!.lowercased().contains(searchText.lowercased())
     })
-    
+  
+  
     filteredContacts = searchText.isEmpty ? contacts : contacts.filter({ (CNContact) -> Bool in
-      return CNContact.givenName.lowercased().contains(searchText.lowercased())
+      
+        let contactFullName = CNContact.givenName.lowercased() + " " + CNContact.familyName.lowercased()
+      
+        return contactFullName.lowercased().contains(searchText.lowercased())
     })
 
     tableView.reloadData()

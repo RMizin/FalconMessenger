@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import Photos
+import AVFoundation
 
 
 private let deletionErrorMessage = "There was a problem when deleting. Try again later."
@@ -17,13 +18,14 @@ private let thumbnailUploadError = "Failed to upload your image to database. Ple
 private let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
 private let noInternetError = "Internet connection is not available. Try again later"
 
+
 extension UserProfileController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   
-  fileprivate func basicErrorAlertWith (message: String) {
+  fileprivate func basicErrorAlertWith (title: String, message: String) {
     
     self.userProfileContainerView.profileImageView.hideActivityIndicator()
-    let alert = UIAlertController(title: "Error", message: message, preferredStyle: UIAlertControllerStyle.alert)
+    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
     alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
     self.present(alert, animated: true, completion: nil)
   }
@@ -220,7 +222,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
           } else {
             
             self.userProfileContainerView.profileImageView.hideActivityIndicator()
-            self.basicErrorAlertWith(message: deletionErrorMessage)
+            self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage)
           }
         
         })
@@ -239,7 +241,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
  fileprivate func deleteCurrentPhoto(completion: @escaping currentPictureDeletionCompletionHandler) {
   
     if currentReachabilityStatus == .notReachable {
-      basicErrorAlertWith(message: noInternetError)
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError)
       return
     }
   
@@ -283,7 +285,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
         completion(true)
       }
     }, withCancel: { (error) in
-      self.basicErrorAlertWith(message: noInternetError)
+      self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError)
     })
   }
   
@@ -291,10 +293,38 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   func openGallery() {
     
     if currentReachabilityStatus == .notReachable {
-      basicErrorAlertWith(message: noInternetError)
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError)
       return
     }
     
+    let status = PHPhotoLibrary.authorizationStatus()
+    
+    switch status {
+      case .authorized:
+        presentGallery()
+        break
+
+      case .denied, .restricted:
+        basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessageProfilePicture)
+        return
+
+      case .notDetermined:
+
+        PHPhotoLibrary.requestAuthorization() { status in
+          switch status {
+            case .authorized:
+              self.presentGallery()
+              break
+            
+            case .denied, .restricted, .notDetermined:
+              self.basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessageProfilePicture)
+              return
+        }
+      }
+    }
+  }
+  
+  func presentGallery() {
     picker.allowsEditing = true
     picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
     present(picker, animated: true, completion: nil)
@@ -304,17 +334,46 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   func openCamera() {
     
     if currentReachabilityStatus == .notReachable {
-      basicErrorAlertWith(message: noInternetError)
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError)
       return
     }
+   
+    let authorizationStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
     
+    switch authorizationStatus {
+      case .authorized:
+        presentCamera()
+        break
+      
+      case .denied, .restricted:
+        self.basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessageProfilePicture)
+        return
+      
+      case .notDetermined:
+        AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
+          
+          switch granted {
+            case true:
+              self.presentCamera()
+              break
+            
+            case false:
+              self.basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessageProfilePicture)
+              return
+          }
+        }
+    }
+  }
+  
+  
+  func presentCamera() {
     if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
       picker.sourceType = UIImagePickerControllerSourceType.camera
       picker.allowsEditing = true
       self.present(picker, animated: true, completion: nil)
       
     } else {
-      basicErrorAlertWith(message: cameraNotExistsMessage)
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: cameraNotExistsMessage)
     }
   }
   
@@ -336,7 +395,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     if let selectedImage = selectedImageFromPicker {
       
       if currentReachabilityStatus == .notReachable {
-        basicErrorAlertWith(message: noInternetError)
+        basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError)
         return
       }
       
@@ -345,14 +404,11 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
               self.userProfileContainerView.profileImageView.image = selectedImage
               self.updateUserProfile(with:  self.userProfileContainerView.profileImageView.image!)
             } else {
-              self.basicErrorAlertWith(message: deletionErrorMessage)
+              self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage)
             }
          })
-      
     }
     
-   // editLayer.removeFromSuperlayer()
-   // label.removeFromSuperview()
     userProfileContainerView.profileImageView.showActivityIndicator()
     
     dismiss(animated: true, completion: nil)
@@ -367,7 +423,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
       let reference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
       reference.updateChildValues(["thumbnailPhotoURL" : String(describing: thumbnailImageURL), "thumbnailPhotoURLPath" : path], withCompletionBlock: { (error, ref) in
         if error != nil {
-          self.basicErrorAlertWith(message: thumbnailUploadError )
+          self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError)
           return
         }
        
@@ -377,14 +433,14 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     uploadAvatarForUserToFirebaseStorageUsingImage(image, quality: 0.5, completion: { (imageURL, path) in
       
       if imageURL == "" && path == "" {
-       self.basicErrorAlertWith(message: fullsizePictureUploadError)
+       self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: fullsizePictureUploadError)
         return
       }
       
       self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: imageURL), placeholderImage: image, options: [.highPriority, .continueInBackground], completed: { (image, error, cacheType, url) in
         if error != nil  {
-          self.basicErrorAlertWith(message: fullsizePictureUploadError)
-          print("from sd")
+          self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: fullsizePictureUploadError)
+        
           return
         }
         
@@ -392,7 +448,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
         reference.updateChildValues(["photoURL" : String(describing: imageURL), "photoURLPath" : path], withCompletionBlock: { (error, ref) in
           
           if error != nil {
-            self.basicErrorAlertWith(message: fullsizePictureUploadError)
+            self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: fullsizePictureUploadError)
           }
       
            self.userProfileContainerView.profileImageView.hideActivityIndicator()
