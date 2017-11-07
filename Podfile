@@ -16,6 +16,5 @@ pod 'Firebase/Messaging'
 pod 'SDWebImage', '4.0'
 pod 'PhoneNumberKit'
 pod 'NYTPhotoViewer'
-#pod 'DTPhotoViewerController'
 
 end

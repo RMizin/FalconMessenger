@@ -98,6 +98,19 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
+  func scrollToBottomOnNewLine() {
+    
+    if self.messages.count - 1 <= 0 {
+      return
+    }
+    
+    let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+    
+    DispatchQueue.main.async {
+      self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+    }
+  }
+
   
   var messagesIds = [String]()
   
@@ -629,8 +642,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   lazy var inputContainerView: ChatInputContainerView = {
     var chatInputContainerView = ChatInputContainerView(frame: CGRect.zero)
-    let height = chatInputContainerView.inputTextView.frame.height
-    chatInputContainerView = ChatInputContainerView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
+    var bottomSafeArea:CGFloat = 0.0
+    
+    if #available(iOS 11.0, *) {
+      let window = UIApplication.shared.keyWindow
+      bottomSafeArea = window?.safeAreaInsets.bottom ?? 0.0
+    }
+    let height = 50 + bottomSafeArea
+    chatInputContainerView = ChatInputContainerView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: height))
     chatInputContainerView.chatLogController = self
     
     return chatInputContainerView
@@ -658,9 +677,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if canRefresh && !refreshControl.isRefreshing {
         
         canRefresh = false
-        
         refreshControl.beginRefreshing()
-        
         performRefresh()
       }
       

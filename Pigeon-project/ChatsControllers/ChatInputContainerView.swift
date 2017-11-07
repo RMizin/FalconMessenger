@@ -122,7 +122,7 @@ class ChatInputContainerView: UIView {
     backgroundColor = .white
     self.autoresizingMask = UIViewAutoresizing.flexibleHeight
     self.inputTextView.delegate = self
-    
+
     sendButton.setImage(UIImage(named: "send"), for: UIControlState())
     sendButton.translatesAutoresizingMaskIntoConstraints = false
     sendButton.isEnabled = false
@@ -161,13 +161,22 @@ class ChatInputContainerView: UIView {
     sendButton.bottomAnchor.constraint(equalTo:  inputTextView.bottomAnchor, constant: -5).isActive = true
     sendButton.widthAnchor.constraint(equalToConstant: 27).isActive = true
     sendButton.heightAnchor.constraint(equalToConstant: 27).isActive = true
-    
+  
     configureAttachedImagesCollection()
   }
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+    override func didMoveToWindow() {
+      super.didMoveToWindow()
+      if #available(iOS 11.0, *) {
+        if let window = window {
+          self.bottomAnchor.constraintLessThanOrEqualToSystemSpacingBelow(window.safeAreaLayoutGuide.bottomAnchor, multiplier: 1.0).isActive = true
+        }
+      }
+    }
 }
 
 
@@ -223,7 +232,6 @@ extension ChatInputContainerView: UITextViewDelegate {
     chatLogController?.scrollToBottom()
   }
   
-  
   func textViewDidChange(_ textView: UITextView) {
     
     placeholderLabel.isHidden = !textView.text.isEmpty
@@ -238,7 +246,6 @@ extension ChatInputContainerView: UITextViewDelegate {
     if textView.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty {
       sendButton.isEnabled = false
     }
-    
   }
   
   func textViewDidEndEditing(_ textView: UITextView) {
@@ -247,15 +254,12 @@ extension ChatInputContainerView: UITextViewDelegate {
   
   func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
     if text == "\n" {
-      print("new fucking line")
-      if chatLogController!.collectionView!.contentOffset.y >= (chatLogController!.collectionView!.contentSize.height - chatLogController!.collectionView!.frame.size.height + 250) {
-        print("at the bottom")
-        chatLogController?.scrollToBottom()
+      if chatLogController!.collectionView!.contentOffset.y >= (chatLogController!.collectionView!.contentSize.height - chatLogController!.collectionView!.frame.size.height + 200) {
+        chatLogController?.scrollToBottomOnNewLine()
       }
     }
     return true
   }
-
 }
 
 extension UIColor {
