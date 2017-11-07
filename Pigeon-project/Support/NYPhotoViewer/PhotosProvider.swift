@@ -94,7 +94,7 @@ extension ChatLogController: NYTPhotosViewControllerDelegate {
     
     let nytPhotosViewController = NYTPhotosViewController(photos: photos, initialPhoto: photos[initialIndex])
     nytPhotosViewController.delegate = self
-    
+   
     present(nytPhotosViewController, animated: true, completion: {
     self.inputAccessoryView?.isHidden = true
     })

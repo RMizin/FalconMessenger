@@ -157,7 +157,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 self.observeTypingIndicator()
                 self.updateMessageStatus(messageRef: self.messagesLoadingReference)
                 self.updateMessageStatusUI(dictionary: dictionary)
-                self.photocCounter()
               }
               
               self.isInitialLoad = false
@@ -189,8 +188,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                     self.mediaMessages.append(Message(dictionary: dictionary))
                   }
                 }
-                
-                self.photocCounter()
                 
                 if self.messages.count - 1 >= 0 {
                 
@@ -239,16 +236,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         self.delegate?.messagesLoader(didFinishLoadingWith: self.messages)
       }
     })
-  }
-  
-  var photosCount = 0
-  fileprivate func photocCounter() {
-    photosCount = 0
-    for message in messages {
-      if message.imageUrl != nil && message.videoUrl == nil {
-        photosCount += 1
-      }
-    }
   }
   
   var queryStartingID = String()
@@ -319,7 +306,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               isInsertingCellsToTop = true
               self.refreshControl.endRefreshing()
               
-              self.photocCounter()
               DispatchQueue.main.async {
                 self.collectionView?.reloadData()
               }

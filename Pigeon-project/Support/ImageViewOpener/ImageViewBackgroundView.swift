@@ -10,8 +10,6 @@ import UIKit
 
 class ImageViewBackgroundView: UIView {
   
-  
-  
   var navigationBar : UINavigationBar = {
     var navigationBar = UINavigationBar()
     navigationBar.isTranslucent = false
@@ -20,24 +18,12 @@ class ImageViewBackgroundView: UIView {
     return navigationBar
   }()
   
-  
-//  var imageView: UIImageView = {
-//    var imageView = UIImageView()
-// //   imageView.backgroundColor = .green
-//    imageView.layer.masksToBounds = true
-//    
-//    return imageView
-//  }()
-  
-  
   var toolbar: UIToolbar = {
     var toolbar = UIToolbar()
     return toolbar
   }()
-
   
-  
-   let navigationItem = UINavigationItem(title: "Profile photo")
+  let navigationItem = UINavigationItem(title: "Profile photo")
   
   
   override init(frame: CGRect) {
@@ -47,14 +33,19 @@ class ImageViewBackgroundView: UIView {
     alpha = 0
    
     addSubview(navigationBar)
-    navigationBar.frame = CGRect(x: 0, y: 20, width: deviceScreen.width, height: 44)
-    
+    navigationBar.frame = CGRect(x: 0, y: UIApplication.shared.statusBarFrame.height, width: deviceScreen.width, height: 44)
     
     addSubview(toolbar)
-    toolbar.frame = CGRect(x: 0, y: deviceScreen.height-49, width: deviceScreen.width, height: 49)
     
-  //  addSubview(imageView)
-   // imageView.frame = CGRect(x: 0, y: 65, width: Int(deviceScreen.width), height: Int(deviceScreen.height-64-49))
+    if #available(iOS 11.0, *) {
+      
+      let window = UIApplication.shared.keyWindow
+      let bottomSafeArea = window?.safeAreaInsets.bottom ?? 0.0
+      
+      toolbar.frame = CGRect(x: 0, y: deviceScreen.height-49-bottomSafeArea, width: deviceScreen.width, height: 49)
+    } else {
+      toolbar.frame = CGRect(x: 0, y: deviceScreen.height-49, width: deviceScreen.width, height: 49)
+    }
   }
   
   required init(coder aDecoder: NSCoder) {

@@ -172,8 +172,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1911D135D064C2C51C2A63E8 /* Pods-OneSignalNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationService.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationService/Pods-OneSignalNotificationService.release.xcconfig"; sourceTree = "<group>"; };
-		300E5D5B472CD9150969282B /* Pods-OneSignalNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationService/Pods-OneSignalNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4B197EEF1F348171008102E1 /* SharedVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedVariables.swift; path = AuthenticationControllers/SharedVariables/SharedVariables.swift; sourceTree = "<group>"; };
 		4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CenteredCollectionViewFlowLayout.swift; path = Support/CenteredCollectionViewFlowLayout/CenteredCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectedMediaCollectionCell.swift; path = ChatsControllers/SelectedMediaCollectionCell.swift; sourceTree = "<group>"; };
@@ -842,8 +840,6 @@
 			children = (
 				9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */,
 				8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */,
-				300E5D5B472CD9150969282B /* Pods-OneSignalNotificationService.debug.xcconfig */,
-				1911D135D064C2C51C2A63E8 /* Pods-OneSignalNotificationService.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
