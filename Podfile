@@ -15,6 +15,6 @@ pod 'Firebase/Storage'
 pod 'Firebase/Messaging'
 pod 'SDWebImage', '4.0'
 pod 'PhoneNumberKit'
-pod 'NYTPhotoViewer'
+pod 'FLAnimatedImage'
 
 end

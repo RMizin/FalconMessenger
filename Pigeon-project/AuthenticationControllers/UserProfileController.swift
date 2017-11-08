@@ -14,16 +14,15 @@ class UserProfileController: UIViewController {
   
   let userProfileContainerView = UserProfileContainerView()
   let picker = UIImagePickerController()
-  var editLayer: CAShapeLayer!
-  var label: UILabel!
+ 
   typealias CompletionHandler = (_ success: Bool) -> Void
   
   weak var settingsContainer: SettingsViewControllersContainer?
   
-  var startingFrame: CGRect?
-  var blackBackgroundView = ImageViewBackgroundView()
-  var startingImageView: UIImageView?
-  let zoomOutGesture = UITapGestureRecognizer(target: self, action: #selector(handleZoomOut))
+  var referenceView:UIView!
+  var currentPhoto:INSPhoto!
+  var galleryPreview:INSPhotosViewController!
+  let overlay = UserProfilePictureOverlayView(frame: CGRect.zero)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,17 +32,20 @@ class UserProfileController: UIViewController {
         userProfileContainerView.frame = view.bounds
         configureNavigationBar()
         configurePickerController()
-        userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlerImageViewSelection)))
+        userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
     }
-
   
     fileprivate func configurePickerController() {
       picker.delegate = self
-    //  navigationController?.delegate = self
-      
-   //   NotificationCenter.default.addObserver(self, selector: #selector(pictureCaptured), name: NSNotification.Name(rawValue: "_UIImagePickerControllerUserDidCaptureItem"), object: nil)
-   //   NotificationCenter.default.addObserver(self, selector: #selector(pictureRejected), name: NSNotification.Name(rawValue: "_UIImagePickerControllerUserDidRejectItem"), object: nil)
     }
+  
+//  fileprivate func configureImageView() {
+//    if userProfileContainerView.profileImageView.image == nil {
+//       userProfileContainerView.addPhotoLabel.isHidden = false
+//    } else {
+//       userProfileContainerView.addPhotoLabel.isHidden = true
+//    }
+//  }
 
   
     fileprivate func configureNavigationBar () {
@@ -51,11 +53,6 @@ class UserProfileController: UIViewController {
       self.navigationItem.rightBarButtonItem = rightBarButton
       self.title = "Profile"
       self.navigationItem.setHidesBackButton(true, animated: true)
-    }
-  
-  
-    deinit {
-      //NotificationCenter.default.removeObserver(self)
     }
 }
 
@@ -119,7 +116,6 @@ extension UserProfileController {  /* only during authentication */
         
          completionHandler(true)
       }
-      
     })
   }
 }

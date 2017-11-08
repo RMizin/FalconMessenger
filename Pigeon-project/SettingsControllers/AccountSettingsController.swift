@@ -19,10 +19,16 @@ class AccountSettingsController: UIViewController {
   var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and sounds" ),
                       ( icon: UIImage(named: "ChangeNumber") , title: "Change number")]
   
-  
   var secondSection = [/* ( icon: UIImage(named: "language") , title: "Язык", controller: nil), */
     ( icon: UIImage(named: "Storage") , title: "Data and storage"),
     ( icon: UIImage(named: "Logout") , title: "Log out")]
+  
+  fileprivate func basicErrorAlertWith (title:String, message: String) {
+    
+    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+    alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
+    self.present(alert, animated: true, completion: nil)
+  }
   
   
   override func viewDidLoad() {
@@ -69,8 +75,10 @@ class AccountSettingsController: UIViewController {
 
     } catch let signOutError as NSError {
       print ("Error signing out: %@", signOutError)
+      basicErrorAlertWith(title: "Error signing out", message: "Please check your internet connection and try again later.")
+      return
     }
-    
+    UIApplication.shared.applicationIconBadgeNumber = 0
     let destination = OnboardingController()
     
     let newNavigationController = UINavigationController(rootViewController: destination)

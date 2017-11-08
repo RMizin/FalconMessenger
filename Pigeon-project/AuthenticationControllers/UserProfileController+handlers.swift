@@ -21,7 +21,6 @@ private let noInternetError = "Internet connection is not available. Try again l
 
 extension UserProfileController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  
   fileprivate func basicErrorAlertWith (title: String, message: String) {
     
     self.userProfileContainerView.profileImageView.hideActivityIndicator()
@@ -29,210 +28,91 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
     self.present(alert, animated: true, completion: nil)
   }
-  
-  
-//  func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-//    // Image picker in edit mode
-//    if let imageVC = NSClassFromString("PUUIImageViewController") {
-//      if viewController.isKind(of: imageVC) {
-//        addRoundedEditLayer(to: viewController, forCamera: false)
-//      }
-//    }
-//  }
-  
-  
-  func configureImageViewBackgroundView() {
-    blackBackgroundView.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(UserProfileController.handleSelectProfileImageView))
-    blackBackgroundView.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(UserProfileController.handleZoomOut))
-    
-     blackBackgroundView.navigationBar.setItems([blackBackgroundView.navigationItem], animated: true)
-  }
-  
-  func configureImageViewBackgroundViewForKeyWindow() {
-    blackBackgroundView.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit  ", style: .done, target: self, action: #selector(UserProfileController.handleSelectProfileImageView))
-    blackBackgroundView.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(UserProfileController.handleZoomOut))
-    blackBackgroundView.navigationItem.leftBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 15)
-    blackBackgroundView.navigationBar.setItems([blackBackgroundView.navigationItem], animated: true)
-  }
-  
-  
-  func configureToolbar() {
-    let item1 = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action: #selector(self.toolbarTouchHandler))
-    
-    blackBackgroundView.toolbar.setItems([item1], animated: true)
-  }
-  
-  func configureToolbarForKeyWindow() {
-    let item1 = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action: #selector(self.toolbarTouchHandler))
-    
-    item1.imageInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
-    blackBackgroundView.toolbar.setItems([item1], animated: true)
-  }
-  
-  
- @objc func handlerImageViewSelection() {
-   settingsContainer?.cancelBarButtonPressed()
-    if userProfileContainerView.profileImageView.image != nil {
-      performZoomInForStartingImageView(userProfileContainerView.profileImageView)
-    } else {
+ 
+ @objc func openUserProfilePicture() {
+    settingsContainer?.cancelBarButtonPressed()
+    if userProfileContainerView.profileImageView.image == nil {
       handleSelectProfileImageView()
+      
+      return
     }
+   UIApplication.shared.statusBarStyle = .lightContent
+    referenceView = userProfileContainerView.profileImageView
+    currentPhoto = INSPhoto(image: userProfileContainerView.profileImageView.image, thumbnailImage: nil, messageUID: nil)
+    galleryPreview = INSPhotosViewController(photos: [currentPhoto], initialPhoto: currentPhoto, referenceView: referenceView)
+
+    overlay.photosViewController = galleryPreview
+    galleryPreview.overlayView = overlay
+ //   galleryPreview.modalPresentationCapturesStatusBarAppearance = false
+ // galleryPreview.setNeedsStatusBarAppearanceUpdate()
+//modalPresentationCapturesStatusBarAppearance
+  
+    overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(UserProfileController.handleSelectProfileImageView))
+    overlay.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(UserProfileController.backButtonTapped))
+    overlay.navigationBar.setItems([overlay.navigationItem], animated: true)
+
+    let item = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action: #selector(self.toolbarTouchHandler))
+    overlay.toolbar.setItems([item], animated: true)
+  
+    galleryPreview.referenceViewForPhotoWhenDismissingHandler = { photo in
+      return self.referenceView
+    }
+
+    present(galleryPreview, animated: true, completion: nil)
   }
   
   
-  func performZoomInForStartingImageView(_ initialImageView: UIImageView) {
-   
-    self.startingImageView = initialImageView
-    
-    self.startingImageView?.isHidden = true
-    
-    self.startingFrame = initialImageView.superview?.convert(initialImageView.frame, to: nil)
-    
-    let zoomingImageView = UIImageView(frame: self.startingFrame!)
-    
-    zoomingImageView.image = startingImageView?.image
-    
-    zoomingImageView.isUserInteractionEnabled = true
-    
-    zoomingImageView.addGestureRecognizer(zoomOutGesture)
-    
-    
-   if let keyWindow = UIApplication.shared.keyWindow {
-      self.blackBackgroundView = ImageViewBackgroundView(frame: keyWindow.frame)
-      self.blackBackgroundView.alpha = 0
-  
-    if let viewControllers = navigationController?.viewControllers {
-      
-      for viewController in viewControllers {
-        
-        if viewController.isKind(of: OnboardingController.self) {
-
-          keyWindow.addSubview(self.blackBackgroundView)
-          keyWindow.addSubview(zoomingImageView)
-          userProfileContainerView.name.resignFirstResponder()
-          configureImageViewBackgroundViewForKeyWindow()
-          configureToolbarForKeyWindow()
-          break
-          
-        } else {
-    
-          self.tabBarController?.view.addSubview(self.blackBackgroundView)
-          self.tabBarController?.view.addSubview(zoomingImageView)
-          configureImageViewBackgroundView()
-          configureToolbar()
-        }
-      }
-    }
-    
-      
-      guard let scaledImage = imageWithImage(sourceImage: zoomingImageView.image!, scaledToWidth: deviceScreen.width) else {
-        return
-      }
-      let centerY = blackBackgroundView.center.y - (scaledImage.size.height/2)
-      
-      UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
-        
-        self.blackBackgroundView.alpha = 1
-      
-        zoomingImageView.frame = CGRect(x: 0, y: centerY , width: scaledImage.size.width, height: scaledImage.size.height)
-        
-      }, completion: { (completed) in
-        // do nothing
-      })
-    }
+  @objc func backButtonTapped() {
+    overlay.photosViewController?.dismiss(animated: true, completion: nil)
   }
   
-@objc func handleZoomOut() {
-    if let zoomOutImageView = zoomOutGesture.view {
-      //need to animate back out to controller
-      zoomOutImageView.layer.masksToBounds = true
-      
-      UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-        
-        zoomOutImageView.frame = self.startingFrame!
-        
-        self.blackBackgroundView.alpha = 0
-        
-        zoomOutImageView.layer.cornerRadius = 48
-        zoomOutImageView.contentMode = .scaleAspectFill
-        zoomOutImageView.layer.borderColor = UIColor.lightGray.cgColor
-        zoomOutImageView.layer.borderWidth = 1
-        
-      }, completion: { (completed) in
-        
-        zoomOutImageView.removeFromSuperview()
-        
-        self.startingImageView?.isHidden = false
-      })
-    }
-  }
-  
-  
 
-
-  
-//  func failedToSaveImageToGallery() {
-//
-//    let alertWindow = UIWindow(frame: UIScreen.main.bounds)
-//    alertWindow.rootViewController = UIViewController()
-//    alertWindow.windowLevel = UIWindowLevelAlert + 1;
-//    alertWindow.makeKeyAndVisible()
-//
-//    let alert = UIAlertController(title: "Error",
-//                                  message: "This app does not have access to your photos or videos. You can enable access in Privacy Settings.",
-//                                  preferredStyle: UIAlertControllerStyle.alert)
-//
-//    alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.default) { UIAlertAction in
-//
-//      alertWindow.rootViewController?.dismiss(animated: true, completion: nil)
-//    })
-//
-//    self.view.isUserInteractionEnabled = true
-//      alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
-//
-//  }
-  
  @objc func toolbarTouchHandler() {
   
   let activity = UIActivityViewController(activityItems: [userProfileContainerView.profileImageView.image!], applicationActivities: nil)
-  
-  present(activity, animated: true, completion: nil)
-  }
+  galleryPreview.present(activity, animated: true, completion: nil)
+ }
   
   @objc func handleSelectProfileImageView() {
     
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
-      self.handleZoomOut()
+
+      self.overlay.photosViewController?.dismiss(animated: true, completion: nil)
       self.openCamera()
     }))
     
     alert.addAction(UIAlertAction(title: "Choose photo", style: .default, handler: { _ in
-      self.handleZoomOut()
+   
+      self.overlay.photosViewController?.dismiss(animated: true, completion: nil)
       self.openGallery()
+     
     }))
     
    if userProfileContainerView.profileImageView.image != nil {
       alert.addAction(UIAlertAction(title: "Delete photo", style: .destructive, handler: { _ in
-        self.handleZoomOut()
-        self.deleteCurrentPhoto(completion: { (isDeleted) in
-          if isDeleted {
-            self.userProfileContainerView.profileImageView.hideActivityIndicator()
-            print("deleted")
-          } else {
-            
-            self.userProfileContainerView.profileImageView.hideActivityIndicator()
-            self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage)
-          }
-        
+        self.overlay.photosViewController?.dismiss(animated: true, completion: {
+          self.deleteCurrentPhoto(completion: { (isDeleted) in
+            if isDeleted {
+              self.userProfileContainerView.profileImageView.hideActivityIndicator()
+              print("deleted")
+            } else {
+              
+              self.userProfileContainerView.profileImageView.hideActivityIndicator()
+              self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage)
+            }
+          })
         })
-        
       }))
-
     }
     
    alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
-   present(alert, animated: true, completion: nil)
+    
+    if userProfileContainerView.profileImageView.image == nil {
+      present(alert, animated: true, completion: nil)
+      } else {
+       galleryPreview.present(alert, animated: true, completion: nil)
+      }
   }
   
   
@@ -381,9 +261,6 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     
     var selectedImageFromPicker: UIImage?
-  
-    
-    
     if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
       selectedImageFromPicker = editedImage
       
@@ -391,14 +268,12 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
       selectedImageFromPicker = originalImage
     }
     
-    
     if let selectedImage = selectedImageFromPicker {
       
       if currentReachabilityStatus == .notReachable {
         basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError)
         return
       }
-      
           deleteCurrentPhoto(completion: { (isDeleted) in
             if isDeleted {
               self.userProfileContainerView.profileImageView.image = selectedImage
@@ -410,7 +285,6 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     }
     
     userProfileContainerView.profileImageView.showActivityIndicator()
-    
     dismiss(animated: true, completion: nil)
   }
   
@@ -426,7 +300,6 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
           self.basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError)
           return
         }
-       
       })
     }
     
@@ -461,5 +334,4 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
     print("canceled picker")
     dismiss(animated: true, completion: nil)
   }
-  
 }

@@ -16,7 +16,7 @@ class UserProfileContainerView: UIView, UITextFieldDelegate {
     profileImageView.contentMode = .scaleAspectFill
     profileImageView.layer.masksToBounds = true
     profileImageView.layer.borderColor = UIColor.lightGray.cgColor
-    profileImageView.layer.borderWidth = 1
+    profileImageView.layer.borderWidth = 0.5
     profileImageView.layer.cornerRadius = 48
     profileImageView.isUserInteractionEnabled = true
     

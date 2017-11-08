@@ -42,7 +42,17 @@
 		4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */; };
 		4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */; };
 		4B4F45541F3226F700A6FF96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */; };
-		4B56B3651F4435EF008F4F27 /* ImageViewBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56B3641F4435EF008F4F27 /* ImageViewBackgroundView.swift */; };
+		4B5419481FB30F920014C4FB /* UserProfilePictureOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419471FB30F920014C4FB /* UserProfilePictureOverlayView.swift */; };
+		4B5419541FB392570014C4FB /* INSPhotosDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54194A1FB392560014C4FB /* INSPhotosDataSource.swift */; };
+		4B5419551FB392570014C4FB /* INSPhotoGallery.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4B54194B1FB392560014C4FB /* INSPhotoGallery.bundle */; };
+		4B5419561FB392570014C4FB /* INSPhotosTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54194C1FB392560014C4FB /* INSPhotosTransitionAnimator.swift */; };
+		4B5419571FB392570014C4FB /* INSPhotosInteractionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54194D1FB392560014C4FB /* INSPhotosInteractionAnimator.swift */; };
+		4B5419581FB392570014C4FB /* INSPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54194E1FB392560014C4FB /* INSPhoto.swift */; };
+		4B5419591FB392570014C4FB /* INSPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54194F1FB392560014C4FB /* INSPhotoViewController.swift */; };
+		4B54195A1FB392570014C4FB /* INSPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419501FB392560014C4FB /* INSPhotosViewController.swift */; };
+		4B54195B1FB392570014C4FB /* INSPhotosOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419511FB392560014C4FB /* INSPhotosOverlayView.swift */; };
+		4B54195C1FB392570014C4FB /* INSScalingImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419521FB392570014C4FB /* INSScalingImageView.swift */; };
+		4B54195D1FB392570014C4FB /* UIVIew+INSPhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419531FB392570014C4FB /* UIVIew+INSPhotoViewer.swift */; };
 		4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */; };
 		4B63646B1F977AAC00A5D3BF /* UserInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */; };
 		4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */; };
@@ -87,8 +97,6 @@
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
-		4BD967571F6C4D14007C5441 /* NYTPhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD967551F6C4D14007C5441 /* NYTPhotoModel.swift */; };
-		4BD967581F6C4D14007C5441 /* PhotosProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD967561F6C4D14007C5441 /* PhotosProvider.swift */; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
 		4BE571501F4D87A4009D9AB4 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */; };
 		4BE571511F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571391F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift */; };
@@ -209,7 +217,17 @@
 		4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralTabBarController.swift; sourceTree = "<group>"; };
 		4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsController.swift; path = ContactsControllers/ContactsController.swift; sourceTree = "<group>"; };
 		4B4F45531F3226F700A6FF96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		4B56B3641F4435EF008F4F27 /* ImageViewBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageViewBackgroundView.swift; path = Support/ImageViewOpener/ImageViewBackgroundView.swift; sourceTree = "<group>"; };
+		4B5419471FB30F920014C4FB /* UserProfilePictureOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfilePictureOverlayView.swift; path = AuthenticationControllers/UserProfilePictureOverlayView.swift; sourceTree = "<group>"; };
+		4B54194A1FB392560014C4FB /* INSPhotosDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSPhotosDataSource.swift; path = Support/INSPhotoGallery/INSPhotosDataSource.swift; sourceTree = "<group>"; };
+		4B54194B1FB392560014C4FB /* INSPhotoGallery.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = INSPhotoGallery.bundle; path = Support/INSPhotoGallery/INSPhotoGallery.bundle; sourceTree = "<group>"; };
+		4B54194C1FB392560014C4FB /* INSPhotosTransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSPhotosTransitionAnimator.swift; path = Support/INSPhotoGallery/INSPhotosTransitionAnimator.swift; sourceTree = "<group>"; };
+		4B54194D1FB392560014C4FB /* INSPhotosInteractionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSPhotosInteractionAnimator.swift; path = Support/INSPhotoGallery/INSPhotosInteractionAnimator.swift; sourceTree = "<group>"; };
+		4B54194E1FB392560014C4FB /* INSPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSPhoto.swift; path = Support/INSPhotoGallery/INSPhoto.swift; sourceTree = "<group>"; };
+		4B54194F1FB392560014C4FB /* INSPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSPhotoViewController.swift; path = Support/INSPhotoGallery/INSPhotoViewController.swift; sourceTree = "<group>"; };
+		4B5419501FB392560014C4FB /* INSPhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSPhotosViewController.swift; path = Support/INSPhotoGallery/INSPhotosViewController.swift; sourceTree = "<group>"; };
+		4B5419511FB392560014C4FB /* INSPhotosOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSPhotosOverlayView.swift; path = Support/INSPhotoGallery/INSPhotosOverlayView.swift; sourceTree = "<group>"; };
+		4B5419521FB392570014C4FB /* INSScalingImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSScalingImageView.swift; path = Support/INSPhotoGallery/INSScalingImageView.swift; sourceTree = "<group>"; };
+		4B5419531FB392570014C4FB /* UIVIew+INSPhotoViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIVIew+INSPhotoViewer.swift"; path = "Support/INSPhotoGallery/UIVIew+INSPhotoViewer.swift"; sourceTree = "<group>"; };
 		4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+MediaPickerHandlers.swift"; path = "ChatsControllers/ChatLogController+MediaPickerHandlers.swift"; sourceTree = "<group>"; };
 		4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoTableViewController.swift; path = ChatsControllers/UserInfoTableViewController.swift; sourceTree = "<group>"; };
 		4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserinfoHeaderTableViewCell.swift; path = ChatsControllers/UserinfoHeaderTableViewCell.swift; sourceTree = "<group>"; };
@@ -257,8 +275,6 @@
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
-		4BD967551F6C4D14007C5441 /* NYTPhotoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NYTPhotoModel.swift; path = Support/NYPhotoViewer/NYTPhotoModel.swift; sourceTree = "<group>"; };
-		4BD967561F6C4D14007C5441 /* PhotosProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotosProvider.swift; path = Support/NYPhotoViewer/PhotosProvider.swift; sourceTree = "<group>"; };
 		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
 		4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorCollectionViewCell.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/ColorCollectionViewCell.swift"; sourceTree = "<group>"; };
 		4BE571391F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorsCollectionViewDelegate.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/ColorsCollectionViewDelegate.swift"; sourceTree = "<group>"; };
@@ -529,12 +545,21 @@
 			name = Contacts;
 			sourceTree = "<group>";
 		};
-		4B56B3631F443591008F4F27 /* ImageView opener */ = {
+		4B5419491FB3923C0014C4FB /* INSPhotoGallery */ = {
 			isa = PBXGroup;
 			children = (
-				4B56B3641F4435EF008F4F27 /* ImageViewBackgroundView.swift */,
+				4B54194E1FB392560014C4FB /* INSPhoto.swift */,
+				4B54194B1FB392560014C4FB /* INSPhotoGallery.bundle */,
+				4B54194A1FB392560014C4FB /* INSPhotosDataSource.swift */,
+				4B54194D1FB392560014C4FB /* INSPhotosInteractionAnimator.swift */,
+				4B5419511FB392560014C4FB /* INSPhotosOverlayView.swift */,
+				4B54194C1FB392560014C4FB /* INSPhotosTransitionAnimator.swift */,
+				4B5419501FB392560014C4FB /* INSPhotosViewController.swift */,
+				4B54194F1FB392560014C4FB /* INSPhotoViewController.swift */,
+				4B5419521FB392570014C4FB /* INSScalingImageView.swift */,
+				4B5419531FB392570014C4FB /* UIVIew+INSPhotoViewer.swift */,
 			);
-			name = "ImageView opener";
+			name = INSPhotoGallery;
 			sourceTree = "<group>";
 		};
 		4B6364691F97441300A5D3BF /* UserInfoViewControllers */ = {
@@ -625,13 +650,12 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				4BCE51FC1F6C3DB0003A5998 /* NYPhotoViewer */,
+				4B5419491FB3923C0014C4FB /* INSPhotoGallery */,
 				4B8D0B7D1F523A6B00E9252A /* CircleProgressView */,
 				4B2142E91F51B77200F7A4B8 /* RevealableCell */,
 				4BE571321F4D86E2009D9AB4 /* PhotoEditor */,
 				4B1A36941F498DAD00B4AA0A /* CenteredCollectionViewFlowLayout */,
 				4BED6EA81F47697D004EF2E0 /* PickerTrayController */,
-				4B56B3631F443591008F4F27 /* ImageView opener */,
 				4B48D3111F361E300050C797 /* ProgressIndicator */,
 				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
 				4B91B8BB1F34E9D60025C67F /* Public.swift */,
@@ -674,15 +698,6 @@
 				4BCE1AB91F3714A000C0EBF7 /* User.swift */,
 			);
 			name = Models;
-			sourceTree = "<group>";
-		};
-		4BCE51FC1F6C3DB0003A5998 /* NYPhotoViewer */ = {
-			isa = PBXGroup;
-			children = (
-				4BD967551F6C4D14007C5441 /* NYTPhotoModel.swift */,
-				4BD967561F6C4D14007C5441 /* PhotosProvider.swift */,
-			);
-			name = NYPhotoViewer;
 			sourceTree = "<group>";
 		};
 		4BE571321F4D86E2009D9AB4 /* PhotoEditor */ = {
@@ -823,6 +838,7 @@
 				4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */,
 				4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */,
 				4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */,
+				4B5419471FB30F920014C4FB /* UserProfilePictureOverlayView.swift */,
 			);
 			name = "User profile";
 			sourceTree = "<group>";
@@ -939,6 +955,7 @@
 				4B45263C1F5EBCFA003FBA29 /* notification.caf in Resources */,
 				4BE5718D1F4D8816009D9AB4 /* PhotoCropEditorBorder.png in Resources */,
 				4BE571951F4D8816009D9AB4 /* text@3x.png in Resources */,
+				4B5419551FB392570014C4FB /* INSPhotoGallery.bundle in Resources */,
 				4BE571871F4D8816009D9AB4 /* crop.png in Resources */,
 				4BBE9A2A1F4DA8FF00053935 /* Trash Icon@2x.png in Resources */,
 				4BE571901F4D8816009D9AB4 /* share.png in Resources */,
@@ -988,7 +1005,6 @@
 				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -1000,7 +1016,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -1038,12 +1053,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */,
+				4B54195B1FB392570014C4FB /* INSPhotosOverlayView.swift in Sources */,
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
 				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
 				4BED6EB71F476A3A004EF2E0 /* UIImageExtensions.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
 				4BE571581F4D87A4009D9AB4 /* PhotoEditor+Controls.swift in Sources */,
 				4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */,
+				4B5419571FB392570014C4FB /* INSPhotosInteractionAnimator.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
 				4BE571501F4D87A4009D9AB4 /* ColorCollectionViewCell.swift in Sources */,
 				4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */,
@@ -1056,12 +1073,12 @@
 				4BE571571F4D87A4009D9AB4 /* GradientView.swift in Sources */,
 				4BE571531F4D87A4009D9AB4 /* CropView.swift in Sources */,
 				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
-				4B56B3651F4435EF008F4F27 /* ImageViewBackgroundView.swift in Sources */,
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
 				4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */,
 				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
 				4BE571611F4D87A4009D9AB4 /* ResizeControl.swift in Sources */,
+				4B5419541FB392570014C4FB /* INSPhotosDataSource.swift in Sources */,
 				4BED6EB31F476A2F004EF2E0 /* TransitionController.swift in Sources */,
 				4BED6EB21F476A2F004EF2E0 /* ImagePickerTrayController.swift in Sources */,
 				4B48D3201F361E490050C797 /* ARSLineProgressExtensions.swift in Sources */,
@@ -1072,12 +1089,16 @@
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
 				4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */,
 				4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */,
+				4B5419561FB392570014C4FB /* INSPhotosTransitionAnimator.swift in Sources */,
 				4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */,
 				4B9CD8691F4B2B6800EF8AB0 /* MediaObject.swift in Sources */,
 				4BE5715C1F4D87A4009D9AB4 /* PhotoEditor+Keyboard.swift in Sources */,
 				4BE5715A1F4D87A4009D9AB4 /* PhotoEditor+Drawing.swift in Sources */,
 				4BE571661F4D87A4009D9AB4 /* UIImageView+Alpha.swift in Sources */,
+				4B54195C1FB392570014C4FB /* INSScalingImageView.swift in Sources */,
+				4B5419591FB392570014C4FB /* INSPhotoViewController.swift in Sources */,
 				4BE5715B1F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift in Sources */,
+				4B5419581FB392570014C4FB /* INSPhoto.swift in Sources */,
 				4BED6EC11F48AAFA004EF2E0 /* MediaPickerController.swift in Sources */,
 				4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */,
 				4BE571631F4D87A4009D9AB4 /* StickersViewController.swift in Sources */,
@@ -1103,13 +1124,14 @@
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
 				4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */,
 				4B2142FE1F51C72700F7A4B8 /* RevealableCollectionViewCell.swift in Sources */,
+				4B54195D1FB392570014C4FB /* UIVIew+INSPhotoViewer.swift in Sources */,
 				4B8D0B821F523AA800E9252A /* CircleProgressView.m in Sources */,
+				4B5419481FB30F920014C4FB /* UserProfilePictureOverlayView.swift in Sources */,
 				4BE5715D1F4D87A4009D9AB4 /* PhotoEditor+StickersViewController.swift in Sources */,
 				4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */,
 				4BEB13F31F39CE3E0048A984 /* PigeonUsersTableViewCell.swift in Sources */,
 				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
 				4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */,
-				4BD967581F6C4D14007C5441 /* PhotosProvider.swift in Sources */,
 				4B8D0B831F523AA800E9252A /* CircleProgressView.swift in Sources */,
 				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
 				4BE571551F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift in Sources */,
@@ -1132,7 +1154,6 @@
 				4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BED6EBD1F476A46004EF2E0 /* CameraCell.swift in Sources */,
 				4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */,
-				4BD967571F6C4D14007C5441 /* NYTPhotoModel.swift in Sources */,
 				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
 				4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */,
 				4BE571671F4D87A4009D9AB4 /* UIView+Image.swift in Sources */,
@@ -1144,6 +1165,7 @@
 				4B2143001F51C72700F7A4B8 /* UICollectionView+Extension.swift in Sources */,
 				4BED6EB11F476A2F004EF2E0 /* ImagePickerAction.swift in Sources */,
 				4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */,
+				4B54195A1FB392570014C4FB /* INSPhotosViewController.swift in Sources */,
 				4B48D3211F361E490050C797 /* ARSLineProgressHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

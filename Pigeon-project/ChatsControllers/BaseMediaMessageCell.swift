@@ -85,13 +85,9 @@ class BaseMediaMessageCell: BaseMessageCell {
       
       return
     }
-    
-    if let imageView = tapGesture.view as? UIImageView {
-      guard  let indexPath = chatLogController?.collectionView?.indexPath(for: self) else {
-        return
-      }
-      
-      self.chatLogController?.performZoomInForStartingImageView(imageView, indexPath: indexPath)
+    guard  let indexPath = chatLogController?.collectionView?.indexPath(for: self) else {
+      return
     }
+    self.chatLogController?.openSelectedPhoto(at: indexPath)
   }    
 }

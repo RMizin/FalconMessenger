@@ -254,8 +254,15 @@ extension ChatInputContainerView: UITextViewDelegate {
   
   func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
     if text == "\n" {
-      if chatLogController!.collectionView!.contentOffset.y >= (chatLogController!.collectionView!.contentSize.height - chatLogController!.collectionView!.frame.size.height + 200) {
-        chatLogController?.scrollToBottomOnNewLine()
+       if chatLogController!.collectionView!.contentOffset.y >= (chatLogController!.collectionView!.contentSize.height - chatLogController!.collectionView!.frame.size.height - 200) {
+        
+        if chatLogController?.collectionView?.numberOfSections == 2 {
+          chatLogController?.scrollToBottomOfTypingIndicator()
+        } else {
+           chatLogController?.scrollToBottomOnNewLine()
+        }
+       
+        
       }
     }
     return true

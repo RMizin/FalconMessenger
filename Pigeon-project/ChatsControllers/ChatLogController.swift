@@ -45,11 +45,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  var startingFrame: CGRect?
-  var blackBackgroundView:ImageViewBackgroundView! = nil
-  var startingImageView: UIImageView?
-  var zoomingImageView: UIImageView!
-  
   var userMessagesLoadingReference: DatabaseQuery!
   
   var messagesLoadingReference: DatabaseReference!
@@ -105,6 +100,19 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+    
+    DispatchQueue.main.async {
+      self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+    }
+  }
+  
+  func scrollToBottomOfTypingIndicator() {
+    
+    if collectionView?.numberOfSections != 2 {
+      return
+    }
+    
+    let indexPath = IndexPath(item: 0, section: 1)
     
     DispatchQueue.main.async {
       self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
@@ -288,11 +296,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           self.messagesIds.append(snapshot.key)
           
           let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
+          let messageUID = snapshot.key
           messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+            guard var dictionary = snapshot.value as? [String: AnyObject] else {
               return
             }
+            
+            dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
             
             self.messages.append(Message(dictionary: dictionary))
             
@@ -437,6 +448,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         cell.typingIndicator.animatedImage = FLAnimatedImage(animatedGIFData: gifData as Data)
+     
+          if self.collectionView!.contentOffset.y >= (self.collectionView!.contentSize.height - self.collectionView!.frame.size.height - 200) {
+          self.scrollToBottomOfTypingIndicator()
+        }
+        
       })
       
     } else {
@@ -454,6 +470,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           }
           
           cell.typingIndicator.animatedImage = nil
+          if self.collectionView!.contentOffset.y >= (self.collectionView!.contentSize.height - self.collectionView!.frame.size.height + 200) {
+            self.scrollToBottomOnNewLine()
+          }
         }
       }, completion: nil)
     }
@@ -499,9 +518,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if let lastMessageStatus = dictionary["status"] as? String {
       
-      self.messages[self.messages.count - 1].status = lastMessageStatus
-      
       if self.messages.count - 1 >= 0 {
+        
+        self.messages[self.messages.count - 1].status = lastMessageStatus
         
         self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section: 0)])
         print("value")
