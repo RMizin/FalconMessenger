@@ -96,6 +96,7 @@
 		4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC2C58C1F40545200B5C825 /* UserCell.swift */; };
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
+		4BCA3BF51FB4966E006AE321 /* AboutTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA3BF41FB4966E006AE321 /* AboutTableViewController.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
 		4BE571501F4D87A4009D9AB4 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */; };
@@ -274,6 +275,7 @@
 		4BC2C58C1F40545200B5C825 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = ChatsControllers/UserCell.swift; sourceTree = "<group>"; };
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
+		4BCA3BF41FB4966E006AE321 /* AboutTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AboutTableViewController.swift; path = SettingsControllers/AboutTableViewController.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
 		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
 		4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorCollectionViewCell.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/ColorCollectionViewCell.swift"; sourceTree = "<group>"; };
@@ -446,6 +448,7 @@
 				4B8D05331F738FBB001735BC /* NotificationsAndSounds */,
 				4B8D05321F738FB6001735BC /* ChangeNumber */,
 				4B48D3091F35C9E20050C797 /* Storage */,
+				4BCA3BF31FB47705006AE321 /* About */,
 			);
 			name = Menu;
 			sourceTree = "<group>";
@@ -690,6 +693,14 @@
 				4BC26B261F3A234A0093A9D2 /* Message.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		4BCA3BF31FB47705006AE321 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				4BCA3BF41FB4966E006AE321 /* AboutTableViewController.swift */,
+			);
+			name = About;
 			sourceTree = "<group>";
 		};
 		4BCE1ABB1F3714A600C0EBF7 /* Models */ = {
@@ -1087,6 +1098,7 @@
 				4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */,
 				4BB775A51F59E74200BFEEB8 /* ChatMetaData.swift in Sources */,
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
+				4BCA3BF51FB4966E006AE321 /* AboutTableViewController.swift in Sources */,
 				4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */,
 				4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */,
 				4B5419561FB392570014C4FB /* INSPhotosTransitionAnimator.swift in Sources */,

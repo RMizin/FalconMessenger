@@ -28,8 +28,6 @@ class SettingsViewControllersContainer: UIViewController {
       
         view.backgroundColor = .white
       
-        extendedLayoutIncludesOpaqueBars = true
-
         userDataController.settingsContainer = self
         
         configureScrollView()
@@ -44,13 +42,13 @@ class SettingsViewControllersContainer: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
+  
     if userDataController.userProfileContainerView.phone.text == "" {
       print("will appear")
       listenChanges()
     }
-    
   }
+  
   
     override func viewDidLayoutSubviews() {
       super.viewDidLayoutSubviews()
@@ -96,11 +94,12 @@ class SettingsViewControllersContainer: UIViewController {
     fileprivate func configureScrollView() {
     
       view.addSubview(scrollView)
-      let scrollViewHeight = view.frame.height - 50
-      scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: scrollViewHeight )
+      
+      scrollView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height - 49)
       scrollView.delegate = self
       scrollView.alwaysBounceVertical = true
       scrollView.backgroundColor = .white
+      extendedLayoutIncludesOpaqueBars = true
     }
 
 
@@ -110,7 +109,7 @@ class SettingsViewControllersContainer: UIViewController {
       addChildViewController(accountSettingsController)
       
       userDataController.view.frame = CGRect(x: 0, y: 0, width: deviceScreen.width, height: 300)
-      accountSettingsController.view.frame = CGRect(x: 0, y: 255, width: deviceScreen.width, height: 280)
+      accountSettingsController.view.frame = CGRect(x: 0, y: 255, width: deviceScreen.width, height: 360)
      
       scrollView.addSubview(userDataController.view)
       scrollView.addSubview(accountSettingsController.view)

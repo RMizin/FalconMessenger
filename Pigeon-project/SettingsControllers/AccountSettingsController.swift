@@ -17,10 +17,11 @@ class AccountSettingsController: UIViewController {
   let accountSettingsCellId = "userProfileCell"
 
   var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and sounds" ),
-                      ( icon: UIImage(named: "ChangeNumber") , title: "Change number")]
+                      ( icon: UIImage(named: "ChangeNumber") , title: "Change number"),
+                      ( icon: UIImage(named: "Storage") , title: "Data and storage")]
   
   var secondSection = [/* ( icon: UIImage(named: "language") , title: "Язык", controller: nil), */
-    ( icon: UIImage(named: "Storage") , title: "Data and storage"),
+    ( icon: UIImage(named: "About") , title: "About"),
     ( icon: UIImage(named: "Logout") , title: "Log out")]
   
   fileprivate func basicErrorAlertWith (title:String, message: String) {
@@ -70,9 +71,7 @@ class AccountSettingsController: UIViewController {
     let firebaseAuth = Auth.auth()
     do {
       try firebaseAuth.signOut()
-      
-      
-
+    
     } catch let signOutError as NSError {
       print ("Error signing out: %@", signOutError)
       basicErrorAlertWith(title: "Error signing out", message: "Please check your internet connection and try again later.")
@@ -114,7 +113,7 @@ extension AccountSettingsController: UITableViewDataSource {
       cell.icon.image = secondSection[indexPath.row].icon
       cell.title.text = secondSection[indexPath.row].title
       
-      if indexPath.row == secondSection.count - 1 {
+      if indexPath.row == 1 {
         cell.accessoryType = .none
         
       }
@@ -128,28 +127,36 @@ extension AccountSettingsController: UITableViewDataSource {
     if indexPath.section == 0 {
       
       if indexPath.row == 0 {
-        
         let destination = NotificationsAndSoundsTableViewController()
+        destination.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(destination  , animated: true)
+      }
+      
+      if indexPath.row == 1 {
+        
+      }
+      
+      if indexPath.row == 2 {
+        let destination = StorageTableViewController()
         destination.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(destination  , animated: true)
       }
     }
     
-    
-    if indexPath.section == 1 {
       
-      if indexPath.row == 0 {
+      if indexPath.section == 1 {
         
-         let destination = StorageTableViewController()
-         destination.hidesBottomBarWhenPushed = true
-         self.navigationController?.pushViewController(destination  , animated: true)
-      }
-      
-      if indexPath.row == secondSection.count - 1 {
+        if indexPath.row == 0 {
+          let destination = AboutTableViewController()
+          destination.hidesBottomBarWhenPushed = true
+          self.navigationController?.pushViewController(destination  , animated: true)
+        }
         
-        logoutButtonTapped()
+        if indexPath.row == 1 {
+          
+          logoutButtonTapped()
+        }
       }
-    }
     
     accountSettingsTableView.deselectRow(at: indexPath, animated: true)
   }

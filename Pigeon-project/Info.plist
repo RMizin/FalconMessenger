@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.social-networking</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -35,12 +33,14 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.social-networking</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To select a profile photo or send photo or video via message</string>
 	<key>NSCameraUsageDescription</key>
-	<string>To take photos and videos</string>
+	<string>To take photos and videos and send them via messages </string>
 	<key>NSContactsUsageDescription</key>
 	<string>To find friends who also use Pigeon</string>
 	<key>NSMicrophoneUsageDescription</key>
