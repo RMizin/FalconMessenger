@@ -7,11 +7,15 @@
 //
 
 import UIKit
+import SafariServices
 
 class AboutTableViewController: UITableViewController {
 
+  let cellData = ["Privacy Policy", "Terms And Conditions", "Open Source Libraries"]
+  let legalData = ["https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing", /*PRIVACY POLICY*/
+    "https://docs.google.com/document/d/19PQFh9LzXz1HO2Zq6U7ysCESIbGoodY6rBJbOeCyjkc/edit?usp=sharing", /*TERMS AND CONDITIONS*/
+    "https://docs.google.com/document/d/12u1ZmTDV79NwcOqLXHnPVPFfmAHZzibEoJNKyWEKHME/edit?usp=sharing" /*OPEN SOURCE LIBRARIES*/]
   
-  let cellData = ["Privacy Policy", "Terms", "Open Source Libraries"]
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -20,11 +24,9 @@ class AboutTableViewController: UITableViewController {
   }
   
   fileprivate func configureController() {
-    
+    title = "About"
     tableView = UITableView(frame: self.tableView.frame, style: .grouped)
     tableView.separatorStyle = .none
-    
-    title = "About"
     extendedLayoutIncludesOpaqueBars = true
     view.backgroundColor = .white
     navigationController?.navigationBar.backgroundColor = .white
@@ -33,7 +35,6 @@ class AboutTableViewController: UITableViewController {
   deinit {
     print("About DID DEINIT")
   }
-  
   
   override func numberOfSections(in tableView: UITableView) -> Int {
     return 1
@@ -55,8 +56,14 @@ class AboutTableViewController: UITableViewController {
     return cell
   }
   
-  
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+    let svc = SFSafariViewController(url: URL(string: legalData[indexPath.row])!)
+    if #available(iOS 11.0, *) {
+      svc.configuration.entersReaderIfAvailable = true
+    }
+    self.present(svc, animated: true, completion: nil)
+    
     tableView.deselectRow(at: indexPath, animated: true)
   }
   

@@ -86,11 +86,16 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = attachedImages.dequeueReusableCell(withReuseIdentifier: selectedMediaCollectionCellID, for: indexPath) as! SelectedMediaCollectionCell
     
-    DispatchQueue.main.async {
-      cell.image.image = self.selectedMedia[indexPath.item].object?.asUIImage
-    }
+    cell.isVideo = selectedMedia[indexPath.item].phAsset?.mediaType == .video
     
-     cell.isVideo = selectedMedia[indexPath.item].phAsset?.mediaType == .video
+ //   DispatchQueue.main.async {
+      guard let image = self.selectedMedia[indexPath.item].object?.asUIImage else {
+        return cell
+      }
+      cell.image.image = image
+    
+    
+    
     
     return cell
   }

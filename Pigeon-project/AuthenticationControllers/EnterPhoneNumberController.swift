@@ -8,6 +8,8 @@
 
 import UIKit
 import FirebaseAuth
+import SafariServices
+
 
 class EnterPhoneNumberController: UIViewController {
   
@@ -16,13 +18,19 @@ class EnterPhoneNumberController: UIViewController {
   
     override func viewDidLoad() {
         super.viewDidLoad()
+      
       view.backgroundColor = UIColor.white
-      view.addSubview(phoneNumberContainerView)
-      phoneNumberContainerView.frame = view.bounds
+      
+      configurePhoneNumberContainerView()
       configureNavigationBar()
       setCountry()
     }
   
+ fileprivate func configurePhoneNumberContainerView() {
+    view.addSubview(phoneNumberContainerView)
+    phoneNumberContainerView.frame = view.bounds
+    phoneNumberContainerView.termsAndPrivacy.delegate = self
+  }
   
   fileprivate func setCountry() {
     for country in countries {
@@ -33,7 +41,7 @@ class EnterPhoneNumberController: UIViewController {
     }
   }
   
-
+  
   fileprivate func configureNavigationBar () {
     let rightBarButton = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(rightBarButtonDidTap))
     self.navigationItem.rightBarButtonItem = rightBarButton
@@ -99,8 +107,6 @@ class EnterPhoneNumberController: UIViewController {
   }
 }
 
-
-
 extension EnterPhoneNumberController: CountryPickerDelegate {
   
   func countryPicker(_ picker: SelectCountryCodeController, didSelectCountryWithName name: String, code: String, dialCode: String) {
@@ -108,6 +114,15 @@ extension EnterPhoneNumberController: CountryPickerDelegate {
     phoneNumberContainerView.countryCode.text = dialCode
     setRightBarButtonStatus()
     picker.navigationController?.popViewController(animated: true)
+  }
+}
+
+extension EnterPhoneNumberController : UITextViewDelegate {
+  func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+    let safariVC = SFSafariViewController(url: URL)
+    present(safariVC, animated: true, completion: nil)
+    
+    return false
   }
 }
 

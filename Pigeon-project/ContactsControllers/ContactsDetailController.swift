@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MessageUI
 
 class ContactsDetailController: UITableViewController {
   
@@ -24,6 +25,13 @@ class ContactsDetailController: UITableViewController {
       tableView.separatorStyle = .none
     }
 
+    private func basicErrorAlertWith(title: String, message: String) {
+    
+      let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+      alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+      self.present(alert, animated: true, completion: nil)
+    }
+  
   
     // MARK: - Table view data source
 
@@ -65,6 +73,21 @@ class ContactsDetailController: UITableViewController {
 
         return cell
     }
+  
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    if indexPath.section == 2 {
+      if MFMessageComposeViewController.canSendText() {
+        let destination = MFMessageComposeViewController()
+        destination.body = "Hey! Download Pigeon messenger on the App Store."
+        destination.recipients = [contactPhoneNumbers[0]]
+        destination.messageComposeDelegate = self
+        present(destination, animated: true, completion: nil)
+      } else {
+        basicErrorAlertWith(title: "Error", message: "You cannot send texts.")
+      }
+    }
+  }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       if indexPath.section == 0 {
@@ -73,5 +96,11 @@ class ContactsDetailController: UITableViewController {
         return 50
       }
     }
-  
+}
+
+
+extension ContactsDetailController: MFMessageComposeViewControllerDelegate {
+  func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+    dismiss(animated: true, completion: nil)
+  }
 }

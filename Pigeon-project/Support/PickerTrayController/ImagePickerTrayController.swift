@@ -117,8 +117,14 @@ public class ImagePickerTrayController: UIViewController {
       imageManager = nil
     }
     
-    cameraController.removeFromParentViewController()
-    cameraController.cameraOverlayView = nil
+ 
+//      cameraController.removeFromParentViewController()
+//      if cameraController.cameraOverlayView != nil {
+//          self.cameraController.cameraOverlayView = nil
+//      }
+//    
+
+   
     
     collectionView.removeFromSuperview()
     print("\n TRAY CONTROLLER DID DEINIT \n")

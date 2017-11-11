@@ -14,12 +14,12 @@ class OutgoingTextMessageCell: BaseMessageCell {
   let textView: UITextView = {
     let textView = UITextView()
     textView.font = UIFont.systemFont(ofSize: 13)
-    textView.backgroundColor = UIColor.clear
+    textView.backgroundColor = .clear
     textView.isEditable = false
     textView.isScrollEnabled = false
     textView.textContainerInset = UIEdgeInsetsMake(10, 7, 10, 7)
     textView.dataDetectorTypes = .all
-    textView.textColor = UIColor.white
+    textView.textColor = .white
     textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
   
     return textView

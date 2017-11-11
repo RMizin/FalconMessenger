@@ -173,7 +173,7 @@ class ChatsController: UITableViewController {
     let titleView = UIView(frame: CGRect(  x: (( activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width) / 2), y: ((activityIndicatorView.frame.size.height) / 2), width:(activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width), height: ( activityIndicatorView.frame.size.height)))
     titleView.addSubview(activityIndicatorView)
     titleView.addSubview(titleLabel)
-    
+  
     self.navigationItem.titleView = titleView
   }
   
@@ -247,11 +247,11 @@ class ChatsController: UITableViewController {
       print("NO USER - RETURNING")
       return
     }
-    
+  
     currentUserConversationsReference = Database.database().reference().child("user-messages").child(uid)
     currentUserConversationsReference.keepSynced(true)
     currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
-      
+     
       let otherUserID = snapshot.key
       
       for snap in snapshot.children.allObjects as! [DataSnapshot] {
@@ -264,7 +264,7 @@ class ChatsController: UITableViewController {
       self.lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(uid).child(otherUserID).child(userMessagesFirebaseFolder)
       self.lastMessageForConverstaionRef.keepSynced(true)
       self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
-        
+
         let lastMessageID = snapshot.key
         self.fetchMessageWithMessageId(lastMessageID)
       })
@@ -619,3 +619,4 @@ extension ChatsController { /* hiding keyboard */
         }
     }
 }
+

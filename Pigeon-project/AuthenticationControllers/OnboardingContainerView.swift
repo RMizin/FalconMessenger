@@ -54,7 +54,6 @@ class OnboardingContainerView: UIView {
     logoImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -50),
     logoImageView.heightAnchor.constraint(equalToConstant: deviceScreen.width),
     
-    startMessaging.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -100),
     startMessaging.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
     startMessaging.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
     startMessaging.heightAnchor.constraint(equalToConstant: 50),
@@ -65,6 +64,11 @@ class OnboardingContainerView: UIView {
     welcomeTitle.bottomAnchor.constraint(equalTo: startMessaging.topAnchor, constant: -10)
     ])
     
+    if #available(iOS 11.0, *) {
+       startMessaging.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -100).isActive = true
+    } else {
+       startMessaging.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -100).isActive = true
+    }
   }
   
   required init(coder aDecoder: NSCoder) {

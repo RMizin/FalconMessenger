@@ -75,7 +75,16 @@ class EnterPhoneNumberContainerView: UIView {
     backgroundFrame.image = UIImage(named: "PigeonAuthPhoneBackground")
     return backgroundFrame
   }()
- 
+  
+  let termsAndPrivacy: UITextView = {
+    let termsAndPrivacy = UITextView()
+    termsAndPrivacy.translatesAutoresizingMaskIntoConstraints = false
+    termsAndPrivacy.isEditable = false
+    termsAndPrivacy.dataDetectorTypes = .all
+    
+    return termsAndPrivacy
+  }()
+
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -86,10 +95,13 @@ class EnterPhoneNumberContainerView: UIView {
     addSubview(countryCode)
     addSubview(phoneNumber)
     addSubview(backgroundFrame)
+    addSubview(termsAndPrivacy)
     
     phoneNumber.delegate = self
    
     let countryCodeWidth = deviceScreen.width * 0.26
+    
+    configureTextViewText()
  
     NSLayoutConstraint.activate([
       
@@ -103,7 +115,7 @@ class EnterPhoneNumberContainerView: UIView {
       instructions.trailingAnchor.constraint(equalTo: title.trailingAnchor, constant: 0),
       instructions.heightAnchor.constraint(equalToConstant: 45),
       
-      selectCountry.topAnchor.constraint(equalTo: topAnchor, constant: 150),
+      selectCountry.topAnchor.constraint(equalTo: instructions.bottomAnchor, constant: 0),
       selectCountry.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
       selectCountry.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
       selectCountry.heightAnchor.constraint(equalToConstant: 70),
@@ -121,12 +133,33 @@ class EnterPhoneNumberContainerView: UIView {
       phoneNumber.leadingAnchor.constraint(equalTo: countryCode.trailingAnchor, constant: 2),
       phoneNumber.trailingAnchor.constraint(equalTo: backgroundFrame.trailingAnchor, constant: -5),
       phoneNumber.centerYAnchor.constraint(equalTo: backgroundFrame.centerYAnchor, constant: 0),
-      phoneNumber.heightAnchor.constraint(equalTo: backgroundFrame.heightAnchor, constant: 0)
+      phoneNumber.heightAnchor.constraint(equalTo: backgroundFrame.heightAnchor, constant: 0),
+      
+      termsAndPrivacy.topAnchor.constraint(equalTo: phoneNumber.bottomAnchor, constant: 10),
+      termsAndPrivacy.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+      termsAndPrivacy.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+      termsAndPrivacy.heightAnchor.constraint(equalToConstant: 50)
     ])
   }
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
+  }
+  
+  private func configureTextViewText() {
+    
+    let termsAndConditionsAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/19PQFh9LzXz1HO2Zq6U7ysCESIbGoodY6rBJbOeCyjkc/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue] as [NSAttributedStringKey : Any]
+    
+    let privacyPolicyAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue] as [NSAttributedStringKey : Any]
+    
+    let termsAttributedString = NSMutableAttributedString(string: "By signing up, you agree to the Terms and Conditions of Service.")
+    termsAttributedString.setAttributes(termsAndConditionsAttributes, range: NSMakeRange(31, 22))
+    
+    let privacyAttributedString = NSMutableAttributedString(string: " Also if you still have not read the Privacy Policy, please take a look before signing up.")
+    privacyAttributedString.setAttributes(privacyPolicyAttributes, range: NSMakeRange(37, 14))
+    termsAttributedString.append(privacyAttributedString)
+    
+    termsAndPrivacy.attributedText = termsAttributedString
   }
 }
 

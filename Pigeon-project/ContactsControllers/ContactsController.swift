@@ -149,6 +149,7 @@ class ContactsController: UITableViewController {
       }
       
       self.fetchPigeonUsers()
+      self.sendUserContactsToDatabase()
     }
   }
   
@@ -174,10 +175,37 @@ class ContactsController: UITableViewController {
      return (user1.onlineStatus ?? "", user1.phoneNumber ?? "") > (user2.onlineStatus ?? "", user2.phoneNumber ?? "") // sort
     })
   }
+  
+  
+ fileprivate func sendUserContactsToDatabase() {
+    
+    guard let uid = Auth.auth().currentUser?.uid else {
+      return
+    }
+    
+    let userReference = Database.database().reference().child("users").child(uid).child("Contacts")
 
+    var preparedNumbers = [String]()
+    
+    for number in localPhones {
+      
+      do {
+        let countryCode = try self.phoneNumberKit.parse(number).countryCode
+        let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
+        preparedNumbers.append( ("+" + String(countryCode) + String(nationalNumber)) )
+        
+      } catch {
+        // print("Generic parser error")
+      }
+    }
+  
+    userReference.setValue(["contactsArray": preparedNumbers])
+  
+  }
+  
   
  fileprivate func fetchPigeonUsers() {
-  
+
     var preparedNumber = String()
     users.removeAll()
     
@@ -466,7 +494,7 @@ class ContactsController: UITableViewController {
 extension ContactsController: UITableViewDataSourcePrefetching {
   
   func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL!)  }
+    let urls = users.map { URL(string: $0.photoURL ?? "")  }
     SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
   }
 }

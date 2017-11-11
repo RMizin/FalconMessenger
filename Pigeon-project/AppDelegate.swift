@@ -136,6 +136,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
     
+    if notification.request.content.title == "New user" {
+      print("NEW USER")
+      // TO DO
+      // update ContactsViewController
+    }
+    
     if ( UIApplication.shared.applicationState == UIApplicationState.active) {
       if self.chatsController.navigationController?.visibleViewController is ChatLogController {
         print("yep")
@@ -196,8 +202,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
-   // UIApplication.shared.applicationIconBadgeNumber = 0
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
   }
 
   func applicationWillTerminate(_ application: UIApplication) {
