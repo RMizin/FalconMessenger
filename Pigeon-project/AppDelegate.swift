@@ -137,9 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
     
     if notification.request.content.title == "New user" {
-      print("NEW USER")
-      // TO DO
-      // update ContactsViewController
+      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
     }
     
     if ( UIApplication.shared.applicationState == UIApplicationState.active) {
@@ -155,6 +153,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       }
     }
   }
+  
+  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+   
+    if response.notification.request.content.title == "New user" {
+       NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
+    }
+    completionHandler()
+  }
+  
   
   func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
     print("Firebase registration token: \(fcmToken)")
@@ -179,13 +186,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
   }
   
-  
-//  var orientationLock = UIInterfaceOrientationMask.all
-//  
-//  func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-//    return self.orientationLock
-//  }
-  
   func applicationWillResignActive(_ application: UIApplication) {
     
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -198,6 +198,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
 
   func applicationWillEnterForeground(_ application: UIApplication) {
+    /* probably will be removed later */
+   //  NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
+    
     // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
   }
 

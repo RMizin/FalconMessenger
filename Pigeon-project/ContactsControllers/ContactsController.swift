@@ -44,7 +44,8 @@ class ContactsController: UITableViewController {
       view.backgroundColor = .white
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
-     
+      NotificationCenter.default.addObserver(self, selector:#selector(fetchPigeonUsers(notification:)),name:NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
+      
       setupTableView()
       fetchContacts()
       setupSearchController()
@@ -148,7 +149,7 @@ class ContactsController: UITableViewController {
         }
       }
       
-      self.fetchPigeonUsers()
+      self.fetchPigeonUsers(notification: nil)
       self.sendUserContactsToDatabase()
     }
   }
@@ -183,7 +184,7 @@ class ContactsController: UITableViewController {
       return
     }
     
-    let userReference = Database.database().reference().child("users").child(uid).child("Contacts")
+    let userReference = Database.database().reference().child("users").child(uid)
 
     var preparedNumbers = [String]()
     
@@ -199,12 +200,11 @@ class ContactsController: UITableViewController {
       }
     }
   
-    userReference.setValue(["contactsArray": preparedNumbers])
-  
+    userReference.updateChildValues(["contacts": preparedNumbers])
   }
   
   
- fileprivate func fetchPigeonUsers() {
+@objc fileprivate func fetchPigeonUsers(notification: NSNotification?) {
 
     var preparedNumber = String()
     users.removeAll()
