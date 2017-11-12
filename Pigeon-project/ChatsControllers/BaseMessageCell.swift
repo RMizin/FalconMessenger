@@ -59,6 +59,4 @@ class BaseMessageCell: RevealableCollectionViewCell {
     super.prepareForReuse()
     prepareViewsForReuse()
   }
-
-    
 }

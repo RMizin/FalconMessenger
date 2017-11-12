@@ -118,7 +118,11 @@ extension ChatLogController {
         }
         
         let indexPathOfCell = IndexPath(item: indexOfCellWithLocalImage, section: 0)
-        return self.collectionView?.cellForItem(at: indexPathOfCell)
+        
+        guard let cellForDismiss = self.collectionView?.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else {
+          return nil
+        }
+        return cellForDismiss.messageImageView
         
       } else {
         guard let indexOfCell = self.messages.index(where: {$0.messageUID == photo.messageUID}) else {

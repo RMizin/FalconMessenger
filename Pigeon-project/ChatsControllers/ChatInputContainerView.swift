@@ -121,7 +121,6 @@ class ChatInputContainerView: UIView {
     attachedImages = UICollectionView(centeredCollectionViewFlowLayout: centeredCollectionViewFlowLayout)
     backgroundColor = .white
     self.autoresizingMask = UIViewAutoresizing.flexibleHeight
-    self.inputTextView.delegate = self
 
     sendButton.setImage(UIImage(named: "send"), for: UIControlState())
     sendButton.translatesAutoresizingMaskIntoConstraints = false
