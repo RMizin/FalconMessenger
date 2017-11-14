@@ -137,10 +137,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     userMessagesLoadingReference?.keepSynced(true)
     userMessagesLoadingReference?.observeSingleEvent(of: .value, with: { (snapshot) in
       
-    if snapshot.exists() {
+      if !snapshot.exists() {
+        self.delegate?.messagesLoader(didFinishLoadingWith: self.messages)
+      }
       
       self.userMessagesLoadingReference?.observe( .childAdded, with: { (snapshot) in
-        
+
         self.messagesIds.append(snapshot.key)
         let messageUID = snapshot.key
     
@@ -193,10 +195,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               if UserDefaults.standard.bool(forKey: "In-AppSounds") {
                 SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
               }
-                
               return
             }
-          
           
             if Message(dictionary: dictionary).toId == uid {
               
@@ -248,14 +248,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }, withCancel: { (error) in
         print("error loading message")
       })
-      
     }, withCancel: { (error) in
       print("error loading message iDS")
     })
-        
-      } else {
-        self.delegate?.messagesLoader(didFinishLoadingWith: self.messages)
-      }
     })
   }
   
@@ -702,6 +697,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
     } else if scrollView.contentOffset.y >= 0 {
       canRefresh = true
+    } else {
+       refreshControl.endRefreshing()
     }
   }
   
@@ -1020,20 +1017,27 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var containerViewBottomAnchor: NSLayoutConstraint?
   
   @objc func handleSend() {
-    inputContainerView.inputTextView.isScrollEnabled = false
-    inputContainerView.invalidateIntrinsicContentSize()
+    
+    if currentReachabilityStatus != .notReachable {
+        
+      inputContainerView.inputTextView.isScrollEnabled = false
+      inputContainerView.invalidateIntrinsicContentSize()
 
-    inputContainerView.sendButton.isEnabled = false
+      inputContainerView.sendButton.isEnabled = false
     
-    if inputContainerView.inputTextView.text != "" {
-      let properties = ["text": inputContainerView.inputTextView.text!]
-      sendMessageWithProperties(properties as [String : AnyObject])
+      if inputContainerView.inputTextView.text != "" {
+        let properties = ["text": inputContainerView.inputTextView.text!]
+    
+          sendMessageWithProperties(properties as [String : AnyObject])
+      }
+    
+      isTyping = false
+      inputContainerView.placeholderLabel.isHidden = false
+    
+      handleMediaMessageSending()
+    } else {
+      basicErrorAlertWith(title: "No internet", message: noInternetError, controller: self)
     }
-    
-    isTyping = false
-    inputContainerView.placeholderLabel.isHidden = false
-    
-    handleMediaMessageSending()
   }
   
 

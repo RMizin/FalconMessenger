@@ -21,15 +21,8 @@ class AccountSettingsController: UIViewController {
                       ( icon: UIImage(named: "Storage") , title: "Data and storage")]
   
   var secondSection = [/* ( icon: UIImage(named: "language") , title: "Язык", controller: nil), */
-    ( icon: UIImage(named: "About") , title: "About"),
+    ( icon: UIImage(named: "Legal") , title: "Legal"),
     ( icon: UIImage(named: "Logout") , title: "Log out")]
-  
-  fileprivate func basicErrorAlertWith (title:String, message: String) {
-    
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
-    self.present(alert, animated: true, completion: nil)
-  }
   
   
   override func viewDidLoad() {
@@ -63,21 +56,25 @@ class AccountSettingsController: UIViewController {
     
     userReference.removeValue()// updateChildValues([token : true])
   }
+  
   func logoutButtonTapped () {
-    
-    
-    self.tabBarController?.selectedIndex = tabs.chats.rawValue
-    removeUserNotificationToken()
+  
     let firebaseAuth = Auth.auth()
+    
+    removeUserNotificationToken()
+    
     do {
       try firebaseAuth.signOut()
-    
+  
     } catch let signOutError as NSError {
       print ("Error signing out: %@", signOutError)
-      basicErrorAlertWith(title: "Error signing out", message: "Please check your internet connection and try again later.")
+      basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
       return
     }
+    
+    
     UIApplication.shared.applicationIconBadgeNumber = 0
+    
     let destination = OnboardingController()
     
     let newNavigationController = UINavigationController(rootViewController: destination)
@@ -87,10 +84,10 @@ class AccountSettingsController: UIViewController {
     newNavigationController.navigationBar.isTranslucent = false
     newNavigationController.modalTransitionStyle = .crossDissolve
     
-    self.present(newNavigationController, animated: true, completion: nil)
-    
+    self.present(newNavigationController, animated: true, completion: {
+       self.tabBarController?.selectedIndex = tabs.chats.rawValue
+    })
   }
-  
 }
 
 extension AccountSettingsController: UIScrollViewDelegate {}
@@ -133,7 +130,10 @@ extension AccountSettingsController: UITableViewDataSource {
       }
       
       if indexPath.row == 1 {
-        
+        let destination = UINavigationController(rootViewController: ChangeNumberEnterPhoneNumberController())
+        destination.hidesBottomBarWhenPushed = true
+        destination.navigationBar.isTranslucent = false
+        self.present(destination, animated: true, completion: nil)
       }
       
       if indexPath.row == 2 {
@@ -142,18 +142,16 @@ extension AccountSettingsController: UITableViewDataSource {
         self.navigationController?.pushViewController(destination  , animated: true)
       }
     }
-    
       
       if indexPath.section == 1 {
         
         if indexPath.row == 0 {
-          let destination = AboutTableViewController()
+          let destination = LegalTableViewController()
           destination.hidesBottomBarWhenPushed = true
-          self.navigationController?.pushViewController(destination  , animated: true)
+          self.navigationController?.pushViewController(destination, animated: true)
         }
         
         if indexPath.row == 1 {
-          
           logoutButtonTapped()
         }
       }

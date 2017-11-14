@@ -1,5 +1,5 @@
 //
-//  EnterVerificationCodeController.swift
+//  ChangeNumberEnterVerificationCodeController.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/2/17.
@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
 
 
-class EnterVerificationCodeController: UIViewController {
+class ChangeNumberEnterVerificationCodeController: UIViewController {
 
-  let enterVerificationContainerView = EnterVerificationContainerView()
+  let enterVerificationContainerView = ChangeNumberEnterVerificationContainerView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,7 @@ class EnterVerificationCodeController: UIViewController {
   
 
   fileprivate func configureNavigationBar () {
-    let rightBarButton = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(rightBarButtonDidTap))
+    let rightBarButton = UIBarButtonItem(title: "Confirm", style: .done, target: self, action: #selector(rightBarButtonDidTap))
     self.navigationItem.rightBarButtonItem = rightBarButton
     self.navigationItem.hidesBackButton = true
   }
@@ -41,7 +41,6 @@ class EnterVerificationCodeController: UIViewController {
     }
     
     enterVerificationContainerView.resend.isEnabled = false
-    print("tappped sms confirmation")
     
     let phoneNumberForVerification = enterVerificationContainerView.titleNumber.text!
     
@@ -61,56 +60,42 @@ class EnterVerificationCodeController: UIViewController {
   }
   
   @objc func rightBarButtonDidTap () {
-    print("tapped")
     
-    if currentReachabilityStatus == .notReachable {
-      basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
-      return
-    }
-   
-   
-    let verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
+    let verificationID = UserDefaults.standard.string(forKey: "ChangeNumberAuthVerificationID")
     let verificationCode = enterVerificationContainerView.verificationCode.text
 
     if verificationID == nil {
-      ARSLineProgress.showFail()
       self.enterVerificationContainerView.verificationCode.shake()
       return
     }
     
     if currentReachabilityStatus == .notReachable {
       basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
+      return
     }
     
-     ARSLineProgress.ars_showOnView(self.view)
+    ARSLineProgress.ars_showOnView(self.view)
     
-      let credential = PhoneAuthProvider.provider().credential (
-        withVerificationID: verificationID!,
-        verificationCode: verificationCode!)
+    let credential = PhoneAuthProvider.provider().credential (withVerificationID: verificationID!, verificationCode: verificationCode!)
+    
+    Auth.auth().currentUser?.updatePhoneNumber(credential, completion: { (error) in
+      if error != nil {
+        ARSLineProgress.hide()
+        basicErrorAlertWith(title: "Error", message: error?.localizedDescription ?? "Number changing process failed. Please try again later.", controller: self)
+        return
+      }
       
-      Auth.auth().signIn(with: credential) { (user, error) in
-        
+      let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
+      userReference.updateChildValues(["phoneNumber" : self.enterVerificationContainerView.titleNumber.text! ]) { (error, reference) in
         if error != nil {
           ARSLineProgress.hide()
-          basicErrorAlertWith(title: "Error", message: error?.localizedDescription ?? "Oops! Something happened, try again later.", controller: self)
+          basicErrorAlertWith(title: "Error", message: error?.localizedDescription ?? "Number changing process failed. Please try again later.", controller: self)
           return
         }
-      
-        let destination = UserProfileController()
-        destination.userProfileContainerView.phone.text = self.enterVerificationContainerView.titleNumber.text
-        destination.checkIfUserDataExists(completionHandler: { (isCompleted) in
-          if isCompleted {
-            ARSLineProgress.hide()
-           
-            if self.navigationController != nil {
-              if !(self.navigationController!.topViewController!.isKind(of: UserProfileController.self)) {
-                self.navigationController?.pushViewController(destination, animated: true)
-              }
-            }
-            
-            print("code is correct")
-          }
-        })
+        
+        ARSLineProgress.showSuccess()
+        self.dismiss(animated: true, completion: nil)
       }
+    })
   }
 }

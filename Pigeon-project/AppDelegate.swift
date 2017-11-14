@@ -142,11 +142,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     if ( UIApplication.shared.applicationState == UIApplicationState.active) {
       if self.chatsController.navigationController?.visibleViewController is ChatLogController {
-        print("yep")
-         print(notification.request.content )
+         print(notification.request.content)
         
       } else {
-        print("NOPE")
         if UserDefaults.standard.bool(forKey: "In-AppSounds")  {
           SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
         }

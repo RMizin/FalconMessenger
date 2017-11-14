@@ -74,6 +74,11 @@ class EnterPhoneNumberController: UIViewController {
   
   @objc func rightBarButtonDidTap () {
     
+    if currentReachabilityStatus == .notReachable {
+      basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
+      return
+    }
+    
     let destination = EnterVerificationCodeController()
     
     destination.enterVerificationContainerView.titleNumber.text = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!

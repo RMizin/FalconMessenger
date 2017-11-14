@@ -158,6 +158,11 @@ extension SettingsViewControllersContainer { /* user name editing */
   }
   
   @objc func doneBarButtonPressed() {
+    if currentReachabilityStatus == .notReachable {
+      basicErrorAlertWith(title: "No internet", message: noInternetError, controller: self)
+      return
+    }
+    
     ARSLineProgress.ars_showOnView(self.view)
     self.view.isUserInteractionEnabled = false
     navigationItem.leftBarButtonItem = nil

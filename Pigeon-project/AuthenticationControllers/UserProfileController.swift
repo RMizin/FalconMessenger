@@ -22,7 +22,7 @@ class UserProfileController: UIViewController {
   var referenceView:UIView!
   var currentPhoto:INSPhoto!
   var galleryPreview:INSPhotosViewController!
-  let overlay = UserProfilePictureOverlayView(frame: CGRect.zero)
+  let overlay = UserProfilePictureOverlayView(frame: CGRect.zero)  
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,15 +38,6 @@ class UserProfileController: UIViewController {
     fileprivate func configurePickerController() {
       picker.delegate = self
     }
-  
-//  fileprivate func configureImageView() {
-//    if userProfileContainerView.profileImageView.image == nil {
-//       userProfileContainerView.addPhotoLabel.isHidden = false
-//    } else {
-//       userProfileContainerView.addPhotoLabel.isHidden = true
-//    }
-//  }
-
   
     fileprivate func configureNavigationBar () {
       let rightBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(rightBarButtonDidTap))
@@ -82,6 +73,11 @@ extension UserProfileController {  /* only during authentication */
        userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
        userProfileContainerView.name.shake()
     } else {
+       
+      if currentReachabilityStatus == .notReachable {
+        basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
+        return
+      }
       
       updateUserData()
       

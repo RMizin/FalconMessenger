@@ -15,14 +15,6 @@ import AVFoundation
 
 extension MediaPickerController: UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
   
-  
-  fileprivate func basicErrorAlertWith (title:String, message: String) {
-  
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
-    self.present(alert, animated: true, completion: nil)
-  }
-  
   func openPhotoLibrary() {
     imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
     presentImagePicker()
@@ -123,7 +115,7 @@ if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceTy
                      
                       let alertMessage = videoRecordedButLibraryUnavailableError
                       self.dismissImagePicker()
-                      self.basicErrorAlertWith(title: basicTitleForAccessError, message: alertMessage)
+                      basicErrorAlertWith(title: basicTitleForAccessError, message: alertMessage, controller: self)
                     
                     }
                   }

@@ -30,6 +30,7 @@ let videoRecordedButLibraryUnavailableError = "To send a recorded video, it has 
 
 let basicErrorTitleForAlert = "Error"
 let basicTitleForAccessError = "Please Allow Access"
+let noInternetError = "Internet is not available. Please try again later"
 
 extension String {
   
@@ -120,6 +121,15 @@ extension SystemSoundID {
     }
   }
 }
+
+func basicErrorAlertWith (title: String, message: String, controller: UIViewController) {
+  
+  let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+  alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
+  controller.present(alert, animated: true, completion: nil)
+}
+
+
 func libraryAccessChecking() -> Bool {
   
   let status = PHPhotoLibrary.authorizationStatus()

@@ -25,15 +25,6 @@ class ContactsDetailController: UITableViewController {
       tableView.separatorStyle = .none
     }
 
-    private func basicErrorAlertWith(title: String, message: String) {
-    
-      let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-      alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
-      self.present(alert, animated: true, completion: nil)
-    }
-  
-  
-    // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
@@ -84,7 +75,7 @@ class ContactsDetailController: UITableViewController {
         destination.messageComposeDelegate = self
         present(destination, animated: true, completion: nil)
       } else {
-        basicErrorAlertWith(title: "Error", message: "You cannot send texts.")
+        basicErrorAlertWith(title: "Error", message: "You cannot send texts.", controller: self)
       }
     }
   }

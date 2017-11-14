@@ -1,0 +1,134 @@
+//
+//  ChangeNumberSelectCountryCodeController.swift
+//  Pigeon-project
+//
+//  Created by Roman Mizin on 8/3/17.
+//  Copyright © 2017 Roman Mizin. All rights reserved.
+//
+
+import UIKit
+
+
+protocol ChangeNumberCountryPickerDelegate: class {
+  func countryPicker(_ picker: ChangeNumberSelectCountryCodeController, didSelectCountryWithName name: String, code: String, dialCode: String)
+}
+
+fileprivate var savedContentOffset = CGPoint(x: 0, y: -50)
+fileprivate var savedCountryCode = String()
+
+
+class ChangeNumberSelectCountryCodeController: UIViewController {
+
+  let countries = Country().countries
+  var filteredCountries = [[String:String]]()
+  var searchBar = UISearchBar()
+  let tableView = UITableView()
+
+  weak var delegate: ChangeNumberCountryPickerDelegate?
+  
+    override func viewDidLoad() {
+        super.viewDidLoad()
+      
+        searchBar.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+      
+      searchBar.searchBarStyle = .minimal
+      searchBar.backgroundColor = .white
+      view.addSubview(tableView)
+      view.addSubview(searchBar)
+      tableView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height - 114)
+      searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+      filteredCountries = countries
+    }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    tableView.setContentOffset(savedContentOffset, animated: false)
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    savedContentOffset = tableView.contentOffset
+  }
+}
+
+
+extension ChangeNumberSelectCountryCodeController: UITableViewDelegate, UITableViewDataSource {
+ 
+   func numberOfSections(in tableView: UITableView) -> Int {
+    return 1
+  }
+  
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return filteredCountries.count
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    let identifier = "cell"
+    
+    let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
+    cell.textLabel?.text = filteredCountries[indexPath.row]["name"]! + " (" + filteredCountries[indexPath.row]["dial_code"]! + ")"
+    
+    if countryCode == filteredCountries[indexPath.row]["code"]! {
+      cell.accessoryType = .checkmark
+    } else {
+      cell.accessoryType = .none
+    }
+    
+    return cell
+  }
+  
+ fileprivate func resetCheckmark() {
+    for index in 0...filteredCountries.count {
+      let indexPath = IndexPath(row: index , section: 0)
+      let cell = tableView.cellForRow(at: indexPath)
+      
+       cell?.accessoryType = .none
+    }
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+    resetCheckmark()
+    let cell = tableView.cellForRow(at: indexPath)
+    cell?.accessoryType = .checkmark
+    
+    countryCode = filteredCountries[indexPath.row]["code"]!
+    delegate?.countryPicker(self, didSelectCountryWithName: filteredCountries[indexPath.row]["name"]!,
+                                   code: filteredCountries[indexPath.row]["code"]!,
+                                   dialCode: filteredCountries[indexPath.row]["dial_code"]!)
+  }
+}
+
+
+extension ChangeNumberSelectCountryCodeController: UISearchBarDelegate {
+  
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    
+    filteredCountries = searchText.isEmpty ? countries : countries.filter({ (data: [String : String]) -> Bool in
+      return data["name"]!.lowercased().contains(searchText.lowercased())
+    })
+ 
+    tableView.reloadData()
+  }
+  
+  
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    self.searchBar.endEditing(true)
+  }
+}
+
+
+extension ChangeNumberSelectCountryCodeController: UIScrollViewDelegate {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    if scrollView.isDecelerating {
+      view.endEditing(true)
+    }
+  }
+}
+
+
+
+

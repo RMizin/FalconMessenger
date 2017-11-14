@@ -22,7 +22,6 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
-
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -35,7 +34,6 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 private let userCellID = "userCellID"
 
-
 protocol ManageAppearance: class {
   func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool )
 }
@@ -43,13 +41,13 @@ protocol ManageAppearance: class {
 
 class ChatsController: UITableViewController {
   
+  var searchBar: UISearchBar?
+  var searchChatsController: UISearchController?
+  
   weak var delegate: ManageAppearance?
   
   var messagesDictionary = [String: (Message, User, ChatMetaData?)]()
   var filteredMessagesDictionary = [String: (Message, User, ChatMetaData?)]()
-  
-  var userIDs = [String]()
-  
   var finalUserCellData = Array<(Message, User, ChatMetaData?)>()
   var filteredFinalUserCellData = Array<(Message, User, ChatMetaData?)>()
   
@@ -59,9 +57,10 @@ class ChatsController: UITableViewController {
   fileprivate var messagesReference: DatabaseReference!
   fileprivate var metadataRef: DatabaseReference!
   fileprivate var usersRef: DatabaseReference!
-    
-  var searchBar: UISearchBar?
-  var searchChatsController:UISearchController?
+
+  private let group = DispatchGroup()
+  private var isAppLoaded = false
+  private var isGroupAlreadyFinished = false
 
   
   override func viewDidLoad() {
@@ -72,53 +71,17 @@ class ChatsController: UITableViewController {
     setupSearchController()
   }
   
-  
   override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    
-    print("\n chatsController will appear \n")
-    
-    if Auth.auth().currentUser?.uid != nil && !areConversationsLoaded {
-      print("YES USER - FETCHING")
-      fetchConversations()
-      areConversationsLoaded = true
-    } 
+      super.viewWillAppear(animated)
+
+    fetchConversations()
   }
   
-  
   override func viewDidAppear(_ animated: Bool) {
-    
     if let testSelected = tableView.indexPathForSelectedRow {
       tableView.deselectRow(at: testSelected, animated: true)
     }
     super.viewDidAppear(animated)
-  }
-  
-  
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    
-    print("\n chatsController did dissapear \n")
-    
-//    if currentUserConversationsReference != nil {
-//      currentUserConversationsReference.removeAllObservers()
-//    }
-//    
-//    if lastMessageForConverstaionRef != nil {
-//      lastMessageForConverstaionRef.removeAllObservers()
-//    }
-//    
-//    if messagesReference != nil {
-//      messagesReference.removeAllObservers()
-//    }
-//    
-//    if metadataRef != nil {
-//      metadataRef.removeAllObservers()
-//    }
-//    
-//    if usersRef != nil {
-//      usersRef.removeAllObservers()
-//    }
   }
   
   
@@ -132,7 +95,7 @@ class ChatsController: UITableViewController {
     edgesForExtendedLayout = UIRectEdge.top
     tableView.separatorStyle = .none
   }
-    
+  
   fileprivate func setupSearchController() {
         
       if #available(iOS 11.0, *) {
@@ -154,35 +117,49 @@ class ChatsController: UITableViewController {
         tableView.contentOffset = CGPoint(x: 0.0, y: 44.0)
       }
   }
-
   
-  func showActivityIndicator(title: String) {
- 
-    let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
-    activityIndicatorView.frame = CGRect(x: 0, y: 0, width: 14, height: 14)
-    activityIndicatorView.color = UIColor.black
-    activityIndicatorView.startAnimating()
+  fileprivate func checkIfThereAnyActiveChats(isEmpty: Bool) {
     
-    let titleLabel = UILabel()
-    titleLabel.text = title
-    titleLabel.font = UIFont.systemFont(ofSize: 14)
-    
-    let fittingSize = titleLabel.sizeThatFits(CGSize(width:200.0, height: activityIndicatorView.frame.size.height))
-    titleLabel.frame = CGRect(x: activityIndicatorView.frame.origin.x + activityIndicatorView.frame.size.width + 8, y: activityIndicatorView.frame.origin.y, width: fittingSize.width, height: fittingSize.height)
-    
-    let titleView = UIView(frame: CGRect(  x: (( activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width) / 2), y: ((activityIndicatorView.frame.size.height) / 2), width:(activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width), height: ( activityIndicatorView.frame.size.height)))
-    titleView.addSubview(activityIndicatorView)
-    titleView.addSubview(titleLabel)
-  
-    self.navigationItem.titleView = titleView
+    if isEmpty {
+      let noChatsYesContainer:NoChatsYetContainer! = NoChatsYetContainer()
+      
+      self.view.addSubview(noChatsYesContainer)
+      noChatsYesContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+      
+    } else {
+      for subview in self.view.subviews {
+        if subview is NoChatsYetContainer {
+          subview.removeFromSuperview()
+        }
+      }
+    }
   }
   
-  
-  func hideActivityIndicator() {
-    self.navigationItem.titleView = nil
+  fileprivate func configureTabBarBadge() {
+    
+    guard let uid = Auth.auth().currentUser?.uid else {
+      return
+    }
+    
+    let tabItems = self.tabBarController?.tabBar.items as NSArray!
+    let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
+    var badge = 0
+    
+    for meta in filteredFinalUserCellData {
+      if meta.0.seen != nil && !meta.0.seen! &&  meta.0.fromId != uid {
+        badge += 1
+        tabItem.badgeValue = badge.toString()
+        UIApplication.shared.applicationIconBadgeNumber = badge
+      }
+    }
+    
+    if badge <= 0 {
+      tabItem.badgeValue = nil
+      UIApplication.shared.applicationIconBadgeNumber = 0
+    }
   }
-  
 
+  
   func managePresense() {
     
     if currentReachabilityStatus == .notReachable {
@@ -190,7 +167,6 @@ class ChatsController: UITableViewController {
     }
     
     connectedRef = Database.database().reference(withPath: ".info/connected")
-    
     connectedRef.observe(.value, with: { (snapshot) in
    
       if self.currentReachabilityStatus != .notReachable {
@@ -204,82 +180,51 @@ class ChatsController: UITableViewController {
     }
   }
   
-  
-  func convigureTabBarBadge() {
-    
-    guard let uid = Auth.auth().currentUser?.uid else {
-      return
-    }
-    
-    let tabItems = self.tabBarController?.tabBar.items as NSArray!
-    
-    var badge = 0
-
-    for meta in finalUserCellData {
-   
-      let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
-      
-      if meta.0.fromId != uid {
-        
-        badge += meta.2?.badge ?? 0
-        
-        if badge <= 0 {
-          tabItem.badgeValue = nil
-           UIApplication.shared.applicationIconBadgeNumber = 0
-        } else {
-          tabItem.badgeValue = badge.toString()
-          
-          UIApplication.shared.applicationIconBadgeNumber = badge
-        }
-      }
-    }
-  }
-  
-  
-  fileprivate var userConversations = 0
-  fileprivate var areConversationsLoaded = false
-  
   func fetchConversations() {
     
-    userConversations = 0
-  
     guard let uid = Auth.auth().currentUser?.uid else {
-      print("NO USER - RETURNING")
       return
     }
   
     currentUserConversationsReference = Database.database().reference().child("user-messages").child(uid)
     currentUserConversationsReference.keepSynced(true)
-    currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
-     
-      let otherUserID = snapshot.key
+    currentUserConversationsReference.observeSingleEvent(of: .value) { (snapshot) in
       
-      for snap in snapshot.children.allObjects as! [DataSnapshot] {
-        if snap.key == userMessagesFirebaseFolder {
-         
-           self.userConversations += 1
-        }
+      for _ in 0 ..< snapshot.childrenCount {
+        self.group.enter()
       }
-
-      self.lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(uid).child(otherUserID).child(userMessagesFirebaseFolder)
-      self.lastMessageForConverstaionRef.keepSynced(true)
-      self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
-
-        let lastMessageID = snapshot.key
-        self.fetchMessageWithMessageId(lastMessageID)
+      
+      self.group.notify(queue: DispatchQueue.main, execute: {
+        self.handleReloadTable()
+        self.isGroupAlreadyFinished = true
+       
       })
+      
+      if !snapshot.exists() {
+        self.handleReloadTable()
+        return
+      }
+    }
+    
+    currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
+  
+        let otherUserID = snapshot.key
+        
+        self.lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(uid).child(otherUserID).child(userMessagesFirebaseFolder)
+        self.lastMessageForConverstaionRef.keepSynced(true)
+        self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
+          
+          let lastMessageID = snapshot.key
+          self.fetchMessageWithMessageId(lastMessageID)
+        })
     })
     
     currentUserConversationsReference.observe(.childRemoved, with: { (snapshot) in
-      print(snapshot.key)
-      print(self.messagesDictionary)
       
       self.messagesDictionary.removeValue(forKey: snapshot.key)
       self.handleReloadTable()
-      
-    }, withCancel: nil)
+    })
   }
-  
   
   func fetchMessageWithMessageId(_ messageId: String) {
     
@@ -287,32 +232,29 @@ class ChatsController: UITableViewController {
     messagesReference.keepSynced(true)
     messagesReference.observe( .value, with: { (snapshot) in
       
-      if let dictionary = snapshot.value as? [String: AnyObject] {
-        
-        let message = Message(dictionary: dictionary)
-        
-        if let chatPartnerId = message.chatPartnerId() {
-          
-          guard let uid = Auth.auth().currentUser?.uid else {
-            return
-          }
-          
-          self.metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
-          self.metadataRef.keepSynced(true)
-          self.metadataRef.removeAllObservers()
-          self.metadataRef.observe( .value, with: { (snapshot) in
-            
-            guard let metaDictionary = snapshot.value as? [String: Int] else {
-              return
-            }
-            
-            self.fetchUserDataWithUserID(chatPartnerId, for: message, metaData: metaDictionary)
-          })
-        }
+      guard let dictionary = snapshot.value as? [String: AnyObject] else {
+        return
       }
-    }, withCancel: nil)
+
+      let message = Message(dictionary: dictionary)
+      
+      guard let chatPartnerId = message.chatPartnerId(), let uid = Auth.auth().currentUser?.uid else  {
+        return
+      }
+      
+      self.metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
+      self.metadataRef.keepSynced(true)
+      self.metadataRef.removeAllObservers()
+      self.metadataRef.observe( .value, with: { (snapshot) in
+            
+        guard let metaDictionary = snapshot.value as? [String: Int] else {
+          return
+        }
+            
+        self.fetchUserDataWithUserID(chatPartnerId, for: message, metaData: metaDictionary)
+      })
+    })
   }
-  
   
   func fetchUserDataWithUserID(_ userID: String, for message: Message, metaData: [String: Int]) {
     
@@ -327,20 +269,14 @@ class ChatsController: UITableViewController {
       dictionary.updateValue(userID as AnyObject, forKey: "id")
       
       let user = User(dictionary: dictionary)
-      
       let meta = ChatMetaData(dictionary: metaData)
-        
-      self.messagesDictionary[userID]  = (message, user, meta)
-        
-      self.userIDs = self.messagesDictionary.keys.sorted()
-        
-      if self.userIDs.count == self.userConversations {
-          
+      self.messagesDictionary[userID] = (message, user, meta)
+      
+      if self.isGroupAlreadyFinished {
         self.handleReloadTable()
+      } else {
+        self.group.leave()
       }
-     
-    }, withCancel: { (error) in
-      print("\n", error.localizedDescription, "error\n")
     })
   }
   
@@ -348,7 +284,6 @@ class ChatsController: UITableViewController {
   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     return true
   }
-  
   
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     
@@ -371,43 +306,25 @@ class ChatsController: UITableViewController {
         self.filteredMessagesDictionary.removeValue(forKey: chatPartnerId)
         self.filteredFinalUserCellData = Array(self.filteredMessagesDictionary.values)
         
-        if self.userIDs.contains(chatPartnerId) {
-          self.userIDs.remove(at: self.userIDs.index(of: chatPartnerId)!)
-        }
-          self.tableView.deleteRows(at: [indexPath], with: .left)
-        
+        self.tableView.deleteRows(at: [indexPath], with: .left)
         self.tableView.endUpdates()
         
-        Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue(completionBlock: { (error, ref) in
-          
-          if error != nil {
-            print("Failed to delete message:", error as Any)
-            return
-          }
-          DispatchQueue.main.async {
-             self.convigureTabBarBadge()
-          }
-        })
+        Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue()
       }
     }
   }
   
- 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       return 85
-      
     }
-
   
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
   
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredMessagesDictionary.count
     }
-
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
@@ -438,7 +355,6 @@ class ChatsController: UITableViewController {
             }
           })
         }
-      
       
       if filteredFinalUserCellData[indexPath.row].0.seen != nil {
         
@@ -490,31 +406,42 @@ class ChatsController: UITableViewController {
   }
   
   
-  fileprivate var appIsLoaded = false
-  
   func handleReloadTable() {
-    
-    filteredMessagesDictionary =  messagesDictionary
-    
+
+    filteredMessagesDictionary = messagesDictionary
     finalUserCellData = Array(self.filteredMessagesDictionary.values)
-    
     finalUserCellData.sort { (dic1: (Message, User, ChatMetaData?), dic2: (Message, User, ChatMetaData?)) -> Bool in
       return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
     }
-     self.convigureTabBarBadge()
-    
+  
     filteredFinalUserCellData = finalUserCellData
+    tableView.reloadData()
+   
+    if self.filteredFinalUserCellData.count == 0 {
+      self.checkIfThereAnyActiveChats(isEmpty: true)
+    } else {
+      self.checkIfThereAnyActiveChats(isEmpty: false)
+    }
     
-    DispatchQueue.main.async(execute: {
-      
-          self.tableView.reloadData()
-    })
+    configureTabBarBadge()
     
-    if !appIsLoaded {
-       self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
-       appIsLoaded = true
+    if !isAppLoaded {
+      self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
+      isAppLoaded = true
     }
   }
+  
+  func handleReloadTableAfterSearch() {
+    
+    finalUserCellData = Array(self.filteredMessagesDictionary.values)
+    finalUserCellData.sort { (dic1: (Message, User, ChatMetaData?), dic2: (Message, User, ChatMetaData?)) -> Bool in
+      return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
+    }
+    
+    filteredFinalUserCellData = finalUserCellData
+    tableView.reloadData()
+  }
+  
 }
 
 
@@ -540,9 +467,7 @@ extension ChatsController: MessagesLoaderDelegate {
     }
     
     self.chatLogController?.startCollectionViewAtBottom()
-  
     if let destination = self.chatLogController {
-      
       navigationController?.pushViewController( destination, animated: true)
       self.chatLogController = nil
       self.autoSizingCollectionViewFlowLayout = nil
@@ -550,52 +475,26 @@ extension ChatsController: MessagesLoaderDelegate {
   }
 }
 
-
 extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
-    
+  
     func updateSearchResults(for searchController: UISearchController) {}
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         
         searchBar.text = nil
         filteredMessagesDictionary = messagesDictionary
-        
         handleReloadTable()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         filteredMessagesDictionary = searchText.isEmpty ? messagesDictionary : messagesDictionary.filter({ (key, value) -> Bool in
-            
-            return  value.1.name!.lowercased().contains(searchText.lowercased())
+          return  value.1.name!.lowercased().contains(searchText.lowercased())
         })
         
         handleReloadTableAfterSearch()
     }
-    
-    func handleReloadTableAfterSearch() {
-        
-        finalUserCellData = Array(self.filteredMessagesDictionary.values)
-        
-        finalUserCellData.sort { (dic1: (Message, User, ChatMetaData?), dic2: (Message, User, ChatMetaData?)) -> Bool in
-            return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
-        }
-        self.convigureTabBarBadge()
-        
-        filteredFinalUserCellData = finalUserCellData
-        
-        DispatchQueue.main.async(execute: {
-            
-            self.tableView.reloadData()
-        })
-        
-        if !appIsLoaded {
-            self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
-            appIsLoaded = true
-        }
-    }
 }
-
 
 extension ChatsController { /* hiding keyboard */
     
@@ -620,3 +519,29 @@ extension ChatsController { /* hiding keyboard */
     }
 }
 
+extension ChatsController { /* activity indicator handling */
+  func showActivityIndicator(title: String) {
+    
+    let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
+    activityIndicatorView.frame = CGRect(x: 0, y: 0, width: 14, height: 14)
+    activityIndicatorView.color = UIColor.black
+    activityIndicatorView.startAnimating()
+    
+    let titleLabel = UILabel()
+    titleLabel.text = title
+    titleLabel.font = UIFont.systemFont(ofSize: 14)
+    
+    let fittingSize = titleLabel.sizeThatFits(CGSize(width:200.0, height: activityIndicatorView.frame.size.height))
+    titleLabel.frame = CGRect(x: activityIndicatorView.frame.origin.x + activityIndicatorView.frame.size.width + 8, y: activityIndicatorView.frame.origin.y, width: fittingSize.width, height: fittingSize.height)
+    
+    let titleView = UIView(frame: CGRect(  x: (( activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width) / 2), y: ((activityIndicatorView.frame.size.height) / 2), width:(activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width), height: ( activityIndicatorView.frame.size.height)))
+    titleView.addSubview(activityIndicatorView)
+    titleView.addSubview(titleLabel)
+    
+    self.navigationItem.titleView = titleView
+  }
+  
+  func hideActivityIndicator() {
+    self.navigationItem.titleView = nil
+  }
+}

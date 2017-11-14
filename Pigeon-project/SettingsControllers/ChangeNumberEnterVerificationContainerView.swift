@@ -1,5 +1,5 @@
 //
-//  EnterVerificationContainerView.swift
+//  ChangeNumberEnterVerificationContainerView.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/3/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EnterVerificationContainerView: UIView {
+class ChangeNumberEnterVerificationContainerView: UIView {
 
   
   let titleNumber: UILabel = {
@@ -56,7 +56,7 @@ class EnterVerificationContainerView: UIView {
   }()
   
   
-  weak var enterVerificationCodeController: EnterVerificationCodeController?
+  weak var enterVerificationCodeController: ChangeNumberEnterVerificationCodeController?
   
   var seconds = 120
   
