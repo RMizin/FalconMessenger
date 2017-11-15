@@ -37,18 +37,8 @@ class ActionCell: UICollectionViewCell {
         return stackView
     }()
 
-    fileprivate let chevronImageView: UIImageView = {
-        let bundle = Bundle(for: ImagePickerTrayController.self)
-        let image = UIImage(named: "ActionCell-Chevron", in: bundle, compatibleWith: nil)
-        let imageView = UIImageView(image: image)
-        imageView.alpha = 0.5
-
-        return imageView
-    }()
 
     var actions = [ImagePickerAction]() {
-        // It is sufficient to compare the length of the array
-        // as actions can only be added but not removed
         
         willSet {
             if newValue.count != actions.count {
@@ -62,45 +52,20 @@ class ActionCell: UICollectionViewCell {
             }
         }
     }
-    
-    var disclosureProcess: CGFloat = 0 {
-        didSet {
-            setNeedsLayout()
-        }
-    }
-    
+  
     // MARK: - Initialization
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        initialize()
+      
+      contentView.addSubview(stackView)
+      stackView.frame = bounds.insetBy(dx: spacing.x, dy: spacing.y).offsetBy(dx:  stackViewOffset, dy: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        initialize()
-    }
-    
-    fileprivate func initialize() {
-        contentView.addSubview(stackView)
-        contentView.addSubview(chevronImageView)
-    }
-    
-    // MARK: - Layout
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let progress = max(disclosureProcess, 0)
-        stackView.frame = bounds.insetBy(dx: spacing.x, dy: spacing.y).offsetBy(dx: -progress * stackViewOffset, dy: 0)
-        
-        chevronImageView.alpha = progress/2
-        
-        let chevronOffset = (1-progress) * (spacing.x + stackViewOffset)
-        let chevronCenterX = max(bounds.maxX - spacing.x/2 + chevronOffset, stackView.frame.maxX + spacing.x/2)
-        chevronImageView.center = CGPoint(x: chevronCenterX, y: bounds.midY)
+       // initialize()
     }
     
 

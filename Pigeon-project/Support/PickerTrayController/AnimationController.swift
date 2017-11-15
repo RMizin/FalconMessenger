@@ -53,8 +53,8 @@ extension AnimationController: UIViewControllerAnimatedTransitioning {
         container.window?.addGestureRecognizer(gestureRecognizer)
         
         container.addSubview(to.view)
-        container.frame = CGRect(x: 0, y: container.bounds.height-to.trayHeight, width: container.bounds.width, height: to.trayHeight)
-        to.view.transform = CGAffineTransform(translationX: 0, y: to.trayHeight)
+        container.frame = CGRect(x: 0, y: container.bounds.height-to.collectionView.frame.height, width: container.bounds.width, height: to.collectionView.frame.height)
+        to.view.transform = CGAffineTransform(translationX: 0, y: to.collectionView.frame.height)
         
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration, delay: 0, options: .allowUserInteraction, animations: {
@@ -72,7 +72,7 @@ extension AnimationController: UIViewControllerAnimatedTransitioning {
         
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration, delay: 0, options: .allowUserInteraction, animations: {
-            from.view.frame.origin.y += from.trayHeight
+            from.view.frame.origin.y += from.collectionView.frame.height
         }, completion: { _ in
             if !transitionContext.transitionWasCancelled {
 //                from.view.removeFromSuperview()

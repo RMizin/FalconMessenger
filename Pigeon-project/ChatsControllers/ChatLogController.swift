@@ -41,12 +41,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     didSet {
       loadMessages()
       self.title = user?.name
-      configureTitileViewWithOnlineStatus()
+      configureTitleViewWithOnlineStatus()
     }
   }
   
   var userMessagesLoadingReference: DatabaseQuery!
-  
+
   var messagesLoadingReference: DatabaseReference!
   
   var typingIndicatorReference: DatabaseReference!
@@ -120,15 +120,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
 
   
-  var messagesIds = [String]()
-  
-  var appendingMessages = [Message]()
-  
- 
-  fileprivate var isInitialLoad = true
+  fileprivate var isInitialChatMessagesLoad = true
   
   func loadMessages() {
     
+    var appendingMessages = [Message]()
+    let initialLoadGroup = DispatchGroup()
     guard let uid = Auth.auth().currentUser?.uid,let toId = user?.id else {
       return
     }
@@ -136,17 +133,31 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     userMessagesLoadingReference = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
     userMessagesLoadingReference?.keepSynced(true)
     userMessagesLoadingReference?.observeSingleEvent(of: .value, with: { (snapshot) in
-      
-      if !snapshot.exists() {
-        self.delegate?.messagesLoader(didFinishLoadingWith: self.messages)
+    
+      for _ in 0 ..< snapshot.childrenCount {
+        initialLoadGroup.enter()
       }
       
+      initialLoadGroup.notify(queue: DispatchQueue.main, execute: {
+        
+        self.isInitialChatMessagesLoad = false
+        
+        if snapshot.exists() {
+          appendingMessages.sort(by: { (message1, message2) -> Bool in
+            return message1.timestamp!.int32Value < message2.timestamp!.int32Value
+          })
+       
+         self.delegate?.messagesLoader(didFinishLoadingWith: appendingMessages)
+         self.observeTypingIndicator()
+         self.updateMessageStatus(messageRef: self.messagesLoadingReference)
+        } else {
+         self.delegate?.messagesLoader(didFinishLoadingWith: self.messages)
+        }
+      })
+      
       self.userMessagesLoadingReference?.observe( .childAdded, with: { (snapshot) in
-
-        self.messagesIds.append(snapshot.key)
         let messageUID = snapshot.key
-    
-        self.messagesLoadingReference = Database.database().reference().child("messages").child(snapshot.key)
+        self.messagesLoadingReference = Database.database().reference().child("messages").child(messageUID)
         self.messagesLoadingReference.keepSynced(true)
         self.messagesLoadingReference.observeSingleEvent(of: .value, with: { (snapshot) in
         
@@ -156,38 +167,28 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
           
-          if self.isInitialLoad {
-            
-            self.appendingMessages.append(Message(dictionary: dictionary))
-            
+          if self.isInitialChatMessagesLoad {
+            appendingMessages.append(Message(dictionary: dictionary))
+  
             if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
               if Message(dictionary: dictionary).localVideoUrl == nil {
                 self.mediaMessages.append(Message(dictionary: dictionary))
               }
             }
-            
-            if self.appendingMessages.count == self.messagesIds.count {
-              
-              self.appendingMessages.sort(by: { (message1, message2) -> Bool in
-                
-                return message1.timestamp!.int32Value < message2.timestamp!.int32Value
-              })
-              
-              self.delegate?.messagesLoader(didFinishLoadingWith: self.appendingMessages)
-              
-              DispatchQueue.main.async {
-            
-                self.observeTypingIndicator()
-                self.updateMessageStatus(messageRef: self.messagesLoadingReference)
-                self.updateMessageStatusUI(dictionary: dictionary)
-              }
-              
-              self.isInitialLoad = false
-              return
-            }
+      
+            initialLoadGroup.leave()
+          
           } else {
           
             if Message(dictionary: dictionary).fromId == uid || Message(dictionary: dictionary).fromId == Message(dictionary:dictionary).toId { /* outbox */
+              
+              self.messagesLoadingReference.observe(.childChanged, with: { (snapshot) in
+                if snapshot.exists() && snapshot.key == "status" {
+                  let newMessageStatus = snapshot.value!
+                  dictionary.updateValue(newMessageStatus as AnyObject, forKey: "status")
+                  self.updateMessageStatusUI(dictionary: dictionary)
+                }
+              })
               
               self.updateMessageStatus(messageRef: self.messagesLoadingReference)
               self.updateMessageStatusUI(dictionary: dictionary)
@@ -198,10 +199,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               return
             }
           
-            if Message(dictionary: dictionary).toId == uid {
+            if Message(dictionary: dictionary).toId == uid { /* inbox */
               
               self.collectionView?.performBatchUpdates ({
-              
                 self.messages.append(Message(dictionary: dictionary))
                 
                 if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
@@ -211,37 +211,25 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 }
                 
                 if self.messages.count - 1 >= 0 {
-                
                   let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-                  
                   self.collectionView?.insertItems(at: [indexPath])
-                
                 } else {
-                  
                   return
                 }
              
                 if self.messages.count - 2 >= 0 {
-                
                   self.collectionView?.reloadItems(at: [IndexPath (row: self.messages.count - 2, section: 0)])
                 }
             
                 if self.messages.count - 1 >= 0 && self.isScrollViewAtTheBottom {
-                
                   let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
                   
                   DispatchQueue.main.async {
-                    
                     self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
                   }
                 }
               }, completion: { (true) in
-                
-                  self.updateMessageStatus(messageRef: self.messagesLoadingReference)
-                
-                  self.updateMessageStatusUI(dictionary: dictionary)
-                
-                return
+                self.updateMessageStatus(messageRef: self.messagesLoadingReference)
               })
             }
           }
@@ -262,9 +250,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let numberOfMessagesToLoad = messages.count + messagesToLoad
     let nextMessageIndex = messages.count + 1
     let mediaMessagesCount = mediaMessages.count
+    let oldestMessagesLoadingGroup = DispatchGroup()
     
     guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
       return
+    }
+    
+    if messages.count <= 0 {
+       self.refreshControl.endRefreshing()
     }
     
     let startingIDRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(numberOfMessagesToLoad))
@@ -272,76 +265,67 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       if snapshot.exists() {
         self.queryStartingID = snapshot.key
-        print(self.queryStartingID)
       }
       
       let endingIDRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(nextMessageIndex))
       endingIDRef.observeSingleEvent(of: .childAdded, with: { (snapshot) in
         self.queryEndingID = snapshot.key
-        print(self.queryEndingID)
         
         if self.queryStartingID == self.queryEndingID {
           self.refreshControl.endRefreshing()
-          print("ALL messages downloaded")
           return
         }
+        
         var userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryOrderedByKey()
           userMessagesRef = userMessagesRef.queryStarting(atValue: self.queryStartingID).queryEnding(atValue: self.queryEndingID)
+        
+        userMessagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+          for _ in 0 ..< snapshot.childrenCount {
+            oldestMessagesLoadingGroup.enter()
+          }
+          
+          oldestMessagesLoadingGroup.notify(queue: DispatchQueue.main, execute: {
+            var arrayWithShiftedMessages = self.messages
+            let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messages.count )
+            print(-shiftingIndex, "shifting index")
+            
+            arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
+            self.mediaMessages.shiftInPlace(withDistance: mediaMessagesCount - self.mediaMessages.count)
+            
+            self.messages = arrayWithShiftedMessages
+            userMessagesRef.removeAllObservers()
+            
+            contentSizeWhenInsertingToTop = self.collectionView?.contentSize
+            isInsertingCellsToTop = true
+            self.refreshControl.endRefreshing()
+            
+            DispatchQueue.main.async {
+              self.collectionView?.reloadData()
+            }
+          })
+        })
+        
           userMessagesRef.observe(.childAdded, with: { (snapshot) in
-          self.messagesIds.append(snapshot.key)
-          
-          let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
-          let messageUID = snapshot.key
-          messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
+            let messageUID = snapshot.key
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            guard var dictionary = snapshot.value as? [String: AnyObject] else {
-              return
-            }
-            
-            dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
-            
-            self.messages.append(Message(dictionary: dictionary))
-            
-            if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
-              if Message(dictionary: dictionary).localVideoUrl == nil {
-                self.mediaMessages.append(Message(dictionary: dictionary))
+              guard var dictionary = snapshot.value as? [String: AnyObject] else {
+                return
               }
-            }
             
-            if self.messages.count == self.messagesIds.count {
-              
-              var arrayWithShiftedMessages = self.messages
-              
-              let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messagesIds.count )
-              print(-shiftingIndex, "shifting index")
-              
-              arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
-              self.mediaMessages.shiftInPlace(withDistance: mediaMessagesCount - self.mediaMessages.count)
-              
-              self.messages = arrayWithShiftedMessages
-              userMessagesRef.removeAllObservers()
-              
-              contentSizeWhenInsertingToTop = self.collectionView?.contentSize
-              isInsertingCellsToTop = true
-              self.refreshControl.endRefreshing()
-              
-              DispatchQueue.main.async {
-                self.collectionView?.reloadData()
+              dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
+            
+              self.messages.append(Message(dictionary: dictionary))
+            
+              if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
+                if Message(dictionary: dictionary).localVideoUrl == nil {
+                  self.mediaMessages.append(Message(dictionary: dictionary))
+                }
               }
-              
-            } // if self.messages.count == numberOfMessagesToLoad
-            
-          }, withCancel: { (error) in
-            
-            print("error loading messages (Message)")
-            
-          }) // messagesRef
-          
-        }) { (error) in
-          
-          print("error loading user-messages (ID's)")
-          
-        } // error
+              oldestMessagesLoadingGroup.leave()
+            }, withCancel: nil) // messagesRef
+        })
       }) // endingIDRef
     }) // startingIDRef
   }
@@ -356,18 +340,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     set {
       localTyping = newValue
-      
       let typingData: NSDictionary = [typingIndicatorStateDatabaseKeyID : newValue]
-      
       if localTyping {
         sendTypingStatus(data: typingData)
-        
       } else {
-        
         guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
           return
         }
-        
         let userIsTypingRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorDatabaseID)
         userIsTypingRef.removeValue()
       }
@@ -447,7 +426,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           if self.collectionView!.contentOffset.y >= (self.collectionView!.contentSize.height - self.collectionView!.frame.size.height - 200) {
           self.scrollToBottomOfTypingIndicator()
         }
-        
       })
       
     } else {
@@ -457,7 +435,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         self.sections = ["Messages"]
         
         if self.collectionView!.numberOfSections > 1 {
-          
           self.collectionView?.deleteSections(sectionsIndexSet)
           
           guard let cell = self.collectionView?.cellForItem(at: IndexPath(item: 0, section: 1 ) ) as? TypingIndicatorCell else {
@@ -473,50 +450,40 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-
+  
   fileprivate func updateMessageStatus(messageRef: DatabaseReference) {
     
-    guard let uid = Auth.auth().currentUser?.uid else {
+    guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else {
       return
     }
-    
-    if currentReachabilityStatus != .notReachable {
-      
-      var recieverID = String()
-      
-      messageRef.child("toId").observeSingleEvent(of: .value, with: { (snapshot) in
+  
+    var recieverID: String?
+    messageRef.child("toId").observeSingleEvent(of: .value, with: { (snapshot) in
         
-        if snapshot.exists() {
-
-          recieverID = snapshot.value as! String
+      if !snapshot.exists() {
+       return
+      }
+      
+      recieverID = snapshot.value as? String
+      
+      if uid == recieverID  { /* if i'm a reciever */
+        if self.navigationController?.visibleViewController is ChatLogController {
+          messageRef.updateChildValues(["seen" : true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
+            self.resetBadgeForReciever()
+          })
         }
-        
-        if uid == recieverID  {
-          
-          if self.navigationController?.visibleViewController is ChatLogController {
-          
-             messageRef.updateChildValues(["seen" : true], withCompletionBlock: { (error, reference) in
-              self.resetBadgeForReciever()
-             }) //updateChildValues(["seen" : true])
-          }
-          
-        } else {
-          
-           recieverID = ""
-        }
-      })
-    }
+      } else { /* if i'm a sender */
+        recieverID = nil
+      }
+    })
   }
   
   
   func updateMessageStatusUI(dictionary: [String : AnyObject]) {
     
     if let lastMessageStatus = dictionary["status"] as? String {
-      
       if self.messages.count - 1 >= 0 {
-        
         self.messages[self.messages.count - 1].status = lastMessageStatus
-        
         self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section: 0)])
         print("value")
       }
@@ -604,7 +571,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  func configureTitileViewWithOnlineStatus() {
+  func configureTitleViewWithOnlineStatus() {
     userStatusReference = Database.database().reference().child("users").child(user!.id!).child("OnlineStatus")
     userStatusReference.observe(.value, with: { (snapshot) in
       
@@ -685,7 +652,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       if collectionView!.contentSize.height < UIScreen.main.bounds.height - 50 {
         canRefresh = false
-        refreshControl.endRefreshing()
       }
       
       if canRefresh && !refreshControl.isRefreshing {
@@ -697,8 +663,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
     } else if scrollView.contentOffset.y >= 0 {
       canRefresh = true
-    } else {
-       refreshControl.endRefreshing()
     }
   }
   
@@ -1355,15 +1319,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       
       if snapshot.hasChild(messageMetaDataFirebaseFolder) {
-        
-        print("SENDER true rooms exist")
-       
         return
         
       } else {
-        
-        print("SENDER false room doesn't exist")
-        
         ref = ref.child(messageMetaDataFirebaseFolder)
         ref.updateChildValues(["badge": 0], withCompletionBlock: { (error, reference) in
           
@@ -1386,9 +1344,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       
       if snapshot.hasChild(messageMetaDataFirebaseFolder) {
-        
-        print("true rooms exist")
-        
         ref = ref.child(messageMetaDataFirebaseFolder).child("badge")
         ref.runTransactionBlock({ (mutableData) -> TransactionResult in
           var value = mutableData.value as? Int
@@ -1400,9 +1355,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         })
         
       } else {
-        
-        print("false room doesn't exist")
-        
         ref = ref.child(messageMetaDataFirebaseFolder)
         ref.updateChildValues(["badge": 1], withCompletionBlock: { (error, reference) in
           

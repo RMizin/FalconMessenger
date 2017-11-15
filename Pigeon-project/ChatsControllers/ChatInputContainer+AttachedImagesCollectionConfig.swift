@@ -38,6 +38,8 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     centeredCollectionViewFlowLayout.estimatedItemSize = CGSize(width: 100, height: selectedMediaCollectionCellHeight)
     
     attachedImages.autoresizesSubviews = false
+    
+    attachedImages.decelerationRate = UIScrollViewDecelerationRateNormal
   }
   
  @objc func removeButtonDidTap(sender: UIButton) {
@@ -61,10 +63,10 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
       if selectedMedia[row].phAsset != nil && mediaPickerController!.customMediaPickerView.assets.contains(selectedMedia[row].phAsset!) {
         deselectAsset(row: row)
       } else {
-        
-        selectedMedia.remove(at: row)
-        attachedImages.deleteItems(at: [indexPath!])
-        resetChatInputConntainerViewSettings()
+       
+          selectedMedia.remove(at: row)
+          attachedImages.deleteItems(at: [indexPath!])
+          self.resetChatInputConntainerViewSettings()
       }
     }
   }
@@ -74,9 +76,9 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
       let index = mediaPickerController!.customMediaPickerView.assets.index(of: selectedMedia[row].phAsset!)
     
       let indexPath = IndexPath(item: index!, section: 2)
-      
-      self.mediaPickerController?.customMediaPickerView.collectionView.deselectItem(at: indexPath , animated: false)
-      
+    
+      self.mediaPickerController?.customMediaPickerView.collectionView.deselectItem(at: indexPath , animated: true)
+    
       self.mediaPickerController?.customMediaPickerView.delegate?.controller?(self.mediaPickerController!.customMediaPickerView,
                                                                               didDeselectAsset: self.selectedMedia[row].phAsset!,
                                                                               at: indexPath)
@@ -88,14 +90,10 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     
     cell.isVideo = selectedMedia[indexPath.item].phAsset?.mediaType == .video
     
- //   DispatchQueue.main.async {
-      guard let image = self.selectedMedia[indexPath.item].object?.asUIImage else {
-        return cell
-      }
-      cell.image.image = image
-    
-    
-    
+    guard let image = self.selectedMedia[indexPath.item].object?.asUIImage else {
+      return cell
+    }
+    cell.image.image = image
     
     return cell
   }
@@ -118,7 +116,6 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    print("selected")
     
     if selectedMedia[indexPath.item].phAsset?.mediaType == PHAssetMediaType.image || selectedMedia[indexPath.item].phAsset == nil {
       chatLogController?.presentPhotoEditor(forImageAt: indexPath)

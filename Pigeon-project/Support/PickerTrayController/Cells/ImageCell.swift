@@ -13,7 +13,7 @@ class ImageCell: UICollectionViewCell {
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
+        imageView.layer.masksToBounds = true
         
         return imageView
     }()
@@ -57,7 +57,7 @@ class ImageCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        initialize()
+       // initialize()
     }
     
     fileprivate func initialize() {

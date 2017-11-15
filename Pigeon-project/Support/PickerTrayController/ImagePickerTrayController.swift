@@ -43,14 +43,6 @@ public let ImagePickerTrayAnimationDurationUserInfoKey = "ImagePickerTrayAnimati
 fileprivate let animationDuration: TimeInterval = 0.2
 
 public class ImagePickerTrayController: UIViewController {
-  
-  fileprivate func basicErrorAlertWith (title: String, message: String) {
-    
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
-    self.present(alert, animated: true, completion: nil)
-  }
-  
     
     fileprivate(set) lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -58,7 +50,6 @@ public class ImagePickerTrayController: UIViewController {
         layout.minimumInteritemSpacing = itemSpacing
         layout.minimumLineSpacing = itemSpacing
     
-        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 2, right: 1)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -101,8 +92,7 @@ public class ImagePickerTrayController: UIViewController {
         
         return options
     }()
-    
-    
+  
     public var allowsMultipleSelection = true {
         didSet {
             if isViewLoaded {
@@ -112,20 +102,9 @@ public class ImagePickerTrayController: UIViewController {
     }
 
   deinit {
-    
     if imageManager != nil {
       imageManager = nil
     }
-    
- 
-//      cameraController.removeFromParentViewController()
-//      if cameraController.cameraOverlayView != nil {
-//          self.cameraController.cameraOverlayView = nil
-//      }
-//    
-
-   
-    
     collectionView.removeFromSuperview()
     print("\n TRAY CONTROLLER DID DEINIT \n")
   }
@@ -136,9 +115,6 @@ public class ImagePickerTrayController: UIViewController {
     NotificationCenter.default.removeObserver(self)
   }
   
-    fileprivate var imageSize: CGSize = .zero
-    let trayHeight: CGFloat
-
     fileprivate let actionCellWidth: CGFloat = 162
     fileprivate weak var actionCell: ActionCell?
 
@@ -153,9 +129,7 @@ public class ImagePickerTrayController: UIViewController {
     }
     
     public weak var delegate: ImagePickerTrayControllerDelegate?
-
-    /// If set to `true` the tray can be dragged down in order to dismiss it
-    /// Defaults to `true`
+  
     public var allowsInteractivePresentation: Bool {
         get {
             return transitionController?.allowsInteractiveTransition ?? false
@@ -169,8 +143,6 @@ public class ImagePickerTrayController: UIViewController {
     // MARK: - Initialization
     
     public init() {
-        self.trayHeight = 216
-        
         super.init(nibName: nil, bundle: nil)
       
       let status = libraryAccessChecking()
@@ -181,7 +153,6 @@ public class ImagePickerTrayController: UIViewController {
         imageManager = nil
       }
       
-        print("\n  TRAY INIT  \n")
         transitionController = TransitionController(trayController: self)
         modalPresentationStyle = .custom
         transitioningDelegate = transitionController
@@ -190,45 +161,31 @@ public class ImagePickerTrayController: UIViewController {
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - View Lifecycle
-    
+  
     public override func loadView() {
         super.loadView()
-        
-        view.addSubview(collectionView)
-        collectionView.heightAnchor.constraint(equalToConstant: trayHeight).isActive = true
-        collectionView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        collectionView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        collectionView.allowsMultipleSelection = allowsMultipleSelection
-        
-        let numberOfRows = (UIDevice.current.userInterfaceIdiom == .pad) ? 3 : 2
-        let totalItemSpacing = CGFloat(numberOfRows-1)*itemSpacing + collectionView.contentInset.vertical
-        let side = round((self.trayHeight-totalItemSpacing)/CGFloat(numberOfRows))
-        self.imageSize = CGSize(width: side, height: side)
-    }
+ 
+      view.addSubview(collectionView)
+      collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+      collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+      collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
+      if #available(iOS 11.0, *) {
+        collectionView.bottomAnchor.constraint(equalTo:view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+      } else {
+        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+      }
+      collectionView.allowsMultipleSelection = allowsMultipleSelection
+    }
+
+    public override func viewDidLoad() {
+      super.viewDidLoad()
         fetchAssets()
     }
 
-    public override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        collectionView.setContentOffset(CGPoint(x: actionCellWidth - spacing.x, y: 0), animated: false)
-        reloadActionCellDisclosureProgress()
-    }
-    
-    // MARK: - Action
-    
     public func add(action: ImagePickerAction) {
         actions.append(action)
     }
-    
-    // MARK: - Images
    
   typealias CompletionHandler = (_ success: Bool) -> Void
   
@@ -282,40 +239,28 @@ public class ImagePickerTrayController: UIViewController {
     
     fileprivate func requestImage(for asset: PHAsset, completion: @escaping (_ image: UIImage?) -> ()) {
         requestOptions.isSynchronous = false
-        let size = scale(imageSize: imageSize)
-        
-        // Workaround because PHImageManager.requestImageForAsset doesn't work for burst images
+      
+        let size = CGSize(width: 200, height: 200)
+      
         if asset.representsBurst {
-         // DispatchQueue.main.async {
           self.imageManager?.requestImageData(for: asset, options: self.requestOptions) { data, _, _, _ in
               let image = data.flatMap { UIImage(data: $0) }
-             // image = compressImage(image!)
               completion(image)
             }
-         // }
-          
         } else {
-        //  DispatchQueue.main.async {
           self.imageManager?.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: self.requestOptions) { image, _ in
               completion(image)
             }
-         // }
-          
         }
     }
     
     fileprivate func prefetchImages(for asset: PHAsset) {
-        let size = scale(imageSize: imageSize)
+      let size = CGSize(width: 200, height: 200)
       imageManager?.startCachingImages(for: [asset], targetSize: size, contentMode: .aspectFill, options: requestOptions)
     }
-    
-    fileprivate func scale(imageSize size: CGSize) -> CGSize {
-        let scale = UIScreen.main.scale
-        return CGSize(width: size.width * scale, height: size.height * scale)
-    }
-    
+  
+  
     // MARK: - Camera
-    
     @objc fileprivate func flipCamera() {
         cameraController.cameraDevice = (cameraController.cameraDevice == .rear) ? .front : .rear
     }
@@ -325,27 +270,11 @@ public class ImagePickerTrayController: UIViewController {
       if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
         cameraController.takePicture()
       } else {
-        self.basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage)
+        basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage, controller: self)
       }
     }
-
-    
-    fileprivate func reloadActionCellDisclosureProgress() {
-        if sections[0] > 0 {
-            actionCell?.disclosureProcess = (collectionView.contentOffset.x / (actionCellWidth/2))
-        }
-    }
-    
-    fileprivate func post(name: Notification.Name, frame: CGRect, duration: TimeInterval?) {
-        var userInfo: [AnyHashable: Any] = [ImagePickerTrayFrameUserInfoKey: frame]
-        if let duration = duration {
-            userInfo[ImagePickerTrayAnimationDurationUserInfoKey] = duration
-        }
-        
-        NotificationCenter.default.post(name: name, object: self, userInfo: userInfo)
-    }
-    
 }
+
 
 // MARK: - UICollectionViewDataSource
 
@@ -354,14 +283,11 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sections.count
     }
-  
 
-    
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sections[section]
     }
   
-
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
@@ -369,15 +295,16 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
             cell.imagePickerTrayController = self
             cell.actions = actions
             actionCell = cell
-            reloadActionCellDisclosureProgress()
             
             return cell
+          
         case 1:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(CameraCell.self), for: indexPath) as! CameraCell
-            cell.cameraView = cameraController.view
-            cell.cameraOverlayView = cameraController.cameraOverlayView
-            
+           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(CameraCell.self), for: indexPath) as! CameraCell
+            cell.cameraView = self.cameraController.view
+            cell.cameraOverlayView = self.cameraController.cameraOverlayView
+
             return cell
+          
         case 2:
             let asset = assets[indexPath.item]
             
@@ -387,7 +314,7 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
                 
                 cell.isVideo = (asset.mediaType == .video)
                 cell.isRemote = (asset.sourceType != .typeUserLibrary)
-            
+             
                 self.requestImage(for: asset) { cell.imageView.image = $0 }
               }
         
@@ -409,7 +336,6 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
       
         if assets.count > indexPath.item {
           delegate?.controller?(self, willSelectAsset: assets[indexPath.item], at: indexPath)
-        //  delegate?.controller?(self, willSelectAsset: assets[indexPath.item], a )
         }
       
         return true
@@ -420,7 +346,6 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
       if assets.count > indexPath.item {
          delegate?.controller?(self, didSelectAsset: assets[indexPath.item], at: indexPath)
       }
-      
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
@@ -430,21 +355,12 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
       
         return true
     }
-    /*
-   NSArray *selectedIndexPaths =  [collectionView  indexPathsForSelectedItems];
-   
-   if (selectedIndexPaths.count > 4)
-   {
-   // Show alert
-   }
-   
-   */
+  
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
        if assets.count > indexPath.item {
         delegate?.controller?(self, didDeselectAsset: assets[indexPath.item], at: indexPath)
       }
     }
-    
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -460,7 +376,7 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
         case 1:
             return CGSize(width: 150, height: maxItemHeight)
         case 2:
-            return imageSize
+            return CGSize(width: collectionView.frame.height/2.05, height:  collectionView.frame.height/2.05)
         default:
             return .zero
         }
@@ -473,19 +389,8 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
         
         return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 6)
     }
-    
 }
 
-// MARK: - UIScrollViewDelegate
-
-extension ImagePickerTrayController: UIScrollViewDelegate {
-
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        reloadActionCellDisclosureProgress()
-    }
-}
-
-// MARK: - UIImagePickerControllerDelegate
 
 extension ImagePickerTrayController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -494,5 +399,4 @@ extension ImagePickerTrayController: UIImagePickerControllerDelegate, UINavigati
             delegate?.controller?(self, didTakeImage: image)
         }
     }
-    
 }

@@ -21,10 +21,10 @@ class MediaPickerController: UIViewController {
   
   var customMediaPickerView: ImagePickerTrayController! = nil
   
+  var imagePicker: UIImagePickerController! = UIImagePickerController()
+  
   weak var inputContainerView: ChatInputContainerView?
   
-  var imagePicker: UIImagePickerController! = UIImagePickerController()
-
   
   public init() {
     super.init(nibName: nil, bundle: nil)
@@ -49,11 +49,11 @@ class MediaPickerController: UIViewController {
   
   
   deinit {
-     print("\nMEDIA PICKER CONTROLLER DE!!!! INIT\n")
+    print("\nMEDIA PICKER CONTROLLER DE!!!! INIT\n")
     imagePicker = nil
   }
   
-
+  
   fileprivate func configureCustomMediaPickerView() {
     
     if container == nil {
@@ -66,7 +66,7 @@ class MediaPickerController: UIViewController {
     container.heightAnchor.constraint(equalToConstant: 216).isActive = true
     container.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
     container.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-
+    
     
     addChildViewController(customMediaPickerView)
     container.addSubview(customMediaPickerView.view)
@@ -81,21 +81,21 @@ class MediaPickerController: UIViewController {
     
     customMediaPickerView.add(action: .cameraAction { _ in
       self.openCamera()
-    })
+      })
     
     customMediaPickerView.add(action: .libraryAction { _ in
       self.openPhotoLibrary()
-    })
+      })
   }
 }
 
 
 extension MediaPickerController: ImagePickerTrayControllerDelegate {
   
- fileprivate typealias getUrlCompletionHandler = (_ url: String, _ success: Bool) -> Void
+  fileprivate typealias getUrlCompletionHandler = (_ url: String, _ success: Bool) -> Void
   
- fileprivate func getUrlFor(asset: PHAsset, completion: @escaping getUrlCompletionHandler) {
-  
+  fileprivate func getUrlFor(asset: PHAsset, completion: @escaping getUrlCompletionHandler) {
+    
     asset.requestContentEditingInput(with: PHContentEditingInputRequestOptions(), completionHandler: { (contentEditingInput, dictInfo) in
       
       if asset.mediaType == .image {
@@ -104,7 +104,7 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
         }
       } else {
         if let strURL = (contentEditingInput!.audiovisualAsset as? AVURLAsset)?.url.absoluteString {
-           completion(strURL, true)
+          completion(strURL, true)
         }
       }
     })
@@ -122,7 +122,7 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     manager.requestAVAsset(forVideo: asset, options: nil, resultHandler: { (avasset, audio, info) in
       
       if let avassetURL = avasset as? AVURLAsset {
-  
+        
         guard let video = try? Data(contentsOf: avassetURL.url) else {
           return
         }
@@ -130,7 +130,7 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
         self.getUrlFor(asset: asset) { (url, completed) in
           
           if completed {
-           
+            
             let mediaObject = ["object": data!,
                                "videoObject": video,
                                "imageSource": imageSourceCamera,
@@ -141,18 +141,9 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
             self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
             
             if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
-              DispatchQueue.main.async {
-                
-                self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
-              }
+              self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
             } else {
-              DispatchQueue.main.async {
-                self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0)])
-              }
-            }
-            
-            DispatchQueue.main.async {
-              self.expandCollection()
+              self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: 0 , section: 0) ], mediaObject: mediaObject)
             }
           }
         }
@@ -162,7 +153,7 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
   
   
   func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath) {
-
+    
     let image = uiImageFromAsset(phAsset: asset)
     
     let filename = asset.originalFilename!
@@ -170,15 +161,15 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     let imageData = compressImage(image: image!)
     
     if asset.mediaType == .image {
-     
+      
       self.handleAssetSelection(imageData: imageData,  videoData: nil, indexPath: indexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
       
     } else if asset.mediaType == .video {
-  
+      
       let manager = PHImageManager.default()
       
       manager.requestAVAsset(forVideo: asset, options: nil, resultHandler: { (avasset, audio, info) in
-   
+        
         if let avassetURL = avasset as? AVURLAsset {
           
           guard let video = try? Data(contentsOf: avassetURL.url) else {
@@ -186,7 +177,7 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
           }
           
           self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: indexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
-   
+          
         } else if avasset is AVComposition {
           
           let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
@@ -216,7 +207,7 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
                   guard let url = exporter!.outputURL else {
                     return
                   }
-                
+                  
                   guard let video = try? Data(contentsOf: url) else {
                     return
                   }
@@ -231,11 +222,12 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     }
   }
   
+  
   fileprivate func handleAssetSelection(imageData: Data, videoData: Data?, indexPath: IndexPath, imageSource: String, asset: PHAsset, filename: String) {
     
     getUrlFor(asset: asset) { (url, completed) in
       if completed {
-
+        
         var mediaObject = [String: AnyObject]()
         
         if videoData == nil {
@@ -257,38 +249,39 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
                          "fileURL" : url] as [String: AnyObject]
         }
         
+        if let _ = self.inputContainerView?.selectedMedia.index(where: { (item) -> Bool in
+          return item.filename == filename
+        }) {
+          return
+        }
+        
         self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
         
         if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
-          
-          self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+          self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
           
         } else {
           
-          self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0)])
+          self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: 0 , section: 0) ], mediaObject: mediaObject)
         }
-        
-        self.expandCollection()
       }
     }
   }
   
   
   func expandCollection() {
-  
-      inputContainerView?.attachedImages.scrollToItem(at: IndexPath(item: inputContainerView!.selectedMedia.count - 1 , section: 0), at: .right, animated: true)
-      
-      inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 175, left: 8, bottom: 8, right: 30)
-      
-      inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 165)
-      
-      inputContainerView?.separator.isHidden = false
-      
-      inputContainerView?.placeholderLabel.text = "Add comment or Send"
-      
-      inputContainerView?.sendButton.isEnabled = true
-      
-      inputContainerView?.invalidateIntrinsicContentSize()   
+    
+    inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 175, left: 8, bottom: 8, right: 30)
+
+    inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 165)
+    
+    inputContainerView?.invalidateIntrinsicContentSize()
+    
+    inputContainerView?.separator.isHidden = false
+    
+    inputContainerView?.sendButton.isEnabled = true
+    
+    inputContainerView?.placeholderLabel.text = "Add comment or Send"
   }
   
   
@@ -309,21 +302,12 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
                            "phAsset": asset,
                            "filename": filename,
                            "fileURL" : fileURL] as [String: AnyObject]
-        
         self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
         
         if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
-          DispatchQueue.main.async {
-            
-            self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
-          }
+          self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
         } else {
-          DispatchQueue.main.async {
-            self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0)])
-          }
-        }
-        DispatchQueue.main.async {
-          self.expandCollection()
+          self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: 0 , section: 0) ], mediaObject: mediaObject)
         }
       }
     }
@@ -338,52 +322,49 @@ extension MediaPickerController: ImagePickerTrayControllerDelegate {
     let mediaObject = ["object": data as AnyObject,
                        "imageSource": imageSourceCamera] as [String: AnyObject]
     
-    inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
+    self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
     
     if inputContainerView!.selectedMedia.count - 1 >= 0 {
+      
       if status {
-          self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+        self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
       } else {
         DispatchQueue.main.async {
-           self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ])
+          self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
         }
       }
-      
     } else {
-      
-      self.inputContainerView?.attachedImages.insertItems(at: [ IndexPath(item: 0 , section: 0) ])
-    }
-    
-    if status {
-        self.expandCollection()
-    } else {
-      DispatchQueue.main.async {
-        self.expandCollection()
-      }
+      self.insertItemsToCollectionViewAnimated(at: [IndexPath(item: 0 , section: 0)], mediaObject: mediaObject )
     }
   }
- 
+  
+  func insertItemsToCollectionViewAnimated(at indexPath: [IndexPath], mediaObject: [String: AnyObject]) {
+    
+    self.expandCollection()
+    self.inputContainerView?.attachedImages.performBatchUpdates ({
+      self.inputContainerView?.attachedImages.insertItems(at: indexPath)
+    }, completion: nil)
+    
+     self.inputContainerView?.attachedImages.scrollToItem(at: IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0), at: .right, animated: true)
+  }
+  
+  func deleteItemsToCollectionViewAnimated(at indexPath: [IndexPath]?, index: Int?) {
+    if self.inputContainerView?.attachedImages.cellForItem(at: indexPath![0]) == nil || self.inputContainerView?.selectedMedia[index!] == nil {
+      return
+    }
+    self.inputContainerView?.selectedMedia.remove(at: index!)
+    self.inputContainerView?.attachedImages.deleteItems(at: indexPath!)
+    self.inputContainerView?.resetChatInputConntainerViewSettings()
+  }
   
   func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset, at indexPath: IndexPath) {
     
-    if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
-    
-        for index in 0...self.inputContainerView!.selectedMedia.count - 1 {
-          
-          if self.inputContainerView!.selectedMedia[index].filename == asset.originalFilename {
-            
-            print("equals")
-            self.inputContainerView?.selectedMedia.remove(at: index)
-            self.inputContainerView?.attachedImages.deleteItems(at: [IndexPath(item: index, section: 0)])
-            break
-          }
-        }
-    } else {
-      self.inputContainerView?.selectedMedia.remove(at: 0)
-      self.inputContainerView?.attachedImages.deleteItems(at: [IndexPath(item: 0, section: 0)])
+    guard let index = self.inputContainerView?.selectedMedia.index(where: { (item) -> Bool in
+      return item.filename == asset.originalFilename
+    }) else {
+      return
     }
     
-    inputContainerView?.resetChatInputConntainerViewSettings()
+    deleteItemsToCollectionViewAnimated(at: [IndexPath(item: index, section: 0)], index: index)
   }
 }
-

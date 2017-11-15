@@ -184,10 +184,10 @@ extension ChatInputContainerView {
   func resetChatInputConntainerViewSettings () {
     
     if selectedMedia.count == 0 {
+    
+     attachedImages.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
       
-      inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
-      
-      attachedImages.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
+     self.inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 30)
       
       separator.isHidden = true
       
@@ -245,6 +245,7 @@ extension ChatInputContainerView: UITextViewDelegate {
     if textView.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty {
       sendButton.isEnabled = false
     }
+    invalidateIntrinsicContentSize()
   }
   
   func textViewDidEndEditing(_ textView: UITextView) {
@@ -260,8 +261,6 @@ extension ChatInputContainerView: UITextViewDelegate {
         } else {
            chatLogController?.scrollToBottomOnNewLine()
         }
-       
-        
       }
     }
     return true
