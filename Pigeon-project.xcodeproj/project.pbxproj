@@ -18,6 +18,7 @@
 		4B2143041F51C76F00F7A4B8 /* TimestampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143031F51C76F00F7A4B8 /* TimestampView.swift */; };
 		4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */; };
 		4B2143081F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143071F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift */; };
+		4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */; };
 		4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */; };
 		4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */; };
 		4B3E634C1FB9F06F00E200CD /* NoChatsYetContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */; };
@@ -198,6 +199,7 @@
 		4B2143031F51C76F00F7A4B8 /* TimestampView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimestampView.swift; path = ChatsControllers/RevealableCell/TimestampView.swift; sourceTree = "<group>"; };
 		4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingPhotoMessageCell.swift; path = ChatsControllers/OutgoingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4B2143071F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+ImageZoomHandlers.swift"; path = "ChatsControllers/ChatLogController+ImageZoomHandlers.swift"; sourceTree = "<group>"; };
+		4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
 		4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsTableViewCell.swift; path = ContactsControllers/ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NoChatsYetContainer.swift; path = ChatsControllers/NoChatsYetContainer.swift; sourceTree = "<group>"; };
@@ -515,6 +517,7 @@
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
 				4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */,
+				4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */,
 				4B4F453C1F32230C00A6FF96 /* Info.plist */,
 			);
 			path = "Pigeon-project";
@@ -1001,6 +1004,7 @@
 				4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */,
 				4BE571841F4D8816009D9AB4 /* clear.png in Resources */,
 				4BBE9A231F4D8CF600053935 /* trash.png in Resources */,
+				4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */,
 				4BE571941F4D8816009D9AB4 /* text@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
