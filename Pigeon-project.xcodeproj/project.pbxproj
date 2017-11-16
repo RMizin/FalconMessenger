@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B1096661FBC5CAF00459B7D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B1096651FBC5CAF00459B7D /* GoogleService-Info.plist */; };
 		4B197EF01F348171008102E1 /* SharedVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B197EEF1F348171008102E1 /* SharedVariables.swift */; };
 		4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */; };
 		4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */; };
@@ -188,7 +187,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4B1096651FBC5CAF00459B7D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B197EEF1F348171008102E1 /* SharedVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedVariables.swift; path = AuthenticationControllers/SharedVariables/SharedVariables.swift; sourceTree = "<group>"; };
 		4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CenteredCollectionViewFlowLayout.swift; path = Support/CenteredCollectionViewFlowLayout/CenteredCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectedMediaCollectionCell.swift; path = ChatsControllers/SelectedMediaCollectionCell.swift; sourceTree = "<group>"; };
@@ -516,7 +514,6 @@
 				4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */,
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
-				4B1096651FBC5CAF00459B7D /* GoogleService-Info.plist */,
 				4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */,
 				4B4F453C1F32230C00A6FF96 /* Info.plist */,
 			);
@@ -1004,7 +1001,6 @@
 				4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */,
 				4BE571841F4D8816009D9AB4 /* clear.png in Resources */,
 				4BBE9A231F4D8CF600053935 /* trash.png in Resources */,
-				4B1096661FBC5CAF00459B7D /* GoogleService-Info.plist in Resources */,
 				4BE571941F4D8816009D9AB4 /* text@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
