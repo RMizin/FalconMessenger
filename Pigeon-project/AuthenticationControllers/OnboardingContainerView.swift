@@ -21,7 +21,7 @@ class OnboardingContainerView: UIView {
   let welcomeTitle: UILabel = {
     let welcomeTitle = UILabel()
     welcomeTitle.translatesAutoresizingMaskIntoConstraints = false
-    welcomeTitle.text = "Welcome to Pigeon"
+    welcomeTitle.text = "Welcome to Falcon"
     welcomeTitle.font = UIFont.systemFont(ofSize: 20)
     welcomeTitle.textAlignment = .center
     return welcomeTitle

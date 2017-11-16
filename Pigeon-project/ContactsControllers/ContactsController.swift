@@ -386,7 +386,7 @@ class ContactsController: UITableViewController {
         if filteredUsers.count == 0 {
           return ""
         } else {
-          return "Pigeon contacts"
+          return "Falcon contacts"
         }
       
       } else {

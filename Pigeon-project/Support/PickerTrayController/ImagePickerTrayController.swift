@@ -82,7 +82,7 @@ public class ImagePickerTrayController: UIViewController {
         return controller
     }()
     
-  fileprivate var imageManager: PHCachingImageManager?
+  var imageManager: PHCachingImageManager?
   
     var assets = [PHAsset]()
     fileprivate lazy var requestOptions: PHImageRequestOptions = {
@@ -180,8 +180,14 @@ public class ImagePickerTrayController: UIViewController {
 
     public override func viewDidLoad() {
       super.viewDidLoad()
-        fetchAssets()
+      // fetchAssets()
+      
     }
+  
+  public override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+     fetchAssets()
+  }
 
     public func add(action: ImagePickerAction) {
         actions.append(action)
@@ -225,7 +231,7 @@ public class ImagePickerTrayController: UIViewController {
   }
   
   
-    fileprivate func fetchAssets() {
+    func fetchAssets() {
       
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]

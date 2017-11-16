@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Pigeon</string>
+	<string>Falcon</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.002</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>1002</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.social-networking</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -42,7 +42,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>To take photos and videos and send them via messages </string>
 	<key>NSContactsUsageDescription</key>
-	<string>Pigeon messenger uses phone numbers as unique identifiers, so that it is easy for you to switch from other messaging apps and retain your social graph. We store your contacts in order to find your friends who also use Pigeon. We only need the number and name (first and last) for this to work and store no other data about your contacts.</string>
+	<string>Falcon messenger uses phone numbers as unique identifiers, so that it is easy for you to switch from other messaging apps and retain your social graph. We store your contacts in order to find your friends who also use Falcon. We only need the number and name (first and last) for this to work and store no other data about your contacts.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To record video with the sound.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

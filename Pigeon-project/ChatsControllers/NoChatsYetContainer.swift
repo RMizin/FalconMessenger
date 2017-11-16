@@ -24,7 +24,7 @@ class NoChatsYetContainer: UIView {
     noChatsYetTitle.translatesAutoresizingMaskIntoConstraints = false
     
     let noChatsYetFAQ = UILabel()
-    noChatsYetFAQ.text = "You can select somebody in Contacts, and send you first message."
+    noChatsYetFAQ.text = "You can select somebody in Contacts, and send your first message."
     noChatsYetFAQ.font = .systemFont(ofSize: 13)
     noChatsYetFAQ.textColor = .gray
     noChatsYetFAQ.textAlignment = .center

@@ -16,7 +16,7 @@ class ContactsAuthorizationDeniedContainer: UIView {
     backgroundColor = .white
     
     let accessRestrictedTitle = UILabel()
-    accessRestrictedTitle.text = "Pigeon does not have access to your contacts"
+    accessRestrictedTitle.text = "Falcon does not have access to your contacts"
     accessRestrictedTitle.font = .systemFont(ofSize: 18)
     accessRestrictedTitle.textColor = .gray
     accessRestrictedTitle.textAlignment = .center
@@ -24,7 +24,7 @@ class ContactsAuthorizationDeniedContainer: UIView {
     accessRestrictedTitle.translatesAutoresizingMaskIntoConstraints = false
     
     let accessRestrictedFAQ = UILabel()
-    accessRestrictedFAQ.text = "Please go to your iPhone Settings –– Privacy –– Contacts. Then select ON for Pigeon."
+    accessRestrictedFAQ.text = "Please go to your iPhone Settings –– Privacy –– Contacts. Then select ON for Falcon."
     accessRestrictedFAQ.font = .systemFont(ofSize: 13)
     accessRestrictedFAQ.textColor = .gray
     accessRestrictedFAQ.textAlignment = .center

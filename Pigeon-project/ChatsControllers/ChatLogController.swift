@@ -152,6 +152,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
          self.updateMessageStatus(messageRef: self.messagesLoadingReference)
         } else {
          self.delegate?.messagesLoader(didFinishLoadingWith: self.messages)
+           self.observeTypingIndicator()
         }
       })
       

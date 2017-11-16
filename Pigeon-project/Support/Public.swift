@@ -20,13 +20,13 @@ public let messageStatusSent = "Sent"
 public let messageStatusSending = "Sending"
 public let messageStatusDelivered = "Delivered"
 
-let cameraAccessDeniedMessage = "Pigeon needs access to your camera to take photos and videos.\n\nPlease go to Settings –– Privacy –– Camera –– and set Pigeon to ON."
-let photoLibraryAccessDeniedMessage = "Pigeon needs access to your photo library to send photos and videos.\n\nPlease go to Settings –– Privacy –– Photos –– and set Pigeon to ON."
+let cameraAccessDeniedMessage = "Falcon needs access to your camera to take photos and videos.\n\nPlease go to Settings –– Privacy –– Camera –– and set Falcon to ON."
+let photoLibraryAccessDeniedMessage = "Falcon needs access to your photo library to send photos and videos.\n\nPlease go to Settings –– Privacy –– Photos –– and set Falcon to ON."
 
-let cameraAccessDeniedMessageProfilePicture = "Pigeon needs access to your camera to take photo for your profile.\n\nPlease go to Settings –– Privacy –– Camera –– and set Pigeon to ON."
-let photoLibraryAccessDeniedMessageProfilePicture = "Pigeon needs access to your photo library to select photo for your profile.\n\nPlease go to Settings –– Privacy –– Photos –– and set Pigeon to ON."
+let cameraAccessDeniedMessageProfilePicture = "Falcon needs access to your camera to take photo for your profile.\n\nPlease go to Settings –– Privacy –– Camera –– and set Falcon to ON."
+let photoLibraryAccessDeniedMessageProfilePicture = "Falcon needs access to your photo library to select photo for your profile.\n\nPlease go to Settings –– Privacy –– Photos –– and set Falcon to ON."
 
-let videoRecordedButLibraryUnavailableError = "To send a recorded video, it has to be saved to your photo library first. Please go to Settings –– Privacy –– Photos –– and set Pigeon to ON."
+let videoRecordedButLibraryUnavailableError = "To send a recorded video, it has to be saved to your photo library first. Please go to Settings –– Privacy –– Photos –– and set Falcon to ON."
 
 let basicErrorTitleForAlert = "Error"
 let basicTitleForAccessError = "Please Allow Access"

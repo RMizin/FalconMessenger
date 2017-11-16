@@ -277,6 +277,7 @@ extension UserProfileController: UIImagePickerControllerDelegate, UINavigationCo
               self.updateUserProfile(with:  self.userProfileContainerView.profileImageView.image!)
             } else {
               if self.userProfileContainerView.profileImageView.image != nil {
+                 self.userProfileContainerView.profileImageView.hideActivityIndicator()
                 basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self)
               } else {
                 self.userProfileContainerView.profileImageView.image = selectedImage
