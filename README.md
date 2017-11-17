@@ -9,6 +9,8 @@
 
 Falcon Messenger is a simple cloud-based messaging app.
 
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="http://www.binpress.com/uploads/store33364/itunes-app-store-logo.png" width="290" height="100" alt="App Store" /></a>
+
 
 ## Features
 
