@@ -9,24 +9,21 @@
 import UIKit
 import Firebase
 
+
+private let headerIdentifier = "headerCell"
+
 class UserInfoTableViewController: UITableViewController {
 
+  var user: User?
   var contactName = String()
-  
   var contactPhoneNumbers = [String]()
-  
   var contactPhoto: NSURL?
-  
-  let headerIdentifier = "headerCell"
-  
   var onlineStatus: String? {
     didSet {
-      print("did set!!!!!")
       tableView.reloadSections([0], with: .none)
     }
   }
   
-  var user: User?
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -42,26 +39,25 @@ class UserInfoTableViewController: UITableViewController {
     tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerIdentifier)
     configureTitleViewWithOnlineStatus()
   }
-  
-  
+    
+    
   func configureTitleViewWithOnlineStatus() {
     
     guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else {
       return
     }
     
-   Database.database().reference().child("users").child(toId).child("OnlineStatus").observe(.value, with: { (snapshot) in
+    Database.database().reference().child("users").child(toId).child("OnlineStatus").observeSingleEvent(of: .value, with: { (snapshot) in
       
       if uid == toId {
         self.onlineStatus = "You"
-       
         return
       }
       
       if snapshot.exists() {
         if snapshot.value as! String == "Online" {
           self.onlineStatus = "Online"
-          
+            
         } else {
           
           let date = NSDate(timeIntervalSince1970:  (snapshot.value as! String).doubleValue )
@@ -88,7 +84,7 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   deinit {
-    print("Info DEINIT")
+    print("Info DE INIT")
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

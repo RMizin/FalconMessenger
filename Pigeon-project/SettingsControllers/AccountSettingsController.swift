@@ -10,9 +10,10 @@ import UIKit
 import Firebase
 
 
-class AccountSettingsController: UIViewController {
+class AccountSettingsController: UITableViewController {
 
-  let accountSettingsTableView: UITableView = UITableView(frame: CGRect.zero, style: .grouped)
+  let userProfileContainerView = UserProfileContainerView()
+  let userProfilePictureOpener = UserProfilePictureOpener()
   
   let accountSettingsCellId = "userProfileCell"
 
@@ -20,58 +21,110 @@ class AccountSettingsController: UIViewController {
                       ( icon: UIImage(named: "ChangeNumber") , title: "Change number"),
                       ( icon: UIImage(named: "Storage") , title: "Data and storage")]
   
-  var secondSection = [/* ( icon: UIImage(named: "language") , title: "Язык", controller: nil), */
-    ( icon: UIImage(named: "Legal") , title: "Legal"),
-    ( icon: UIImage(named: "Logout") , title: "Log out")]
+  var secondSection = [( icon: UIImage(named: "Legal") , title: "Legal"),
+                       ( icon: UIImage(named: "Logout") , title: "Log out")]
   
+  let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
+  let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
   
+  var currentName = String()
+  
+
   override func viewDidLoad() {
-    super.viewDidLoad()
-    self.title = "Settings"
+     super.viewDidLoad()
+    
+    title = "Settings"
+    extendedLayoutIncludesOpaqueBars = true
+    edgesForExtendedLayout = UIRectEdge.top
     view.backgroundColor = UIColor.white
-    view.addSubview(accountSettingsTableView)
+    tableView = UITableView(frame: tableView.frame, style: .grouped)
     
-    accountSettingsTableView.delegate = self
-    accountSettingsTableView.dataSource = self
-    accountSettingsTableView.backgroundColor = UIColor.white
-    accountSettingsTableView.separatorStyle = .none
-    accountSettingsTableView.isScrollEnabled = false
-    accountSettingsTableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
-    setConstraints()
+    configureTableView()
+    configureContainerView()
+    listenChanges()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    if userProfileContainerView.phone.text == "" {
+      listenChanges()
+    }
   }
   
   
-  fileprivate func setConstraints() {
-    accountSettingsTableView.translatesAutoresizingMaskIntoConstraints = false
-    accountSettingsTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-    accountSettingsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-    accountSettingsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-    accountSettingsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+  func listenChanges() {
+    
+    if let currentUser = Auth.auth().currentUser?.uid {
+      
+      let photoURLReference = Database.database().reference().child("users").child(currentUser).child("photoURL")
+      photoURLReference.observe(.value, with: { (snapshot) in
+        if let url = snapshot.value as? String {
+          self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url) , placeholderImage: nil, options: [.highPriority, .continueInBackground], completed: {(image, error, cacheType, url) in
+            if error != nil {
+              //basicErrorAlertWith(title: "Error loading profile picture", message: "It seems like you are not connected to the internet.", controller: self)
+            }
+          })
+        }
+      })
+      
+      let nameReference = Database.database().reference().child("users").child(currentUser).child("name")
+      nameReference.observe(.value, with: { (snapshot) in
+        if let name = snapshot.value as? String {
+          self.userProfileContainerView.name.text = name
+          self.currentName = name
+        }
+      })
+      
+      let phoneNumberReference = Database.database().reference().child("users").child(currentUser).child("phoneNumber")
+      phoneNumberReference.observe(.value, with: { (snapshot) in
+        if let phoneNumber = snapshot.value as? String {
+          self.userProfileContainerView.phone.text = phoneNumber
+        }
+      })
+    }
+  }
+
+  
+  fileprivate func configureTableView() {
+    
+    tableView.separatorStyle = .none
+    tableView.backgroundColor = UIColor.white
+    tableView.tableHeaderView = userProfileContainerView
+    tableView.translatesAutoresizingMaskIntoConstraints = false
+    tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
   }
   
-  
-  func removeUserNotificationToken() {
+  fileprivate func configureContainerView() {
     
-    let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("notificationTokens")
-    
-    userReference.removeValue()// updateChildValues([token : true])
+    userProfileContainerView.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
+    userProfileContainerView.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
+    userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
+    userProfileContainerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 300)
   }
+  
+  @objc fileprivate func openUserProfilePicture() {
+    
+    userProfilePictureOpener.userProfileContainerView = userProfileContainerView
+    userProfilePictureOpener.controllerWithUserProfilePhoto = self
+    
+    cancelBarButtonPressed()
+    userProfilePictureOpener.openUserProfilePicture()
+  }
+  
   
   func logoutButtonTapped () {
   
     let firebaseAuth = Auth.auth()
-    
     removeUserNotificationToken()
     
     do {
       try firebaseAuth.signOut()
   
     } catch let signOutError as NSError {
-      print ("Error signing out: %@", signOutError)
       basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
       return
     }
-    
     
     UIApplication.shared.applicationIconBadgeNumber = 0
     
@@ -88,17 +141,22 @@ class AccountSettingsController: UIViewController {
        self.tabBarController?.selectedIndex = tabs.chats.rawValue
     })
   }
+  
+  func removeUserNotificationToken() {
+    
+    let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("notificationTokens")
+    userReference.removeValue()
+  }
+  
 }
 
-extension AccountSettingsController: UIScrollViewDelegate {}
-extension AccountSettingsController: UITableViewDelegate {}
 
 
-extension AccountSettingsController: UITableViewDataSource {
+extension AccountSettingsController {
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = accountSettingsTableView.dequeueReusableCell(withIdentifier: accountSettingsCellId, for: indexPath) as! AccountSettingsTableViewCell
-    
+override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: accountSettingsCellId, for: indexPath) as! AccountSettingsTableViewCell
+    cell.accessoryType = .disclosureIndicator
     if indexPath.section == 0 {
       
       cell.icon.image = firstSection[indexPath.row].icon
@@ -112,21 +170,19 @@ extension AccountSettingsController: UITableViewDataSource {
       
       if indexPath.row == 1 {
         cell.accessoryType = .none
-        
       }
     }
     return cell
   }
   
-  
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+ override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     if indexPath.section == 0 {
       
       if indexPath.row == 0 {
         let destination = NotificationsAndSoundsTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination  , animated: true)
+        self.navigationController?.pushViewController(destination, animated: true)
       }
       
       if indexPath.row == 1 {
@@ -139,7 +195,7 @@ extension AccountSettingsController: UITableViewDataSource {
       if indexPath.row == 2 {
         let destination = StorageTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination  , animated: true)
+        self.navigationController?.pushViewController(destination, animated: true)
       }
     }
       
@@ -156,21 +212,21 @@ extension AccountSettingsController: UITableViewDataSource {
         }
       }
     
-    accountSettingsTableView.deselectRow(at: indexPath, animated: true)
+    tableView.deselectRow(at: indexPath, animated: true)
   }
   
   
-  func numberOfSections(in tableView: UITableView) -> Int {
+ override func numberOfSections(in tableView: UITableView) -> Int {
     return 2
   }
   
   
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+override  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 55
   }
   
   
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
     if section == 0 {
       return firstSection.count

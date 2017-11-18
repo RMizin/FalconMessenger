@@ -49,7 +49,7 @@ class MediaPickerController: UIViewController {
   
   
   deinit {
-    print("\nMEDIA PICKER CONTROLLER DE!!!! INIT\n")
+    print("\nMEDIA PICKER CONTROLLER DE INIT\n")
     imagePicker = nil
   }
   

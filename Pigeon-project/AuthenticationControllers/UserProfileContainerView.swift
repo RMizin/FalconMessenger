@@ -125,51 +125,61 @@ class UserProfileContainerView: UIView, UITextFieldDelegate {
 //    placeholderLabel.frame.origin = CGPoint(x: 12, y: (bio.font?.pointSize)! / 2)
 //    placeholderLabel.isHidden = !bio.text.isEmpty
     
-    NSLayoutConstraint.activate([
-      
-     // profileImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-      profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-      profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 30),
-      profileImageView.widthAnchor.constraint(equalToConstant: 100),
-      profileImageView.heightAnchor.constraint(equalToConstant: 100),
-      
-      addPhotoLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor),
-      addPhotoLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor),
-      addPhotoLabel.widthAnchor.constraint(equalToConstant: 100),
-      addPhotoLabel.heightAnchor.constraint(equalToConstant: 100),
-      
-      subtitleLabel.topAnchor.constraint(equalTo: profileImageView.topAnchor, constant: 0),
-      subtitleLabel.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 0),
-      subtitleLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
-      subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-  
-      name.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
-      name.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-      name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-      name.heightAnchor.constraint(equalToConstant: 50),
-      
-      phone.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 10),
-      phone.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-      phone.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-      phone.heightAnchor.constraint(equalToConstant: 50)
-  
-//      bio.topAnchor.constraint(equalTo: phone.bottomAnchor, constant: 10),
-//      bio.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-//      bio.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-//      bio.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-      
-    ])
+   
+      NSLayoutConstraint.activate([
+        profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 30),
+        profileImageView.widthAnchor.constraint(equalToConstant: 100),
+        profileImageView.heightAnchor.constraint(equalToConstant: 100),
+        
+        addPhotoLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor),
+        addPhotoLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor),
+        addPhotoLabel.widthAnchor.constraint(equalToConstant: 100),
+        addPhotoLabel.heightAnchor.constraint(equalToConstant: 100),
+        
+        subtitleLabel.topAnchor.constraint(equalTo: profileImageView.topAnchor, constant: 0),
+        subtitleLabel.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 0),
+        subtitleLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
+        
+        name.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
+        name.heightAnchor.constraint(equalToConstant: 50),
+        
+        phone.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 10),
+        phone.heightAnchor.constraint(equalToConstant: 50)
+        
+        //bio.topAnchor.constraint(equalTo: phone.bottomAnchor, constant: 10),
+        //bio.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+        //bio.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+        //bio.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+      ])
+    
+    if #available(iOS 11.0, *) {
+      NSLayoutConstraint.activate([
+        profileImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10),
+        subtitleLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10),
+        name.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10),
+        name.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10),
+        phone.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10),
+        phone.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10)
+        ])
+    } else {
+      NSLayoutConstraint.activate([
+        profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+        subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+        name.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+        name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+        phone.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+        phone.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
+      ])
+    }
   }
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
   }
   
-  
 //  func textViewDidChange(_ textView: UITextView) {
-//    placeholderLabel.isHidden = !textView.text.isEmpty
+//   placeholderLabel.isHidden = !textView.text.isEmpty
 //  }
-
 }
 
 

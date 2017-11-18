@@ -71,14 +71,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   func startCollectionViewAtBottom () {
     
     let collectionViewInsets: CGFloat = (collectionView!.contentInset.bottom + collectionView!.contentInset.top)// + inputContainerView.inputTextView.frame.height
-    
     let contentSize = self.collectionView?.collectionViewLayout.collectionViewContentSize
+    
     if Double(contentSize!.height) > Double(self.collectionView!.bounds.size.height) {
       let targetContentOffset = CGPoint(x: 0.0, y: contentSize!.height - (self.collectionView!.bounds.size.height - collectionViewInsets))
       self.collectionView?.contentOffset = targetContentOffset
     }
   }
-  
   
   func scrollToBottom() {
     
@@ -152,7 +151,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
          self.updateMessageStatus(messageRef: self.messagesLoadingReference)
         } else {
          self.delegate?.messagesLoader(didFinishLoadingWith: self.messages)
-           self.observeTypingIndicator()
+         self.observeTypingIndicator()
         }
       })
       
@@ -361,6 +360,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
     
+    if uid == toId { /* If you are chatting with yourself */
+        return
+    }
+    
     let userIsTypingRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorDatabaseID)
     userIsTypingRef.setValue(data)
   }
@@ -370,6 +373,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
       return
+    }
+    
+    if uid == toId { /* If you are chatting with yourself */
+        return
     }
     
     let internalTypingIndicatorRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorDatabaseID)
@@ -407,24 +414,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         self.collectionView?.insertSections(sectionsIndexSet)
         
       }, completion: { (true) in
-        
-        let indexPath = IndexPath(row: 0, section: 1)
-        
-        guard let cell = self.collectionView?.cellForItem(at: indexPath) as? TypingIndicatorCell else {
-          return
-        }
-        
-        guard let gifURL = Bundle.main.url(forResource: "typingIndicator", withExtension: "gif") else {
-          return
-        }
-        
-        guard let gifData = NSData(contentsOf: gifURL) else {
-          return
-        }
-        
-        cell.typingIndicator.animatedImage = FLAnimatedImage(animatedGIFData: gifData as Data)
-     
-          if self.collectionView!.contentOffset.y >= (self.collectionView!.contentSize.height - self.collectionView!.frame.size.height - 200) {
+        if self.collectionView!.contentOffset.y >= (self.collectionView!.contentSize.height - self.collectionView!.frame.size.height - 200) {
           self.scrollToBottomOfTypingIndicator()
         }
       })
@@ -500,39 +490,59 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     setRightBarButtonItem()
   }
 
-  
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
+    
+    if self.navigationController?.visibleViewController is UserInfoTableViewController {
+        return
+    }
     
     if userMessagesLoadingReference != nil {
       userMessagesLoadingReference.removeAllObservers()
     }
-   
+
     if messagesLoadingReference != nil {
       messagesLoadingReference.removeAllObservers()
     }
-   
+
     if typingIndicatorReference != nil {
       typingIndicatorReference.removeAllObservers()
     }
-    
+
     if userStatusReference != nil {
       userStatusReference.removeAllObservers()
     }
-    
+
     if self.mediaPickerController != nil && self.mediaPickerController.customMediaPickerView != nil {
-      
+
       if self.mediaPickerController.container != nil && self.mediaPickerController.container.isDescendant( of: self.mediaPickerController.view) {
-        
+
         self.mediaPickerController.container.removeFromSuperview()
         self.mediaPickerController.container = nil
       }
-      
+
       self.mediaPickerController.customMediaPickerView.removeFromParentViewController()
       self.mediaPickerController.customMediaPickerView = nil
     }
       
     isTyping = false
+  }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+         super.willTransition(to: newCollection, with: coordinator)
+        collectionView?.collectionViewLayout.invalidateLayout()
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+         super.viewWillTransition(to: size, with: coordinator)
+        collectionView?.collectionViewLayout.invalidateLayout()
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+    }
+    
+  deinit {
+    print("\n CHATLOG CONTROLLER DE INIT \n")
   }
   
   
@@ -547,14 +557,21 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   fileprivate func setupCollectionView () {
     inputTextViewTapGestureRecognizer = UITapGestureRecognizer(target: inputContainerView.chatLogController, action: #selector(ChatLogController.toggleTextView))
     inputTextViewTapGestureRecognizer.delegate = inputContainerView
+    
     view.backgroundColor = .white
-    collectionView?.delaysContentTouches = false
+    automaticallyAdjustsScrollViewInsets = false
+    extendedLayoutIncludesOpaqueBars = true
+   
+    if #available(iOS 11.0, *) {
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.largeTitleDisplayMode = .never
+    }
+   
+    collectionView?.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
     collectionView?.frame = CGRect(x: 0, y: 64, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height - 64 )
     collectionView?.keyboardDismissMode = .interactive
     collectionView?.backgroundColor = UIColor.white
-    collectionView?.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
-    automaticallyAdjustsScrollViewInsets = false
-    extendedLayoutIncludesOpaqueBars = true
+    collectionView?.delaysContentTouches = false
     collectionView?.alwaysBounceVertical = true
     
     collectionView?.addSubview(refreshControl)
@@ -564,11 +581,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.register(PhotoMessageCell.self, forCellWithReuseIdentifier: photoMessageCellID)
     collectionView?.register(IncomingPhotoMessageCell.self, forCellWithReuseIdentifier: incomingPhotoMessageCellID)
     collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
-    
-    if #available(iOS 11.0, *) {
-      self.navigationController?.navigationBar.prefersLargeTitles = false
-      self.navigationItem.largeTitleDisplayMode = .never
-    }
   }
   
   
@@ -588,11 +600,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       if snapshot.exists() {
         if snapshot.value as! String == "Online" {
-          self.navigationItem.setTitle(title: self.user!.name!, subtitle: "Online")
-         
+          DispatchQueue.main.async {
+            self.navigationItem.setTitle(title: self.user!.name!, subtitle: "Online")
+          }
         } else {
            let date = NSDate(timeIntervalSince1970:  (snapshot.value as! String).doubleValue )
-           self.navigationItem.setTitle(title: self.user!.name!, subtitle: ("Last seen " + timeAgoSinceDate(date: date, timeinterval: (snapshot.value as! String).doubleValue, numericDates: false)))
+            DispatchQueue.main.async {
+                self.navigationItem.setTitle(title: self.user!.name!, subtitle: ("Last seen " + timeAgoSinceDate(date: date, timeinterval: (snapshot.value as! String).doubleValue, numericDates: false)))
+            }
         }
       }
     })
@@ -716,10 +731,22 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell
     }
   }
-  
+
   
   fileprivate func showTypingIndicator(indexPath: IndexPath) -> UICollectionViewCell? {
+    
     let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: typingIndicatorCellID, for: indexPath) as! TypingIndicatorCell
+    
+    guard let gifURL = Bundle.main.url(forResource: "typingIndicator", withExtension: "gif") else {
+        return nil
+    }
+    
+    guard let gifData = NSData(contentsOf: gifURL) else {
+        return nil
+    }
+    
+    cell.typingIndicator.animatedImage = FLAnimatedImage(animatedGIFData: gifData as Data)
+    
     return cell
   }
   
@@ -782,7 +809,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
            
             cell.textView.text = messageText
         
-            cell.bubbleView.frame.size = CGSize(width: estimateFrameForText(messageText).width + 30,
+            cell.bubbleView.frame.size = CGSize(width: (estimateFrameForText(messageText).width + 30).rounded(),
                                           height: cell.frame.size.height.rounded())//.integral
           
             cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(),
@@ -811,6 +838,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         cell.chatLogController = self
         
         cell.message = message
+        
+        cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
         cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
     
         DispatchQueue.main.async {
@@ -937,15 +966,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  deinit {
-    print("\n chatlog controller deinit \n")
-  }
-  
-  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-    super.viewWillTransition(to: size, with: coordinator)
-    collectionView?.collectionViewLayout.invalidateLayout()
-  }
-  
   
   fileprivate var cellHeight: CGFloat = 80
   
@@ -963,11 +983,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
       }
       
-      return CGSize(width: deviceScreen.width, height: cellHeight)
+      return CGSize(width: self.view.frame.width, height: cellHeight)
       
     } else {
       
-      return CGSize(width: deviceScreen.width, height: 40)
+      return CGSize(width: self.view.frame.width, height: 40)
     }
   }
   
@@ -978,8 +998,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13)], context: nil).integral
   }
   
-  
-  var containerViewBottomAnchor: NSLayoutConstraint?
   
   @objc func handleSend() {
     

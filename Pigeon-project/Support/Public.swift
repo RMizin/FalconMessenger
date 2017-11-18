@@ -203,7 +203,7 @@ func timeAgoSinceDate(date:NSDate, timeinterval: Double, numericDates:Bool) -> S
     return "\(components.hour!) hours ago"
   } else if (components.hour! >= 1){
     if (numericDates){
-      return "1 hour ago"
+      return "an hour ago"//"1 hour ago"
     } else {
       return "an hour ago"
     }
@@ -211,12 +211,12 @@ func timeAgoSinceDate(date:NSDate, timeinterval: Double, numericDates:Bool) -> S
     return "\(components.minute!) minutes ago"
   } else if (components.minute! >= 1){
     if (numericDates){
-      return "1 minute ago"
+      return "a minute ago"//"1 minute ago"
     } else {
       return "a minute ago"
     }
   } else if (components.second! >= 30) {
-    return "\(components.second!) seconds ago"
+    return "just now" //"\(components.second!) seconds ago"
   } else {
     return "just now"
   }

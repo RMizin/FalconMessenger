@@ -74,6 +74,8 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         view.addGestureRecognizer(doubleTapGestureRecognizer)
         view.addGestureRecognizer(longPressGestureRecognizer)
         
+        modalPresentationCapturesStatusBarAppearance = true
+        
         if let image = photo.image {
             self.scalingImageView.image = image
             self.activityIndicator.stopAnimating()

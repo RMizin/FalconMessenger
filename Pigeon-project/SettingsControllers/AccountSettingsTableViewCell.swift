@@ -39,11 +39,10 @@ class AccountSettingsTableViewCell: UITableViewCell {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
     backgroundColor = UIColor.white
+    accessoryView?.backgroundColor = backgroundColor
     title.backgroundColor = backgroundColor
     icon.backgroundColor = backgroundColor
-    accessoryView?.backgroundColor = backgroundColor
-    accessoryType = .disclosureIndicator
-   
+  
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
@@ -63,7 +62,7 @@ class AccountSettingsTableViewCell: UITableViewCell {
     separator.heightAnchor.constraint(equalToConstant: 0.4).isActive = true
   }
   
-  
+
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

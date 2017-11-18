@@ -187,7 +187,7 @@ extension ChatInputContainerView {
     
      attachedImages.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
       
-     self.inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 30)
+     self.inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
       
       separator.isHidden = true
       

@@ -27,11 +27,11 @@ extension UserInfoTableViewController {
       let cell = self.tableView.cellForRow(at: indexPath) as! UserinfoHeaderTableViewCell
       let currentPhoto = photos[indexPath.row]
       let galleryPreview = INSPhotosViewController(photos: photos, initialPhoto: currentPhoto, referenceView: cell.icon)
-//      galleryPreview.modalPresentationCapturesStatusBarAppearance = false
+        
       galleryPreview.referenceViewForPhotoWhenDismissingHandler = {  photo in
           return cell.icon
       }
-      
+       galleryPreview.modalPresentationStyle = .fullScreen
       self.present(galleryPreview, animated: true, completion: nil)
     }
   }

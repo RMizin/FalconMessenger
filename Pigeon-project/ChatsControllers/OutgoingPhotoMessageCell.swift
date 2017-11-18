@@ -18,8 +18,6 @@ class PhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.addSubview(messageImageView)
     
-    bubbleView.frame.origin = CGPoint(x: (frame.width - 210).rounded(), y: 0)
-    
     bubbleView.frame.size.width = 200
     
     bubbleView.image = BaseMessageCell.blueBubbleImage

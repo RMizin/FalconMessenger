@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9E571FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift */; };
+		4B0D9E5B1FC08AC800FEDE24 /* UserProfilePictureOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9E5A1FC08AC800FEDE24 /* UserProfilePictureOpener.swift */; };
 		4B197EF01F348171008102E1 /* SharedVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B197EEF1F348171008102E1 /* SharedVariables.swift */; };
 		4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */; };
 		4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */; };
@@ -32,7 +34,6 @@
 		4B45263D1F5EBCFA003FBA29 /* sent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B45263B1F5EBCFA003FBA29 /* sent.caf */; };
 		4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */; };
 		4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */; };
-		4B48D30D1F35EAB70050C797 /* SettingsViewControllersContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */; };
 		4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */; };
 		4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3121F361E490050C797 /* ARSInfiniteLoader.swift */; };
 		4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3131F361E490050C797 /* ARSLineProgress.swift */; };
@@ -72,7 +73,6 @@
 		4B8D0B821F523AA800E9252A /* CircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D0B801F523AA800E9252A /* CircleProgressView.m */; };
 		4B8D0B831F523AA800E9252A /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D0B811F523AA800E9252A /* CircleProgressView.swift */; };
 		4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */; };
-		4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */; };
 		4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */; };
 		4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8BB1F34E9D60025C67F /* Public.swift */; };
 		4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94986F1F32448A008DA07F /* EnterPhoneNumberController.swift */; };
@@ -188,6 +188,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4B0D9E571FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "AccountSettingsController+nameEditing.swift"; path = "SettingsControllers/AccountSettingsController+nameEditing.swift"; sourceTree = "<group>"; };
+		4B0D9E5A1FC08AC800FEDE24 /* UserProfilePictureOpener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfilePictureOpener.swift; path = Support/UserProfilePictureOpener/UserProfilePictureOpener.swift; sourceTree = "<group>"; };
 		4B197EEF1F348171008102E1 /* SharedVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharedVariables.swift; path = AuthenticationControllers/SharedVariables/SharedVariables.swift; sourceTree = "<group>"; };
 		4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CenteredCollectionViewFlowLayout.swift; path = Support/CenteredCollectionViewFlowLayout/CenteredCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectedMediaCollectionCell.swift; path = ChatsControllers/SelectedMediaCollectionCell.swift; sourceTree = "<group>"; };
@@ -213,7 +215,6 @@
 		4B45263B1F5EBCFA003FBA29 /* sent.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = sent.caf; path = Resources/sent.caf; sourceTree = "<group>"; };
 		4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StorageTableViewController.swift; path = SettingsControllers/StorageTableViewController.swift; sourceTree = "<group>"; };
 		4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountSettingsTableViewCell.swift; path = SettingsControllers/AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
-		4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewControllersContainer.swift; path = SettingsControllers/SettingsViewControllersContainer.swift; sourceTree = "<group>"; };
 		4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountSettingsController.swift; path = SettingsControllers/AccountSettingsController.swift; sourceTree = "<group>"; };
 		4B48D3121F361E490050C797 /* ARSInfiniteLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSInfiniteLoader.swift; path = Support/progressIndicator/ARSInfiniteLoader.swift; sourceTree = "<group>"; };
 		4B48D3131F361E490050C797 /* ARSLineProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ARSLineProgress.swift; path = Support/progressIndicator/ARSLineProgress.swift; sourceTree = "<group>"; };
@@ -257,7 +258,6 @@
 		4B8D0B801F523AA800E9252A /* CircleProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircleProgressView.m; path = Support/CircleProgressView/CircleProgressView.m; sourceTree = "<group>"; };
 		4B8D0B811F523AA800E9252A /* CircleProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CircleProgressView.swift; path = Support/CircleProgressView/CircleProgressView.swift; sourceTree = "<group>"; };
 		4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileContainerView.swift; path = AuthenticationControllers/UserProfileContainerView.swift; sourceTree = "<group>"; };
-		4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+handlers.swift"; path = "AuthenticationControllers/UserProfileController+handlers.swift"; sourceTree = "<group>"; };
 		4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+keyboardHandlers.swift"; path = "AuthenticationControllers/UserProfileController+keyboardHandlers.swift"; sourceTree = "<group>"; };
 		4B91B8BB1F34E9D60025C67F /* Public.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Public.swift; path = Support/Public.swift; sourceTree = "<group>"; };
 		4B94986E1F323B76008DA07F /* Pigeon-project.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pigeon-project.entitlements"; sourceTree = "<group>"; };
@@ -383,6 +383,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4B0D9E591FC082F100FEDE24 /* UserProfilePictureOpener */ = {
+			isa = PBXGroup;
+			children = (
+				4B0D9E5A1FC08AC800FEDE24 /* UserProfilePictureOpener.swift */,
+			);
+			name = UserProfilePictureOpener;
+			sourceTree = "<group>";
+		};
 		4B197EF11F34817A008102E1 /* SharedVariables */ = {
 			isa = PBXGroup;
 			children = (
@@ -445,15 +453,6 @@
 				4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */,
 			);
 			name = Storage;
-			sourceTree = "<group>";
-		};
-		4B48D30A1F35C9FE0050C797 /* SettingsViews */ = {
-			isa = PBXGroup;
-			children = (
-				4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */,
-				4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */,
-			);
-			name = SettingsViews;
 			sourceTree = "<group>";
 		};
 		4B48D30B1F35CA0D0050C797 /* Menu */ = {
@@ -526,9 +525,10 @@
 		4B4F45501F3225F100A6FF96 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				4B48D30C1F35EAB70050C797 /* SettingsViewControllersContainer.swift */,
+				4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */,
+				4B0D9E571FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift */,
+				4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */,
 				4B48D30B1F35CA0D0050C797 /* Menu */,
-				4B48D30A1F35C9FE0050C797 /* SettingsViews */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -674,6 +674,7 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4B0D9E591FC082F100FEDE24 /* UserProfilePictureOpener */,
 				4B5419491FB3923C0014C4FB /* INSPhotoGallery */,
 				4B8D0B7D1F523A6B00E9252A /* CircleProgressView */,
 				4B2142E91F51B77200F7A4B8 /* RevealableCell */,
@@ -868,7 +869,6 @@
 			children = (
 				4B9498731F3244CA008DA07F /* UserProfileController.swift */,
 				4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */,
-				4B91B8B71F34CB5E0025C67F /* UserProfileController+handlers.swift */,
 				4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */,
 				4B5419471FB30F920014C4FB /* UserProfilePictureOverlayView.swift */,
 			);
@@ -1091,6 +1091,7 @@
 				4BED6EB71F476A3A004EF2E0 /* UIImageExtensions.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
 				4BE571581F4D87A4009D9AB4 /* PhotoEditor+Controls.swift in Sources */,
+				4B0D9E5B1FC08AC800FEDE24 /* UserProfilePictureOpener.swift in Sources */,
 				4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */,
 				4B5419571FB392570014C4FB /* INSPhotosInteractionAnimator.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
@@ -1100,7 +1101,6 @@
 				4BED6EB01F476A2F004EF2E0 /* AnimationController.swift in Sources */,
 				4BE571521F4D87A4009D9AB4 /* CropRectView.swift in Sources */,
 				4BC26B321F3A27750093A9D2 /* ChatsController.swift in Sources */,
-				4B91B8B81F34CB5E0025C67F /* UserProfileController+handlers.swift in Sources */,
 				4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */,
 				4BE571571F4D87A4009D9AB4 /* GradientView.swift in Sources */,
 				4BE571531F4D87A4009D9AB4 /* CropView.swift in Sources */,
@@ -1145,6 +1145,7 @@
 				4B2142FF1F51C72700F7A4B8 /* RevealableView.swift in Sources */,
 				4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */,
 				4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */,
+				4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */,
 				4BE571561F4D87A4009D9AB4 /* EmojisCollectionViewDelegate.swift in Sources */,
 				4BE5715E1F4D87A4009D9AB4 /* PhotoEditor+UITextView.swift in Sources */,
 				4BE571541F4D87A4009D9AB4 /* CropViewController.swift in Sources */,
@@ -1200,7 +1201,6 @@
 				4B3E63531FBA73F600E200CD /* ChangeNumberSelectCountryCodeController.swift in Sources */,
 				4B48D31F1F361E490050C797 /* ARSLineProgressCustomization.swift in Sources */,
 				4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */,
-				4B48D30D1F35EAB70050C797 /* SettingsViewControllersContainer.swift in Sources */,
 				4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */,
 				4B2143001F51C72700F7A4B8 /* UICollectionView+Extension.swift in Sources */,
 				4BED6EB11F476A2F004EF2E0 /* ImagePickerAction.swift in Sources */,

@@ -13,30 +13,17 @@ import Firebase
 class UserProfileController: UIViewController {
   
   let userProfileContainerView = UserProfileContainerView()
-  let picker = UIImagePickerController()
- 
+  let userProfilePictureOpener = UserProfilePictureOpener()
   typealias CompletionHandler = (_ success: Bool) -> Void
-  
-  weak var settingsContainer: SettingsViewControllersContainer?
-  
-  var referenceView:UIView!
-  var currentPhoto:INSPhoto!
-  var galleryPreview:INSPhotosViewController!
-  let overlay = UserProfilePictureOverlayView(frame: CGRect.zero)  
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
         view.addSubview(userProfileContainerView)
-        userProfileContainerView.frame = view.bounds
+      
         configureNavigationBar()
-        configurePickerController()
-        userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
-    }
-  
-    fileprivate func configurePickerController() {
-      picker.delegate = self
+        configureContainerView()
     }
   
     fileprivate func configureNavigationBar () {
@@ -45,27 +32,21 @@ class UserProfileController: UIViewController {
       self.title = "Profile"
       self.navigationItem.setHidesBackButton(true, animated: true)
     }
-}
-
-
-extension UserProfileController { /* setting user data to database and to private data  */ /* firebase */
   
-  func updateUserData() {
-    
-    ARSLineProgress.ars_showOnView(self.view)
-    let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
-      userReference.updateChildValues(["name" : userProfileContainerView.name.text! ,
-                                       "phoneNumber" : userProfileContainerView.phone.text! ]) { (error, reference) in
-                                        
-      ARSLineProgress.hide()
-      
-      self.dismiss(animated: true, completion: nil)
+    fileprivate func configureContainerView() {
+      userProfileContainerView.frame = view.bounds
+      userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
     }
-  }
+  
+    @objc fileprivate func openUserProfilePicture() {
+      userProfilePictureOpener.controllerWithUserProfilePhoto = self
+      userProfilePictureOpener.userProfileContainerView = userProfileContainerView
+      userProfilePictureOpener.openUserProfilePicture()
+    }
 }
 
 
-extension UserProfileController {  /* only during authentication */
+extension UserProfileController {
   
   @objc func rightBarButtonDidTap () {
     
@@ -114,12 +95,14 @@ extension UserProfileController {  /* only during authentication */
       }
     })
   }
-}
-
-
-func setUserNotificationToken(token: String) {
   
-  let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("notificationTokens")
- 
-    userReference.updateChildValues([token : true])
+  func updateUserData() {
+    
+    ARSLineProgress.ars_showOnView(self.view)
+    let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
+    userReference.updateChildValues(["name" : userProfileContainerView.name.text! , "phoneNumber" : userProfileContainerView.phone.text! ]) { (error, reference) in
+      ARSLineProgress.hide()
+      self.dismiss(animated: true, completion: nil)
+    }
+  }
 }

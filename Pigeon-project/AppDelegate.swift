@@ -14,6 +14,11 @@ import AudioToolbox
 
 public let deviceScreen = UIScreen.main.bounds
 
+func setUserNotificationToken(token: String) { //
+  
+  let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("notificationTokens")
+  userReference.updateChildValues([token : true])
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -112,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       chatsNavigationController.navigationBar.prefersLargeTitles = true
     }
     
-    let settingsController = SettingsViewControllersContainer()
+    let settingsController = AccountSettingsController()
     _ = settingsController.view
     settingsController.title = "Settings"
     let settingsNavigationController = UINavigationController(rootViewController: settingsController)
