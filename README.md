@@ -1,6 +1,6 @@
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Pigeon-project/Assets.xcassets/roundedPigeon.imageset/roundedPigeon%402x.png" width="300"/>
+ <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Pigeon-project/Assets.xcassets/roundedPigeon.imageset/roundedPigeon%402x.png" width="310"/>
 </p> 
 
 
@@ -34,11 +34,11 @@ Also, it makes possible for you to send messages, photos, and videos to people w
  
 <p align="center">
  
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Screenshots/Welcome.png" width="250"/>
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Screenshots/Contacts.png" width="250"/>
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Screenshots/Chats.png" width="250"/>
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Screenshots/ChatLog.png" width="250"/>
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Screenshots/Settings.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/welcomeCorrectDim.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/contactsCorrectDim.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/chatsCorrectDim.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/chatLogCorrectDim.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SettingsCorrectDim.png" width="250"/>
  
 </p> 
 
