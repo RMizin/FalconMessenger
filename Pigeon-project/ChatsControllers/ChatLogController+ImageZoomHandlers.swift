@@ -138,7 +138,8 @@ extension ChatLogController {
     }
     
     inputContainerView.inputTextView.resignFirstResponder()
-    galleryPreview.modalPresentationStyle = .fullScreen
+    galleryPreview.modalPresentationStyle = .overFullScreen
+    galleryPreview.modalPresentationCapturesStatusBarAppearance = true
     present(galleryPreview, animated: true, completion: {
       self.inputAccessoryView?.isHidden = true
     })

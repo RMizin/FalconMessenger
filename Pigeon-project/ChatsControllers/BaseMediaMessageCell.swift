@@ -49,13 +49,12 @@ class BaseMediaMessageCell: BaseMessageCell {
     return progressView
   }()
 
-  override func prepareForReuse() {
-    super.prepareForReuse()
   
+  override func prepareViewsForReuse() {
+    
     messageImageView.image = nil
     playButton.isHidden = true
   }
-  
   
   @objc func handlePlay() {
     

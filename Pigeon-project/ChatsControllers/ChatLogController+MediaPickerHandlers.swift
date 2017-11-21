@@ -32,9 +32,9 @@ extension ChatLogController {
         PHPhotoLibrary.requestAuthorization() { status in
           switch status {
             case .authorized:
-              self.inputContainerView.mediaPickerController?.customMediaPickerView.imageManager = PHCachingImageManager()
-              self.inputContainerView.mediaPickerController?.customMediaPickerView.fetchAssets()
-              self.inputContainerView.mediaPickerController?.customMediaPickerView.collectionView.reloadData()
+              self.inputContainerView.mediaPickerController?.imageManager = PHCachingImageManager()
+              self.inputContainerView.mediaPickerController?.fetchAssets()
+              self.inputContainerView.mediaPickerController?.collectionView.reloadData()
             break
         case .denied, .restricted, .notDetermined:
           break
@@ -43,7 +43,7 @@ extension ChatLogController {
     }
     
     if mediaPickerController == nil {
-      mediaPickerController = MediaPickerController()
+      mediaPickerController = MediaPickerControllerNew()
     }
   
     inputContainerView.attachButton.isSelected = !inputContainerView.attachButton.isSelected

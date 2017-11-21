@@ -31,7 +31,8 @@ extension UserInfoTableViewController {
       galleryPreview.referenceViewForPhotoWhenDismissingHandler = {  photo in
           return cell.icon
       }
-       galleryPreview.modalPresentationStyle = .fullScreen
+      galleryPreview.modalPresentationStyle = .overFullScreen
+      galleryPreview.modalPresentationCapturesStatusBarAppearance = true
       self.present(galleryPreview, animated: true, completion: nil)
     }
   }

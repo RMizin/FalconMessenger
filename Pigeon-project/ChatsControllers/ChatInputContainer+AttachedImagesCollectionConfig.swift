@@ -35,7 +35,7 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     
     centeredCollectionViewFlowLayout.minimumInteritemSpacing = 5
     
-    centeredCollectionViewFlowLayout.estimatedItemSize = CGSize(width: 100, height: selectedMediaCollectionCellHeight)
+    centeredCollectionViewFlowLayout.estimatedItemSize = CGSize(width: 100, height: 100)
     
     attachedImages.autoresizesSubviews = false
     
@@ -54,13 +54,13 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
     if selectedMedia[row].imageSource == imageSourcePhotoLibrary {
       
-      if mediaPickerController!.customMediaPickerView.assets.contains(selectedMedia[row].phAsset!) {
-        deselectAsset(row: row)
-      }
+    if mediaPickerController!.assets.contains(selectedMedia[row].phAsset!) {
+      deselectAsset(row: row)
+    }
       
     } else {
     
-      if selectedMedia[row].phAsset != nil && mediaPickerController!.customMediaPickerView.assets.contains(selectedMedia[row].phAsset!) {
+      if selectedMedia[row].phAsset != nil && mediaPickerController!.assets.contains(selectedMedia[row].phAsset!) {
         deselectAsset(row: row)
       } else {
        
@@ -73,13 +73,13 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
   func deselectAsset(row: Int) {
     
-      let index = mediaPickerController!.customMediaPickerView.assets.index(of: selectedMedia[row].phAsset!)
+      let index = mediaPickerController!.assets.index(of: selectedMedia[row].phAsset!)
     
       let indexPath = IndexPath(item: index!, section: 2)
     
-      self.mediaPickerController?.customMediaPickerView.collectionView.deselectItem(at: indexPath , animated: true)
+      self.mediaPickerController?.collectionView.deselectItem(at: indexPath , animated: true)
     
-      self.mediaPickerController?.customMediaPickerView.delegate?.controller?(self.mediaPickerController!.customMediaPickerView,
+      self.mediaPickerController?.delegate?.controller?(self.mediaPickerController!,
                                                                               didDeselectAsset: self.selectedMedia[row].phAsset!,
                                                                               at: indexPath)
   }
@@ -99,15 +99,6 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   }
   
   func numberOfSections(in collectionView: UICollectionView) -> Int {
-    let status = libraryAccessChecking()
-    if !status {
-      DispatchQueue.main.async {
-         self.attachedImages.collectionViewLayout.invalidateLayout()
-      }
-    } else {
-       attachedImages.collectionViewLayout.invalidateLayout()
-    }
-   
     return 1
   }
   
@@ -128,14 +119,14 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-      let oldHeight = self.selectedMedia[indexPath.row].object?.asUIImage!.size.height
+    let oldHeight = self.selectedMedia[indexPath.row].object?.asUIImage!.size.height
     
-      let scaleFactor = selectedMediaCollectionCellHeight / oldHeight!
-      
-      let newWidth = self.selectedMedia[indexPath.row].object!.asUIImage!.size.width * scaleFactor
+    let scaleFactor = selectedMediaCollectionCellHeight / oldHeight!
     
-      let newHeight = oldHeight! * scaleFactor
-      
-      return CGSize(width: newWidth , height: newHeight)
+    let newWidth = self.selectedMedia[indexPath.row].object!.asUIImage!.size.width * scaleFactor
+    
+    let newHeight = oldHeight! * scaleFactor
+    
+    return CGSize(width: newWidth , height: newHeight)
   }
 }

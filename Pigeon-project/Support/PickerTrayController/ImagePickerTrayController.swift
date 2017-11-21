@@ -111,14 +111,12 @@ public class ImagePickerTrayController: UIViewController {
   
   public override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    
-    NotificationCenter.default.removeObserver(self)
+
+   NotificationCenter.default.removeObserver(self)
   }
   
-    fileprivate let actionCellWidth: CGFloat = 162
-    fileprivate weak var actionCell: ActionCell?
-
-    public fileprivate(set) var actions = [ImagePickerAction]()
+  fileprivate let actionCellWidth: CGFloat = 162
+  public fileprivate(set) var actions = [ImagePickerAction]()
 
     fileprivate var sections: [Int] {
         let actionSection = (actions.count > 0) ? 1 : 0
@@ -176,12 +174,6 @@ public class ImagePickerTrayController: UIViewController {
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
       }
       collectionView.allowsMultipleSelection = allowsMultipleSelection
-    }
-
-    public override func viewDidLoad() {
-      super.viewDidLoad()
-      // fetchAssets()
-      
     }
   
   public override func viewWillAppear(_ animated: Bool) {
@@ -300,7 +292,6 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ActionCell.self), for: indexPath) as! ActionCell
             cell.imagePickerTrayController = self
             cell.actions = actions
-            actionCell = cell
             
             return cell
           

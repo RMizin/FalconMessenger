@@ -69,13 +69,12 @@ class ChatsController: UITableViewController {
     configureTableView()
     managePresense()
     setupSearchController()
+    fetchConversations()
+    
+    NotificationCenter.default.addObserver(self, selector:#selector(fetchConversations),name:NSNotification.Name(rawValue: "reloadUserConversations"), object: nil)
+    NotificationCenter.default.addObserver(self, selector:#selector(clearConversations),name:NSNotification.Name(rawValue: "clearConversations"), object: nil)
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-      super.viewWillAppear(animated)
-
-    fetchConversations()
-  }
   
   override func viewDidAppear(_ animated: Bool) {
     if let testSelected = tableView.indexPathForSelectedRow {
@@ -180,7 +179,19 @@ class ChatsController: UITableViewController {
     }
   }
   
-  func fetchConversations() {
+  @objc func clearConversations() {
+
+    messagesDictionary.removeAll()
+    filteredMessagesDictionary.removeAll()
+    finalUserCellData.removeAll()
+    filteredFinalUserCellData.removeAll()
+    
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
+    }
+  }
+  
+ @objc func fetchConversations() {
     
     guard let uid = Auth.auth().currentUser?.uid else {
       return
@@ -466,7 +477,6 @@ extension ChatsController: MessagesLoaderDelegate {
       }
     }
     
-    self.chatLogController?.startCollectionViewAtBottom()
     if let destination = self.chatLogController {
       navigationController?.pushViewController( destination, animated: true)
       self.chatLogController = nil

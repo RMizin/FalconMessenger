@@ -16,18 +16,8 @@ fileprivate let stackViewOffset: CGFloat = 6
 
 class ActionCell: UICollectionViewCell {
   
-  weak var imagePickerTrayController:ImagePickerTrayController?
+  weak var imagePickerTrayController: ImagePickerTrayController?
   
-  fileprivate func basicErrorAlertWith (title:String, message: String) {
-    
-   
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
-    imagePickerTrayController?.present(alert, animated: true, completion: nil)
-  }
-  
-  
-
     fileprivate let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -62,11 +52,9 @@ class ActionCell: UICollectionViewCell {
       stackView.frame = bounds.insetBy(dx: spacing.x, dy: spacing.y).offsetBy(dx:  stackViewOffset, dy: 0)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        
-       // initialize()
-    }
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
     
 
     @objc fileprivate func callAction(sender: UIButton) {
@@ -80,7 +68,7 @@ class ActionCell: UICollectionViewCell {
                actions[index].call()
             } else {
               
-              basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage)
+              basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage, controller: imagePickerTrayController!)
             }
           } else {
             let status = libraryAccessChecking()
@@ -89,7 +77,7 @@ class ActionCell: UICollectionViewCell {
               actions[index].call()
             } else {
               
-              basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessage)
+              basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessage, controller: imagePickerTrayController!)
             }
           }
        }

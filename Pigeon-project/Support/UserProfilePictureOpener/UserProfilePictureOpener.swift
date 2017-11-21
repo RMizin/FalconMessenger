@@ -59,7 +59,8 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
       return self.referenceView
     }
     
-    galleryPreview.modalPresentationStyle = .fullScreen
+    galleryPreview.modalPresentationStyle = .overFullScreen
+    galleryPreview.modalPresentationCapturesStatusBarAppearance = true
     controllerWithUserProfilePhoto?.present(galleryPreview, animated: true, completion: nil)
   }
   

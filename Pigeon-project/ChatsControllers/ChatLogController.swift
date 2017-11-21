@@ -61,58 +61,38 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   let messagesToLoad = 50
   
-  var mediaPickerController: MediaPickerController! = nil
+  var mediaPickerController: MediaPickerControllerNew! = nil
   
   var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
   
-  let messageSendingProgressBar = UIProgressView(progressViewStyle: .bar)
+  var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
 
   
-  func startCollectionViewAtBottom () {
-    
-    let collectionViewInsets: CGFloat = (collectionView!.contentInset.bottom + collectionView!.contentInset.top)// + inputContainerView.inputTextView.frame.height
-    let contentSize = self.collectionView?.collectionViewLayout.collectionViewContentSize
-    
-    if Double(contentSize!.height) > Double(self.collectionView!.bounds.size.height) {
-      let targetContentOffset = CGPoint(x: 0.0, y: contentSize!.height - (self.collectionView!.bounds.size.height - collectionViewInsets))
-      self.collectionView?.contentOffset = targetContentOffset
-    }
-  }
-  
   func scrollToBottom() {
-    
     if self.messages.count - 1 <= 0 {
       return
     }
-    
     let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-    
     DispatchQueue.main.async {
       self.collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
     }
   }
   
   func scrollToBottomOnNewLine() {
-    
     if self.messages.count - 1 <= 0 {
       return
     }
-    
     let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-    
     DispatchQueue.main.async {
       self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
     }
   }
   
   func scrollToBottomOfTypingIndicator() {
-    
     if collectionView?.numberOfSections != 2 {
       return
     }
-    
     let indexPath = IndexPath(item: 0, section: 1)
-    
     DispatchQueue.main.async {
       self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
     }
@@ -167,6 +147,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
           
+          if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
+            dictionary.updateValue( self.estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
+          } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight =  Message(dictionary: dictionary).imageHeight?.floatValue {
+            let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
+            dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
+          }
+        
           if self.isInitialChatMessagesLoad {
             appendingMessages.append(Message(dictionary: dictionary))
   
@@ -287,7 +274,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           oldestMessagesLoadingGroup.notify(queue: DispatchQueue.main, execute: {
             var arrayWithShiftedMessages = self.messages
             let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messages.count )
-            print(-shiftingIndex, "shifting index")
             
             arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
             self.mediaMessages.shiftInPlace(withDistance: mediaMessagesCount - self.mediaMessages.count)
@@ -315,6 +301,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               }
             
               dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
+              
+              if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
+                dictionary.updateValue(self.estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
+              } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight =  Message(dictionary: dictionary).imageHeight?.floatValue {
+                let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
+                dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
+              }
             
               self.messages.append(Message(dictionary: dictionary))
             
@@ -486,8 +479,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     super.viewDidLoad()
     
     setupCollectionView()
-    setupProgressBar()
     setRightBarButtonItem()
+    configureProgressBar()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -513,19 +506,51 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       userStatusReference.removeAllObservers()
     }
 
-    if self.mediaPickerController != nil && self.mediaPickerController.customMediaPickerView != nil {
-
-      if self.mediaPickerController.container != nil && self.mediaPickerController.container.isDescendant( of: self.mediaPickerController.view) {
-
-        self.mediaPickerController.container.removeFromSuperview()
-        self.mediaPickerController.container = nil
-      }
-
-      self.mediaPickerController.customMediaPickerView.removeFromParentViewController()
-      self.mediaPickerController.customMediaPickerView = nil
-    }
-      
     isTyping = false
+    
+    uploadProgressBar.removeFromSuperview()
+  }
+  
+  
+  private var oldOffset: CGPoint?
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+
+    oldOffset = self.collectionView!.contentOffset
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    if oldOffset != nil  {
+      collectionView?.setContentOffset(oldOffset!, animated: false)
+      oldOffset = nil
+    }
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+  
+    if oldOffset != nil {
+      collectionView?.setContentOffset(oldOffset!, animated: false)
+      collectionView?.collectionViewLayout.invalidateLayout()
+      collectionView?.layoutIfNeeded()
+      oldOffset = nil
+    }
+  }
+  
+  private var didLayoutFlag: Bool = false
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+
+    guard let collectionView = collectionView, !didLayoutFlag else {
+      return
+    }
+    
+    if messages.count - 1 >= 0 {
+      collectionView.scrollToItem(at: IndexPath(item: messages.count-1, section: 0), at: .bottom, animated: false)
+    }
+    didLayoutFlag = true
   }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -540,39 +565,52 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             self.collectionView?.reloadData()
         }
     }
-    
+  
   deinit {
     print("\n CHATLOG CONTROLLER DE INIT \n")
   }
   
-  
-  func setupProgressBar() {
-  
-    let pSetY = CGFloat(64)
-    messageSendingProgressBar.frame = CGRect(x: 0, y: pSetY, width: deviceScreen.width, height: 5)
-    self.view.addSubview(messageSendingProgressBar)
+  fileprivate func configureProgressBar() {
+    navigationController?.navigationBar.addSubview(uploadProgressBar)
+    uploadProgressBar.translatesAutoresizingMaskIntoConstraints = false
+    uploadProgressBar.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor).isActive = true
+    uploadProgressBar.leftAnchor.constraint(equalTo: navigationController!.navigationBar.leftAnchor).isActive = true
+    uploadProgressBar.rightAnchor.constraint(equalTo: navigationController!.navigationBar.rightAnchor).isActive = true
   }
-  
 
+  
   fileprivate func setupCollectionView () {
     inputTextViewTapGestureRecognizer = UITapGestureRecognizer(target: inputContainerView.chatLogController, action: #selector(ChatLogController.toggleTextView))
     inputTextViewTapGestureRecognizer.delegate = inputContainerView
     
     view.backgroundColor = .white
-    automaticallyAdjustsScrollViewInsets = false
+    collectionView?.translatesAutoresizingMaskIntoConstraints = false
     extendedLayoutIncludesOpaqueBars = true
-   
+    automaticallyAdjustsScrollViewInsets = false
+  
     if #available(iOS 11.0, *) {
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationItem.largeTitleDisplayMode = .never
-    }
-   
+    
+      navigationItem.largeTitleDisplayMode = .never
+    
+      collectionView?.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+      collectionView?.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+      collectionView?.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+      collectionView?.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+    } else {
+      collectionView?.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+      collectionView?.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+      collectionView?.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+      collectionView?.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+   }
+    
     collectionView?.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
-    collectionView?.frame = CGRect(x: 0, y: 64, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height - 64 )
+    collectionView?.scrollIndicatorInsets = UIEdgeInsets.zero
+    collectionView?.autoresizingMask = UIViewAutoresizing()
     collectionView?.keyboardDismissMode = .interactive
     collectionView?.backgroundColor = UIColor.white
     collectionView?.delaysContentTouches = false
     collectionView?.alwaysBounceVertical = true
+    collectionView?.isPrefetchingEnabled = true
     
     collectionView?.addSubview(refreshControl)
     collectionView?.register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
@@ -638,15 +676,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   
   lazy var inputContainerView: ChatInputContainerView = {
-    var chatInputContainerView = ChatInputContainerView(frame: CGRect.zero)
-    var bottomSafeArea:CGFloat = 0.0
-    
-    if #available(iOS 11.0, *) {
-      let window = UIApplication.shared.keyWindow
-      bottomSafeArea = window?.safeAreaInsets.bottom ?? 0.0
-    }
-    let height = 50 + bottomSafeArea
-    chatInputContainerView = ChatInputContainerView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: height))
+    var chatInputContainerView = ChatInputContainerView()
     chatInputContainerView.chatLogController = self
     
     return chatInputContainerView
@@ -654,7 +684,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   
   var canRefresh = true
-  
   var isScrollViewAtTheBottom = true
   
   override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -664,19 +693,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     } else {
       isScrollViewAtTheBottom = false
     }
+    
     if scrollView.contentOffset.y < 0 { //change 100 to whatever you want
-      
       if collectionView!.contentSize.height < UIScreen.main.bounds.height - 50 {
         canRefresh = false
       }
       
       if canRefresh && !refreshControl.isRefreshing {
-        
         canRefresh = false
         refreshControl.beginRefreshing()
         performRefresh()
       }
-      
     } else if scrollView.contentOffset.y >= 0 {
       canRefresh = true
     }
@@ -762,12 +789,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
         
         UIView.performWithoutAnimation {
-          
-          cell.textView.text = messageText
-          
-          cell.bubbleView.frame = CGRect(x: view.frame.width - estimateFrameForText(messageText).width - 35,
+      
+            cell.textView.text = messageText
+
+          cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - /*estimateFrameForText(messageText).width */ message.estimatedFrameForText!.width - 35,
                                          y: 0,
-                                         width: estimateFrameForText(messageText).width + 30,
+                                         width: /*estimateFrameForText(messageText).width*/  message.estimatedFrameForText!.width + 30,
                                          height: cell.frame.size.height).integral
         
          
@@ -809,7 +836,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
            
             cell.textView.text = messageText
         
-            cell.bubbleView.frame.size = CGSize(width: (estimateFrameForText(messageText).width + 30).rounded(),
+            cell.bubbleView.frame.size = CGSize(width: (/*estimateFrameForText(messageText).width*/ message.estimatedFrameForText!.width + 30).rounded(),
                                           height: cell.frame.size.height.rounded())//.integral
           
             cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(),
@@ -837,8 +864,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         cell.chatLogController = self
         
+        UIView.performWithoutAnimation {
+          
         cell.message = message
-        
         cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
         cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
     
@@ -867,6 +895,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         cell.messageImageView.isUserInteractionEnabled = false
+        }
         
         if let image = message.localImage {
           
@@ -883,7 +912,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           cell.progressView.isHidden = false
           
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize, url) in
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
             let progress = Double(100 * downloadedSize/expectedSize)
             
             DispatchQueue.main.async {
@@ -907,9 +936,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
         
         cell.chatLogController = self
-        
+        UIView.performWithoutAnimation {
+          
         cell.message = message
-        
         cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         
         DispatchQueue.main.async {
@@ -923,7 +952,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         cell.messageImageView.isUserInteractionEnabled = false
-        
+        }
         if let image = message.localImage {
           
           cell.messageImageView.image = image
@@ -937,7 +966,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         if let messageImageUrl = message.imageUrl {
           cell.progressView.isHidden = false
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority], progress: { (downloadedSize, expectedSize, url) in
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
             
             let progress = Double(100 * downloadedSize/expectedSize)
             
@@ -967,27 +996,27 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  fileprivate var cellHeight: CGFloat = 80
-  
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return selectSize(indexPath: indexPath)
+  }
+
+  func selectSize(indexPath: IndexPath) -> CGSize  {
+    
+    var cellHeight: CGFloat = 80
     
     if indexPath.section == 0 {
       let message = messages[indexPath.row]
-      
-      if let text = message.text {
+    
+      if message.text != nil {
+        cellHeight = /*estimateFrameForText(text).height*/  message.estimatedFrameForText!.height + 20
+      } else if message.imageWidth?.floatValue != nil && message.imageHeight?.floatValue != nil {
         
-        cellHeight = estimateFrameForText(text).height + 20
-        
-      } else if let imageWidth = message.imageWidth?.floatValue, let imageHeight = message.imageHeight?.floatValue {
-        
-        cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
+        cellHeight = CGFloat(truncating: message.imageCellHeight!)// CGFloat(imageHeight / imageWidth * 200).rounded()
       }
       
-      return CGSize(width: self.view.frame.width, height: cellHeight)
-      
+      return CGSize(width: self.collectionView!.frame.width, height: cellHeight)
     } else {
-      
-      return CGSize(width: self.view.frame.width, height: 40)
+      return CGSize(width: self.collectionView!.frame.width, height: 40)
     }
   }
   
@@ -1029,11 +1058,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if !inputContainerView.selectedMedia.isEmpty {
       let selectedMedia = inputContainerView.selectedMedia
       
-      let selected = mediaPickerController.customMediaPickerView.collectionView.indexPathsForSelectedItems
-      
+      let selected = mediaPickerController.collectionView.indexPathsForSelectedItems
       
       for indexPath in selected!  {
-        mediaPickerController.customMediaPickerView.collectionView.deselectItem(at: indexPath, animated: false)
+        mediaPickerController.collectionView.deselectItem(at: indexPath, animated: false)
       }
    
       if self.inputContainerView.selectedMedia.count - 1 >= 0 {
@@ -1059,8 +1087,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       var percentCompleted: CGFloat = 0.0
       
        UIView.animate(withDuration: 3, delay: 0, options: [.curveEaseOut], animations: {
-        self.messageSendingProgressBar.setProgress(0.25, animated: true)
-       
+        self.uploadProgressBar.setProgress(0.25, animated: true)
        }, completion: nil)
       
       let defaultMessageStatus = messageStatusSent
@@ -1082,15 +1109,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageURL) in
             self.sendMessageWithImageUrl(imageURL, image: selectedMedia.object!.asUIImage!)
             
-            percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
-           
-            self.messageSendingProgressBar.setProgress(Float(percentCompleted), animated: true)
+           percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
+           self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
             
             if percentCompleted == 1.0 {
               DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-                self.messageSendingProgressBar.setProgress(0.0, animated: false)
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
+               self.uploadProgressBar.setProgress(0.0, animated: false)
+              
               })
             }
           })
@@ -1119,13 +1144,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               
               percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
               
-              self.messageSendingProgressBar.setProgress(Float(percentCompleted), animated: true)
+              self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
               
               if percentCompleted == 1.0 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-                  self.messageSendingProgressBar.setProgress(0.0, animated: false)
-                  self.view.setNeedsLayout()
-                  self.view.layoutIfNeeded()
+                  self.uploadProgressBar.setProgress(0.0, animated: false)
                 })
               }
             })
@@ -1228,6 +1251,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
   fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
     
+    var values = values
+    
+    if let messageText = Message(dictionary: values).text { /* pre-calculateCellSizes */
+      values.updateValue(self.estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
+    } else if let imageWidth = Message(dictionary: values).imageWidth?.floatValue, let imageHeight =  Message(dictionary: values).imageHeight?.floatValue {
+      let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
+      values.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
+    }
+    
     self.collectionView?.performBatchUpdates ({
       
       self.messages.append(Message(dictionary: values ))
@@ -1282,7 +1314,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     properties.forEach({values[$0] = $1})
     
     self.reloadCollectionViewAfterSending(values: values)
-    
     childRef.updateChildValues(values) { (error, ref) in
       
       if error != nil {
@@ -1292,7 +1323,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }
       
       let messageId = childRef.key
-      
       let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
       
       userMessagesRef.updateChildValues([messageId: 1])
@@ -1382,3 +1412,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     })
   }
 }
+
+
+
+/*
+ func startCollectionViewAtBottom () {
+ 
+ let collectionViewInsets: CGFloat = (collectionView!.contentInset.bottom + collectionView!.contentInset.top)// + inputContainerView.inputTextView.frame.height
+ let contentSize = self.collectionView?.collectionViewLayout.collectionViewContentSize
+ 
+ if Double(contentSize!.height) > Double(self.collectionView!.bounds.size.height) {
+ let targetContentOffset = CGPoint(x: 0.0, y: contentSize!.height - (self.collectionView!.bounds.size.height - collectionViewInsets))
+ self.collectionView?.contentOffset = targetContentOffset
+ }
+ */

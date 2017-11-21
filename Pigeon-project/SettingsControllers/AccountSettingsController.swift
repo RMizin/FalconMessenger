@@ -38,6 +38,7 @@ class AccountSettingsController: UITableViewController {
     edgesForExtendedLayout = UIRectEdge.top
     view.backgroundColor = UIColor.white
     tableView = UITableView(frame: tableView.frame, style: .grouped)
+    NotificationCenter.default.addObserver(self, selector:#selector(clearUserData),name:NSNotification.Name(rawValue: "clearUserData"), object: nil)
     
     configureTableView()
     configureContainerView()
@@ -50,6 +51,12 @@ class AccountSettingsController: UITableViewController {
     if userProfileContainerView.phone.text == "" {
       listenChanges()
     }
+  }
+  
+  @objc func clearUserData() {
+    userProfileContainerView.name.text = ""
+    userProfileContainerView.phone.text = ""
+    userProfileContainerView.profileImageView.image = nil
   }
   
   
@@ -138,6 +145,9 @@ class AccountSettingsController: UITableViewController {
     newNavigationController.modalTransitionStyle = .crossDissolve
     
     self.present(newNavigationController, animated: true, completion: {
+         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearConversations"), object: nil)
+         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
        self.tabBarController?.selectedIndex = tabs.chats.rawValue
     })
   }

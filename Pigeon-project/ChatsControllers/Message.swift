@@ -30,6 +30,9 @@ class Message:  NSObject  {
     var localVideoUrl: String?
   
     var videoUrl: String?
+  
+    var estimatedFrameForText:CGRect?
+    var imageCellHeight: NSNumber?
       
     func chatPartnerId() -> String? {
         return fromId == Auth.auth().currentUser?.uid ? toId : fromId
@@ -55,5 +58,8 @@ class Message:  NSObject  {
       
         localImage = dictionary["localImage"] as? UIImage
         localVideoUrl = dictionary["localVideoUrl"] as? String
+      
+        estimatedFrameForText = dictionary["estimatedFrameForText"] as? CGRect
+        imageCellHeight = dictionary["imageCellHeight"] as? NSNumber
     }
 }

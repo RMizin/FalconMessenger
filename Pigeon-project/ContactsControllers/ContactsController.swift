@@ -228,8 +228,6 @@ class ContactsController: UITableViewController {
         
         if snapshot.exists() {
          
-          self.startObservingUserChanges(at: userRef)
-         
           // Initial load
           for child in snapshot.children.allObjects as! [DataSnapshot]  {
   
@@ -246,11 +244,13 @@ class ContactsController: UITableViewController {
             self.rearrangeUsers()
 
             self.filteredUsers = self.users
-            
-            DispatchQueue.main.async {
-              self.tableView.reloadData()
-            }
           }
+          
+          DispatchQueue.main.async {
+            self.tableView.reloadData()
+          }
+          
+          self.startObservingUserChanges(at: userRef)
         }
         
       }, withCancel: { (error) in
@@ -300,6 +300,10 @@ class ContactsController: UITableViewController {
       }
       
       dictionary.updateValue(snap.key as AnyObject, forKey: "id")
+      
+      if self.users.count - 1 < 0 {
+        return
+      }
       
       for index in 0...self.users.count - 1 {
         
@@ -576,7 +580,6 @@ extension ContactsController: MessagesLoaderDelegate {
       }
     }
     
-    self.chatLogController?.startCollectionViewAtBottom()
     if let destination = self.chatLogController {
       navigationController?.pushViewController( destination, animated: true)
       self.chatLogController = nil

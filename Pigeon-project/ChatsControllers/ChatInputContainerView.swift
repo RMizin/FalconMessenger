@@ -18,7 +18,7 @@ class ChatInputContainerView: UIView {
   
   var selectedMedia = [MediaObject]()
   
-  weak var mediaPickerController: MediaPickerController?
+  weak var mediaPickerController: MediaPickerControllerNew?
   
   var maxTextViewHeight: CGFloat = 0.0
   
@@ -33,8 +33,7 @@ class ChatInputContainerView: UIView {
     get {
       let textSize = self.inputTextView.sizeThatFits(CGSize(width: self.inputTextView.bounds.width, height: CGFloat.greatestFiniteMagnitude))
       
-          
-      if textSize.height > 220 {
+      if inputTextView.contentSize.height > 220 {
         maxTextViewHeight = 220
         inputTextView.isScrollEnabled = true
       } else {
@@ -84,13 +83,7 @@ class ChatInputContainerView: UIView {
   }()
   
   let sendButton = UIButton(type: .system)
-  
-  var attachedImages: UICollectionView = {
-    var attachedImages = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-  
-    return attachedImages
-  }()
-  
+
   let separator: UIView = {
     let separator = UIView()
     separator.translatesAutoresizingMaskIntoConstraints = false
@@ -98,6 +91,12 @@ class ChatInputContainerView: UIView {
     separator.isHidden = false
     
     return separator
+  }()
+  
+  var attachedImages: UICollectionView = {
+    var attachedImages = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
+    return attachedImages
   }()
   
   
@@ -117,7 +116,7 @@ class ChatInputContainerView: UIView {
     if centeredCollectionViewFlowLayout == nil {
       centeredCollectionViewFlowLayout = CenteredCollectionViewFlowLayout()
     }
-    
+  
     attachedImages = UICollectionView(centeredCollectionViewFlowLayout: centeredCollectionViewFlowLayout)
     backgroundColor = .white
     self.autoresizingMask = UIViewAutoresizing.flexibleHeight
@@ -160,7 +159,7 @@ class ChatInputContainerView: UIView {
     sendButton.bottomAnchor.constraint(equalTo:  inputTextView.bottomAnchor, constant: -5).isActive = true
     sendButton.widthAnchor.constraint(equalToConstant: 27).isActive = true
     sendButton.heightAnchor.constraint(equalToConstant: 27).isActive = true
-  
+    
     configureAttachedImagesCollection()
   }
   
@@ -185,9 +184,9 @@ extension ChatInputContainerView {
     
     if selectedMedia.count == 0 {
     
-     attachedImages.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
+      attachedImages.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
       
-     self.inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
+      self.inputTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
       
       separator.isHidden = true
       

@@ -6,11 +6,10 @@
 //  Copyright © 2016 Laurin Brandner. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 public struct ImagePickerAction {
-    
+  
     public typealias Callback = (ImagePickerAction) -> ()
     
     public var title: String
@@ -30,7 +29,7 @@ public struct ImagePickerAction {
     }
     
     func call() {
-        callback(self)
+      callback(self)
     }
     
 }

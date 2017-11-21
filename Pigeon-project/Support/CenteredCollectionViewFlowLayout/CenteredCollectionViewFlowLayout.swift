@@ -25,6 +25,13 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 	
 	private var lastCollectionViewSize: CGSize = CGSize.zero
 	private var lastScrollDirection: UICollectionViewScrollDirection!
+  
+  open override func shouldInvalidateLayout(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
+    return true
+  }
+  open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+    return true
+  }
 	
 	public override init() {
 		super.init()
@@ -35,6 +42,7 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+  
 	
 	override open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
 		super.invalidateLayout(with: context)
