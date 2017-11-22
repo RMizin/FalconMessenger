@@ -25,7 +25,7 @@ public struct ImagePickerAction {
     public static func libraryAction(with callback: @escaping Callback) -> ImagePickerAction {
         let image = UIImage(bundledName: "ImagePickerAction-Library")!
         
-        return ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Image Picker Photo Library Action"), image: image, callback: callback)
+        return ImagePickerAction(title: NSLocalizedString("Photos", comment: "Image Picker Photo Library Action"), image: image, callback: callback)
     }
     
     func call() {

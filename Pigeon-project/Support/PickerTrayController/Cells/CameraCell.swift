@@ -17,6 +17,7 @@ class CameraCell: UICollectionViewCell {
         didSet {
             if let cameraView = cameraView {
                 contentView.addSubview(cameraView)
+              setNeedsLayout()
             }
         }
     }

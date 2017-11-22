@@ -1033,7 +1033,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if currentReachabilityStatus != .notReachable {
         
       inputContainerView.inputTextView.isScrollEnabled = false
-      inputContainerView.invalidateIntrinsicContentSize()
+      inputContainerView.inputTextView.invalidateIntrinsicContentSize()
 
       inputContainerView.sendButton.isEnabled = false
     

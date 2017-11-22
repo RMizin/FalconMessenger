@@ -48,8 +48,12 @@ class ActionCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
       
-      contentView.addSubview(stackView)
-      stackView.frame = bounds.insetBy(dx: spacing.x, dy: spacing.y).offsetBy(dx:  stackViewOffset, dy: 0)
+      addSubview(stackView)
+      stackView.translatesAutoresizingMaskIntoConstraints = false
+      stackView.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+      stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+      stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+      stackView.widthAnchor.constraint(equalToConstant: 80).isActive = true
     }
     
   required init?(coder aDecoder: NSCoder) {
@@ -92,14 +96,15 @@ fileprivate class ActionButton: UIButton {
     init(action: ImagePickerAction, target: Any, selector: Selector) {
         super.init(frame: .zero)
         
-        setTitle(action.title, for: .normal)
+       setTitle(action.title, for: .normal)
         setTitleColor(.black, for: .normal)
         setImage(action.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        
+      
         imageView?.tintColor = .black
+     // contentMode = .center
         imageView?.contentMode = .bottom
-        
-        titleLabel?.textAlignment = .center
+     
+    titleLabel?.textAlignment = .center
         titleLabel?.font = .systemFont(ofSize: 14)
         
         backgroundColor = .white
@@ -115,7 +120,7 @@ fileprivate class ActionButton: UIButton {
     // MARK: - Layout
     
     fileprivate override func imageRect(forContentRect contentRect: CGRect) -> CGRect {
-        return contentRect.divided(atDistance: contentRect.midX, from: .minYEdge).slice
+        return  CGRect(x: 0, y: -contentRect.height/2.3, width: contentRect.width, height: contentRect.height) //contentRect.divided(atDistance: contentRect.midX, from: .minYEdge ).slice
     }
     
     fileprivate override func titleRect(forContentRect contentRect: CGRect) -> CGRect {

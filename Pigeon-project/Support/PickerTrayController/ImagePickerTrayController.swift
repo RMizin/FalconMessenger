@@ -51,7 +51,7 @@ public class ImagePickerTrayController: UIViewController {
         layout.minimumLineSpacing = itemSpacing
     
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 2, right: 1)
+        collectionView.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 1)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = UIColor(red: 209.0/255.0, green: 213.0/255.0, blue: 218.0/255.0, alpha: 1.0)
         collectionView.dataSource = self
@@ -115,7 +115,7 @@ public class ImagePickerTrayController: UIViewController {
    NotificationCenter.default.removeObserver(self)
   }
   
-  fileprivate let actionCellWidth: CGFloat = 162
+  fileprivate let actionCellWidth: CGFloat = 100
   public fileprivate(set) var actions = [ImagePickerAction]()
 
     fileprivate var sections: [Int] {
@@ -165,12 +165,14 @@ public class ImagePickerTrayController: UIViewController {
  
       view.addSubview(collectionView)
       collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-      collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-      collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     
       if #available(iOS 11.0, *) {
+        collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo:view.safeAreaLayoutGuide.bottomAnchor).isActive = true
       } else {
+        collectionView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        collectionView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
       }
       collectionView.allowsMultipleSelection = allowsMultipleSelection
@@ -181,6 +183,22 @@ public class ImagePickerTrayController: UIViewController {
      fetchAssets()
   }
 
+  
+  public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    
+    collectionView.collectionViewLayout.invalidateLayout()
+  }
+  
+  override public func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    collectionView.collectionViewLayout.invalidateLayout()
+  }
+  
+  public override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.willTransition(to: newCollection, with: coordinator)
+  }
+  
     public func add(action: ImagePickerAction) {
         actions.append(action)
     }
@@ -297,8 +315,8 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
           
         case 1:
            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(CameraCell.self), for: indexPath) as! CameraCell
-            cell.cameraView = self.cameraController.view
-            cell.cameraOverlayView = self.cameraController.cameraOverlayView
+           cell.cameraView = self.cameraController.view
+           cell.cameraOverlayView = self.cameraController.cameraOverlayView
 
             return cell
           
@@ -363,17 +381,17 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
-    
+ 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let maxItemHeight = collectionView.frame.height-collectionView.contentInset.vertical
-        
+      //  let maxItemHeight = ((view.frame.height * 0.8) - collectionView.contentInset.vertical)
+      
         switch indexPath.section {
         case 0:
-            return CGSize(width: actionCellWidth, height: maxItemHeight)
+          return CGSize(width: actionCellWidth, height: collectionView.frame.height-1)
         case 1:
-            return CGSize(width: 150, height: maxItemHeight)
+          return CGSize(width: 197, height: collectionView.frame.height-1)
         case 2:
-            return CGSize(width: collectionView.frame.height/2.05, height:  collectionView.frame.height/2.05)
+          return CGSize(width: collectionView.frame.height/2.035, height: collectionView.frame.height/2.035)
         default:
             return .zero
         }
@@ -384,7 +402,7 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
             return UIEdgeInsets()
         }
         
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 6)
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 1)
     }
 }
 

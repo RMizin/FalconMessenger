@@ -42,22 +42,23 @@ class CameraOverlayView: UIButton {
     fileprivate func initialize() {
         addSubview(flipCameraButton)
         addSubview(shutterButtonView)
+      
+      flipCameraButton.translatesAutoresizingMaskIntoConstraints = false
+      shutterButtonView.translatesAutoresizingMaskIntoConstraints = false
+      
+      flipCameraButton.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
+      flipCameraButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -5).isActive = true
+      flipCameraButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+      flipCameraButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+      
+      
+      shutterButtonView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
+      shutterButtonView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+      shutterButtonView.widthAnchor.constraint(equalToConstant: 29).isActive = true
+      shutterButtonView.heightAnchor.constraint(equalToConstant: 29).isActive = true
     }
     
     // MARK: - Layout
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let flipCameraButtonSize = CGSize(width: 44, height: 44)
-        let flipCameraButtonOrigin = CGPoint(x: bounds.maxX - flipCameraButtonSize.width, y: bounds.minY)
-        flipCameraButton.frame = CGRect(origin: flipCameraButtonOrigin, size: flipCameraButtonSize)
-        
-        let shutterButtonViewSize = CGSize(width: 29, height: 29)
-        let shutterButtonViewOrigin = CGPoint(x: bounds.midX - shutterButtonViewSize.width/2, y: bounds.maxY - shutterButtonViewSize.height-4)
-        shutterButtonView.frame = CGRect(origin: shutterButtonViewOrigin, size: shutterButtonViewSize)
-    }
-    
 }
 
 fileprivate class FlipCameraButton: UIButton {

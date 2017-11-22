@@ -13,7 +13,7 @@ pod 'Firebase/Database'
 pod 'Firebase/Auth'
 pod 'Firebase/Storage'
 pod 'Firebase/Messaging'
-pod 'SDWebImage', '4.0'
+pod 'SDWebImage'   #, '4.0'
 pod 'PhoneNumberKit'
 pod 'FLAnimatedImage'
 

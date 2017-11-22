@@ -222,17 +222,15 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
   }
   
   func expandCollection() {
-    
-    inputContainerView?.inputTextView.textContainerInset = UIEdgeInsets(top: 175, left: 8, bottom: 8, right: 30)
-    
+    inputContainerView?.inputTextView.textContainerInset = InputContainerViewConstants.containerInsetsWithAttachedImages
     inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 165)
-    
-    inputContainerView?.invalidateIntrinsicContentSize()
+
+    if inputContainerView!.inputTextView.contentSize.height <= InputContainerViewConstants.maxContainerViewHeight  {
+       inputContainerView?.inputTextView.invalidateIntrinsicContentSize()
+    }
     
     inputContainerView?.separator.isHidden = false
-    
     inputContainerView?.sendButton.isEnabled = true
-    
     inputContainerView?.placeholderLabel.text = "Add comment or Send"
   }
   

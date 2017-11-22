@@ -26,7 +26,7 @@ class ImageCell: UICollectionViewCell {
     
     fileprivate let checkmarkView = UIImageView(image: UIImage(bundledName: "ImageCell-Selected"))
   
-    fileprivate let checkmarkViewUnselected = UIImageView(image: UIImage(bundledName: "ImageCell-Unselected"))
+  //  fileprivate let checkmarkViewUnselected = UIImageView(image: UIImage(bundledName: "ImageCell-Unselected"))
    //ImageCell-Unselected
     var isVideo = false {
         didSet {
@@ -62,11 +62,11 @@ class ImageCell: UICollectionViewCell {
     
     fileprivate func initialize() {
         contentView.addSubview(imageView)
-        contentView.addSubview(shadowView)
+        //contentView.addSubview(shadowView)
         contentView.addSubview(videoIndicatorView)
         contentView.addSubview(cloudIndicatorView)
         contentView.addSubview(checkmarkView)
-        contentView.addSubview(checkmarkViewUnselected)
+      //  contentView.addSubview(checkmarkViewUnselected)
         
         reloadAccessoryViews()
         reloadCheckmarkView()
@@ -100,8 +100,8 @@ class ImageCell: UICollectionViewCell {
         imageView.frame = bounds
         let inset: CGFloat = 8
         
-        let shadowHeight = shadowView.image?.size.height ?? 0
-        shadowView.frame = CGRect(origin: CGPoint(x: bounds.minX, y: bounds.maxY-shadowHeight), size: CGSize(width: bounds.width, height: shadowHeight))
+      //  let shadowHeight = shadowView.image?.size.height ?? 0
+       // shadowView.frame = CGRect(origin: CGPoint(x: bounds.minX, y: bounds.maxY-shadowHeight), size: CGSize(width: bounds.width, height: shadowHeight))
         
         let videoIndicatorViewSize = videoIndicatorView.image?.size ?? .zero
         let videoIndicatorViewOrigin = CGPoint(x: bounds.minX + inset, y: bounds.maxY - inset - videoIndicatorViewSize.height)
@@ -113,7 +113,7 @@ class ImageCell: UICollectionViewCell {
         
         let checkmarkSize = checkmarkView.frame.size
         checkmarkView.center = CGPoint(x: bounds.maxX-checkmarkSize.width/2-4, y: bounds.maxY-checkmarkSize.height/2-4)
-        checkmarkViewUnselected.center = CGPoint(x: bounds.maxX-checkmarkSize.width/2-4, y: bounds.maxY-checkmarkSize.height/2-4)
+       // checkmarkViewUnselected.center = CGPoint(x: bounds.maxX-checkmarkSize.width/2-4, y: bounds.maxY-checkmarkSize.height/2-4)
     }
     
 }
