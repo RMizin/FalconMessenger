@@ -24,7 +24,7 @@ class UserProfilePictureOverlayView: UIView {
     return viewForSatausbarSafeArea
   }()
   
-  var navigationBar : UINavigationBar = {
+  var navigationBar: UINavigationBar = {
     var navigationBar = UINavigationBar()
     navigationBar.backgroundColor = UIColor.black
     navigationBar.alpha = 0.8

@@ -222,18 +222,17 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
   }
   
   func expandCollection() {
-    inputContainerView?.inputTextView.textContainerInset = InputContainerViewConstants.containerInsetsWithAttachedImages
-    inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 165)
-
-    if inputContainerView!.inputTextView.contentSize.height <= InputContainerViewConstants.maxContainerViewHeight  {
-       inputContainerView?.inputTextView.invalidateIntrinsicContentSize()
-    }
-    
     inputContainerView?.separator.isHidden = false
     inputContainerView?.sendButton.isEnabled = true
     inputContainerView?.placeholderLabel.text = "Add comment or Send"
+    inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 0, width: inputContainerView!.inputTextView.frame.width, height: 165)
+    inputContainerView?.inputTextView.textContainerInset = InputContainerViewConstants.containerInsetsWithAttachedImages
+    
+    let maxTextViewHeightRelativeToOrientation: CGFloat! = getInputTextViewMaxHeight()
+    if inputContainerView!.inputTextView.contentSize.height <= maxTextViewHeightRelativeToOrientation {
+      inputContainerView?.invalidateIntrinsicContentSize()
+    }
   }
-  
   
   func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage, with asset: PHAsset) {
     let filename = asset.originalFilename!

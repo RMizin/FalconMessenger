@@ -552,7 +552,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     didLayoutFlag = true
   }
-    
+  
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
          super.willTransition(to: newCollection, with: coordinator)
         collectionView?.collectionViewLayout.invalidateLayout()
@@ -560,8 +560,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
          super.viewWillTransition(to: size, with: coordinator)
+      
         collectionView?.collectionViewLayout.invalidateLayout()
+        inputContainerView.inputTextView.invalidateIntrinsicContentSize()
+        inputContainerView.invalidateIntrinsicContentSize()
+  
         DispatchQueue.main.async {
+           self.inputContainerView.attachedImages.frame.size.width = self.inputContainerView.inputTextView.frame.width
             self.collectionView?.reloadData()
         }
     }
@@ -1033,7 +1038,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if currentReachabilityStatus != .notReachable {
         
       inputContainerView.inputTextView.isScrollEnabled = false
-      inputContainerView.inputTextView.invalidateIntrinsicContentSize()
+      inputContainerView.invalidateIntrinsicContentSize()
 
       inputContainerView.sendButton.isEnabled = false
     
