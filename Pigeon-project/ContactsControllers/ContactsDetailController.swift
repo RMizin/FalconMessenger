@@ -70,7 +70,7 @@ class ContactsDetailController: UITableViewController {
     if indexPath.section == 2 {
       if MFMessageComposeViewController.canSendText() {
         let destination = MFMessageComposeViewController()
-        destination.body = "Hey! Download Falcon Messenger on the App Store."
+        destination.body = "Hey! Download Falcon Messenger on the App Store. https://itunes.apple.com/ua/app/falcon-messenger/id1313765714?mt=8 "
         destination.recipients = [contactPhoneNumbers[0]]
         destination.messageComposeDelegate = self
         present(destination, animated: true, completion: nil)

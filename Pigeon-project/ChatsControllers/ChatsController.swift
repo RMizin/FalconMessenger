@@ -98,22 +98,18 @@ class ChatsController: UITableViewController {
   fileprivate func setupSearchController() {
         
       if #available(iOS 11.0, *) {
-            
         searchChatsController = UISearchController(searchResultsController: nil)
         searchChatsController?.searchResultsUpdater = self
         searchChatsController?.obscuresBackgroundDuringPresentation = false
         definesPresentationContext = true
         searchChatsController?.searchBar.delegate = self
         navigationItem.searchController = searchChatsController
-            
       } else {
-            
         searchBar = UISearchBar()
         searchBar?.delegate = self
         searchBar?.searchBarStyle = .minimal
         searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         tableView.tableHeaderView = searchBar
-        tableView.contentOffset = CGPoint(x: 0.0, y: 44.0)
       }
   }
   
@@ -477,6 +473,10 @@ extension ChatsController: MessagesLoaderDelegate {
       }
     }
     
+    if #available(iOS 11.0, *) {
+    } else {
+       self.chatLogController?.startCollectionViewAtBottom()
+    }
     if let destination = self.chatLogController {
       navigationController?.pushViewController( destination, animated: true)
       self.chatLogController = nil

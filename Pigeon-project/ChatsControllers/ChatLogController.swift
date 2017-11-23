@@ -480,7 +480,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     setupCollectionView()
     setRightBarButtonItem()
-    configureProgressBar()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -508,7 +507,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
     isTyping = false
     
-    uploadProgressBar.removeFromSuperview()
   }
   
   
@@ -530,6 +528,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+    configureProgressBar()
   
     if oldOffset != nil {
       collectionView?.setContentOffset(oldOffset!, animated: false)
@@ -538,19 +537,31 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       oldOffset = nil
     }
   }
+
+  func startCollectionViewAtBottom () { // start chat log at bottom for iOS 10
+    let collectionViewInsets: CGFloat = (collectionView!.contentInset.bottom + collectionView!.contentInset.top )
+    let contentSize = self.collectionView?.collectionViewLayout.collectionViewContentSize
+    if Double(contentSize!.height) > Double(self.collectionView!.bounds.size.height) {
+      let targetContentOffset = CGPoint(x: 0.0, y: contentSize!.height - (self.collectionView!.bounds.size.height - collectionViewInsets - inputContainerView.frame.height))
+      self.collectionView?.contentOffset = targetContentOffset
+    }
+  }
+  
   
   private var didLayoutFlag: Bool = false
-  override func viewDidLayoutSubviews() {
+  override func viewDidLayoutSubviews() { // start chat log at bottom for iOS 11
     super.viewDidLayoutSubviews()
 
-    guard let collectionView = collectionView, !didLayoutFlag else {
-      return
+    if #available(iOS 11.0, *) {
+      guard let collectionView = collectionView, !didLayoutFlag else {
+        return
     }
-    
+
     if messages.count - 1 >= 0 {
       collectionView.scrollToItem(at: IndexPath(item: messages.count-1, section: 0), at: .bottom, animated: false)
     }
     didLayoutFlag = true
+    }
   }
   
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -576,41 +587,46 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   fileprivate func configureProgressBar() {
-    navigationController?.navigationBar.addSubview(uploadProgressBar)
-    uploadProgressBar.translatesAutoresizingMaskIntoConstraints = false
-    uploadProgressBar.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor).isActive = true
-    uploadProgressBar.leftAnchor.constraint(equalTo: navigationController!.navigationBar.leftAnchor).isActive = true
-    uploadProgressBar.rightAnchor.constraint(equalTo: navigationController!.navigationBar.rightAnchor).isActive = true
+    
+    guard navigationController?.navigationBar != nil else {
+      return
+    }
+    
+    if uploadProgressBar.isDescendant(of: navigationController!.navigationBar) {
+      return
+    } else {
+      navigationController?.navigationBar.addSubview(uploadProgressBar)
+      uploadProgressBar.translatesAutoresizingMaskIntoConstraints = false
+      uploadProgressBar.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor).isActive = true
+      uploadProgressBar.leftAnchor.constraint(equalTo: navigationController!.navigationBar.leftAnchor).isActive = true
+      uploadProgressBar.rightAnchor.constraint(equalTo: navigationController!.navigationBar.rightAnchor).isActive = true
+    }
   }
 
-  
   fileprivate func setupCollectionView () {
     inputTextViewTapGestureRecognizer = UITapGestureRecognizer(target: inputContainerView.chatLogController, action: #selector(ChatLogController.toggleTextView))
     inputTextViewTapGestureRecognizer.delegate = inputContainerView
-    
-    view.backgroundColor = .white
-    collectionView?.translatesAutoresizingMaskIntoConstraints = false
-    extendedLayoutIncludesOpaqueBars = true
-    automaticallyAdjustsScrollViewInsets = false
   
     if #available(iOS 11.0, *) {
-    
+      collectionView?.translatesAutoresizingMaskIntoConstraints = false
+      extendedLayoutIncludesOpaqueBars = true
+      automaticallyAdjustsScrollViewInsets = false
       navigationItem.largeTitleDisplayMode = .never
+      collectionView?.scrollIndicatorInsets = UIEdgeInsets.zero
+      collectionView?.autoresizingMask = UIViewAutoresizing()
     
       collectionView?.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
       collectionView?.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
       collectionView?.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
       collectionView?.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     } else {
-      collectionView?.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-      collectionView?.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-      collectionView?.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-      collectionView?.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+      collectionView?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height  )
+      automaticallyAdjustsScrollViewInsets = true
+      extendedLayoutIncludesOpaqueBars = true
    }
-    
+
+    view.backgroundColor = .white
     collectionView?.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
-    collectionView?.scrollIndicatorInsets = UIEdgeInsets.zero
-    collectionView?.autoresizingMask = UIViewAutoresizing()
     collectionView?.keyboardDismissMode = .interactive
     collectionView?.backgroundColor = UIColor.white
     collectionView?.delaysContentTouches = false
@@ -683,6 +699,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   lazy var inputContainerView: ChatInputContainerView = {
     var chatInputContainerView = ChatInputContainerView()
     chatInputContainerView.chatLogController = self
+    chatInputContainerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 50)
     
     return chatInputContainerView
   }()

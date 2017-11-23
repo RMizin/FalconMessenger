@@ -14,9 +14,12 @@ import AudioToolbox
 
 public let deviceScreen = UIScreen.main.bounds
 
-func setUserNotificationToken(token: String) { //
+func setUserNotificationToken(token: String) {
   
-  let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("notificationTokens")
+  guard let uid = Auth.auth().currentUser?.uid else {
+    return
+  }
+  let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
   userReference.updateChildValues([token : true])
 }
 

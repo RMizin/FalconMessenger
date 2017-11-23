@@ -90,25 +90,20 @@ class ContactsController: UITableViewController {
     fileprivate func setupSearchController() {
         
         if #available(iOS 11.0, *) {
-            
-            searchContactsController = UISearchController(searchResultsController: nil)
-            searchContactsController?.searchResultsUpdater = self
-            searchContactsController?.obscuresBackgroundDuringPresentation = false
-            definesPresentationContext = true
-            searchContactsController?.searchBar.delegate = self
-            navigationItem.searchController = searchContactsController
-            
+          searchContactsController = UISearchController(searchResultsController: nil)
+          searchContactsController?.searchResultsUpdater = self
+          searchContactsController?.obscuresBackgroundDuringPresentation = false
+          definesPresentationContext = true
+          searchContactsController?.searchBar.delegate = self
+          navigationItem.searchController = searchContactsController
         } else {
-            
-            searchBar = UISearchBar()
-            searchBar?.delegate = self
-            searchBar?.searchBarStyle = .minimal
-            searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-            tableView.tableHeaderView = searchBar
-            tableView.contentOffset = CGPoint(x: 0.0, y: 44.0)
+          searchBar = UISearchBar()
+          searchBar?.delegate = self
+          searchBar?.searchBarStyle = .minimal
+          searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+          tableView.tableHeaderView = searchBar
         }
     }
-  
 
  fileprivate func fetchContacts () {
     
@@ -580,12 +575,15 @@ extension ContactsController: MessagesLoaderDelegate {
       }
     }
     
+    if #available(iOS 11.0, *) {
+    } else {
+      self.chatLogController?.startCollectionViewAtBottom()
+    }
     if let destination = self.chatLogController {
       navigationController?.pushViewController( destination, animated: true)
       self.chatLogController = nil
       self.autoSizingCollectionViewFlowLayout = nil
     }
-    
   }
 }
 

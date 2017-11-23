@@ -91,7 +91,10 @@ extension Double {
     let date = Date(timeIntervalSince1970: self)
     
     let dateFormatter = DateFormatter()
+    let locale = Locale(identifier: "en_US_POSIX")
+    dateFormatter.locale = locale
     dateFormatter.dateStyle = .medium
+    
     dateFormatter.dateFormat = "hh:mm a"
     dateFormatter.amSymbol = "AM"
     dateFormatter.pmSymbol = "PM"

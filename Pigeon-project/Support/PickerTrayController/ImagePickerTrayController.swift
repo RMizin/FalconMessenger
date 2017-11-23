@@ -321,9 +321,9 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
             return cell
           
         case 2:
-            let asset = assets[indexPath.item]
-            
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ImageCell.self), for: indexPath) as! ImageCell
+            
+              let asset = assets[indexPath.item]
             
               if assets.count > indexPath.item {
                 

@@ -169,6 +169,6 @@ extension EnterPhoneNumberContainerView: UITextFieldDelegate {
     guard let text = textField.text else { return true }
     
     let newLength = text.utf16.count + string.utf16.count - range.length
-    return newLength <= 15
+    return newLength <= 25
   }
 }
