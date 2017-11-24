@@ -97,17 +97,16 @@ class EnterVerificationCodeController: UIViewController {
         }
       
         let destination = UserProfileController()
+        AppUtility.lockOrientation(.portrait)
         destination.userProfileContainerView.phone.text = self.enterVerificationContainerView.titleNumber.text
         destination.checkIfUserDataExists(completionHandler: { (isCompleted) in
           if isCompleted {
             ARSLineProgress.hide()
-           
             if self.navigationController != nil {
               if !(self.navigationController!.topViewController!.isKind(of: UserProfileController.self)) {
                 self.navigationController?.pushViewController(destination, animated: true)
               }
             }
-            
             print("code is correct")
           }
         })

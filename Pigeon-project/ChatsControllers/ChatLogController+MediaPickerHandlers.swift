@@ -14,8 +14,19 @@ extension ChatLogController {
   
   @objc func toggleTextView () {
     
-    inputContainerView.inputTextView.inputView = nil
-    inputContainerView.inputTextView.reloadInputViews()
+  
+    if inputContainerView.attachButton.isSelected {
+      self.inputContainerView.inputTextView.inputView = nil
+      self.inputContainerView.inputTextView.reloadInputViews()
+    } else {
+      UIView.performWithoutAnimation {
+        self.inputContainerView.inputTextView.inputView = nil
+        self.inputContainerView.inputTextView.reloadInputViews()
+        self.inputContainerView.inputTextView.resignFirstResponder()
+      }
+      self.inputContainerView.inputTextView.becomeFirstResponder()
+    }
+    
     inputContainerView.attachButton.isSelected = false
   }
   

@@ -132,7 +132,7 @@ class AccountSettingsController: UITableViewController {
       basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
       return
     }
-    
+    AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
     UIApplication.shared.applicationIconBadgeNumber = 0
     
     let destination = OnboardingController()
@@ -196,6 +196,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       }
       
       if indexPath.row == 1 {
+         AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         let destination = UINavigationController(rootViewController: ChangeNumberEnterPhoneNumberController())
         destination.hidesBottomBarWhenPushed = true
         destination.navigationBar.isTranslucent = false
@@ -226,12 +227,11 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
   }
   
   
- override func numberOfSections(in tableView: UITableView) -> Int {
-    return 2
+  override func numberOfSections(in tableView: UITableView) -> Int {
+   return 2
   }
   
-  
-override  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  override  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 55
   }
   

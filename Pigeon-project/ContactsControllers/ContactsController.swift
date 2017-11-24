@@ -27,15 +27,21 @@ class ContactsController: UITableViewController {
   
   var filteredUsers = [User]()
   
+  var currentUser: User?
+  
   let contactsCellID = "contactsCellID"
   
   let pigeonUsersCellID = "pigeonUsersCellID"
+  
+  let currentUserCellID = "currentUserCellID"
   
   private let reloadAnimation = UITableViewRowAnimation.none
   
   var searchBar: UISearchBar?
     
   var searchContactsController: UISearchController?
+  
+  let contactsAuthorizationDeniedContainer:ContactsAuthorizationDeniedContainer! = ContactsAuthorizationDeniedContainer()
   
 
     override func viewDidLoad() {
@@ -44,45 +50,29 @@ class ContactsController: UITableViewController {
       view.backgroundColor = .white
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
-      NotificationCenter.default.addObserver(self, selector:#selector(fetchPigeonUsers(notification:)),name:NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
-      
+ 
       setupTableView()
-      fetchContacts()
       setupSearchController()
+      fetchContacts()
       checkContactsAuthorizationStatus()
     }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-      checkContactsAuthorizationStatus()
-  }
-  
-  
-    fileprivate func checkContactsAuthorizationStatus() {
-      
-      let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
-      let contactsAuthorizationDeniedContainer:ContactsAuthorizationDeniedContainer! = ContactsAuthorizationDeniedContainer()
-      
-      switch contactsAuthorityCheck {
-        case .denied, .notDetermined, .restricted:
-          self.view.addSubview(contactsAuthorizationDeniedContainer)
-          contactsAuthorizationDeniedContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-        
-        case .authorized:
-        
-          for subview in self.view.subviews {
-            if subview is ContactsAuthorizationDeniedContainer {
-              subview.removeFromSuperview()
-            }
-        }
-      }
+    override func viewWillAppear(_ animated: Bool) {
+      super.viewWillAppear(animated)
+        checkContactsAuthorizationStatus()
+        fetchCurrentUser()
     }
-      
-    
+  
+    override func viewWillLayoutSubviews() {
+      super.viewWillLayoutSubviews()
+      contactsAuthorizationDeniedContainer.frame = CGRect(x: 0, y: 135, width: self.view.bounds.width, height: 100)
+      contactsAuthorizationDeniedContainer.layoutIfNeeded()
+    }
+  
     fileprivate func setupTableView() {
-        
         tableView.register(ContactsTableViewCell.self, forCellReuseIdentifier: contactsCellID)
         tableView.register(PigeonUsersTableViewCell.self, forCellReuseIdentifier: pigeonUsersCellID)
+        tableView.register(CurrentUserTableViewCell.self, forCellReuseIdentifier: currentUserCellID)
         tableView.separatorStyle = .none
         tableView.prefetchDataSource = self
     }
@@ -104,7 +94,44 @@ class ContactsController: UITableViewController {
           tableView.tableHeaderView = searchBar
         }
     }
+  
+  
+  fileprivate func checkContactsAuthorizationStatus() {
+    let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+    
+    switch contactsAuthorityCheck {
+    case .denied, .notDetermined, .restricted:
+      self.view.addSubview(contactsAuthorizationDeniedContainer)
+      contactsAuthorizationDeniedContainer.frame = CGRect(x: 0, y: 135, width: self.view.bounds.width, height: 100)
+      
+    case .authorized:
+      for subview in self.view.subviews {
+        if subview is ContactsAuthorizationDeniedContainer {
+          subview.removeFromSuperview()
+        }
+      }
+    }
+  }
 
+  
+  fileprivate func fetchCurrentUser() {
+    guard let uid = Auth.auth().currentUser?.uid else {
+      return
+    }
+    
+    let userReference = Database.database().reference().child("users").child(uid)
+    userReference.observe(.value) { (snapshot) in
+      if snapshot.exists() {
+        guard var dictionary = snapshot.value as? [String: AnyObject] else {
+          return
+        }
+        dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
+        self.currentUser = User(dictionary: dictionary)
+      }
+    }
+  }
+  
+  
  fileprivate func fetchContacts () {
     
     let status = CNContactStore.authorizationStatus(for: .contacts)
@@ -144,7 +171,7 @@ class ContactsController: UITableViewController {
         }
       }
       
-      self.fetchPigeonUsers(notification: nil)
+      self.fetchPigeonUsers()
       self.sendUserContactsToDatabase()
     }
   }
@@ -174,183 +201,118 @@ class ContactsController: UITableViewController {
   
   
  fileprivate func sendUserContactsToDatabase() {
-    
     guard let uid = Auth.auth().currentUser?.uid else {
       return
     }
     
     let userReference = Database.database().reference().child("users").child(uid)
-
     var preparedNumbers = [String]()
-    
+  
     for number in localPhones {
-      
       do {
         let countryCode = try self.phoneNumberKit.parse(number).countryCode
         let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
         preparedNumbers.append( ("+" + String(countryCode) + String(nationalNumber)) )
-        
       } catch {
         // print("Generic parser error")
       }
     }
-  
     userReference.updateChildValues(["contacts": preparedNumbers])
   }
   
   
-@objc fileprivate func fetchPigeonUsers(notification: NSNotification?) {
+@objc fileprivate func fetchPigeonUsers() {
 
     var preparedNumber = String()
     users.removeAll()
     
     for number in localPhones {
-      
       do {
         let countryCode = try self.phoneNumberKit.parse(number).countryCode
         let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
         preparedNumber = "+" + String(countryCode) + String(nationalNumber)
-        
-      
       } catch {
        // print("Generic parser error")
       }
 
       var userRef: DatabaseQuery = Database.database().reference().child("users")
-      userRef = userRef.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber )
-      userRef.observeSingleEvent(of: .value, with: { (snapshot) in
+      userRef = userRef.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber)
       userRef.keepSynced(true)
-        
+      userRef.observe( .value, with: { (snapshot) in
+    
         if snapshot.exists() {
-         
           // Initial load
+          
           for child in snapshot.children.allObjects as! [DataSnapshot]  {
-  
-            guard var dictionary = child.value as? [String: AnyObject] else {
-              return
-            }
-            
+            guard var dictionary = child.value as? [String: AnyObject] else { return }
             dictionary.updateValue(child.key as AnyObject, forKey: "id")
             
-            self.users.append(User(dictionary: dictionary))
+            if let index = self.users.index(where: { (user) -> Bool in
+              return user.id == User(dictionary: dictionary).id
+            }) {
+              print("Already contains updating")
+              self.users[index] = User(dictionary: dictionary)
+            } else {
+              print("NOT CONTAINS APPENDING")
+              self.users.append(User(dictionary: dictionary))
+            }
             
             self.sortUsers()
-            
             self.rearrangeUsers()
 
+            if let index = self.users.index(where: { (user) -> Bool in
+              return user.id == Auth.auth().currentUser?.uid
+            }) {
+               self.users.remove(at: index)
+            }
+            
             self.filteredUsers = self.users
           }
-          
-          DispatchQueue.main.async {
-            self.tableView.reloadData()
-          }
-          
-          self.startObservingUserChanges(at: userRef)
+           self.reloadTableView(snap: snapshot)
         }
-        
       }, withCancel: { (error) in
         //search error
       })
     }
   }
-
- 
-  fileprivate func userStatusChangedDuringSearch(snap: DataSnapshot) {
-    
-    guard var dictionary = snap.value as? [String: AnyObject] else {
-      return
-    }
-    
-    dictionary.updateValue(snap.key as AnyObject, forKey: "id")
-    
-    for index in 0...self.filteredUsers.count - 1  {
-      
-      if self.filteredUsers[index].id == snap.key {
-        
-        self.filteredUsers[index] = User(dictionary: dictionary)
-      
-        rearrangeUsers()
-        
-        rearrangeFilteredUsers()
-
-        self.tableView.beginUpdates()
-        
-        for indexOfIndexPath in 0...self.filteredUsers.count - 1 {
-          self.tableView.reloadRows(at: [IndexPath(row: indexOfIndexPath, section: 0)], with: self.reloadAnimation)
-        }
-        
-        self.tableView.endUpdates()
-      }
-    }
-  }
   
-  
- fileprivate func startObservingUserChanges(at userRef: DatabaseQuery) {
-    
-    // user updates observer
-    userRef.observe(.childChanged, with: { (snap) in
-      
+
+  fileprivate func reloadTableView(snap: DataSnapshot) {
+    var searchBar: UISearchBar?
+    if #available(iOS 11.0, *) {
+      searchBar = self.searchContactsController?.searchBar
+    } else {
+      searchBar = self.searchBar
+    }
+
+    if searchBar?.text != "" && self.filteredUsers.count != 0 {
       guard var dictionary = snap.value as? [String: AnyObject] else {
         return
       }
-      
+
       dictionary.updateValue(snap.key as AnyObject, forKey: "id")
-      
-      if self.users.count - 1 < 0 {
-        return
-      }
-      
-      for index in 0...self.users.count - 1 {
-        
-        if self.users[index].id == snap.key {
-          
-          self.users[index] = User(dictionary: dictionary)
-          
-          self.sortUsers()
-          
-          if self.users[index].onlineStatus == statusOnline {
-            self.users = rearrange(array: self.users, fromIndex: index, toIndex: 0)
+      for index in 0...self.filteredUsers.count - 1  {
+        if self.filteredUsers[index].id == snap.key {
+          self.filteredUsers[index] = User(dictionary: dictionary)
+          rearrangeUsers()
+          rearrangeFilteredUsers()
+          self.tableView.beginUpdates()
+          for indexOfIndexPath in 0...self.filteredUsers.count - 1 {
+            self.tableView.reloadRows(at: [IndexPath(row: indexOfIndexPath, section: 1)], with: self.reloadAnimation)
           }
-            var searchBar: UISearchBar?
-            
-            if #available(iOS 11.0, *) {
-                searchBar = self.searchContactsController?.searchBar
-            
-            } else {
-                searchBar = self.searchBar
-            }
-            
-          
-            if searchBar?.text != "" && self.filteredUsers.count != 0 {
-            
-            self.userStatusChangedDuringSearch(snap: snap)
-            
-          } else if self.filteredUsers.count == 0 {
-            
-          } else {
-            
-            self.sortUsers()
-            
-            self.rearrangeUsers()
-            
-            self.filteredUsers = self.users
-            
-            self.tableView.beginUpdates()
-            
-            for indexOfIndexPath in 0...self.filteredUsers.count - 1 {
-              self.tableView.reloadRows(at: [IndexPath(row: indexOfIndexPath, section: 0)], with: self.reloadAnimation)
-            }
-            
-            self.tableView.endUpdates()
-          }
+          self.tableView.endUpdates()
         }
       }
-    })
+    } else if self.filteredUsers.count == 0 {
+    } else {
+      DispatchQueue.main.async {
+        self.tableView.reloadData()
+      }
+    }
   }
   
-  
  fileprivate func presentSettingsActionSheet() {
-    let alert = UIAlertController(title: "Permission to Contacts", message: "This app needs access to contacts in order to ...", preferredStyle: .actionSheet)
+    let alert = UIAlertController(title: "Permission to Contacts", message: "Falcon messenger uses phone numbers as unique identifiers, so that it is easy for you to switch from other messaging apps and retain your social graph. We store your contacts in order to find your friends who also use Falcon. We only need the number and name (first and last) for this to work and store no other data about your contacts.", preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Go to Settings", style: .default) { _ in
       let url = URL(string: UIApplicationOpenSettingsURLString)!
       UIApplication.shared.open(url)
@@ -363,12 +325,14 @@ class ContactsController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      
+  
       if section == 0 {
+        return 1
+      } else if section == 1 {
         return filteredUsers.count
       } else {
          return filteredContacts.count
@@ -376,18 +340,24 @@ class ContactsController: UITableViewController {
     }
   
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      return 65
+      if indexPath.section == 0 {
+         return 100
+      } else {
+         return 65
+      }
     }
   
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+      
       if section == 0 {
+        return ""
+      } else if section == 1 {
       
         if filteredUsers.count == 0 {
           return ""
         } else {
           return "Falcon contacts"
         }
-      
       } else {
         return "All contacts"
       }
@@ -406,6 +376,13 @@ class ContactsController: UITableViewController {
   func selectCell(for indexPath: IndexPath) -> UITableViewCell? {
     
     if indexPath.section == 0 {
+      let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as! CurrentUserTableViewCell
+      cell.title.text = NameConstants.personalStorage
+
+      return cell
+    }
+    
+    if indexPath.section == 1 {
       
       let cell = tableView.dequeueReusableCell(withIdentifier: pigeonUsersCellID, for: indexPath) as! PigeonUsersTableViewCell
     
@@ -447,7 +424,7 @@ class ContactsController: UITableViewController {
       
       return cell
       
-    } else if indexPath.section == 1 {
+    } else if indexPath.section == 2 {
       
       let cell = tableView.dequeueReusableCell(withIdentifier: contactsCellID, for: indexPath) as! ContactsTableViewCell
       
@@ -468,6 +445,20 @@ class ContactsController: UITableViewController {
       
       if indexPath.section == 0 {
         
+        guard currentUser != nil else  {
+          return
+        }
+        
+        autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
+        autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
+        chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
+        chatLogController?.delegate = self
+        chatLogController?.hidesBottomBarWhenPushed = true
+        chatLogController?.user = currentUser
+      }
+      
+      if indexPath.section == 1 {
+        
         autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
         autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
         chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
@@ -476,7 +467,7 @@ class ContactsController: UITableViewController {
         chatLogController?.user = filteredUsers[indexPath.row]
       }
     
-      if indexPath.section == 1 {
+      if indexPath.section == 2 {
         let destination = ContactsDetailController()
         destination.contactName = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
         destination.contactPhoneNumbers.removeAll()
@@ -507,6 +498,7 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
      
         searchBar.text = nil
         filteredUsers = users
+        filteredContacts = contacts
         
         tableView.reloadData()
     }
@@ -565,7 +557,7 @@ extension ContactsController: MessagesLoaderDelegate {
     if messages.count - 1 >= 0 {
       for index in 0...messages.count - 1 {
         
-        indexPaths.append(IndexPath(item: index, section: 0))
+        indexPaths.append(IndexPath(item: index, section: 1))
       }
       
       UIView.performWithoutAnimation {

@@ -144,9 +144,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
     
-    if notification.request.content.title == "New user" {
-      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
-    }
+//    if notification.request.content.title == "New user" {
+//    //  NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
+//    }
     
     if ( UIApplication.shared.applicationState == UIApplicationState.active) {
       if self.chatsController.navigationController?.visibleViewController is ChatLogController {
@@ -162,9 +162,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
    
-    if response.notification.request.content.title == "New user" {
-       NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
-    }
+//    if response.notification.request.content.title == "New user" {
+//      // NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
+//    }
     completionHandler()
   }
   
@@ -189,6 +189,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   func setDeaultsForSettings() {
     if UserDefaults.standard.object(forKey: "In-AppSounds") == nil {
       UserDefaults.standard.set(true, forKey: "In-AppSounds")
+    }
+  }
+  
+  var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
+  
+  func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+    
+    if Auth.auth().currentUser == nil {
+      return UIInterfaceOrientationMask.portrait
+    } else {
+      return self.orientationLock
     }
   }
   

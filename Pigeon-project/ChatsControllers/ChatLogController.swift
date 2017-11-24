@@ -510,32 +510,32 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  private var oldOffset: CGPoint?
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-
-    oldOffset = self.collectionView!.contentOffset
-  }
+ // private var oldOffset: CGPoint?
+//  override func viewWillDisappear(_ animated: Bool) {
+//    super.viewWillDisappear(animated)
+//
+//   // oldOffset = self.collectionView!.contentOffset
+//  }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    
-    if oldOffset != nil  {
-      collectionView?.setContentOffset(oldOffset!, animated: false)
-      oldOffset = nil
-    }
-  }
+//  override func viewWillAppear(_ animated: Bool) {
+//    super.viewWillAppear(animated)
+//
+////    if oldOffset != nil  {
+////      collectionView?.setContentOffset(oldOffset!, animated: false)
+////      oldOffset = nil
+////    }
+//  }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     configureProgressBar()
-  
-    if oldOffset != nil {
-      collectionView?.setContentOffset(oldOffset!, animated: false)
-      collectionView?.collectionViewLayout.invalidateLayout()
-      collectionView?.layoutIfNeeded()
-      oldOffset = nil
-    }
+
+//    if oldOffset != nil {
+//      collectionView?.setContentOffset(oldOffset!, animated: false)
+//      collectionView?.collectionViewLayout.invalidateLayout()
+//      collectionView?.layoutIfNeeded()
+//      oldOffset = nil
+//    }
   }
 
   func startCollectionViewAtBottom () { // start chat log at bottom for iOS 10
@@ -558,7 +558,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
 
     if messages.count - 1 >= 0 {
-      collectionView.scrollToItem(at: IndexPath(item: messages.count-1, section: 0), at: .bottom, animated: false)
+      UIView.performWithoutAnimation {
+        if collectionView.contentSize.height < collectionView.bounds.height  {
+          collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
+        } else {
+          let targetContentOffset = CGPoint(x: 0.0, y: collectionView.contentSize.height - (collectionView.bounds.size.height - 40 - inputContainerView.frame.height + 70))
+          self.collectionView?.setContentOffset(targetContentOffset, animated: false)
+        }
+      }
     }
     didLayoutFlag = true
     }
@@ -612,13 +619,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       extendedLayoutIncludesOpaqueBars = true
       automaticallyAdjustsScrollViewInsets = false
       navigationItem.largeTitleDisplayMode = .never
-      collectionView?.scrollIndicatorInsets = UIEdgeInsets.zero
-      collectionView?.autoresizingMask = UIViewAutoresizing()
     
       collectionView?.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
       collectionView?.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
       collectionView?.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
-      collectionView?.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+      collectionView?.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant:  -inputContainerView.frame.height).isActive = true
     } else {
       collectionView?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height  )
       automaticallyAdjustsScrollViewInsets = true
@@ -652,8 +657,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }
       
       if uid == toId {
-         self.navigationItem.setTitle(title: self.user!.name!, subtitle: "You")
-       
+        self.navigationItem.title = NameConstants.personalStorage
         return
       }
       
@@ -681,7 +685,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 
-    navigationItem.rightBarButtonItem = infoBarButtonItem
+    guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else {
+      return
+    }
+    if uid != toId {
+      navigationItem.rightBarButtonItem = infoBarButtonItem
+    }
   }
   
   @objc func getInfoAction() {
@@ -1067,6 +1076,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
       isTyping = false
       inputContainerView.placeholderLabel.isHidden = false
+      inputContainerView.inputTextView.text = nil
     
       handleMediaMessageSending()
     } else {
@@ -1200,7 +1210,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
     
-    self.inputContainerView.inputTextView.text = nil
+   // self.inputContainerView.inputTextView.text = nil
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
@@ -1326,7 +1336,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
     
-    self.inputContainerView.inputTextView.text = nil
+   // self.inputContainerView.inputTextView.text = nil
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     

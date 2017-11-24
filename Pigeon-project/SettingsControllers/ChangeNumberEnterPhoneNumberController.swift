@@ -20,8 +20,6 @@ class ChangeNumberEnterPhoneNumberController: UIViewController {
         super.viewDidLoad()
       
       view.backgroundColor = UIColor.white
-      
-      
       configurePhoneNumberContainerView()
       configureNavigationBar()
       setCountry()
@@ -56,20 +54,20 @@ class ChangeNumberEnterPhoneNumberController: UIViewController {
       }
     }
   
-  
     @objc func openCountryCodesList () {
       let picker = ChangeNumberSelectCountryCodeController()
       picker.delegate = self
       navigationController?.pushViewController(picker, animated: true)
     }
   
-  
     @objc func textFieldDidChange(_ textField: UITextField) {
       setRightBarButtonStatus()
     }
   
     @objc func leftBarButtonDidTap() {
-      self.dismiss(animated: true, completion: nil)
+      self.dismiss(animated: true) {
+         AppUtility.lockOrientation(.allButUpsideDown)
+      }
     }
   
     func setRightBarButtonStatus() {

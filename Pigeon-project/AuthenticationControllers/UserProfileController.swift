@@ -38,6 +38,12 @@ class UserProfileController: UIViewController {
       userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
     }
   
+    override func viewWillLayoutSubviews() {
+      super.viewWillLayoutSubviews()
+      userProfileContainerView.frame = view.bounds
+      userProfileContainerView.layoutIfNeeded()
+    }
+  
     @objc fileprivate func openUserProfilePicture() {
       userProfilePictureOpener.controllerWithUserProfilePhoto = self
       userProfilePictureOpener.userProfileContainerView = userProfileContainerView
@@ -104,7 +110,9 @@ extension UserProfileController {
     let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
     userReference.updateChildValues(["name" : userProfileContainerView.name.text! , "phoneNumber" : userProfileContainerView.phone.text! ]) { (error, reference) in
       ARSLineProgress.hide()
-      self.dismiss(animated: true, completion: nil)
+      self.dismiss(animated: true) {
+        AppUtility.lockOrientation(.allButUpsideDown)
+      }
     }
   }
 }

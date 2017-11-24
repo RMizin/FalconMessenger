@@ -100,11 +100,10 @@ class UserCell: UITableViewCell {
         newMessageIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         newMessageIndicator.widthAnchor.constraint(equalToConstant: 12).isActive = true
         newMessageIndicator.heightAnchor.constraint(equalToConstant: 12).isActive = true
-      
-        let tlWidth = contentView.frame.width - profileImageView.frame.width - 200
+    
         nameLabel.topAnchor.constraint(equalTo: profileImageView.topAnchor).isActive = true
         nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true
-        nameLabel.widthAnchor.constraint(lessThanOrEqualToConstant: tlWidth).isActive = true
+        nameLabel.rightAnchor.constraint(equalTo: timeLabel.leftAnchor, constant: -2).isActive = true
       
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         messageLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true

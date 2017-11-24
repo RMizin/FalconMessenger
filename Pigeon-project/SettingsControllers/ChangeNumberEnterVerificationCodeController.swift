@@ -94,7 +94,9 @@ class ChangeNumberEnterVerificationCodeController: UIViewController {
         }
         
         ARSLineProgress.showSuccess()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true) {
+          AppUtility.lockOrientation(.allButUpsideDown)
+        }
       }
     })
   }

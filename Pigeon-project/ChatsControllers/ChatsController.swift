@@ -61,6 +61,8 @@ class ChatsController: UITableViewController {
   private let group = DispatchGroup()
   private var isAppLoaded = false
   private var isGroupAlreadyFinished = false
+  
+  let noChatsYetContainer:NoChatsYetContainer! = NoChatsYetContainer()
 
   
   override func viewDidLoad() {
@@ -81,6 +83,13 @@ class ChatsController: UITableViewController {
       tableView.deselectRow(at: testSelected, animated: true)
     }
     super.viewDidAppear(animated)
+  }
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+     noChatsYetContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+     noChatsYetContainer.layoutIfNeeded()
+    
   }
   
   
@@ -116,10 +125,8 @@ class ChatsController: UITableViewController {
   fileprivate func checkIfThereAnyActiveChats(isEmpty: Bool) {
     
     if isEmpty {
-      let noChatsYesContainer:NoChatsYetContainer! = NoChatsYetContainer()
-      
-      self.view.addSubview(noChatsYesContainer)
-      noChatsYesContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+      self.view.addSubview(noChatsYetContainer)
+      noChatsYetContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
       
     } else {
       for subview in self.view.subviews {
@@ -335,8 +342,13 @@ class ChatsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
-  
-      cell.nameLabel.text = filteredFinalUserCellData[indexPath.row].1.name
+      
+      if filteredFinalUserCellData[indexPath.row].1.id == Auth.auth().currentUser?.uid {
+        cell.nameLabel.text = NameConstants.personalStorage
+      } else {
+        cell.nameLabel.text = filteredFinalUserCellData[indexPath.row].1.name
+      }
+      
       if (filteredFinalUserCellData[indexPath.row].0.imageUrl != nil || filteredFinalUserCellData[indexPath.row].0.localImage != nil) && filteredFinalUserCellData[indexPath.row].0.videoUrl == nil  {
         cell.messageLabel.text = "Attachment: Image"
       } else if (filteredFinalUserCellData[indexPath.row].0.imageUrl != nil || filteredFinalUserCellData[indexPath.row].0.localImage != nil) && filteredFinalUserCellData[indexPath.row].0.videoUrl != nil {
@@ -348,6 +360,9 @@ class ChatsController: UITableViewController {
       let date = NSDate(timeIntervalSince1970:  filteredFinalUserCellData[indexPath.row].0.timestamp as! TimeInterval)
       cell.timeLabel.text = timeAgoSinceDate(date: date, timeinterval: filteredFinalUserCellData[indexPath.row].0.timestamp!.doubleValue, numericDates: false)
     
+      if filteredFinalUserCellData[indexPath.row].1.id == Auth.auth().currentUser?.uid {
+        cell.profileImageView.image = UIImage(named: "PersonalStorage")
+      } else {
         if let url = self.filteredFinalUserCellData[indexPath.row].1.thumbnailPhotoURL {
           cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
             if image != nil {
@@ -362,6 +377,7 @@ class ChatsController: UITableViewController {
             }
           })
         }
+      }
       
       if filteredFinalUserCellData[indexPath.row].0.seen != nil {
         

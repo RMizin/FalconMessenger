@@ -32,6 +32,26 @@ struct DeviceType {
   static let IS_IPAD_PRO          = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.maxLength == 1366.0
 }
 
+struct AppUtility {
+  
+  static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
+    
+    if let delegate = UIApplication.shared.delegate as? AppDelegate {
+      delegate.orientationLock = orientation
+    }
+  }
+
+  static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
+    self.lockOrientation(orientation)
+    UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
+  }
+}
+
+struct NameConstants {
+  static let personalStorage = "Personal storage"
+}
+
+
 public let messageStatusRead = "Read"
 public let messageStatusSent = "Sent"
 public let messageStatusSending = "Sending"

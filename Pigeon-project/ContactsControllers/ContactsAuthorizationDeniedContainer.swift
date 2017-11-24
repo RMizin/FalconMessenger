@@ -32,16 +32,16 @@ class ContactsAuthorizationDeniedContainer: UIView {
     accessRestrictedFAQ.translatesAutoresizingMaskIntoConstraints = false
     
     addSubview(accessRestrictedTitle)
-    accessRestrictedTitle.topAnchor.constraint(equalTo: topAnchor, constant: 100).isActive = true
+    accessRestrictedTitle.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
     accessRestrictedTitle.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
     accessRestrictedTitle.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
-    accessRestrictedTitle.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    accessRestrictedTitle.heightAnchor.constraint(equalToConstant: 45).isActive = true
     
     addSubview(accessRestrictedFAQ)
-    accessRestrictedFAQ.topAnchor.constraint(equalTo: accessRestrictedTitle.bottomAnchor, constant: 20).isActive = true
+    accessRestrictedFAQ.topAnchor.constraint(equalTo: accessRestrictedTitle.bottomAnchor, constant: 5).isActive = true
     accessRestrictedFAQ.leftAnchor.constraint(equalTo: leftAnchor, constant: 35).isActive = true
     accessRestrictedFAQ.rightAnchor.constraint(equalTo: rightAnchor, constant: -35).isActive = true
-    accessRestrictedFAQ.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    accessRestrictedFAQ.heightAnchor.constraint(equalToConstant: 50).isActive = true
   }
   
   required init?(coder aDecoder: NSCoder) {
