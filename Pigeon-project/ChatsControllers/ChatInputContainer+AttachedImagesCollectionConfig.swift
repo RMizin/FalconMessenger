@@ -12,7 +12,7 @@ import Photos
 
 private let selectedMediaCollectionCellID = "selectedMediaCollectionCellID"
 
-private let selectedMediaCollectionCellHeight:CGFloat = 155
+private let selectedMediaCollectionCellHeight:CGFloat = 145
 
 extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
   
@@ -39,7 +39,7 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     
     attachedImages.autoresizesSubviews = false
     
-    attachedImages.decelerationRate = UIScrollViewDecelerationRateNormal
+    attachedImages.decelerationRate = UIScrollViewDecelerationRateFast
   }
   
  @objc func removeButtonDidTap(sender: UIButton) {
@@ -88,11 +88,23 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = attachedImages.dequeueReusableCell(withReuseIdentifier: selectedMediaCollectionCellID, for: indexPath) as! SelectedMediaCollectionCell
     
+    cell.chatInputContainerView = self
+  
     cell.isVideo = selectedMedia[indexPath.item].phAsset?.mediaType == .video
-    
-    guard let image = self.selectedMedia[indexPath.item].object?.asUIImage else {
+   
+    guard let image = self.selectedMedia[indexPath.item].object?.asUIImage else { // it is voice message
+      let data = selectedMedia[indexPath.row].audioObject!
+      let duration = getAudioDurationInHours(from: data)
+      cell.image.contentMode = .scaleAspectFit
+      cell.image.image = UIImage(named:"VoiceMemo")
+      cell.playerViewHeightAnchor.constant = 20
+      cell.playerView.timerLabel.text = duration
+      cell.playerView.startingTime = getAudioDurationInSeconds(from: data)!
+      cell.playerView.seconds = getAudioDurationInSeconds(from: data)!
+   
       return cell
     }
+    
     cell.image.image = image
     
     return cell
@@ -108,6 +120,10 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     
+    if selectedMedia[indexPath.item].audioObject != nil {
+      return
+    }
+    
     if selectedMedia[indexPath.item].phAsset?.mediaType == PHAssetMediaType.image || selectedMedia[indexPath.item].phAsset == nil {
       chatLogController?.presentPhotoEditor(forImageAt: indexPath)
     }
@@ -119,14 +135,46 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
+    if self.selectedMedia[indexPath.row].audioObject != nil {
+      let oldHeight = UIImage(named:"VoiceMemo")!.size.height
+      let scaleFactor = selectedMediaCollectionCellHeight / oldHeight
+      let newWidth = UIImage(named:"VoiceMemo")!.size.width * scaleFactor
+      let newHeight = oldHeight * scaleFactor
+      
+      return CGSize(width: newWidth , height: newHeight)
+    }
+    
     let oldHeight = self.selectedMedia[indexPath.row].object?.asUIImage!.size.height
-    
     let scaleFactor = selectedMediaCollectionCellHeight / oldHeight!
-    
     let newWidth = self.selectedMedia[indexPath.row].object!.asUIImage!.size.width * scaleFactor
-    
     let newHeight = oldHeight! * scaleFactor
     
     return CGSize(width: newWidth , height: newHeight)
+  }
+  
+  func getAudioDurationInHours(from data: Data) -> String? {
+    do {
+      audioPlayer = try AVAudioPlayer(data: data)
+      let duration = Int(audioPlayer!.duration)
+      let hours = Int(duration) / 3600
+      let minutes = Int(duration) / 60 % 60
+      let seconds = Int(duration) % 60
+      return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
+    } catch {
+      print("error playing")
+      return String(format:"%02i:%02i:%02i", 0, 0, 0)
+    }
+    
+  }
+  
+  func getAudioDurationInSeconds(from data: Data) -> Int? {
+    do {
+      audioPlayer = try AVAudioPlayer(data: data)
+      let duration = Int(audioPlayer!.duration)
+      return duration
+    } catch {
+      print("error playing")
+      return nil
+    }
   }
 }

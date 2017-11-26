@@ -7,8 +7,19 @@
 //
 
 import UIKit
+import AVFoundation
 
 class SelectedMediaCollectionCell: UICollectionViewCell {
+  
+  weak var chatInputContainerView:ChatInputContainerView!
+  var isHeightCalculated: Bool = false
+  var playerViewHeightAnchor: NSLayoutConstraint!
+  
+  var isVideo = false {
+    didSet {
+      reloadAccessoryViews()
+    }
+  }
   
   var image: UIImageView = {
     var image = UIImageView()
@@ -38,58 +49,37 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     return videoIndicatorView
   }()
   
-  var isHeightCalculated: Bool = false
+  var playerView: PlayerCellView = {
+    var playerView = PlayerCellView()
+    playerView.translatesAutoresizingMaskIntoConstraints = false
+    return playerView
+  }()
   
-  
- override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-  
-    if !isHeightCalculated {
-  
-      self.setNeedsLayout()
-      self.layoutIfNeeded()
-   
-      let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
-      var newFrame = layoutAttributes.frame
-      newFrame.size.width = CGFloat(ceilf(Float(size.width)))
-      layoutAttributes.frame = newFrame
-      isHeightCalculated = true
-    }
-  
-    return layoutAttributes
-  }
-  
-  var isVideo = false {
-    didSet {
-      reloadAccessoryViews()
-    }
-  }
-  
-  fileprivate func reloadAccessoryViews() {
-    videoIndicatorView.isHidden = !isVideo
-  }
 
-  override func prepareForReuse() {
-    super.prepareForReuse()
-
-      isVideo = false
-  }
-  
-  
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
-   
+    
+    let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTap(_:)))
+    addGestureRecognizer(longGesture)
+    
     addSubview(image)
     addSubview(remove)
     addSubview(videoIndicatorView)
-  
-    NSLayoutConstraint.activate([
+    addSubview(playerView)
     
+    playerViewHeightAnchor = playerView.heightAnchor.constraint(equalToConstant: 0)
+    playerViewHeightAnchor.isActive = true
+    
+    NSLayoutConstraint.activate([
+      playerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+      playerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+      playerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+      
       image.leadingAnchor.constraint(equalTo: leadingAnchor),
       image.topAnchor.constraint(equalTo: topAnchor),
       image.trailingAnchor.constraint(equalTo: trailingAnchor),
-      image.bottomAnchor.constraint(equalTo: bottomAnchor),
-      
+      image.bottomAnchor.constraint(equalTo: playerView.topAnchor, constant: -3),
+    
       remove.topAnchor.constraint(equalTo: topAnchor, constant: 2),
       remove.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2),
       remove.widthAnchor.constraint(equalToConstant: 25),
@@ -99,7 +89,6 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
       videoIndicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
       videoIndicatorView.widthAnchor.constraint(equalToConstant: videoIndicatorView.image!.size.width),
       videoIndicatorView.heightAnchor.constraint(equalToConstant: videoIndicatorView.image!.size.height)
-      
     ])
   }
   
@@ -107,4 +96,81 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    
+    isVideo = false
+    image.contentMode = .scaleAspectFill
+    image.layer.borderColor = nil
+    image.layer.borderWidth = 0
+    playerViewHeightAnchor.constant = 0
+  }
+  
+  override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
+    
+    if !isHeightCalculated {
+      
+      self.setNeedsLayout()
+      self.layoutIfNeeded()
+      
+      let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
+      var newFrame = layoutAttributes.frame
+      newFrame.size.width = CGFloat(ceilf(Float(size.width)))
+      layoutAttributes.frame = newFrame
+      isHeightCalculated = true
+    }
+    
+    return layoutAttributes
+  }
+  
+
+  @objc func longTap(_ gestureReconizer: UILongPressGestureRecognizer) {
+    
+    let locationInView = gestureReconizer.location(in: chatInputContainerView.attachedImages)
+    
+    guard let indexPath = chatInputContainerView.attachedImages.indexPathForItem(at: locationInView) else {
+      return
+    }
+    guard let data = chatInputContainerView.selectedMedia[indexPath.item].audioObject else {
+      return
+    }
+    guard let cell = chatInputContainerView.attachedImages.cellForItem(at: indexPath) as? SelectedMediaCollectionCell else {
+      return
+    }
+    
+    if gestureReconizer.state == .began {
+      print("press began")
+    
+      do {
+        chatInputContainerView.audioPlayer = try AVAudioPlayer(data: data)
+      } catch {
+        print("error playing")
+      }
+      
+      chatInputContainerView.audioPlayer.prepareToPlay()
+      chatInputContainerView.audioPlayer.volume = 1.0
+      chatInputContainerView.audioPlayer.play()
+      cell.runTimer()
+      cell.playerView.play.setImage(UIImage(named: "pause"), for: .normal)
+    }
+
+    if gestureReconizer.state == .cancelled || gestureReconizer.state == .failed || gestureReconizer.state == .ended {
+      
+      
+      print("press cancelled failed or ended")
+      do {
+        chatInputContainerView.audioPlayer = try AVAudioPlayer(data: data)
+      } catch {
+        print("error playing")
+      }
+      
+      chatInputContainerView.audioPlayer.stop()
+      cell.resetTimer()
+      cell.playerView.play.setImage(UIImage(named: "play"), for: .normal)
+    }
+  }
+  
+  fileprivate func reloadAccessoryViews() {
+    videoIndicatorView.isHidden = !isVideo
+  }
 }

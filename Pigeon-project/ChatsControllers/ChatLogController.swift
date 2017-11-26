@@ -63,6 +63,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var mediaPickerController: MediaPickerControllerNew! = nil
   
+  var voiceRecordingViewController: VoiceRecordingViewController! = nil
+  
   var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
   
   var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
@@ -507,6 +509,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
     isTyping = false
     
+  
+    guard voiceRecordingViewController != nil, voiceRecordingViewController.recorder != nil else {
+      return
+    }
+    
+    voiceRecordingViewController.stop()
+    voiceRecordingViewController.deleteAllRecordings()
   }
   
   
@@ -1132,7 +1141,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       for selectedMedia in selectedMedia {
         
-        if selectedMedia.phAsset?.mediaType == PHAssetMediaType.image || selectedMedia.phAsset == nil {
+        
+        if selectedMedia.audioObject != nil { // audio
+          //TODO
+        }
+        
+        
+        if (selectedMedia.phAsset?.mediaType == PHAssetMediaType.image || selectedMedia.phAsset == nil) && selectedMedia.audioObject == nil { //photo
           
           let values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject]
           
@@ -1153,7 +1168,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           })
         }
         
-        if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video {
+        if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video { // video
 
           guard let path = selectedMedia.fileURL else {
             print("no file url returning")

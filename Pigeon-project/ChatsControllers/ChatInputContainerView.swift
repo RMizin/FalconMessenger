@@ -8,6 +8,7 @@
 
 
 import UIKit
+import AVFoundation
 
 
 public func getInputTextViewMaxHeight() -> CGFloat? {
@@ -37,7 +38,7 @@ struct InputContainerViewConstants {
 
 
 class ChatInputContainerView: UIView {
-  
+  var audioPlayer: AVAudioPlayer!
   var centeredCollectionViewFlowLayout: CenteredCollectionViewFlowLayout! = nil
   weak var trayDelegate: ImagePickerTrayControllerDelegate?
   var selectedMedia = [MediaObject]()
@@ -48,6 +49,7 @@ class ChatInputContainerView: UIView {
     didSet {
       sendButton.addTarget(chatLogController, action: #selector(ChatLogController.handleSend), for: .touchUpInside)
       attachButton.addTarget(chatLogController, action: #selector(ChatLogController.togglePhoto), for: .touchDown)
+      recordVoiceButton.addTarget(chatLogController, action: #selector(ChatLogController.toggleVoiceRecording), for: .touchDown)
     }
   }
   
@@ -103,6 +105,16 @@ class ChatInputContainerView: UIView {
     return attachButton
   }()
   
+  let recordVoiceButton: UIButton = {
+    let recordVoiceButton = UIButton()
+    recordVoiceButton.tintColor = PigeonPalette.pigeonPaletteBlue
+    recordVoiceButton.translatesAutoresizingMaskIntoConstraints = false
+    recordVoiceButton.setImage(UIImage(named: "microphone"), for: .normal)
+    recordVoiceButton.setImage(UIImage(named: "microphoneSelected"), for: .selected)
+    
+    return recordVoiceButton
+  }()
+  
   let sendButton = UIButton(type: .system)
   
   let separator: UIView = {
@@ -141,6 +153,7 @@ class ChatInputContainerView: UIView {
     sendButton.isEnabled = false
     
     addSubview(attachButton)
+    addSubview(recordVoiceButton)
     addSubview(inputTextView)
     addSubview(sendButton)
     addSubview(placeholderLabel)
@@ -154,19 +167,24 @@ class ChatInputContainerView: UIView {
     separator.bottomAnchor.constraint(equalTo: attachedImages.bottomAnchor).isActive = true
     
     if #available(iOS 11.0, *) {
-      attachButton.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
+      attachButton.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 5).isActive = true
       inputTextView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
     } else {
-      attachButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
+      attachButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 5).isActive = true
       inputTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
     }
     attachButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     attachButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    attachButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+    attachButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+    
+    recordVoiceButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    recordVoiceButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    recordVoiceButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+    recordVoiceButton.leftAnchor.constraint(equalTo: attachButton.rightAnchor, constant: 0).isActive = true
     
     inputTextView.topAnchor.constraint(equalTo: topAnchor, constant: 6).isActive = true
     inputTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6).isActive = true
-    inputTextView.leftAnchor.constraint(equalTo: attachButton.rightAnchor, constant: 0).isActive = true
+    inputTextView.leftAnchor.constraint(equalTo: recordVoiceButton.rightAnchor, constant: 3).isActive = true
     
     placeholderLabel.font = UIFont.systemFont(ofSize: (inputTextView.font?.pointSize)!)
     placeholderLabel.isHidden = !inputTextView.text.isEmpty
@@ -266,7 +284,17 @@ extension ChatInputContainerView: UITextViewDelegate {
   }
   
   func textViewDidEndEditing(_ textView: UITextView) {
-    attachButton.isSelected = false
+      attachButton.isSelected = false
+      recordVoiceButton.isSelected = false
+   
+    
+    guard chatLogController != nil, chatLogController?.voiceRecordingViewController != nil, chatLogController!.voiceRecordingViewController.recorder != nil else {
+      return
+    }
+    
+    if chatLogController!.voiceRecordingViewController.recorder.isRecording {
+      chatLogController?.voiceRecordingViewController.stop()
+    }
   }
   
   func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

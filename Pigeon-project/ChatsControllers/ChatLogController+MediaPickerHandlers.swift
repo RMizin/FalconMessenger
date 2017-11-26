@@ -15,7 +15,7 @@ extension ChatLogController {
   @objc func toggleTextView () {
     
   
-    if inputContainerView.attachButton.isSelected {
+    if inputContainerView.attachButton.isSelected || inputContainerView.recordVoiceButton.isSelected {
       self.inputContainerView.inputTextView.inputView = nil
       self.inputContainerView.inputTextView.reloadInputViews()
     } else {
@@ -28,6 +28,7 @@ extension ChatLogController {
     }
     
     inputContainerView.attachButton.isSelected = false
+    inputContainerView.recordVoiceButton.isSelected = false
   }
   
     
@@ -65,7 +66,7 @@ extension ChatLogController {
       if inputContainerView.mediaPickerController == nil {
         inputContainerView.mediaPickerController = mediaPickerController
       }
-      
+      inputContainerView.recordVoiceButton.isSelected = false
       inputContainerView.inputTextView.inputView = mediaPickerController.view
       inputContainerView.inputTextView.reloadInputViews()
       inputContainerView.inputTextView.becomeFirstResponder()
