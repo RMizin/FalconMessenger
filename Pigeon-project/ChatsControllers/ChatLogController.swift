@@ -21,6 +21,10 @@ private let typingIndicatorCellID = "typingIndicatorCellID"
 
 private let photoMessageCellID = "photoMessageCellID"
 
+private let outgoingVoiceMessageCellID = "outgoingVoiceMessageCellID"
+
+private let incomingVoiceMessageCellID = "incomingVoiceMessageCellID"
+
 private let typingIndicatorDatabaseID = "typingIndicator"
 
 private let typingIndicatorStateDatabaseKeyID = "Is typing"
@@ -64,6 +68,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var mediaPickerController: MediaPickerControllerNew! = nil
   
   var voiceRecordingViewController: VoiceRecordingViewController! = nil
+  
+  var chatLogAudioPlayer: AVAudioPlayer!
   
   var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
   
@@ -653,6 +659,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.register(TypingIndicatorCell.self, forCellWithReuseIdentifier: typingIndicatorCellID)
     collectionView?.register(PhotoMessageCell.self, forCellWithReuseIdentifier: photoMessageCellID)
     collectionView?.register(IncomingPhotoMessageCell.self, forCellWithReuseIdentifier: incomingPhotoMessageCellID)
+    collectionView?.register(OutgoingVoiceMessageCell.self, forCellWithReuseIdentifier: outgoingVoiceMessageCellID)
+    collectionView?.register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
     collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
   }
   
@@ -867,7 +875,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         return cell
       
-        } else { /* Incoming message with grey bubble */
+        } else { /* Incoming text message with grey bubble */
         
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
         
@@ -895,10 +903,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           return cell
         }
       
-    } else if message.imageUrl != nil || message.localImage != nil { /* If current message is a photo/video message */
+    } else if (message.imageUrl != nil || message.localImage != nil) && (message.voiceUrl == nil && message.voiceData == nil) { /* If current message is a photo/video message */
       
      
-      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
+      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing photo/video message with blue bubble */
         
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
         
@@ -971,7 +979,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         return cell
         
-      } else { /* Incoming message with grey bubble */
+      } else { /* Incoming photo/video message with grey bubble */
         
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
         
@@ -993,6 +1001,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         cell.messageImageView.isUserInteractionEnabled = false
         }
+        
         if let image = message.localImage {
           
           cell.messageImageView.image = image
@@ -1029,12 +1038,194 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         return cell
       }
     
-    } else {
+    } else if message.voiceUrl != nil || message.voiceData != nil || message.voiceEncodedString != nil { // if current message is a Voice message
       
-      return nil
+      if message.fromId == Auth.auth().currentUser?.uid { /* MARK: Outgoing Voice message with blue bubble */
+          
+          let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
+          
+          UIView.performWithoutAnimation {
+            
+            cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
+            cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+            cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(),
+                                                height:(cell.bubbleView.frame.height).rounded())
+            
+            DispatchQueue.main.async {
+              
+              cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
+              
+              switch indexPath.row == self.messages.count - 1 {
+                
+              case true:
+                cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
+                cell.deliveryStatus.isHidden = false
+                break
+                
+              default:
+                cell.deliveryStatus.isHidden = true
+                break
+              }
+              
+              if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+                view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+                cell.setRevealableView(view, style: .slide , direction: .left)
+              }
+            }
+          }
+        
+//          if let voiceData = message.voiceData {
+//             print("voiceData != nil")
+//            let duration = getAudioDurationInHours(from: voiceData)
+//            cell.playerView.timerLabel.text = duration
+//            cell.playerView.startingTime = getAudioDurationInSeconds(from: voiceData)!
+//            cell.playerView.seconds = getAudioDurationInSeconds(from: voiceData)!
+//
+//            return cell
+//          } else {
+//            print("voiceData == nil")
+//          }
+//
+//          if let voiceURL = message.voiceUrl {
+//            print("voice url != nil")
+//          } else {
+//             print("voice url == nil")
+//          }
+        
+          if let voiceEncodedString = message.voiceEncodedString {
+            
+            let decoded = Data(base64Encoded: voiceEncodedString)
+            let duration = getAudioDurationInHours(from: decoded!)
+            cell.playerView.timerLabel.text = duration
+            cell.playerView.startingTime = getAudioDurationInSeconds(from: decoded!)!
+            cell.playerView.seconds =  cell.playerView.startingTime
+            
+              print("voiceEncodedString != nil")
+          } else {
+            print("voiceEncodedString == nil")
+          }
+        
+          return cell
+            
+      } else { /* MARK: Incoming Voice message with blue bubble */
+          
+          let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
+        
+          UIView.performWithoutAnimation {
+
+            cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+            cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(),
+                                                height:(cell.bubbleView.frame.height).rounded())
+            
+            DispatchQueue.main.async {
+              if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+                view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+                cell.setRevealableView(view, style: .over , direction: .left)
+              }
+            }
+          }
+        
+//          if let voiceData = message.voiceData {
+//            let duration = getAudioDurationInHours(from: voiceData)
+//            cell.playerView.timerLabel.text = duration
+//            cell.playerView.startingTime = getAudioDurationInSeconds(from: voiceData)!
+//            cell.playerView.seconds = getAudioDurationInSeconds(from: voiceData)!
+//
+//            return cell
+//          }
+//
+//          if let voiceURL = message.voiceUrl {
+//            print(voiceURL)
+//
+//          }
+        
+          return cell
+        }
+    
     }
+     return nil
   }
   
+  
+  override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    print("Did deselect", indexPath)
+    if let cell = collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell  {
+      if chatLogAudioPlayer != nil {
+        chatLogAudioPlayer.stop()
+        cell.resetTimer()
+        cell.playerView.play.isSelected = false
+      }
+    }
+    
+    if let cell = collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell  {
+      if chatLogAudioPlayer != nil {
+        chatLogAudioPlayer.stop()
+        cell.resetTimer()
+        cell.playerView.play.isSelected = false
+      }
+    }
+  }
+
+  
+  
+  override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    
+    print("did select", indexPath)
+    
+    let message = messages[indexPath.item]
+    
+    guard let voiceEncodedString = message.voiceEncodedString else  {
+      return
+    }
+    
+    guard let data = Data(base64Encoded: voiceEncodedString) else {
+      return
+    }
+
+    
+    if let cell = collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell  {
+      
+      if chatLogAudioPlayer != nil && chatLogAudioPlayer.isPlaying {
+        chatLogAudioPlayer.stop()
+        cell.resetTimer()
+        cell.playerView.play.isSelected = false
+        return
+      }
+      
+      do {
+        chatLogAudioPlayer = try AVAudioPlayer(data:  data)
+        chatLogAudioPlayer.prepareToPlay()
+        chatLogAudioPlayer.volume = 1.0
+        chatLogAudioPlayer.play()
+        cell.runTimer()
+        cell.playerView.play.isSelected = true
+      } catch {
+        chatLogAudioPlayer = nil
+        print(error.localizedDescription)
+      }
+    }
+    
+    if let cell = collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
+      if chatLogAudioPlayer != nil && chatLogAudioPlayer.isPlaying {
+        chatLogAudioPlayer.stop()
+        cell.resetTimer()
+        cell.playerView.play.isSelected = false
+        return
+      }
+      
+      do {
+        chatLogAudioPlayer = try AVAudioPlayer(data:  data)
+        chatLogAudioPlayer.prepareToPlay()
+        chatLogAudioPlayer.volume = 1.0
+        chatLogAudioPlayer.play()
+        cell.runTimer()
+        cell.playerView.play.isSelected = true
+      } catch {
+        chatLogAudioPlayer = nil
+        print(error.localizedDescription)
+      }
+    }
+  }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     return selectSize(indexPath: indexPath)
@@ -1052,6 +1243,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       } else if message.imageWidth?.floatValue != nil && message.imageHeight?.floatValue != nil {
         
         cellHeight = CGFloat(truncating: message.imageCellHeight!)// CGFloat(imageHeight / imageWidth * 200).rounded()
+      } else if message.voiceEncodedString != nil {
+        cellHeight = 40
       }
       
       return CGSize(width: self.collectionView!.frame.width, height: cellHeight)
@@ -1099,10 +1292,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if !inputContainerView.selectedMedia.isEmpty {
       let selectedMedia = inputContainerView.selectedMedia
       
-      let selected = mediaPickerController.collectionView.indexPathsForSelectedItems
-      
-      for indexPath in selected!  {
-        mediaPickerController.collectionView.deselectItem(at: indexPath, animated: false)
+      if mediaPickerController != nil {
+        if let selected = mediaPickerController.collectionView.indexPathsForSelectedItems {
+          for indexPath in selected  {
+            mediaPickerController.collectionView.deselectItem(at: indexPath, animated: false)
+          }
+        }
       }
    
       if self.inputContainerView.selectedMedia.count - 1 >= 0 {
@@ -1143,7 +1338,28 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         
         if selectedMedia.audioObject != nil { // audio
-          //TODO
+          
+          let bae64string = selectedMedia.audioObject?.base64EncodedString()
+          
+          let values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "voiceEncodedString": bae64string as AnyObject]
+          
+           reloadCollectionViewAfterSending(values: values)
+           let properties: [String: AnyObject] = ["voiceEncodedString": bae64string as AnyObject]
+           self.sendMediaMessageWithProperties(properties)
+          
+//          uploadToFirebaseStorageUsingVoiceData(selectedMedia.audioObject!, completion: { (voiceDataURL) in
+//            self.sendMessageWithVoiceUrl(voiceDataURL)
+//
+//            percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
+//            self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
+//
+//            if percentCompleted == 1.0 {
+//              DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+//                self.uploadProgressBar.setProgress(0.0, animated: false)
+//
+//              })
+//            }
+//          })
         }
         
         
@@ -1167,6 +1383,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           })
         }
+        
         
         if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video { // video
 
@@ -1207,10 +1424,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   
   fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage) {
-    
-   let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
+    let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
     sendMediaMessageWithProperties(properties)
   }
+  
+//  fileprivate func sendMessageWithVoiceUrl(_ voiceUrl: String) {
+//    let properties: [String: AnyObject] = ["voiceUrl": voiceUrl as AnyObject]
+//    sendMediaMessageWithProperties(properties)
+//  }
   
   
   func sendMediaMessageWithProperties(_ properties: [String: AnyObject]) {
@@ -1257,6 +1478,24 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
+//  fileprivate func uploadToFirebaseStorageUsingVoiceData(_ voiceData: Data?, completion: @escaping (_ voiceDataUrl: String) -> ()) {
+//    let voiceMessageName = UUID().uuidString
+//    let ref = Storage.storage().reference().child("messageAudio").child(voiceMessageName)
+//    
+//    if let uploadData = voiceData {
+//      ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+//        
+//        if error != nil {
+//          print("Failed to upload voice:", error as Any)
+//          return
+//        }
+//        
+//        if let voiceURL = metadata?.downloadURL()?.absoluteString {
+//          completion(voiceURL)
+//        }
+//      })
+//    }
+//  }
   
   fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
     let imageName = UUID().uuidString

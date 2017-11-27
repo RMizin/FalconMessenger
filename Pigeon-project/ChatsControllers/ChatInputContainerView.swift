@@ -287,7 +287,10 @@ extension ChatInputContainerView: UITextViewDelegate {
       attachButton.isSelected = false
       recordVoiceButton.isSelected = false
    
-    
+    if chatLogController?.chatLogAudioPlayer != nil  {
+      chatLogController?.chatLogAudioPlayer.stop()
+      chatLogController?.chatLogAudioPlayer = nil
+    }
     guard chatLogController != nil, chatLogController?.voiceRecordingViewController != nil, chatLogController!.voiceRecordingViewController.recorder != nil else {
       return
     }

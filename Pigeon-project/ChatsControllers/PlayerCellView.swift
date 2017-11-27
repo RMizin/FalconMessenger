@@ -28,13 +28,14 @@ class PlayerCellView: UIView {
     var timerLabel = UILabel()
     timerLabel.translatesAutoresizingMaskIntoConstraints = false
     timerLabel.textColor = .white
-    timerLabel.text = "00:00"
+    timerLabel.text = "00:00:00"
     timerLabel.textAlignment = .center
     timerLabel.font = UIFont.systemFont(ofSize: 10)
     
     return timerLabel
   }()
   
+  var playLeadingAnchor: NSLayoutConstraint!
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -45,9 +46,10 @@ class PlayerCellView: UIView {
     
     addSubview(play)
     addSubview(timerLabel)
-    
+    playLeadingAnchor = play.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3)
+    playLeadingAnchor.isActive = true
     NSLayoutConstraint.activate([
-      play.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3),
+    
       play.centerYAnchor.constraint(equalTo: centerYAnchor),
       play.widthAnchor.constraint(equalToConstant: 20),
       play.heightAnchor.constraint(equalTo: heightAnchor, constant: -5),
@@ -56,7 +58,7 @@ class PlayerCellView: UIView {
       timerLabel.heightAnchor.constraint(equalTo: heightAnchor),
       timerLabel.leadingAnchor.constraint(equalTo: play.trailingAnchor),
       timerLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
-      ])
+    ])
   }
   
   required init?(coder aDecoder: NSCoder) {

@@ -28,7 +28,6 @@ class VoiceRecordingViewController: UIViewController {
      print("VOICE INIT")
     view.addSubview(voiceRecordingContainerView)
     
-    print(view.frame)
     view.addSubview(voiceRecordingContainerView)
     voiceRecordingContainerView.translatesAutoresizingMaskIntoConstraints = false
     voiceRecordingContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -71,7 +70,7 @@ class VoiceRecordingViewController: UIViewController {
         recorder.updateMeters()
        
         let percentage = pow (10, (0.05 * recorder.averagePower(forChannel: 0)));
-        print(percentage)
+       // print(percentage)
         voiceRecordingContainerView.waveForm.amplitude = CGFloat(percentage*5)
       }
     }
@@ -99,6 +98,7 @@ class VoiceRecordingViewController: UIViewController {
     
     if recorder == nil {
       print("recording. recorder nil")
+     
       voiceRecordingContainerView.recordButton.setTitle("Pause", for: .normal)
      // voiceRecordingContainerView.playButton.isEnabled = false
       voiceRecordingContainerView.stopButton.isEnabled = true
@@ -131,7 +131,6 @@ class VoiceRecordingViewController: UIViewController {
     
     recorder?.stop()
     player?.stop()
-    
     meterTimer.invalidate()
     
     voiceRecordingContainerView.recordButton.setTitle("Record", for: .normal)
@@ -168,18 +167,18 @@ class VoiceRecordingViewController: UIViewController {
     }
     
     let recordSettings: [String: Any] = [
-      AVFormatIDKey: kAudioFormatAppleLossless,
-      AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue,
-      AVEncoderBitRateKey: 32000,
-      AVNumberOfChannelsKey: 2,
-      AVSampleRateKey: 44100.0
+      AVFormatIDKey: kAudioFormatMPEG4AAC,
+      AVEncoderAudioQualityKey: AVAudioQuality.min.rawValue ,
+      AVEncoderBitRateKey: 12000,//32000,
+      AVNumberOfChannelsKey: 1,
+      AVSampleRateKey: 12000// 44100.0
     ]
-    
     
     do {
       recorder = try AVAudioRecorder(url: soundFileURL, settings: recordSettings)
       recorder.delegate = self
       recorder.isMeteringEnabled = true
+      
       recorder.prepareToRecord() // creates/overwrites the file at soundFileURL
     } catch {
       recorder = nil
@@ -201,7 +200,7 @@ class VoiceRecordingViewController: UIViewController {
           if setup {
             self.setupRecorder()
           }
-          self.recorder.record()
+          self.recorder.record(forDuration: 1800)
           
           self.meterTimer = Timer.scheduledTimer(timeInterval: 0.01,
                                                  target: self,
@@ -439,6 +438,17 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
     self.inputContainerView?.attachedImages.scrollToItem(at: IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0), at: .right, animated: true)
   }
   
+  func stackOverflowAnswer(data: Data) {
+  //  if let data = UIImagePNGRepresentation(#imageLiteral(resourceName: "VanGogh.jpg")) as Data? {
+      print("There were \(data.count) bytes")
+      let bcf = ByteCountFormatter()
+      bcf.allowedUnits = [.useMB] // optional: restricts the units to MB only
+      bcf.countStyle = .file
+      let string = bcf.string(fromByteCount: Int64(data.count))
+      print("formatted result: \(string)")
+  //  }
+  }
+  
   
   func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder,
                                        successfully flag: Bool) {
@@ -451,15 +461,15 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
     voiceRecordingContainerView.recordButton.setTitle("Record", for: UIControlState())
    
     
-    var soundData = Data()
+    var soundData: Data!
     
     do {
-      soundData = try Data.init(contentsOf: soundFileURL)
-
+      soundData = try Data(contentsOf: soundFileURL)
+        stackOverflowAnswer(data: soundData)
       let mediaObject = ["audioObject": soundData ,
                          "fileURL" : soundFileURL] as [String: AnyObject]
       self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
-
+      soundData = nil
       if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
         self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
       } else {

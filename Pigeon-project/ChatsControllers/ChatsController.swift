@@ -353,6 +353,8 @@ class ChatsController: UITableViewController {
         cell.messageLabel.text = "Attachment: Image"
       } else if (filteredFinalUserCellData[indexPath.row].0.imageUrl != nil || filteredFinalUserCellData[indexPath.row].0.localImage != nil) && filteredFinalUserCellData[indexPath.row].0.videoUrl != nil {
         cell.messageLabel.text = "Attachment: Video"
+      } else if filteredFinalUserCellData[indexPath.row].0.voiceEncodedString != nil {
+          cell.messageLabel.text = "Audio message"
       } else {
          cell.messageLabel.text = filteredFinalUserCellData[indexPath.row].0.text
       }

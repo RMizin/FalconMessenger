@@ -161,6 +161,9 @@
 		4BE8BB421FCA836A00EB35FA /* SelectedMediaCollectionCell+timerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB411FCA836A00EB35FA /* SelectedMediaCollectionCell+timerHandlers.swift */; };
 		4BE8BB441FCA83D200EB35FA /* PlayerCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB431FCA83D200EB35FA /* PlayerCellView.swift */; };
 		4BE8BB471FCA98D600EB35FA /* SwiftSiriWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB461FCA98D600EB35FA /* SwiftSiriWaveformView.swift */; };
+		4BE8BB491FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB481FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift */; };
+		4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB4A1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift */; };
+		4BE8BB4F1FCAFB0800EB35FA /* VoiceMessageCells+timerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB4E1FCAFB0800EB35FA /* VoiceMessageCells+timerHandlers.swift */; };
 		4BEB13F31F39CE3E0048A984 /* PigeonUsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */; };
 		4BED6EB01F476A2F004EF2E0 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EAB1F476A2F004EF2E0 /* AnimationController.swift */; };
 		4BED6EB11F476A2F004EF2E0 /* ImagePickerAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BED6EAC1F476A2F004EF2E0 /* ImagePickerAction.swift */; };
@@ -354,6 +357,9 @@
 		4BE8BB411FCA836A00EB35FA /* SelectedMediaCollectionCell+timerHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SelectedMediaCollectionCell+timerHandlers.swift"; path = "ChatsControllers/SelectedMediaCollectionCell+timerHandlers.swift"; sourceTree = "<group>"; };
 		4BE8BB431FCA83D200EB35FA /* PlayerCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlayerCellView.swift; path = ChatsControllers/PlayerCellView.swift; sourceTree = "<group>"; };
 		4BE8BB461FCA98D600EB35FA /* SwiftSiriWaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftSiriWaveformView.swift; path = Support/WaveformView/SwiftSiriWaveformView.swift; sourceTree = "<group>"; };
+		4BE8BB481FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OutgoingVoiceMessageCell.swift; path = ChatsControllers/OutgoingVoiceMessageCell.swift; sourceTree = "<group>"; };
+		4BE8BB4A1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IncomingVoiceMessageCell.swift; path = ChatsControllers/IncomingVoiceMessageCell.swift; sourceTree = "<group>"; };
+		4BE8BB4E1FCAFB0800EB35FA /* VoiceMessageCells+timerHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "VoiceMessageCells+timerHandlers.swift"; path = "ChatsControllers/VoiceMessageCells+timerHandlers.swift"; sourceTree = "<group>"; };
 		4BEB13F21F39CE3E0048A984 /* PigeonUsersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonUsersTableViewCell.swift; path = ContactsControllers/PigeonUsersTableViewCell.swift; sourceTree = "<group>"; };
 		4BED6EAB1F476A2F004EF2E0 /* AnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimationController.swift; path = Support/PickerTrayController/AnimationController.swift; sourceTree = "<group>"; };
 		4BED6EAC1F476A2F004EF2E0 /* ImagePickerAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImagePickerAction.swift; path = Support/PickerTrayController/ImagePickerAction.swift; sourceTree = "<group>"; };
@@ -621,6 +627,9 @@
 				4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */,
 				4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */,
 				4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */,
+				4BE8BB481FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift */,
+				4BE8BB4A1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift */,
+				4BE8BB4E1FCAFB0800EB35FA /* VoiceMessageCells+timerHandlers.swift */,
 				4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */,
 			);
 			name = Cells;
@@ -1125,6 +1134,7 @@
 				4B5419571FB392570014C4FB /* INSPhotosInteractionAnimator.swift in Sources */,
 				4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
+				4BE8BB491FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift in Sources */,
 				4BE571501F4D87A4009D9AB4 /* ColorCollectionViewCell.swift in Sources */,
 				4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
@@ -1152,6 +1162,7 @@
 				4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */,
 				4BB775A51F59E74200BFEEB8 /* ChatMetaData.swift in Sources */,
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
+				4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */,
 				4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */,
 				4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */,
 				4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */,
@@ -1203,6 +1214,7 @@
 				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
 				4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */,
 				4B8D0B831F523AA800E9252A /* CircleProgressView.swift in Sources */,
+				4BE8BB4F1FCAFB0800EB35FA /* VoiceMessageCells+timerHandlers.swift in Sources */,
 				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
 				4B3E63571FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView.swift in Sources */,
 				4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */,

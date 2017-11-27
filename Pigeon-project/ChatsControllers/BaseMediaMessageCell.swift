@@ -10,7 +10,7 @@ import UIKit
 
 class BaseMediaMessageCell: BaseMessageCell {
   
-  var message: Message?
+  weak var message: Message?
   
   weak var chatLogController: ChatLogController?
   
