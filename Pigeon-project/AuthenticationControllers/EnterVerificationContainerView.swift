@@ -48,8 +48,8 @@ class EnterVerificationContainerView: UIView {
     resend.setTitle("Resend", for: .normal)
     resend.contentVerticalAlignment = .center
     resend.contentHorizontalAlignment = .center
-    resend.setTitleColor(PigeonPalette.pigeonPaletteBlue, for: .normal)
-    resend.setTitleColor(PigeonPalette.pigeonPaletteUiViewGray, for: .highlighted)
+    resend.setTitleColor(FalconPalette.falconPaletteBlue, for: .normal)
+    resend.setTitleColor(FalconPalette.falconPaletteUiViewGray, for: .highlighted)
     resend.setTitleColor(UIColor.lightGray, for: .disabled )
     
     return resend

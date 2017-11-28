@@ -57,7 +57,7 @@ class ContactsDetailController: UITableViewController {
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
       } else {
         
-        cell.textLabel?.textColor = PigeonPalette.pigeonPaletteBlue
+        cell.textLabel?.textColor = FalconPalette.falconPaletteBlue
         cell.textLabel?.text = "Invite to Falcon"
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
       }

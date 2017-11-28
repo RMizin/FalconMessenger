@@ -156,11 +156,11 @@ extension UICollectionView: UIGestureRecognizerDelegate {
     }
     
     public func dequeueReusableRevealableView(withIdentifier identifier: String) -> RevealableView? {
-//        let queue = reuseQueues.queueForIdentifier(identifier)
-//      
-//        if let view = queue.dequeueView() {
-//            return view
-//        }
+        let queue = reuseQueues.queueForIdentifier(identifier)
+      
+        if let view = queue.dequeueView() {
+            return view
+        }
       
         let regs = registrations
         

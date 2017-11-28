@@ -26,7 +26,7 @@ extension SelectedMediaCollectionCell {
   }
   
   func resetTimer() {
-    playerView.timer.invalidate()
+    playerView.timer?.invalidate()
     playerView.seconds = playerView.startingTime
     playerView.timerLabel.text = timeString(time: TimeInterval(playerView.seconds))
   }

@@ -81,7 +81,7 @@
 		4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */; };
 		4B9498781F324919008DA07F /* OnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498771F324919008DA07F /* OnboardingController.swift */; };
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
-		4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* PigeonPalette.swift */; };
+		4B9498811F324C84008DA07F /* FalconPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* FalconPalette.swift */; };
 		4B9CD8691F4B2B6800EF8AB0 /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */; };
 		4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */; };
 		4BB775A51F59E74200BFEEB8 /* ChatMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */; };
@@ -277,7 +277,7 @@
 		4B9498751F32474E008DA07F /* EnterPhoneNumberContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhoneNumberContainerView.swift; path = AuthenticationControllers/EnterPhoneNumberContainerView.swift; sourceTree = "<group>"; };
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
-		4B9498801F324C84008DA07F /* PigeonPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PigeonPalette.swift; path = Support/PigeonPalette.swift; sourceTree = "<group>"; };
+		4B9498801F324C84008DA07F /* FalconPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FalconPalette.swift; path = Support/FalconPalette.swift; sourceTree = "<group>"; };
 		4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = ChatsControllers/MediaObject.swift; sourceTree = "<group>"; };
 		4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrentUserTableViewCell.swift; path = ContactsControllers/CurrentUserTableViewCell.swift; sourceTree = "<group>"; };
 		4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatMetaData.swift; path = ChatsControllers/ChatMetaData.swift; sourceTree = "<group>"; };
@@ -565,11 +565,11 @@
 				4B2143071F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift */,
 				4BC26B311F3A27750093A9D2 /* ChatsController.swift */,
 				4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */,
+				4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */,
 				4BE8BB381FC9F8C100EB35FA /* VoiceRecordingViewController.swift */,
 				4BE8BB3A1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift */,
 				4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */,
 				4BE8BB361FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift */,
-				4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */,
 				4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */,
 				4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */,
 			);
@@ -712,7 +712,7 @@
 				4B1A36941F498DAD00B4AA0A /* CenteredCollectionViewFlowLayout */,
 				4BED6EA81F47697D004EF2E0 /* PickerTrayController */,
 				4B48D3111F361E300050C797 /* ProgressIndicator */,
-				4B9498801F324C84008DA07F /* PigeonPalette.swift */,
+				4B9498801F324C84008DA07F /* FalconPalette.swift */,
 				4B91B8BB1F34E9D60025C67F /* Public.swift */,
 			);
 			name = Support;
@@ -1229,7 +1229,7 @@
 				4B48D31E1F361E490050C797 /* ARSLineProgressConstants.swift in Sources */,
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,
-				4B9498811F324C84008DA07F /* PigeonPalette.swift in Sources */,
+				4B9498811F324C84008DA07F /* FalconPalette.swift in Sources */,
 				4B3E63551FBA73F600E200CD /* ChangeNumberEnterPhoneNumberContainerView.swift in Sources */,
 				4B2143041F51C76F00F7A4B8 /* TimestampView.swift in Sources */,
 				4BED6EBE1F476A46004EF2E0 /* CameraOverlayView.swift in Sources */,

@@ -27,7 +27,7 @@ extension OutgoingVoiceMessageCell {
   
   func resetTimer() {
     playerView.play.isSelected = false
-    playerView.timer.invalidate()
+    playerView.timer?.invalidate()
     playerView.seconds = playerView.startingTime
     
     playerView.timerLabel.text = timeString(time: TimeInterval(playerView.seconds))
@@ -59,9 +59,10 @@ extension IncomingVoiceMessageCell {
   }
   
   func resetTimer() {
-    playerView.timer.invalidate()
+    playerView.timer?.invalidate()
     playerView.seconds = playerView.startingTime
     playerView.timerLabel.text = timeString(time: TimeInterval(playerView.seconds))
+    playerView.timer = nil
   }
   
   func timeString(time:TimeInterval) -> String {

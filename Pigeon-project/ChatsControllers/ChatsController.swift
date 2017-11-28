@@ -97,7 +97,7 @@ class ChatsController: UITableViewController {
     
     tableView.register(UserCell.self, forCellReuseIdentifier: userCellID)
     tableView.allowsMultipleSelectionDuringEditing = false
-    tableView.backgroundColor = UIColor.white
+    tableView.backgroundColor = FalconPalette.generalBackgroundColor
     navigationItem.leftBarButtonItem = editButtonItem
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top

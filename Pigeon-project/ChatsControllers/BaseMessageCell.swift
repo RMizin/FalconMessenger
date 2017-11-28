@@ -48,8 +48,8 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   
   func setupViews() {
-    backgroundColor = PigeonPalette.pigeonPaletteControllerBackground
-    contentView.backgroundColor = PigeonPalette.pigeonPaletteControllerBackground
+    backgroundColor = FalconPalette.generalBackgroundColor
+    contentView.backgroundColor = FalconPalette.generalBackgroundColor
   }
   
   

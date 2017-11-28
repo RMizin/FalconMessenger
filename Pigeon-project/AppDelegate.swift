@@ -76,8 +76,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     setDeaultsForSettings()
+   // globalNavigationBarSettings()
     
     return true
+  }
+  
+  func globalNavigationBarSettings() {
+    UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+    UINavigationBar.appearance().shadowImage = UIImage()
+  //  UINavigationBar.appearance().tintColor = UIColor.red
+   // UINavigationBar.appearance().
+    UINavigationBar.appearance().barTintColor = FalconPalette.generalBackgroundColor
+    UINavigationBar.appearance().isTranslucent = false
+    UINavigationBar.appearance().clipsToBounds = false
+   // UINavigationBar.appearance().titlete
+    UINavigationBar.appearance().backgroundColor = FalconPalette.generalBackgroundColor
+    UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor:  FalconPalette.generalTitleColor]
+    if #available(iOS 11.0, *) {
+      UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:  FalconPalette.generalTitleColor]
+    }
+    //UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.backgroundColor : FalconPalette.generalTitleColor]
   }
   
   
@@ -87,10 +105,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       let destination = OnboardingController()
       let newNavigationController = UINavigationController(rootViewController: destination)
   
-      newNavigationController.navigationBar.shadowImage = UIImage()
-      newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+     // newNavigationController.navigationBar.shadowImage = UIImage()
+     // newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+    //  newNavigationController.navigationBar.tintColor = FalconPalette.generalBackgroundColor
       newNavigationController.modalTransitionStyle = .crossDissolve
-      newNavigationController.navigationBar.isTranslucent = false
+  //    newNavigationController.navigationBar.isTranslucent = false
       
       mainController.present(newNavigationController, animated: false, completion: {
       })
@@ -105,7 +124,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     contactsController.title = "Contacts"
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     
-    contactsNavigationController.navigationBar.isTranslucent = false
+  //  contactsNavigationController.navigationBar.isTranslucent = false
     if #available(iOS 11.0, *) {
       contactsNavigationController.navigationBar.prefersLargeTitles = true
     }
@@ -115,7 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     chatsController.title = "Chats"
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)
   
-    chatsNavigationController.navigationBar.isTranslucent = false
+   // chatsNavigationController.navigationBar.isTranslucent = false
     if #available(iOS 11.0, *) {
       chatsNavigationController.navigationBar.prefersLargeTitles = true
     }
@@ -125,7 +144,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     settingsController.title = "Settings"
     let settingsNavigationController = UINavigationController(rootViewController: settingsController)
 
-    settingsNavigationController.navigationBar.isTranslucent = false
+   // settingsNavigationController.navigationBar.isTranslucent = false
     if #available(iOS 11.0, *) {
       settingsNavigationController.navigationBar.prefersLargeTitles = true
     }

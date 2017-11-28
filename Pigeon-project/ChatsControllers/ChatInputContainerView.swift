@@ -97,7 +97,7 @@ class ChatInputContainerView: UIView {
   
   let attachButton: UIButton = {
     let attachButton = UIButton()
-    attachButton.tintColor = PigeonPalette.pigeonPaletteBlue
+    attachButton.tintColor = FalconPalette.falconPaletteBlue
     attachButton.translatesAutoresizingMaskIntoConstraints = false
     attachButton.setImage(UIImage(named: "ConversationAttach"), for: .normal)
     attachButton.setImage(UIImage(named: "SelectedModernConversationAttach"), for: .selected)
@@ -107,7 +107,7 @@ class ChatInputContainerView: UIView {
   
   let recordVoiceButton: UIButton = {
     let recordVoiceButton = UIButton()
-    recordVoiceButton.tintColor = PigeonPalette.pigeonPaletteBlue
+    recordVoiceButton.tintColor = FalconPalette.falconPaletteBlue
     recordVoiceButton.translatesAutoresizingMaskIntoConstraints = false
     recordVoiceButton.setImage(UIImage(named: "microphone"), for: .normal)
     recordVoiceButton.setImage(UIImage(named: "microphoneSelected"), for: .selected)

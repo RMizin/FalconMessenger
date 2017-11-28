@@ -38,7 +38,7 @@ class UserCell: UITableViewCell {
     let timeLabel: UILabel = {
       let label = UILabel()
       label.font = UIFont.systemFont(ofSize: 12)
-      label.textColor = UIColor.lightGray
+      label.textColor = FalconPalette.generalSubtitleColor
       label.translatesAutoresizingMaskIntoConstraints = false
       label.sizeToFit()
       label.textAlignment = .right
@@ -48,6 +48,7 @@ class UserCell: UITableViewCell {
   
     let nameLabel: UILabel = {
       let label = UILabel()
+      label.textColor = FalconPalette.generalTitleColor
       label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.semibold) 
       label.translatesAutoresizingMaskIntoConstraints = false
       label.sizeToFit()
@@ -58,7 +59,7 @@ class UserCell: UITableViewCell {
     let messageLabel: UILabel = {
       let label = UILabel()
       label.font = UIFont.systemFont(ofSize: 13)
-      label.textColor = UIColor.lightGray
+      label.textColor = FalconPalette.generalSubtitleColor
       label.numberOfLines = 2
       label.translatesAutoresizingMaskIntoConstraints = false
       label.sizeToFit()
@@ -69,7 +70,7 @@ class UserCell: UITableViewCell {
   let badgeLabel: UILabel = {
     let badgeLabel = UILabel()
     badgeLabel.translatesAutoresizingMaskIntoConstraints = false
-    badgeLabel.backgroundColor = PigeonPalette.pigeonPaletteBlue
+    badgeLabel.backgroundColor = FalconPalette.falconPaletteBlue
     badgeLabel.layer.cornerRadius = 7
     badgeLabel.text = "1"
     badgeLabel.isHidden = true
@@ -84,12 +85,15 @@ class UserCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
       
+        backgroundColor = FalconPalette.generalBackgroundColor
         contentView.addSubview(newMessageIndicator)
         contentView.addSubview(profileImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(messageLabel)
         contentView.addSubview(timeLabel)
         contentView.addSubview(badgeLabel)
+      
+      
       
         profileImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 26).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
@@ -126,10 +130,8 @@ class UserCell: UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
-   // if profileImageView.image == nil {
-       profileImageView.image = UIImage(named: "UserpicIcon")
-    //}
-   
+    
+    profileImageView.image = UIImage(named: "UserpicIcon")
     nameLabel.text = ""
     messageLabel.text = nil
     timeLabel.text = nil

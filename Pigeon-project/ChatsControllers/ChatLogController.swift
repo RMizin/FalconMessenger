@@ -161,6 +161,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
             dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
           }
+          
+          if let voiceEncodedString = Message(dictionary: dictionary).voiceEncodedString {  /* pre-encoding voice messages */
+            let decoded = Data(base64Encoded: voiceEncodedString) as AnyObject
+            let duration = self.getAudioDurationInHours(from: decoded as! Data) as AnyObject
+            let startTime = self.getAudioDurationInSeconds(from: decoded as! Data) as AnyObject
+            dictionary.updateValue(decoded, forKey: "voiceData")
+            dictionary.updateValue(duration, forKey: "voiceDuration")
+            dictionary.updateValue(startTime, forKey: "voiceStartTime")
+          }
         
           if self.isInitialChatMessagesLoad {
             appendingMessages.append(Message(dictionary: dictionary))
@@ -170,7 +179,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 self.mediaMessages.append(Message(dictionary: dictionary))
               }
             }
-      
+
             initialLoadGroup.leave()
           
           } else {
@@ -315,6 +324,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight =  Message(dictionary: dictionary).imageHeight?.floatValue {
                 let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
                 dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
+              }
+              
+              if let voiceEncodedString = Message(dictionary: dictionary).voiceEncodedString { /* pre-encoding voice messages */
+                let decoded = Data(base64Encoded: voiceEncodedString) as AnyObject
+                let duration = self.getAudioDurationInHours(from: decoded as! Data) as AnyObject
+                let startTime = self.getAudioDurationInSeconds(from: decoded as! Data) as AnyObject
+                dictionary.updateValue(decoded, forKey: "voiceData")
+                dictionary.updateValue(duration, forKey: "voiceDuration")
+                dictionary.updateValue(startTime, forKey: "voiceStartTime")
               }
             
               self.messages.append(Message(dictionary: dictionary))
@@ -634,7 +652,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       extendedLayoutIncludesOpaqueBars = true
       automaticallyAdjustsScrollViewInsets = false
       navigationItem.largeTitleDisplayMode = .never
-    
+  
       collectionView?.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
       collectionView?.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
       collectionView?.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
@@ -825,7 +843,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     return cell
   }
   
-  
+
   fileprivate func selectCell(for indexPath: IndexPath) -> RevealableCollectionViewCell? {
     
     let message = messages[indexPath.item]
@@ -835,21 +853,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
       
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
-        
         UIView.performWithoutAnimation {
       
-            cell.textView.text = messageText
-
-          cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - /*estimateFrameForText(messageText).width */ message.estimatedFrameForText!.width - 35,
+          cell.textView.text = messageText
+          cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - message.estimatedFrameForText!.width - 40,
                                          y: 0,
-                                         width: /*estimateFrameForText(messageText).width*/  message.estimatedFrameForText!.width + 30,
+                                         width: message.estimatedFrameForText!.width + 30,
                                          height: cell.frame.size.height).integral
-        
-         
           cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(),
                                             height: cell.bubbleView.frame.height.rounded())
             
-           DispatchQueue.main.async {
+          DispatchQueue.main.async {
             cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
             
             switch indexPath.row == self.messages.count - 1 {
@@ -865,9 +879,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           
             if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-          
               view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
-          
               cell.setRevealableView(view, style: .slide, direction: .left)
             }
           }
@@ -881,20 +893,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
           UIView.performWithoutAnimation {
             
-           
             cell.textView.text = messageText
-        
-            cell.bubbleView.frame.size = CGSize(width: (/*estimateFrameForText(messageText).width*/ message.estimatedFrameForText!.width + 30).rounded(),
-                                          height: cell.frame.size.height.rounded())//.integral
-          
+            cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(),
+                                          height: cell.frame.size.height.rounded())
             cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(),
                                               height: cell.bubbleView.frame.height.rounded())
             
             DispatchQueue.main.async {
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              
                 view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
-            
                 cell.setRevealableView(view, style: .over , direction: .left)
               }
             }
@@ -903,9 +910,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           return cell
         }
       
-    } else if (message.imageUrl != nil || message.localImage != nil) && (message.voiceUrl == nil && message.voiceData == nil) { /* If current message is a photo/video message */
+    } else if message.imageUrl != nil || message.localImage != nil { /* If current message is a photo/video message */
       
-     
       if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing photo/video message with blue bubble */
         
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
@@ -914,35 +920,33 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         UIView.performWithoutAnimation {
           
-        cell.message = message
-        cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
-        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+          cell.message = message
+          cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
+          cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
     
-        DispatchQueue.main.async {
+          DispatchQueue.main.async {
           
-          cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
+            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
           
-          switch indexPath.row == self.messages.count - 1 {
+            switch indexPath.row == self.messages.count - 1 {
             
-          case true:
-            cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
-            cell.deliveryStatus.isHidden = false
-            break
+            case true:
+              cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
+              cell.deliveryStatus.isHidden = false
+              break
             
-          default:
-            cell.deliveryStatus.isHidden = true
-            break
+            default:
+              cell.deliveryStatus.isHidden = true
+              break
+            }
+          
+            if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+              view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+              cell.setRevealableView(view, style: .slide , direction: .left)
+            }
           }
-          
-          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-            
-            view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
-            
-            cell.setRevealableView(view, style: .slide , direction: .left)
-          }
-        }
         
-        cell.messageImageView.isUserInteractionEnabled = false
+          cell.messageImageView.isUserInteractionEnabled = false
         }
         
         if let image = message.localImage {
@@ -986,28 +990,24 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         cell.chatLogController = self
         UIView.performWithoutAnimation {
           
-        cell.message = message
-        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+          cell.message = message
+          cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         
-        DispatchQueue.main.async {
+          DispatchQueue.main.async {
           
-          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-            
-            view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
-            
-            cell.setRevealableView(view, style: .over , direction: .left)
+            if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+              view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+              cell.setRevealableView(view, style: .over , direction: .left)
+            }
           }
-        }
         
-        cell.messageImageView.isUserInteractionEnabled = false
+          cell.messageImageView.isUserInteractionEnabled = false
         }
         
         if let image = message.localImage {
-          
           cell.messageImageView.image = image
           cell.progressView.isHidden = true
           cell.messageImageView.isUserInteractionEnabled = true
-          
           cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
           
           return cell
@@ -1028,33 +1028,22 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           }, completed: { (image, error, cacheType, url) in
             
             cell.progressView.isHidden = true
-            
             cell.messageImageView.isUserInteractionEnabled = true
-            
-             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
+            cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
           })
         }
         
         return cell
       }
     
-    } else if message.voiceUrl != nil || message.voiceData != nil || message.voiceEncodedString != nil { // if current message is a Voice message
+    } else if message.voiceEncodedString != nil { // if current message is a Voice message
       
       if message.fromId == Auth.auth().currentUser?.uid { /* MARK: Outgoing Voice message with blue bubble */
           
           let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
           
           UIView.performWithoutAnimation {
-            
-            cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
-            cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-            cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(),
-                                                height:(cell.bubbleView.frame.height).rounded())
-            
             DispatchQueue.main.async {
-              
-              cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
-              
               switch indexPath.row == self.messages.count - 1 {
                 
               case true:
@@ -1074,35 +1063,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           }
         
-//          if let voiceData = message.voiceData {
-//             print("voiceData != nil")
-//            let duration = getAudioDurationInHours(from: voiceData)
-//            cell.playerView.timerLabel.text = duration
-//            cell.playerView.startingTime = getAudioDurationInSeconds(from: voiceData)!
-//            cell.playerView.seconds = getAudioDurationInSeconds(from: voiceData)!
-//
-//            return cell
-//          } else {
-//            print("voiceData == nil")
-//          }
-//
-//          if let voiceURL = message.voiceUrl {
-//            print("voice url != nil")
-//          } else {
-//             print("voice url == nil")
-//          }
-        
-          if let voiceEncodedString = message.voiceEncodedString {
-            
-            let decoded = Data(base64Encoded: voiceEncodedString)
-            let duration = getAudioDurationInHours(from: decoded!)
-            cell.playerView.timerLabel.text = duration
-            cell.playerView.startingTime = getAudioDurationInSeconds(from: decoded!)!
-            cell.playerView.seconds =  cell.playerView.startingTime
-            
-              print("voiceEncodedString != nil")
-          } else {
-            print("voiceEncodedString == nil")
+          if message.voiceEncodedString != nil {
+              cell.playerView.timerLabel.text = message.voiceDuration
+              cell.playerView.startingTime = message.voiceStartTime ?? 0
+              cell.playerView.seconds = message.voiceStartTime ?? 0
+
           }
         
           return cell
@@ -1112,11 +1077,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
         
           UIView.performWithoutAnimation {
-
-            cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-            cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(),
-                                                height:(cell.bubbleView.frame.height).rounded())
-            
             DispatchQueue.main.async {
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
                 view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
@@ -1125,27 +1085,37 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           }
         
-//          if let voiceData = message.voiceData {
-//            let duration = getAudioDurationInHours(from: voiceData)
-//            cell.playerView.timerLabel.text = duration
-//            cell.playerView.startingTime = getAudioDurationInSeconds(from: voiceData)!
-//            cell.playerView.seconds = getAudioDurationInSeconds(from: voiceData)!
-//
-//            return cell
-//          }
-//
-//          if let voiceURL = message.voiceUrl {
-//            print(voiceURL)
-//
-//          }
+          if message.voiceEncodedString != nil {
+            cell.playerView.timerLabel.text = message.voiceDuration
+            cell.playerView.startingTime = message.voiceStartTime ?? 0
+            cell.playerView.seconds = message.voiceStartTime ?? 0
+          }
         
           return cell
         }
-    
     }
      return nil
   }
   
+  
+
+  override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    
+    if let cell = cell as? OutgoingVoiceMessageCell {
+      if chatLogAudioPlayer != nil {
+        
+        chatLogAudioPlayer.stop()
+        cell.resetTimer()
+        cell.playerView.play.isSelected = false
+      }
+    } else if let cell = cell as? IncomingVoiceMessageCell {
+      if chatLogAudioPlayer != nil {
+        chatLogAudioPlayer.stop()
+        cell.resetTimer()
+        cell.playerView.play.isSelected = false
+      }
+    }
+  }
   
   override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
     print("Did deselect", indexPath)
@@ -1239,7 +1209,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let message = messages[indexPath.row]
     
       if message.text != nil {
-        cellHeight = /*estimateFrameForText(text).height*/  message.estimatedFrameForText!.height + 20
+        cellHeight = message.estimatedFrameForText!.height + 20
       } else if message.imageWidth?.floatValue != nil && message.imageHeight?.floatValue != nil {
         
         cellHeight = CGFloat(truncating: message.imageCellHeight!)// CGFloat(imageHeight / imageWidth * 200).rounded()
@@ -1335,31 +1305,24 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
       
       for selectedMedia in selectedMedia {
-        
+      
         
         if selectedMedia.audioObject != nil { // audio
           
           let bae64string = selectedMedia.audioObject?.base64EncodedString()
-          
+          let properties: [String: AnyObject] = ["voiceEncodedString": bae64string as AnyObject]
           let values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "voiceEncodedString": bae64string as AnyObject]
           
-           reloadCollectionViewAfterSending(values: values)
-           let properties: [String: AnyObject] = ["voiceEncodedString": bae64string as AnyObject]
-           self.sendMediaMessageWithProperties(properties)
+          reloadCollectionViewAfterSending(values: values) // for instant displaying from local data
+          sendMediaMessageWithProperties(properties)
           
-//          uploadToFirebaseStorageUsingVoiceData(selectedMedia.audioObject!, completion: { (voiceDataURL) in
-//            self.sendMessageWithVoiceUrl(voiceDataURL)
-//
-//            percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
-//            self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
-//
-//            if percentCompleted == 1.0 {
-//              DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-//                self.uploadProgressBar.setProgress(0.0, animated: false)
-//
-//              })
-//            }
-//          })
+          percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
+          self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
+          if percentCompleted == 1.0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+              self.uploadProgressBar.setProgress(0.0, animated: false)
+            })
+          }
         }
         
         
@@ -1428,11 +1391,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     sendMediaMessageWithProperties(properties)
   }
   
-//  fileprivate func sendMessageWithVoiceUrl(_ voiceUrl: String) {
-//    let properties: [String: AnyObject] = ["voiceUrl": voiceUrl as AnyObject]
-//    sendMediaMessageWithProperties(properties)
-//  }
-  
   
   func sendMediaMessageWithProperties(_ properties: [String: AnyObject]) {
     
@@ -1446,10 +1404,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
     
-   // self.inputContainerView.inputTextView.text = nil
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    
     
     var values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
     
@@ -1478,24 +1434,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-//  fileprivate func uploadToFirebaseStorageUsingVoiceData(_ voiceData: Data?, completion: @escaping (_ voiceDataUrl: String) -> ()) {
-//    let voiceMessageName = UUID().uuidString
-//    let ref = Storage.storage().reference().child("messageAudio").child(voiceMessageName)
-//    
-//    if let uploadData = voiceData {
-//      ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
-//        
-//        if error != nil {
-//          print("Failed to upload voice:", error as Any)
-//          return
-//        }
-//        
-//        if let voiceURL = metadata?.downloadURL()?.absoluteString {
-//          completion(voiceURL)
-//        }
-//      })
-//    }
-//  }
   
   fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
     let imageName = UUID().uuidString
@@ -1541,9 +1479,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if let messageText = Message(dictionary: values).text { /* pre-calculateCellSizes */
       values.updateValue(self.estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
-    } else if let imageWidth = Message(dictionary: values).imageWidth?.floatValue, let imageHeight =  Message(dictionary: values).imageHeight?.floatValue {
+    } else if let imageWidth = Message(dictionary: values).imageWidth?.floatValue, let imageHeight = Message(dictionary: values).imageHeight?.floatValue {
       let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
       values.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
+    }
+    
+    if let voiceEncodedString = Message(dictionary: values).voiceEncodedString { /* pre-encoding voice messages */
+      let decoded = Data(base64Encoded: voiceEncodedString) as AnyObject
+      let duration = self.getAudioDurationInHours(from: decoded as! Data) as AnyObject
+      let startTime = self.getAudioDurationInSeconds(from: decoded as! Data) as AnyObject
+      values.updateValue(decoded, forKey: "voiceData")
+      values.updateValue(duration, forKey: "voiceDuration")
+      values.updateValue(startTime, forKey: "voiceStartTime")
     }
     
     self.collectionView?.performBatchUpdates ({
@@ -1581,20 +1528,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   fileprivate func sendMessageWithProperties(_ properties: [String: AnyObject]) {
     
     let ref = Database.database().reference().child("messages")
-    
     let childRef = ref.childByAutoId()
-    
     let defaultMessageStatus = messageStatusSent
     
     guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
       return
     }
     
-   // self.inputContainerView.inputTextView.text = nil
-    
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    
-    
     var values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
     
     properties.forEach({values[$0] = $1})

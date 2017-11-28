@@ -11,7 +11,7 @@ import UIKit
 open class RevealableCollectionViewCell: UICollectionViewCell {
     
      var horizontalConstraint: NSLayoutConstraint?
-    var revealView: RevealableView?
+     var revealView: RevealableView?
      var revealWidth: CGFloat = 0
     
     open override var isSelected: Bool {
@@ -31,10 +31,8 @@ open class RevealableCollectionViewCell: UICollectionViewCell {
      */
     open override func prepareForReuse() {
         super.prepareForReuse()
-      
-        
+    
         if let view = revealView {
-          
             view.prepareForReuse()
         }
     }

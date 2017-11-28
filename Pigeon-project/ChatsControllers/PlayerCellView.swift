@@ -13,7 +13,7 @@ class PlayerCellView: UIView {
   
   var startingTime = Int()
   var seconds = Int()
-  var timer = Timer()
+  var timer: Timer?
   
   var play: UIButton = {
     var play = UIButton()

@@ -29,8 +29,9 @@ class Message:  NSObject  {
   
     var localVideoUrl: String?
   
-    var voiceUrl: String? //unused
-    var voiceData: Data? //unused
+    var voiceData: Data?
+    var voiceDuration: String?
+    var voiceStartTime: Int?
     var voiceEncodedString: String?
 
     var videoUrl: String?
@@ -63,9 +64,10 @@ class Message:  NSObject  {
         localImage = dictionary["localImage"] as? UIImage
         localVideoUrl = dictionary["localVideoUrl"] as? String
       
-        voiceUrl = dictionary["voiceUrl"] as? String //unused
-        voiceData = dictionary["voiceData"] as? Data //unused
         voiceEncodedString = dictionary["voiceEncodedString"] as? String
+        voiceData = dictionary["voiceData"] as? Data //unused
+        voiceDuration = dictionary["voiceDuration"] as? String
+        voiceStartTime = dictionary["voiceStartTime"] as? Int
       
         estimatedFrameForText = dictionary["estimatedFrameForText"] as? CGRect
         imageCellHeight = dictionary["imageCellHeight"] as? NSNumber

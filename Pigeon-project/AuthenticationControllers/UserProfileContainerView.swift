@@ -28,7 +28,7 @@ class UserProfileContainerView: UIView {
     addPhotoLabel.translatesAutoresizingMaskIntoConstraints = false
     addPhotoLabel.text = "Add\nphoto"
     addPhotoLabel.numberOfLines = 2
-    addPhotoLabel.textColor = PigeonPalette.pigeonPaletteBlue
+    addPhotoLabel.textColor = FalconPalette.falconPaletteBlue
     addPhotoLabel.textAlignment = .center
     
     return addPhotoLabel

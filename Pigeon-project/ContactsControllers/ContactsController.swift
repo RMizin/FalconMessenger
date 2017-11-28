@@ -393,7 +393,7 @@ class ContactsController: UITableViewController {
       
         if let status = filteredUsers[indexPath.row].onlineStatus {
           if status == statusOnline {
-            cell.subtitle.textColor = PigeonPalette.pigeonPaletteBlue
+            cell.subtitle.textColor = FalconPalette.falconPaletteBlue
             cell.subtitle.text = status
             
           } else {

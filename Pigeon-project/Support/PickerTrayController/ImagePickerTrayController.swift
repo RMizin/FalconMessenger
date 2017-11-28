@@ -324,16 +324,14 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ImageCell.self), for: indexPath) as! ImageCell
             
               let asset = assets[indexPath.item]
-            
               if assets.count > indexPath.item {
-                
                 cell.isVideo = (asset.mediaType == .video)
                 cell.isRemote = (asset.sourceType != .typeUserLibrary)
-             
                 self.requestImage(for: asset) { cell.imageView.image = $0 }
               }
-        
+          
             return cell
+          
         default:
             fatalError("More than 3 sections is invalid.")
         }
@@ -411,6 +409,7 @@ extension ImagePickerTrayController: UIImagePickerControllerDelegate, UINavigati
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        //  delegate?.controller?(self, didTakeImage: image, with: assets.last!)
             delegate?.controller?(self, didTakeImage: image)
         }
     }
