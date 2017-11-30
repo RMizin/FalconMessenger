@@ -22,7 +22,7 @@ Your messages sync seamlessly across any number of your devices.
 You will not lose any of your data when you change your mobile phone or re-install the app. All you need is to re-authenticate with your phone number.
 
 - Personal cloud storage<br>
-You can store text, photos, and videos in the cloud, by sending messages to yourself and get access to your data across all of your devices. 
+You can store text, photos, videos and voice messages in the cloud, by sending them to your personal storage and get access to your data across all of your devices. 
 
 - Simple authentication process<br>
 Falcon uses your phone number for authentication. No emails and passwords.
