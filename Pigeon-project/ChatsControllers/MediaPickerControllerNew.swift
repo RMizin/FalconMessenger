@@ -22,7 +22,9 @@ class MediaPickerControllerNew: ImagePickerTrayController {
 
   override func loadView() {
     super.loadView()
+//    view.backgroundColor = th
     
+    collectionView.backgroundColor = ThemeManager.currentTheme().mediaPickerControllerBackgroundColor
     delegate = self
     imagePicker.delegate = self
     imagePicker.allowsEditing = false

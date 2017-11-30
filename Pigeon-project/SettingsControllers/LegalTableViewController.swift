@@ -28,8 +28,8 @@ class LegalTableViewController: UITableViewController {
     tableView = UITableView(frame: self.tableView.frame, style: .grouped)
     tableView.separatorStyle = .none
     extendedLayoutIncludesOpaqueBars = true
-    view.backgroundColor = .white
-    navigationController?.navigationBar.backgroundColor = .white
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.backgroundColor = view.backgroundColor
   }
   
   deinit {
@@ -49,9 +49,11 @@ class LegalTableViewController: UITableViewController {
     let identifier = "cell"
     
     let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
+    cell.backgroundColor = view.backgroundColor
     cell.accessoryType = .disclosureIndicator
     cell.textLabel?.text = cellData[indexPath.row]
     cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
+    cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
     
     return cell
   }

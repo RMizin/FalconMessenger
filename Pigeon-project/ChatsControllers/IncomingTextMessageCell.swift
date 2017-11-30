@@ -28,7 +28,7 @@ class IncomingTextMessageCell: BaseMessageCell {
     
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
-    bubbleView.image = BaseMessageCell.grayBubbleImage
+    bubbleView.image = grayBubbleImage
     bubbleView.frame.origin = CGPoint(x: 10, y: 0)
   }
 }

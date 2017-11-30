@@ -19,7 +19,7 @@ class EnterPhoneNumberController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      view.backgroundColor = UIColor.white
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       
       configurePhoneNumberContainerView()
       configureNavigationBar()

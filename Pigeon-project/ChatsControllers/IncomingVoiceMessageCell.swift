@@ -30,7 +30,7 @@ class IncomingVoiceMessageCell: BaseMessageCell {
   override func setupViews() {  
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(playerView)
-    bubbleView.image = BaseMessageCell.grayBubbleImage
+    bubbleView.image = grayBubbleImage
     bubbleView.frame.origin = CGPoint(x: 10, y: 0)
     bubbleView.frame.size.width = 200
     playerView.playLeadingAnchor.constant = 15

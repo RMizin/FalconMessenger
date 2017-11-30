@@ -49,7 +49,7 @@ class ChangeNumberEnterVerificationContainerView: UIView {
     resend.contentVerticalAlignment = .center
     resend.contentHorizontalAlignment = .center
     resend.setTitleColor(FalconPalette.falconPaletteBlue, for: .normal)
-    resend.setTitleColor(FalconPalette.falconPaletteUiViewGray, for: .highlighted)
+    resend.setTitleColor(.gray, for: .highlighted)
     resend.setTitleColor(UIColor.lightGray, for: .disabled )
     
     return resend

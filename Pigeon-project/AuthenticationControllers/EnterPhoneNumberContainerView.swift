@@ -96,6 +96,7 @@ class EnterPhoneNumberContainerView: UIView {
     addSubview(phoneNumber)
     addSubview(backgroundFrame)
     addSubview(termsAndPrivacy)
+    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     
     phoneNumber.delegate = self
    

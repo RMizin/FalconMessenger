@@ -13,12 +13,12 @@ class NoChatsYetContainer: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    backgroundColor = .white
+    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     
     let noChatsYetTitle = UILabel()
     noChatsYetTitle.text = "You don't have any active conversations yet."
     noChatsYetTitle.font = .systemFont(ofSize: 18)
-    noChatsYetTitle.textColor = .gray
+    noChatsYetTitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
     noChatsYetTitle.textAlignment = .center
     noChatsYetTitle.numberOfLines = 0
     noChatsYetTitle.translatesAutoresizingMaskIntoConstraints = false
@@ -26,7 +26,7 @@ class NoChatsYetContainer: UIView {
     let noChatsYetFAQ = UILabel()
     noChatsYetFAQ.text = "You can select somebody in Contacts, and send your first message."
     noChatsYetFAQ.font = .systemFont(ofSize: 13)
-    noChatsYetFAQ.textColor = .gray
+    noChatsYetFAQ.textColor = ThemeManager.currentTheme().generalSubtitleColor
     noChatsYetFAQ.textAlignment = .center
     noChatsYetFAQ.numberOfLines = 0
     noChatsYetFAQ.translatesAutoresizingMaskIntoConstraints = false

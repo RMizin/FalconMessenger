@@ -38,7 +38,7 @@ class UserCell: UITableViewCell {
     let timeLabel: UILabel = {
       let label = UILabel()
       label.font = UIFont.systemFont(ofSize: 12)
-      label.textColor = FalconPalette.generalSubtitleColor
+      label.textColor = ThemeManager.currentTheme().generalSubtitleColor
       label.translatesAutoresizingMaskIntoConstraints = false
       label.sizeToFit()
       label.textAlignment = .right
@@ -48,7 +48,7 @@ class UserCell: UITableViewCell {
   
     let nameLabel: UILabel = {
       let label = UILabel()
-      label.textColor = FalconPalette.generalTitleColor
+      label.textColor = ThemeManager.currentTheme().generalTitleColor
       label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.semibold) 
       label.translatesAutoresizingMaskIntoConstraints = false
       label.sizeToFit()
@@ -59,7 +59,7 @@ class UserCell: UITableViewCell {
     let messageLabel: UILabel = {
       let label = UILabel()
       label.font = UIFont.systemFont(ofSize: 13)
-      label.textColor = FalconPalette.generalSubtitleColor
+      label.textColor = ThemeManager.currentTheme().generalSubtitleColor
       label.numberOfLines = 2
       label.translatesAutoresizingMaskIntoConstraints = false
       label.sizeToFit()
@@ -85,15 +85,13 @@ class UserCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
       
-        backgroundColor = FalconPalette.generalBackgroundColor
+        backgroundColor = .clear
         contentView.addSubview(newMessageIndicator)
         contentView.addSubview(profileImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(messageLabel)
         contentView.addSubview(timeLabel)
         contentView.addSubview(badgeLabel)
-      
-      
       
         profileImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 26).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
@@ -127,6 +125,7 @@ class UserCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+ 
   
   override func prepareForReuse() {
     super.prepareForReuse()
@@ -136,5 +135,6 @@ class UserCell: UITableViewCell {
     messageLabel.text = nil
     timeLabel.text = nil
     badgeLabel.isHidden = true
+    nameLabel.textColor = ThemeManager.currentTheme().generalTitleColor
   }
 }

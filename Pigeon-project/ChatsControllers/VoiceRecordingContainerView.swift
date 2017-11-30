@@ -30,7 +30,8 @@ class VoiceRecordingContainerView: UIView {
   
   var statusLabel: UILabel = {
      var statusLabel = UILabel()
-    statusLabel.text = "00:00:00"
+     statusLabel.text = "00:00:00"
+     statusLabel.textColor = ThemeManager.currentTheme().generalTitleColor
      statusLabel.translatesAutoresizingMaskIntoConstraints = false
     
     return statusLabel

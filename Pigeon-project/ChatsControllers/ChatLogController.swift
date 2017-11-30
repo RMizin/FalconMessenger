@@ -44,7 +44,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
    var user: User? {
     didSet {
       loadMessages()
-      self.title = user?.name
+      self.navigationItem.title = user?.name
       configureTitleViewWithOnlineStatus()
     }
   }
@@ -663,10 +663,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       extendedLayoutIncludesOpaqueBars = true
    }
 
-    view.backgroundColor = .white
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    collectionView?.backgroundColor =  view.backgroundColor
     collectionView?.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
     collectionView?.keyboardDismissMode = .interactive
-    collectionView?.backgroundColor = UIColor.white
     collectionView?.delaysContentTouches = false
     collectionView?.alwaysBounceVertical = true
     collectionView?.isPrefetchingEnabled = true

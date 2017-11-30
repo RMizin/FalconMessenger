@@ -13,6 +13,9 @@ import Firebase
 import SDWebImage
 
 
+public var shouldReloadContactsControllerAfterChangingTheme = false
+
+
 class ContactsController: UITableViewController {
   
   let phoneNumberKit = PhoneNumberKit()
@@ -46,11 +49,13 @@ class ContactsController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-      view.backgroundColor = .white
+      
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
- 
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.sectionIndexBackgroundColor = view.backgroundColor
+      tableView.backgroundColor = view.backgroundColor
+
       setupTableView()
       setupSearchController()
       fetchContacts()
@@ -61,6 +66,7 @@ class ContactsController: UITableViewController {
       super.viewWillAppear(animated)
         checkContactsAuthorizationStatus()
         fetchCurrentUser()
+        setUpColorsAccordingToTheme()
     }
   
     override func viewWillLayoutSubviews() {
@@ -69,12 +75,25 @@ class ContactsController: UITableViewController {
       contactsAuthorizationDeniedContainer.layoutIfNeeded()
     }
   
+  
+  fileprivate func setUpColorsAccordingToTheme() {
+    if shouldReloadContactsControllerAfterChangingTheme {
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.sectionIndexBackgroundColor = view.backgroundColor
+      tableView.backgroundColor = view.backgroundColor
+      tableView.reloadData()
+      print("reloading")
+      shouldReloadContactsControllerAfterChangingTheme = false
+    }
+  }
+  
     fileprivate func setupTableView() {
         tableView.register(ContactsTableViewCell.self, forCellReuseIdentifier: contactsCellID)
         tableView.register(PigeonUsersTableViewCell.self, forCellReuseIdentifier: pigeonUsersCellID)
         tableView.register(CurrentUserTableViewCell.self, forCellReuseIdentifier: currentUserCellID)
         tableView.separatorStyle = .none
         tableView.prefetchDataSource = self
+        definesPresentationContext = true
     }
     
     fileprivate func setupSearchController() {
@@ -83,7 +102,6 @@ class ContactsController: UITableViewController {
           searchContactsController = UISearchController(searchResultsController: nil)
           searchContactsController?.searchResultsUpdater = self
           searchContactsController?.obscuresBackgroundDuringPresentation = false
-          definesPresentationContext = true
           searchContactsController?.searchBar.delegate = self
           navigationItem.searchController = searchContactsController
         } else {
@@ -364,9 +382,13 @@ class ContactsController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-      view.tintColor = .white
+      view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
+      
+      if let headerTitle = view as? UITableViewHeaderFooterView {
+        headerTitle.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+      }
     }
-  
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
      return selectCell(for: indexPath)!
@@ -378,7 +400,6 @@ class ContactsController: UITableViewController {
     if indexPath.section == 0 {
       let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as! CurrentUserTableViewCell
       cell.title.text = NameConstants.personalStorage
-
       return cell
     }
     
@@ -503,6 +524,10 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
         tableView.reloadData()
     }
     
+  func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+    searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    return true
+  }
   
  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     

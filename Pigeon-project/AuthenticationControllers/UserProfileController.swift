@@ -19,7 +19,7 @@ class UserProfileController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .white
+        view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
         view.addSubview(userProfileContainerView)
       
         configureNavigationBar()

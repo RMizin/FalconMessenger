@@ -57,7 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       
      self.window?.rootViewController = mainController
      self.window?.makeKeyAndVisible()
-     self.window?.backgroundColor = .white
+     self.window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    
     
     let userDefaults = UserDefaults.standard
     
@@ -76,43 +77,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     setDeaultsForSettings()
-   // globalNavigationBarSettings()
     
     return true
   }
-  
-  func globalNavigationBarSettings() {
-    UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-    UINavigationBar.appearance().shadowImage = UIImage()
-  //  UINavigationBar.appearance().tintColor = UIColor.red
-   // UINavigationBar.appearance().
-    UINavigationBar.appearance().barTintColor = FalconPalette.generalBackgroundColor
-    UINavigationBar.appearance().isTranslucent = false
-    UINavigationBar.appearance().clipsToBounds = false
-   // UINavigationBar.appearance().titlete
-    UINavigationBar.appearance().backgroundColor = FalconPalette.generalBackgroundColor
-    UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor:  FalconPalette.generalTitleColor]
-    if #available(iOS 11.0, *) {
-      UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:  FalconPalette.generalTitleColor]
-    }
-    //UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.backgroundColor : FalconPalette.generalTitleColor]
-  }
-  
   
   func presentController(with mainController: UITabBarController) {
     if Auth.auth().currentUser == nil {
       
       let destination = OnboardingController()
       let newNavigationController = UINavigationController(rootViewController: destination)
-  
-     // newNavigationController.navigationBar.shadowImage = UIImage()
-     // newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-    //  newNavigationController.navigationBar.tintColor = FalconPalette.generalBackgroundColor
+      let theme = Theme.Default
+      ThemeManager.applyTheme(theme: theme)
+      newNavigationController.navigationBar.shadowImage = UIImage()
+      newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
       newNavigationController.modalTransitionStyle = .crossDissolve
-  //    newNavigationController.navigationBar.isTranslucent = false
-      
       mainController.present(newNavigationController, animated: false, completion: {
       })
+    } else {
+      let theme = ThemeManager.currentTheme()
+      ThemeManager.applyTheme(theme: theme)
+
     }
   }
   
@@ -133,8 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     _ = chatsController.view
     chatsController.title = "Chats"
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)
-  
-   // chatsNavigationController.navigationBar.isTranslucent = false
+
     if #available(iOS 11.0, *) {
       chatsNavigationController.navigationBar.prefersLargeTitles = true
     }
@@ -247,4 +230,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
   }
 }
-

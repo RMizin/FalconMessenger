@@ -26,9 +26,9 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     
     progressView.trackBackgroundColor = UIColor(red:0.78, green:0.78, blue:0.80, alpha:1.0)
     
-    progressView.centerFillColor = UIColor(red:0.94, green:0.94, blue:0.94, alpha:1.0)
+    progressView.centerFillColor = UIColor.white//(red:0.94, green:0.94, blue:0.94, alpha:1.0)
     
-    bubbleView.image = BaseMessageCell.grayBubbleImage
+    bubbleView.image = grayBubbleImage
 
     messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 4).isActive = true
     messageImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -4).isActive = true

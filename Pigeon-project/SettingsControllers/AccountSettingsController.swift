@@ -36,21 +36,63 @@ class AccountSettingsController: UITableViewController {
     title = "Settings"
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
-    view.backgroundColor = UIColor.white
     tableView = UITableView(frame: tableView.frame, style: .grouped)
     NotificationCenter.default.addObserver(self, selector:#selector(clearUserData),name:NSNotification.Name(rawValue: "clearUserData"), object: nil)
     
     configureTableView()
     configureContainerView()
     listenChanges()
+    configureNavigationBarDefaultRightBarButton()
+    setColorAccordingToTheme()
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
     if userProfileContainerView.phone.text == "" {
       listenChanges()
     }
+  }
+  
+  func configureNavigationBarDefaultRightBarButton () {
+    
+    let nightMode = UIButton()
+    nightMode.setImage(UIImage(named: "defaultTheme"), for: .normal)
+    nightMode.setImage(UIImage(named: "darkTheme"), for: .selected)
+    nightMode.imageView?.contentMode = .scaleAspectFit
+    nightMode.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
+    nightMode.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+    nightMode.addTarget(self, action: #selector(rightBarButtonDidTap(sender:)), for: .touchUpInside)
+    nightMode.isSelected = Bool(ThemeManager.currentTheme().rawValue)
+    
+    let rightBarButton = UIBarButtonItem(customView: nightMode)
+    self.navigationItem.setRightBarButton(rightBarButton, animated: false)
+  }
+  
+  @objc fileprivate func rightBarButtonDidTap(sender: UIButton) {
+  
+    sender.isSelected = !sender.isSelected
+    
+    if sender.isSelected {
+      let theme = Theme.Dark
+      ThemeManager.applyTheme(theme: theme)
+    } else {
+      let theme = Theme.Default
+      ThemeManager.applyTheme(theme: theme)
+    }
+    shouldReloadChatsControllerAfterChangingTheme = true
+    shouldReloadContactsControllerAfterChangingTheme = true
+    setColorAccordingToTheme()
+    tableView.reloadData()
+  }
+  
+  fileprivate func setColorAccordingToTheme() {
+      self.view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      self.tableView.backgroundColor = self.view.backgroundColor
+      self.userProfileContainerView.backgroundColor = self.view.backgroundColor
+      self.navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
+      self.tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
+    userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+   
   }
   
   @objc func clearUserData() {
@@ -58,7 +100,6 @@ class AccountSettingsController: UITableViewController {
     userProfileContainerView.phone.text = ""
     userProfileContainerView.profileImageView.image = nil
   }
-  
   
   func listenChanges() {
     
@@ -92,11 +133,10 @@ class AccountSettingsController: UITableViewController {
     }
   }
 
-  
   fileprivate func configureTableView() {
     
     tableView.separatorStyle = .none
-    tableView.backgroundColor = UIColor.white
+   
     tableView.tableHeaderView = userProfileContainerView
     tableView.translatesAutoresizingMaskIntoConstraints = false
     tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
@@ -114,11 +154,9 @@ class AccountSettingsController: UITableViewController {
     
     userProfilePictureOpener.userProfileContainerView = userProfileContainerView
     userProfilePictureOpener.controllerWithUserProfilePhoto = self
-    
     cancelBarButtonPressed()
     userProfilePictureOpener.openUserProfilePicture()
   }
-  
   
   func logoutButtonTapped () {
   
@@ -134,7 +172,9 @@ class AccountSettingsController: UITableViewController {
     }
     AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
     UIApplication.shared.applicationIconBadgeNumber = 0
-    
+    let theme = Theme.Default
+    ThemeManager.applyTheme(theme: theme)
+    setColorAccordingToTheme()
     let destination = OnboardingController()
     
     let newNavigationController = UINavigationController(rootViewController: destination)
@@ -170,6 +210,7 @@ extension AccountSettingsController {
 override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: accountSettingsCellId, for: indexPath) as! AccountSettingsTableViewCell
     cell.accessoryType = .disclosureIndicator
+  
     if indexPath.section == 0 {
       
       cell.icon.image = firstSection[indexPath.row].icon
@@ -201,6 +242,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       if indexPath.row == 1 {
          AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         let destination = UINavigationController(rootViewController: ChangeNumberEnterPhoneNumberController())
+        destination.navigationBar.barStyle = .default
         destination.hidesBottomBarWhenPushed = true
         destination.navigationBar.isTranslucent = false
         self.present(destination, animated: true, completion: nil)

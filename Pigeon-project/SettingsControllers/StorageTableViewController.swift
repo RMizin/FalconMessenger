@@ -29,7 +29,8 @@ class StorageTableViewController: UITableViewController {
       
       title = "Data and storage"
       tableView = UITableView(frame: self.tableView.frame, style: .grouped)
-      tableView.backgroundColor = UIColor.white
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.backgroundColor = view.backgroundColor
       tableView.separatorStyle = .none
       extendedLayoutIncludesOpaqueBars = true
     }
@@ -54,6 +55,7 @@ class StorageTableViewController: UITableViewController {
       
       cell.accessoryType = .disclosureIndicator
       cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
+      cell.backgroundColor = view.backgroundColor
       
       if indexPath.row == 0 {
         let cachedSize = SDImageCache.shared().getSize()
@@ -62,24 +64,23 @@ class StorageTableViewController: UITableViewController {
         
         print(cachedSize, cachedSizeInMegabyes)
         
-       
-        
         if cachedSize > 0 {
           
           cell.textLabel?.text = "Clear cache"
           cell.isUserInteractionEnabled = true
-          cell.textLabel?.textColor = UIColor.black
+          cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
           
         } else {
           
           cell.textLabel?.text = "Cache is empty"
           cell.isUserInteractionEnabled = false
-          cell.textLabel?.textColor = UIColor.lightGray
+          cell.textLabel?.textColor = ThemeManager.currentTheme().generalSubtitleColor
         }
       }
       
       if indexPath.row == 1 {
        cell.textLabel?.text = "Clear temporary docs and data"
+       cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
       }
   
         return cell

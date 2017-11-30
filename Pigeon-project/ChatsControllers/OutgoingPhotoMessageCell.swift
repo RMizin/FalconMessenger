@@ -20,7 +20,7 @@ class PhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.frame.size.width = 200
     
-    bubbleView.image = BaseMessageCell.blueBubbleImage
+    bubbleView.image = blueBubbleImage
     
     progressView.trackFillColor = .white
     

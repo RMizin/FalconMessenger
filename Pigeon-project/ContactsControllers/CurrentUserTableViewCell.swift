@@ -26,7 +26,7 @@ class CurrentUserTableViewCell: UITableViewCell {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
     title.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
-    
+    title.textColor = ThemeManager.currentTheme().generalTitleColor
     return title
   }()
   
@@ -34,8 +34,8 @@ class CurrentUserTableViewCell: UITableViewCell {
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
-    backgroundColor = UIColor.white
-    backgroundColor = UIColor.white
+
+    backgroundColor = .clear
     title.backgroundColor = backgroundColor
     icon.backgroundColor = backgroundColor
     
@@ -58,9 +58,12 @@ class CurrentUserTableViewCell: UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
+    print("prepare for reuser")
     
     icon.image = UIImage(named: "PersonalStorage")
     title.text = ""
+    title.textColor = ThemeManager.currentTheme().generalTitleColor
+    
   }
   
 }

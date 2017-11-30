@@ -28,8 +28,7 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
       
       title = "Notifications"
       extendedLayoutIncludesOpaqueBars = true
-      view.backgroundColor = .white
-      navigationController?.navigationBar.backgroundColor = .white
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     }
   
   
@@ -70,7 +69,8 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
       let identifier = "cell"
     
       let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
-    
+      cell.backgroundColor = view.backgroundColor
+      cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
       cell.accessoryView = accessorySwich
       cell.textLabel?.text = "In-App Sounds"
       cell.textLabel?.font = UIFont.systemFont(ofSize: 18)

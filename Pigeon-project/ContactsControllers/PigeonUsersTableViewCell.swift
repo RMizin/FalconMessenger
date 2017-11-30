@@ -26,6 +26,7 @@ class PigeonUsersTableViewCell: UITableViewCell {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
     title.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.semibold)
+    title.textColor = ThemeManager.currentTheme().generalTitleColor
     
     return title
   }()
@@ -34,25 +35,16 @@ class PigeonUsersTableViewCell: UITableViewCell {
     var subtitle = UILabel()
     subtitle.translatesAutoresizingMaskIntoConstraints = false
     subtitle.font = UIFont.systemFont(ofSize: 13)
-    subtitle.textColor = UIColor.lightGray
+    subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
     
     return subtitle
   }()
-  
-  
-//  let separator: UIView = {
-//    let separator = UIView()
-//    separator.translatesAutoresizingMaskIntoConstraints = false
-//    separator.backgroundColor = UIColor.lightGray
-//    
-//    return separator
-//  }()
-  
+
   
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
-    backgroundColor = UIColor.white
+    backgroundColor = .clear
     title.backgroundColor = backgroundColor
     icon.backgroundColor = backgroundColor
     
@@ -68,19 +60,11 @@ class PigeonUsersTableViewCell: UITableViewCell {
     title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
     title.heightAnchor.constraint(equalToConstant: 23).isActive = true
     
-    
     contentView.addSubview(subtitle)
     subtitle.bottomAnchor.constraint(equalTo: icon.bottomAnchor, constant: 0).isActive = true
     subtitle.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15).isActive = true
     subtitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
     subtitle.heightAnchor.constraint(equalToConstant: 23).isActive = true
-    
-    
-//    addSubview(separator)
-//    separator.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-//    separator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 75).isActive = true
-//    separator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
-//    separator.heightAnchor.constraint(equalToConstant: 0.3).isActive = true
   }
   
   
@@ -94,6 +78,8 @@ class PigeonUsersTableViewCell: UITableViewCell {
     icon.image = UIImage(named: "UserpicIcon")
     title.text = ""
     subtitle.text = ""
+    title.textColor = ThemeManager.currentTheme().generalTitleColor
+    subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
   }
 
 }

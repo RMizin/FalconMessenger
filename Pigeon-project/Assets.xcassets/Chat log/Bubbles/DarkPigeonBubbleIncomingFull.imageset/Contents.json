@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "idiom" : "iphone",
+      "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "idiom" : "iphone",
-      "filename" : "PigeonBubbleIncomingFull@2x.png",
+      "idiom" : "universal",
+      "filename" : "ModernBubbleIncomingFull@2x.png",
       "scale" : "2x"
     },
     {
-      "idiom" : "iphone",
-      "filename" : "PigeonBubbleIncomingFull@3x.png",
+      "idiom" : "universal",
+      "filename" : "ModernBubbleIncomingFull@3x.png",
       "scale" : "3x"
     }
   ],

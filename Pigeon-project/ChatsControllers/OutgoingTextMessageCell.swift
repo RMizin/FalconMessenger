@@ -19,7 +19,7 @@ class OutgoingTextMessageCell: BaseMessageCell {
     textView.isScrollEnabled = false
     textView.textContainerInset = UIEdgeInsetsMake(10, 7, 10, 7)
     textView.dataDetectorTypes = .all
-    textView.textColor = .white
+    textView.textColor = .white//ThemeManager.currentTheme().generalBackgroundColor
     textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
   
     return textView
@@ -30,7 +30,7 @@ class OutgoingTextMessageCell: BaseMessageCell {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
     contentView.addSubview(deliveryStatus)
-    bubbleView.image = BaseMessageCell.blueBubbleImage
+    bubbleView.image = blueBubbleImage
    
   }
 }

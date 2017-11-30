@@ -22,6 +22,7 @@ class AccountSettingsTableViewCell: UITableViewCell {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
     title.font = UIFont.systemFont(ofSize: 18)
+    title.textColor = ThemeManager.currentTheme().generalTitleColor
   
     return title
   }()
@@ -38,11 +39,7 @@ class AccountSettingsTableViewCell: UITableViewCell {
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
-    backgroundColor = UIColor.white
-    accessoryView?.backgroundColor = backgroundColor
-    title.backgroundColor = backgroundColor
-    icon.backgroundColor = backgroundColor
-  
+    setColor()
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
@@ -65,6 +62,19 @@ class AccountSettingsTableViewCell: UITableViewCell {
 
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  fileprivate func setColor() {
+    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    accessoryView?.backgroundColor = backgroundColor
+    title.backgroundColor = backgroundColor
+    icon.backgroundColor = backgroundColor
+    title.textColor = ThemeManager.currentTheme().generalTitleColor
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    setColor()
   }
 
 }

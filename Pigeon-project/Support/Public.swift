@@ -91,6 +91,11 @@ extension String {
   }
 }
 
+extension Bool {
+  init<T: BinaryInteger>(_ num: T) {
+    self.init(num != 0)
+  }
+}
 
 extension Double {
   func getShortDateStringFromUTC() -> String {
@@ -168,7 +173,6 @@ func basicErrorAlertWith (title: String, message: String, controller: UIViewCont
   alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
   controller.present(alert, animated: true, completion: nil)
 }
-
 
 func libraryAccessChecking() -> Bool {
   
@@ -263,32 +267,13 @@ func timeAgoSinceDate(date:NSDate, timeinterval: Double, numericDates:Bool) -> S
   
 }
 
-//struct AppUtility {
-//
-//  static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
-//
-//    if let delegate = UIApplication.shared.delegate as? AppDelegate {
-//      delegate.orientationLock = orientation
-//    }
-//  }
-//
-//  /// OPTIONAL Added method to adjust lock and rotate to the desired orientation
-//  static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
-//    
-//    self.lockOrientation(orientation)
-//    
-//    UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
-//  }
-//  
-//}
-
-
 extension UINavigationItem {
   
   func setTitle(title:String, subtitle:String) {
     
     let one = UILabel()
     one.text = title
+    one.textColor = ThemeManager.currentTheme().generalTitleColor
   //  one.textAlignment = .center
     one.font = UIFont.systemFont(ofSize: 17)
     one.sizeToFit()
@@ -298,7 +283,7 @@ extension UINavigationItem {
     two.text = subtitle
     two.font = UIFont.systemFont(ofSize: 12)
     two.textAlignment = .center
-    two.textColor = UIColor.lightGray
+    two.textColor = ThemeManager.currentTheme().generalSubtitleColor
     two.sizeToFit()
     
     
@@ -312,9 +297,6 @@ extension UINavigationItem {
     
     one.sizeToFit()
     two.sizeToFit()
-    
-    
-    
     self.titleView = stackView
   }
 }

@@ -20,7 +20,7 @@ class ContactsDetailController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       title = "Info"
-      view.backgroundColor = .white
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       extendedLayoutIncludesOpaqueBars = true
       tableView.separatorStyle = .none
     }
@@ -44,7 +44,8 @@ class ContactsDetailController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       let identifier = "cell"
       let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
-       cell.textLabel?.textColor = .black
+       cell.backgroundColor =  view.backgroundColor
+       cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
       
       if indexPath.section == 0 {
         cell.imageView?.image = UIImage(named: "UserpicIcon")

@@ -13,12 +13,12 @@ class ContactsAuthorizationDeniedContainer: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    backgroundColor = .white
+    backgroundColor = .clear
     
     let accessRestrictedTitle = UILabel()
     accessRestrictedTitle.text = "Falcon does not have access to your contacts"
     accessRestrictedTitle.font = .systemFont(ofSize: 18)
-    accessRestrictedTitle.textColor = .gray
+    accessRestrictedTitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
     accessRestrictedTitle.textAlignment = .center
     accessRestrictedTitle.numberOfLines = 0
     accessRestrictedTitle.translatesAutoresizingMaskIntoConstraints = false
@@ -26,7 +26,7 @@ class ContactsAuthorizationDeniedContainer: UIView {
     let accessRestrictedFAQ = UILabel()
     accessRestrictedFAQ.text = "Please go to your iPhone Settings –– Privacy –– Contacts. Then select ON for Falcon."
     accessRestrictedFAQ.font = .systemFont(ofSize: 13)
-    accessRestrictedFAQ.textColor = .gray
+    accessRestrictedFAQ.textColor = ThemeManager.currentTheme().generalSubtitleColor
     accessRestrictedFAQ.textAlignment = .center
     accessRestrictedFAQ.numberOfLines = 0
     accessRestrictedFAQ.translatesAutoresizingMaskIntoConstraints = false

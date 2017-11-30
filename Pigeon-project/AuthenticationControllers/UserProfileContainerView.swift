@@ -15,8 +15,9 @@ class UserProfileContainerView: UIView {
     profileImageView.translatesAutoresizingMaskIntoConstraints = false
     profileImageView.contentMode = .scaleAspectFill
     profileImageView.layer.masksToBounds = true
-    profileImageView.layer.borderColor = UIColor.lightGray.cgColor
-    profileImageView.layer.borderWidth = 0.5
+    profileImageView.layer.borderColor =  ThemeManager.currentTheme().generalSubtitleColor.cgColor
+    profileImageView.layer.borderWidth = 1
+    profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
     profileImageView.layer.cornerRadius = 48
     profileImageView.isUserInteractionEnabled = true
     
@@ -39,9 +40,9 @@ class UserProfileContainerView: UIView {
     subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
     subtitleLabel.text = "Enter your name and add an optional profile picture"
     subtitleLabel.numberOfLines = 2
-    subtitleLabel.textColor = UIColor.lightGray
+    subtitleLabel.textColor = ThemeManager.currentTheme().generalSubtitleColor
     subtitleLabel.font = UIFont.systemFont(ofSize: 15)
-    subtitleLabel.textAlignment = .left
+    subtitleLabel.textAlignment = .center
     
     return subtitleLabel
   }()
@@ -54,6 +55,7 @@ class UserProfileContainerView: UIView {
     name.placeholder = "Enter name"
     name.borderStyle = .roundedRect
     name.autocorrectionType = .no
+    name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
   
     return name
   }()
@@ -68,6 +70,7 @@ class UserProfileContainerView: UIView {
     phone.borderStyle = .roundedRect
     phone.isEnabled = false
     phone.textColor = UIColor.gray
+    phone.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
    
     return phone
   }()
@@ -76,7 +79,7 @@ class UserProfileContainerView: UIView {
     let placeholderLabel = UILabel()
     placeholderLabel.text = "Add bio"
     placeholderLabel.sizeToFit()
-    placeholderLabel.textColor = UIColor.lightGray
+    placeholderLabel.textColor = ThemeManager.currentTheme().generalSubtitleColor
     
     return placeholderLabel
   }()
@@ -91,6 +94,7 @@ class UserProfileContainerView: UIView {
     addSubview(name)
     addSubview(phone)
     addSubview(subtitleLabel)
+    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     
     name.delegate = self
     phone.delegate = self

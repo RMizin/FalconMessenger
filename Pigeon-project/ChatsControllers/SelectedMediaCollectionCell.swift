@@ -71,22 +71,22 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     playerViewHeightAnchor.isActive = true
     
     NSLayoutConstraint.activate([
-      playerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-      playerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+      playerView.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),
+      playerView.rightAnchor.constraint(equalTo: rightAnchor, constant: -10),
       playerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
       
-      image.leadingAnchor.constraint(equalTo: leadingAnchor),
+      image.leftAnchor.constraint(equalTo: leftAnchor),
       image.topAnchor.constraint(equalTo: topAnchor),
-      image.trailingAnchor.constraint(equalTo: trailingAnchor),
+      image.rightAnchor.constraint(equalTo: rightAnchor),
       image.bottomAnchor.constraint(equalTo: playerView.topAnchor, constant: -3),
     
       remove.topAnchor.constraint(equalTo: topAnchor, constant: 2),
-      remove.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2),
+      remove.rightAnchor.constraint(equalTo: rightAnchor, constant: 2),
       remove.widthAnchor.constraint(equalToConstant: 25),
       remove.heightAnchor.constraint(equalToConstant: 25),
       
       videoIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
-      videoIndicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+      videoIndicatorView.leftAnchor.constraint(equalTo: leftAnchor, constant: 5),
       videoIndicatorView.widthAnchor.constraint(equalToConstant: videoIndicatorView.image!.size.width),
       videoIndicatorView.heightAnchor.constraint(equalToConstant: videoIndicatorView.image!.size.height)
     ])

@@ -74,13 +74,12 @@ class ChatInputContainerView: UIView {
     textView.translatesAutoresizingMaskIntoConstraints = false
     textView.delegate = self
     textView.font = UIFont.systemFont(ofSize: 16)
-   // textView.sizeToFit()
+    textView.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     textView.isScrollEnabled = false
-    textView.layer.borderColor = UIColor.lightGray.cgColor
-    textView.layer.borderWidth = 0.3
     textView.layer.cornerRadius = 16
+    textView.textColor = ThemeManager.currentTheme().generalTitleColor
     textView.textContainerInset = InputContainerViewConstants.containerInsetsDefault
-    textView.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
+    textView.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
     
     return textView
   }()
@@ -115,7 +114,14 @@ class ChatInputContainerView: UIView {
     return recordVoiceButton
   }()
   
-  let sendButton = UIButton(type: .system)
+  let sendButton: UIButton = {
+    let sendButton = UIButton(type: .custom)
+    sendButton.setImage(UIImage(named: "send"), for: .normal)
+    sendButton.translatesAutoresizingMaskIntoConstraints = false
+    sendButton.isEnabled = false
+    
+    return sendButton
+  }()
   
   let separator: UIView = {
     let separator = UIView()
@@ -145,12 +151,8 @@ class ChatInputContainerView: UIView {
     }
     
     attachedImages = UICollectionView(centeredCollectionViewFlowLayout: centeredCollectionViewFlowLayout)
-    backgroundColor = .white
+    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     self.autoresizingMask = UIViewAutoresizing.flexibleHeight
-    
-    sendButton.setImage(UIImage(named: "send"), for: UIControlState())
-    sendButton.translatesAutoresizingMaskIntoConstraints = false
-    sendButton.isEnabled = false
     
     addSubview(attachButton)
     addSubview(recordVoiceButton)
@@ -186,17 +188,17 @@ class ChatInputContainerView: UIView {
     inputTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6).isActive = true
     inputTextView.leftAnchor.constraint(equalTo: recordVoiceButton.rightAnchor, constant: 3).isActive = true
     
-    placeholderLabel.font = UIFont.systemFont(ofSize: (inputTextView.font?.pointSize)!)
+    placeholderLabel.font = UIFont.systemFont(ofSize: (inputTextView.font!.pointSize - 1))
     placeholderLabel.isHidden = !inputTextView.text.isEmpty
     placeholderLabel.leftAnchor.constraint(equalTo: inputTextView.leftAnchor, constant: 12).isActive = true
     placeholderLabel.rightAnchor.constraint(equalTo: inputTextView.rightAnchor).isActive = true
     placeholderLabel.bottomAnchor.constraint(equalTo: inputTextView.bottomAnchor, constant: -(inputTextView.font?.pointSize)! / 2).isActive = true
     placeholderLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
     
-    sendButton.rightAnchor.constraint(equalTo: inputTextView.rightAnchor, constant: -1).isActive = true
-    sendButton.bottomAnchor.constraint(equalTo: inputTextView.bottomAnchor, constant: -1).isActive = true
-    sendButton.widthAnchor.constraint(equalToConstant: 36).isActive = true
-    sendButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
+    sendButton.rightAnchor.constraint(equalTo: inputTextView.rightAnchor, constant: -4).isActive = true
+    sendButton.bottomAnchor.constraint(equalTo: inputTextView.bottomAnchor, constant: -4).isActive = true
+    sendButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+    sendButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
     
     configureAttachedImagesCollection()
   }

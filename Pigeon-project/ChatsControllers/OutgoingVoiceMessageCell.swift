@@ -24,13 +24,12 @@ class OutgoingVoiceMessageCell: BaseMessageCell {
     
     return playerView
   }()
-  
-  
+    
   override func setupViews() {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(playerView)
     contentView.addSubview(deliveryStatus)
-    bubbleView.image = BaseMessageCell.blueBubbleImage
+    bubbleView.image = blueBubbleImage
     bubbleView.frame.size.width = 200
     playerView.playLeadingAnchor.constant = 12
     playerView.timerLabel.font = UIFont.systemFont(ofSize: 12)

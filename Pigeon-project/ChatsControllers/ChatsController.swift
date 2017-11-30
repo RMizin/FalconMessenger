@@ -38,6 +38,8 @@ protocol ManageAppearance: class {
   func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool )
 }
 
+public var shouldReloadChatsControllerAfterChangingTheme = false
+
 
 class ChatsController: UITableViewController {
   
@@ -92,16 +94,33 @@ class ChatsController: UITableViewController {
     
   }
   
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    setUpColorsAccordingToTheme()
+  }
+  
+  fileprivate func setUpColorsAccordingToTheme() {
+    if shouldReloadChatsControllerAfterChangingTheme {
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.sectionIndexBackgroundColor = view.backgroundColor
+      tableView.backgroundColor = view.backgroundColor
+      tableView.reloadData()
+      print("reloading")
+      shouldReloadChatsControllerAfterChangingTheme = false
+    }
+  }
   
   fileprivate func configureTableView() {
     
     tableView.register(UserCell.self, forCellReuseIdentifier: userCellID)
     tableView.allowsMultipleSelectionDuringEditing = false
-    tableView.backgroundColor = FalconPalette.generalBackgroundColor
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.backgroundColor = view.backgroundColor
     navigationItem.leftBarButtonItem = editButtonItem
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
     tableView.separatorStyle = .none
+    definesPresentationContext = true
   }
   
   fileprivate func setupSearchController() {
@@ -110,7 +129,6 @@ class ChatsController: UITableViewController {
         searchChatsController = UISearchController(searchResultsController: nil)
         searchChatsController?.searchResultsUpdater = self
         searchChatsController?.obscuresBackgroundDuringPresentation = false
-        definesPresentationContext = true
         searchChatsController?.searchBar.delegate = self
         navigationItem.searchController = searchChatsController
       } else {
@@ -522,7 +540,13 @@ extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISe
         
         handleReloadTableAfterSearch()
     }
+  
+  func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+    searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    return true
+  }
 }
+
 
 extension ChatsController { /* hiding keyboard */
     
@@ -552,12 +576,13 @@ extension ChatsController { /* activity indicator handling */
     
     let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
     activityIndicatorView.frame = CGRect(x: 0, y: 0, width: 14, height: 14)
-    activityIndicatorView.color = UIColor.black
+    activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
     activityIndicatorView.startAnimating()
     
     let titleLabel = UILabel()
     titleLabel.text = title
     titleLabel.font = UIFont.systemFont(ofSize: 14)
+    titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
     
     let fittingSize = titleLabel.sizeThatFits(CGSize(width:200.0, height: activityIndicatorView.frame.size.height))
     titleLabel.frame = CGRect(x: activityIndicatorView.frame.origin.x + activityIndicatorView.frame.size.width + 8, y: activityIndicatorView.frame.origin.y, width: fittingSize.width, height: fittingSize.height)

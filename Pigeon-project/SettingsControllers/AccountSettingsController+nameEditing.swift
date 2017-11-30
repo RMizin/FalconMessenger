@@ -39,6 +39,7 @@ extension AccountSettingsController { /* user name editing */
     userProfileContainerView.name.resignFirstResponder()
     navigationItem.leftBarButtonItem = nil
     navigationItem.rightBarButtonItem = nil
+    configureNavigationBarDefaultRightBarButton()
   }
   
   @objc func doneBarButtonPressed() {
@@ -51,6 +52,7 @@ extension AccountSettingsController { /* user name editing */
     self.view.isUserInteractionEnabled = false
     navigationItem.leftBarButtonItem = nil
     navigationItem.rightBarButtonItem = nil
+    configureNavigationBarDefaultRightBarButton()
     userProfileContainerView.name.resignFirstResponder()
     
     

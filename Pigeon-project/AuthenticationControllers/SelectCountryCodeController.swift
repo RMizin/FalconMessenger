@@ -34,7 +34,7 @@ class SelectCountryCodeController: UIViewController {
         tableView.dataSource = self
       
       searchBar.searchBarStyle = .minimal
-      searchBar.backgroundColor = .white
+      searchBar.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       view.addSubview(tableView)
       view.addSubview(searchBar)
       tableView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height - 114)
@@ -70,7 +70,7 @@ extension SelectCountryCodeController: UITableViewDelegate, UITableViewDataSourc
     
     let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
     cell.textLabel?.text = filteredCountries[indexPath.row]["name"]! + " (" + filteredCountries[indexPath.row]["dial_code"]! + ")"
-    
+   cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
     if countryCode == filteredCountries[indexPath.row]["code"]! {
       cell.accessoryType = .checkmark
     } else {

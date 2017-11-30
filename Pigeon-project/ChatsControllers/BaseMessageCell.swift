@@ -10,14 +10,14 @@ import UIKit
 
 class BaseMessageCell: RevealableCollectionViewCell {
   
-  static let grayBubbleImage = UIImage(named: "PigeonBubbleIncomingFull")?.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
+  let grayBubbleImage = ThemeManager.currentTheme().incomingBubble//UIImage(named: "PigeonBubbleIncomingFull")?.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
   
-  static let blueBubbleImage = UIImage(named: "PigeonBubbleOutgoingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
+  let blueBubbleImage = ThemeManager.currentTheme().outgoingBubble//UIImage(named: "PigeonBubbleOutgoingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
   
   
   let bubbleView: UIImageView = {
     let bubbleView = UIImageView()
-    bubbleView.backgroundColor = UIColor.white
+    bubbleView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     bubbleView.isUserInteractionEnabled = true
     
     return bubbleView
@@ -27,7 +27,7 @@ class BaseMessageCell: RevealableCollectionViewCell {
     var deliveryStatus = UILabel()
     deliveryStatus.text = "status"
     deliveryStatus.font = UIFont.boldSystemFont(ofSize: 10)
-    deliveryStatus.textColor = UIColor.lightGray
+    deliveryStatus.textColor =  ThemeManager.currentTheme().generalSubtitleColor
     deliveryStatus.isHidden = true
     deliveryStatus.textAlignment = .right
     
@@ -48,8 +48,8 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   
   func setupViews() {
-    backgroundColor = FalconPalette.generalBackgroundColor
-    contentView.backgroundColor = FalconPalette.generalBackgroundColor
+    backgroundColor =  ThemeManager.currentTheme().generalBackgroundColor
+    contentView.backgroundColor =  ThemeManager.currentTheme().generalBackgroundColor
   }
   
   
