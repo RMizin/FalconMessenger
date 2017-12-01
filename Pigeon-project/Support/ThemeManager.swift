@@ -60,8 +60,14 @@ enum Theme: Int {
     }
   }
   
- 
-  
+  var splashImage: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named: "whiteSplash")!
+    case .Dark:
+      return UIImage(named: "blackSplash")!
+    }
+  }
 
   
   var incomingBubble: UIImage {

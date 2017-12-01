@@ -1057,7 +1057,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               }
               
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+                view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC()
                 cell.setRevealableView(view, style: .slide , direction: .left)
               }
             }
@@ -1067,7 +1067,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               cell.playerView.timerLabel.text = message.voiceDuration
               cell.playerView.startingTime = message.voiceStartTime ?? 0
               cell.playerView.seconds = message.voiceStartTime ?? 0
-
           }
         
           return cell
@@ -1096,24 +1095,24 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
      return nil
   }
-  
-  
 
   override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-    
+
     if let cell = cell as? OutgoingVoiceMessageCell {
-      if chatLogAudioPlayer != nil {
-        
-        chatLogAudioPlayer.stop()
-        cell.resetTimer()
-        cell.playerView.play.isSelected = false
+      guard cell.isSelected, chatLogAudioPlayer != nil else  {
+        return
       }
+      chatLogAudioPlayer.stop()
+      cell.playerView.resetTimer()
+      cell.playerView.play.isSelected = false
+    
     } else if let cell = cell as? IncomingVoiceMessageCell {
-      if chatLogAudioPlayer != nil {
-        chatLogAudioPlayer.stop()
-        cell.resetTimer()
-        cell.playerView.play.isSelected = false
+      guard cell.isSelected, chatLogAudioPlayer != nil else  {
+        return
       }
+      chatLogAudioPlayer.stop()
+      cell.playerView.resetTimer()
+      cell.playerView.play.isSelected = false
     }
   }
   
@@ -1122,7 +1121,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if let cell = collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell  {
       if chatLogAudioPlayer != nil {
         chatLogAudioPlayer.stop()
-        cell.resetTimer()
+        cell.playerView.resetTimer()
         cell.playerView.play.isSelected = false
       }
     }
@@ -1130,13 +1129,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if let cell = collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell  {
       if chatLogAudioPlayer != nil {
         chatLogAudioPlayer.stop()
-        cell.resetTimer()
+        cell.playerView.resetTimer()
         cell.playerView.play.isSelected = false
       }
     }
   }
-
-  
   
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     
@@ -1157,7 +1154,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       if chatLogAudioPlayer != nil && chatLogAudioPlayer.isPlaying {
         chatLogAudioPlayer.stop()
-        cell.resetTimer()
+        cell.playerView.resetTimer()
         cell.playerView.play.isSelected = false
         return
       }
@@ -1167,7 +1164,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         chatLogAudioPlayer.prepareToPlay()
         chatLogAudioPlayer.volume = 1.0
         chatLogAudioPlayer.play()
-        cell.runTimer()
+        cell.playerView.runTimer()
         cell.playerView.play.isSelected = true
       } catch {
         chatLogAudioPlayer = nil
@@ -1178,7 +1175,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     if let cell = collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if chatLogAudioPlayer != nil && chatLogAudioPlayer.isPlaying {
         chatLogAudioPlayer.stop()
-        cell.resetTimer()
+        cell.playerView.resetTimer()
         cell.playerView.play.isSelected = false
         return
       }
@@ -1188,7 +1185,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         chatLogAudioPlayer.prepareToPlay()
         chatLogAudioPlayer.volume = 1.0
         chatLogAudioPlayer.play()
-        cell.runTimer()
+        cell.playerView.runTimer()
         cell.playerView.play.isSelected = true
       } catch {
         chatLogAudioPlayer = nil

@@ -13,7 +13,7 @@ class PlayerCellView: UIView {
   
   var startingTime = Int()
   var seconds = Int()
-  var timer: Timer?
+  var timer:Timer? = Timer()
   
   var play: UIButton = {
     var play = UIButton()
@@ -43,7 +43,6 @@ class PlayerCellView: UIView {
     layer.cornerRadius = 5.0
     backgroundColor = .black
     alpha = 0.7
-    
     addSubview(play)
     addSubview(timerLabel)
     playLeadingAnchor = play.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3)
@@ -63,6 +62,36 @@ class PlayerCellView: UIView {
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  
+  func runTimer() {
+    timer?.invalidate()
+    timer = Timer.scheduledTimer(timeInterval: 1, target: self,  selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
+  }
+  
+  @objc func updateTimer() {
+    if seconds < 1 {
+      resetTimer()
+    } else {
+      seconds -= 1
+      timerLabel.text = timeString(time: TimeInterval(seconds))
+    }
+  }
+  
+  func resetTimer() {
+    play.isSelected = false
+    timer?.invalidate()
+    seconds = startingTime
+    
+    timerLabel.text = timeString(time: TimeInterval(seconds))
+  }
+  
+  func timeString(time:TimeInterval) -> String {
+    let hours = Int(time) / 3600
+    let minutes = Int(time) / 60 % 60
+    let seconds = Int(time) % 60
+    return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
   }
 }
 

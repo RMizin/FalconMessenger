@@ -32,7 +32,7 @@ class IncomingVoiceMessageCell: BaseMessageCell {
     bubbleView.addSubview(playerView)
     bubbleView.image = grayBubbleImage
     bubbleView.frame.origin = CGPoint(x: 10, y: 0)
-    bubbleView.frame.size.width = 200
+    bubbleView.frame.size.width = 150
     playerView.playLeadingAnchor.constant = 15
     playerView.timerLabel.font = UIFont.systemFont(ofSize: 12)
     setCellSize()

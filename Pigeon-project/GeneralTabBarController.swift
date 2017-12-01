@@ -34,7 +34,7 @@ class GeneralTabBarController: UITabBarController {
     
    
     if onceToken == 0 {
-      splash.image = UIImage(named: "whiteSplash")
+      splash.image = ThemeManager.currentTheme().splashImage
       splash.tag = 13
       view.addSubview(splash)
     }

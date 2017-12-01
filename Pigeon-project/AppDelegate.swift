@@ -158,6 +158,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if UserDefaults.standard.bool(forKey: "In-AppSounds")  {
           SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
         }
+        if UserDefaults.standard.bool(forKey: "In-AppVibration")  {
+          AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        }
       }
     }
   }
@@ -191,6 +194,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   func setDeaultsForSettings() {
     if UserDefaults.standard.object(forKey: "In-AppSounds") == nil {
       UserDefaults.standard.set(true, forKey: "In-AppSounds")
+    }
+    
+    if UserDefaults.standard.object(forKey: "In-AppVibration") == nil {
+      UserDefaults.standard.set(true, forKey: "In-AppVibration")
     }
   }
   

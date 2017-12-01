@@ -98,13 +98,19 @@ class UserInfoTableViewController: UITableViewController {
     let cell = tableView.dequeueReusableCell(withIdentifier: defaultIdentifier) ?? UITableViewCell(style: .default, reuseIdentifier: defaultIdentifier)
     cell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+    cell.selectionStyle = .none
     
     if indexPath.section == 0 {
       
      let headerCell = tableView.dequeueReusableCell(withIdentifier: headerIdentifier, for: indexPath) as! UserinfoHeaderTableViewCell
+     headerCell.selectionStyle = .none
       
       if contactPhoto != nil {
-        headerCell.icon.sd_setImage(with: contactPhoto! as URL, placeholderImage: UIImage(named: "UserpicIcon"), options: [], completed: nil)
+        headerCell.icon.sd_setImage(with:  contactPhoto! as URL, placeholderImage: UIImage(named: "UserpicIcon"), options: [], completed: { (image, error, cacheType, url) in
+          if error == nil {
+            headerCell.icon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openPhoto)))
+          }
+        })
       } else {
          headerCell.icon.image = UIImage(named: "UserpicIcon")
       }
@@ -112,8 +118,7 @@ class UserInfoTableViewController: UITableViewController {
       headerCell.title.text = contactName
       headerCell.title.font = UIFont.boldSystemFont(ofSize: 20)
       headerCell.subtitle.text = onlineStatus
-      headerCell.icon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openPhoto)))
-      
+     
       return headerCell
       
     } else if indexPath.section == 1 {

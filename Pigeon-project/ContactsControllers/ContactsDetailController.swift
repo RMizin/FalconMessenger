@@ -45,6 +45,7 @@ class ContactsDetailController: UITableViewController {
       let identifier = "cell"
       let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
        cell.backgroundColor =  view.backgroundColor
+       cell.selectionStyle = .none
        cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
       
       if indexPath.section == 0 {

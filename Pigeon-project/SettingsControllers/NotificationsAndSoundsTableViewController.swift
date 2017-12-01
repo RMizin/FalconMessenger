@@ -10,8 +10,8 @@ import UIKit
 
 class NotificationsAndSoundsTableViewController: UITableViewController {
   
-   let accessorySwich = UISwitch()
-  
+   let soundsSwich = UISwitch()
+   let vibrationSwich = UISwitch()
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,19 +34,29 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
   
     fileprivate func configureUISwith () {
       
-      accessorySwich.addTarget(self, action: #selector(switchStateChanged), for: .valueChanged)
-      accessorySwich.setOn(UserDefaults.standard.bool(forKey: "In-AppSounds"), animated: false)
+      soundsSwich.addTarget(self, action: #selector(switchStateChanged(sender:)), for: .valueChanged)
+      soundsSwich.setOn(UserDefaults.standard.bool(forKey: "In-AppSounds"), animated: false)
+      
+      vibrationSwich.addTarget(self, action: #selector(switchStateChanged(sender:)), for: .valueChanged)
+      vibrationSwich.setOn(UserDefaults.standard.bool(forKey: "In-AppVibration"), animated: false)
     }
   
   
-    @objc func switchStateChanged() {
-     
-      if accessorySwich.isOn {
+  @objc func switchStateChanged(sender:UISwitch) {
+    if sender == soundsSwich {
+      if sender.isOn {
         UserDefaults.standard.set(true, forKey: "In-AppSounds")
       } else {
         UserDefaults.standard.set(false, forKey: "In-AppSounds")
       }
-      
+
+    } else {
+      if sender.isOn {
+        UserDefaults.standard.set(true, forKey: "In-AppVibration")
+      } else {
+        UserDefaults.standard.set(false, forKey: "In-AppVibration")
+      }
+    }
       UserDefaults.standard.synchronize()
     }
   
@@ -61,7 +71,7 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,11 +80,19 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
     
       let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
       cell.backgroundColor = view.backgroundColor
-      cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-      cell.accessoryView = accessorySwich
-      cell.textLabel?.text = "In-App Sounds"
+      cell.selectionStyle = .none
       cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
-    
+      cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+      
+      if indexPath.row == 0 {
+        cell.accessoryView = soundsSwich
+        cell.textLabel?.text = "In-App Sounds"
+      }
+      if indexPath.row == 1 {
+        cell.accessoryView = vibrationSwich
+        cell.textLabel?.text = "In-App Vibration"
+      }
+
       return cell
     }
   
