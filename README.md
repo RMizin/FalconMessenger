@@ -28,6 +28,7 @@ You can store text, photos, videos and voice messages in the cloud, by sending t
 Falcon uses your phone number for authentication. No emails and passwords.
 Also, it makes possible for you to send messages, photos, and videos to people who are in your phone contacts and have Falcon.
 
+- Night mode
 
 
 ## User Interface
