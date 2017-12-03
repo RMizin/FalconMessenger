@@ -672,6 +672,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
    }
 
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    collectionView?.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     collectionView?.backgroundColor =  view.backgroundColor
     collectionView?.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
     collectionView?.keyboardDismissMode = .interactive
@@ -705,15 +706,25 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }
       
       if snapshot.exists() {
-        if snapshot.value as! String == "Online" {
-          DispatchQueue.main.async {
-            self.navigationItem.setTitle(title: self.user!.name!, subtitle: "Online")
+        
+        guard let title = self.user?.name else { return }
+        
+        if let stringSnapshot = snapshot.value as? String {
+          
+          if stringSnapshot == statusOnline { // user online
+            self.navigationItem.setTitle(title: title, subtitle: statusOnline)
+          } else { // user got a timstamp converted to string (was in earlier versions of app)
+            print("\n\nOLDER VERSION OF TIMESTAMP\n\n")
+            let date = Date(timeIntervalSince1970: TimeInterval(stringSnapshot)!)
+            let subtitle = "Last seen " + timeAgoSinceDate(date)
+            self.navigationItem.setTitle(title: title, subtitle: subtitle)
           }
-        } else {
-           let date = NSDate(timeIntervalSince1970:  (snapshot.value as! String).doubleValue )
-            DispatchQueue.main.async {
-                self.navigationItem.setTitle(title: self.user!.name!, subtitle: ("Last seen " + timeAgoSinceDate(date: date, timeinterval: (snapshot.value as! String).doubleValue, numericDates: false)))
-            }
+          
+        } else if let timeintervalSnapshot = snapshot.value as? TimeInterval { //user got server timestamp in miliseconds
+          print("\n\newer VERSION OF TIMESTAMP\n\n")
+          let date = Date(timeIntervalSince1970: timeintervalSnapshot/1000)
+          let subtitle = "Last seen " + timeAgoSinceDate(date)
+          self.navigationItem.setTitle(title: title, subtitle: subtitle)
         }
       }
     })
@@ -784,8 +795,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  let refreshControl: UIRefreshControl = {
-    let refreshControl = UIRefreshControl()
+  var refreshControl: UIRefreshControl = {
+    var refreshControl = UIRefreshControl()
     refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
     refreshControl.tintColor = ThemeManager.currentTheme().generalTitleColor
     refreshControl.addTarget(self, action: #selector(performRefresh), for: .valueChanged)

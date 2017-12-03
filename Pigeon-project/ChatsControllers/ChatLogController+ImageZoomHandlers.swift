@@ -59,11 +59,10 @@ extension ChatLogController {
         }
         
         let title = NSMutableAttributedString(string: titleString , attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
-        
-        let date = NSDate(timeIntervalSince1970:  self.mediaMessages[photoIndex].timestamp!.doubleValue )
-        let timestamp = timeAgoSinceDate(date: date, timeinterval: self.mediaMessages[photoIndex].timestamp!.doubleValue, numericDates: false)
-        
-        let attributedCaptionSummary = NSMutableAttributedString(string: timestamp, attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
+  
+       let date = Date(timeIntervalSince1970:  self.mediaMessages[photoIndex].timestamp!.doubleValue )
+       let timestamp = timeAgoSinceDate(date)
+       let attributedCaptionSummary = NSMutableAttributedString(string: timestamp, attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
         
         let combination = NSMutableAttributedString()
         combination.append(title)

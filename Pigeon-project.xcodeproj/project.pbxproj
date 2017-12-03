@@ -562,15 +562,15 @@
 				4BC26B2C1F3A236A0093A9D2 /* Model */,
 				4BC26B251F3A22B80093A9D2 /* MessengerViews */,
 				4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */,
+				4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */,
 				4B2143071F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift */,
+				4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */,
+				4BE8BB361FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift */,
 				4BC26B311F3A27750093A9D2 /* ChatsController.swift */,
 				4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */,
 				4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */,
 				4BE8BB381FC9F8C100EB35FA /* VoiceRecordingViewController.swift */,
 				4BE8BB3A1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift */,
-				4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */,
-				4BE8BB361FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift */,
-				4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */,
 				4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */,
 			);
 			name = Chats;

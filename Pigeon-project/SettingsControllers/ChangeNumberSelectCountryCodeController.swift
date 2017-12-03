@@ -61,6 +61,7 @@ class ChangeNumberSelectCountryCodeController: UIViewController {
       tableView.delegate = self
       tableView.dataSource = self
       tableView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.translatesAutoresizingMaskIntoConstraints = false
       tableView.separatorStyle = .none
       tableView.tableHeaderView = searchBar

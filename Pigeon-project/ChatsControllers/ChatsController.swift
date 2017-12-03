@@ -98,9 +98,14 @@ class ChatsController: UITableViewController {
     setUpColorsAccordingToTheme()
   }
   
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    return ThemeManager.currentTheme().statusBarStyle
+  }
+  
   fileprivate func setUpColorsAccordingToTheme() {
     if shouldReloadChatsControllerAfterChangingTheme {
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
       tableView.reloadData()
@@ -113,6 +118,7 @@ class ChatsController: UITableViewController {
     tableView.register(UserCell.self, forCellReuseIdentifier: userCellID)
     tableView.allowsMultipleSelectionDuringEditing = false
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     tableView.backgroundColor = view.backgroundColor
     navigationItem.leftBarButtonItem = editButtonItem
     extendedLayoutIncludesOpaqueBars = true
@@ -128,6 +134,7 @@ class ChatsController: UITableViewController {
         searchChatsController?.searchResultsUpdater = self
         searchChatsController?.obscuresBackgroundDuringPresentation = false
         searchChatsController?.searchBar.delegate = self
+        searchChatsController?.definesPresentationContext = true
         navigationItem.searchController = searchChatsController
       } else {
         searchBar = UISearchBar()
@@ -492,19 +499,18 @@ extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISe
 }
 
 extension ChatsController { /* hiding keyboard */
-    
+
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
         if #available(iOS 11.0, *) {
-            searchChatsController?.resignFirstResponder()
-            searchChatsController?.searchBar.resignFirstResponder()
+           searchChatsController?.searchBar.endEditing(true)
         } else {
-            searchBar?.resignFirstResponder()
+          self.searchBar?.endEditing(true)
         }
     }
   
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
+         UIApplication.shared.statusBarStyle = ThemeManager.currentTheme().statusBarStyle //fix
         if #available(iOS 11.0, *) {
             searchChatsController?.searchBar.endEditing(true)
         } else {
@@ -539,9 +545,9 @@ extension ChatsController {
       cell.messageLabel.text = filtededConversations[indexPath.row].message?.text
     }
     
-    let date = NSDate(timeIntervalSince1970:  filtededConversations[indexPath.row].message?.timestamp as! TimeInterval)
+     let date = Date(timeIntervalSince1970: filtededConversations[indexPath.row].message?.timestamp as! TimeInterval)
+    cell.timeLabel.text = timeAgoSinceDate(date)
     
-    cell.timeLabel.text = timeAgoSinceDate(date: date, timeinterval: filtededConversations[indexPath.row].message!.timestamp!.doubleValue, numericDates: false)
     
     if filtededConversations[indexPath.row].user?.id == Auth.auth().currentUser?.uid {
       cell.profileImageView.image = UIImage(named: "PersonalStorage")

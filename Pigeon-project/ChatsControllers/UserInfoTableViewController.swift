@@ -55,13 +55,18 @@ class UserInfoTableViewController: UITableViewController {
       }
       
       if snapshot.exists() {
-        if snapshot.value as! String == "Online" {
-          self.onlineStatus = "Online"
-            
-        } else {
-          
-          let date = NSDate(timeIntervalSince1970:  (snapshot.value as! String).doubleValue )
-          self.onlineStatus = ("Last seen " + timeAgoSinceDate(date: date, timeinterval: (snapshot.value as! String).doubleValue, numericDates: false))
+        if let stringSnapshot = snapshot.value as? String {
+          if stringSnapshot == statusOnline { // user online
+            self.onlineStatus = statusOnline
+          } else { // user got a timstamp converted to string (was in earlier versions of app)
+            let date = Date(timeIntervalSince1970: TimeInterval(stringSnapshot)!)
+            let subtitle = "Last seen " + timeAgoSinceDate(date)
+            self.onlineStatus = subtitle
+          }
+        } else if let timeintervalSnapshot = snapshot.value as? TimeInterval { //user got server timestamp in miliseconds
+          let date = Date(timeIntervalSince1970: timeintervalSnapshot/1000)
+          let subtitle = "Last seen " + timeAgoSinceDate(date)
+          self.onlineStatus = subtitle
         }
       }
     })

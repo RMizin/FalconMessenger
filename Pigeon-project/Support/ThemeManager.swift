@@ -144,6 +144,15 @@ enum Theme: Int {
     }
   }
   
+  var scrollBarStyle: UIScrollViewIndicatorStyle {
+    switch self {
+    case .Default:
+      return .default
+    case .Dark:
+      return .white
+    }
+  }
+  
   var backgroundColor: UIColor {
     switch self {
     case .Default:

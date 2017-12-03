@@ -53,6 +53,7 @@ class ContactsController: UITableViewController {
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
 
@@ -75,12 +76,17 @@ class ContactsController: UITableViewController {
       contactsAuthorizationDeniedContainer.layoutIfNeeded()
     }
   
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+      return ThemeManager.currentTheme().statusBarStyle
+    }
+  
   
   fileprivate func setUpColorsAccordingToTheme() {
     if shouldReloadContactsControllerAfterChangingTheme {
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
+      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.reloadData()
       print("reloading")
       shouldReloadContactsControllerAfterChangingTheme = false
@@ -197,7 +203,7 @@ class ContactsController: UITableViewController {
   
  fileprivate func rearrangeUsers() { /* Moves Online users to the top  */
     for index in 0...self.users.count - 1 {
-      if self.users[index].onlineStatus == statusOnline {
+      if self.users[index].onlineStatus as? String == statusOnline {
         self.users = rearrange(array: self.users, fromIndex: index, toIndex: 0)
       }
     }
@@ -205,15 +211,19 @@ class ContactsController: UITableViewController {
   
  fileprivate func rearrangeFilteredUsers() { /* Moves Online users to the top  */
     for index in 0...self.filteredUsers.count - 1 {
-      if self.filteredUsers[index].onlineStatus == statusOnline {
+      if self.filteredUsers[index].onlineStatus as? String == statusOnline {
         self.filteredUsers = rearrange(array: self.filteredUsers, fromIndex: index, toIndex: 0)
       }
     }
   }
   
- fileprivate func sortUsers() { /* Sort users by las online date  */
+ fileprivate func sortUsers() { /* Sort users by last online date  */
     self.users.sort(by: { (user1, user2) -> Bool in
-     return (user1.onlineStatus ?? "", user1.phoneNumber ?? "") > (user2.onlineStatus ?? "", user2.phoneNumber ?? "") // sort
+      if let firstUserOnlineStatus = user1.onlineStatus as? TimeInterval , let secondUserOnlineStatus = user2.onlineStatus as? TimeInterval {
+        return (firstUserOnlineStatus, user1.phoneNumber ?? "") > ( secondUserOnlineStatus, user2.phoneNumber ?? "")
+      } else {
+        return ( user1.phoneNumber ?? "") > (user2.phoneNumber ?? "") // sort
+      }
     })
   }
   
@@ -409,21 +419,65 @@ class ContactsController: UITableViewController {
         
           cell.title.text = name
         }
-      
-        if let status = filteredUsers[indexPath.row].onlineStatus {
-          if status == statusOnline {
-            cell.subtitle.textColor = FalconPalette.falconPaletteBlue
-            cell.subtitle.text = status
-            
-          } else {
-            let date = NSDate(timeIntervalSince1970:  status.doubleValue )
-            cell.subtitle.textColor = UIColor.lightGray
-            cell.subtitle.text = "last seen " + timeAgoSinceDate(date: date, timeinterval: status.doubleValue, numericDates: false)
-          }
-        } else {
+      /*
+      if snapshot.exists() {
+        
+        guard let title = self.user?.name else { return }
+        
+        if let stringSnapshot = snapshot.value as? String {
           
-          cell.subtitle.text = ""
+          if stringSnapshot == statusOnline { // user online
+            self.navigationItem.setTitle(title: title, subtitle: statusOnline)
+          } else { // user got a timstamp converted to string (was in earlier versions of app)
+            print("\n\nOLDER VERSION OF TIMESTAMP\n\n")
+            let date = Date(timeIntervalSince1970: TimeInterval(stringSnapshot)!)
+            let subtitle = "Last seen " + timeAgoSinceDate(date)
+            self.navigationItem.setTitle(title: title, subtitle: subtitle)
+          }
+          
+        } else if let timeintervalSnapshot = snapshot.value as? TimeInterval { //user got server timestamp in miliseconds
+          print("\n\newer VERSION OF TIMESTAMP\n\n")
+          let date = Date(timeIntervalSince1970: timeintervalSnapshot/1000)
+          let subtitle = "Last seen " + timeAgoSinceDate(date)
+          self.navigationItem.setTitle(title: title, subtitle: subtitle)
         }
+      }
+      */
+      
+      if let statusString = filteredUsers[indexPath.row].onlineStatus as? String {
+        if statusString == statusOnline {
+          cell.subtitle.textColor = FalconPalette.falconPaletteBlue
+          cell.subtitle.text = statusString
+        } else {
+          cell.subtitle.textColor = UIColor.lightGray
+          let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
+          let subtitle = "Last seen " + timeAgoSinceDate(date)
+          cell.subtitle.text = subtitle
+         
+        }
+        
+      } else if let statusTimeinterval = filteredUsers[indexPath.row].onlineStatus as? TimeInterval {
+        cell.subtitle.textColor = UIColor.lightGray
+        let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
+       
+        let subtitle = "Last seen " + timeAgoSinceDate(date)
+        cell.subtitle.text = subtitle
+       // self.navigationItem.setTitle(title: title, subtitle: subtitle)
+      }
+       // if let status = filteredUsers[indexPath.row].onlineStatus {
+         // if status == statusOnline {
+          //  cell.subtitle.textColor = FalconPalette.falconPaletteBlue
+         //   cell.subtitle.text = status
+            
+        //  } else {
+          //  let date = NSDate(timeIntervalSince1970:  status.doubleValue/1000 )
+          //  cell.subtitle.textColor = UIColor.lightGray
+           // cell.subtitle.text = "last seen " + timeAgoSinceDate(date: date, timeinterval: status.doubleValue, numericDates: false)
+      //    }
+      //  } else {
+          
+        //  cell.subtitle.text = ""
+      //  }
       
         if let url = filteredUsers[indexPath.row].thumbnailPhotoURL {          
           cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in

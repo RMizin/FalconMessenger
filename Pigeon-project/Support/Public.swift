@@ -202,30 +202,29 @@ func cameraAccessChecking() -> Bool  {
   }
 }
 
-
-func timeAgoSinceDate(date:NSDate, timeinterval: Double, numericDates:Bool) -> String {
+func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
   let calendar = NSCalendar.current
   let unitFlags: Set<Calendar.Component> = [.minute, .hour, .day, .weekOfYear, .month, .year, .second]
-  let now = NSDate()
-  let earliest = now.earlierDate(date as Date)
-  let latest = (earliest == now as Date) ? date : now
-  let components = calendar.dateComponents(unitFlags, from: earliest as Date,  to: latest as Date)
+  let now = Date()
+  let earliest = now < date ? now : date
+  let latest = (earliest == now) ? date : now
+  let components = calendar.dateComponents(unitFlags, from: earliest,  to: latest)
   
   if (components.year! >= 2) {
-    return timeinterval.getShortDateStringFromUTC()//"\(components.year!) years ago"
+    return "\(components.year!) years ago"
   } else if (components.year! >= 1){
     if (numericDates){
-      return timeinterval.getShortDateStringFromUTC()//"1 year ago"
+      return "1 year ago"
     } else {
-      return timeinterval.getShortDateStringFromUTC()//"last year"
+      return "last year"
     }
   } else if (components.month! >= 2) {
-    return timeinterval.getShortDateStringFromUTC()//"\(components.month!) months ago"
+    return "\(components.month!) months ago"
   } else if (components.month! >= 1){
     if (numericDates){
-      return timeinterval.getShortDateStringFromUTC()//"1 month ago"
+      return "1 month ago"
     } else {
-      return timeinterval.getShortDateStringFromUTC()
+      return "last month"
     }
   } else if (components.weekOfYear! >= 2) {
     return "\(components.weekOfYear!) weeks ago"
@@ -247,7 +246,7 @@ func timeAgoSinceDate(date:NSDate, timeinterval: Double, numericDates:Bool) -> S
     return "\(components.hour!) hours ago"
   } else if (components.hour! >= 1){
     if (numericDates){
-      return "an hour ago"//"1 hour ago"
+      return "1 hour ago"
     } else {
       return "an hour ago"
     }
@@ -255,17 +254,38 @@ func timeAgoSinceDate(date:NSDate, timeinterval: Double, numericDates:Bool) -> S
     return "\(components.minute!) minutes ago"
   } else if (components.minute! >= 1){
     if (numericDates){
-      return "a minute ago"//"1 minute ago"
+      return "1 minute ago"
     } else {
       return "a minute ago"
     }
-  } else if (components.second! >= 30) {
-    return "just now" //"\(components.second!) seconds ago"
+  } else if (components.second! >= 3) {
+    return "just now"//"\(components.second!) seconds ago"
   } else {
     return "just now"
   }
   
 }
+
+public let statusOnline = "Online"
+public let userMessagesFirebaseFolder = "userMessages"
+public let messageMetaDataFirebaseFolder = "metaData"
+
+
+func setOnlineStatus()  {
+  
+  if Auth.auth().currentUser != nil {
+    let onlineStatusReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("OnlineStatus")
+    let connectedRef = Database.database().reference(withPath: ".info/connected")
+    
+    connectedRef.observe(.value, with: { (snapshot) in
+      guard let connected = snapshot.value as? Bool, connected else { return }
+      onlineStatusReference.setValue(statusOnline)
+     
+      onlineStatusReference.onDisconnectSetValue(ServerValue.timestamp())
+    })
+  }
+}
+
 
 extension UINavigationItem {
   
@@ -384,35 +404,6 @@ extension UIScrollView {
 }
 
 
-public let statusOnline = "Online"
-public let userMessagesFirebaseFolder = "userMessages"
-public let messageMetaDataFirebaseFolder = "metaData"
-
-func setOnlineStatus()  {
-  
-  if Auth.auth().currentUser != nil {
-    let myConnectionsRef = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("OnlineStatus")
-    
-    let connectedRef = Database.database().reference(withPath: ".info/connected")
-    
-    connectedRef.observe(.value, with: { (snapshot) in
-      guard let connected = snapshot.value as? Bool, connected else {
-        return
-      }
-      
-      let con = myConnectionsRef
-      con.setValue(statusOnline, withCompletionBlock: { (error, ref) in
-        
-      })
-      
-      let date = Date()
-      let result = String(describing: date.timeIntervalSince1970)
-      con.onDisconnectSetValue(result)
-      
-    })
-    
-  }
-}
 
 func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage? {
   let oldWidth = sourceImage.size.width

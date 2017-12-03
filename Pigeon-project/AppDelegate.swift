@@ -30,6 +30,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
   
+    let theme = ThemeManager.currentTheme()
+    ThemeManager.applyTheme(theme: theme)
+    
     if #available(iOS 10.0, *) {
       // For iOS 10 display notification (sent via APNS)
       UNUserNotificationCenter.current().delegate = self
@@ -82,9 +85,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
   
   func presentController(with mainController: UITabBarController) {
+    
     if Auth.auth().currentUser == nil {
-      let theme = Theme.Default
-      ThemeManager.applyTheme(theme: theme)
+   
       let destination = OnboardingController()
       destination.onboardingContainerView.backgroundColor = .white
       destination.view.backgroundColor = .white
@@ -95,10 +98,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       newNavigationController.modalTransitionStyle = .crossDissolve
       mainController.present(newNavigationController, animated: false, completion: {
       })
-    } else {
-      let theme = ThemeManager.currentTheme()
-      ThemeManager.applyTheme(theme: theme)
-
     }
   }
   

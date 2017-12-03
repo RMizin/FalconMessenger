@@ -80,6 +80,7 @@ class ChatInputContainerView: UIView {
     textView.textColor = ThemeManager.currentTheme().generalTitleColor
     textView.textContainerInset = InputContainerViewConstants.containerInsetsDefault
     textView.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+    textView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     
     return textView
   }()

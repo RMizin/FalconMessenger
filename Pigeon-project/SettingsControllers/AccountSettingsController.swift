@@ -86,11 +86,12 @@ class AccountSettingsController: UITableViewController {
   }
   
   fileprivate func setColorAccordingToTheme() {
-      self.view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      self.tableView.backgroundColor = self.view.backgroundColor
-      self.userProfileContainerView.backgroundColor = self.view.backgroundColor
-      self.navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
-      self.tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.backgroundColor = view.backgroundColor
+      userProfileContainerView.backgroundColor = view.backgroundColor
+      navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
+      tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
+      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
   }
   
@@ -133,9 +134,8 @@ class AccountSettingsController: UITableViewController {
   }
 
   fileprivate func configureTableView() {
-    
     tableView.separatorStyle = .none
-   
+    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     tableView.tableHeaderView = userProfileContainerView
     tableView.translatesAutoresizingMaskIntoConstraints = false
     tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
@@ -180,14 +180,9 @@ class AccountSettingsController: UITableViewController {
     
     newNavigationController.navigationBar.isTranslucent = false
     newNavigationController.modalTransitionStyle = .crossDissolve
-   // newNavigationController.navigationBar.barStyle = .default
- ///  newNavigationController.navigationBar.backgroundColor = .white
-//    let theme = Theme.Default
-//    ThemeManager.applyTheme(theme: theme)
-//    self.setColorAccordingToTheme()
+  
     self.present(newNavigationController, animated: true, completion: {
          NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
-        // NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearConversations"), object: nil)
          NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
       
         self.tabBarController?.selectedIndex = tabs.chats.rawValue

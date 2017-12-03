@@ -15,7 +15,7 @@ class User: NSObject {
   var photoURL: String?
   var thumbnailPhotoURL: String?
   var phoneNumber: String?
-  var onlineStatus: String?
+  var onlineStatus: AnyObject?
   
   init(dictionary: [String: AnyObject]) {
     self.id = dictionary["id"] as? String
@@ -23,6 +23,6 @@ class User: NSObject {
     self.photoURL = dictionary["photoURL"] as? String
     self.thumbnailPhotoURL = dictionary["thumbnailPhotoURL"] as? String
     self.phoneNumber = dictionary["phoneNumber"] as? String
-    self.onlineStatus = dictionary["OnlineStatus"] as? String
+    self.onlineStatus = dictionary["OnlineStatus"]// as? AnyObject
   }
 }
