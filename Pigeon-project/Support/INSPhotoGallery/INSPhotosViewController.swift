@@ -187,7 +187,6 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
         view.tintColor = UIColor.white
         view.backgroundColor = UIColor.black
         pageViewController.view.backgroundColor = UIColor.clear
-        
         pageViewController.view.addGestureRecognizer(panGestureRecognizer)
         pageViewController.view.addGestureRecognizer(singleTapGestureRecognizer)
         
@@ -434,12 +433,12 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
         return statusBarHidden
     }
     
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
-    open override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
-        return .fade
-    }
+//    open override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .lightContent
+//    }
+//
+//    open override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+//        return .fade
+//    }
 }
 

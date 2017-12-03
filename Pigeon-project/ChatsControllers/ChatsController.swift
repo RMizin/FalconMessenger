@@ -44,14 +44,14 @@ public var shouldReloadChatsControllerAfterChangingTheme = false
 class ChatsController: UITableViewController {
   
   var searchBar: UISearchBar?
+  
   var searchChatsController: UISearchController?
   
   weak var delegate: ManageAppearance?
   
-  var messagesDictionary = [String: (Message, User, ChatMetaData?)]()
-  var filteredMessagesDictionary = [String: (Message, User, ChatMetaData?)]()
-  var finalUserCellData = Array<(Message, User, ChatMetaData?)>()
-  var filteredFinalUserCellData = Array<(Message, User, ChatMetaData?)>()
+  var conversations = [Conversation]()
+  
+  var filtededConversations = [Conversation]()
   
   fileprivate var connectedRef: DatabaseReference!
   fileprivate var currentUserConversationsReference: DatabaseReference!
@@ -71,12 +71,11 @@ class ChatsController: UITableViewController {
       super.viewDidLoad()
     
     configureTableView()
-    managePresense()
+   // managePresense()
     setupSearchController()
     fetchConversations()
     
     NotificationCenter.default.addObserver(self, selector:#selector(fetchConversations),name:NSNotification.Name(rawValue: "reloadUserConversations"), object: nil)
-    NotificationCenter.default.addObserver(self, selector:#selector(clearConversations),name:NSNotification.Name(rawValue: "clearConversations"), object: nil)
   }
   
   
@@ -105,7 +104,6 @@ class ChatsController: UITableViewController {
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
       tableView.reloadData()
-      print("reloading")
       shouldReloadChatsControllerAfterChangingTheme = false
     }
   }
@@ -157,16 +155,14 @@ class ChatsController: UITableViewController {
   
   fileprivate func configureTabBarBadge() {
     
-    guard let uid = Auth.auth().currentUser?.uid else {
-      return
-    }
+    guard let uid = Auth.auth().currentUser?.uid else { return }
     
     let tabItems = self.tabBarController?.tabBar.items as NSArray!
     let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
     var badge = 0
     
-    for meta in filteredFinalUserCellData {
-      if meta.0.seen != nil && !meta.0.seen! &&  meta.0.fromId != uid {
+    for meta in filtededConversations {
+      if meta.message?.seen != nil && !meta.message!.seen! &&  meta.message!.fromId != uid {
         badge += 1
         tabItem.badgeValue = badge.toString()
         UIApplication.shared.applicationIconBadgeNumber = badge
@@ -179,49 +175,44 @@ class ChatsController: UITableViewController {
     }
   }
 
+//  func managePresense() {
+//
+//    if currentReachabilityStatus == .notReachable {
+//      showActivityIndicator(title: ChatsController.connectingMessage)
+//    }
+//
+//    connectedRef = Database.database().reference(withPath: ".info/connected")
+//    connectedRef.observe(.value, with: { (snapshot) in
+//      if self.currentReachabilityStatus != .notReachable {
+//        self.hideActivityIndicator()
+//      } else {
+//        self.showActivityIndicator(title: ChatsController.noInternetMessage)
+//      }
+//    }) { (error) in
+//        print(error.localizedDescription)
+//    }
+//  }
   
-  func managePresense() {
-    
-    if currentReachabilityStatus == .notReachable {
-      showActivityIndicator(title: "Connecting...")
-    }
-    
-    connectedRef = Database.database().reference(withPath: ".info/connected")
-    connectedRef.observe(.value, with: { (snapshot) in
-   
-      if self.currentReachabilityStatus != .notReachable {
-         self.hideActivityIndicator()
-      } else {
-        self.showActivityIndicator(title: "No internet connection...")
+  
+  private var isFirstRemoteUpdateRequested = false
+  fileprivate func handleActivityIndicatorAppearance() {
+    if self.isAppLoaded {
+      if !self.isFirstRemoteUpdateRequested {
+        self.showActivityIndicator(title: ChatsController.updatingMessage)
+        self.isFirstRemoteUpdateRequested = true
       }
-      
-    }) { (error) in
-        print(error.localizedDescription)
+    } else {
+      self.showActivityIndicator(title: ChatsController.updatingMessage)
     }
   }
   
-  @objc func clearConversations() {
-
-    messagesDictionary.removeAll()
-    filteredMessagesDictionary.removeAll()
-    finalUserCellData.removeAll()
-    filteredFinalUserCellData.removeAll()
+@objc func fetchConversations() {
     
-    DispatchQueue.main.async {
-      self.tableView.reloadData()
-    }
-  }
-  
- @objc func fetchConversations() {
-    
-    guard let uid = Auth.auth().currentUser?.uid else {
-      return
-    }
+    guard let uid = Auth.auth().currentUser?.uid else { return }
   
     currentUserConversationsReference = Database.database().reference().child("user-messages").child(uid)
-    currentUserConversationsReference.keepSynced(true)
     currentUserConversationsReference.observeSingleEvent(of: .value) { (snapshot) in
-      
+    
       for _ in 0 ..< snapshot.childrenCount {
         self.group.enter()
       }
@@ -229,89 +220,147 @@ class ChatsController: UITableViewController {
       self.group.notify(queue: DispatchQueue.main, execute: {
         self.handleReloadTable()
         self.isGroupAlreadyFinished = true
-       
       })
       
       if !snapshot.exists() {
         self.handleReloadTable()
+        self.hideActivityIndicator()
         return
       }
     }
-    
+
     currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
-  
+     
         let otherUserID = snapshot.key
-        
         self.lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(uid).child(otherUserID).child(userMessagesFirebaseFolder)
-        self.lastMessageForConverstaionRef.keepSynced(true)
-        self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
-          
-          let lastMessageID = snapshot.key
-          self.fetchMessageWithMessageId(lastMessageID)
+        self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.value, with: { (snapshot) in
+
+          self.handleActivityIndicatorAppearance()
+          guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+          guard let lastMessageID = dictionary.keys.first else { return }
+          self.fetchMessageWith(lastMessageID)
         })
     })
-    
-    currentUserConversationsReference.observe(.childRemoved, with: { (snapshot) in
-      
-      self.messagesDictionary.removeValue(forKey: snapshot.key)
-      self.handleReloadTable()
-    })
-  }
   
-  func fetchMessageWithMessageId(_ messageId: String) {
+  
+    currentUserConversationsReference.observe(.childRemoved) { (snapshot) in
+      self.hideActivityIndicator()
+    }
+  }
+
+  
+  func fetchMessageWith(_ messageID: String) {
     
-    messagesReference = Database.database().reference().child("messages").child(messageId)
-    messagesReference.keepSynced(true)
+    messagesReference = Database.database().reference().child("messages").child(messageID)
     messagesReference.observe( .value, with: { (snapshot) in
       
-      guard let dictionary = snapshot.value as? [String: AnyObject] else {
-        return
-      }
-
+      guard var dictionary = snapshot.value as? [String: AnyObject], let uid = Auth.auth().currentUser?.uid else { return }
+      dictionary.updateValue(messageID as AnyObject, forKey: "messageUID")
+    
       let message = Message(dictionary: dictionary)
+      guard let chatPartnerID = message.chatPartnerId() else { return }
       
-      guard let chatPartnerId = message.chatPartnerId(), let uid = Auth.auth().currentUser?.uid else  {
-        return
-      }
-      
-      self.metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
-      self.metadataRef.keepSynced(true)
+      self.metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerID).child(messageMetaDataFirebaseFolder)
       self.metadataRef.removeAllObservers()
       self.metadataRef.observe( .value, with: { (snapshot) in
-            
-        guard let metaDictionary = snapshot.value as? [String: Int] else {
-          return
-        }
-            
-        self.fetchUserDataWithUserID(chatPartnerId, for: message, metaData: metaDictionary)
+        
+        guard let metaDictionary = snapshot.value as? [String: Int] else { return }
+        let meta = ChatMetaData(dictionary: metaDictionary)
+        self.fetchUserData(for: message, with: meta)
       })
     })
   }
   
-  func fetchUserDataWithUserID(_ userID: String, for message: Message, metaData: [String: Int]) {
+  func fetchUserData(for message: Message, with metaData: ChatMetaData?) {
     
-    usersRef = Database.database().reference().child("users").child(userID)
-    usersRef.keepSynced(true)
-    usersRef.observe(.value, with: { (snapshot) in
+    guard let chatPartnerID = message.chatPartnerId() else { return }
+    
+    usersRef = Database.database().reference().child("users").child(chatPartnerID)
+    usersRef.observeSingleEvent(of: .value, with: { (snapshot) in
       
-      guard var dictionary = snapshot.value as? [String: AnyObject] else {
-        return
-      }
-    
-      dictionary.updateValue(userID as AnyObject, forKey: "id")
+      guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+      dictionary.updateValue(chatPartnerID as AnyObject, forKey: "id")
       
       let user = User(dictionary: dictionary)
-      let meta = ChatMetaData(dictionary: metaData)
-      self.messagesDictionary[userID] = (message, user, meta)
+      let conv = Conversation(message: message, user: user, chatMetaData: metaData)
       
-      if self.isGroupAlreadyFinished {
-        self.handleReloadTable()
-      } else {
-        self.group.leave()
+      guard let index = self.conversations.index(where: { (conversation) -> Bool in
+        return conversation.user?.id == chatPartnerID
+      }) else {
+        self.conversations.append(conv)
+        self.handleGroupOrReloadTable()
+    
+        return
       }
+      
+      self.conversations[index] = conv
+      self.handleGroupOrReloadTable()
     })
+  
+    usersRef.observe(.childChanged) { (snapshot) in
+      guard let index = self.conversations.index(where: { (conversation) -> Bool in
+        return conversation.user!.id == chatPartnerID
+      }) else {
+        return
+      }
+      
+      if snapshot.key == "name" {
+        self.conversations[index].user?.name = snapshot.value as? String
+        self.handleGroupOrReloadTable()
+      } else if snapshot.key == "thumbnailPhotoURL" {
+        self.conversations[index].user?.thumbnailPhotoURL = snapshot.value as? String
+        self.handleGroupOrReloadTable()
+      } else {
+        return
+      }
+    }
+  }
+
+  fileprivate func handleGroupOrReloadTable() {
+    if self.isGroupAlreadyFinished {
+      self.handleReloadTable()
+    } else {
+      self.group.leave()
+    }
   }
   
+  func handleReloadTable() {
+    
+    conversations.sort { (conversation1, conversation2) -> Bool in
+      return conversation1.message?.timestamp?.int32Value > conversation2.message?.timestamp?.int32Value
+    }
+    
+    filtededConversations = conversations
+    
+    if !isAppLoaded {
+      UIView.transition(with: tableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+    } else {
+      self.tableView.reloadData()
+    }
+    
+    if filtededConversations.count == 0 {
+      checkIfThereAnyActiveChats(isEmpty: true)
+    } else {
+      checkIfThereAnyActiveChats(isEmpty: false)
+    }
+    
+    self.configureTabBarBadge()
+
+    if !isAppLoaded {
+      hideActivityIndicator()
+      delegate?.manageAppearance(self, didFinishLoadingWith: true)
+      isAppLoaded = true
+    } else {
+      hideActivityIndicatorWithDelay()
+    }
+  }
+  
+  fileprivate func hideActivityIndicatorWithDelay() {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+      self.hideActivityIndicator()
+    }
+  }
+
   
   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     return true
@@ -329,20 +378,17 @@ class ChatsController: UITableViewController {
     
     if (editingStyle == UITableViewCellEditingStyle.delete) {
       
-      let message = self.filteredFinalUserCellData[indexPath.row]
-      
-      if let chatPartnerId = message.0.chatPartnerId() {
+      let conversation = self.filtededConversations[indexPath.row]
+      guard let chatPartnerId = conversation.message?.chatPartnerId() else { return }
+     
+      self.tableView.beginUpdates()
+      self.filtededConversations.remove(at: indexPath.row)
+      self.conversations = self.filtededConversations
+      self.tableView.deleteRows(at: [indexPath], with: .left)
+      self.tableView.endUpdates()
         
-        self.tableView.beginUpdates()
-        
-        self.filteredMessagesDictionary.removeValue(forKey: chatPartnerId)
-        self.filteredFinalUserCellData = Array(self.filteredMessagesDictionary.values)
-        
-        self.tableView.deleteRows(at: [indexPath], with: .left)
-        self.tableView.endUpdates()
-        
-        Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue()
-      }
+      Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue()
+      self.configureTabBarBadge()
     }
   }
   
@@ -355,81 +401,11 @@ class ChatsController: UITableViewController {
     }
   
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredMessagesDictionary.count
+        return filtededConversations.count
     }
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-         let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
-      
-      if filteredFinalUserCellData[indexPath.row].1.id == Auth.auth().currentUser?.uid {
-        cell.nameLabel.text = NameConstants.personalStorage
-      } else {
-        cell.nameLabel.text = filteredFinalUserCellData[indexPath.row].1.name
-      }
-      
-      if (filteredFinalUserCellData[indexPath.row].0.imageUrl != nil || filteredFinalUserCellData[indexPath.row].0.localImage != nil) && filteredFinalUserCellData[indexPath.row].0.videoUrl == nil  {
-        cell.messageLabel.text = "Attachment: Image"
-      } else if (filteredFinalUserCellData[indexPath.row].0.imageUrl != nil || filteredFinalUserCellData[indexPath.row].0.localImage != nil) && filteredFinalUserCellData[indexPath.row].0.videoUrl != nil {
-        cell.messageLabel.text = "Attachment: Video"
-      } else if filteredFinalUserCellData[indexPath.row].0.voiceEncodedString != nil {
-          cell.messageLabel.text = "Audio message"
-      } else {
-         cell.messageLabel.text = filteredFinalUserCellData[indexPath.row].0.text
-      }
-    
-      let date = NSDate(timeIntervalSince1970:  filteredFinalUserCellData[indexPath.row].0.timestamp as! TimeInterval)
-      cell.timeLabel.text = timeAgoSinceDate(date: date, timeinterval: filteredFinalUserCellData[indexPath.row].0.timestamp!.doubleValue, numericDates: false)
-    
-      if filteredFinalUserCellData[indexPath.row].1.id == Auth.auth().currentUser?.uid {
-        cell.profileImageView.image = UIImage(named: "PersonalStorage")
-      } else {
-        if let url = self.filteredFinalUserCellData[indexPath.row].1.thumbnailPhotoURL {
-          cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
-            if image != nil {
-              if (cacheType != SDImageCacheType.memory && cacheType != SDImageCacheType.disk) {
-                cell.profileImageView.alpha = 0
-                UIView.animate(withDuration: 0.25, animations: {
-                  cell.profileImageView.alpha = 1
-                })
-              } else {
-                cell.profileImageView.alpha = 1
-              }
-            }
-          })
-        }
-      }
-      
-      if filteredFinalUserCellData[indexPath.row].0.seen != nil {
-        
-        let seen = filteredFinalUserCellData[indexPath.row].0.seen!
-        
-        if !seen && filteredFinalUserCellData[indexPath.row].0.fromId != Auth.auth().currentUser?.uid {
-          
-          cell.newMessageIndicator.isHidden = false
-          cell.badgeLabel.text = filteredFinalUserCellData[indexPath.row].2?.badge?.toString()
-          
-          if Int(cell.badgeLabel.text!)! > 0 {
-            cell.badgeLabel.isHidden = false
-          } else {
-            cell.badgeLabel.text = "1"
-            cell.badgeLabel.isHidden = false
-          }
-          
-        } else {
-          
-          cell.newMessageIndicator.isHidden = true
-          cell.badgeLabel.isHidden = true
-          cell.badgeLabel.text = filteredFinalUserCellData[indexPath.row].2?.badge?.toString()
-        }
-        
-      } else {
-        
-         cell.newMessageIndicator.isHidden = true
-         cell.badgeLabel.isHidden = true
-         cell.badgeLabel.text = filteredFinalUserCellData[indexPath.row].2?.badge?.toString()
-      }
-    
-        return cell
+        return configuredCell(for: indexPath)
     }
   
   
@@ -439,7 +415,7 @@ class ChatsController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
   
-    let user = filteredFinalUserCellData[indexPath.row].1
+    let user = filtededConversations[indexPath.row].user
     autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
     autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
     chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
@@ -448,45 +424,14 @@ class ChatsController: UITableViewController {
     chatLogController?.hidesBottomBarWhenPushed = true
   }
   
-  
-  func handleReloadTable() {
-
-    filteredMessagesDictionary = messagesDictionary
-    finalUserCellData = Array(self.filteredMessagesDictionary.values)
-    finalUserCellData.sort { (dic1: (Message, User, ChatMetaData?), dic2: (Message, User, ChatMetaData?)) -> Bool in
-      return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
-    }
-  
-    filteredFinalUserCellData = finalUserCellData
-    tableView.reloadData()
-   
-    if self.filteredFinalUserCellData.count == 0 {
-      self.checkIfThereAnyActiveChats(isEmpty: true)
-    } else {
-      self.checkIfThereAnyActiveChats(isEmpty: false)
-    }
-    
-    configureTabBarBadge()
-    
-    if !isAppLoaded {
-      self.delegate?.manageAppearance(self, didFinishLoadingWith: true)
-      isAppLoaded = true
-    }
-  }
-  
   func handleReloadTableAfterSearch() {
-    
-    finalUserCellData = Array(self.filteredMessagesDictionary.values)
-    finalUserCellData.sort { (dic1: (Message, User, ChatMetaData?), dic2: (Message, User, ChatMetaData?)) -> Bool in
-      return dic1.0.timestamp?.int32Value > dic2.0.timestamp?.int32Value
+    filtededConversations.sort { (conversation1, conversation2) -> Bool in
+      return conversation1.message?.timestamp?.int32Value > conversation2.message?.timestamp?.int32Value
     }
-    
-    filteredFinalUserCellData = finalUserCellData
     tableView.reloadData()
   }
   
 }
-
 
 extension ChatsController: MessagesLoaderDelegate {
   
@@ -526,18 +471,17 @@ extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISe
     func updateSearchResults(for searchController: UISearchController) {}
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
         searchBar.text = nil
-        filteredMessagesDictionary = messagesDictionary
+        filtededConversations = conversations
         handleReloadTable()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        filteredMessagesDictionary = searchText.isEmpty ? messagesDictionary : messagesDictionary.filter({ (key, value) -> Bool in
-          return  value.1.name!.lowercased().contains(searchText.lowercased())
-        })
-        
+        filtededConversations = searchText.isEmpty ? conversations :
+          conversations.filter({ (conversation) -> Bool in
+            return conversation.user!.name!.lowercased().contains(searchText.lowercased())
+          })
         handleReloadTableAfterSearch()
     }
   
@@ -546,7 +490,6 @@ extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISe
     return true
   }
 }
-
 
 extension ChatsController { /* hiding keyboard */
     
@@ -559,8 +502,7 @@ extension ChatsController { /* hiding keyboard */
             searchBar?.resignFirstResponder()
         }
     }
-    
-    
+  
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         if #available(iOS 11.0, *) {
@@ -571,7 +513,76 @@ extension ChatsController { /* hiding keyboard */
     }
 }
 
+
+extension ChatsController {
+  fileprivate func configuredCell(for indexPath: IndexPath) -> UserCell {
+    
+    let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
+    
+    if filtededConversations[indexPath.row].user?.id == Auth.auth().currentUser?.uid {
+      cell.nameLabel.text = NameConstants.personalStorage
+    } else {
+      cell.nameLabel.text = filtededConversations[indexPath.row].user?.name
+    }
+    
+    if (filtededConversations[indexPath.row].message?.imageUrl != nil ||
+      filtededConversations[indexPath.row].message?.localImage != nil) &&
+      filtededConversations[indexPath.row].message?.videoUrl == nil {
+      cell.messageLabel.text = "Attachment: Image"
+    } else if (filtededConversations[indexPath.row].message?.imageUrl != nil ||
+      filtededConversations[indexPath.row].message?.localImage != nil) &&
+      filtededConversations[indexPath.row].message?.videoUrl != nil {
+      cell.messageLabel.text = "Attachment: Video"
+    } else if filtededConversations[indexPath.row].message?.voiceEncodedString != nil {
+      cell.messageLabel.text = "Audio message"
+    } else {
+      cell.messageLabel.text = filtededConversations[indexPath.row].message?.text
+    }
+    
+    let date = NSDate(timeIntervalSince1970:  filtededConversations[indexPath.row].message?.timestamp as! TimeInterval)
+    
+    cell.timeLabel.text = timeAgoSinceDate(date: date, timeinterval: filtededConversations[indexPath.row].message!.timestamp!.doubleValue, numericDates: false)
+    
+    if filtededConversations[indexPath.row].user?.id == Auth.auth().currentUser?.uid {
+      cell.profileImageView.image = UIImage(named: "PersonalStorage")
+      
+    } else if let url = self.filtededConversations[indexPath.row].user?.thumbnailPhotoURL {
+      cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload,.scaleDownLargeImages ], completed: nil)
+    }
+    
+    if filtededConversations[indexPath.row].message?.seen != nil {
+      let seen = filtededConversations[indexPath.row].message?.seen!
+      if !seen! && filtededConversations[indexPath.row].message?.fromId != Auth.auth().currentUser?.uid {
+        cell.badgeLabel.text = conversations[indexPath.row].chatMetaData?.badge?.toString()
+        
+        if Int(cell.badgeLabel.text!)! > 0 {
+          cell.badgeLabel.isHidden = false
+          cell.newMessageIndicator.isHidden = false
+        } else {
+          cell.newMessageIndicator.isHidden = true
+          cell.badgeLabel.isHidden = true
+        }
+      } else {
+        cell.newMessageIndicator.isHidden = true
+        cell.badgeLabel.isHidden = true
+        cell.badgeLabel.text = filtededConversations[indexPath.row].chatMetaData?.badge?.toString()
+      }
+    } else {
+      cell.newMessageIndicator.isHidden = true
+      cell.badgeLabel.isHidden = true
+      cell.badgeLabel.text = filtededConversations[indexPath.row].chatMetaData?.badge?.toString()
+    }
+    return cell
+  }
+}
+
+
 extension ChatsController { /* activity indicator handling */
+  
+  static let noInternetMessage = "No internet connection..."
+  static let updatingMessage = "Updating..."
+  static let connectingMessage = "Connecting..."
+  
   func showActivityIndicator(title: String) {
     
     let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)

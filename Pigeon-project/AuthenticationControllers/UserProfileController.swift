@@ -55,7 +55,7 @@ class UserProfileController: UIViewController {
 extension UserProfileController {
   
   @objc func rightBarButtonDidTap () {
-    
+   userProfileContainerView.name.resignFirstResponder()
     if userProfileContainerView.name.text?.count == 0 ||
        userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
        userProfileContainerView.name.shake()

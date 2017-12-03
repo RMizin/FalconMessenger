@@ -15,6 +15,7 @@ class EnterVerificationContainerView: UIView {
     let titleNumber = UILabel()
     titleNumber.translatesAutoresizingMaskIntoConstraints = false
     titleNumber.textAlignment = .center
+    titleNumber.textColor = ThemeManager.currentTheme().generalTitleColor
     titleNumber.font = UIFont.systemFont(ofSize: 32)
     
     return titleNumber
@@ -25,6 +26,7 @@ class EnterVerificationContainerView: UIView {
     subtitleText.translatesAutoresizingMaskIntoConstraints = false
     subtitleText.font = UIFont.systemFont(ofSize: 15)
     subtitleText.textAlignment = .center
+    subtitleText.textColor = ThemeManager.currentTheme().generalTitleColor
     subtitleText.text = "We have sent you an SMS with the code"
     
     return subtitleText
@@ -37,6 +39,7 @@ class EnterVerificationContainerView: UIView {
     verificationCode.textAlignment = .center
     verificationCode.keyboardType = .numberPad
     verificationCode.placeholder = "Code"
+    verificationCode.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     verificationCode.borderStyle = .roundedRect
     
     return verificationCode

@@ -11,7 +11,6 @@ import UIKit
 var isInsertingCellsToTop: Bool = false
 var contentSizeWhenInsertingToTop: CGSize?
 
-
 class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
   
   override func prepare() {

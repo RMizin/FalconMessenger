@@ -26,11 +26,8 @@ class UserProfilePictureOverlayView: UIView {
   
   var navigationBar: UINavigationBar = {
     var navigationBar = UINavigationBar()
-    navigationBar.backgroundColor = UIColor.black
     navigationBar.alpha = 0.8
     navigationBar.barStyle = .blackTranslucent
-    navigationBar.shadowImage = UIImage()
-    navigationBar.setBackgroundImage(UIImage(), for: .default)
     navigationBar.translatesAutoresizingMaskIntoConstraints = false
     
     return navigationBar

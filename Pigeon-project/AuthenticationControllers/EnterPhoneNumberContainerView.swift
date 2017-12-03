@@ -16,6 +16,7 @@ class EnterPhoneNumberContainerView: UIView {
     title.translatesAutoresizingMaskIntoConstraints = false
     title.textAlignment = .center
     title.text = "Your phone"
+    title.textColor = ThemeManager.currentTheme().generalTitleColor
     title.font = UIFont.systemFont(ofSize: 32)
     
     return title
@@ -27,6 +28,7 @@ class EnterPhoneNumberContainerView: UIView {
     instructions.textAlignment = .center
     instructions.text = "Please confirm your country code\nand enter your phone number."
     instructions.numberOfLines = 2
+    instructions.textColor = ThemeManager.currentTheme().generalTitleColor
     instructions.font = UIFont.systemFont(ofSize: 17)
 
     return instructions
@@ -35,16 +37,16 @@ class EnterPhoneNumberContainerView: UIView {
   let selectCountry: UIButton = {
     let selectCountry = UIButton()
     selectCountry.translatesAutoresizingMaskIntoConstraints = false
-    selectCountry.setBackgroundImage(UIImage(named: "PigeonAuthCountryButton"), for: .normal)
-    selectCountry.setBackgroundImage(UIImage(named:"PigeonAuthCountryButtonHighlighted"), for: .highlighted)
+    selectCountry.setBackgroundImage(ThemeManager.currentTheme().enterPhoneNumberBackground, for: .normal)
+    selectCountry.setBackgroundImage(ThemeManager.currentTheme().enterPhoneNumberBackgroundSelected, for: .highlighted)
     selectCountry.setTitle("Ukraine", for: .normal)
-    selectCountry.setTitleColor(.black, for: .normal)
+    selectCountry.setTitleColor(ThemeManager.currentTheme().generalTitleColor, for: .normal)
     selectCountry.contentHorizontalAlignment = .left
     selectCountry.contentVerticalAlignment = .center
     selectCountry.titleEdgeInsets = UIEdgeInsetsMake(0, 15.0, 0.0, 0.0)
     selectCountry.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-    selectCountry.addTarget(self, action: #selector(EnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
-
+    selectCountry.addTarget(self, action: #selector(ChangeNumberEnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
+    
     return selectCountry
   }()
   
@@ -53,6 +55,7 @@ class EnterPhoneNumberContainerView: UIView {
     countryCode.translatesAutoresizingMaskIntoConstraints = false
     countryCode.text = "+380"
     countryCode.textAlignment = .center
+    countryCode.textColor = ThemeManager.currentTheme().generalTitleColor
     countryCode.font = UIFont.systemFont(ofSize: 20)
     return countryCode
   }()
@@ -63,7 +66,11 @@ class EnterPhoneNumberContainerView: UIView {
     phoneNumber.translatesAutoresizingMaskIntoConstraints = false
     phoneNumber.textAlignment = .center
     phoneNumber.keyboardType = .numberPad
-    phoneNumber.placeholder = "Phone number"
+    phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    phoneNumber.attributedPlaceholder = NSAttributedString(string: "Phone number",
+                                                           attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+    
+    phoneNumber.textColor = ThemeManager.currentTheme().generalTitleColor
     phoneNumber.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
     
     return phoneNumber
@@ -80,6 +87,8 @@ class EnterPhoneNumberContainerView: UIView {
     let termsAndPrivacy = UITextView()
     termsAndPrivacy.translatesAutoresizingMaskIntoConstraints = false
     termsAndPrivacy.isEditable = false
+    termsAndPrivacy.backgroundColor = .clear
+    termsAndPrivacy.textColor = ThemeManager.currentTheme().generalTitleColor
     termsAndPrivacy.dataDetectorTypes = .all
     
     return termsAndPrivacy
@@ -96,7 +105,6 @@ class EnterPhoneNumberContainerView: UIView {
     addSubview(phoneNumber)
     addSubview(backgroundFrame)
     addSubview(termsAndPrivacy)
-    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     
     phoneNumber.delegate = self
    
@@ -152,11 +160,11 @@ class EnterPhoneNumberContainerView: UIView {
     let termsAndConditionsAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/19PQFh9LzXz1HO2Zq6U7ysCESIbGoodY6rBJbOeCyjkc/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue] as [NSAttributedStringKey : Any]
     
     let privacyPolicyAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue] as [NSAttributedStringKey : Any]
-    
-    let termsAttributedString = NSMutableAttributedString(string: "By signing up, you agree to the Terms and Conditions of Service.")
+
+    let termsAttributedString = NSMutableAttributedString(string: "By signing up, you agree to the Terms and Conditions of Service.", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor])
     termsAttributedString.setAttributes(termsAndConditionsAttributes, range: NSMakeRange(31, 22))
     
-    let privacyAttributedString = NSMutableAttributedString(string: " Also if you still have not read the Privacy Policy, please take a look before signing up.")
+    let privacyAttributedString = NSMutableAttributedString(string: " Also if you still have not read the Privacy Policy, please take a look before signing up.", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor])
     privacyAttributedString.setAttributes(privacyPolicyAttributes, range: NSMakeRange(37, 14))
     termsAttributedString.append(privacyAttributedString)
     

@@ -19,7 +19,9 @@ class ChangeNumberEnterPhoneNumberController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      view.backgroundColor = UIColor.white
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      navigationController?.navigationBar.shadowImage = UIImage()
+      navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
       configurePhoneNumberContainerView()
       configureNavigationBar()
       setCountry()
@@ -65,6 +67,7 @@ class ChangeNumberEnterPhoneNumberController: UIViewController {
     }
   
     @objc func leftBarButtonDidTap() {
+      phoneNumberContainerView.phoneNumber.resignFirstResponder()
       self.dismiss(animated: true) {
          AppUtility.lockOrientation(.allButUpsideDown)
       }

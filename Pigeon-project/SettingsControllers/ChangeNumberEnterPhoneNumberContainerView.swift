@@ -16,6 +16,7 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
     title.translatesAutoresizingMaskIntoConstraints = false
     title.textAlignment = .center
     title.text = "Your phone"
+    title.textColor = ThemeManager.currentTheme().generalTitleColor
     title.font = UIFont.systemFont(ofSize: 32)
     
     return title
@@ -27,6 +28,7 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
     instructions.textAlignment = .center
     instructions.text = "Please confirm your country code\nand enter your NEW phone number."
     instructions.numberOfLines = 2
+    instructions.textColor = ThemeManager.currentTheme().generalTitleColor
     instructions.font = UIFont.systemFont(ofSize: 17)
 
     return instructions
@@ -35,10 +37,10 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
   let selectCountry: UIButton = {
     let selectCountry = UIButton()
     selectCountry.translatesAutoresizingMaskIntoConstraints = false
-    selectCountry.setBackgroundImage(UIImage(named: "PigeonAuthCountryButton"), for: .normal)
-    selectCountry.setBackgroundImage(UIImage(named:"PigeonAuthCountryButtonHighlighted"), for: .highlighted)
+    selectCountry.setBackgroundImage(ThemeManager.currentTheme().enterPhoneNumberBackground, for: .normal)
+    selectCountry.setBackgroundImage(ThemeManager.currentTheme().enterPhoneNumberBackgroundSelected, for: .highlighted)
     selectCountry.setTitle("Ukraine", for: .normal)
-    selectCountry.setTitleColor(.black, for: .normal)
+    selectCountry.setTitleColor(ThemeManager.currentTheme().generalTitleColor, for: .normal)
     selectCountry.contentHorizontalAlignment = .left
     selectCountry.contentVerticalAlignment = .center
     selectCountry.titleEdgeInsets = UIEdgeInsetsMake(0, 15.0, 0.0, 0.0)
@@ -53,6 +55,7 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
     countryCode.translatesAutoresizingMaskIntoConstraints = false
     countryCode.text = "+380"
     countryCode.textAlignment = .center
+    countryCode.textColor = ThemeManager.currentTheme().generalTitleColor
     countryCode.font = UIFont.systemFont(ofSize: 20)
     return countryCode
   }()
@@ -63,7 +66,11 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
     phoneNumber.translatesAutoresizingMaskIntoConstraints = false
     phoneNumber.textAlignment = .center
     phoneNumber.keyboardType = .numberPad
-    phoneNumber.placeholder = "New phone number"
+    phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    phoneNumber.attributedPlaceholder = NSAttributedString(string: "New phone number",
+                                                           attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+    
+    phoneNumber.textColor = ThemeManager.currentTheme().generalTitleColor
     phoneNumber.addTarget(self, action: #selector(ChangeNumberEnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
     
     return phoneNumber

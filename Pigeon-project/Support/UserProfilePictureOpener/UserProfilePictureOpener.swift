@@ -40,7 +40,6 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
       return
     }
   
-   UIApplication.shared.statusBarStyle = .lightContent
     referenceView = userProfileContainerView?.profileImageView
     currentPhoto = INSPhoto(image: userProfileContainerView?.profileImageView.image, thumbnailImage: nil, messageUID: nil)
     galleryPreview = INSPhotosViewController(photos: [currentPhoto], initialPhoto: currentPhoto, referenceView: referenceView)
@@ -51,6 +50,7 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
     overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(handleSelectProfileImageView))
     overlay.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(backButtonTapped))
     overlay.navigationBar.setItems([overlay.navigationItem], animated: true)
+    overlay.navigationBar.barStyle = .blackTranslucent
 
     let item = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action: #selector(self.toolbarTouchHandler))
     overlay.toolbar.setItems([item], animated: true)
@@ -58,9 +58,10 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
     galleryPreview.referenceViewForPhotoWhenDismissingHandler = { photo in
       return self.referenceView
     }
-    
+  
     galleryPreview.modalPresentationStyle = .overFullScreen
     galleryPreview.modalPresentationCapturesStatusBarAppearance = true
+ 
     controllerWithUserProfilePhoto?.present(galleryPreview, animated: true, completion: nil)
   }
   
@@ -119,6 +120,7 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
     if userProfileContainerView?.profileImageView.image == nil {
       controllerWithUserProfilePhoto?.present(alert, animated: true, completion: nil)
       } else {
+       galleryPreview.navigationController?.navigationBar.barStyle = .blackTranslucent
        galleryPreview.present(alert, animated: true, completion: nil)
       }
   }

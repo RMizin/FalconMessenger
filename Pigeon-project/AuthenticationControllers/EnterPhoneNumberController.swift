@@ -20,7 +20,6 @@ class EnterPhoneNumberController: UIViewController {
         super.viewDidLoad()
       
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      
       configurePhoneNumberContainerView()
       configureNavigationBar()
       setCountry()

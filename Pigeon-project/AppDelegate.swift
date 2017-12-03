@@ -83,11 +83,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   
   func presentController(with mainController: UITabBarController) {
     if Auth.auth().currentUser == nil {
-      
-      let destination = OnboardingController()
-      let newNavigationController = UINavigationController(rootViewController: destination)
       let theme = Theme.Default
       ThemeManager.applyTheme(theme: theme)
+      let destination = OnboardingController()
+      destination.onboardingContainerView.backgroundColor = .white
+      destination.view.backgroundColor = .white
+      mainController.view.backgroundColor = .white
+      let newNavigationController = UINavigationController(rootViewController: destination)
       newNavigationController.navigationBar.shadowImage = UIImage()
       newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
       newNavigationController.modalTransitionStyle = .crossDissolve

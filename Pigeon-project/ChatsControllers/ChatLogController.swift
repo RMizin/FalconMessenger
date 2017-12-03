@@ -118,7 +118,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     userMessagesLoadingReference = Database.database().reference().child("user-messages").child(uid).child(toId).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
-    userMessagesLoadingReference?.keepSynced(true)
     userMessagesLoadingReference?.observeSingleEvent(of: .value, with: { (snapshot) in
     
       for _ in 0 ..< snapshot.childrenCount {
@@ -146,7 +145,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       self.userMessagesLoadingReference?.observe( .childAdded, with: { (snapshot) in
         let messageUID = snapshot.key
         self.messagesLoadingReference = Database.database().reference().child("messages").child(messageUID)
-        self.messagesLoadingReference.keepSynced(true)
         self.messagesLoadingReference.observeSingleEvent(of: .value, with: { (snapshot) in
         
           guard var dictionary = snapshot.value as? [String: AnyObject] else {
@@ -434,7 +432,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
       }, completion: { (true) in
         if self.collectionView!.contentOffset.y >= (self.collectionView!.contentSize.height - self.collectionView!.frame.size.height - 200) {
-          self.scrollToBottomOfTypingIndicator()
+          if self.collectionView!.contentSize.height < self.collectionView!.bounds.height  {
+            return
+          }
+          
+           if #available(iOS 11.0, *) {
+            let currentContentOffset = self.collectionView?.contentOffset
+            let newContentOffset = CGPoint(x: 0, y: currentContentOffset!.y + 40)
+            self.collectionView?.setContentOffset(newContentOffset, animated: true)
+           } else {
+            self.scrollToBottomOfTypingIndicator()
+           }
         }
       })
       
@@ -779,6 +787,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   let refreshControl: UIRefreshControl = {
     let refreshControl = UIRefreshControl()
     refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+    refreshControl.tintColor = ThemeManager.currentTheme().generalTitleColor
     refreshControl.addTarget(self, action: #selector(performRefresh), for: .valueChanged)
     
     return refreshControl
@@ -830,7 +839,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: typingIndicatorCellID, for: indexPath) as! TypingIndicatorCell
     
-    guard let gifURL = Bundle.main.url(forResource: "typingIndicator", withExtension: "gif") else {
+    guard let gifURL = ThemeManager.currentTheme().typingIndicatorURL else {
         return nil
     }
     

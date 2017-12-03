@@ -27,7 +27,7 @@ extension ChangeNumberEnterVerificationContainerView {
       
     } else {
       seconds -= 1
-      timerLabel.text =  "The message has been sent!\nYou can try again in \(timeString(time: TimeInterval(seconds)))"
+      timerLabel.text = "The message has been sent!\nYou can try again in \(timeString(time: TimeInterval(seconds)))"
     }
   }
   

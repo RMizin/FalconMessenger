@@ -17,7 +17,7 @@ class ChangeNumberEnterVerificationCodeController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      view.backgroundColor = UIColor.white
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       view.addSubview(enterVerificationContainerView)
       enterVerificationContainerView.frame = view.bounds
       enterVerificationContainerView.resend.addTarget(self, action: #selector(sendSMSConfirmation), for: .touchUpInside)
@@ -60,7 +60,7 @@ class ChangeNumberEnterVerificationCodeController: UIViewController {
   }
   
   @objc func rightBarButtonDidTap () {
-    
+    enterVerificationContainerView.verificationCode.resignFirstResponder()
     let verificationID = UserDefaults.standard.string(forKey: "ChangeNumberAuthVerificationID")
     let verificationCode = enterVerificationContainerView.verificationCode.text
 
@@ -68,7 +68,7 @@ class ChangeNumberEnterVerificationCodeController: UIViewController {
       self.enterVerificationContainerView.verificationCode.shake()
       return
     }
-    
+   
     if currentReachabilityStatus == .notReachable {
       basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
       return

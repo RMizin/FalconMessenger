@@ -17,7 +17,7 @@ class EnterVerificationCodeController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      view.backgroundColor = UIColor.white
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       view.addSubview(enterVerificationContainerView)
       enterVerificationContainerView.frame = view.bounds
       enterVerificationContainerView.resend.addTarget(self, action: #selector(sendSMSConfirmation), for: .touchUpInside)
@@ -62,7 +62,7 @@ class EnterVerificationCodeController: UIViewController {
   
   @objc func rightBarButtonDidTap () {
     print("tapped")
-    
+    enterVerificationContainerView.verificationCode.resignFirstResponder()
     if currentReachabilityStatus == .notReachable {
       basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
       return

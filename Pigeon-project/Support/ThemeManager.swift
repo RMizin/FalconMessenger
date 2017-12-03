@@ -68,6 +68,35 @@ enum Theme: Int {
       return UIImage(named: "blackSplash")!
     }
   }
+  
+  var typingIndicatorURL: URL? {
+    switch self {
+    case .Default:
+      return Bundle.main.url(forResource: "typingIndicator", withExtension: "gif")
+    case .Dark:
+      return Bundle.main.url(forResource: "typingindicatorDark", withExtension: "gif")
+    }
+  }
+  
+  var enterPhoneNumberBackground: UIImage {
+    switch self {
+    case .Default:
+      return  UIImage(named: "PigeonAuthCountryButton")!
+    case .Dark:
+      return UIImage(named: "DarkPigeonAuthCountryButton")!
+    }
+  }
+  
+  var enterPhoneNumberBackgroundSelected: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named:"PigeonAuthCountryButtonHighlighted")!
+    case .Dark:
+      return UIImage(named:"DarkPigeonAuthCountryButtonHighlighted")!
+    }
+  }
+  
+  
 
   
   var incomingBubble: UIImage {

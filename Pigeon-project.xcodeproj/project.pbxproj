@@ -179,6 +179,8 @@
 		4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */; };
 		4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */; };
 		4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC3841F33C0A10005B8E6 /* Country.swift */; };
+		4BF6F94D1FD188110011686B /* typingindicatorDark.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BF6F94C1FD188110011686B /* typingindicatorDark.gif */; };
+		4BF6F94F1FD2340E0011686B /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF6F94E1FD2340E0011686B /* Conversation.swift */; };
 		4BFD07761FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFD07751FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
@@ -375,6 +377,8 @@
 		4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationContainerView.swift; path = AuthenticationControllers/EnterVerificationContainerView.swift; sourceTree = "<group>"; };
 		4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectCountryCodeController.swift; path = AuthenticationControllers/SelectCountryCodeController.swift; sourceTree = "<group>"; };
 		4BEDC3841F33C0A10005B8E6 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Country.swift; path = AuthenticationControllers/Country.swift; sourceTree = "<group>"; };
+		4BF6F94C1FD188110011686B /* typingindicatorDark.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingindicatorDark.gif; path = ChatsControllers/Media/typingindicatorDark.gif; sourceTree = "<group>"; };
+		4BF6F94E1FD2340E0011686B /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = ChatsControllers/Conversation.swift; sourceTree = "<group>"; };
 		4BFD07751FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactsAuthorizationDeniedContainer.swift; path = ContactsControllers/ContactsAuthorizationDeniedContainer.swift; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
@@ -433,7 +437,6 @@
 				4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */,
 				4BE8BB411FCA836A00EB35FA /* SelectedMediaCollectionCell+timerHandlers.swift */,
 				4BE8BB431FCA83D200EB35FA /* PlayerCellView.swift */,
-				4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */,
 			);
 			name = ChatInputContainer;
 			sourceTree = "<group>";
@@ -531,7 +534,6 @@
 				4B4F45501F3225F100A6FF96 /* Settings */,
 				4B4F45511F3225F700A6FF96 /* Chats */,
 				4B4F45521F32260100A6FF96 /* Contacts */,
-				4BCE1ABB1F3714A600C0EBF7 /* Models */,
 				4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */,
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
@@ -719,6 +721,7 @@
 		4BC26B221F3A227E0093A9D2 /* Media */ = {
 			isa = PBXGroup;
 			children = (
+				4BF6F94C1FD188110011686B /* typingindicatorDark.gif */,
 				4BC26B231F3A22890093A9D2 /* typingIndicator.gif */,
 			);
 			name = Media;
@@ -727,7 +730,7 @@
 		4BC26B251F3A22B80093A9D2 /* MessengerViews */ = {
 			isa = PBXGroup;
 			children = (
-				4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */,
+				4BF6F9521FD3359C0011686B /* FlowLayout */,
 				4B7ACCB71F3A3C74000606E1 /* Cells */,
 				4BC26B221F3A227E0093A9D2 /* Media */,
 				4B1A36991F49990D00B4AA0A /* ChatInputContainer */,
@@ -740,6 +743,9 @@
 			children = (
 				4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */,
 				4BC26B261F3A234A0093A9D2 /* Message.swift */,
+				4BF6F94E1FD2340E0011686B /* Conversation.swift */,
+				4BCE1AB91F3714A000C0EBF7 /* User.swift */,
+				4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -750,14 +756,6 @@
 				4BCA3BF41FB4966E006AE321 /* LegalTableViewController.swift */,
 			);
 			name = Legal;
-			sourceTree = "<group>";
-		};
-		4BCE1ABB1F3714A600C0EBF7 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				4BCE1AB91F3714A000C0EBF7 /* User.swift */,
-			);
-			name = Models;
 			sourceTree = "<group>";
 		};
 		4BE571321F4D86E2009D9AB4 /* PhotoEditor */ = {
@@ -918,6 +916,14 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		4BF6F9521FD3359C0011686B /* FlowLayout */ = {
+			isa = PBXGroup;
+			children = (
+				4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */,
+			);
+			name = FlowLayout;
+			sourceTree = "<group>";
+		};
 		E788FC79B73E9599A409079F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1021,6 +1027,7 @@
 				4B45263C1F5EBCFA003FBA29 /* notification.caf in Resources */,
 				4BE5718D1F4D8816009D9AB4 /* PhotoCropEditorBorder.png in Resources */,
 				4BE571951F4D8816009D9AB4 /* text@3x.png in Resources */,
+				4BF6F94D1FD188110011686B /* typingindicatorDark.gif in Resources */,
 				4B5419551FB392570014C4FB /* INSPhotoGallery.bundle in Resources */,
 				4BE571871F4D8816009D9AB4 /* crop.png in Resources */,
 				4BBE9A2A1F4DA8FF00053935 /* Trash Icon@2x.png in Resources */,
@@ -1186,6 +1193,7 @@
 				4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */,
 				4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */,
 				4BE8BB441FCA83D200EB35FA /* PlayerCellView.swift in Sources */,
+				4BF6F94F1FD2340E0011686B /* Conversation.swift in Sources */,
 				4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */,
 				4BE571561F4D87A4009D9AB4 /* EmojisCollectionViewDelegate.swift in Sources */,
 				4BE5715E1F4D87A4009D9AB4 /* PhotoEditor+UITextView.swift in Sources */,

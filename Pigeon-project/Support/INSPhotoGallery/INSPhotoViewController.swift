@@ -73,6 +73,7 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         
         view.addGestureRecognizer(doubleTapGestureRecognizer)
         view.addGestureRecognizer(longPressGestureRecognizer)
+    //  navigationController?.navigationBar.barStyle = .blackTranslucent
         
         modalPresentationCapturesStatusBarAppearance = true
         

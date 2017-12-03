@@ -14,7 +14,7 @@ class TypingIndicatorCell: UICollectionViewCell {
   var typingIndicator: FLAnimatedImageView = {
     var typingIndicator = FLAnimatedImageView()
   
-    typingIndicator.backgroundColor = .white
+    typingIndicator.backgroundColor = .clear
   
     return typingIndicator
   }()

@@ -91,8 +91,7 @@ class AccountSettingsController: UITableViewController {
       self.userProfileContainerView.backgroundColor = self.view.backgroundColor
       self.navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
       self.tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
-    userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
-   
+      userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
   }
   
   @objc func clearUserData() {
@@ -172,9 +171,7 @@ class AccountSettingsController: UITableViewController {
     }
     AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
     UIApplication.shared.applicationIconBadgeNumber = 0
-    let theme = Theme.Default
-    ThemeManager.applyTheme(theme: theme)
-    setColorAccordingToTheme()
+   
     let destination = OnboardingController()
     
     let newNavigationController = UINavigationController(rootViewController: destination)
@@ -183,12 +180,18 @@ class AccountSettingsController: UITableViewController {
     
     newNavigationController.navigationBar.isTranslucent = false
     newNavigationController.modalTransitionStyle = .crossDissolve
-    
+   // newNavigationController.navigationBar.barStyle = .default
+ ///  newNavigationController.navigationBar.backgroundColor = .white
+//    let theme = Theme.Default
+//    ThemeManager.applyTheme(theme: theme)
+//    self.setColorAccordingToTheme()
     self.present(newNavigationController, animated: true, completion: {
          NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
-         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearConversations"), object: nil)
+        // NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearConversations"), object: nil)
          NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
-       self.tabBarController?.selectedIndex = tabs.chats.rawValue
+      
+        self.tabBarController?.selectedIndex = tabs.chats.rawValue
+      
     })
   }
   
@@ -242,7 +245,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       if indexPath.row == 1 {
          AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         let destination = UINavigationController(rootViewController: ChangeNumberEnterPhoneNumberController())
-        destination.navigationBar.barStyle = .default
+      //  destination.navigationBar.barStyle = .default
         destination.hidesBottomBarWhenPushed = true
         destination.navigationBar.isTranslucent = false
         self.present(destination, animated: true, completion: nil)

@@ -16,41 +16,67 @@ protocol ChangeNumberCountryPickerDelegate: class {
 fileprivate var savedContentOffset = CGPoint(x: 0, y: -50)
 fileprivate var savedCountryCode = String()
 
-
+  
 class ChangeNumberSelectCountryCodeController: UIViewController {
 
   let countries = Country().countries
   var filteredCountries = [[String:String]]()
   var searchBar = UISearchBar()
   let tableView = UITableView()
-
   weak var delegate: ChangeNumberCountryPickerDelegate?
   
     override func viewDidLoad() {
         super.viewDidLoad()
-      
-        searchBar.delegate = self
-        tableView.delegate = self
-        tableView.dataSource = self
-      
-      searchBar.searchBarStyle = .minimal
-      searchBar.backgroundColor = .white
-      view.addSubview(tableView)
-      view.addSubview(searchBar)
-      tableView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height - 114)
-      searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-      filteredCountries = countries
+      configureView()
+      configureSearchBar()
+      configureTableView()
     }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    tableView.setContentOffset(savedContentOffset, animated: false)
-  }
+    override func viewWillAppear(_ animated: Bool) {
+      super.viewWillAppear(animated)
+      tableView.setContentOffset(savedContentOffset, animated: false)
+    }
   
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    savedContentOffset = tableView.contentOffset
-  }
+    override func viewWillDisappear(_ animated: Bool) {
+      super.viewWillDisappear(animated)
+      savedContentOffset = tableView.contentOffset
+    }
+  
+    fileprivate func configureView() {
+      title = "Select your country"
+      view.addSubview(tableView)
+      view.addSubview(searchBar)
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    }
+  
+    fileprivate func configureSearchBar() {
+      searchBar.delegate = self
+      searchBar.searchBarStyle = .minimal
+      searchBar.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+      searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+    }
+  
+    fileprivate func configureTableView() {
+      tableView.delegate = self
+      tableView.dataSource = self
+      tableView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.translatesAutoresizingMaskIntoConstraints = false
+      tableView.separatorStyle = .none
+      tableView.tableHeaderView = searchBar
+      if #available(iOS 11.0, *) {
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+      } else {
+        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+      }
+      filteredCountries = countries
+    }
 }
 
 
@@ -58,6 +84,10 @@ extension ChangeNumberSelectCountryCodeController: UITableViewDelegate, UITableV
  
    func numberOfSections(in tableView: UITableView) -> Int {
     return 1
+  }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 55
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -69,6 +99,9 @@ extension ChangeNumberSelectCountryCodeController: UITableViewDelegate, UITableV
     let identifier = "cell"
     
     let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
+    cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+    cell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
     cell.textLabel?.text = filteredCountries[indexPath.row]["name"]! + " (" + filteredCountries[indexPath.row]["dial_code"]! + ")"
     
     if countryCode == filteredCountries[indexPath.row]["code"]! {
@@ -106,7 +139,6 @@ extension ChangeNumberSelectCountryCodeController: UITableViewDelegate, UITableV
 extension ChangeNumberSelectCountryCodeController: UISearchBarDelegate {
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    
     filteredCountries = searchText.isEmpty ? countries : countries.filter({ (data: [String : String]) -> Bool in
       return data["name"]!.lowercased().contains(searchText.lowercased())
     })

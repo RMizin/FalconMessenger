@@ -268,10 +268,8 @@ class ContactsController: UITableViewController {
             if let index = self.users.index(where: { (user) -> Bool in
               return user.id == User(dictionary: dictionary).id
             }) {
-              print("Already contains updating")
               self.users[index] = User(dictionary: dictionary)
             } else {
-              print("NOT CONTAINS APPENDING")
               self.users.append(User(dictionary: dictionary))
             }
             
