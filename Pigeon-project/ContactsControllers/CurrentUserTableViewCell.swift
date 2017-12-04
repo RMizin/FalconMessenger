@@ -15,7 +15,7 @@ class CurrentUserTableViewCell: UITableViewCell {
     icon.translatesAutoresizingMaskIntoConstraints = false
     icon.contentMode = .scaleAspectFill
     
-    icon.layer.cornerRadius = 33
+    icon.layer.cornerRadius = 26
     icon.layer.masksToBounds = true
     icon.image = UIImage(named: "PersonalStorage")
     
@@ -42,14 +42,14 @@ class CurrentUserTableViewCell: UITableViewCell {
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
-    icon.widthAnchor.constraint(equalToConstant: 65).isActive = true
-    icon.heightAnchor.constraint(equalToConstant: 65).isActive = true
+    icon.widthAnchor.constraint(equalToConstant: 55).isActive = true
+    icon.heightAnchor.constraint(equalToConstant: 55).isActive = true
     
     contentView.addSubview(title)
     title.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 0).isActive = true
     title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15).isActive = true
     title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-    title.heightAnchor.constraint(equalToConstant: 65).isActive = true
+    title.heightAnchor.constraint(equalToConstant: 55).isActive = true
   }
   
   required init?(coder aDecoder: NSCoder) {

@@ -193,7 +193,7 @@ class ChatInputContainerView: UIView {
     placeholderLabel.isHidden = !inputTextView.text.isEmpty
     placeholderLabel.leftAnchor.constraint(equalTo: inputTextView.leftAnchor, constant: 12).isActive = true
     placeholderLabel.rightAnchor.constraint(equalTo: inputTextView.rightAnchor).isActive = true
-    placeholderLabel.bottomAnchor.constraint(equalTo: inputTextView.bottomAnchor, constant: -(inputTextView.font?.pointSize)! / 2).isActive = true
+    placeholderLabel.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: inputTextView.font!.pointSize / 2).isActive = true
     placeholderLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
     
     sendButton.rightAnchor.constraint(equalTo: inputTextView.rightAnchor, constant: -4).isActive = true

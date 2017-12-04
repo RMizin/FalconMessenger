@@ -546,7 +546,7 @@ extension ChatsController {
     }
     
      let date = Date(timeIntervalSince1970: filtededConversations[indexPath.row].message?.timestamp as! TimeInterval)
-    cell.timeLabel.text = timeAgoSinceDate(date)
+    cell.timeLabel.text = timestampOfLastMessage(date)
     
     
     if filtededConversations[indexPath.row].user?.id == Auth.auth().currentUser?.uid {

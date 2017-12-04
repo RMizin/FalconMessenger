@@ -899,7 +899,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           
             if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+              let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
+              view.titleLabel.text = timestampOfChatLogMessage(date)
               cell.setRevealableView(view, style: .slide, direction: .left)
             }
           }
@@ -921,7 +922,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
             DispatchQueue.main.async {
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+                let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
+                view.titleLabel.text = timestampOfChatLogMessage(date)
                 cell.setRevealableView(view, style: .over , direction: .left)
               }
             }
@@ -961,7 +963,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           
             if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+              let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
+              view.titleLabel.text = timestampOfChatLogMessage(date)
               cell.setRevealableView(view, style: .slide , direction: .left)
             }
           }
@@ -1016,7 +1019,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           DispatchQueue.main.async {
           
             if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+              let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
+              view.titleLabel.text = timestampOfChatLogMessage(date)
               cell.setRevealableView(view, style: .over , direction: .left)
             }
           }
@@ -1077,7 +1081,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               }
               
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC()
+                let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
+                view.titleLabel.text = timestampOfChatLogMessage(date)
                 cell.setRevealableView(view, style: .slide , direction: .left)
               }
             }
@@ -1098,7 +1103,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           UIView.performWithoutAnimation {
             DispatchQueue.main.async {
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                view.titleLabel.text = message.timestamp?.doubleValue.getTimeStringFromUTC() // configure
+                let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
+                view.titleLabel.text = timestampOfChatLogMessage(date)
                 cell.setRevealableView(view, style: .over , direction: .left)
               }
             }

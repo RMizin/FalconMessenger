@@ -367,7 +367,7 @@ class ContactsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       if indexPath.section == 0 {
-         return 100
+         return 85
       } else {
          return 65
       }
@@ -419,31 +419,7 @@ class ContactsController: UITableViewController {
         
           cell.title.text = name
         }
-      /*
-      if snapshot.exists() {
-        
-        guard let title = self.user?.name else { return }
-        
-        if let stringSnapshot = snapshot.value as? String {
-          
-          if stringSnapshot == statusOnline { // user online
-            self.navigationItem.setTitle(title: title, subtitle: statusOnline)
-          } else { // user got a timstamp converted to string (was in earlier versions of app)
-            print("\n\nOLDER VERSION OF TIMESTAMP\n\n")
-            let date = Date(timeIntervalSince1970: TimeInterval(stringSnapshot)!)
-            let subtitle = "Last seen " + timeAgoSinceDate(date)
-            self.navigationItem.setTitle(title: title, subtitle: subtitle)
-          }
-          
-        } else if let timeintervalSnapshot = snapshot.value as? TimeInterval { //user got server timestamp in miliseconds
-          print("\n\newer VERSION OF TIMESTAMP\n\n")
-          let date = Date(timeIntervalSince1970: timeintervalSnapshot/1000)
-          let subtitle = "Last seen " + timeAgoSinceDate(date)
-          self.navigationItem.setTitle(title: title, subtitle: subtitle)
-        }
-      }
-      */
-      
+    
       if let statusString = filteredUsers[indexPath.row].onlineStatus as? String {
         if statusString == statusOnline {
           cell.subtitle.textColor = FalconPalette.falconPaletteBlue
@@ -462,22 +438,7 @@ class ContactsController: UITableViewController {
        
         let subtitle = "Last seen " + timeAgoSinceDate(date)
         cell.subtitle.text = subtitle
-       // self.navigationItem.setTitle(title: title, subtitle: subtitle)
       }
-       // if let status = filteredUsers[indexPath.row].onlineStatus {
-         // if status == statusOnline {
-          //  cell.subtitle.textColor = FalconPalette.falconPaletteBlue
-         //   cell.subtitle.text = status
-            
-        //  } else {
-          //  let date = NSDate(timeIntervalSince1970:  status.doubleValue/1000 )
-          //  cell.subtitle.textColor = UIColor.lightGray
-           // cell.subtitle.text = "last seen " + timeAgoSinceDate(date: date, timeinterval: status.doubleValue, numericDates: false)
-      //    }
-      //  } else {
-          
-        //  cell.subtitle.text = ""
-      //  }
       
         if let url = filteredUsers[indexPath.row].thumbnailPhotoURL {          
           cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
@@ -500,16 +461,13 @@ class ContactsController: UITableViewController {
     } else if indexPath.section == 2 {
       
       let cell = tableView.dequeueReusableCell(withIdentifier: contactsCellID, for: indexPath) as! ContactsTableViewCell
-      
       cell.icon.image = UIImage(named: "UserpicIcon")
       cell.title.text = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
       
       return cell
     }
-    
     return nil
   }
-  
   
     var chatLogController:ChatLogController? = nil
     var autoSizingCollectionViewFlowLayout:AutoSizingCollectionViewFlowLayout? = nil

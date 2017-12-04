@@ -12,11 +12,11 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="100" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" id="pQO-fj-agS" customClass="TimestampView" customModule="Pigeon_project" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="60" height="28"/>
+            <rect key="frame" x="0.0" y="0.0" width="67" height="28"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="12:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxG-3r-Lcq">
-                    <rect key="frame" x="5" y="8.5" width="50" height="12"/>
+                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="12:00" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxG-3r-Lcq">
+                    <rect key="frame" x="0.0" y="0.0" width="55" height="28"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                     <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -26,12 +26,14 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="OxG-3r-Lcq" secondAttribute="bottom" constant="5" id="97x-V5-6RB"/>
-                <constraint firstItem="OxG-3r-Lcq" firstAttribute="leading" secondItem="pQO-fj-agS" secondAttribute="leading" constant="5" id="LXp-Tz-n9F"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="leading" secondItem="pQO-fj-agS" secondAttribute="leading" id="LXp-Tz-n9F"/>
                 <constraint firstItem="OxG-3r-Lcq" firstAttribute="centerY" secondItem="pQO-fj-agS" secondAttribute="centerY" id="OHc-PJ-Zcl"/>
                 <constraint firstItem="OxG-3r-Lcq" firstAttribute="top" secondItem="pQO-fj-agS" secondAttribute="top" constant="5" id="Pb4-RT-Ddc"/>
-                <constraint firstAttribute="trailing" secondItem="OxG-3r-Lcq" secondAttribute="trailing" constant="5" id="Ube-XS-ZVG"/>
+                <constraint firstAttribute="trailing" secondItem="OxG-3r-Lcq" secondAttribute="trailing" constant="12" id="Ube-XS-ZVG"/>
                 <constraint firstItem="OxG-3r-Lcq" firstAttribute="leading" secondItem="pQO-fj-agS" secondAttribute="leading" constant="5" id="WgF-6x-4Ot"/>
-                <constraint firstItem="OxG-3r-Lcq" firstAttribute="leading" secondItem="pQO-fj-agS" secondAttribute="leading" constant="5" id="hVu-mn-iJL"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="top" secondItem="pQO-fj-agS" secondAttribute="top" id="hGT-uQ-GQn"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="leading" secondItem="pQO-fj-agS" secondAttribute="leading" id="hVu-mn-iJL"/>
+                <constraint firstAttribute="bottom" secondItem="OxG-3r-Lcq" secondAttribute="bottom" id="i0b-VY-NEw"/>
                 <constraint firstAttribute="trailing" secondItem="OxG-3r-Lcq" secondAttribute="trailing" constant="5" id="qAG-Zy-1fp"/>
                 <constraint firstAttribute="trailing" secondItem="OxG-3r-Lcq" secondAttribute="trailing" constant="5" id="wdC-LO-G3W"/>
             </constraints>

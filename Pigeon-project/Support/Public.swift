@@ -28,8 +28,8 @@ struct DeviceType {
   static let iPhone678p = UIDevice.current.userInterfaceIdiom == .phone && ScreenSize.maxLength == 736.0
   static let iPhoneX = UIDevice.current.userInterfaceIdiom == .phone && ScreenSize.maxLength == 812.0
   
-  static let IS_IPAD              = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.maxLength == 1024.0
-  static let IS_IPAD_PRO          = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.maxLength == 1366.0
+  static let IS_IPAD = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.maxLength == 1024.0
+  static let IS_IPAD_PRO = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.maxLength == 1366.0
 }
 
 struct AppUtility {
@@ -50,7 +50,6 @@ struct AppUtility {
 struct NameConstants {
   static let personalStorage = "Personal storage"
 }
-
 
 public let messageStatusRead = "Read"
 public let messageStatusSent = "Sent"
@@ -75,68 +74,9 @@ extension String {
     return components(separatedBy: CharacterSet.decimalDigits.inverted)
       .joined()
   }
-}
-
-extension Int {
-  func toString() -> String {
-    let myString = String(self)
-    return myString
-  }
-}
-
-
-extension String {
+  
   var doubleValue: Double {
     return Double(self) ?? 0
-  }
-}
-
-extension Bool {
-  init<T: BinaryInteger>(_ num: T) {
-    self.init(num != 0)
-  }
-}
-
-extension Double {
-  func getShortDateStringFromUTC() -> String {
-    let date = Date(timeIntervalSince1970: self)
-    
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateStyle = .medium
-    dateFormatter.dateFormat = "dd/MM/yy"
-   // dateFormatter.amSymbol = "AM"
-   // dateFormatter.pmSymbol = "PM"
-    
-    return dateFormatter.string(from: date)
-  }
-}
-
-extension Double {
-  func getTimeStringFromUTC() -> String {
-    let date = Date(timeIntervalSince1970: self)
-    
-    let dateFormatter = DateFormatter()
-    let locale = Locale(identifier: "en_US_POSIX")
-    dateFormatter.locale = locale
-    dateFormatter.dateStyle = .medium
-    
-    dateFormatter.dateFormat = "hh:mm a"
-    dateFormatter.amSymbol = "AM"
-    dateFormatter.pmSymbol = "PM"
-    
-    return dateFormatter.string(from: date)
-  }
-}
-
-extension Double {
-  func getDateStringFromUTC() -> String {
-    let date = Date(timeIntervalSince1970: self)
-    
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateStyle = .medium
-    dateFormatter.dateFormat = "dd.MM.yyyy hh:mm a"
-    
-    return dateFormatter.string(from: date)
   }
 }
 
@@ -156,51 +96,84 @@ extension Array {
   }
 }
 
-
-extension SystemSoundID {
-  static func playFileNamed(fileName: String, withExtenstion fileExtension: String) {
-    var sound: SystemSoundID = 0
-    if let soundURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension) {
-      AudioServicesCreateSystemSoundID(soundURL as CFURL, &sound)
-      AudioServicesPlaySystemSound(sound)
-    }
+extension Bool {
+  init<T: BinaryInteger>(_ num: T) {
+    self.init(num != 0)
   }
 }
 
-func basicErrorAlertWith (title: String, message: String, controller: UIViewController) {
-  
-  let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-  alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
-  controller.present(alert, animated: true, completion: nil)
-}
-
-func libraryAccessChecking() -> Bool {
-  
-  let status = PHPhotoLibrary.authorizationStatus()
-  
-  switch status {
-  case .authorized:
-    return true
-    
-  case .denied, .restricted :
-    return false
-    
-  case .notDetermined:
-    return false
+extension Int {
+  func toString() -> String {
+    let myString = String(self)
+    return myString
   }
 }
 
-func cameraAccessChecking() -> Bool  {
+extension Date {
   
-  if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
-    
-    return true
-    
+  func getShortDateStringFromUTC() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .medium
+    dateFormatter.dateFormat = "dd/MM/yy"
+    return dateFormatter.string(from: self)
+  }
+  
+  func getTimeStringFromUTC() -> String {
+    let dateFormatter = DateFormatter()
+    let locale = Locale(identifier: "en_US_POSIX")
+    dateFormatter.locale = locale
+    dateFormatter.dateStyle = .medium
+    dateFormatter.dateFormat = "hh:mm a"
+    dateFormatter.amSymbol = "AM"
+    dateFormatter.pmSymbol = "PM"
+    return dateFormatter.string(from: self)
+  }
+
+  func dayOfWeek() -> String {
+    let dateFormatter = DateFormatter()
+    let locale = Locale(identifier: "en_US_POSIX")
+    dateFormatter.locale = locale
+    dateFormatter.dateFormat = "E"
+    return dateFormatter.string(from: self).capitalized
+  }
+  
+  func dayNumberOfWeek() -> Int {
+    return Calendar.current.dateComponents([.weekday], from: self).weekday!
+  }
+}
+
+func timestampOfLastMessage(_ date: Date) -> String {
+  let calendar = NSCalendar.current
+  let unitFlags: Set<Calendar.Component> = [ .day, .weekOfYear, .weekday]
+  let now = Date()
+  let earliest = now < date ? now : date
+  let latest = (earliest == now) ? date : now
+  let components =  calendar.dateComponents(unitFlags, from: earliest,  to: latest)
+  
+  if components.weekOfYear! >= 1 {
+    return date.getShortDateStringFromUTC()
+  } else if components.weekOfYear! < 1 && date.dayNumberOfWeek() != now.dayNumberOfWeek() {
+    return date.dayOfWeek()
   } else {
-    
-    return false
+    return date.getTimeStringFromUTC()
   }
 }
+
+func timestampOfChatLogMessage(_ date: Date) -> String {
+ // let calendar = NSCalendar.current
+ //let unitFlags: Set<Calendar.Component> = [ .day, .weekOfYear, .weekday]
+  let now = Date()
+//  let earliest = now < date ? now : date
+//  let latest = (earliest == now) ? date : now
+ // let components =  calendar.dateComponents(unitFlags, from: earliest,  to: latest)
+  
+  if date.dayNumberOfWeek() != now.dayNumberOfWeek() {
+    return "\(date.getShortDateStringFromUTC())\n\(date.getTimeStringFromUTC())"//date.
+  } else {
+    return date.getTimeStringFromUTC()
+  }
+}
+
 
 func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
   let calendar = NSCalendar.current
@@ -263,8 +236,55 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
   } else {
     return "just now"
   }
-  
 }
+
+
+extension SystemSoundID {
+  static func playFileNamed(fileName: String, withExtenstion fileExtension: String) {
+    var sound: SystemSoundID = 0
+    if let soundURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension) {
+      AudioServicesCreateSystemSoundID(soundURL as CFURL, &sound)
+      AudioServicesPlaySystemSound(sound)
+    }
+  }
+}
+
+func basicErrorAlertWith (title: String, message: String, controller: UIViewController) {
+  
+  let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+  alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
+  controller.present(alert, animated: true, completion: nil)
+}
+
+func libraryAccessChecking() -> Bool {
+  
+  let status = PHPhotoLibrary.authorizationStatus()
+  
+  switch status {
+  case .authorized:
+    return true
+    
+  case .denied, .restricted :
+    return false
+    
+  case .notDetermined:
+    return false
+  }
+}
+
+func cameraAccessChecking() -> Bool  {
+  
+  if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
+    
+    return true
+    
+  } else {
+    
+    return false
+  }
+}
+
+
 
 public let statusOnline = "Online"
 public let userMessagesFirebaseFolder = "userMessages"
@@ -615,7 +635,6 @@ extension UIImageView {
     DispatchQueue.main.async {
       activityIndicator.startAnimating()
     }
-    
   }
   
   
@@ -627,7 +646,6 @@ extension UIImageView {
       activityIndicator.removeFromSuperview()
       backgroundView.removeFromSuperview()
   }
-  
 }
 
 

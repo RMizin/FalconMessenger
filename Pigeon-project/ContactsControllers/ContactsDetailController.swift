@@ -54,7 +54,7 @@ class ContactsDetailController: UITableViewController {
         cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         
       } else if indexPath.section == 1 {
-        
+        cell.imageView?.image = nil
         cell.textLabel?.text = contactPhoneNumbers[indexPath.row]
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
       } else {
