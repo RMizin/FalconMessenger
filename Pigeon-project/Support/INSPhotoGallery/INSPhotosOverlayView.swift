@@ -156,14 +156,9 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
     private func setupNavigationBar() {
         navigationBar = UINavigationBar()
         navigationBar.translatesAutoresizingMaskIntoConstraints = false
-        navigationBar.backgroundColor = UIColor.black
         navigationBar.alpha = 0.8
-      //  navigationBar.barTintColor = nil
-      //  navigationBar.isTranslucent = true
-      //  navigationBar.shadowImage = UIImage()
-       // navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationBar.barTintColor = .black
         navigationBar.barStyle = .blackTranslucent
-        
         navigationItem = UINavigationItem(title: "")
         navigationBar.items = [navigationItem]
         addSubview(navigationBar)

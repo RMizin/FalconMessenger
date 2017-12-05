@@ -94,6 +94,7 @@
 		4BBE9A291F4DA8FF00053935 /* Trash Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A261F4DA8FF00053935 /* Trash Icon.png */; };
 		4BBE9A2A1F4DA8FF00053935 /* Trash Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A271F4DA8FF00053935 /* Trash Icon@2x.png */; };
 		4BBE9A2B1F4DA8FF00053935 /* Trash Icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A281F4DA8FF00053935 /* Trash Icon@3x.png */; };
+		4BC0AE331FD6F8A400C39A61 /* typingindicatorGray.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC0AE321FD6F8A300C39A61 /* typingindicatorGray.gif */; };
 		4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */; };
 		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
 		4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC26B231F3A22890093A9D2 /* typingIndicator.gif */; };
@@ -291,6 +292,7 @@
 		4BBE9A261F4DA8FF00053935 /* Trash Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Trash Icon.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/Trash Icon.png"; sourceTree = "<group>"; };
 		4BBE9A271F4DA8FF00053935 /* Trash Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Trash Icon@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/Trash Icon@2x.png"; sourceTree = "<group>"; };
 		4BBE9A281F4DA8FF00053935 /* Trash Icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Trash Icon@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/Trash Icon@3x.png"; sourceTree = "<group>"; };
+		4BC0AE321FD6F8A300C39A61 /* typingindicatorGray.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingindicatorGray.gif; path = ChatsControllers/Media/typingindicatorGray.gif; sourceTree = "<group>"; };
 		4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatInputContainerView.swift; path = ChatsControllers/ChatInputContainerView.swift; sourceTree = "<group>"; };
 		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
 		4BC26B231F3A22890093A9D2 /* typingIndicator.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingIndicator.gif; path = ChatsControllers/Media/typingIndicator.gif; sourceTree = "<group>"; };
@@ -721,6 +723,7 @@
 		4BC26B221F3A227E0093A9D2 /* Media */ = {
 			isa = PBXGroup;
 			children = (
+				4BC0AE321FD6F8A300C39A61 /* typingindicatorGray.gif */,
 				4BF6F94C1FD188110011686B /* typingindicatorDark.gif */,
 				4BC26B231F3A22890093A9D2 /* typingIndicator.gif */,
 			);
@@ -1009,6 +1012,7 @@
 				4BE571851F4D8816009D9AB4 /* clear@2x.png in Resources */,
 				4BE5718C1F4D8816009D9AB4 /* draw@3x.png in Resources */,
 				4BEDC3731F335E2B0005B8E6 /* CallingCodes.plist in Resources */,
+				4BC0AE331FD6F8A400C39A61 /* typingindicatorGray.gif in Resources */,
 				4BE5718B1F4D8816009D9AB4 /* draw@2x.png in Resources */,
 				4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */,
 				4BE571921F4D8816009D9AB4 /* share@3x.png in Resources */,

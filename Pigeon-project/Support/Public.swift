@@ -140,6 +140,12 @@ extension Date {
   func dayNumberOfWeek() -> Int {
     return Calendar.current.dateComponents([.weekday], from: self).weekday!
   }
+  func monthNumber() -> Int {
+    return Calendar.current.dateComponents([.month], from: self).month!
+  }
+  func yearNumber() -> Int {
+    return Calendar.current.dateComponents([.year], from: self).year!
+  }
 }
 
 func timestampOfLastMessage(_ date: Date) -> String {
@@ -160,20 +166,13 @@ func timestampOfLastMessage(_ date: Date) -> String {
 }
 
 func timestampOfChatLogMessage(_ date: Date) -> String {
- // let calendar = NSCalendar.current
- //let unitFlags: Set<Calendar.Component> = [ .day, .weekOfYear, .weekday]
   let now = Date()
-//  let earliest = now < date ? now : date
-//  let latest = (earliest == now) ? date : now
- // let components =  calendar.dateComponents(unitFlags, from: earliest,  to: latest)
-  
-  if date.dayNumberOfWeek() != now.dayNumberOfWeek() {
-    return "\(date.getShortDateStringFromUTC())\n\(date.getTimeStringFromUTC())"//date.
+  if now.getShortDateStringFromUTC() != date.getShortDateStringFromUTC() {
+    return "\(date.getShortDateStringFromUTC())\n\(date.getTimeStringFromUTC())"
   } else {
     return date.getTimeStringFromUTC()
   }
 }
-
 
 func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
   let calendar = NSCalendar.current
@@ -238,6 +237,19 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
   }
 }
 
+extension UITableViewCell {
+  var selectionColor: UIColor {
+    set {
+      let view = UIView()
+      view.backgroundColor = newValue
+
+      self.selectedBackgroundView = view
+    }
+    get {
+      return self.selectedBackgroundView?.backgroundColor ?? UIColor.clear
+    }
+  }
+}
 
 extension SystemSoundID {
   static func playFileNamed(fileName: String, withExtenstion fileExtension: String) {

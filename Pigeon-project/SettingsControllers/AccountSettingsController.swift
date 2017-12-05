@@ -90,6 +90,8 @@ class AccountSettingsController: UITableViewController {
       tableView.backgroundColor = view.backgroundColor
       userProfileContainerView.backgroundColor = view.backgroundColor
       navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
+      navigationController?.navigationBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
+      tabBarController?.tabBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
       tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor

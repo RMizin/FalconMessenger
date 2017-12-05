@@ -20,9 +20,19 @@ enum Theme: Int {
     case .Default:
       return UIColor.white
     case .Dark:
-      return UIColor.black
+      return .black//UIColor(red:0.07, green:0.07, blue:0.07, alpha:1.0)
     }
   }
+  
+  var barBackgroundColor: UIColor {
+    switch self {
+    case .Default:
+      return .white
+    case .Dark:
+      return .black//UIColor(red:0.07, green:0.07, blue:0.07, alpha:1.0)
+    }
+  }
+  
   
   var generalTitleColor: UIColor {
     switch self {
@@ -42,12 +52,21 @@ enum Theme: Int {
     }
   }
   
+  var cellSelectionColor: UIColor {
+    switch self {
+    case .Default:
+      return  UIColor(red:0.95, green:0.95, blue:0.95, alpha:1.0)// UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
+    case .Dark:
+      return UIColor(red:0.10, green:0.10, blue:0.10, alpha:1.0)
+    }
+  }
+  
   var inputTextViewColor: UIColor {
     switch self {
     case .Default:
       return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
     case .Dark:
-      return UIColor(red: 0.10, green: 0.10, blue: 0.10, alpha: 1.0)
+      return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
     }
   }
   
@@ -96,13 +115,10 @@ enum Theme: Int {
     }
   }
   
-  
-
-  
   var incomingBubble: UIImage {
     switch self {
     case .Default:
-      return  UIImage(named: "DarkPigeonBubbleIncomingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))//UIImage(named: "PigeonBubbleIncomingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
+      return UIImage(named: "DarkPigeonBubbleIncomingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))//UIImage(named: "PigeonBubbleIncomingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
     case .Dark:
       return UIImage(named: "DarkPigeonBubbleIncomingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
     }
@@ -184,8 +200,11 @@ func setGlobalNavigationBarSettingsAccordingToTheme(theme: Theme) {
 
   UITabBar.appearance().barStyle = theme.barStyle
   UINavigationBar.appearance().isTranslucent = false
-  UINavigationBar.appearance().barStyle = theme .barStyle
+  UINavigationBar.appearance().barStyle = theme.barStyle
+  UINavigationBar.appearance().barTintColor = theme.barBackgroundColor
+  UITabBar.appearance().barTintColor = theme.barBackgroundColor
   UIApplication.shared.statusBarStyle = theme.statusBarStyle
+  UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
   UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: theme.generalTitleColor]
 }
 

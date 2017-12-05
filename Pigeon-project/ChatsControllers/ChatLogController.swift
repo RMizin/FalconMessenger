@@ -168,6 +168,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             dictionary.updateValue(duration, forKey: "voiceDuration")
             dictionary.updateValue(startTime, forKey: "voiceStartTime")
           }
+          
+          if let messageTimestamp = Message(dictionary: dictionary).timestamp {  /* pre-converting timeintervals into dates */
+            let date = Date(timeIntervalSince1970: TimeInterval(truncating: messageTimestamp))
+            let convertedTimestamp = timestampOfChatLogMessage(date) as AnyObject
+            dictionary.updateValue(convertedTimestamp, forKey: "convertedTimestamp")
+          }
+          
         
           if self.isInitialChatMessagesLoad {
             appendingMessages.append(Message(dictionary: dictionary))
@@ -332,6 +339,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 dictionary.updateValue(duration, forKey: "voiceDuration")
                 dictionary.updateValue(startTime, forKey: "voiceStartTime")
               }
+              
+              if let messageTimestamp = Message(dictionary: dictionary).timestamp {  /* pre-converting timeintervals into dates */
+                let date = Date(timeIntervalSince1970: TimeInterval(truncating: messageTimestamp))
+                let convertedTimestamp = timestampOfChatLogMessage(date) as AnyObject
+                dictionary.updateValue(convertedTimestamp, forKey: "convertedTimestamp")
+              }
+              
             
               self.messages.append(Message(dictionary: dictionary))
             
@@ -795,7 +809,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  var refreshControl: UIRefreshControl = {
+ var refreshControl: UIRefreshControl = {
     var refreshControl = UIRefreshControl()
     refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
     refreshControl.tintColor = ThemeManager.currentTheme().generalTitleColor
@@ -849,15 +863,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   fileprivate func showTypingIndicator(indexPath: IndexPath) -> UICollectionViewCell? {
     
     let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: typingIndicatorCellID, for: indexPath) as! TypingIndicatorCell
-    
-    guard let gifURL = ThemeManager.currentTheme().typingIndicatorURL else {
-        return nil
-    }
-    
-    guard let gifData = NSData(contentsOf: gifURL) else {
-        return nil
-    }
-    
+    guard let gifURL = ThemeManager.currentTheme().typingIndicatorURL else { return nil }
+    guard let gifData = NSData(contentsOf: gifURL) else { return nil }
     cell.typingIndicator.animatedImage = FLAnimatedImage(animatedGIFData: gifData as Data)
     
     return cell
@@ -876,19 +883,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         UIView.performWithoutAnimation {
       
           cell.textView.text = messageText
-          cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - message.estimatedFrameForText!.width - 40,
-                                         y: 0,
-                                         width: message.estimatedFrameForText!.width + 30,
-                                         height: cell.frame.size.height).integral
-          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(),
-                                            height: cell.bubbleView.frame.height.rounded())
+          cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - message.estimatedFrameForText!.width - 40, y: 0,
+                                         width: message.estimatedFrameForText!.width + 30, height: cell.frame.size.height).integral
+          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
             
           DispatchQueue.main.async {
-            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
-            
             switch indexPath.row == self.messages.count - 1 {
-              
             case true:
+              cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
               cell.deliveryStatus.text = self.messages[indexPath.row].status
               cell.deliveryStatus.isHidden = false
               break
@@ -899,8 +901,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           
             if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
-              view.titleLabel.text = timestampOfChatLogMessage(date)
+              view.titleLabel.text = message.convertedTimestamp
               cell.setRevealableView(view, style: .slide, direction: .left)
             }
           }
@@ -913,18 +914,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
         
           UIView.performWithoutAnimation {
-            
             cell.textView.text = messageText
-            cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(),
-                                          height: cell.frame.size.height.rounded())
-            cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(),
-                                              height: cell.bubbleView.frame.height.rounded())
+            cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
+            cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
             
             DispatchQueue.main.async {
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
-                view.titleLabel.text = timestampOfChatLogMessage(date)
-                cell.setRevealableView(view, style: .over , direction: .left)
+                view.titleLabel.text = message.convertedTimestamp
+                cell.setRevealableView(view, style: .over, direction: .left)
               }
             }
           }
@@ -941,18 +938,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         cell.chatLogController = self
         
         UIView.performWithoutAnimation {
-          
           cell.message = message
           cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
           cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
     
           DispatchQueue.main.async {
-          
-            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
-          
             switch indexPath.row == self.messages.count - 1 {
-            
             case true:
+              cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
               cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
               cell.deliveryStatus.isHidden = false
               break
@@ -963,9 +956,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           
             if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
-              view.titleLabel.text = timestampOfChatLogMessage(date)
-              cell.setRevealableView(view, style: .slide , direction: .left)
+              view.titleLabel.text = message.convertedTimestamp
+              cell.setRevealableView(view, style: .slide, direction: .left)
             }
           }
         
@@ -1012,16 +1004,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         cell.chatLogController = self
         UIView.performWithoutAnimation {
-          
           cell.message = message
           cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         
           DispatchQueue.main.async {
-          
             if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
-              view.titleLabel.text = timestampOfChatLogMessage(date)
-              cell.setRevealableView(view, style: .over , direction: .left)
+              view.titleLabel.text = message.convertedTimestamp
+              cell.setRevealableView(view, style: .over, direction: .left)
             }
           }
         
@@ -1069,21 +1058,19 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           UIView.performWithoutAnimation {
             DispatchQueue.main.async {
               switch indexPath.row == self.messages.count - 1 {
-                
               case true:
                 cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
                 cell.deliveryStatus.isHidden = false
                 break
-                
+            
               default:
                 cell.deliveryStatus.isHidden = true
                 break
               }
               
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
-                view.titleLabel.text = timestampOfChatLogMessage(date)
-                cell.setRevealableView(view, style: .slide , direction: .left)
+                view.titleLabel.text = message.convertedTimestamp
+                cell.setRevealableView(view, style: .slide, direction: .left)
               }
             }
           }
@@ -1103,9 +1090,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           UIView.performWithoutAnimation {
             DispatchQueue.main.async {
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                let date = Date(timeIntervalSince1970: TimeInterval(truncating: message.timestamp ?? 0))
-                view.titleLabel.text = timestampOfChatLogMessage(date)
-                cell.setRevealableView(view, style: .over , direction: .left)
+                view.titleLabel.text = message.convertedTimestamp
+                cell.setRevealableView(view, style: .over, direction: .left)
               }
             }
           }
@@ -1160,7 +1146,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }
     }
   }
-  
+    
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     
     print("did select", indexPath)
@@ -1514,6 +1500,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       values.updateValue(decoded, forKey: "voiceData")
       values.updateValue(duration, forKey: "voiceDuration")
       values.updateValue(startTime, forKey: "voiceStartTime")
+    }
+    
+    if let messageTimestamp = Message(dictionary: values).timestamp {  /* pre-converting timeintervals into dates */
+      let date = Date(timeIntervalSince1970: TimeInterval(truncating: messageTimestamp))
+      let convertedTimestamp = timestampOfChatLogMessage(date) as AnyObject
+      values.updateValue(convertedTimestamp, forKey: "convertedTimestamp")
     }
     
     self.collectionView?.performBatchUpdates ({

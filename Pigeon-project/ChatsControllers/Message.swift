@@ -15,8 +15,9 @@ class Message:  NSObject  {
 
     var fromId: String?
     var text: String?
-    var timestamp: NSNumber?
     var toId: String?
+    var timestamp: NSNumber?
+    var convertedTimestamp: String?
   
     var status: String?
     var seen: Bool?
@@ -49,8 +50,10 @@ class Message:  NSObject  {
         messageUID = dictionary["messageUID"] as? String
         fromId = dictionary["fromId"] as? String
         text = dictionary["text"] as? String
-        timestamp = dictionary["timestamp"] as? NSNumber
         toId = dictionary["toId"] as? String
+        timestamp = dictionary["timestamp"] as? NSNumber
+      
+        convertedTimestamp = dictionary["convertedTimestamp"] as? String
       
         status = dictionary["status"] as? String
         seen = dictionary["seen"] as? Bool
