@@ -703,6 +703,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.register(OutgoingVoiceMessageCell.self, forCellWithReuseIdentifier: outgoingVoiceMessageCellID)
     collectionView?.register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
     collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
+    
+    configureRefreshControlInitialTintColor()
+  }
+  
+  fileprivate func configureRefreshControlInitialTintColor() { /* fixes bug of not setting refresh control tint color on initial refresh */
+    collectionView?.contentOffset = CGPoint(x: 0, y: -refreshControl.frame.size.height)
+    refreshControl.beginRefreshing()
+    refreshControl.endRefreshing()
   }
   
   
