@@ -53,6 +53,16 @@ class AccountSettingsController: UITableViewController {
     }
   }
   
+  fileprivate func managePhotoPlaceholderLabelAppearance() {
+    DispatchQueue.main.async {
+      if self.userProfileContainerView.profileImageView.image != nil {
+        self.userProfileContainerView.addPhotoLabel.isHidden = true
+      } else {
+        self.userProfileContainerView.addPhotoLabel.isHidden = false
+      }
+    }
+  }
+  
   func configureNavigationBarDefaultRightBarButton () {
     
     let nightMode = UIButton()
@@ -114,6 +124,7 @@ class AccountSettingsController: UITableViewController {
             if error != nil {
               //basicErrorAlertWith(title: "Error loading profile picture", message: "It seems like you are not connected to the internet.", controller: self)
             }
+             self.managePhotoPlaceholderLabelAppearance()
           })
         }
       })

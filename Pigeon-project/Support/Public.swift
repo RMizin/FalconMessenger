@@ -156,13 +156,26 @@ func timestampOfLastMessage(_ date: Date) -> String {
   let latest = (earliest == now) ? date : now
   let components =  calendar.dateComponents(unitFlags, from: earliest,  to: latest)
   
-  if components.weekOfYear! >= 1 {
-    return date.getShortDateStringFromUTC()
-  } else if components.weekOfYear! < 1 && date.dayNumberOfWeek() != now.dayNumberOfWeek() {
-    return date.dayOfWeek()
-  } else {
+//  if components.weekOfYear! >= 1 {
+//    return date.getShortDateStringFromUTC()
+//  } else if components.weekOfYear! < 1 && date.dayNumberOfWeek() != now.dayNumberOfWeek() {
+//    return date.dayOfWeek()
+//  } else {
+//    return date.getTimeStringFromUTC()
+//  }
+  
+  if now.getShortDateStringFromUTC() != date.getShortDateStringFromUTC() {  // not today
+    if components.weekOfYear! >= 1 { // last week
+      return date.getShortDateStringFromUTC()
+    } else { // this week
+      return date.dayOfWeek()
+    }
+   
+  } else { // this day
     return date.getTimeStringFromUTC()
   }
+  
+  
 }
 
 func timestampOfChatLogMessage(_ date: Date) -> String {

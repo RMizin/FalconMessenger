@@ -101,6 +101,7 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
               if self.userProfileContainerView?.profileImageView.image != nil {
                 self.userProfileContainerView?.profileImageView.image = nil
               }
+              self.managePhotoPlaceholderLabelAppearance()
               self.userProfileContainerView?.profileImageView.hideActivityIndicator()
               print("deleted")
               
@@ -317,6 +318,7 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
       reference.updateChildValues(["thumbnailPhotoURL" : String(describing: thumbnailImageURL), "thumbnailPhotoURLPath" : path], withCompletionBlock: { (error, ref) in
         if error != nil {
           self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+          
           basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError, controller: self.controllerWithUserProfilePhoto!)
           return
         }
@@ -338,7 +340,7 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
         
           return
         }
-        
+        self.managePhotoPlaceholderLabelAppearance()
         let reference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
         reference.updateChildValues(["photoURL" : String(describing: imageURL), "photoURLPath" : path], withCompletionBlock: { (error, ref) in
           
@@ -352,6 +354,16 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
     })
   }
 
+  fileprivate func managePhotoPlaceholderLabelAppearance() {
+    DispatchQueue.main.async {
+      if self.userProfileContainerView?.profileImageView.image != nil {
+        self.userProfileContainerView?.addPhotoLabel.isHidden = true
+      } else {
+        self.userProfileContainerView?.addPhotoLabel.isHidden = false
+      }
+    }
+  }
+  
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
     print("canceled picker")
     controllerWithUserProfilePhoto?.dismiss(animated: true, completion: nil)

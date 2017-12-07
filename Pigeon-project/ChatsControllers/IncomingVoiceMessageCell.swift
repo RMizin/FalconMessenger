@@ -35,22 +35,13 @@ class IncomingVoiceMessageCell: BaseMessageCell {
     bubbleView.frame.size.width = 150
     playerView.playLeadingAnchor.constant = 15
     playerView.timerLabel.font = UIFont.systemFont(ofSize: 12)
-    setCellSize()
   }
   
   override func prepareViewsForReuse() {
-    setCellSize()
     playerView.seconds = 0
     playerView.startingTime = 0
     playerView.play.setImage(UIImage(named: "pauseBlack"), for: .selected)
     playerView.play.setImage(UIImage(named: "playBlack"), for: .normal)
     playerView.play.isSelected = false
-   
-  }
-  
-  fileprivate func setCellSize() {
-    bubbleView.frame.size.height = frame.size.height.rounded()
-    playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(),
-                                   height:(bubbleView.frame.height).rounded())
   }
 }

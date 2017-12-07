@@ -33,22 +33,12 @@ class OutgoingVoiceMessageCell: BaseMessageCell {
     bubbleView.frame.size.width = 150
     playerView.playLeadingAnchor.constant = 12
     playerView.timerLabel.font = UIFont.systemFont(ofSize: 12)
-    setCellSize()
   }
   
   override func prepareViewsForReuse() {
-    setCellSize()
     playerView.timerLabel.text = "00:00:00"
     playerView.seconds = 0
     playerView.startingTime = 0
     playerView.play.isSelected = false
-  }
-  
-  fileprivate func setCellSize() {
-    bubbleView.frame.origin = CGPoint(x: (frame.width - 160).rounded(), y: 0)
-    bubbleView.frame.size.height = frame.size.height.rounded()
-    playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(),
-                                   height:(bubbleView.frame.height).rounded())
-    deliveryStatus.frame = CGRect(x: frame.width - 80, y: bubbleView.frame.height + 2, width: 70, height: 10).integral
   }
 }

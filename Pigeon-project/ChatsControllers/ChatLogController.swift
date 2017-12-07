@@ -1064,7 +1064,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
           
           UIView.performWithoutAnimation {
+            cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 160).rounded(), y: 0)
+            cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+            cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:( cell.bubbleView.frame.height).rounded())
             DispatchQueue.main.async {
+              cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y:  cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
               switch indexPath.row == self.messages.count - 1 {
               case true:
                 cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
@@ -1096,6 +1100,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
         
           UIView.performWithoutAnimation {
+            cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+            cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height).rounded())
             DispatchQueue.main.async {
               if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
                 view.titleLabel.text = message.convertedTimestamp
