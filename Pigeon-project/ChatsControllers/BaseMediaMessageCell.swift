@@ -15,12 +15,11 @@ class BaseMediaMessageCell: BaseMessageCell {
   weak var chatLogController: ChatLogController?
   
   lazy var playButton: UIButton = {
-    let button = UIButton(type: .system)
+    let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
     let image = UIImage(named: "play")
-    button.tintColor = UIColor.white
     button.isHidden = true
-    button.setImage(image, for: UIControlState())
+    button.setImage(image, for: .normal)
     button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
     
     return button
@@ -31,7 +30,6 @@ class BaseMediaMessageCell: BaseMessageCell {
     messageImageView.translatesAutoresizingMaskIntoConstraints = false
     messageImageView.layer.cornerRadius = 15
     messageImageView.layer.masksToBounds = true
-    //messageImageView.contentMode = .scaleAspectFill
     messageImageView.isUserInteractionEnabled = true
     
     messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:  #selector(handleZoomTap)))

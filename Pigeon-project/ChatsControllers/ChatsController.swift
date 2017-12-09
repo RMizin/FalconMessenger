@@ -424,7 +424,7 @@ class ChatsController: UITableViewController {
   
     let user = filtededConversations[indexPath.row].user
     autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-    autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
+    autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
     chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
     chatLogController?.delegate = self
     chatLogController?.user = user

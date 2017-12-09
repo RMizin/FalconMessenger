@@ -885,11 +885,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if let messageText = message.text { /* If current message is a text message */
       
-      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing message with blue bubble */
+      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing text message with blue bubble */
       
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
-        UIView.performWithoutAnimation {
-      
+     
           cell.textView.text = messageText
           cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - message.estimatedFrameForText!.width - 40, y: 0,
                                          width: message.estimatedFrameForText!.width + 30, height: cell.frame.size.height).integral
@@ -907,33 +906,29 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               cell.deliveryStatus.isHidden = true
               break
             }
-          
             if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
               view.titleLabel.text = message.convertedTimestamp
               cell.setRevealableView(view, style: .slide, direction: .left)
             }
           }
-        }
         
         return cell
       
         } else { /* Incoming text message with grey bubble */
         
-        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
+          let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
         
-          UIView.performWithoutAnimation {
-            cell.textView.text = messageText
-            cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
-            cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
+          cell.textView.text = messageText
+          cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
+          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
             
-            DispatchQueue.main.async {
-              if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                view.titleLabel.text = message.convertedTimestamp
-                cell.setRevealableView(view, style: .over, direction: .left)
-              }
+          DispatchQueue.main.async {
+            if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+              view.titleLabel.text = message.convertedTimestamp
+              cell.setRevealableView(view, style: .over, direction: .left)
             }
           }
-        
+
           return cell
         }
       
@@ -944,49 +939,42 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
         
         cell.chatLogController = self
-        
-        UIView.performWithoutAnimation {
-          cell.message = message
-          cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
-          cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+        cell.message = message
+        cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
+        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
     
-          DispatchQueue.main.async {
-            switch indexPath.row == self.messages.count - 1 {
-            case true:
-              cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
-              cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
-              cell.deliveryStatus.isHidden = false
-              break
+        DispatchQueue.main.async {
+          switch indexPath.row == self.messages.count - 1 {
+          case true:
+            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
+            cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
+            cell.deliveryStatus.isHidden = false
+            break
             
-            default:
-              cell.deliveryStatus.isHidden = true
-              break
-            }
-          
-            if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              view.titleLabel.text = message.convertedTimestamp
-              cell.setRevealableView(view, style: .slide, direction: .left)
-            }
+          default:
+            cell.deliveryStatus.isHidden = true
+            break
           }
-        
-          cell.messageImageView.isUserInteractionEnabled = false
+          
+          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+            view.titleLabel.text = message.convertedTimestamp
+            cell.setRevealableView(view, style: .slide, direction: .left)
+          }
         }
         
+        cell.messageImageView.isUserInteractionEnabled = false
+        
         if let image = message.localImage {
-          
           cell.messageImageView.image = image
           cell.progressView.isHidden = true
           cell.messageImageView.isUserInteractionEnabled = true
-          
           cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
           
           return cell
         }
         
         if let messageImageUrl = message.imageUrl {
-          
           cell.progressView.isHidden = false
-          
           cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
             let progress = Double(100 * downloadedSize/expectedSize)
             
@@ -995,12 +983,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               cell.progressView.setNeedsLayout()
               cell.progressView.layoutIfNeeded()
             }
-            
           }, completed: { (image, error, cacheType, url) in
             cell.progressView.isHidden = true
             cell.messageImageView.isUserInteractionEnabled = true
             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
-            
           })
         }
         
@@ -1011,20 +997,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
         
         cell.chatLogController = self
-        UIView.performWithoutAnimation {
-          cell.message = message
-          cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+        cell.message = message
+        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         
-          DispatchQueue.main.async {
-            if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              view.titleLabel.text = message.convertedTimestamp
-              cell.setRevealableView(view, style: .over, direction: .left)
-            }
+        DispatchQueue.main.async {
+          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+            view.titleLabel.text = message.convertedTimestamp
+            cell.setRevealableView(view, style: .over, direction: .left)
           }
-        
-          cell.messageImageView.isUserInteractionEnabled = false
         }
         
+        cell.messageImageView.isUserInteractionEnabled = false
         if let image = message.localImage {
           cell.messageImageView.image = image
           cell.progressView.isHidden = true
@@ -1039,15 +1022,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
             
             let progress = Double(100 * downloadedSize/expectedSize)
-            
+  
             DispatchQueue.main.async {
               cell.progressView.setProgress(progress * 0.01, animated: false)
               cell.progressView.setNeedsLayout()
               cell.progressView.layoutIfNeeded()
             }
-            
           }, completed: { (image, error, cacheType, url) in
-            
             cell.progressView.isHidden = true
             cell.messageImageView.isUserInteractionEnabled = true
             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
@@ -1061,63 +1042,59 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       if message.fromId == Auth.auth().currentUser?.uid { /* MARK: Outgoing Voice message with blue bubble */
           
-          let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
-          
-          UIView.performWithoutAnimation {
-            cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 160).rounded(), y: 0)
-            cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-            cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:( cell.bubbleView.frame.height).rounded())
-            DispatchQueue.main.async {
-              cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y:  cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
-              switch indexPath.row == self.messages.count - 1 {
-              case true:
-                cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
-                cell.deliveryStatus.isHidden = false
-                break
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
+  
+        cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 160).rounded(), y: 0)
+        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+        cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:( cell.bubbleView.frame.height).rounded())
+        
+        DispatchQueue.main.async {
+          switch indexPath.row == self.messages.count - 1 {
+          case true:
+            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y:  cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
+            cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
+            cell.deliveryStatus.isHidden = false
+            break
+          default:
+            cell.deliveryStatus.isHidden = true
+            break
+          }
             
-              default:
-                cell.deliveryStatus.isHidden = true
-                break
-              }
-              
-              if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                view.titleLabel.text = message.convertedTimestamp
-                cell.setRevealableView(view, style: .slide, direction: .left)
-              }
-            }
+          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+            view.titleLabel.text = message.convertedTimestamp
+            cell.setRevealableView(view, style: .slide, direction: .left)
           }
+        }
+      
+        if message.voiceEncodedString != nil {
+          cell.playerView.timerLabel.text = message.voiceDuration
+          cell.playerView.startingTime = message.voiceStartTime ?? 0
+          cell.playerView.seconds = message.voiceStartTime ?? 0
+        }
         
-          if message.voiceEncodedString != nil {
-              cell.playerView.timerLabel.text = message.voiceDuration
-              cell.playerView.startingTime = message.voiceStartTime ?? 0
-              cell.playerView.seconds = message.voiceStartTime ?? 0
-          }
-        
-          return cell
+        return cell
             
       } else { /* MARK: Incoming Voice message with blue bubble */
           
-          let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
-        
-          UIView.performWithoutAnimation {
-            cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-            cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height).rounded())
-            DispatchQueue.main.async {
-              if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-                view.titleLabel.text = message.convertedTimestamp
-                cell.setRevealableView(view, style: .over, direction: .left)
-              }
-            }
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
+
+        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+        cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height).rounded())
+        DispatchQueue.main.async {
+          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+            view.titleLabel.text = message.convertedTimestamp
+            cell.setRevealableView(view, style: .over, direction: .left)
           }
-        
-          if message.voiceEncodedString != nil {
-            cell.playerView.timerLabel.text = message.voiceDuration
-            cell.playerView.startingTime = message.voiceStartTime ?? 0
-            cell.playerView.seconds = message.voiceStartTime ?? 0
-          }
-        
-          return cell
         }
+      
+        if message.voiceEncodedString != nil {
+          cell.playerView.timerLabel.text = message.voiceDuration
+          cell.playerView.startingTime = message.voiceStartTime ?? 0
+          cell.playerView.seconds = message.voiceStartTime ?? 0
+        }
+        
+        return cell
+      }
     }
      return nil
   }

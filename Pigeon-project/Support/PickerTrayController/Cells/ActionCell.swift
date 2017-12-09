@@ -99,14 +99,10 @@ fileprivate class ActionButton: UIButton {
        setTitle(action.title, for: .normal)
         setTitleColor(.black, for: .normal)
         setImage(action.image.withRenderingMode(.alwaysTemplate), for: .normal)
-      
         imageView?.tintColor = .black
-     // contentMode = .center
         imageView?.contentMode = .bottom
-     
-    titleLabel?.textAlignment = .center
+        titleLabel?.textAlignment = .center
         titleLabel?.font = .systemFont(ofSize: 14)
-        
         backgroundColor = .white
         layer.masksToBounds = true
         layer.cornerRadius = 11.0
@@ -120,7 +116,7 @@ fileprivate class ActionButton: UIButton {
     // MARK: - Layout
     
     fileprivate override func imageRect(forContentRect contentRect: CGRect) -> CGRect {
-        return  CGRect(x: 0, y: -contentRect.height/2.3, width: contentRect.width, height: contentRect.height) //contentRect.divided(atDistance: contentRect.midX, from: .minYEdge ).slice
+        return  CGRect(x: 0, y: -contentRect.height/2.45, width: contentRect.width, height: contentRect.height) //contentRect.divided(atDistance: contentRect.midX, from: .minYEdge ).slice
     }
     
     fileprivate override func titleRect(forContentRect contentRect: CGRect) -> CGRect {

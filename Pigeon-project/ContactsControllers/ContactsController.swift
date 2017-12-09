@@ -481,7 +481,7 @@ class ContactsController: UITableViewController {
         }
         
         autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-        autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
+        autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
         chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
         chatLogController?.delegate = self
         chatLogController?.hidesBottomBarWhenPushed = true
@@ -491,7 +491,7 @@ class ContactsController: UITableViewController {
       if indexPath.section == 1 {
         
         autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-        autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 5
+        autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
         chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
         chatLogController?.delegate = self
         chatLogController?.hidesBottomBarWhenPushed = true

@@ -389,7 +389,7 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
         case 1:
           return CGSize(width: 197, height: collectionView.frame.height-1)
         case 2:
-          return CGSize(width: collectionView.frame.height/2.035, height: collectionView.frame.height/2.035)
+          return CGSize(width: collectionView.frame.height/2.045, height: collectionView.frame.height/2.045)
         default:
             return .zero
         }
