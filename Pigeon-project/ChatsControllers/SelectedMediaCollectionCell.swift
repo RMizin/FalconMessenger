@@ -166,7 +166,7 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
       
       chatInputContainerView.audioPlayer.stop()
       cell.resetTimer()
-      cell.playerView.play.setImage(UIImage(named: "play"), for: .normal)
+      cell.playerView.play.setImage(UIImage(named: "playWhite"), for: .normal)
     }
   }
   

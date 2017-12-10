@@ -18,7 +18,7 @@ class PlayerCellView: UIView {
   var play: UIButton = {
     var play = UIButton()
     play.translatesAutoresizingMaskIntoConstraints = false
-    play.setImage(UIImage(named: "play"), for: .normal)
+    play.setImage(UIImage(named: "playWhite"), for: .normal)
     play.imageView?.contentMode = .scaleAspectFit
    
     return play

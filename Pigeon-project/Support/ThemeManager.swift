@@ -115,6 +115,15 @@ enum Theme: Int {
     }
   }
   
+  var personalStorageImage: UIImage {
+    switch self {
+    case .Default:
+      return  UIImage(named: "PersonalStorage")!
+    case .Dark:
+      return UIImage(named: "PersonalStorage")!
+    }
+  }
+  
   var incomingBubble: UIImage {
     switch self {
     case .Default:

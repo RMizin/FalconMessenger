@@ -17,7 +17,7 @@ class CurrentUserTableViewCell: UITableViewCell {
     
     icon.layer.cornerRadius = 26
     icon.layer.masksToBounds = true
-    icon.image = UIImage(named: "PersonalStorage")
+    icon.image = ThemeManager.currentTheme().personalStorageImage
     
     return icon
   }()

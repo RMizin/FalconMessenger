@@ -1,42 +1,42 @@
 PODS:
-  - Firebase/Auth (4.6.0):
+  - Firebase/Auth (4.7.0):
     - Firebase/Core
-    - FirebaseAuth (= 4.3.2)
-  - Firebase/Core (4.6.0):
+    - FirebaseAuth (= 4.4.0)
+  - Firebase/Core (4.7.0):
     - FirebaseAnalytics (= 4.0.5)
-    - FirebaseCore (= 4.0.11)
-  - Firebase/Database (4.6.0):
+    - FirebaseCore (= 4.0.12)
+  - Firebase/Database (4.7.0):
     - Firebase/Core
-    - FirebaseDatabase (= 4.1.1)
-  - Firebase/Messaging (4.6.0):
+    - FirebaseDatabase (= 4.1.2)
+  - Firebase/Messaging (4.7.0):
     - Firebase/Core
-    - FirebaseMessaging (= 2.0.6)
-  - Firebase/Storage (4.6.0):
+    - FirebaseMessaging (= 2.0.7)
+  - Firebase/Storage (4.7.0):
     - Firebase/Core
-    - FirebaseStorage (= 2.0.2)
+    - FirebaseStorage (= 2.1.0)
   - FirebaseAnalytics (4.0.5):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.3.2):
+  - FirebaseAuth (4.4.0):
     - FirebaseAnalytics (~> 4.0)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.11):
+  - FirebaseCore (4.0.12):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-  - FirebaseDatabase (4.1.1):
+  - FirebaseDatabase (4.1.2):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
     - leveldb-library (~> 1.18)
-  - FirebaseInstanceID (2.0.6)
-  - FirebaseMessaging (2.0.6):
+  - FirebaseInstanceID (2.0.7)
+  - FirebaseMessaging (2.0.7):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
     - Protobuf (~> 3.1)
-  - FirebaseStorage (2.0.2):
+  - FirebaseStorage (2.1.0):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
     - GTMSessionFetcher/Core (~> 1.1)
@@ -60,11 +60,11 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - PhoneNumberKit (2.0.0):
-    - PhoneNumberKit/PhoneNumberKitCore (= 2.0.0)
-    - PhoneNumberKit/UIKit (= 2.0.0)
-  - PhoneNumberKit/PhoneNumberKitCore (2.0.0)
-  - PhoneNumberKit/UIKit (2.0.0):
+  - PhoneNumberKit (2.1.0):
+    - PhoneNumberKit/PhoneNumberKitCore (= 2.1.0)
+    - PhoneNumberKit/UIKit (= 2.1.0)
+  - PhoneNumberKit/PhoneNumberKitCore (2.1.0)
+  - PhoneNumberKit/UIKit (2.1.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.5.0)
   - SDWebImage (4.2.2):
@@ -82,20 +82,20 @@ DEPENDENCIES:
   - SDWebImage
 
 SPEC CHECKSUMS:
-  Firebase: 27321a925aa85520618255a7c630859e0502ccbd
+  Firebase: dbfb98ccec2dcfcd21ab9cc1b4981a3f3c8c5e26
   FirebaseAnalytics: 5b02a63ead2c3f0259cfc7f15e053e440587ecf8
-  FirebaseAuth: e58563adb207a43910a2ed87fecb9fa7d556df5a
-  FirebaseCore: 2a946ece8fbe3ce1fdeeb55324f273caade22df9
-  FirebaseDatabase: 2e6e8e110b93b9a6e7aac71774c769a363035cb1
-  FirebaseInstanceID: 24958382a1011bba5aaff37e334e7a650b9118f5
-  FirebaseMessaging: 75d83375b0f7a9911568d7bdd1a1a8261cbcbdef
-  FirebaseStorage: 0cca42d9b889a0227c3a50121f45a4469fc9eb27
+  FirebaseAuth: cdeee95b528958dbb7dcf220ad0fb804d3a284b0
+  FirebaseCore: 6cf108b63997bc08c04a1ffa55a3ac0d71a59ffc
+  FirebaseDatabase: 18ecb23e15c7f58bb0c4527e9cace06897cc40ca
+  FirebaseInstanceID: 148c25c986c8699e67304b114e365713dce467f2
+  FirebaseMessaging: 1a11d1c0a9ed9b3f75a0685bb0ae5932e1062f5f
+  FirebaseStorage: 0930e97994dc79b404179bdfafb6b16f59433a82
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
-  leveldb-library: 4f9eedf84ab46b4fa3b7893bf30714b2a1a74022
+  leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  PhoneNumberKit: 073b3cef30c2a64ddcd623ea5953bc84bb5b3fc4
+  PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   SDWebImage: 89a9d32cd520bbb46eb14e541d5109b3564af198
 
