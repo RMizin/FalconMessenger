@@ -85,6 +85,7 @@
 		4B9CD8691F4B2B6800EF8AB0 /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */; };
 		4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */; };
 		4BB775A51F59E74200BFEEB8 /* ChatMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */; };
+		4BB782441FDEE00E00BB2A33 /* FalconTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB782431FDEE00E00BB2A33 /* FalconTextView.swift */; };
 		4BBE9A1D1F4D8A2C00053935 /* stickers.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1A1F4D8A2C00053935 /* stickers.png */; };
 		4BBE9A1E1F4D8A2C00053935 /* stickers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1B1F4D8A2C00053935 /* stickers@2x.png */; };
 		4BBE9A1F1F4D8A2C00053935 /* stickers@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1C1F4D8A2C00053935 /* stickers@3x.png */; };
@@ -283,6 +284,7 @@
 		4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = ChatsControllers/MediaObject.swift; sourceTree = "<group>"; };
 		4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrentUserTableViewCell.swift; path = ContactsControllers/CurrentUserTableViewCell.swift; sourceTree = "<group>"; };
 		4BB775A41F59E74200BFEEB8 /* ChatMetaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatMetaData.swift; path = ChatsControllers/ChatMetaData.swift; sourceTree = "<group>"; };
+		4BB782431FDEE00E00BB2A33 /* FalconTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FalconTextView.swift; path = Support/FlaconTextView/FalconTextView.swift; sourceTree = "<group>"; };
 		4BBE9A1A1F4D8A2C00053935 /* stickers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stickers.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers.png"; sourceTree = "<group>"; };
 		4BBE9A1B1F4D8A2C00053935 /* stickers@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stickers@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers@2x.png"; sourceTree = "<group>"; };
 		4BBE9A1C1F4D8A2C00053935 /* stickers@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stickers@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers@3x.png"; sourceTree = "<group>"; };
@@ -704,6 +706,7 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4BB782421FDEDA8F00BB2A33 /* FalconTextView */,
 				4BE8BB451FCA98C700EB35FA /* WaveformView */,
 				4B0D9E591FC082F100FEDE24 /* UserProfilePictureOpener */,
 				4B5419491FB3923C0014C4FB /* INSPhotoGallery */,
@@ -718,6 +721,14 @@
 			);
 			name = Support;
 			path = "Pigeon-project";
+			sourceTree = "<group>";
+		};
+		4BB782421FDEDA8F00BB2A33 /* FalconTextView */ = {
+			isa = PBXGroup;
+			children = (
+				4BB782431FDEE00E00BB2A33 /* FalconTextView.swift */,
+			);
+			name = FalconTextView;
 			sourceTree = "<group>";
 		};
 		4BC26B221F3A227E0093A9D2 /* Media */ = {
@@ -1154,6 +1165,7 @@
 				4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */,
 				4BE571571F4D87A4009D9AB4 /* GradientView.swift in Sources */,
 				4BE571531F4D87A4009D9AB4 /* CropView.swift in Sources */,
+				4BB782441FDEE00E00BB2A33 /* FalconTextView.swift in Sources */,
 				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
 				4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */,

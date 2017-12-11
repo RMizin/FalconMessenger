@@ -10,8 +10,8 @@ import UIKit
 
 class IncomingTextMessageCell: BaseMessageCell {
   
-  let textView: UITextView = {
-    let textView = UITextView()
+  let textView: FalconTextView = {
+    let textView = FalconTextView()
     textView.font = UIFont.systemFont(ofSize: 13)
     textView.backgroundColor = .clear
     textView.isEditable = false
@@ -20,7 +20,6 @@ class IncomingTextMessageCell: BaseMessageCell {
     textView.dataDetectorTypes = .all
     textView.textColor = .darkText
     textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
-    textView.isUserInteractionEnabled = false
     
     return textView
   }()

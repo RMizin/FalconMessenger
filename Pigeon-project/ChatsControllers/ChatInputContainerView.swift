@@ -76,7 +76,7 @@ class ChatInputContainerView: UIView {
     textView.font = UIFont.systemFont(ofSize: 16)
     textView.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     textView.isScrollEnabled = false
-    textView.layer.cornerRadius = 16
+    textView.layer.cornerRadius = 18
     textView.textColor = ThemeManager.currentTheme().generalTitleColor
     textView.textContainerInset = InputContainerViewConstants.containerInsetsDefault
     textView.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
