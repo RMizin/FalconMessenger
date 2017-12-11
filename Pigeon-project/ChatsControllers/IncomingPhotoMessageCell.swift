@@ -14,6 +14,8 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
 
   override func setupViews() {
     
+    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
+    
     contentView.addSubview(bubbleView)
     
     bubbleView.addSubview(messageImageView)

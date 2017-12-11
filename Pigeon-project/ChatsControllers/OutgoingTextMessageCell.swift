@@ -20,16 +20,19 @@ class OutgoingTextMessageCell: BaseMessageCell {
     textView.textContainerInset = UIEdgeInsetsMake(10, 7, 10, 7)
     textView.dataDetectorTypes = .all
     textView.textColor = .white
+    textView.isUserInteractionEnabled = false
     textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
-  
+
     return textView
   }()
   
   override func setupViews() {
-    
+    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
     contentView.addSubview(deliveryStatus)
     bubbleView.image = blueBubbleImage
+   
   }
 }
+

@@ -16,5 +16,6 @@ pod 'Firebase/Messaging'
 pod 'SDWebImage'   #, '4.0'
 pod 'PhoneNumberKit'
 pod 'FLAnimatedImage'
+pod 'FTPopOverMenu_Swift'
 
 end

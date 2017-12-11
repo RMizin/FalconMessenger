@@ -12,8 +12,6 @@ class BaseMediaMessageCell: BaseMessageCell {
   
   weak var message: Message?
   
-  weak var chatLogController: ChatLogController?
-  
   lazy var playButton: UIButton = {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false

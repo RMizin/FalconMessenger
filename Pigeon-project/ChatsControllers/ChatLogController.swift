@@ -11,7 +11,7 @@ import Firebase
 import Photos
 import AudioToolbox
 import FLAnimatedImage
-
+import FTPopOverMenu_Swift
 
 private let incomingTextMessageCellID = "incomingTextMessageCellID"
 
@@ -705,6 +705,20 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
     
     configureRefreshControlInitialTintColor()
+    configureCellContextMenuView()
+  }
+  
+  fileprivate func configureCellContextMenuView() {
+    let config = FTConfiguration.shared
+    config.textColor = .white
+    config.backgoundTintColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)//ThemeManager.currentTheme().inputTextViewColor//UIColor(red: 80/255, green: 80/255, blue: 80/255, alpha: 0.98)
+    config.borderColor = UIColor(red: 80/255, green: 80/255, blue: 80/255, alpha: 0.0)
+    config.menuWidth = 100//175
+    config.menuSeparatorColor = UIColor.lightGray
+    config.textAlignment = .center
+    config.textFont = UIFont.systemFont(ofSize: 14)
+    config.menuRowHeight = 40
+    config.cornerRadius = 10
   }
   
   fileprivate func configureRefreshControlInitialTintColor() { /* fixes bug of not setting refresh control tint color on initial refresh */
@@ -888,7 +902,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing text message with blue bubble */
       
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
-     
+          cell.chatLogController = self
           cell.textView.text = messageText
           cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - message.estimatedFrameForText!.width - 40, y: 0,
                                          width: message.estimatedFrameForText!.width + 30, height: cell.frame.size.height).integral
@@ -917,7 +931,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         } else { /* Incoming text message with grey bubble */
         
           let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
-        
+          cell.chatLogController = self
           cell.textView.text = messageText
           cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
           cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
@@ -1043,7 +1057,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if message.fromId == Auth.auth().currentUser?.uid { /* MARK: Outgoing Voice message with blue bubble */
           
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
-  
+        cell.chatLogController = self
         cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 160).rounded(), y: 0)
         cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:( cell.bubbleView.frame.height).rounded())
@@ -1077,7 +1091,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       } else { /* MARK: Incoming Voice message with blue bubble */
           
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
-
+        cell.chatLogController = self
         cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height).rounded())
         DispatchQueue.main.async {
