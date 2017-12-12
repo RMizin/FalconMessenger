@@ -242,9 +242,9 @@ class ChatsController: UITableViewController {
         self.lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(uid).child(otherUserID).child(userMessagesFirebaseFolder)
         self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.value, with: { (snapshot) in
 
-          self.handleActivityIndicatorAppearance()
           guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
           guard let lastMessageID = dictionary.keys.first else { return }
+          self.handleActivityIndicatorAppearance()
           self.fetchMessageWith(lastMessageID)
         })
     })
@@ -375,22 +375,23 @@ class ChatsController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     
-    guard let uid = Auth.auth().currentUser?.uid  else {
-      return
-    }
+    guard let uid = Auth.auth().currentUser?.uid else { return }
     
     if currentReachabilityStatus == .notReachable {
+      basicErrorAlertWith(title: "Error deleting message", message: noInternetError, controller: self)
       return
     }
     
     if (editingStyle == UITableViewCellEditingStyle.delete) {
-      
       let conversation = self.filtededConversations[indexPath.row]
       guard let chatPartnerId = conversation.message?.chatPartnerId() else { return }
-     
+      guard let index = self.conversations.index(where: { (conversation) -> Bool in
+        return conversation.user?.id == self.filtededConversations[indexPath.row].user?.id
+      }) else { return }
+      
       self.tableView.beginUpdates()
       self.filtededConversations.remove(at: indexPath.row)
-      self.conversations = self.filtededConversations
+      self.conversations.remove(at: index)
       self.tableView.deleteRows(at: [indexPath], with: .left)
       self.tableView.endUpdates()
         
@@ -427,6 +428,7 @@ class ChatsController: UITableViewController {
     autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
     chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
     chatLogController?.delegate = self
+    chatLogController?.allMessagesRemovedDelegate = self
     chatLogController?.user = user
     chatLogController?.hidesBottomBarWhenPushed = true
   }
@@ -582,6 +584,42 @@ extension ChatsController {
   }
 }
 
+extension ChatsController: AllMessagesRemovedDelegate {
+  
+  func allMessagesRemoved(for chatPartnerID: String, state: Bool) {
+      guard state else { return }
+      removeEmptyChat(chatPartnerID: chatPartnerID)
+  }
+  
+  fileprivate func removeEmptyChat(chatPartnerID: String) {
+    
+    guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else { return }
+    
+    self.tableView.beginUpdates()
+    
+    guard let indexForConversations = self.conversations.index(where: { (conversation) -> Bool in
+      return conversation.user?.id == chatPartnerID
+    }) else {
+      self.tableView.endUpdates()
+      return
+    }
+    
+    self.conversations.remove(at: indexForConversations)
+    
+    guard let index = self.filtededConversations.index(where: { (conversation) -> Bool in
+      return conversation.user?.id == chatPartnerID
+    }) else {
+      self.tableView.endUpdates()
+      return
+    }
+    self.filtededConversations.remove(at: index)
+    self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .left)
+    self.tableView.endUpdates()
+      
+    Database.database().reference().child("user-messages").child(uid).child(chatPartnerID).removeValue()
+    self.configureTabBarBadge()
+  }
+}
 
 extension ChatsController { /* activity indicator handling */
   

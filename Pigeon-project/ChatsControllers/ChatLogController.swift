@@ -36,10 +36,16 @@ protocol MessagesLoaderDelegate: class {
   func messagesLoader( didFinishLoadingWith messages: [Message] )
 }
 
+protocol AllMessagesRemovedDelegate: class {
+  func allMessagesRemoved(for chatPartnerID: String, state: Bool)
+}
+
 
 class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
   
   weak var delegate: MessagesLoaderDelegate?
+  
+  weak var allMessagesRemovedDelegate: AllMessagesRemovedDelegate?
   
    var user: User? {
     didSet {
@@ -64,6 +70,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var sections = ["Messages"]
   
   let messagesToLoad = 50
+  
   var deletedMessagesNumber = 0
   
   var mediaPickerController: MediaPickerControllerNew! = nil

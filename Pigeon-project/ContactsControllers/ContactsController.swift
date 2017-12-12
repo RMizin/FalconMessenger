@@ -474,16 +474,17 @@ class ContactsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       
+      let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
       if indexPath.section == 0 {
         
-        guard currentUser != nil else  {
-          return
-        }
+        guard currentUser != nil else { return }
         
         autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
         autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
         chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
         chatLogController?.delegate = self
+        chatLogController?.allMessagesRemovedDelegate = appDelegate.chatsController
         chatLogController?.hidesBottomBarWhenPushed = true
         chatLogController?.user = currentUser
       }
@@ -494,6 +495,7 @@ class ContactsController: UITableViewController {
         autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
         chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
         chatLogController?.delegate = self
+        chatLogController?.allMessagesRemovedDelegate = appDelegate.chatsController
         chatLogController?.hidesBottomBarWhenPushed = true
         chatLogController?.user = filteredUsers[indexPath.row]
       }

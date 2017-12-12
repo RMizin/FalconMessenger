@@ -49,4 +49,8 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     progressView.widthAnchor.constraint(equalToConstant: 75).isActive = true
     progressView.heightAnchor.constraint(equalToConstant: 75).isActive = true
   }
+  
+  override func prepareViewsForReuse() {
+    bubbleView.image = grayBubbleImage
+  }
 }

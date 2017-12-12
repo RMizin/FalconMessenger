@@ -173,44 +173,54 @@ class AccountSettingsController: UITableViewController {
   func logoutButtonTapped () {
   
     let firebaseAuth = Auth.auth()
-    removeUserNotificationToken()
-    
-    do {
-      try firebaseAuth.signOut()
-  
-    } catch let signOutError as NSError {
-      basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    guard currentReachabilityStatus != .notReachable else {
+      basicErrorAlertWith(title: "Error signing out", message: noInternetError, controller: self)
       return
-    }
-    AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-    UIApplication.shared.applicationIconBadgeNumber = 0
-   
-    let destination = OnboardingController()
-    
-    let newNavigationController = UINavigationController(rootViewController: destination)
-    newNavigationController.navigationBar.shadowImage = UIImage()
-    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-    
-    newNavigationController.navigationBar.isTranslucent = false
-    newNavigationController.modalTransitionStyle = .crossDissolve
-  
-    self.present(newNavigationController, animated: true, completion: {
-         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
-         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
       
-        self.tabBarController?.selectedIndex = tabs.chats.rawValue
-      
-    })
-  }
-  
-  func removeUserNotificationToken() {
-    
-    guard let uid = Auth.auth().currentUser?.uid else {
-      return
     }
-    
+    ARSLineProgress.ars_showOnView(self.tableView)
+  
     let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
-    userReference.removeValue()
+    userReference.removeValue { (error, reference) in
+      
+      if error != nil {
+        ARSLineProgress.hide()
+        basicErrorAlertWith(title: "Error signing out", message: "Try again later", controller: self)
+        return
+      }
+      
+      let onlineStatusReference = Database.database().reference().child("users").child(uid).child("OnlineStatus")
+      onlineStatusReference.setValue(ServerValue.timestamp())
+      
+      do {
+        try firebaseAuth.signOut()
+        
+      } catch let signOutError as NSError {
+        ARSLineProgress.hide()
+        basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
+        return
+      }
+      AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+      UIApplication.shared.applicationIconBadgeNumber = 0
+      
+      let destination = OnboardingController()
+      
+      let newNavigationController = UINavigationController(rootViewController: destination)
+      newNavigationController.navigationBar.shadowImage = UIImage()
+      newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+      
+      newNavigationController.navigationBar.isTranslucent = false
+      newNavigationController.modalTransitionStyle = .crossDissolve
+      ARSLineProgress.hide()
+      self.present(newNavigationController, animated: true, completion: {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
+        
+        self.tabBarController?.selectedIndex = tabs.chats.rawValue
+        
+      })
+    }
   }
 }
 

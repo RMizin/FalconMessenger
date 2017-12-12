@@ -44,5 +44,6 @@ class IncomingVoiceMessageCell: BaseMessageCell {
     playerView.play.setImage(UIImage(named: "pauseBlack"), for: .selected)
     playerView.play.setImage(UIImage(named: "playBlack"), for: .normal)
     playerView.play.isSelected = false
+    bubbleView.image = grayBubbleImage
   }
 }

@@ -31,7 +31,10 @@ class OutgoingTextMessageCell: BaseMessageCell {
     bubbleView.addSubview(textView)
     contentView.addSubview(deliveryStatus)
     bubbleView.image = blueBubbleImage
-   
+  }
+  
+  override func prepareViewsForReuse() {
+     bubbleView.image = blueBubbleImage
   }
 }
 

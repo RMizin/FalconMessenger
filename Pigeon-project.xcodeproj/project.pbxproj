@@ -70,6 +70,7 @@
 		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
 		4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */; };
 		4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D05341F739B00001735BC /* NotificationsAndSoundsTableViewController.swift */; };
+		4B8D07711FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D07701FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift */; };
 		4B8D0B821F523AA800E9252A /* CircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D0B801F523AA800E9252A /* CircleProgressView.m */; };
 		4B8D0B831F523AA800E9252A /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D0B811F523AA800E9252A /* CircleProgressView.swift */; };
 		4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */; };
@@ -266,6 +267,7 @@
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoSizingCollectionViewFlowLayout.swift; path = ChatsControllers/AutoSizingCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4B8D05341F739B00001735BC /* NotificationsAndSoundsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationsAndSoundsTableViewController.swift; path = SettingsControllers/NotificationsAndSoundsTableViewController.swift; sourceTree = "<group>"; };
+		4B8D07701FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BaseMessageCell+CellDeletionHandlers.swift"; path = "ChatsControllers/BaseMessageCell+CellDeletionHandlers.swift"; sourceTree = "<group>"; };
 		4B8D0B7E1F523AA800E9252A /* CircleProgressView-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CircleProgressView-Bridging-Header.h"; path = "Support/CircleProgressView/CircleProgressView-Bridging-Header.h"; sourceTree = "<group>"; };
 		4B8D0B7F1F523AA800E9252A /* CircleProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircleProgressView.h; path = Support/CircleProgressView/CircleProgressView.h; sourceTree = "<group>"; };
 		4B8D0B801F523AA800E9252A /* CircleProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircleProgressView.m; path = Support/CircleProgressView/CircleProgressView.m; sourceTree = "<group>"; };
@@ -626,6 +628,7 @@
 				4B2142F61F51B83500F7A4B8 /* RevealableCell */,
 				4BC2C58C1F40545200B5C825 /* UserCell.swift */,
 				4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */,
+				4B8D07701FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift */,
 				4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */,
 				4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */,
 				4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */,
@@ -1144,6 +1147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */,
+				4B8D07711FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift in Sources */,
 				4B54195B1FB392570014C4FB /* INSPhotosOverlayView.swift in Sources */,
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
 				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,

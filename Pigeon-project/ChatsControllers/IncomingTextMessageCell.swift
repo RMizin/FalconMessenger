@@ -31,4 +31,8 @@ class IncomingTextMessageCell: BaseMessageCell {
     bubbleView.image = grayBubbleImage
     bubbleView.frame.origin = CGPoint(x: 10, y: 0)
   }
+  
+  override func prepareViewsForReuse() {
+    bubbleView.image = grayBubbleImage
+  }
 }
