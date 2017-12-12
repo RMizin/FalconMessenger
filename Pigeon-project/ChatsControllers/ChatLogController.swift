@@ -64,6 +64,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var sections = ["Messages"]
   
   let messagesToLoad = 50
+  var deletedMessagesNumber = 0
   
   var mediaPickerController: MediaPickerControllerNew! = nil
   
@@ -155,7 +156,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
             dictionary.updateValue( self.estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
-          } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight =  Message(dictionary: dictionary).imageHeight?.floatValue {
+          } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight = Message(dictionary: dictionary).imageHeight?.floatValue {
             let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
             dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
           }
@@ -193,22 +194,31 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               
               self.messagesLoadingReference.observe(.childChanged, with: { (snapshot) in
                 if snapshot.exists() && snapshot.key == "status" {
-                  let newMessageStatus = snapshot.value!
-                  dictionary.updateValue(newMessageStatus as AnyObject, forKey: "status")
-                  self.updateMessageStatusUI(dictionary: dictionary)
+                  print("child changed")
+                  if let newMessageStatus = snapshot.value {
+                    dictionary.updateValue(newMessageStatus as AnyObject, forKey: "status")
+                    self.updateMessageStatusUI(sentMessage: Message(dictionary: dictionary))
+                  }
                 }
               })
               
-              self.updateMessageStatus(messageRef: self.messagesLoadingReference)
-              self.updateMessageStatusUI(dictionary: dictionary)
               
-              if UserDefaults.standard.bool(forKey: "In-AppSounds") {
-                SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
-              }
+              
+              self.updateMessageStatus(messageRef: self.messagesLoadingReference)
+              self.updateMessageStatusUI(sentMessage: Message(dictionary: dictionary))
+              
+              
               return
             }
           
             if Message(dictionary: dictionary).toId == uid { /* inbox */
+            let index = (self.messages.count - 1) - self.messagesToLoad + self.deletedMessagesNumber
+              if index >= 0 {
+                if CGFloat(truncating: Message(dictionary: dictionary).timestamp!) <= CGFloat(truncating: self.messages[index].timestamp!) {
+                  print("DELETION RETURNING")
+                  return
+                }
+              }
               
               self.collectionView?.performBatchUpdates ({
                 self.messages.append(Message(dictionary: dictionary))
@@ -511,14 +521,26 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  func updateMessageStatusUI(dictionary: [String : AnyObject]) {
+  func updateMessageStatusUI(sentMessage: Message) {
     
-    if let lastMessageStatus = dictionary["status"] as? String {
-      if self.messages.count - 1 >= 0 {
-        self.messages[self.messages.count - 1].status = lastMessageStatus
-        self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-1 ,section: 0)])
-        print("value")
+    guard let index = self.messages.index(where: { (message) -> Bool in
+      return message.messageUID == sentMessage.messageUID
+    }) else {
+      print("returning in status")
+      return
+    }
+    
+    if index >= 0 {
+      self.messages[index].status = sentMessage.status
+       self.collectionView?.reloadItems(at: [IndexPath(row: index ,section: 0)])
+      if sentMessage.status == messageStatusDelivered {
+        if UserDefaults.standard.bool(forKey: "In-AppSounds") {
+          SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
+        }
       }
+      print("status successfuly reloaded")
+    } else {
+      print("index invalid")
     }
   }
   
@@ -718,7 +740,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     config.textAlignment = .center
     config.textFont = UIFont.systemFont(ofSize: 14)
     config.menuRowHeight = 40
-    config.cornerRadius = 10
+    config.cornerRadius = 25
   }
   
   fileprivate func configureRefreshControlInitialTintColor() { /* fixes bug of not setting refresh control tint color on initial refresh */
@@ -903,6 +925,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
           cell.chatLogController = self
+          cell.message = message
           cell.textView.text = messageText
           cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - message.estimatedFrameForText!.width - 40, y: 0,
                                          width: message.estimatedFrameForText!.width + 30, height: cell.frame.size.height).integral
@@ -932,6 +955,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
           let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
           cell.chatLogController = self
+          cell.message = message
           cell.textView.text = messageText
           cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
           cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
@@ -1058,6 +1082,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
         cell.chatLogController = self
+        cell.message = message
         cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 160).rounded(), y: 0)
         cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:( cell.bubbleView.frame.height).rounded())
@@ -1092,6 +1117,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
         cell.chatLogController = self
+        cell.message = message
         cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
         cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height).rounded())
         DispatchQueue.main.async {
@@ -1310,25 +1336,26 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         self.uploadProgressBar.setProgress(0.25, animated: true)
        }, completion: nil)
       
-      let defaultMessageStatus = messageStatusSent
+      let defaultMessageStatus = messageStatusDelivered
       
       guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
         return
       }
       
-      let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-      
       for selectedMedia in selectedMedia {
-      
+        
+       let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
+       let ref = Database.database().reference().child("messages")
+       let childRef = ref.childByAutoId()
         
         if selectedMedia.audioObject != nil { // audio
           
           let bae64string = selectedMedia.audioObject?.base64EncodedString()
           let properties: [String: AnyObject] = ["voiceEncodedString": bae64string as AnyObject]
-          let values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "voiceEncodedString": bae64string as AnyObject]
+          let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "voiceEncodedString": bae64string as AnyObject]
           
           reloadCollectionViewAfterSending(values: values) // for instant displaying from local data
-          sendMediaMessageWithProperties(properties)
+          sendMediaMessageWithProperties(properties, childRef: childRef)
           
           percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
           self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
@@ -1342,12 +1369,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         if (selectedMedia.phAsset?.mediaType == PHAssetMediaType.image || selectedMedia.phAsset == nil) && selectedMedia.audioObject == nil { //photo
           
-          let values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject]
+          let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject]
           
           reloadCollectionViewAfterSending(values: values)
           
           uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageURL) in
-            self.sendMessageWithImageUrl(imageURL, image: selectedMedia.object!.asUIImage!)
+            self.sendMessageWithImageUrl(imageURL, image: selectedMedia.object!.asUIImage!, childRef: childRef)
             
            percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
            self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
@@ -1369,7 +1396,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             return
           }
           
-          let valuesForVideo: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject, "localVideoUrl" : path as AnyObject]
+          let valuesForVideo: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject, "localVideoUrl" : path as AnyObject]
           
           self.reloadCollectionViewAfterSending(values: valuesForVideo)
           
@@ -1381,7 +1408,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               
               let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": selectedMedia.object!.asUIImage?.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage?.size.height as AnyObject, "videoUrl": videoURL as AnyObject]
               
-              self.sendMediaMessageWithProperties(properties)
+              self.sendMediaMessageWithProperties(properties, childRef: childRef)
               
               percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
               
@@ -1400,28 +1427,21 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage) {
+  fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage, childRef: DatabaseReference) {
     let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
-    sendMediaMessageWithProperties(properties)
+    sendMediaMessageWithProperties(properties, childRef: childRef)
   }
   
   
-  func sendMediaMessageWithProperties(_ properties: [String: AnyObject]) {
+  func sendMediaMessageWithProperties(_ properties: [String: AnyObject], childRef: DatabaseReference) {
     
-    let ref = Database.database().reference().child("messages")
+    let defaultMessageStatus = messageStatusDelivered
     
-    let childRef = ref.childByAutoId()
-    
-    let defaultMessageStatus = messageStatusSent
-    
-    guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
-      return
-    }
-    
+    guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else { return }
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
-    var values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
+    var values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
     
     properties.forEach({values[$0] = $1})
     
@@ -1537,10 +1557,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)
       
       DispatchQueue.main.async {
-        
         self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
       }
-      
     }, completion: nil)
   }
   
@@ -1549,14 +1567,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let ref = Database.database().reference().child("messages")
     let childRef = ref.childByAutoId()
-    let defaultMessageStatus = messageStatusSent
+    let defaultMessageStatus = messageStatusDelivered
     
     guard let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
       return
     }
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    var values: [String: AnyObject] = ["toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
+    var values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
     
     properties.forEach({values[$0] = $1})
     

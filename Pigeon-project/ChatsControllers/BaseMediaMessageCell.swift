@@ -10,8 +10,6 @@ import UIKit
 
 class BaseMediaMessageCell: BaseMessageCell {
   
-  weak var message: Message?
-  
   lazy var playButton: UIButton = {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false

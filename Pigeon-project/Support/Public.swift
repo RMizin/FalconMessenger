@@ -52,7 +52,7 @@ struct NameConstants {
 }
 
 public let messageStatusRead = "Read"
-public let messageStatusSent = "Sent"
+//public let messageStatusSent = "Sent"
 public let messageStatusSending = "Sending"
 public let messageStatusDelivered = "Delivered"
 
