@@ -105,8 +105,7 @@ extension UserProfileController {
   func updateUserData() {
     
     ARSLineProgress.ars_showOnView(self.view)
-      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadUserConversations"), object: nil)
-     
+
     let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
     userReference.updateChildValues(["name" : userProfileContainerView.name.text! , "phoneNumber" : userProfileContainerView.phone.text! ]) { (error, reference) in
       ARSLineProgress.hide()

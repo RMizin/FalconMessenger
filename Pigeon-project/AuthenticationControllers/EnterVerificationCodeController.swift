@@ -47,8 +47,8 @@ class EnterVerificationCodeController: UIViewController {
     
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
       if let error = error {
-        print(error.localizedDescription)
-        ARSLineProgress.showFail()
+        basicErrorAlertWith(title: "Error", message: error.localizedDescription + "\nPlease try again later.", controller: self)
+       
         return
       }
       

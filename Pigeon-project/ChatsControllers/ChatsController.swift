@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import SDWebImage
+import AudioToolbox
 
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -63,21 +64,24 @@ class ChatsController: UITableViewController {
   private let group = DispatchGroup()
   private var isAppLoaded = false
   private var isGroupAlreadyFinished = false
+  private var isAppJustDidBecomeActive = false
+  private var unhandledNewMessages = 0
   
   let noChatsYetContainer:NoChatsYetContainer! = NoChatsYetContainer()
 
   
   override func viewDidLoad() {
       super.viewDidLoad()
-    
+    NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: .UIApplicationDidBecomeActive, object: nil)
     configureTableView()
-   // managePresense()
     setupSearchController()
-    fetchConversations()
-    
-    NotificationCenter.default.addObserver(self, selector:#selector(fetchConversations),name:NSNotification.Name(rawValue: "reloadUserConversations"), object: nil)
   }
   
+  @objc func applicationDidBecomeActive() {
+    if isAppLoaded {
+      self.isAppJustDidBecomeActive = true
+    }
+  }
   
   override func viewDidAppear(_ animated: Bool) {
     if let testSelected = tableView.indexPathForSelectedRow {
@@ -95,9 +99,14 @@ class ChatsController: UITableViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+
+    if !isAppLoaded {
+      fetchConversations()
+    }
+  
     setUpColorsAccordingToTheme()
   }
-  
+
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return ThemeManager.currentTheme().statusBarStyle
   }
@@ -180,26 +189,7 @@ class ChatsController: UITableViewController {
       tabItem.badgeValue = nil
       UIApplication.shared.applicationIconBadgeNumber = 0
     }
-  }
-
-//  func managePresense() {
-//
-//    if currentReachabilityStatus == .notReachable {
-//      showActivityIndicator(title: ChatsController.connectingMessage)
-//    }
-//
-//    connectedRef = Database.database().reference(withPath: ".info/connected")
-//    connectedRef.observe(.value, with: { (snapshot) in
-//      if self.currentReachabilityStatus != .notReachable {
-//        self.hideActivityIndicator()
-//      } else {
-//        self.showActivityIndicator(title: ChatsController.noInternetMessage)
-//      }
-//    }) { (error) in
-//        print(error.localizedDescription)
-//    }
-//  }
-  
+  }  
   
   private var isFirstRemoteUpdateRequested = false
   fileprivate func handleActivityIndicatorAppearance() {
@@ -245,16 +235,15 @@ class ChatsController: UITableViewController {
           guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
           guard let lastMessageID = dictionary.keys.first else { return }
           self.handleActivityIndicatorAppearance()
+          self.unhandledNewMessages += 1
           self.fetchMessageWith(lastMessageID)
         })
     })
-  
   
     currentUserConversationsReference.observe(.childRemoved) { (snapshot) in
       self.hideActivityIndicator()
     }
   }
-
   
   func fetchMessageWith(_ messageID: String) {
     
@@ -266,6 +255,9 @@ class ChatsController: UITableViewController {
     
       let message = Message(dictionary: dictionary)
       guard let chatPartnerID = message.chatPartnerId() else { return }
+      
+      self.unhandledNewMessages -= 1
+      self.handleInAppSoundPlaying(message, for: self.unhandledNewMessages)
       
       self.metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerID).child(messageMetaDataFirebaseFolder)
       self.metadataRef.removeAllObservers()
@@ -359,6 +351,31 @@ class ChatsController: UITableViewController {
       isAppLoaded = true
     } else {
       hideActivityIndicatorWithDelay()
+    }
+  }
+  
+  fileprivate func handleInAppSoundPlaying(_ message: Message, for unhandledNewMessages: Int) {
+    
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    if self.unhandledNewMessages <= 0 {
+      self.unhandledNewMessages = 0
+      if !self.isAppJustDidBecomeActive {
+        if self.navigationController?.visibleViewController is ChatsController && self.isAppLoaded && message.fromId != uid {
+          self.playNotificationSound()
+          self.isAppJustDidBecomeActive = false
+        }
+      } else {
+        self.isAppJustDidBecomeActive = false
+      }
+    }
+  }
+  
+  fileprivate func playNotificationSound() {
+    if UserDefaults.standard.bool(forKey: "In-AppSounds")  {
+      SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
+    }
+    if UserDefaults.standard.bool(forKey: "In-AppVibration")  {
+      AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
     }
   }
   
@@ -561,7 +578,7 @@ extension ChatsController {
     if filtededConversations[indexPath.row].message?.seen != nil {
       let seen = filtededConversations[indexPath.row].message?.seen!
       if !seen! && filtededConversations[indexPath.row].message?.fromId != Auth.auth().currentUser?.uid {
-        cell.badgeLabel.text = conversations[indexPath.row].chatMetaData?.badge?.toString()
+        cell.badgeLabel.text = filtededConversations[indexPath.row].chatMetaData?.badge?.toString()
         
         if Int(cell.badgeLabel.text!)! > 0 {
           cell.badgeLabel.isHidden = false

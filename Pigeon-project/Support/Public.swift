@@ -57,6 +57,7 @@ public let messageStatusSending = "Sending"
 public let messageStatusDelivered = "Delivered"
 
 let cameraAccessDeniedMessage = "Falcon needs access to your camera to take photos and videos.\n\nPlease go to Settings –– Privacy –– Camera –– and set Falcon to ON."
+let microphoneAccessDeniedMessage = "Falcon needs access to your microphone to record audio messages.\n\nPlease go to Settings –– Privacy –– Microphone –– and set Falcon to ON."
 let photoLibraryAccessDeniedMessage = "Falcon needs access to your photo library to send photos and videos.\n\nPlease go to Settings –– Privacy –– Photos –– and set Falcon to ON."
 
 let cameraAccessDeniedMessageProfilePicture = "Falcon needs access to your camera to take photo for your profile.\n\nPlease go to Settings –– Privacy –– Camera –– and set Falcon to ON."

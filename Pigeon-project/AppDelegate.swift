@@ -9,16 +9,13 @@
 import UIKit
 import Firebase
 import UserNotifications
-import AudioToolbox
 
 
 public let deviceScreen = UIScreen.main.bounds
 
 func setUserNotificationToken(token: String) {
   
-  guard let uid = Auth.auth().currentUser?.uid else {
-    return
-  }
+  guard let uid = Auth.auth().currentUser?.uid else { return }
   let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
   userReference.updateChildValues([token : true])
 }
@@ -145,35 +142,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     mainController.selectedIndex = tabs.chats.rawValue
   }
   
-  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    
-//    if notification.request.content.title == "New user" {
-//    //  NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
-//    }
-    
-    if ( UIApplication.shared.applicationState == UIApplicationState.active) {
-      if self.chatsController.navigationController?.visibleViewController is ChatLogController {
-         print(notification.request.content)
-        
-      } else {
-        if UserDefaults.standard.bool(forKey: "In-AppSounds")  {
-          SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
-        }
-        if UserDefaults.standard.bool(forKey: "In-AppVibration")  {
-          AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        }
-      }
-    }
-  }
-  
-  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-   
-//    if response.notification.request.content.title == "New user" {
-//      // NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPigeonContacts"), object: nil)
-//    }
-    completionHandler()
-  }
-  
+//  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+//    
+//  }
   
   func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
     print("Firebase registration token: \(fcmToken)")

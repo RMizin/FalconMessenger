@@ -97,15 +97,24 @@ class VoiceRecordingViewController: UIViewController {
     }
     
     if recorder == nil {
-      print("recording. recorder nil")
-     
-      voiceRecordingContainerView.recordButton.setTitle("Pause", for: .normal)
-     // voiceRecordingContainerView.playButton.isEnabled = false
-      voiceRecordingContainerView.stopButton.isEnabled = true
-        voiceRecordingContainerView.stopButton.setTitleColor(.red, for: .normal)
-      recordWithPermission(true)
+   
+      recordWithPermission(true, completionHandler: { (isCompleted) in
+        if isCompleted {
+          print("recording. recorder nil")
+          DispatchQueue.main.async {
+            self.voiceRecordingContainerView.recordButton.setTitle("Pause", for: .normal)
+            self.voiceRecordingContainerView.stopButton.isEnabled = true
+            self.voiceRecordingContainerView.stopButton.setTitleColor(.red, for: .normal)
+          }
+          return
+        } else {
+          
+          basicErrorAlertWith(title: "Error", message: microphoneAccessDeniedMessage, controller: self)
+          return
+        }
+      })
       return
-    }
+    } else
     
     if recorder != nil && recorder.isRecording {
       print("pausing")
@@ -121,7 +130,7 @@ class VoiceRecordingViewController: UIViewController {
       voiceRecordingContainerView.stopButton.setTitleColor(.red, for: .normal)
       
       //            recorder.record()
-      recordWithPermission(false)
+      recordWithPermission(false, completionHandler: { (completed) in })
     }
   }
   
@@ -186,14 +195,14 @@ class VoiceRecordingViewController: UIViewController {
     }
     
   }
-  
-  func recordWithPermission(_ setup: Bool) {
+    typealias CompletionHandler = (_ success: Bool) -> Void
+  func recordWithPermission(_ setup: Bool, completionHandler: @escaping CompletionHandler) {
     print("\(#function)")
     
     AVAudioSession.sharedInstance().requestRecordPermission {
       [unowned self] granted in
       if granted {
-        
+         completionHandler(true)
         DispatchQueue.main.async {
           print("Permission to record granted")
           self.setSessionPlayAndRecord()
@@ -209,6 +218,7 @@ class VoiceRecordingViewController: UIViewController {
                                                  repeats: true)
         }
       } else {
+        completionHandler(false)
         print("Permission to record not granted")
       }
     }
