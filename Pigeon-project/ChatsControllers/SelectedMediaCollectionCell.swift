@@ -37,6 +37,7 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     var remove = UIButton()
     remove.translatesAutoresizingMaskIntoConstraints = false
     remove.setImage(UIImage(named: "remove"), for: .normal)
+    remove.imageView?.contentMode = .scaleAspectFit
     remove.addTarget(self, action: #selector(ChatInputContainerView.removeButtonDidTap), for: .touchUpInside)
    
     return remove
@@ -80,13 +81,13 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
       image.rightAnchor.constraint(equalTo: rightAnchor),
       image.bottomAnchor.constraint(equalTo: playerView.topAnchor, constant: -3),
     
-      remove.topAnchor.constraint(equalTo: topAnchor, constant: 2),
-      remove.rightAnchor.constraint(equalTo: rightAnchor, constant: 2),
-      remove.widthAnchor.constraint(equalToConstant: 25),
-      remove.heightAnchor.constraint(equalToConstant: 25),
+      remove.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+      remove.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
+      remove.widthAnchor.constraint(equalToConstant: 30),
+      remove.heightAnchor.constraint(equalToConstant: 30),
       
-      videoIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
-      videoIndicatorView.leftAnchor.constraint(equalTo: leftAnchor, constant: 5),
+      videoIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
+      videoIndicatorView.leftAnchor.constraint(equalTo: leftAnchor, constant: 4),
       videoIndicatorView.widthAnchor.constraint(equalToConstant: videoIndicatorView.image!.size.width),
       videoIndicatorView.heightAnchor.constraint(equalToConstant: videoIndicatorView.image!.size.height)
     ])
