@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 import SDWebImage
-import AudioToolbox
 
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -62,10 +61,10 @@ class ChatsController: UITableViewController {
   fileprivate var usersRef: DatabaseReference!
 
   private let group = DispatchGroup()
-  private var isAppLoaded = false
   private var isGroupAlreadyFinished = false
-  private var isAppJustDidBecomeActive = false
-  private var unhandledNewMessages = 0
+  var isAppLoaded = false
+  var isAppJustDidBecomeActive = false
+  var unhandledNewMessages = 0
   
   let noChatsYetContainer:NoChatsYetContainer! = NoChatsYetContainer()
 
@@ -354,31 +353,6 @@ class ChatsController: UITableViewController {
     }
   }
   
-  fileprivate func handleInAppSoundPlaying(_ message: Message, for unhandledNewMessages: Int) {
-    
-    guard let uid = Auth.auth().currentUser?.uid else { return }
-    if self.unhandledNewMessages <= 0 {
-      self.unhandledNewMessages = 0
-      if !self.isAppJustDidBecomeActive {
-        if self.navigationController?.visibleViewController is ChatsController && self.isAppLoaded && message.fromId != uid {
-          self.playNotificationSound()
-          self.isAppJustDidBecomeActive = false
-        }
-      } else {
-        self.isAppJustDidBecomeActive = false
-      }
-    }
-  }
-  
-  fileprivate func playNotificationSound() {
-    if UserDefaults.standard.bool(forKey: "In-AppSounds")  {
-      SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
-    }
-    if UserDefaults.standard.bool(forKey: "In-AppVibration")  {
-      AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-    }
-  }
-  
   fileprivate func hideActivityIndicatorWithDelay() {
     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
       self.hideActivityIndicator()
@@ -485,7 +459,7 @@ extension ChatsController: MessagesLoaderDelegate {
        self.chatLogController?.startCollectionViewAtBottom()
     }
     if let destination = self.chatLogController {
-      navigationController?.pushViewController( destination, animated: true)
+      self.visibleNavigationController()?.pushViewController(destination, animated: true)
       self.chatLogController = nil
       self.autoSizingCollectionViewFlowLayout = nil
     }
@@ -553,13 +527,13 @@ extension ChatsController {
     if (filtededConversations[indexPath.row].message?.imageUrl != nil ||
       filtededConversations[indexPath.row].message?.localImage != nil) &&
       filtededConversations[indexPath.row].message?.videoUrl == nil {
-      cell.messageLabel.text = "Attachment: Image"
+      cell.messageLabel.text = MessageSubtitle.image
     } else if (filtededConversations[indexPath.row].message?.imageUrl != nil ||
       filtededConversations[indexPath.row].message?.localImage != nil) &&
       filtededConversations[indexPath.row].message?.videoUrl != nil {
-      cell.messageLabel.text = "Attachment: Video"
+      cell.messageLabel.text =  MessageSubtitle.video
     } else if filtededConversations[indexPath.row].message?.voiceEncodedString != nil {
-      cell.messageLabel.text = "Audio message"
+      cell.messageLabel.text =  MessageSubtitle.audio
     } else {
       cell.messageLabel.text = filtededConversations[indexPath.row].message?.text
     }

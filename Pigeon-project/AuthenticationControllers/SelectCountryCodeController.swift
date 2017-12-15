@@ -13,6 +13,8 @@ protocol CountryPickerDelegate: class {
   func countryPicker(_ picker: SelectCountryCodeController, didSelectCountryWithName name: String, code: String, dialCode: String)
 }
 
+public var countryCode = NSLocale.current.regionCode
+
 fileprivate var savedContentOffset = CGPoint(x: 0, y: -50)
 fileprivate var savedCountryCode = String()
 

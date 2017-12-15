@@ -9,7 +9,13 @@
 import UIKit
 import Firebase
 
-class Message:  NSObject  {
+struct MessageSubtitle {
+  static let video = "Attachment: Video"
+  static let image = "Attachment: Image"
+  static let audio = "Audio message"
+}
+
+class Message: NSObject  {
   
     var messageUID: String?
 

@@ -304,6 +304,17 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
         return sections[section]
     }
   
+  public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    if let cell = cell as? CameraCell {
+     
+      cell.cameraView = self.cameraController.view
+      DispatchQueue.main.async {
+        cell.cameraOverlayView = self.cameraController.cameraOverlayView
+      }
+    }
+  }
+  
+  
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
@@ -315,8 +326,6 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
           
         case 1:
            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(CameraCell.self), for: indexPath) as! CameraCell
-           cell.cameraView = self.cameraController.view
-           cell.cameraOverlayView = self.cameraController.cameraOverlayView
 
             return cell
           

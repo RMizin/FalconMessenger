@@ -27,13 +27,12 @@ extension ChatLogController {
       inputContainerView.inputTextView.inputView = voiceRecordingViewController.view
       inputContainerView.inputTextView.reloadInputViews()
       inputContainerView.inputTextView.becomeFirstResponder()
-  inputContainerView.inputTextView.addGestureRecognizer(inputTextViewTapGestureRecognizer)
+      inputContainerView.inputTextView.addGestureRecognizer(inputTextViewTapGestureRecognizer)
       
     } else {
-      
       inputContainerView.inputTextView.inputView = nil
       inputContainerView.inputTextView.reloadInputViews()
-  inputContainerView.inputTextView.removeGestureRecognizer(inputTextViewTapGestureRecognizer)
+      inputContainerView.inputTextView.removeGestureRecognizer(inputTextViewTapGestureRecognizer)
     }
   }
   

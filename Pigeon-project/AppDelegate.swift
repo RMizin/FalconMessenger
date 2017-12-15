@@ -98,15 +98,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
   }
   
- let chatsController = ChatsController()
+  let chatsController = ChatsController()
+  let contactsController = ContactsController()
+  let settingsController = AccountSettingsController()
+  
   func setTabs(mainController : UITabBarController) {
     
-    let contactsController = ContactsController()
     _ = contactsController.view
     contactsController.title = "Contacts"
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     
-  //  contactsNavigationController.navigationBar.isTranslucent = false
     if #available(iOS 11.0, *) {
       contactsNavigationController.navigationBar.prefersLargeTitles = true
     }
@@ -120,7 +121,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       chatsNavigationController.navigationBar.prefersLargeTitles = true
     }
     
-    let settingsController = AccountSettingsController()
     _ = settingsController.view
     settingsController.title = "Settings"
     let settingsNavigationController = UINavigationController(rootViewController: settingsController)
@@ -141,11 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     mainController.setViewControllers((tabBarControllers), animated: false)
     mainController.selectedIndex = tabs.chats.rawValue
   }
-  
-//  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//    
-//  }
-  
+    
   func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
     print("Firebase registration token: \(fcmToken)")
     setUserNotificationToken(token: fcmToken)

@@ -51,6 +51,7 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
     overlay.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(backButtonTapped))
     overlay.navigationBar.setItems([overlay.navigationItem], animated: true)
     overlay.navigationBar.barStyle = .blackTranslucent
+    overlay.navigationBar.barTintColor = .black
 
     let item = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action: #selector(self.toolbarTouchHandler))
     overlay.toolbar.setItems([item], animated: true)

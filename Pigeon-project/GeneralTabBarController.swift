@@ -32,7 +32,6 @@ class GeneralTabBarController: UITabBarController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-   
     if onceToken == 0 {
       splash.image = ThemeManager.currentTheme().splashImage
       splash.tag = 13
@@ -45,8 +44,6 @@ class GeneralTabBarController: UITabBarController {
 extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool) {
     if state {
-      //self.view.alpha = 1
-      print("\n did finished loading protocol \n")
       splash.removeFromSuperview()
     }
   }
