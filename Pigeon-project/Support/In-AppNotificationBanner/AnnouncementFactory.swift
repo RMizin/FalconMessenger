@@ -15,7 +15,7 @@ open class ShoutView: UIView {
 
   open fileprivate(set) lazy var backgroundView: UIView = {
     let view = UIView()
-    view.alpha = 0.98
+    view.alpha = 0.95
     view.clipsToBounds = true
 
     return view
@@ -150,43 +150,52 @@ open class ShoutView: UIView {
   // MARK: - Setup
 
   public func setupFrames() {
-    internalHeight = (UIApplication.shared.isStatusBarHidden ? 55 : 65)
-
+   
+    self.internalHeight = (UIApplication.shared.isStatusBarHidden ? 45 : 65)
     let totalWidth = UIScreen.main.bounds.width
-    let offset: CGFloat = UIApplication.shared.isStatusBarHidden ? 2.5 : 5
-    let textOffsetX: CGFloat = imageView.image != nil ? Dimensions.textOffset : 18
-    let imageSize: CGFloat = imageView.image != nil ? Dimensions.imageSize : 0
+    DispatchQueue.main.async {
 
-    [titleLabel, subtitleLabel].forEach {
-        $0.frame.size.width = totalWidth - imageSize - (Dimensions.imageOffset * 2)
-        $0.sizeToFit()
+        [self.titleLabel, self.subtitleLabel].forEach {
+          $0.frame.size.width = totalWidth - (Dimensions.imageOffset * 2)
+          $0.sizeToFit()
+        }
+        
+        self.internalHeight += self.safeYCoordinate
+        self.internalHeight += self.subtitleLabel.frame.height
+
+        let textOffsetX: CGFloat = 20
+        var textOffsetY:CGFloat = 0
+      
+        if #available(iOS 11.0, *) {
+          textOffsetY = 10 + UIApplication.shared.statusBarFrame.height//+ self.safeYCoordinate
+        } else {
+           textOffsetY = UIApplication.shared.isStatusBarHidden ? 10 : 30 + self.safeYCoordinate
+        }
+        
+        self.titleLabel.frame.origin = CGPoint(x: textOffsetX, y: textOffsetY)
+        self.subtitleLabel.frame.origin = CGPoint(x: textOffsetX, y: self.titleLabel.frame.maxY + 2.5)
+      
+        if self.subtitleLabel.text?.isEmpty ?? true {
+          self.titleLabel.center.y = self.imageView.center.y - 2.5
+        }
+      
+        self.frame = CGRect(x: 0, y: 0, width: totalWidth, height: self.internalHeight + Dimensions.touchOffset)
     }
-
-    internalHeight += subtitleLabel.frame.height
-
-    imageView.frame = CGRect(x: Dimensions.imageOffset, y: (internalHeight - imageSize) / 2 + offset,
-      width: imageSize, height: imageSize)
-
-    let textOffsetY = imageView.image != nil ? imageView.frame.origin.x + 3 : textOffsetX + 5
-
-    titleLabel.frame.origin = CGPoint(x: textOffsetX, y: textOffsetY)
-    subtitleLabel.frame.origin = CGPoint(x: textOffsetX, y: titleLabel.frame.maxY + 2.5)
-
-    if subtitleLabel.text?.isEmpty ?? true {
-      titleLabel.center.y = imageView.center.y - 2.5
-    }
-
-    frame = CGRect(x: 0, y: safeYCoordinate,
-                   width: totalWidth, height: internalHeight + Dimensions.touchOffset)
   }
 
   // MARK: - Frame
 
   open override var frame: CGRect {
     didSet {
-      backgroundView.frame = CGRect(x: 0, y: safeYCoordinate,
-                                    width: frame.size.width,
-                                    height: frame.size.height - Dimensions.touchOffset)
+    if #available(iOS 11.0, *) {
+      if UIApplication.shared.isStatusBarHidden {
+        backgroundView.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - Dimensions.touchOffset)
+      } else {
+        backgroundView.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - Dimensions.touchOffset - 20)
+      }
+    } else {
+      backgroundView.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - Dimensions.touchOffset)
+    }
 
       indicatorView.frame = CGRect(x: (backgroundView.frame.size.width - Dimensions.indicatorWidth) / 2,
                                    y: backgroundView.frame.height - Dimensions.indicatorHeight - 5,
@@ -234,28 +243,24 @@ open class ShoutView: UIView {
     } else if panGestureRecognizer.state == .changed {
       panGestureActive = true
       
-      let maxTranslation = subtitleLabel.bounds.size.height - subtitleLabelOriginalHeight
+      let maxTranslation = (subtitleLabel.bounds.size.height - subtitleLabelOriginalHeight)
       
       if translation.y >= maxTranslation {
-        frame.size.height = internalHeight + maxTranslation
-          + (translation.y - maxTranslation) / 25 + Dimensions.touchOffset
+        frame.size.height = internalHeight + maxTranslation + (translation.y - maxTranslation) / 25 + Dimensions.touchOffset
       } else {
         frame.size.height = internalHeight + translation.y + Dimensions.touchOffset
       }
     } else {
       panGestureActive = false
-      let height = translation.y < -5 || shouldSilent ? 0 : internalHeight
-
       subtitleLabel.numberOfLines = 2
       subtitleLabel.sizeToFit()
       
       UIView.animate(withDuration: 0.2, animations: {
-        self.frame.size.height = height + Dimensions.touchOffset
+  
+        self.frame.size.height = 0
       }, completion: { _ in
-          if translation.y < -5 {
-            self.completion?()
-            self.removeFromSuperview()
-        }
+        self.completion?()
+        self.removeFromSuperview()
       })
     }
   }

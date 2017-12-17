@@ -102,7 +102,7 @@ extension ChatsController {
   
   fileprivate func showInAppNotification(title: String, subtitle: String, user: User) {
     
-    let announcement = Announcement(title: title, subtitle: subtitle, image: nil, duration: 3, backgroundColor: ThemeManager.currentTheme().generalBackgroundColor, textColor: ThemeManager.currentTheme().generalTitleColor, dragIndicatordColor: ThemeManager.currentTheme().generalTitleColor) {
+    let announcement = Announcement(title: title, subtitle: subtitle, image: nil, duration: 3, backgroundColor: ThemeManager.currentTheme().inputTextViewColor, textColor: ThemeManager.currentTheme().generalTitleColor, dragIndicatordColor: ThemeManager.currentTheme().generalTitleColor) {
       
       let user = user
       self.autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
