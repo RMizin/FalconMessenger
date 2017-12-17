@@ -77,7 +77,10 @@ extension ChatsController {
       }
    
       self.playNotificationSound()
-      self.showInAppNotification(title: user.name ?? "" , subtitle: self.subtitleForMessage(message: message), user: user)
+      if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
+        self.showInAppNotification(title: user.name ?? "" , subtitle: self.subtitleForMessage(message: message), user: user)
+      }
+     
       self.isAppJustDidBecomeActive = false
     })
   }

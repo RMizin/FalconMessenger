@@ -160,6 +160,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
   
   func setDeaultsForSettings() {
+    
+    if UserDefaults.standard.object(forKey: "In-AppNotifications") == nil {
+      UserDefaults.standard.set(true, forKey: "In-AppNotifications")
+    }
+    
     if UserDefaults.standard.object(forKey: "In-AppSounds") == nil {
       UserDefaults.standard.set(true, forKey: "In-AppSounds")
     }

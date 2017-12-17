@@ -10,6 +10,7 @@ import UIKit
 
 class NotificationsAndSoundsTableViewController: UITableViewController {
   
+   let notificationsSwich = UISwitch()
    let soundsSwich = UISwitch()
    let vibrationSwich = UISwitch()
   
@@ -39,6 +40,9 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
       
       vibrationSwich.addTarget(self, action: #selector(switchStateChanged(sender:)), for: .valueChanged)
       vibrationSwich.setOn(UserDefaults.standard.bool(forKey: "In-AppVibration"), animated: false)
+      
+      notificationsSwich.addTarget(self, action: #selector(switchStateChanged(sender:)), for: .valueChanged)
+      notificationsSwich.setOn(UserDefaults.standard.bool(forKey: "In-AppNotifications"), animated: false)
     }
   
   
@@ -50,12 +54,19 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
         UserDefaults.standard.set(false, forKey: "In-AppSounds")
       }
 
-    } else {
+    } else if sender == vibrationSwich {
       if sender.isOn {
         UserDefaults.standard.set(true, forKey: "In-AppVibration")
       } else {
         UserDefaults.standard.set(false, forKey: "In-AppVibration")
       }
+    } else if sender == notificationsSwich {
+      if sender.isOn {
+        UserDefaults.standard.set(true, forKey: "In-AppNotifications")
+      } else {
+        UserDefaults.standard.set(false, forKey: "In-AppNotifications")
+      }
+
     }
       UserDefaults.standard.synchronize()
     }
@@ -71,7 +82,7 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -83,14 +94,17 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
       cell.selectionStyle = .none
       cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
       cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-      
       if indexPath.row == 0 {
+        cell.accessoryView = notificationsSwich
+        cell.textLabel?.text = "In-App Preview"
+      }
+      if indexPath.row == 1 {
         cell.accessoryView = soundsSwich
         cell.textLabel?.text = "In-App Sounds"
       }
-      if indexPath.row == 1 {
+      if indexPath.row == 2 {
         cell.accessoryView = vibrationSwich
-        cell.textLabel?.text = "In-App Vibration"
+        cell.textLabel?.text = "In-App Vibrate"
       }
 
       return cell
