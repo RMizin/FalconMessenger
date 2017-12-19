@@ -528,7 +528,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
-  func updateMessageStatusUI(sentMessage: Message) {
+ fileprivate func updateMessageStatusUI(sentMessage: Message) {
     
     guard let index = self.messages.index(where: { (message) -> Bool in
       return message.messageUID == sentMessage.messageUID
@@ -551,6 +551,20 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
+  func updateMessageStatusUIAfterDeletion(sentMessage: Message) {
+    guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable,
+    let lastMessageUID = messages.last?.messageUID, self.messages.count >= 0 else { return }
+  
+    if messages.last!.toId == uid && self.messages.last?.status != messageStatusRead {
+      let messagesRef = Database.database().reference().child("messages").child(lastMessageUID)
+      messagesRef.updateChildValues(["seen" : true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
+        self.messages.last?.status = messageStatusRead
+        self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count - 1 ,section: 0)])
+      })
+    } else {
+      self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count - 1 ,section: 0)])
+    }
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()

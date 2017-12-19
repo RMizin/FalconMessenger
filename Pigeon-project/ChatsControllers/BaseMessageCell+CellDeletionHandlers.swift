@@ -92,7 +92,7 @@ extension BaseMessageCell {
             print(error?.localizedDescription ?? "", "\nERROR DELETION\n")
             return
           }
-          
+          let shouldReloadMessageStatus = self.shouldReloadMessageSatus()
           self.chatLogController?.collectionView?.performBatchUpdates ({
             
             if let index = self.chatLogController?.mediaMessages.index(where: { (message) -> Bool in  //if removing message is photo message
@@ -111,6 +111,9 @@ extension BaseMessageCell {
               self.chatLogController?.allMessagesRemovedDelegate?.allMessagesRemoved(for: partnerID, state: true)
               
               self.chatLogController?.navigationController?.popViewController(animated: true)
+            } else {
+              guard shouldReloadMessageStatus, let lastMessage = self.chatLogController?.messages.last else { return }
+              self.chatLogController?.updateMessageStatusUIAfterDeletion(sentMessage: lastMessage)
             }
             print("\ncell deletion completed\n")
           })
@@ -121,4 +124,8 @@ extension BaseMessageCell {
     }
   }
   
+  func shouldReloadMessageSatus() -> Bool {
+    guard self.message == self.chatLogController?.messages.last, self.chatLogController!.messages.count > 0 else { return false }
+      return true
+  }
 }

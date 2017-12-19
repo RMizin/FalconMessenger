@@ -10,7 +10,6 @@ import UIKit
 import Firebase
 import SDWebImage
 
-
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -53,6 +52,10 @@ class ChatsController: UITableViewController {
   
   var filtededConversations = [Conversation]()
   
+  var pinnedConversations = [Conversation]()
+  
+  var filteredPinnedConversations = [Conversation]()
+  
   fileprivate var connectedRef: DatabaseReference!
   fileprivate var currentUserConversationsReference: DatabaseReference!
   fileprivate var lastMessageForConverstaionRef: DatabaseReference!
@@ -93,7 +96,6 @@ class ChatsController: UITableViewController {
     super.viewWillLayoutSubviews()
      noChatsYetContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
      noChatsYetContainer.layoutIfNeeded()
-    
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -184,6 +186,14 @@ class ChatsController: UITableViewController {
       }
     }
     
+    for meta in filteredPinnedConversations {
+      if meta.message?.seen != nil && !meta.message!.seen! &&  meta.message!.fromId != uid {
+        badge += 1
+        tabItem.badgeValue = badge.toString()
+        UIApplication.shared.applicationIconBadgeNumber = badge
+      }
+    }
+    
     if badge <= 0 {
       tabItem.badgeValue = nil
       UIApplication.shared.applicationIconBadgeNumber = 0
@@ -262,7 +272,7 @@ class ChatsController: UITableViewController {
       self.metadataRef.removeAllObservers()
       self.metadataRef.observe( .value, with: { (snapshot) in
         
-        guard let metaDictionary = snapshot.value as? [String: Int] else { return }
+        guard let metaDictionary = snapshot.value as? [String: AnyObject] else { return }
         let meta = ChatMetaData(dictionary: metaDictionary)
         self.fetchUserData(for: message, with: meta)
       })
@@ -282,32 +292,54 @@ class ChatsController: UITableViewController {
       let user = User(dictionary: dictionary)
       let conv = Conversation(message: message, user: user, chatMetaData: metaData)
       
-      guard let index = self.conversations.index(where: { (conversation) -> Bool in
-        return conversation.user?.id == chatPartnerID
-      }) else {
-        self.conversations.append(conv)
+      if let unpinnedIndex = self.conversations.index(where: { (conversation) -> Bool in
+        return conversation.user?.id == chatPartnerID }) {
+        
+        self.conversations[unpinnedIndex] = conv
         self.handleGroupOrReloadTable()
-    
-        return
+        
+      } else if let pinnedIndex = self.pinnedConversations.index(where: { (conversation) -> Bool in
+        return conversation.user?.id == chatPartnerID }) {
+        
+        self.pinnedConversations[pinnedIndex] = conv
+        self.handleGroupOrReloadTable()
+        
+      } else {
+        if metaData?.pinned != nil && metaData!.pinned! {
+          self.pinnedConversations.append(conv)
+        } else {
+          self.conversations.append(conv)
+        }
+        self.handleGroupOrReloadTable()
       }
-      
-      self.conversations[index] = conv
-      self.handleGroupOrReloadTable()
     })
   
     usersRef.observe(.childChanged) { (snapshot) in
-      guard let index = self.conversations.index(where: { (conversation) -> Bool in
-        return conversation.user!.id == chatPartnerID
-      }) else {
-        return
-      }
       
-      if snapshot.key == "name" {
-        self.conversations[index].user?.name = snapshot.value as? String
-        self.handleGroupOrReloadTable()
-      } else if snapshot.key == "thumbnailPhotoURL" {
-        self.conversations[index].user?.thumbnailPhotoURL = snapshot.value as? String
-        self.handleGroupOrReloadTable()
+      if let unpinnedIndex = self.filtededConversations.index(where: { (conversation) -> Bool in
+        return conversation.user?.id == chatPartnerID }) {
+        
+        if snapshot.key == "name" {
+          self.filtededConversations[unpinnedIndex].user?.name = snapshot.value as? String
+          self.handleGroupOrReloadTable()
+        } else if snapshot.key == "thumbnailPhotoURL" {
+          self.filtededConversations[unpinnedIndex].user?.thumbnailPhotoURL = snapshot.value as? String
+          self.handleGroupOrReloadTable()
+        } else {
+          return
+        }
+      } else if let pinnedIndex = self.filteredPinnedConversations.index(where: { (conversation) -> Bool in
+        return conversation.user?.id == chatPartnerID }) {
+        
+        if snapshot.key == "name" {
+          self.filteredPinnedConversations[pinnedIndex].user?.name = snapshot.value as? String
+          self.handleGroupOrReloadTable()
+        } else if snapshot.key == "thumbnailPhotoURL" {
+          self.filteredPinnedConversations[pinnedIndex].user?.thumbnailPhotoURL = snapshot.value as? String
+          self.handleGroupOrReloadTable()
+        } else {
+          return
+        }
       } else {
         return
       }
@@ -328,6 +360,11 @@ class ChatsController: UITableViewController {
       return conversation1.message?.timestamp?.int32Value > conversation2.message?.timestamp?.int32Value
     }
     
+    pinnedConversations.sort { (conversation1, conversation2) -> Bool in
+      return conversation1.message?.timestamp?.int32Value > conversation2.message?.timestamp?.int32Value
+    }
+    
+    filteredPinnedConversations = pinnedConversations
     filtededConversations = conversations
     
     if !isAppLoaded {
@@ -336,7 +373,7 @@ class ChatsController: UITableViewController {
       self.tableView.reloadData()
     }
     
-    if filtededConversations.count == 0 {
+    if filtededConversations.count == 0 && filteredPinnedConversations.count == 0 {
       checkIfThereAnyActiveChats(isEmpty: true)
     } else {
       checkIfThereAnyActiveChats(isEmpty: false)
@@ -364,31 +401,186 @@ class ChatsController: UITableViewController {
     return true
   }
   
-  override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
     
-    guard let uid = Auth.auth().currentUser?.uid else { return }
-    
-    if currentReachabilityStatus == .notReachable {
-      basicErrorAlertWith(title: "Error deleting message", message: noInternetError, controller: self)
-      return
+    if self.tableView.isEditing {
+      self.tableView.endEditing(true)
+      self.tableView.reloadData()
+    }
+  }
+ 
+  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    if section == 0 {
+      if filteredPinnedConversations.count == 0 {
+        return ""
+      }
+      return "PINNED"
+    } else {
+      return " "
+    }
+  }
+  
+override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+  if section == 0 {
+    return 20
+  } else {
+    if self.filteredPinnedConversations.count == 0 {
+      return 0
+    }
+   return 8
+  }
+}
+  
+  override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    if section == 0 {
+        view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
+    } else {
+       view.tintColor = ThemeManager.currentTheme().inputTextViewColor
     }
     
-    if (editingStyle == UITableViewCellEditingStyle.delete) {
-      let conversation = self.filtededConversations[indexPath.row]
-      guard let chatPartnerId = conversation.message?.chatPartnerId() else { return }
-      guard let index = self.conversations.index(where: { (conversation) -> Bool in
-        return conversation.user?.id == self.filtededConversations[indexPath.row].user?.id
-      }) else { return }
+    if let headerTitle = view as? UITableViewHeaderFooterView {
+      headerTitle.textLabel?.textColor = .lightGray
+      headerTitle.textLabel?.font = UIFont.systemFont(ofSize: 10)
+    }
+  }
+  
+  
+  func sortData() {
+
+    self.conversations.sort { (conversation1, conversation2) -> Bool in
+      return conversation1.message?.timestamp?.int32Value > conversation2.message?.timestamp?.int32Value
+    }
+    
+    self.pinnedConversations.sort { (conversation1, conversation2) -> Bool in
+      return conversation1.message?.timestamp?.int32Value > conversation2.message?.timestamp?.int32Value
+    }
+    
+    self.filteredPinnedConversations = self.pinnedConversations
+    self.filtededConversations = self.conversations
+    self.tableView.reloadData()
+  }
+  
+  override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+  
+    let pin = UITableViewRowAction(style: .default, title: "Pin") { action, index in
       
-      self.tableView.beginUpdates()
-      self.filtededConversations.remove(at: indexPath.row)
-      self.conversations.remove(at: index)
-      self.tableView.deleteRows(at: [indexPath], with: .left)
-      self.tableView.endUpdates()
+      if indexPath.section == 0 {
         
-      Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue()
-      self.configureTabBarBadge()
+        guard let uid = Auth.auth().currentUser?.uid else  { return }
+        
+        let conversation = self.filteredPinnedConversations[indexPath.row]
+        guard let chatPartnerId = conversation.message?.chatPartnerId() else { return }
+        
+        guard let index = self.pinnedConversations.index(where: { (conversation) -> Bool in
+          return conversation.user?.id == self.filteredPinnedConversations[indexPath.row].user?.id
+        }) else { return }
+        
+        self.tableView.beginUpdates()
+        self.filtededConversations.insert(self.filteredPinnedConversations[indexPath.row], at: 0)
+        self.conversations.insert(self.filteredPinnedConversations[indexPath.row], at: 0)
+        self.filteredPinnedConversations.remove(at: indexPath.row)
+        self.pinnedConversations.remove(at: index)
+        self.tableView.deleteRows(at: [indexPath], with: .left)
+        self.tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+        self.sortData()
+        self.tableView.endUpdates()
+        
+        let metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
+        metadataRef.updateChildValues(["pinned": false], withCompletionBlock: { (error, reference) in
+          if error != nil {
+            basicErrorAlertWith(title: "Error pinning/unpinning", message: "Changes won't be saved across app restarts. Check your internet connection, re-launch the app, and try again.", controller: self)
+            print(error?.localizedDescription ?? "")
+            return
+          }
+        })
+      } else if indexPath.section == 1 {
+        guard let uid = Auth.auth().currentUser?.uid else  { return }
+       
+        let conversation = self.filtededConversations[indexPath.row]
+        guard let chatPartnerId = conversation.message?.chatPartnerId() else { return }
+        
+        guard let index = self.conversations.index(where: { (conversation) -> Bool in
+          return conversation.user?.id == self.filtededConversations[indexPath.row].user?.id
+        }) else { return }
+        
+        
+        self.tableView.beginUpdates()
+        self.filteredPinnedConversations.insert(self.filtededConversations[indexPath.row], at: 0)
+        self.pinnedConversations.insert(self.filtededConversations[indexPath.row], at: 0)
+        self.filtededConversations.remove(at: indexPath.row)
+        self.conversations.remove(at: index)
+        self.tableView.deleteRows(at: [indexPath], with: .left)
+        self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+        self.sortData()
+        self.tableView.endUpdates()
+        
+        let metadataRef = Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).child(messageMetaDataFirebaseFolder)
+        metadataRef.updateChildValues(["pinned": true], withCompletionBlock: { (error, reference) in
+          if error != nil {
+            basicErrorAlertWith(title: "Error pinning/unpinning", message: "Changes won't be saved across app restarts. Check your internet connection, re-launch the app, and try again.", controller: self)
+            print(error?.localizedDescription ?? "")
+            return
+          }
+          
+        })        
+      }
     }
+    
+    if indexPath.section == 0 {
+      pin.title = "Unpin"
+    } else if indexPath.section == 1 {
+      pin.title = "Pin"
+    }
+
+    pin.backgroundColor = .orange
+    
+    let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+      guard let uid = Auth.auth().currentUser?.uid else { return }
+      
+      if self.currentReachabilityStatus == .notReachable {
+        basicErrorAlertWith(title: "Error deleting message", message: noInternetError, controller: self)
+        return
+      }
+      if indexPath.section == 0 {
+        
+        let conversation = self.filteredPinnedConversations[indexPath.row]
+        guard let chatPartnerId = conversation.message?.chatPartnerId() else { return }
+        guard let index = self.pinnedConversations.index(where: { (conversation) -> Bool in
+          return conversation.user?.id == self.filteredPinnedConversations[indexPath.row].user?.id
+        }) else { return }
+        
+        self.tableView.beginUpdates()
+        self.filteredPinnedConversations.remove(at: indexPath.row)
+        self.pinnedConversations.remove(at: index)
+        self.tableView.deleteRows(at: [indexPath], with: .left)
+        self.tableView.endUpdates()
+        
+        Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue()
+        self.configureTabBarBadge()
+        
+      } else if indexPath.section == 1 {
+        
+        let conversation = self.filtededConversations[indexPath.row]
+        guard let chatPartnerId = conversation.message?.chatPartnerId() else { return }
+        guard let index = self.conversations.index(where: { (conversation) -> Bool in
+          return conversation.user?.id == self.filtededConversations[indexPath.row].user?.id
+        }) else { return }
+        
+        self.tableView.beginUpdates()
+        self.filtededConversations.remove(at: indexPath.row)
+        self.conversations.remove(at: index)
+        self.tableView.deleteRows(at: [indexPath], with: .left)
+        self.tableView.endUpdates()
+        
+        Database.database().reference().child("user-messages").child(uid).child(chatPartnerId).removeValue()
+        self.configureTabBarBadge()
+      }
+    }
+  
+    delete.backgroundColor = .red
+    
+    return [delete, pin]
   }
   
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -396,15 +588,23 @@ class ChatsController: UITableViewController {
     }
   
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
   
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+      if section == 0 {
+        return filteredPinnedConversations.count
+      } else {
         return filtededConversations.count
+      }
     }
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+      if indexPath.section == 0 {
+          return configurePinnedCell(for: indexPath)
+        } else {
         return configuredCell(for: indexPath)
+      }
     }
   
   
@@ -413,8 +613,13 @@ class ChatsController: UITableViewController {
   var autoSizingCollectionViewFlowLayout: AutoSizingCollectionViewFlowLayout? = nil
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    var user: User!
+    if indexPath.section == 0 {
+      user = filteredPinnedConversations[indexPath.row].user
+    } else {
+      user = filtededConversations[indexPath.row].user
+    }
   
-    let user = filtededConversations[indexPath.row].user
     autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
     autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
     chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
@@ -473,6 +678,7 @@ extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISe
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
         filtededConversations = conversations
+        filteredPinnedConversations = pinnedConversations
         handleReloadTable()
     }
     
@@ -482,6 +688,12 @@ extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISe
           conversations.filter({ (conversation) -> Bool in
             return conversation.user!.name!.lowercased().contains(searchText.lowercased())
           })
+      
+      filteredPinnedConversations = searchText.isEmpty ? pinnedConversations :
+        pinnedConversations.filter({ (conversation) -> Bool in
+          return conversation.user!.name!.lowercased().contains(searchText.lowercased())
+        })
+      
         handleReloadTableAfterSearch()
     }
   
@@ -514,6 +726,68 @@ extension ChatsController { /* hiding keyboard */
 
 
 extension ChatsController {
+  
+  fileprivate func configurePinnedCell(for indexPath: IndexPath) -> UserCell {
+    
+    let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
+    
+    if filteredPinnedConversations[indexPath.row].user?.id == Auth.auth().currentUser?.uid {
+      cell.nameLabel.text = NameConstants.personalStorage
+    } else {
+      cell.nameLabel.text = filteredPinnedConversations[indexPath.row].user?.name
+    }
+    
+    if (filteredPinnedConversations[indexPath.row].message?.imageUrl != nil ||
+      filteredPinnedConversations[indexPath.row].message?.localImage != nil) &&
+      filteredPinnedConversations[indexPath.row].message?.videoUrl == nil {
+      cell.messageLabel.text = MessageSubtitle.image
+    } else if (filteredPinnedConversations[indexPath.row].message?.imageUrl != nil ||
+      filteredPinnedConversations[indexPath.row].message?.localImage != nil) &&
+      filteredPinnedConversations[indexPath.row].message?.videoUrl != nil {
+      cell.messageLabel.text =  MessageSubtitle.video
+    } else if filteredPinnedConversations[indexPath.row].message?.voiceEncodedString != nil {
+      cell.messageLabel.text =  MessageSubtitle.audio
+    } else {
+      cell.messageLabel.text = filteredPinnedConversations[indexPath.row].message?.text
+    }
+    
+    let date = Date(timeIntervalSince1970: filteredPinnedConversations[indexPath.row].message?.timestamp as! TimeInterval)
+    cell.timeLabel.text = timestampOfLastMessage(date)
+    
+    
+    if filteredPinnedConversations[indexPath.row].user?.id == Auth.auth().currentUser?.uid {
+      cell.profileImageView.image = UIImage(named: "PersonalStorage")
+      
+    } else if let url = self.filteredPinnedConversations[indexPath.row].user?.thumbnailPhotoURL {
+      cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload,.scaleDownLargeImages ], completed: nil)
+    }
+    
+    if filteredPinnedConversations[indexPath.row].message?.seen != nil {
+      let seen = filteredPinnedConversations[indexPath.row].message?.seen!
+      if !seen! && filteredPinnedConversations[indexPath.row].message?.fromId != Auth.auth().currentUser?.uid {
+        cell.badgeLabel.text = filteredPinnedConversations[indexPath.row].chatMetaData?.badge?.toString()
+        
+        if Int(cell.badgeLabel.text!)! > 0 {
+          cell.badgeLabel.isHidden = false
+          cell.newMessageIndicator.isHidden = false
+        } else {
+          cell.newMessageIndicator.isHidden = true
+          cell.badgeLabel.isHidden = true
+        }
+      } else {
+        cell.newMessageIndicator.isHidden = true
+        cell.badgeLabel.isHidden = true
+        cell.badgeLabel.text = filteredPinnedConversations[indexPath.row].chatMetaData?.badge?.toString()
+      }
+    } else {
+      cell.newMessageIndicator.isHidden = true
+      cell.badgeLabel.isHidden = true
+      cell.badgeLabel.text = filteredPinnedConversations[indexPath.row].chatMetaData?.badge?.toString()
+    }
+    
+    return cell
+  }
+  
   fileprivate func configuredCell(for indexPath: IndexPath) -> UserCell {
     
     let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell

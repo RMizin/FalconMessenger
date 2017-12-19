@@ -11,11 +11,13 @@ import UIKit
 class ChatMetaData:  NSObject  {
   
   var badge: Int?
+  var pinned: Bool?
   
-  init(dictionary: [String: Int]?) {
+  init(dictionary: [String: AnyObject]?) {
     super.init()
     
-    badge = dictionary?["badge"] //as? Int
+    badge = dictionary?["badge"] as? Int
+    pinned = dictionary?["pinned"] as? Bool
     
   }
 }
