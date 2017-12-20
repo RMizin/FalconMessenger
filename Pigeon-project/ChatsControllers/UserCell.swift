@@ -35,6 +35,17 @@ class UserCell: UITableViewCell {
       return newMessageIndicator
     }()
   
+  let muteIndicator: UIImageView = {
+    let muteIndicator = UIImageView()
+    muteIndicator.translatesAutoresizingMaskIntoConstraints = false
+    muteIndicator.layer.masksToBounds = true
+    muteIndicator.contentMode = .scaleAspectFit
+    muteIndicator.isHidden = true
+    muteIndicator.image = UIImage(named: "mute")
+    
+    return muteIndicator
+  }()
+  
     let timeLabel: UILabel = {
       let label = UILabel()
       label.font = UIFont.systemFont(ofSize: 12)
@@ -87,6 +98,7 @@ class UserCell: UITableViewCell {
       
         backgroundColor = .clear
         contentView.addSubview(newMessageIndicator)
+        contentView.addSubview(muteIndicator)
         contentView.addSubview(profileImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(messageLabel)
@@ -102,10 +114,10 @@ class UserCell: UITableViewCell {
         newMessageIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         newMessageIndicator.widthAnchor.constraint(equalToConstant: 12).isActive = true
         newMessageIndicator.heightAnchor.constraint(equalToConstant: 12).isActive = true
-    
+     
         nameLabel.topAnchor.constraint(equalTo: profileImageView.topAnchor).isActive = true
         nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true
-        nameLabel.rightAnchor.constraint(equalTo: timeLabel.leftAnchor, constant: -2).isActive = true
+        nameLabel.rightAnchor.constraint(lessThanOrEqualTo: muteIndicator.leftAnchor, constant: -5).isActive = true
       
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         messageLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true
@@ -113,8 +125,12 @@ class UserCell: UITableViewCell {
   
         timeLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor).isActive = true
         timeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -15).isActive = true
-        timeLabel.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 5).isActive = true
-      
+   
+        muteIndicator.rightAnchor.constraint(equalTo: timeLabel.leftAnchor, constant: -5).isActive = true
+        muteIndicator.centerYAnchor.constraint(equalTo: timeLabel.centerYAnchor).isActive = true
+        muteIndicator.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        muteIndicator.heightAnchor.constraint(equalToConstant: 12).isActive = true
+    
         badgeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -15).isActive = true
         badgeLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
         badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
@@ -135,6 +151,7 @@ class UserCell: UITableViewCell {
     messageLabel.text = nil
     timeLabel.text = nil
     badgeLabel.isHidden = true
+    muteIndicator.isHidden = true
     nameLabel.textColor = ThemeManager.currentTheme().generalTitleColor
   }
 }

@@ -97,6 +97,13 @@ extension Array {
   }
 }
 
+extension Collection {
+  func insertionIndex(of element: Self.Iterator.Element,
+                      using areInIncreasingOrder: (Self.Iterator.Element, Self.Iterator.Element) -> Bool) -> Index {
+    return index(where: { !areInIncreasingOrder($0, element) }) ?? endIndex
+  }
+}
+
 extension Bool {
   init<T: BinaryInteger>(_ num: T) {
     self.init(num != 0)

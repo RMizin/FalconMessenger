@@ -150,7 +150,7 @@ open class ShoutView: UIView {
   // MARK: - Setup
 
   public func setupFrames() {
-   
+    self.internalHeight = 0
     self.internalHeight = (UIApplication.shared.isStatusBarHidden ? 45 : 65)
     let totalWidth = UIScreen.main.bounds.width
     DispatchQueue.main.async {

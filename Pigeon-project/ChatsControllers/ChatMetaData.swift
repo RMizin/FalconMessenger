@@ -12,12 +12,13 @@ class ChatMetaData:  NSObject  {
   
   var badge: Int?
   var pinned: Bool?
+  var muted: Bool?
   
   init(dictionary: [String: AnyObject]?) {
     super.init()
     
     badge = dictionary?["badge"] as? Int
     pinned = dictionary?["pinned"] as? Bool
-    
+    muted = dictionary?["muted"] as? Bool
   }
 }

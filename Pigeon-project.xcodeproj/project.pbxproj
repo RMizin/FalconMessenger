@@ -162,6 +162,7 @@
 		4BE571931F4D8816009D9AB4 /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571811F4D8816009D9AB4 /* text.png */; };
 		4BE571941F4D8816009D9AB4 /* text@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571821F4D8816009D9AB4 /* text@2x.png */; };
 		4BE571951F4D8816009D9AB4 /* text@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571831F4D8816009D9AB4 /* text@3x.png */; };
+		4BE746071FE927B300C8C220 /* ChatsController+TableRowActionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE746061FE927B300C8C220 /* ChatsController+TableRowActionHandlers.swift */; };
 		4BE8BB371FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB361FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift */; };
 		4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB381FC9F8C100EB35FA /* VoiceRecordingViewController.swift */; };
 		4BE8BB3B1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB3A1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift */; };
@@ -366,6 +367,7 @@
 		4BE571811F4D8816009D9AB4 /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = text.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/text.png"; sourceTree = "<group>"; };
 		4BE571821F4D8816009D9AB4 /* text@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "text@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/text@2x.png"; sourceTree = "<group>"; };
 		4BE571831F4D8816009D9AB4 /* text@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "text@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/text@3x.png"; sourceTree = "<group>"; };
+		4BE746061FE927B300C8C220 /* ChatsController+TableRowActionHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsController+TableRowActionHandlers.swift"; path = "ChatsControllers/ChatsController+TableRowActionHandlers.swift"; sourceTree = "<group>"; };
 		4BE8BB361FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogController+VoiceRecordingHandlers.swift"; path = "ChatsControllers/ChatLogController+VoiceRecordingHandlers.swift"; sourceTree = "<group>"; };
 		4BE8BB381FC9F8C100EB35FA /* VoiceRecordingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceRecordingViewController.swift; path = ChatsControllers/VoiceRecordingViewController.swift; sourceTree = "<group>"; };
 		4BE8BB3A1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceRecordingContainerView.swift; path = ChatsControllers/VoiceRecordingContainerView.swift; sourceTree = "<group>"; };
@@ -584,6 +586,7 @@
 				4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */,
 				4BE8BB361FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift */,
 				4BC26B311F3A27750093A9D2 /* ChatsController.swift */,
+				4BE746061FE927B300C8C220 /* ChatsController+TableRowActionHandlers.swift */,
 				4B2820EE1FE424DF00791AB1 /* ChatsController+NotificationsHandlers.swift */,
 				4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */,
 				4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */,
@@ -1198,6 +1201,7 @@
 				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
 				4BED6EBC1F476A46004EF2E0 /* ActionCell.swift in Sources */,
 				4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */,
+				4BE746071FE927B300C8C220 /* ChatsController+TableRowActionHandlers.swift in Sources */,
 				4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */,
 				4BB775A51F59E74200BFEEB8 /* ChatMetaData.swift in Sources */,
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
