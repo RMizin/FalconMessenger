@@ -34,25 +34,19 @@ Also, it makes possible for you to send messages, photos, and videos to people w
 ## User Interface
 
 <p align="center">
- 
+ <p align="left"><b>Day color theme</p>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/WelcomeiPhoneX.png" width="171"/>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ContactsiPhoneX.png" width="171"/>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ChatsiphoneX.png" width="171"/>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ChatLogiPhoneX.png" width="171"/>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SettingsiPhoneX.png" width="171"/>
- 
-</p>
- 
-<p align="center">
- 
+ <p align="left"><b>Night color theme</p>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackWelcomeIPhoneX.png" width="171"/>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackContactsIPhoneX.png" width="171"/>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackChatsIPhoneX.png" width="171"/>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackChatLogIPhoneX.png" width="171"/>
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackSettingsIPhoneX.png" width="171"/>
- 
 </p> 
-
 
 
 ## License
