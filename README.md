@@ -35,11 +35,11 @@ Also, it makes possible for you to send messages, photos, and videos to people w
  
 <p align="center">
  
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/welcomeCorrectDim.png" width="250"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/contactsCorrectDim.png" width="250"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/chatsCorrectDim.png" width="250"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/chatLogCorrectDim.png" width="250"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SettingsCorrectDim.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/WelcomeiPhoneX.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ContactsiPhoneX.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ChatsiphoneX.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ChatLogiPhoneX.png" width="250"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SettingsiPhoneX.jpeg" width="250"/>
  
 </p> 
 
