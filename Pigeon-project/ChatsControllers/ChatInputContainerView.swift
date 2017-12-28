@@ -152,7 +152,7 @@ class ChatInputContainerView: UIView {
     }
     
     attachedImages = UICollectionView(centeredCollectionViewFlowLayout: centeredCollectionViewFlowLayout)
-    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    backgroundColor = ThemeManager.currentTheme().barBackgroundColor
     self.autoresizingMask = UIViewAutoresizing.flexibleHeight
     
     addSubview(attachButton)

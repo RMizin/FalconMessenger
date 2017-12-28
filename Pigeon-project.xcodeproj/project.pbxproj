@@ -531,7 +531,7 @@
 				4B4F452D1F32230C00A6FF96 /* Pigeon-project */,
 				4B4F452C1F32230C00A6FF96 /* Products */,
 				4B4526391F5EBCC5003FBA29 /* Resources */,
-				4B94987F1F324B00008DA07F /* Support */,
+				4B94987F1F324B00008DA07F /* Third-Party Frameworks */,
 				E788FC79B73E9599A409079F /* Pods */,
 				2AF4427B37282913090A248D /* Frameworks */,
 			);
@@ -720,7 +720,7 @@
 			name = Onboarding;
 			sourceTree = "<group>";
 		};
-		4B94987F1F324B00008DA07F /* Support */ = {
+		4B94987F1F324B00008DA07F /* Third-Party Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				4B91B8BB1F34E9D60025C67F /* Public.swift */,
@@ -737,7 +737,7 @@
 				4BED6EA81F47697D004EF2E0 /* PickerTrayController */,
 				4B48D3111F361E300050C797 /* ProgressIndicator */,
 			);
-			name = Support;
+			name = "Third-Party Frameworks";
 			path = "Pigeon-project";
 			sourceTree = "<group>";
 		};
