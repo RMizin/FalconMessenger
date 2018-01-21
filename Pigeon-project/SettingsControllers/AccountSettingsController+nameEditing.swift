@@ -9,6 +9,51 @@
 import UIKit
 import Firebase
 
+
+extension AccountSettingsController: UITextFieldDelegate {
+  
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    doneBarButtonPressed()
+    textField.resignFirstResponder()
+    return true
+  }
+}
+
+extension AccountSettingsController: UITextViewDelegate {
+  
+  func textViewDidBeginEditing(_ textView: UITextView) {
+   setEditingBarButtons()
+   userProfileContainerView.bioPlaceholderLabel.isHidden = true
+   userProfileContainerView.countLabel.text = "\(userProfileContainerView.bioMaxCharactersCount - userProfileContainerView.bio.text.count)"
+   userProfileContainerView.countLabel.isHidden = false
+  }
+  
+  func textViewDidEndEditing(_ textView: UITextView) {
+     userProfileContainerView.bioPlaceholderLabel.isHidden = !textView.text.isEmpty
+     userProfileContainerView.countLabel.isHidden = true
+  }
+  
+  func textViewDidChange(_ textView: UITextView) {
+    if textView.isFirstResponder && textView.text == "" {
+       userProfileContainerView.bioPlaceholderLabel.isHidden = true
+    } else {
+      userProfileContainerView.bioPlaceholderLabel.isHidden = !textView.text.isEmpty
+    }
+     userProfileContainerView.countLabel.text = "\(userProfileContainerView.bioMaxCharactersCount - textView.text.count)"
+  }
+  
+  func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    
+    if(text == "\n") {
+      textView.resignFirstResponder()
+      doneBarButtonPressed()
+      return false
+    }
+    
+    return textView.text.count + (text.count - range.length) <= userProfileContainerView.bioMaxCharactersCount
+  }
+}
+
 extension AccountSettingsController { /* user name editing */
   
   @objc func nameDidBeginEditing() {
@@ -36,7 +81,9 @@ extension AccountSettingsController { /* user name editing */
   @objc func cancelBarButtonPressed() {
     
     userProfileContainerView.name.text = currentName
+    userProfileContainerView.bio.text = currentBio
     userProfileContainerView.name.resignFirstResponder()
+    userProfileContainerView.bio.resignFirstResponder()
     navigationItem.leftBarButtonItem = nil
     navigationItem.rightBarButtonItem = nil
     configureNavigationBarDefaultRightBarButton()
@@ -54,10 +101,12 @@ extension AccountSettingsController { /* user name editing */
     navigationItem.rightBarButtonItem = nil
     configureNavigationBarDefaultRightBarButton()
     userProfileContainerView.name.resignFirstResponder()
+    userProfileContainerView.bio.resignFirstResponder()
     
     
     let userNameReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
-    userNameReference.updateChildValues(["name" : userProfileContainerView.name.text!]) { (error, reference) in
+    userNameReference.updateChildValues(["name": userProfileContainerView.name.text!,
+                                         "bio": userProfileContainerView.bio.text!]) { (error, reference) in
       
       if error != nil {
         ARSLineProgress.showFail()

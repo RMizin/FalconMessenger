@@ -28,8 +28,8 @@ class AccountSettingsController: UITableViewController {
   let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
   
   var currentName = String()
+  var currentBio = String()
   
-
   override func viewDidLoad() {
      super.viewDidLoad()
     
@@ -105,6 +105,12 @@ class AccountSettingsController: UITableViewController {
       tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+      userProfileContainerView.userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+      userProfileContainerView.name.textColor = ThemeManager.currentTheme().generalTitleColor
+      userProfileContainerView.bio.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+      userProfileContainerView.bio.textColor = ThemeManager.currentTheme().generalTitleColor
+      userProfileContainerView.bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+      userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
   }
   
   @objc func clearUserData() {
@@ -137,6 +143,15 @@ class AccountSettingsController: UITableViewController {
         }
       })
       
+      let bioReference = Database.database().reference().child("users").child(currentUser).child("bio")
+      bioReference.observe(.value, with: { (snapshot) in
+        if let bio = snapshot.value as? String {
+          self.userProfileContainerView.bio.text = bio
+          self.userProfileContainerView.bioPlaceholderLabel.isHidden = !self.userProfileContainerView.bio.text.isEmpty
+          self.currentBio = bio
+        }
+      })
+      
       let phoneNumberReference = Database.database().reference().child("users").child(currentUser).child("phoneNumber")
       phoneNumberReference.observe(.value, with: { (snapshot) in
         if let phoneNumber = snapshot.value as? String {
@@ -159,7 +174,9 @@ class AccountSettingsController: UITableViewController {
     userProfileContainerView.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
     userProfileContainerView.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
     userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
-    userProfileContainerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 300)
+    userProfileContainerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 250)
+    userProfileContainerView.bio.delegate = self
+    userProfileContainerView.name.delegate = self
   }
   
   @objc fileprivate func openUserProfilePicture() {
@@ -223,8 +240,6 @@ class AccountSettingsController: UITableViewController {
     }
   }
 }
-
-
 
 extension AccountSettingsController {
   

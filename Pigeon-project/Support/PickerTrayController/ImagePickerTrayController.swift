@@ -304,15 +304,15 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
         return sections[section]
     }
   
-  public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-    if let cell = cell as? CameraCell {
+//  public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+  //  if let cell = cell as? CameraCell {
      
-      cell.cameraView = self.cameraController.view
-      DispatchQueue.main.async {
-        cell.cameraOverlayView = self.cameraController.cameraOverlayView
-      }
-    }
-  }
+   //   cell.cameraView = self.cameraController.view
+    //  DispatchQueue.main.async {
+      //  cell.cameraOverlayView = self.cameraController.cameraOverlayView
+    //  }
+//    }
+ // }
   
   
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -396,7 +396,7 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
         case 0:
           return CGSize(width: actionCellWidth, height: collectionView.frame.height-1)
         case 1:
-          return CGSize(width: 197, height: collectionView.frame.height-1)
+          return CGSize(width: 0, height: 0)//CGSize(width: 197, height: collectionView.frame.height-1)
         case 2:
           return CGSize(width: collectionView.frame.height/2.045, height: collectionView.frame.height/2.045)
         default:

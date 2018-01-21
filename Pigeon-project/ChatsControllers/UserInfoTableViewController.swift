@@ -18,6 +18,7 @@ class UserInfoTableViewController: UITableViewController {
   var contactName = String()
   var contactPhoneNumbers = [String]()
   var contactPhoto: NSURL?
+  var contactBio: String?
   var onlineStatus: String? {
     didSet {
       tableView.reloadSections([0], with: .none)
@@ -38,14 +39,22 @@ class UserInfoTableViewController: UITableViewController {
   
     tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerIdentifier)
     configureTitleViewWithOnlineStatus()
+    configureBioDisplaying()
   }
     
-    
+  
+  func configureBioDisplaying() {
+    guard let toId = self.user?.id else { return }
+    Database.database().reference().child("users").child(toId).child("bio").observeSingleEvent(of: .value, with: { (snapshot) in
+      if let stringSnapshot = snapshot.value as? String {
+        self.contactBio = stringSnapshot
+      }
+    })
+  }
+  
   func configureTitleViewWithOnlineStatus() {
     
-    guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else {
-      return
-    }
+    guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else { return }
     
     Database.database().reference().child("users").child(toId).child("OnlineStatus").observeSingleEvent(of: .value, with: { (snapshot) in
       
@@ -74,7 +83,7 @@ class UserInfoTableViewController: UITableViewController {
 
   
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return 2
+    return 3
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -130,6 +139,16 @@ class UserInfoTableViewController: UITableViewController {
       
       cell.textLabel?.text = contactPhoneNumbers[indexPath.row]
       cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+      
+      return cell
+      
+    } else if indexPath.section == 2 {
+
+      cell.textLabel?.numberOfLines = 0
+      cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+      DispatchQueue.main.async {
+        cell.textLabel?.text = self.contactBio
+      }
     }
     
     return cell
@@ -138,8 +157,10 @@ class UserInfoTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     if indexPath.section == 0 {
       return 100
-    } else {
+    } else if indexPath.section == 1 {
       return 50
+    } else {
+      return 80
     }
   }
 }

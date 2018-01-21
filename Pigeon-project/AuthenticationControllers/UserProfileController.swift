@@ -24,6 +24,7 @@ class UserProfileController: UIViewController {
       
         configureNavigationBar()
         configureContainerView()
+        configureColorsAccordingToTheme()
     }
   
     fileprivate func configureNavigationBar () {
@@ -36,7 +37,14 @@ class UserProfileController: UIViewController {
     fileprivate func configureContainerView() {
       userProfileContainerView.frame = view.bounds
       userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
+      userProfileContainerView.bio.delegate = self
+      userProfileContainerView.name.delegate = self
     }
+  
+  fileprivate func configureColorsAccordingToTheme() {
+    userProfileContainerView.bio.textColor = ThemeManager.currentTheme().generalTitleColor
+    userProfileContainerView.name.textColor = ThemeManager.currentTheme().generalTitleColor
+  }
   
     override func viewWillLayoutSubviews() {
       super.viewWillLayoutSubviews()
@@ -81,7 +89,14 @@ extension UserProfileController {
     let nameReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("name")
     nameReference.observe(.value, with: { (snapshot) in
       if snapshot.exists() {
-        self.userProfileContainerView.name.text = (snapshot.value as! String)
+        self.userProfileContainerView.name.text = snapshot.value as? String
+      }
+    })
+    
+    let bioReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("bio")
+    bioReference.observe(.value, with: { (snapshot) in
+      if snapshot.exists() {
+        self.userProfileContainerView.bio.text = snapshot.value as? String
       }
     })
     
@@ -107,7 +122,9 @@ extension UserProfileController {
     ARSLineProgress.ars_showOnView(self.view)
 
     let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
-    userReference.updateChildValues(["name" : userProfileContainerView.name.text! , "phoneNumber" : userProfileContainerView.phone.text! ]) { (error, reference) in
+    userReference.updateChildValues(["name" : userProfileContainerView.name.text!,
+                                     "phoneNumber" : userProfileContainerView.phone.text!,
+                                     "bio" : userProfileContainerView.bio.text!]) { (error, reference) in
       ARSLineProgress.hide()
       self.dismiss(animated: true) {
         AppUtility.lockOrientation(.allButUpsideDown)
@@ -115,3 +132,45 @@ extension UserProfileController {
     }
   }
 }
+
+extension UserProfileController: UITextViewDelegate {
+  
+  func textViewDidBeginEditing(_ textView: UITextView) {
+    userProfileContainerView.bioPlaceholderLabel.isHidden = true
+    userProfileContainerView.countLabel.text = "\(userProfileContainerView.bioMaxCharactersCount - userProfileContainerView.bio.text.count)"
+    userProfileContainerView.countLabel.isHidden = false
+  }
+  
+  func textViewDidEndEditing(_ textView: UITextView) {
+    userProfileContainerView.bioPlaceholderLabel.isHidden = !textView.text.isEmpty
+    userProfileContainerView.countLabel.isHidden = true
+  }
+  
+  func textViewDidChange(_ textView: UITextView) {
+    if textView.isFirstResponder && textView.text == "" {
+      userProfileContainerView.bioPlaceholderLabel.isHidden = true
+    } else {
+      userProfileContainerView.bioPlaceholderLabel.isHidden = !textView.text.isEmpty
+    }
+    userProfileContainerView.countLabel.text = "\(userProfileContainerView.bioMaxCharactersCount - textView.text.count)"
+  }
+  
+  func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    
+    if(text == "\n") {
+      textView.resignFirstResponder()
+      return false
+    }
+
+    return textView.text.count + (text.count - range.length) <= userProfileContainerView.bioMaxCharactersCount
+  }
+}
+
+extension UserProfileController: UITextFieldDelegate {
+  
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    return true
+  }
+}
+

@@ -770,43 +770,39 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     refreshControl.endRefreshing()
   }
   
-  
   func configureTitleViewWithOnlineStatus() {
-    userStatusReference = Database.database().reference().child("users").child(user!.id!).child("OnlineStatus")
+
+    guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else { return }
+    
+    if uid == toId {
+      self.navigationItem.title = NameConstants.personalStorage
+      return
+    }
+    
+    userStatusReference = Database.database().reference().child("users").child(toId).child("OnlineStatus")
     userStatusReference.observe(.value, with: { (snapshot) in
-      
-      guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else {
-        return
-      }
-      
-      if uid == toId {
-        self.navigationItem.title = NameConstants.personalStorage
-        return
-      }
-      
-      if snapshot.exists() {
-        
-        guard let title = self.user?.name else { return }
-        
-        if let stringSnapshot = snapshot.value as? String {
-          
-          if stringSnapshot == statusOnline { // user online
-            self.navigationItem.setTitle(title: title, subtitle: statusOnline)
-          } else { // user got a timstamp converted to string (was in earlier versions of app)
-            print("\n\nOLDER VERSION OF TIMESTAMP\n\n")
-            let date = Date(timeIntervalSince1970: TimeInterval(stringSnapshot)!)
-            let subtitle = "Last seen " + timeAgoSinceDate(date)
-            self.navigationItem.setTitle(title: title, subtitle: subtitle)
-          }
-          
-        } else if let timeintervalSnapshot = snapshot.value as? TimeInterval { //user got server timestamp in miliseconds
-          print("\n\newer VERSION OF TIMESTAMP\n\n")
-          let date = Date(timeIntervalSince1970: timeintervalSnapshot/1000)
-          let subtitle = "Last seen " + timeAgoSinceDate(date)
-          self.navigationItem.setTitle(title: title, subtitle: subtitle)
-        }
-      }
+      guard snapshot.exists() else { return }
+      self.manageNavigationItemTitle(onlineStatusObject: snapshot.value as AnyObject)
     })
+  }
+  
+  fileprivate func manageNavigationItemTitle(onlineStatusObject: AnyObject) {
+    
+    guard let title = self.user?.name else { return }
+    if let onlineStatusStringStamp = onlineStatusObject as? String {
+      if onlineStatusStringStamp == statusOnline { // user online
+        self.navigationItem.setTitle(title: title, subtitle: statusOnline)
+      } else { // user got a timstamp converted to string (was in earlier versions of app)
+        let date = Date(timeIntervalSince1970: TimeInterval(onlineStatusStringStamp)!)
+        let subtitle = "Last seen " + timeAgoSinceDate(date)
+        self.navigationItem.setTitle(title: title, subtitle: subtitle)
+      }
+      
+    } else if let onlineStatusTimeIntervalStamp = onlineStatusObject as? TimeInterval { //user got server timestamp in miliseconds
+      let date = Date(timeIntervalSince1970: onlineStatusTimeIntervalStamp/1000)
+      let subtitle = "Last seen " + timeAgoSinceDate(date)
+      self.navigationItem.setTitle(title: title, subtitle: subtitle)
+    }
   }
   
   
