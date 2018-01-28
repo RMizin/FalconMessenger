@@ -103,11 +103,23 @@ extension SelectCountryCodeController: UITableViewDelegate, UITableViewDataSourc
     let identifier = "cell"
     
     let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
-    cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
     cell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    cell.textLabel?.text = filteredCountries[indexPath.row]["name"]! + " (" + filteredCountries[indexPath.row]["dial_code"]! + ")"
-    cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
     cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
+    
+    let countryName = filteredCountries[indexPath.row]["name"]!
+    let countryDial = " " + filteredCountries[indexPath.row]["dial_code"]!
+    
+    let countryNameAttribute = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
+    let countryDialAttribute = [NSAttributedStringKey.foregroundColor: UIColor.darkGray]
+    let countryNameAString = NSAttributedString(string: countryName, attributes: countryNameAttribute)
+    let countryDialAString = NSAttributedString(string: countryDial, attributes: countryDialAttribute)
+    
+    let mutableAttributedString = NSMutableAttributedString()
+    mutableAttributedString.append(countryNameAString)
+    mutableAttributedString.append(countryDialAString)
+    
+    cell.textLabel?.attributedText = mutableAttributedString
+    
     if countryCode == filteredCountries[indexPath.row]["code"]! {
       cell.accessoryType = .checkmark
     } else {
@@ -145,7 +157,7 @@ extension SelectCountryCodeController: UISearchBarDelegate {
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     
     filteredCountries = searchText.isEmpty ? countries : countries.filter({ (data: [String : String]) -> Bool in
-      return data["name"]!.lowercased().contains(searchText.lowercased())
+      return data["name"]!.lowercased().contains(searchText.lowercased()) || data["dial_code"]!.lowercased().contains(searchText.lowercased())
     })
  
     tableView.reloadData()

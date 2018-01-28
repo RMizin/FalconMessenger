@@ -36,6 +36,7 @@ class UserProfileController: UIViewController {
   
     fileprivate func configureContainerView() {
       userProfileContainerView.frame = view.bounds
+      userProfileContainerView.bioPlaceholderLabel.isHidden = !userProfileContainerView.bio.text.isEmpty
       userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
       userProfileContainerView.bio.delegate = self
       userProfileContainerView.name.delegate = self
