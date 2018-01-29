@@ -68,7 +68,7 @@ class EnterPhoneNumberContainerView: UIView {
     phoneNumber.keyboardType = .numberPad
     phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     phoneNumber.attributedPlaceholder = NSAttributedString(string: "Phone number",
-                                                           attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+                                                           attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
     
     phoneNumber.textColor = ThemeManager.currentTheme().generalTitleColor
     phoneNumber.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)

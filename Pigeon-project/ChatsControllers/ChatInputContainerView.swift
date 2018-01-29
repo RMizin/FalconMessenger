@@ -89,7 +89,7 @@ class ChatInputContainerView: UIView {
     let placeholderLabel = UILabel()
     placeholderLabel.text = "Message"
     placeholderLabel.sizeToFit()
-    placeholderLabel.textColor = UIColor.lightGray
+    placeholderLabel.textColor = ThemeManager.currentTheme().generalSubtitleColor
     placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
     
     return placeholderLabel
@@ -127,7 +127,7 @@ class ChatInputContainerView: UIView {
   let separator: UIView = {
     let separator = UIView()
     separator.translatesAutoresizingMaskIntoConstraints = false
-    separator.backgroundColor = UIColor.lightGray
+    separator.backgroundColor = ThemeManager.currentTheme().generalSubtitleColor
     separator.isHidden = false
     
     return separator
@@ -318,9 +318,10 @@ extension ChatInputContainerView: UITextViewDelegate {
   }
 }
 
-extension UIColor {
-  
-  convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
-    self.init(red: r/255, green: g/255, blue: b/255, alpha: 1)
-  }
-}
+//extension UIColor {
+//  
+//  convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
+//    self.init(red: r/255, green: g/255, blue: b/255, alpha: 1)
+//  }
+//}
+

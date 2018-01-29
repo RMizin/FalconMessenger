@@ -20,7 +20,7 @@ enum Theme: Int {
     case .Default:
       return UIColor.white
     case .Dark:
-      return .black//UIColor(red:0.07, green:0.07, blue:0.07, alpha:1.0)
+      return .black
     }
   }
   
@@ -46,9 +46,9 @@ enum Theme: Int {
   var generalSubtitleColor: UIColor {
     switch self {
     case .Default:
-      return UIColor.lightGray
+      return UIColor(red:0.67, green:0.67, blue:0.67, alpha:1.0)//UIColor.lightGray
     case .Dark:
-      return UIColor.lightGray
+      return UIColor(red:0.67, green:0.67, blue:0.67, alpha:1.0)//UIColor.lightGray
     }
   }
   

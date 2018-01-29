@@ -35,7 +35,7 @@ class UserProfileContainerView: UIView {
     profileImageView.contentMode = .scaleAspectFill
     profileImageView.layer.masksToBounds = true
     profileImageView.layer.borderWidth = 1
-    profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    profileImageView.layer.borderColor = ThemeManager.currentTheme().generalSubtitleColor.cgColor//ThemeManager.currentTheme().inputTextViewColor.cgColor
     profileImageView.layer.cornerRadius = 48
     profileImageView.isUserInteractionEnabled = true
     
@@ -99,7 +99,7 @@ class UserProfileContainerView: UIView {
     userData.translatesAutoresizingMaskIntoConstraints = false
     userData.layer.cornerRadius = 30
     userData.layer.borderWidth = 1
-    userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    userData.layer.borderColor = ThemeManager.currentTheme().generalSubtitleColor.cgColor//ThemeManager.currentTheme().inputTextViewColor.cgColor
     
     return userData
   }()
@@ -117,7 +117,7 @@ class UserProfileContainerView: UIView {
     bio.backgroundColor = .clear
     bio.textColor = ThemeManager.currentTheme().generalTitleColor
     bio.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-    bio.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    bio.layer.borderColor = ThemeManager.currentTheme().generalSubtitleColor.cgColor
     bio.textContainer.maximumNumberOfLines = 3
     bio.textContainer.lineBreakMode = .byTruncatingTail
     bio.returnKeyType = .done

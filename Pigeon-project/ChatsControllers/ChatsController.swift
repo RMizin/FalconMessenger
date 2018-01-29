@@ -464,7 +464,7 @@ class ChatsController: UITableViewController {
     }
     
     if let headerTitle = view as? UITableViewHeaderFooterView {
-      headerTitle.textLabel?.textColor = .lightGray
+      headerTitle.textLabel?.textColor = ThemeManager.currentTheme().generalSubtitleColor
       headerTitle.textLabel?.font = UIFont.systemFont(ofSize: 10)
     }
   }
@@ -548,7 +548,7 @@ class ChatsController: UITableViewController {
     
     pin.backgroundColor = .orange
     delete.backgroundColor = .red
-    mute.backgroundColor = .lightGray
+    mute.backgroundColor = ThemeManager.currentTheme().generalSubtitleColor
     
     return [delete, pin, mute]
   }

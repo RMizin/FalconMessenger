@@ -52,8 +52,8 @@ class ChangeNumberEnterVerificationContainerView: UIView {
     resend.contentVerticalAlignment = .center
     resend.contentHorizontalAlignment = .center
     resend.setTitleColor(FalconPalette.falconPaletteBlue, for: .normal)
-    resend.setTitleColor(.gray, for: .highlighted)
-    resend.setTitleColor(UIColor.lightGray, for: .disabled )
+    resend.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .highlighted)
+    resend.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .disabled )
     
     return resend
   }()
@@ -67,7 +67,7 @@ class ChangeNumberEnterVerificationContainerView: UIView {
   
   var timerLabel: UILabel = {
     var timerLabel = UILabel()
-    timerLabel.textColor = UIColor.lightGray
+    timerLabel.textColor = ThemeManager.currentTheme().generalSubtitleColor
     timerLabel.font = UIFont.systemFont(ofSize: 13)
     timerLabel.translatesAutoresizingMaskIntoConstraints = false
     timerLabel.textAlignment = .center

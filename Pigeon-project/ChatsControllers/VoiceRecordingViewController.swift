@@ -46,7 +46,7 @@ class VoiceRecordingViewController: UIViewController {
     voiceRecordingContainerView.recordButton.addTarget(self, action: #selector(record(_:)), for: .touchUpInside)
     
     voiceRecordingContainerView.stopButton.isEnabled = false
-    voiceRecordingContainerView.stopButton.setTitleColor(.gray, for: .normal)
+    voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
 
     setSessionPlayback()
     askForNotifications()
@@ -148,7 +148,7 @@ class VoiceRecordingViewController: UIViewController {
       try session.setActive(false)
     //  voiceRecordingContainerView.playButton.isEnabled = true
       voiceRecordingContainerView.stopButton.isEnabled = false
-      voiceRecordingContainerView.stopButton.setTitleColor(.gray, for: .normal)
+      voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
       voiceRecordingContainerView.recordButton.isEnabled = true
     } catch {
       print("could not make session inactive")
@@ -467,7 +467,7 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
     
     print("finished recording \(flag)")
     voiceRecordingContainerView.stopButton.isEnabled = false
-    voiceRecordingContainerView.stopButton.setTitleColor(.gray, for: .normal)
+    voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
     voiceRecordingContainerView.recordButton.setTitle("Record", for: UIControlState())
    
     
@@ -511,7 +511,7 @@ extension VoiceRecordingViewController: AVAudioPlayerDelegate {
     print("finished playing \(flag)")
     voiceRecordingContainerView.recordButton.isEnabled = true
     voiceRecordingContainerView.stopButton.isEnabled = false
-    voiceRecordingContainerView.stopButton.setTitleColor(.gray, for: .normal)
+    voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
   }
   
   func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {

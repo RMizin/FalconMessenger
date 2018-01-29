@@ -425,7 +425,7 @@ class ContactsController: UITableViewController {
           cell.subtitle.textColor = FalconPalette.falconPaletteBlue
           cell.subtitle.text = statusString
         } else {
-          cell.subtitle.textColor = UIColor.lightGray
+          cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
           let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
           let subtitle = "Last seen " + timeAgoSinceDate(date)
           cell.subtitle.text = subtitle
@@ -433,7 +433,7 @@ class ContactsController: UITableViewController {
         }
         
       } else if let statusTimeinterval = filteredUsers[indexPath.row].onlineStatus as? TimeInterval {
-        cell.subtitle.textColor = UIColor.lightGray
+        cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
         let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
        
         let subtitle = "Last seen " + timeAgoSinceDate(date)

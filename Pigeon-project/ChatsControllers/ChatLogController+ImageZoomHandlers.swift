@@ -62,7 +62,7 @@ extension ChatLogController {
   
        let date = Date(timeIntervalSince1970:  self.mediaMessages[photoIndex].timestamp!.doubleValue )
        let timestamp = timeAgoSinceDate(date)
-       let attributedCaptionSummary = NSMutableAttributedString(string: timestamp, attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
+       let attributedCaptionSummary = NSMutableAttributedString(string: timestamp, attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
         
         let combination = NSMutableAttributedString()
         combination.append(title)

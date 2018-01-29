@@ -107,7 +107,7 @@ extension ChangeNumberSelectCountryCodeController: UITableViewDelegate, UITableV
     let countryDial = " " + filteredCountries[indexPath.row]["dial_code"]!
     
     let countryNameAttribute = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
-    let countryDialAttribute = [NSAttributedStringKey.foregroundColor: UIColor.darkGray]
+    let countryDialAttribute = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
     let countryNameAString = NSAttributedString(string: countryName, attributes: countryNameAttribute)
     let countryDialAString = NSAttributedString(string: countryDial, attributes: countryDialAttribute)
     

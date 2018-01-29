@@ -1,20 +1,20 @@
 PODS:
-  - Firebase/Auth (4.8.1):
+  - Firebase/Auth (4.8.2):
     - Firebase/Core
     - FirebaseAuth (= 4.4.2)
-  - Firebase/Core (4.8.1):
-    - FirebaseAnalytics (= 4.0.7)
+  - Firebase/Core (4.8.2):
+    - FirebaseAnalytics (= 4.0.9)
     - FirebaseCore (= 4.0.14)
-  - Firebase/Database (4.8.1):
+  - Firebase/Database (4.8.2):
     - Firebase/Core
     - FirebaseDatabase (= 4.1.4)
-  - Firebase/Messaging (4.8.1):
+  - Firebase/Messaging (4.8.2):
     - Firebase/Core
     - FirebaseMessaging (= 2.0.8)
-  - Firebase/Storage (4.8.1):
+  - Firebase/Storage (4.8.2):
     - Firebase/Core
     - FirebaseStorage (= 2.1.2)
-  - FirebaseAnalytics (4.0.7):
+  - FirebaseAnalytics (4.0.9):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
@@ -85,8 +85,8 @@ DEPENDENCIES:
   - SDWebImage
 
 SPEC CHECKSUMS:
-  Firebase: 2721056b8885eef90233b03f37be64358d35d262
-  FirebaseAnalytics: 617afa8c26b57a0c3f11361b248bc9e17bfd8dfd
+  Firebase: 7d3b8cd837ad9fcd391657734c0d56dab8e9a5a3
+  FirebaseAnalytics: 388b630c15713f5dbf364071f5f3d6077fb52f4e
   FirebaseAuth: bd2738c5c1e92b108ba5f7f7335908097a4e50bb
   FirebaseCore: 2e0b98fb2d64ca8140136beff15772bdd14d2dd7
   FirebaseDatabase: de4446507ccd3257fca37d16f40e1540324571fd
