@@ -398,7 +398,7 @@ class ChatsController: UITableViewController {
     }
     
     self.configureTabBarBadge()
-
+  
     if !isAppLoaded {
       hideActivityIndicator()
       delegate?.manageAppearance(self, didFinishLoadingWith: true)

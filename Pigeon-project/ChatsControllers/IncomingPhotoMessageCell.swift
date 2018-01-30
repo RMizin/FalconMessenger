@@ -24,11 +24,8 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.frame.size.width = 200
     
-    progressView.trackFillColor = .darkGray
-    
-    progressView.trackBackgroundColor = UIColor(red: 0.78, green: 0.78, blue: 0.80, alpha: 1.0)
-    
-    progressView.centerFillColor = UIColor(red: 0.94, green: 0.94, blue: 0.94, alpha: 1.0)
+    progressView.progressColor =  .darkGray
+    progressView.progressBackgroundColor = UIColor(red: 0.78, green: 0.78, blue: 0.80, alpha: 1.0)
     
     bubbleView.image = grayBubbleImage
 
@@ -52,5 +49,6 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
   
   override func prepareViewsForReuse() {
     bubbleView.image = grayBubbleImage
+    playButton.isHidden = true
   }
 }

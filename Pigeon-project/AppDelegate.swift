@@ -130,9 +130,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       settingsNavigationController.navigationBar.prefersLargeTitles = true
     }
     
-    let contactsTabItem = UITabBarItem(title: contactsController.title, image: UIImage(named:"user"), selectedImage: UIImage(named:""))
-    let chatsTabItem = UITabBarItem(title: chatsController.title, image: UIImage(named:"chat"), selectedImage: UIImage(named:""))
-    let settingsTabItem = UITabBarItem(title: settingsController.title, image: UIImage(named:"settings"), selectedImage: UIImage(named:""))
+    let contactsImage =  UIImage(named:"user")
+    let chatsImage = UIImage(named:"chat")
+    let settingsImage = UIImage(named:"settings")
+
+    let contactsTabItem = UITabBarItem(title: contactsController.title, image: contactsImage, selectedImage: UIImage(named:""))
+    let chatsTabItem = UITabBarItem(title: chatsController.title, image: chatsImage, selectedImage: UIImage(named:""))
+    let settingsTabItem = UITabBarItem(title: settingsController.title, image: settingsImage, selectedImage: UIImage(named:""))
+
     contactsController.tabBarItem = contactsTabItem
     chatsController.tabBarItem = chatsTabItem
     settingsController.tabBarItem = settingsTabItem

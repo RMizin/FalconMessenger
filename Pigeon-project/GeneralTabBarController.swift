@@ -18,20 +18,21 @@ enum tabs: Int {
 
 
 class GeneralTabBarController: UITabBarController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-     // tabBar.unselectedItemTintColor = UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0)
-      setOnlineStatus()
-      tabBar.isTranslucent = false
-      
-     tabBar.layer.borderWidth = 0.50
-      tabBar.layer.borderColor = UIColor.clear.cgColor
-      tabBar.clipsToBounds = true
-    }
-   let splash = UIImageView(frame: UIScreen.main.bounds)
   
-   var onceToken = 0
+  let splash = UIImageView(frame: UIScreen.main.bounds)
+  var onceToken = 0
+  
+  override func viewDidLoad() {
+      super.viewDidLoad()
+    //UITabBar.appearance().tintColor = UIColor.white
+    UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor], for: .normal)
+    tabBar.unselectedItemTintColor = ThemeManager.currentTheme().generalSubtitleColor
+    setOnlineStatus()
+    tabBar.isTranslucent = false
+    tabBar.layer.borderWidth = 0.50
+    tabBar.layer.borderColor = UIColor.clear.cgColor
+    tabBar.clipsToBounds = true
+  }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)

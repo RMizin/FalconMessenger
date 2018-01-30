@@ -33,11 +33,9 @@ class BaseMediaMessageCell: BaseMessageCell {
     return messageImageView
   }()
   
-  var progressView: CircleProgressView = {
-    let progressView = CircleProgressView()
-    progressView.trackWidth = 5
+  var progressView: RoundProgressView = {
+    let progressView = RoundProgressView()
     progressView.backgroundColor = .clear
-
     progressView.translatesAutoresizingMaskIntoConstraints = false
     
     return progressView

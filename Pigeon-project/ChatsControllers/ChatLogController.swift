@@ -1030,13 +1030,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         if let messageImageUrl = message.imageUrl {
           cell.progressView.isHidden = false
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.retryFailed, .continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
             let progress = Double(100 * downloadedSize/expectedSize)
-            
+
             DispatchQueue.main.async {
-              cell.progressView.setProgress(progress * 0.01, animated: false)
-              cell.progressView.setNeedsLayout()
-              cell.progressView.layoutIfNeeded()
+              cell.progressView.percent = progress
             }
           }, completed: { (image, error, cacheType, url) in
             cell.progressView.isHidden = true
@@ -1079,9 +1077,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             let progress = Double(100 * downloadedSize/expectedSize)
   
             DispatchQueue.main.async {
-              cell.progressView.setProgress(progress * 0.01, animated: false)
-              cell.progressView.setNeedsLayout()
-              cell.progressView.layoutIfNeeded()
+              cell.progressView.percent = progress
             }
           }, completed: { (image, error, cacheType, url) in
             cell.progressView.isHidden = true
