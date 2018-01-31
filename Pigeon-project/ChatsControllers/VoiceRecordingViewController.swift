@@ -177,10 +177,10 @@ class VoiceRecordingViewController: UIViewController {
     
     let recordSettings: [String: Any] = [
       AVFormatIDKey: kAudioFormatMPEG4AAC,
-      AVEncoderAudioQualityKey: AVAudioQuality.min.rawValue ,
-      AVEncoderBitRateKey: 12000,//32000,
+      AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue ,
+      AVEncoderBitRateKey: 24000,//32000,
       AVNumberOfChannelsKey: 1,
-      AVSampleRateKey: 12000// 44100.0
+      AVSampleRateKey: 24000 //44100.0
     ]
     
     do {

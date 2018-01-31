@@ -20,7 +20,7 @@ class PlayerCellView: UIView {
     play.translatesAutoresizingMaskIntoConstraints = false
     play.setImage(UIImage(named: "playWhite"), for: .normal)
     play.imageView?.contentMode = .scaleAspectFit
-   
+
     return play
   }()
   
@@ -30,32 +30,40 @@ class PlayerCellView: UIView {
     timerLabel.textColor = .white
     timerLabel.text = "00:00:00"
     timerLabel.textAlignment = .center
-    timerLabel.font = UIFont.systemFont(ofSize: 10)
+    timerLabel.font = UIFont.systemFont(ofSize: 13)
     
     return timerLabel
   }()
   
   var playLeadingAnchor: NSLayoutConstraint!
+  var playWidthAnchor: NSLayoutConstraint!
+  var playHeightAnchor: NSLayoutConstraint!
+  var timelabelLeadingAnchor: NSLayoutConstraint!
   
   override init(frame: CGRect) {
     super.init(frame: frame)
     
     layer.cornerRadius = 5.0
     backgroundColor = .black
-    alpha = 0.7
+    alpha = 0.85
     addSubview(play)
     addSubview(timerLabel)
     playLeadingAnchor = play.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3)
     playLeadingAnchor.isActive = true
+    playWidthAnchor = play.widthAnchor.constraint(equalToConstant: 0)
+    playWidthAnchor.isActive = true
+    playHeightAnchor = play.heightAnchor.constraint(equalTo: heightAnchor, constant: 0)
+    playHeightAnchor.isActive = true
+    
+    timelabelLeadingAnchor = timerLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
+    timelabelLeadingAnchor.isActive = true
     NSLayoutConstraint.activate([
     
       play.centerYAnchor.constraint(equalTo: centerYAnchor),
-      play.widthAnchor.constraint(equalToConstant: 20),
-      play.heightAnchor.constraint(equalTo: heightAnchor, constant: -5),
       
       timerLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
       timerLabel.heightAnchor.constraint(equalTo: heightAnchor),
-      timerLabel.leadingAnchor.constraint(equalTo: play.trailingAnchor),
+     
       timerLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
     ])
   }

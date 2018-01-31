@@ -152,11 +152,14 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
       chatInputContainerView.audioPlayer.volume = 1.0
       chatInputContainerView.audioPlayer.play()
       cell.runTimer()
+      UIView.animate(withDuration: 0.2, animations: {
+          cell.playerView.alpha = 1
+          cell.playerView.backgroundColor = .green
+      })
       cell.playerView.play.setImage(UIImage(named: "pause"), for: .normal)
     }
 
     if gestureReconizer.state == .cancelled || gestureReconizer.state == .failed || gestureReconizer.state == .ended {
-      
       
       print("press cancelled failed or ended")
       do {
@@ -167,6 +170,10 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
       
       chatInputContainerView.audioPlayer.stop()
       cell.resetTimer()
+      UIView.animate(withDuration: 0.2, animations: {
+         cell.playerView.alpha = 0.85
+         cell.playerView.backgroundColor = .black
+      })
       cell.playerView.play.setImage(UIImage(named: "playWhite"), for: .normal)
     }
   }

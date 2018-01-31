@@ -33,6 +33,9 @@ class OutgoingVoiceMessageCell: BaseMessageCell {
     bubbleView.image = blueBubbleImage
     bubbleView.frame.size.width = 150
     playerView.playLeadingAnchor.constant = 12
+    playerView.playWidthAnchor.constant = 20
+    playerView.playHeightAnchor.constant = -5
+    playerView.timelabelLeadingAnchor.constant = playerView.playWidthAnchor.constant + playerView.playLeadingAnchor.constant
     playerView.timerLabel.font = UIFont.systemFont(ofSize: 12)
   }
   

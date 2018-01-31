@@ -35,6 +35,9 @@ class IncomingVoiceMessageCell: BaseMessageCell {
     bubbleView.frame.origin = CGPoint(x: 10, y: 0)
     bubbleView.frame.size.width = 150
     playerView.playLeadingAnchor.constant = 15
+    playerView.playWidthAnchor.constant = 20
+    playerView.playHeightAnchor.constant = -5
+    playerView.timelabelLeadingAnchor.constant = playerView.playWidthAnchor.constant + playerView.playLeadingAnchor.constant
     playerView.timerLabel.font = UIFont.systemFont(ofSize: 12)
   }
   

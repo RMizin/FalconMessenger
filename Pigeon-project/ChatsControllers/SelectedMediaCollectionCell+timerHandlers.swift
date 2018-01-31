@@ -29,6 +29,11 @@ extension SelectedMediaCollectionCell {
     playerView.timer?.invalidate()
     playerView.seconds = playerView.startingTime
     playerView.timerLabel.text = timeString(time: TimeInterval(playerView.seconds))
+    
+    UIView.animate(withDuration: 0.2, animations: {
+      self.playerView.alpha = 0.85
+      self.playerView.backgroundColor = .black
+    })
   }
   
   func timeString(time:TimeInterval) -> String {
