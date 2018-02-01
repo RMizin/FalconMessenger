@@ -546,9 +546,9 @@ class ChatsController: UITableViewController {
       }
     }
     
-    pin.backgroundColor = .orange
-    delete.backgroundColor = .red
-    mute.backgroundColor = ThemeManager.currentTheme().generalSubtitleColor
+    pin.backgroundColor = UIColor(red:0.96, green:0.49, blue:0.00, alpha:1.0)
+    delete.backgroundColor = UIColor(red:0.90, green:0.22, blue:0.21, alpha:1.0)
+    mute.backgroundColor = UIColor(red:0.56, green:0.64, blue:0.68, alpha:1.0)
     
     return [delete, pin, mute]
   }

@@ -19,69 +19,53 @@ class UserInfoTableViewController: UITableViewController {
   var contactPhoneNumbers = [String]()
   var contactPhoto: NSURL?
   var contactBio: String?
-  var onlineStatus: String? {
-    didSet {
-      tableView.reloadSections([0], with: .none)
-    }
-  }
+  var onlineStatus: String?
   
+  var bioRef: DatabaseReference!
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    title = "Info"
-    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    extendedLayoutIncludesOpaqueBars = true
-    tableView.separatorStyle = .none
     
+    title = "Info"
+    extendedLayoutIncludesOpaqueBars = true
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    configureTableView()
     if #available(iOS 11.0, *) {
       navigationItem.largeTitleDisplayMode = .always
     }
+  }
   
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    if bioRef != nil {
+      bioRef.removeAllObservers()
+    }
+  }
+  
+  deinit {
+    print("user info deinit")
+  }
+    
+  
+  fileprivate func configureTableView() {
+    tableView.separatorStyle = .none
     tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerIdentifier)
-    configureTitleViewWithOnlineStatus()
     configureBioDisplaying()
   }
-    
   
-  func configureBioDisplaying() {
+
+  fileprivate func configureBioDisplaying() {
+    
     guard let toId = self.user?.id else { return }
-    Database.database().reference().child("users").child(toId).child("bio").observeSingleEvent(of: .value, with: { (snapshot) in
-      if let stringSnapshot = snapshot.value as? String {
-        self.contactBio = stringSnapshot
-      }
-    })
-  }
-  
-  func configureTitleViewWithOnlineStatus() {
-    
-    guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else { return }
-    
-    Database.database().reference().child("users").child(toId).child("OnlineStatus").observeSingleEvent(of: .value, with: { (snapshot) in
-      
-      if uid == toId {
-        self.onlineStatus = "You"
-        return
-      }
-      
-      if snapshot.exists() {
-        if let stringSnapshot = snapshot.value as? String {
-          if stringSnapshot == statusOnline { // user online
-            self.onlineStatus = statusOnline
-          } else { // user got a timstamp converted to string (was in earlier versions of app)
-            let date = Date(timeIntervalSince1970: TimeInterval(stringSnapshot)!)
-            let subtitle = "Last seen " + timeAgoSinceDate(date)
-            self.onlineStatus = subtitle
-          }
-        } else if let timeintervalSnapshot = snapshot.value as? TimeInterval { //user got server timestamp in miliseconds
-          let date = Date(timeIntervalSince1970: timeintervalSnapshot/1000)
-          let subtitle = "Last seen " + timeAgoSinceDate(date)
-          self.onlineStatus = subtitle
-        }
-      }
+    bioRef = Database.database().reference().child("users").child(toId).child("bio")
+    bioRef.observe( .value, with: { (snapshot) in
+      guard let stringSnapshot = snapshot.value as? String  else { return }
+      self.contactBio = stringSnapshot
+      self.tableView.reloadData()
     })
   }
 
-  
   override func numberOfSections(in tableView: UITableView) -> Int {
     return 3
   }
@@ -97,12 +81,14 @@ class UserInfoTableViewController: UITableViewController {
     }
   }
   
-  deinit {
-    print("Info DE INIT")
-  }
-  
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
+  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    if indexPath.section == 0 {
+      return 100
+    } else if indexPath.section == 1 {
+      return 50
+    } else {
+      return 80
+    }
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -146,21 +132,14 @@ class UserInfoTableViewController: UITableViewController {
 
       cell.textLabel?.numberOfLines = 0
       cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
-      DispatchQueue.main.async {
-        cell.textLabel?.text = self.contactBio
-      }
+      cell.textLabel?.text = contactBio
     }
     
     return cell
   }
   
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    if indexPath.section == 0 {
-      return 100
-    } else if indexPath.section == 1 {
-      return 50
-    } else {
-      return 80
-    }
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
   }
+  
 }

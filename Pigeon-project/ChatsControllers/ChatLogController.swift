@@ -593,7 +593,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
 
     if userStatusReference != nil {
-      userStatusReference.removeAllObservers()
+      userStatusReference.removeObserver(withHandle: userHandler)
     }
 
     isTyping = false
@@ -607,22 +607,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     voiceRecordingViewController.deleteAllRecordings()
   }
   
-  
- // private var oldOffset: CGPoint?
-//  override func viewWillDisappear(_ animated: Bool) {
-//    super.viewWillDisappear(animated)
-//
-//   // oldOffset = self.collectionView!.contentOffset
-//  }
-  
-//  override func viewWillAppear(_ animated: Bool) {
-//    super.viewWillAppear(animated)
-//
-////    if oldOffset != nil  {
-////      collectionView?.setContentOffset(oldOffset!, animated: false)
-////      oldOffset = nil
-////    }
-//  }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
@@ -769,40 +753,49 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     refreshControl.beginRefreshing()
     refreshControl.endRefreshing()
   }
+  fileprivate var userHandler: UInt = 01
+  fileprivate var onlineStatusInString:String?
   
   func configureTitleViewWithOnlineStatus() {
-
-    guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else { return }
     
+    guard let uid = Auth.auth().currentUser?.uid, let toId = self.user?.id else { return }
     if uid == toId {
       self.navigationItem.title = NameConstants.personalStorage
       return
     }
-    
-    userStatusReference = Database.database().reference().child("users").child(toId).child("OnlineStatus")
-    userStatusReference.observe(.value, with: { (snapshot) in
-      guard snapshot.exists() else { return }
-      self.manageNavigationItemTitle(onlineStatusObject: snapshot.value as AnyObject)
+  
+    userStatusReference = Database.database().reference().child("users").child(toId)
+    userHandler = userStatusReference.observe(.value, with: { (snapshot) in
+      guard snapshot.exists() else { print("snapshot not exists returning"); return }
+      print("exists")
+      
+      let value = snapshot.value as? NSDictionary
+      let status = value?["OnlineStatus"] as AnyObject
+      self.onlineStatusInString = self.manageNavigationItemTitle(onlineStatusObject:  status)
     })
   }
-  
-  fileprivate func manageNavigationItemTitle(onlineStatusObject: AnyObject) {
+
+  fileprivate func manageNavigationItemTitle(onlineStatusObject: AnyObject) -> String {
     
-    guard let title = self.user?.name else { return }
+    guard let title = self.user?.name else { return "" }
     if let onlineStatusStringStamp = onlineStatusObject as? String {
       if onlineStatusStringStamp == statusOnline { // user online
         self.navigationItem.setTitle(title: title, subtitle: statusOnline)
+        return statusOnline
       } else { // user got a timstamp converted to string (was in earlier versions of app)
         let date = Date(timeIntervalSince1970: TimeInterval(onlineStatusStringStamp)!)
         let subtitle = "Last seen " + timeAgoSinceDate(date)
         self.navigationItem.setTitle(title: title, subtitle: subtitle)
+        return subtitle
       }
       
     } else if let onlineStatusTimeIntervalStamp = onlineStatusObject as? TimeInterval { //user got server timestamp in miliseconds
       let date = Date(timeIntervalSince1970: onlineStatusTimeIntervalStamp/1000)
       let subtitle = "Last seen " + timeAgoSinceDate(date)
       self.navigationItem.setTitle(title: title, subtitle: subtitle)
+      return subtitle
     }
+    return ""
   }
   
   
@@ -821,16 +814,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       navigationItem.rightBarButtonItem = infoBarButtonItem
     }
   }
-  
+   var destination: UserInfoTableViewController!
   @objc func getInfoAction() {
     
-    let destination = UserInfoTableViewController()
-    destination.contactName = user?.name ?? ""
+  
+    destination = UserInfoTableViewController()
+    destination.contactName = user?.name ?? "Error loading name"
     destination.contactPhoneNumbers = [user?.phoneNumber ?? ""]
     destination.contactPhoto = NSURL(string: user?.photoURL ?? "")
     destination.user = user
-    
+    destination.onlineStatus = onlineStatusInString
     self.navigationController?.pushViewController(destination, animated: true)
+    destination = nil
   }
   
   
