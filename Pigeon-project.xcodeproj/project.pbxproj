@@ -27,6 +27,7 @@
 		4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */; };
 		4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */; };
 		4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */; };
+		4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */; };
 		4B3E634C1FB9F06F00E200CD /* NoChatsYetContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */; };
 		4B3E63531FBA73F600E200CD /* ChangeNumberSelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634D1FBA73F500E200CD /* ChangeNumberSelectCountryCodeController.swift */; };
 		4B3E63541FBA73F600E200CD /* ChangeNumberEnterVerificationCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634E1FBA73F600E200CD /* ChangeNumberEnterVerificationCodeController.swift */; };
@@ -226,6 +227,7 @@
 		4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
 		4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsTableViewCell.swift; path = ContactsControllers/ContactsTableViewCell.swift; sourceTree = "<group>"; };
+		4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoPhoneNumberTableViewCell.swift; path = ChatsControllers/UserInfoPhoneNumberTableViewCell.swift; sourceTree = "<group>"; };
 		4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NoChatsYetContainer.swift; path = ChatsControllers/NoChatsYetContainer.swift; sourceTree = "<group>"; };
 		4B3E634D1FBA73F500E200CD /* ChangeNumberSelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangeNumberSelectCountryCodeController.swift; path = SettingsControllers/ChangeNumberSelectCountryCodeController.swift; sourceTree = "<group>"; };
 		4B3E634E1FBA73F600E200CD /* ChangeNumberEnterVerificationCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangeNumberEnterVerificationCodeController.swift; path = SettingsControllers/ChangeNumberEnterVerificationCodeController.swift; sourceTree = "<group>"; };
@@ -628,6 +630,7 @@
 			children = (
 				4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */,
 				4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */,
+				4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */,
 				4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */,
 			);
 			name = UserInfoViewControllers;
@@ -1221,6 +1224,7 @@
 				4BE571651F4D87A4009D9AB4 /* UIImage+Size.swift in Sources */,
 				4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */,
 				4BC26B291F3A234A0093A9D2 /* Message.swift in Sources */,
+				4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */,
 				4B9498721F3244B1008DA07F /* EnterVerificationCodeController.swift in Sources */,
 				4B2142FF1F51C72700F7A4B8 /* RevealableView.swift in Sources */,
 				4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */,

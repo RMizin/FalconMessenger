@@ -9,8 +9,10 @@
 import UIKit
 import Firebase
 
+private let headerCellIdentifier = "headerCellIdentifier"
+private let phoneNumberCellIdentifier = "phoneNumberCellIdentifier"
+private let bioCellIdentifier = "phoneNumberCellIdentifier"
 
-private let headerIdentifier = "headerCell"
 
 class UserInfoTableViewController: UITableViewController {
 
@@ -20,7 +22,6 @@ class UserInfoTableViewController: UITableViewController {
   var contactPhoto: NSURL?
   var contactBio: String?
   var onlineStatus: String?
-  
   var bioRef: DatabaseReference!
 
   override func viewDidLoad() {
@@ -50,13 +51,13 @@ class UserInfoTableViewController: UITableViewController {
   
   fileprivate func configureTableView() {
     tableView.separatorStyle = .none
-    tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerIdentifier)
+    tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
+    tableView.register(UserInfoPhoneNumberTableViewCell.self, forCellReuseIdentifier: phoneNumberCellIdentifier)
     configureBioDisplaying()
   }
   
 
   fileprivate func configureBioDisplaying() {
-    
     guard let toId = self.user?.id else { return }
     bioRef = Database.database().reference().child("users").child(toId).child("bio")
     bioRef.observe( .value, with: { (snapshot) in
@@ -91,19 +92,20 @@ class UserInfoTableViewController: UITableViewController {
     }
   }
   
+
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    let defaultIdentifier = "defaultCell"
-   
-    let cell = tableView.dequeueReusableCell(withIdentifier: defaultIdentifier) ?? UITableViewCell(style: .default, reuseIdentifier: defaultIdentifier)
-    cell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-    cell.selectionStyle = .none
+    var headerCell:UserinfoHeaderTableViewCell!
+    var phoneNumberCell:UserInfoPhoneNumberTableViewCell!
+    var bioCell:UITableViewCell!
     
     if indexPath.section == 0 {
       
-     let headerCell = tableView.dequeueReusableCell(withIdentifier: headerIdentifier, for: indexPath) as! UserinfoHeaderTableViewCell
-     headerCell.selectionStyle = .none
+      headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath) as! UserinfoHeaderTableViewCell
+      headerCell.title.text = contactName
+      headerCell.title.font = UIFont.boldSystemFont(ofSize: 20)
+      headerCell.subtitle.text = onlineStatus
+      headerCell.selectionStyle = .none
       
       if contactPhoto != nil {
         headerCell.icon.sd_setImage(with:  contactPhoto! as URL, placeholderImage: UIImage(named: "UserpicIcon"), options: [], completed: { (image, error, cacheType, url) in
@@ -115,31 +117,33 @@ class UserInfoTableViewController: UITableViewController {
          headerCell.icon.image = UIImage(named: "UserpicIcon")
       }
      
-      headerCell.title.text = contactName
-      headerCell.title.font = UIFont.boldSystemFont(ofSize: 20)
-      headerCell.subtitle.text = onlineStatus
-     
+    
       return headerCell
       
     } else if indexPath.section == 1 {
+      phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier, for: indexPath) as! UserInfoPhoneNumberTableViewCell
+      phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      phoneNumberCell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+      phoneNumberCell.userInfoTableViewController = self
+      phoneNumberCell.textLabel?.text = contactPhoneNumbers[indexPath.row]
+      phoneNumberCell.textLabel?.font = UIFont.systemFont(ofSize: 17)
       
-      cell.textLabel?.text = contactPhoneNumbers[indexPath.row]
-      cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+      return phoneNumberCell
       
-      return cell
+    } else {
+      bioCell = tableView.dequeueReusableCell(withIdentifier: bioCellIdentifier) ?? UITableViewCell(style: .default, reuseIdentifier: bioCellIdentifier)
+      bioCell.textLabel?.numberOfLines = 0
+      bioCell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+      bioCell.textLabel?.text = contactBio
+      bioCell.selectionStyle = .none
+      bioCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      bioCell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
       
-    } else if indexPath.section == 2 {
-
-      cell.textLabel?.numberOfLines = 0
-      cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
-      cell.textLabel?.text = contactBio
+      return bioCell
     }
-    
-    return cell
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
+       self.tableView.deselectRow(at: indexPath, animated: true)
   }
-  
 }
