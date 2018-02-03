@@ -11,7 +11,7 @@ import Firebase
 
 private let headerCellIdentifier = "headerCellIdentifier"
 private let phoneNumberCellIdentifier = "phoneNumberCellIdentifier"
-private let bioCellIdentifier = "phoneNumberCellIdentifier"
+private let bioCellIdentifier = "bioCellIdentifier"
 
 
 class UserInfoTableViewController: UITableViewController {
@@ -23,6 +23,7 @@ class UserInfoTableViewController: UITableViewController {
   var contactBio: String?
   var onlineStatus: String?
   var bioRef: DatabaseReference!
+  var shouldDisplayContactAdder:Bool?
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -30,11 +31,13 @@ class UserInfoTableViewController: UITableViewController {
     title = "Info"
     extendedLayoutIncludesOpaqueBars = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    
     configureTableView()
     if #available(iOS 11.0, *) {
       navigationItem.largeTitleDisplayMode = .always
     }
   }
+
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
@@ -53,6 +56,8 @@ class UserInfoTableViewController: UITableViewController {
     tableView.separatorStyle = .none
     tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
     tableView.register(UserInfoPhoneNumberTableViewCell.self, forCellReuseIdentifier: phoneNumberCellIdentifier)
+    tableView.register(UserInfoBioTableViewCell.self, forCellReuseIdentifier: bioCellIdentifier)
+    
     configureBioDisplaying()
   }
   
@@ -66,6 +71,7 @@ class UserInfoTableViewController: UITableViewController {
       self.tableView.reloadData()
     })
   }
+
 
   override func numberOfSections(in tableView: UITableView) -> Int {
     return 3
@@ -86,52 +92,75 @@ class UserInfoTableViewController: UITableViewController {
     if indexPath.section == 0 {
       return 100
     } else if indexPath.section == 1 {
-      return 50
+      return 90
     } else {
       return 80
     }
   }
   
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+   
+    let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! UserInfoPhoneNumberTableViewCell
+    
+    if localPhones.contains(contactPhoneNumbers[0].digits) {
+      phoneNumberCell.add.isHidden = true
+      phoneNumberCell.contactStatus.isHidden = true
+      phoneNumberCell.addHeightConstraint.constant = 0
+      phoneNumberCell.contactStatusHeightConstraint.constant = 0
+    } else {
+      phoneNumberCell.add.isHidden = false
+      phoneNumberCell.contactStatus.isHidden = false
+      phoneNumberCell.addHeightConstraint.constant = 20
+      phoneNumberCell.contactStatusHeightConstraint.constant = 40
+    }
+    
+  }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    
-    var headerCell:UserinfoHeaderTableViewCell!
-    var phoneNumberCell:UserInfoPhoneNumberTableViewCell!
-    var bioCell:UITableViewCell!
-    
+
     if indexPath.section == 0 {
-      
-      headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath) as! UserinfoHeaderTableViewCell
+      let headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath) as! UserinfoHeaderTableViewCell
       headerCell.title.text = contactName
       headerCell.title.font = UIFont.boldSystemFont(ofSize: 20)
       headerCell.subtitle.text = onlineStatus
       headerCell.selectionStyle = .none
       
-      if contactPhoto != nil {
-        headerCell.icon.sd_setImage(with:  contactPhoto! as URL, placeholderImage: UIImage(named: "UserpicIcon"), options: [], completed: { (image, error, cacheType, url) in
-          if error == nil {
-            headerCell.icon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openPhoto)))
-          }
-        })
-      } else {
-         headerCell.icon.image = UIImage(named: "UserpicIcon")
-      }
-     
+      guard contactPhoto != nil else { headerCell.icon.image = UIImage(named: "UserpicIcon"); return headerCell }
+      headerCell.icon.sd_setImage(with: contactPhoto! as URL, placeholderImage: UIImage(named: "UserpicIcon"), options: [], completed: { (image, error, cacheType, url) in
+        guard error == nil else { return }
+        headerCell.icon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openPhoto)))
+
+      })
     
       return headerCell
       
     } else if indexPath.section == 1 {
-      phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier, for: indexPath) as! UserInfoPhoneNumberTableViewCell
+      let phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier, for: indexPath) as! UserInfoPhoneNumberTableViewCell
       phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      phoneNumberCell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+      
+      if localPhones.contains(contactPhoneNumbers[indexPath.row].digits) {
+        phoneNumberCell.add.isHidden = true
+        phoneNumberCell.contactStatus.isHidden = true
+        phoneNumberCell.addHeightConstraint.constant = 0
+        phoneNumberCell.contactStatusHeightConstraint.constant = 0
+      } else {
+        phoneNumberCell.add.isHidden = false
+        phoneNumberCell.contactStatus.isHidden = false
+        phoneNumberCell.addHeightConstraint.constant = 20
+        phoneNumberCell.contactStatusHeightConstraint.constant = 40
+      }
+      
+      phoneNumberCell.phoneLabel.textColor = ThemeManager.currentTheme().generalTitleColor
       phoneNumberCell.userInfoTableViewController = self
-      phoneNumberCell.textLabel?.text = contactPhoneNumbers[indexPath.row]
-      phoneNumberCell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+      phoneNumberCell.phoneLabel.text = contactPhoneNumbers[indexPath.row]
+      phoneNumberCell.phoneLabel.font = UIFont.systemFont(ofSize: 17)
+      phoneNumberCell.selectionStyle = .none
       
       return phoneNumberCell
       
     } else {
-      bioCell = tableView.dequeueReusableCell(withIdentifier: bioCellIdentifier) ?? UITableViewCell(style: .default, reuseIdentifier: bioCellIdentifier)
+      let bioCell = tableView.dequeueReusableCell(withIdentifier: bioCellIdentifier, for: indexPath) as! UserInfoBioTableViewCell
       bioCell.textLabel?.numberOfLines = 0
       bioCell.textLabel?.font = UIFont.systemFont(ofSize: 17)
       bioCell.textLabel?.text = contactBio

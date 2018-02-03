@@ -189,6 +189,9 @@
 		4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC3841F33C0A10005B8E6 /* Country.swift */; };
 		4BF6F94D1FD188110011686B /* typingindicatorDark.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BF6F94C1FD188110011686B /* typingindicatorDark.gif */; };
 		4BF6F94F1FD2340E0011686B /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF6F94E1FD2340E0011686B /* Conversation.swift */; };
+		4BFAA0D12025CD1800DFC9E5 /* UserInfoBioTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA0D02025CD1800DFC9E5 /* UserInfoBioTableViewCell.swift */; };
+		4BFAA0D32025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */; };
+		4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */; };
 		4BFD07761FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFD07751FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
@@ -393,6 +396,9 @@
 		4BEDC3841F33C0A10005B8E6 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Country.swift; path = AuthenticationControllers/Country.swift; sourceTree = "<group>"; };
 		4BF6F94C1FD188110011686B /* typingindicatorDark.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingindicatorDark.gif; path = ChatsControllers/Media/typingindicatorDark.gif; sourceTree = "<group>"; };
 		4BF6F94E1FD2340E0011686B /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = ChatsControllers/Conversation.swift; sourceTree = "<group>"; };
+		4BFAA0D02025CD1800DFC9E5 /* UserInfoBioTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoBioTableViewCell.swift; path = ChatsControllers/UserInfoBioTableViewCell.swift; sourceTree = "<group>"; };
+		4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoCreateContactTableViewController.swift; path = ChatsControllers/UserInfoCreateContactTableViewController.swift; sourceTree = "<group>"; };
+		4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactDataTableViewCell.swift; path = ChatsControllers/ContactDataTableViewCell.swift; sourceTree = "<group>"; };
 		4BFD07751FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactsAuthorizationDeniedContainer.swift; path = ContactsControllers/ContactsAuthorizationDeniedContainer.swift; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
@@ -631,7 +637,9 @@
 				4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */,
 				4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */,
 				4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */,
+				4BFAA0D02025CD1800DFC9E5 /* UserInfoBioTableViewCell.swift */,
 				4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */,
+				4BFAA15A2026080900DFC9E5 /* CreateNewContact */,
 			);
 			name = UserInfoViewControllers;
 			sourceTree = "<group>";
@@ -711,9 +719,9 @@
 		4B94987F1F324B00008DA07F /* Third-Party Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4BEB0C7B2020D1CE001325CD /* Progress view */,
 				4B91B8BB1F34E9D60025C67F /* Public.swift */,
 				4B9498801F324C84008DA07F /* ThemeManager.swift */,
+				4BEB0C7B2020D1CE001325CD /* Progress view */,
 				4B2820DE1FE3FECE00791AB1 /* In-AppAnnouncement */,
 				4BB782421FDEDA8F00BB2A33 /* FalconTextView */,
 				4BE8BB451FCA98C700EB35FA /* WaveformView */,
@@ -952,6 +960,15 @@
 			name = FlowLayout;
 			sourceTree = "<group>";
 		};
+		4BFAA15A2026080900DFC9E5 /* CreateNewContact */ = {
+			isa = PBXGroup;
+			children = (
+				4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */,
+				4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */,
+			);
+			name = CreateNewContact;
+			sourceTree = "<group>";
+		};
 		E788FC79B73E9599A409079F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1167,6 +1184,7 @@
 				4BE571581F4D87A4009D9AB4 /* PhotoEditor+Controls.swift in Sources */,
 				4B0D9E5B1FC08AC800FEDE24 /* UserProfilePictureOpener.swift in Sources */,
 				4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */,
+				4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */,
 				4B5419571FB392570014C4FB /* INSPhotosInteractionAnimator.swift in Sources */,
 				4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
@@ -1183,6 +1201,7 @@
 				4BB782441FDEE00E00BB2A33 /* FalconTextView.swift in Sources */,
 				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
+				4BFAA0D32025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift in Sources */,
 				4B48D31D1F361E490050C797 /* ARSLineProgress.swift in Sources */,
 				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
@@ -1217,6 +1236,7 @@
 				4BEB0C832020D69A001325CD /* RoundProgressView.swift in Sources */,
 				4BE5715B1F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift in Sources */,
 				4B5419581FB392570014C4FB /* INSPhoto.swift in Sources */,
+				4BFAA0D12025CD1800DFC9E5 /* UserInfoBioTableViewCell.swift in Sources */,
 				4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */,
 				4BE571631F4D87A4009D9AB4 /* StickersViewController.swift in Sources */,
 				4BED9B8A1F4EDE81007A1631 /* EnterVerificationContainerView+timerHandlers.swift in Sources */,

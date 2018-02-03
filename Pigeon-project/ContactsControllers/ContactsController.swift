@@ -15,6 +15,9 @@ import SDWebImage
 
 public var shouldReloadContactsControllerAfterChangingTheme = false
 
+public var localPhones = [String]()
+
+public var shouldReFetchUsers = false
 
 class ContactsController: UITableViewController {
   
@@ -23,8 +26,6 @@ class ContactsController: UITableViewController {
   var contacts = [CNContact]()
   
   var filteredContacts = [CNContact]()
-  
-  var localPhones = [String]()
   
   var users = [User]()
   
@@ -68,6 +69,14 @@ class ContactsController: UITableViewController {
         checkContactsAuthorizationStatus()
         fetchCurrentUser()
         setUpColorsAccordingToTheme()
+      
+      if shouldReFetchUsers {
+        DispatchQueue.main.async {
+          self.fetchPigeonUsers()
+        }
+        
+        shouldReFetchUsers = false
+      }
     }
   
     override func viewWillLayoutSubviews() {
@@ -184,14 +193,14 @@ class ContactsController: UITableViewController {
         print(error)
       }
       
-      self.localPhones.removeAll()
+      localPhones.removeAll()
       self.filteredContacts = self.contacts
 
       for contact in self.contacts {
        
         for phone in contact.phoneNumbers {
         
-          self.localPhones.append(phone.value.stringValue)
+          localPhones.append(phone.value.stringValue.digits)
         }
       }
       
@@ -241,6 +250,7 @@ class ContactsController: UITableViewController {
         let countryCode = try self.phoneNumberKit.parse(number).countryCode
         let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
         preparedNumbers.append( ("+" + String(countryCode) + String(nationalNumber)) )
+       
       } catch {
         // print("Generic parser error")
       }
