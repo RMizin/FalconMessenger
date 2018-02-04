@@ -70,16 +70,31 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
     return contactStatus
   }()
   
+  let bio: UILabel = {
+    let bio = UILabel()
+    bio.sizeToFit()
+    bio.numberOfLines = 0
+    bio.textColor = ThemeManager.currentTheme().generalTitleColor
+    bio.translatesAutoresizingMaskIntoConstraints = false
+    bio.font = UIFont.systemFont(ofSize: 17)
+    
+    return bio
+  }()
+  
+  var bioTopAnchor: NSLayoutConstraint!
+  
   var addHeightConstraint:NSLayoutConstraint!
+   var phoneTopConstraint:NSLayoutConstraint!
   var contactStatusHeightConstraint: NSLayoutConstraint!
   
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)
- 
+    selectionStyle = .none
     addSubview(copy)
     addSubview(add)
     addSubview(contactStatus)
     addSubview(phoneLabel)
+    addSubview(bio)
     
     contactStatus.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
     if #available(iOS 11.0, *) {
@@ -91,8 +106,9 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
     contactStatusHeightConstraint = contactStatus.heightAnchor.constraint(equalToConstant: 40)
     contactStatusHeightConstraint.isActive = true
     
-    phoneLabel.topAnchor.constraint(equalTo: contactStatus.bottomAnchor, constant: 0).isActive = true
-    phoneLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+    phoneTopConstraint = phoneLabel.topAnchor.constraint(equalTo: contactStatus.bottomAnchor, constant: 0)
+    phoneTopConstraint.isActive = true
+
     if #available(iOS 11.0, *) {
       phoneLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
     } else {
@@ -123,6 +139,16 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
     add.addTarget(self, action: #selector(handleAddNewContact), for: .touchUpInside)
     copy.addTarget(self, action: #selector(handleCopy), for: .touchUpInside)
     copy.setImage(copyNumberImage, for: .normal)
+    
+    bioTopAnchor = bio.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: 20)
+    bioTopAnchor.isActive = true
+    if #available(iOS 11.0, *) {
+      bio.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
+      bio.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
+    } else {
+      bio.leftAnchor.constraint(equalTo: leadingAnchor, constant: 15).isActive = true
+      bio.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
+    }
   }
   
   required init?(coder aDecoder: NSCoder) {

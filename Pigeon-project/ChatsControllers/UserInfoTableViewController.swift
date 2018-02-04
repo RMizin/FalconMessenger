@@ -18,7 +18,7 @@ class UserInfoTableViewController: UITableViewController {
 
   var user: User?
   var contactName = String()
-  var contactPhoneNumbers = [String]()
+  var contactPhoneNumber = String()
   var contactPhoto: NSURL?
   var contactBio: String?
   var onlineStatus: String?
@@ -38,7 +38,6 @@ class UserInfoTableViewController: UITableViewController {
     }
   }
 
-  
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     
@@ -51,17 +50,14 @@ class UserInfoTableViewController: UITableViewController {
     print("user info deinit")
   }
     
-  
   fileprivate func configureTableView() {
     tableView.separatorStyle = .none
     tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
     tableView.register(UserInfoPhoneNumberTableViewCell.self, forCellReuseIdentifier: phoneNumberCellIdentifier)
-    tableView.register(UserInfoBioTableViewCell.self, forCellReuseIdentifier: bioCellIdentifier)
     
     configureBioDisplaying()
   }
   
-
   fileprivate func configureBioDisplaying() {
     guard let toId = self.user?.id else { return }
     bioRef = Database.database().reference().child("users").child(toId).child("bio")
@@ -74,27 +70,19 @@ class UserInfoTableViewController: UITableViewController {
 
 
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return 3
+    return 2
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    
-    if section == 0 {
-      return 1
-    } else if section == 1 {
-      return contactPhoneNumbers.count
-    } else {
-      return 1
-    }
+    return 1
   }
   
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  
     if indexPath.section == 0 {
       return 100
-    } else if indexPath.section == 1 {
-      return 90
     } else {
-      return 80
+      return 200
     }
   }
   
@@ -103,7 +91,7 @@ class UserInfoTableViewController: UITableViewController {
    
     let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! UserInfoPhoneNumberTableViewCell
     
-    if localPhones.contains(contactPhoneNumbers[0].digits) {
+    if localPhones.contains(contactPhoneNumber.digits) {
       phoneNumberCell.add.isHidden = true
       phoneNumberCell.contactStatus.isHidden = true
       phoneNumberCell.addHeightConstraint.constant = 0
@@ -111,10 +99,9 @@ class UserInfoTableViewController: UITableViewController {
     } else {
       phoneNumberCell.add.isHidden = false
       phoneNumberCell.contactStatus.isHidden = false
-      phoneNumberCell.addHeightConstraint.constant = 20
+      phoneNumberCell.addHeightConstraint.constant = 40
       phoneNumberCell.contactStatusHeightConstraint.constant = 40
     }
-    
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -135,11 +122,11 @@ class UserInfoTableViewController: UITableViewController {
     
       return headerCell
       
-    } else if indexPath.section == 1 {
+    } else  {
       let phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier, for: indexPath) as! UserInfoPhoneNumberTableViewCell
       phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       
-      if localPhones.contains(contactPhoneNumbers[indexPath.row].digits) {
+      if localPhones.contains(contactPhoneNumber.digits) {
         phoneNumberCell.add.isHidden = true
         phoneNumberCell.contactStatus.isHidden = true
         phoneNumberCell.addHeightConstraint.constant = 0
@@ -147,28 +134,18 @@ class UserInfoTableViewController: UITableViewController {
       } else {
         phoneNumberCell.add.isHidden = false
         phoneNumberCell.contactStatus.isHidden = false
-        phoneNumberCell.addHeightConstraint.constant = 20
+        phoneNumberCell.addHeightConstraint.constant = 40
         phoneNumberCell.contactStatusHeightConstraint.constant = 40
       }
       
       phoneNumberCell.phoneLabel.textColor = ThemeManager.currentTheme().generalTitleColor
       phoneNumberCell.userInfoTableViewController = self
-      phoneNumberCell.phoneLabel.text = contactPhoneNumbers[indexPath.row]
+      phoneNumberCell.phoneLabel.text = contactPhoneNumber
       phoneNumberCell.phoneLabel.font = UIFont.systemFont(ofSize: 17)
-      phoneNumberCell.selectionStyle = .none
+      phoneNumberCell.bio.text = contactBio
+      phoneNumberCell.bio.textColor = ThemeManager.currentTheme().generalTitleColor
       
       return phoneNumberCell
-      
-    } else {
-      let bioCell = tableView.dequeueReusableCell(withIdentifier: bioCellIdentifier, for: indexPath) as! UserInfoBioTableViewCell
-      bioCell.textLabel?.numberOfLines = 0
-      bioCell.textLabel?.font = UIFont.systemFont(ofSize: 17)
-      bioCell.textLabel?.text = contactBio
-      bioCell.selectionStyle = .none
-      bioCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      bioCell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-      
-      return bioCell
     }
   }
   

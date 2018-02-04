@@ -820,7 +820,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
     destination = UserInfoTableViewController()
     destination.contactName = user?.name ?? "Error loading name"
-    destination.contactPhoneNumbers = [user?.phoneNumber ?? ""]
+    destination.contactPhoneNumber = user?.phoneNumber ?? ""
     destination.contactPhoto = NSURL(string: user?.photoURL ?? "")
     destination.user = user
     destination.onlineStatus = onlineStatusInString
