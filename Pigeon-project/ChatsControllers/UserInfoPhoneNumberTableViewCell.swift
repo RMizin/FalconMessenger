@@ -11,7 +11,25 @@ import ContactsUI
 
 extension UIViewController: CNContactViewControllerDelegate {
   
+  
+  fileprivate func checkContactsAuthorizationStatus() -> Bool {
+    let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+    
+    switch contactsAuthorityCheck {
+      
+    case .denied, .notDetermined, .restricted:
+      basicErrorAlertWith(title: "No access", message: contactsAccessDeniedMessage, controller: self)
+      return false
+
+    case .authorized:
+      return true
+    }
+  }
+  
   func addPhoneNumber(phone : String , name: String, surname: String) {
+    
+    let contactsAccessStatus = checkContactsAuthorizationStatus()
+    guard contactsAccessStatus == true else { return }
     
       let phone = CNLabeledValue(label: CNLabelPhoneNumberiPhone, value: CNPhoneNumber(stringValue :phone ))
       let contact = CNMutableContact()
