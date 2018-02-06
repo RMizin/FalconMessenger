@@ -417,7 +417,7 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
 extension ImagePickerTrayController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
         //  delegate?.controller?(self, didTakeImage: image, with: assets.last!)
             delegate?.controller?(self, didTakeImage: image)
         }

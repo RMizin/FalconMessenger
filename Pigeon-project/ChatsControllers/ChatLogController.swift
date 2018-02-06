@@ -1025,13 +1025,20 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         if let messageImageUrl = message.imageUrl {
           cell.progressView.isHidden = false
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.retryFailed, .continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages, .retryFailed], progress: { (downloadedSize, expectedSize, url) in
             let progress = Double(100 * downloadedSize/expectedSize)
 
             DispatchQueue.main.async {
               cell.progressView.percent = progress
             }
           }, completed: { (image, error, cacheType, url) in
+            if error != nil {
+               cell.progressView.isHidden = false
+               cell.messageImageView.isUserInteractionEnabled = false
+               cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
+               return
+            }
+            
             cell.progressView.isHidden = true
             cell.messageImageView.isUserInteractionEnabled = true
             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil

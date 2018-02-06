@@ -459,33 +459,33 @@ extension UIScrollView {
 
 
 
-func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage? {
-  let oldWidth = sourceImage.size.width
-  let scaleFactor = scaledToWidth / oldWidth
-  
-  let newHeight = sourceImage.size.height * scaleFactor
-  let newWidth = oldWidth * scaleFactor
-  
-  UIGraphicsBeginImageContext(CGSize(width:newWidth, height:newHeight))
-  sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
-  let newImage = UIGraphicsGetImageFromCurrentImageContext()
-  UIGraphicsEndImageContext()
-  return newImage
-}
-
-func imageWithImageHeight (sourceImage:UIImage, scaledToHeight: CGFloat) -> UIImage {
-  let oldHeight = sourceImage.size.height
-  let scaleFactor = scaledToHeight / oldHeight
-  
-  let newWidth = sourceImage.size.width * scaleFactor
-  let newHeight = oldHeight * scaleFactor
-  
-  UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
-  sourceImage.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
-  let newImage = UIGraphicsGetImageFromCurrentImageContext()
-  UIGraphicsEndImageContext()
-  return newImage!
-}
+//func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage? {
+//  let oldWidth = sourceImage.size.width
+//  let scaleFactor = scaledToWidth / oldWidth
+//
+//  let newHeight = sourceImage.size.height * scaleFactor
+//  let newWidth = oldWidth * scaleFactor
+//
+//  UIGraphicsBeginImageContext(CGSize(width:newWidth, height:newHeight))
+//  sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
+//  let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//  UIGraphicsEndImageContext()
+//  return newImage
+//}
+//
+//func imageWithImageHeight (sourceImage:UIImage, scaledToHeight: CGFloat) -> UIImage {
+//  let oldHeight = sourceImage.size.height
+//  let scaleFactor = scaledToHeight / oldHeight
+//
+//  let newWidth = sourceImage.size.width * scaleFactor
+//  let newHeight = oldHeight * scaleFactor
+//
+//  UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+//  sourceImage.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+//  let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//  UIGraphicsEndImageContext()
+//  return newImage!
+//}
 
 func createImageThumbnail (_ image: UIImage) -> UIImage {
   
@@ -512,11 +512,11 @@ func compressImage(image: UIImage) -> Data {
   
   var actualHeight : CGFloat = image.size.height
   var actualWidth : CGFloat = image.size.width
-  let maxHeight : CGFloat = 1136.0
-  let maxWidth : CGFloat = 640.0
+  let maxHeight : CGFloat = 1920.0
+  let maxWidth : CGFloat = 1080.0
   var imgRatio : CGFloat = actualWidth/actualHeight
   let maxRatio : CGFloat = maxWidth/maxHeight
-  var compressionQuality : CGFloat = 0.5
+  var compressionQuality : CGFloat = 0.8
   
   if (actualHeight > maxHeight || actualWidth > maxWidth) {
     
@@ -535,16 +535,16 @@ func compressImage(image: UIImage) -> Data {
       
     } else {
       
-      actualHeight = maxHeight;
-      actualWidth = maxWidth;
-      compressionQuality = 1;
+      actualHeight = maxHeight
+      actualWidth = maxWidth
+      compressionQuality = 1
     }
   }
   
   let rect = CGRect(x:0.0, y:0.0, width:actualWidth, height:actualHeight);
-  UIGraphicsBeginImageContext(rect.size);
+  UIGraphicsBeginImageContext(rect.size)
   image.draw(in: rect)
-  let img = UIGraphicsGetImageFromCurrentImageContext();
+  let img = UIGraphicsGetImageFromCurrentImageContext()
   let imageData = UIImageJPEGRepresentation(img!, compressionQuality);
   UIGraphicsEndImageContext();
   
@@ -556,9 +556,9 @@ func uiImageFromAsset(phAsset: PHAsset) -> UIImage? {
   var img: UIImage?
   let manager = PHImageManager.default()
   let options = PHImageRequestOptions()
-  options.version = .original
+  options.version = .current
   options.deliveryMode = .fastFormat
-  options.resizeMode = .fast
+  options.resizeMode = .exact
   options.isSynchronous = true
   manager.requestImageData(for: phAsset, options: options) { data, _, _, _ in
     
@@ -574,10 +574,10 @@ func dataFromAsset(asset: PHAsset) -> Data? {
   var finalData: Data?
   let manager = PHImageManager.default()
   let options = PHImageRequestOptions()
-  options.version = .original
+  options.version = .current
   options.deliveryMode = .fastFormat
   options.isSynchronous = true
-  options.resizeMode = .fast
+  options.resizeMode = .exact
   options.normalizedCropRect = CGRect(x: 0, y: 0, width: 1000, height: 1000)
   manager.requestImageData(for: asset, options: options) { data, _, _, _ in
     

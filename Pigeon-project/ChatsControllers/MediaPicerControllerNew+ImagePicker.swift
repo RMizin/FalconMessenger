@@ -56,7 +56,7 @@ extension MediaPickerControllerNew {
         
         if mediaType  == "public.image" {
           
-          if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+          if let originalImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             
             PHPhotoLibrary.shared().performChanges ({
               
