@@ -42,10 +42,15 @@ class UserProfileController: UIViewController {
       userProfileContainerView.name.delegate = self
     }
   
-  fileprivate func configureColorsAccordingToTheme() {
-    userProfileContainerView.bio.textColor = ThemeManager.currentTheme().generalTitleColor
-    userProfileContainerView.name.textColor = ThemeManager.currentTheme().generalTitleColor
-  }
+    fileprivate func configureColorsAccordingToTheme() {
+      userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+      userProfileContainerView.userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+      userProfileContainerView.name.textColor = ThemeManager.currentTheme().generalTitleColor
+      userProfileContainerView.bio.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+      userProfileContainerView.bio.textColor = ThemeManager.currentTheme().generalTitleColor
+      userProfileContainerView.bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+      userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    }
   
     override func viewWillLayoutSubviews() {
       super.viewWillLayoutSubviews()
