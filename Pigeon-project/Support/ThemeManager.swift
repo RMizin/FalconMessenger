@@ -46,18 +46,18 @@ enum Theme: Int {
   var generalSubtitleColor: UIColor {
     switch self {
     case .Default:
-      return UIColor(red:0.67, green:0.67, blue:0.67, alpha:1.0)//UIColor.lightGray
+      return UIColor(red:0.67, green:0.67, blue:0.67, alpha:1.0)
     case .Dark:
-      return UIColor(red:0.67, green:0.67, blue:0.67, alpha:1.0)//UIColor.lightGray
+      return UIColor(red:0.67, green:0.67, blue:0.67, alpha:1.0)
     }
   }
   
   var cellSelectionColor: UIColor {
     switch self {
     case .Default:
-      return  UIColor(red:0.95, green:0.95, blue:0.95, alpha:1.0)// UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
+      return  UIColor(red:0.95, green:0.95, blue:0.95, alpha:1.0) //F1F1F1
     case .Dark:
-      return UIColor(red:0.10, green:0.10, blue:0.10, alpha:1.0)
+      return UIColor(red:0.10, green:0.10, blue:0.10, alpha:1.0) //191919
     }
   }
   
@@ -100,18 +100,18 @@ enum Theme: Int {
   var enterPhoneNumberBackground: UIImage {
     switch self {
     case .Default:
-      return  UIImage(named: "PigeonAuthCountryButton")!
+      return  UIImage(named: "LightAuthCountryButtonNormal")!
     case .Dark:
-      return UIImage(named: "DarkPigeonAuthCountryButton")!
+      return UIImage(named: "DarkAuthCountryButtonNormal")!
     }
   }
   
   var enterPhoneNumberBackgroundSelected: UIImage {
     switch self {
     case .Default:
-      return UIImage(named:"PigeonAuthCountryButtonHighlighted")!
+      return UIImage(named:"LightAuthCountryButtonHighlighted")!
     case .Dark:
-      return UIImage(named:"DarkPigeonAuthCountryButtonHighlighted")!
+      return UIImage(named:"DarkAuthCountryButtonHighlighted")!
     }
   }
   

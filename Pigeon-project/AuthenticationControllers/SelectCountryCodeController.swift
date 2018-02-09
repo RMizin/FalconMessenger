@@ -19,12 +19,11 @@ fileprivate var savedContentOffset = CGPoint(x: 0, y: -50)
 fileprivate var savedCountryCode = String()
 
 
-class SelectCountryCodeController: UIViewController {
+class SelectCountryCodeController: UITableViewController {
 
   let countries = Country().countries
   var filteredCountries = [[String:String]]()
   var searchBar = UISearchBar()
-  let tableView = UITableView()
 
   weak var delegate: CountryPickerDelegate?
   
@@ -47,8 +46,6 @@ class SelectCountryCodeController: UIViewController {
   
   fileprivate func configureView() {
     title = "Select your country"
-    view.addSubview(tableView)
-    view.addSubview(searchBar)
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
   }
   
@@ -61,44 +58,30 @@ class SelectCountryCodeController: UIViewController {
   }
   
   fileprivate func configureTableView() {
-    tableView.delegate = self
-    tableView.dataSource = self
     tableView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-    tableView.translatesAutoresizingMaskIntoConstraints = false
     tableView.separatorStyle = .none
     tableView.tableHeaderView = searchBar
-    if #available(iOS 11.0, *) {
-      tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-      tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-      tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
-      tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
-    } else {
-      tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-      tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-      tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-      tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-    }
     filteredCountries = countries
   }
 }
 
 
-extension SelectCountryCodeController: UITableViewDelegate, UITableViewDataSource {
+extension SelectCountryCodeController {
  
-   func numberOfSections(in tableView: UITableView) -> Int {
+  override func numberOfSections(in tableView: UITableView) -> Int {
     return 1
   }
   
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return filteredCountries.count
   }
   
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 55
   }
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     let identifier = "cell"
     
@@ -138,7 +121,7 @@ extension SelectCountryCodeController: UITableViewDelegate, UITableViewDataSourc
     }
   }
   
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     resetCheckmark()
     let cell = tableView.cellForRow(at: indexPath)
@@ -170,8 +153,8 @@ extension SelectCountryCodeController: UISearchBarDelegate {
 }
 
 
-extension SelectCountryCodeController: UIScrollViewDelegate {
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+extension SelectCountryCodeController {
+  override func scrollViewDidScroll(_ scrollView: UIScrollView) {
     if scrollView.isDecelerating {
       view.endEditing(true)
     }

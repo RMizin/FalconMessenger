@@ -43,7 +43,7 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
     selectCountry.setTitleColor(ThemeManager.currentTheme().generalTitleColor, for: .normal)
     selectCountry.contentHorizontalAlignment = .left
     selectCountry.contentVerticalAlignment = .center
-    selectCountry.titleEdgeInsets = UIEdgeInsetsMake(0, 15.0, 0.0, 0.0)
+    selectCountry.titleEdgeInsets = UIEdgeInsetsMake(-10, 10.0, 0.0, 0.0)
     selectCountry.titleLabel?.font = UIFont.systemFont(ofSize: 20)
     selectCountry.addTarget(self, action: #selector(ChangeNumberEnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
 
@@ -57,6 +57,7 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
     countryCode.textAlignment = .center
     countryCode.textColor = ThemeManager.currentTheme().generalTitleColor
     countryCode.font = UIFont.systemFont(ofSize: 20)
+   // countryCode.backgroundColor = .yellow
     return countryCode
   }()
   
@@ -66,6 +67,7 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
     phoneNumber.translatesAutoresizingMaskIntoConstraints = false
     phoneNumber.textAlignment = .center
     phoneNumber.keyboardType = .numberPad
+    //phoneNumber.backgroundColor = .red
     phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     phoneNumber.attributedPlaceholder = NSAttributedString(string: "New phone number",
                                                            attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
@@ -79,7 +81,7 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
   let backgroundFrame: UIImageView = {
     let backgroundFrame = UIImageView()
     backgroundFrame.translatesAutoresizingMaskIntoConstraints = false
-    backgroundFrame.image = UIImage(named: "PigeonAuthPhoneBackground")
+    backgroundFrame.image = UIImage(named: "AuthCountryBackground")
     return backgroundFrame
   }()
   
@@ -96,7 +98,7 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
   
     phoneNumber.delegate = self
    
-    let countryCodeWidth = deviceScreen.width * 0.26
+    let countryCodeWidth = deviceScreen.width * 0.295
  
     NSLayoutConstraint.activate([
       
@@ -116,17 +118,17 @@ class ChangeNumberEnterPhoneNumberContainerView: UIView {
       selectCountry.heightAnchor.constraint(equalToConstant: 70),
       
       backgroundFrame.topAnchor.constraint(equalTo: selectCountry.bottomAnchor, constant: -8),
-      backgroundFrame.leadingAnchor.constraint(equalTo: selectCountry.leadingAnchor, constant: 0),
+      backgroundFrame.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
       backgroundFrame.trailingAnchor.constraint(equalTo: selectCountry.trailingAnchor, constant: 0),
       backgroundFrame.heightAnchor.constraint(equalToConstant: 50),
       
-      countryCode.leadingAnchor.constraint(equalTo: backgroundFrame.leadingAnchor, constant: 0),
+      countryCode.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
       countryCode.centerYAnchor.constraint(equalTo: backgroundFrame.centerYAnchor, constant: 0),
       countryCode.widthAnchor.constraint(equalToConstant: countryCodeWidth),
       countryCode.heightAnchor.constraint(equalTo: backgroundFrame.heightAnchor, constant: 0),
       
       phoneNumber.leadingAnchor.constraint(equalTo: countryCode.trailingAnchor, constant: 2),
-      phoneNumber.trailingAnchor.constraint(equalTo: backgroundFrame.trailingAnchor, constant: -5),
+      phoneNumber.trailingAnchor.constraint(equalTo: backgroundFrame.trailingAnchor, constant: 0),
       phoneNumber.centerYAnchor.constraint(equalTo: backgroundFrame.centerYAnchor, constant: 0),
       phoneNumber.heightAnchor.constraint(equalTo: backgroundFrame.heightAnchor, constant: 0)
     ])
