@@ -64,9 +64,7 @@ Follow these simple steps:
 6. Go to Firebase Console, select your project, choose "Authentication" from left menu
 7. Select "SIGN-IN METHOD" and enable "Phone" option.
 
- Note:<i> if you don't have cocoapods installed on your computer, you have to install it first.
- You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), 
- then do the step №8. If you already have cocoapods installed, ignore this note.</i>
+Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
 8. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
