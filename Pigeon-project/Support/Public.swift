@@ -69,6 +69,7 @@ let videoRecordedButLibraryUnavailableError = "To send a recorded video, it has 
 let basicErrorTitleForAlert = "Error"
 let basicTitleForAccessError = "Please Allow Access"
 let noInternetError = "Internet is not available. Please try again later"
+let copyingImageError = "You cannot copy not downloaded image, please wait until downloading finished"
 
 extension String {
   

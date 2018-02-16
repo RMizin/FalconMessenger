@@ -71,8 +71,19 @@ extension BaseMessageCell {
         contextMenuItems[selectedIndex] == ContextMenuItems.copyPreviewItem {
         self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
         if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? PhotoMessageCell {
+          if cell.messageImageView.image == nil {
+            guard let controllerToDisplayOn = self.chatLogController else { return }
+            basicErrorAlertWith(title: basicErrorTitleForAlert, message: copyingImageError, controller: controllerToDisplayOn)
+            return
+          }
           UIPasteboard.general.image = cell.messageImageView.image
         } else if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
+          if cell.messageImageView.image == nil {
+            guard let controllerToDisplayOn = self.chatLogController else { return }
+            basicErrorAlertWith(title: basicErrorTitleForAlert, message: copyingImageError, controller: controllerToDisplayOn)
+            return
+          }
+
           UIPasteboard.general.image = cell.messageImageView.image
         } else if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
           UIPasteboard.general.string = cell.textView.text
@@ -83,13 +94,18 @@ extension BaseMessageCell {
         }
       } else {
         self.chatLogController?.deletedMessagesNumber += 1
-        guard let uid = Auth.auth().currentUser?.uid,let partnerID = self.message?.chatPartnerId(),let messageID = self.message?.messageUID else { return }
+        guard let uid = Auth.auth().currentUser?.uid, let partnerID = self.message?.chatPartnerId(), let messageID = self.message?.messageUID, self.currentReachabilityStatus != .notReachable else {
+            self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
+            guard let controllerToDisplayOn = self.chatLogController else { return }
+            basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerToDisplayOn)
+            return
+        }
         
+       
         let deletionReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child("userMessages").child(messageID)
         deletionReference.removeValue(completionBlock: { (error, reference) in
           if error != nil {
             self.chatLogController?.deletedMessagesNumber -= 1
-            print(error?.localizedDescription ?? "", "\nERROR DELETION\n")
             return
           }
           let shouldReloadMessageStatus = self.shouldReloadMessageSatus()

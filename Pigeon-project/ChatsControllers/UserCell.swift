@@ -117,7 +117,7 @@ class UserCell: UITableViewCell {
      
         nameLabel.topAnchor.constraint(equalTo: profileImageView.topAnchor).isActive = true
         nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true
-        nameLabel.rightAnchor.constraint(lessThanOrEqualTo: muteIndicator.leftAnchor, constant: -5).isActive = true
+        nameLabel.rightAnchor.constraint(lessThanOrEqualTo: timeLabel.leftAnchor, constant: -17).isActive = true
       
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         messageLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true
@@ -125,9 +125,10 @@ class UserCell: UITableViewCell {
   
         timeLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor).isActive = true
         timeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -15).isActive = true
+        timeLabel.widthAnchor.constraint(equalToConstant: 55).isActive = true
    
-        muteIndicator.rightAnchor.constraint(equalTo: timeLabel.leftAnchor, constant: -5).isActive = true
-        muteIndicator.centerYAnchor.constraint(equalTo: timeLabel.centerYAnchor).isActive = true
+        muteIndicator.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 3).isActive = true
+        muteIndicator.centerYAnchor.constraint(equalTo: timeLabel.centerYAnchor, constant: 1).isActive = true
         muteIndicator.widthAnchor.constraint(equalToConstant: 12).isActive = true
         muteIndicator.heightAnchor.constraint(equalToConstant: 12).isActive = true
     
