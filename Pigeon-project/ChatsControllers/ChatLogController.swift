@@ -65,8 +65,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var messages = [Message]()
   
-  var mediaMessages = [Message]()
-  
   var sections = ["Messages"]
   
   let messagesToLoad = 50
@@ -187,12 +185,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           if self.isInitialChatMessagesLoad {
             appendingMessages.append(Message(dictionary: dictionary))
   
-            if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
-              if Message(dictionary: dictionary).localVideoUrl == nil {
-                self.mediaMessages.append(Message(dictionary: dictionary))
-              }
-            }
-
             initialLoadGroup.leave()
           
           } else {
@@ -229,12 +221,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               
               self.collectionView?.performBatchUpdates ({
                 self.messages.append(Message(dictionary: dictionary))
-                
-                if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
-                  if Message(dictionary: dictionary).localVideoUrl == nil {
-                    self.mediaMessages.append(Message(dictionary: dictionary))
-                  }
-                }
                 
                 if self.messages.count - 1 >= 0 {
                   let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
@@ -275,7 +261,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let numberOfMessagesToLoad = messages.count + messagesToLoad
     let nextMessageIndex = messages.count + 1
-    let mediaMessagesCount = mediaMessages.count
     let oldestMessagesLoadingGroup = DispatchGroup()
     
     guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
@@ -315,8 +300,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messages.count )
             
             arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
-            self.mediaMessages.shiftInPlace(withDistance: mediaMessagesCount - self.mediaMessages.count)
-            
+         
             self.messages = arrayWithShiftedMessages
             userMessagesRef.removeAllObservers()
             
@@ -363,14 +347,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 dictionary.updateValue(convertedTimestamp, forKey: "convertedTimestamp")
               }
               
-            
               self.messages.append(Message(dictionary: dictionary))
             
-              if (Message(dictionary: dictionary).imageUrl != nil || Message(dictionary: dictionary).localImage != nil) && Message(dictionary: dictionary).videoUrl == nil {
-                if Message(dictionary: dictionary).localVideoUrl == nil {
-                  self.mediaMessages.append(Message(dictionary: dictionary))
-                }
-              }
               oldestMessagesLoadingGroup.leave()
             }, withCancel: nil) // messagesRef
         })
@@ -1381,9 +1359,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
           self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
-          if percentCompleted == 1.0 {
+          if percentCompleted >= 0.9999 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
               self.uploadProgressBar.setProgress(0.0, animated: false)
+            //  self.uploadProgressBar.isHidden = true
+             // self.uploadProgressBar.setNeedsLayout()
+             // self.uploadProgressBar.layoutIfNeeded()
             })
           }
         }
@@ -1401,7 +1382,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
            percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
            self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
             
-            if percentCompleted == 1.0 {
+            if percentCompleted >= 0.9999 {
               DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                self.uploadProgressBar.setProgress(0.0, animated: false)
               
@@ -1436,7 +1417,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               
               self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
               
-              if percentCompleted == 1.0 {
+              if percentCompleted >= 0.9999 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                   self.uploadProgressBar.setProgress(0.0, animated: false)
                 })
@@ -1568,12 +1549,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if self.messages.count - 2 >= 0 {
         
           self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
-      }
-      
-      if (self.messages[indexPath.item].imageUrl != nil || self.messages[indexPath.item].localImage != nil) && self.messages[indexPath.item].videoUrl == nil {
-        if self.messages[indexPath.item].localVideoUrl == nil {
-          self.mediaMessages.append(self.messages[indexPath.item])
-        }
       }
       
       let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)

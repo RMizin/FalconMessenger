@@ -36,68 +36,61 @@ extension ChatLogController {
   }
   
   
+  func configurePhotoToolbarInfo(for messagesWithPhotos: [Message], at photoIndex: Int) -> NSMutableAttributedString? {
+    
+    guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = user?.name  else { return nil }
+    
+    let isChattingWithSelf = user?.id == uid ?  true : false
+    var titleString = (messagesWithPhotos[photoIndex].fromId == user?.id ? chatPartnerName + "\n" : "You\n")
+    if isChattingWithSelf { titleString = "You\n" }
+    
+    let title = NSMutableAttributedString(string: titleString , attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
+    let date = Date(timeIntervalSince1970:  messagesWithPhotos[photoIndex].timestamp!.doubleValue )
+    let timestamp = timeAgoSinceDate(date)
+    let attributedCaptionSummary = NSMutableAttributedString(string: timestamp, attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
+    
+    let combination = NSMutableAttributedString()
+    combination.append(title)
+    combination.append(attributedCaptionSummary)
+    return combination
+  }
+  
+  
   func openSelectedPhoto(at indexPath : IndexPath) {
     
-    let numberOfPhotos = mediaMessages.count
-    
-    guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = user?.name  else {
-      return
-    }
-    
-    let photos: [INSPhotoViewable] = {
+      var photos: [INSPhotoViewable] = []
       
-      var mutablePhotos: [INSPhotoViewable] = []
+      let messagesWithPhotos = self.messages.filter({ (message) -> Bool in
+        return (message.imageUrl != nil || message.localImage != nil) && message.localVideoUrl == nil && message.videoUrl == nil
+      })
+      
+      let numberOfPhotos = messagesWithPhotos.count
       
       for photoIndex in 0 ..< numberOfPhotos {
-        
-        let isChattingWithSelf = user?.id == uid ?  true : false
-        
-        var titleString = (mediaMessages[photoIndex].fromId == user?.id ? chatPartnerName + "\n" : "You\n")
-        
-        if isChattingWithSelf {
-          titleString = "You\n"
-        }
-        
-        let title = NSMutableAttributedString(string: titleString , attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
-  
-       let date = Date(timeIntervalSince1970:  self.mediaMessages[photoIndex].timestamp!.doubleValue )
-       let timestamp = timeAgoSinceDate(date)
-       let attributedCaptionSummary = NSMutableAttributedString(string: timestamp, attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
-        
-        let combination = NSMutableAttributedString()
-        combination.append(title)
-        combination.append(attributedCaptionSummary)
-        
-        
-        if let downloadURL = self.mediaMessages[photoIndex].imageUrl, let messageID = self.mediaMessages[photoIndex].messageUID {
-          
-          let imageView = UIImageView()
-          imageView.sd_setImage(with: URL(string: downloadURL), completed: { (image, error, cacheType, url) in
+        let combination = configurePhotoToolbarInfo(for: messagesWithPhotos, at: photoIndex)
+        if let downloadURL = messagesWithPhotos[photoIndex].imageUrl, let messageID = messagesWithPhotos[photoIndex].messageUID {
+          var imageView: UIImageView? = UIImageView()
+          imageView?.sd_setImage(with: URL(string: downloadURL), completed: { (image, error, cacheType, url) in
             let newPhoto = INSPhoto(image: image, thumbnailImage: nil, messageUID: messageID)
             newPhoto.attributedTitle = combination
-            mutablePhotos.append(newPhoto)
+            photos.append(newPhoto)
+            imageView = nil
           })
-        } else if let localImage = self.mediaMessages[photoIndex].localImage {
+        } else if let localImage = messagesWithPhotos[photoIndex].localImage {
           let newPhoto = INSPhoto(image: localImage, thumbnailImage: nil, messageUID: nil)
           newPhoto.attributedTitle = combination
-          mutablePhotos.append(newPhoto)
+          photos.append(newPhoto)
         }
       }
-      
-      return mutablePhotos
-    }()
-    
+
+  
     var initialPhotoIndex: Int!
     
     if messages[indexPath.item].localImage != nil {
-      guard let initial = photos.index(where: {$0.image == messages[indexPath.item].localImage }) else {
-        return
-      }
+      guard let initial = photos.index(where: {$0.image == messages[indexPath.item].localImage }) else { return }
       initialPhotoIndex = initial
     } else {
-      guard let initial = photos.index(where: {$0.messageUID == messages[indexPath.item].messageUID }) else {
-        return
-      }
+      guard let initial = photos.index(where: {$0.messageUID == messages[indexPath.item].messageUID }) else { return }
       initialPhotoIndex = initial
     }
     

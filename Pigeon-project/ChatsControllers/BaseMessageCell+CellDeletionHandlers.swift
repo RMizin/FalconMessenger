@@ -111,12 +111,6 @@ extension BaseMessageCell {
           let shouldReloadMessageStatus = self.shouldReloadMessageSatus()
           self.chatLogController?.collectionView?.performBatchUpdates ({
             
-            if let index = self.chatLogController?.mediaMessages.index(where: { (message) -> Bool in  //if removing message is photo message
-              return message.messageUID == self.chatLogController?.messages[indexPath.item].messageUID
-            })  {
-              self.chatLogController?.mediaMessages.remove(at: index)
-            }
-            
             self.chatLogController?.messages.remove(at: indexPath.item)
             self.chatLogController?.collectionView?.deleteItems(at: [indexPath])
             
