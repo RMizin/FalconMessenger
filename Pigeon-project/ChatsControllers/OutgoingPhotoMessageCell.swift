@@ -94,8 +94,11 @@ class PhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.image = blueBubbleImage
     
-    progressView.progressColor =  UIColor(red: 1, green: 1, blue: 1, alpha: 1)
-    progressView.progressBackgroundColor =  UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
+    progressView.color = .white
+    
+    //progressView.progressColor =  UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+    
+    //progressView.progressBackgroundColor =  UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
     
     contentView.addSubview(deliveryStatus)
 

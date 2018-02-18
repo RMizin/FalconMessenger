@@ -44,9 +44,7 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
  @objc func removeButtonDidTap(sender: UIButton) {
     
-    guard let cell = sender.superview as? SelectedMediaCollectionCell else {
-      return
-    }
+    guard let cell = sender.superview as? SelectedMediaCollectionCell else { return }
     
     let indexPath = attachedImages.indexPath(for: cell)
     
@@ -56,6 +54,10 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
       
     if mediaPickerController!.assets.contains(selectedMedia[row].phAsset!) {
       deselectAsset(row: row)
+    } else {
+      selectedMedia.remove(at: row)
+      attachedImages.deleteItems(at: [indexPath!])
+      self.resetChatInputConntainerViewSettings()
     }
       
     } else {

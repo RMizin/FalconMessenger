@@ -105,8 +105,52 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
     })
   }
   
+  fileprivate func handleOlderAssetSelection(imageData: Data, videoData: Data?, imageSource: String, asset: PHAsset, filename: String) {
+    
+    getUrlFor(asset: asset) { (url, completed) in
+      if completed {
+        
+        var mediaObject = [String: AnyObject]()
+        
+        if videoData == nil {
+          
+          mediaObject = ["object": imageData,
+                  
+                         "imageSource": imageSource,
+                         "phAsset": asset,
+                         "filename": filename,
+                         "fileURL" : url] as [String: AnyObject]
+        } else {
+          
+          mediaObject = ["object": imageData,
+                         "videoObject": videoData! ,
+                        
+                         "imageSource": imageSource,
+                         "phAsset": asset,
+                         "filename": filename,
+                         "fileURL" : url] as [String: AnyObject]
+        }
+        
+        if let _ = self.inputContainerView?.selectedMedia.index(where: { (item) -> Bool in
+          return item.filename == filename
+        }) {
+          return
+        }
+        
+        self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
+        
+        if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
+          self.insertItemsToCollectionViewAnimated(at: [IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0)], mediaObject: mediaObject)
+          
+        } else {
+          
+          self.insertItemsToCollectionViewAnimated(at: [IndexPath(item: 0 , section: 0)], mediaObject: mediaObject)
+        }
+      }
+    }
+  }
   
-  func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath) {
+  func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath?) {
     
     let image = uiImageFromAsset(phAsset: asset)
     
@@ -115,8 +159,11 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
     let imageData = compressImage(image: image!)
     
     if asset.mediaType == .image {
-      
-      self.handleAssetSelection(imageData: imageData,  videoData: nil, indexPath: indexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+      guard let unwrappedIndexPath = indexPath else {
+        self.handleOlderAssetSelection(imageData: imageData, videoData: nil, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+        return
+      }
+      self.handleAssetSelection(imageData: imageData,  videoData: nil, indexPath: unwrappedIndexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
       
     } else if asset.mediaType == .video {
       
@@ -130,7 +177,12 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
             return
           }
           
-          self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: indexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+          guard let unwrappedIndexPath = indexPath else {
+            self.handleOlderAssetSelection(imageData: imageData, videoData: video, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+            return
+          }
+          
+          self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: unwrappedIndexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
           
         } else if avasset is AVComposition {
           
@@ -166,7 +218,12 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
                     return
                   }
                   
-                  self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: indexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+                  guard let unwrappedIndexPath = indexPath else {
+                    self.handleOlderAssetSelection(imageData: imageData, videoData: video, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+                    return
+                  }
+                  
+                  self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: unwrappedIndexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
                 })
               }
             }
@@ -288,6 +345,8 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
     }
   }
   
+  
+  
   func insertItemsToCollectionViewAnimated(at indexPath: [IndexPath], mediaObject: [String: AnyObject]) {
     
     self.expandCollection()
@@ -298,24 +357,29 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
     self.inputContainerView?.attachedImages.scrollToItem(at: IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0), at: .right, animated: true)
   }
   
-  func deleteItemsToCollectionViewAnimated(at indexPath: [IndexPath]?, index: Int?) {
-    if self.inputContainerView?.attachedImages.cellForItem(at: indexPath![0]) == nil || self.inputContainerView?.selectedMedia[index!] == nil {
+  func deleteItemsToCollectionViewAnimated(at indexPath: IndexPath, index: Int) {
+    if self.inputContainerView?.attachedImages.cellForItem(at: indexPath) == nil || self.inputContainerView?.selectedMedia[index] == nil {
+       print("returning2")
+      self.inputContainerView?.selectedMedia.remove(at: index)
+      self.inputContainerView?.attachedImages.reloadData()
       return
     }
-    self.inputContainerView?.selectedMedia.remove(at: index!)
-    self.inputContainerView?.attachedImages.deleteItems(at: indexPath!)
+ 
+    self.inputContainerView?.selectedMedia.remove(at: index)
+    self.inputContainerView?.attachedImages.deleteItems(at: [indexPath])
     self.inputContainerView?.resetChatInputConntainerViewSettings()
   }
   
+
   func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset, at indexPath: IndexPath) {
     
     guard let index = self.inputContainerView?.selectedMedia.index(where: { (item) -> Bool in
       return item.filename == asset.originalFilename
     }) else {
+      print("returning1")
       return
     }
     
-    deleteItemsToCollectionViewAnimated(at: [IndexPath(item: index, section: 0)], index: index)
+    deleteItemsToCollectionViewAnimated(at: IndexPath(item: index, section: 0), index: index)
   }
 }
-

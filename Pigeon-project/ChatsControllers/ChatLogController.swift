@@ -1002,21 +1002,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         if let messageImageUrl = message.imageUrl {
-          cell.progressView.isHidden = false
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages, .lowPriority], progress: { (downloadedSize, expectedSize, url) in
-            let progress = Double(100 * downloadedSize/expectedSize)
-
-            DispatchQueue.main.async {
-              cell.progressView.percent = progress
-            }
-          }, completed: { (image, error, cacheType, url) in
+         cell.progressView.isHidden = false
+          cell.progressView.startAnimating()
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages, .lowPriority], completed: { (image, error, cacheType, url) in
             if error != nil {
                cell.progressView.isHidden = false
                cell.messageImageView.isUserInteractionEnabled = false
                cell.playButton.isHidden = true
                return
             }
-            
+            cell.progressView.stopAnimating()
             cell.progressView.isHidden = true
             cell.messageImageView.isUserInteractionEnabled = true
             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
@@ -1052,21 +1047,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         if let messageImageUrl = message.imageUrl {
           cell.progressView.isHidden = false
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
-            
-            let progress = Double(100 * downloadedSize/expectedSize)
-  
-            DispatchQueue.main.async {
-              cell.progressView.percent = progress
-            }
-          }, completed: { (image, error, cacheType, url) in
+          cell.progressView.startAnimating()
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
             if error != nil {
               cell.progressView.isHidden = false
               cell.messageImageView.isUserInteractionEnabled = false
               cell.playButton.isHidden = true
               return
             }
-            
+            cell.progressView.stopAnimating()
             cell.progressView.isHidden = true
             cell.messageImageView.isUserInteractionEnabled = true
             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil

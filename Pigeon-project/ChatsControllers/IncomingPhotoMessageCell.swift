@@ -24,9 +24,12 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.frame.size.width = 200
     
-    progressView.progressColor =  .darkGray
-    progressView.progressBackgroundColor = UIColor(red: 0.78, green: 0.78, blue: 0.80, alpha: 1.0)
+    progressView.color = .black
     
+    //progressView.progressColor = .darkGray
+    
+    //progressView.progressBackgroundColor = UIColor(red: 0.78, green: 0.78, blue: 0.80, alpha: 1.0)
+
     bubbleView.image = grayBubbleImage
 
     messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 4).isActive = true

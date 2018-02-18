@@ -33,9 +33,9 @@ class BaseMediaMessageCell: BaseMessageCell {
     return messageImageView
   }()
   
-  var progressView: RoundProgressView = {
-    let progressView = RoundProgressView()
-    progressView.backgroundColor = .clear
+  var progressView: UIActivityIndicatorView = {
+    let progressView = UIActivityIndicatorView()
+    progressView.activityIndicatorViewStyle = .whiteLarge
     progressView.translatesAutoresizingMaskIntoConstraints = false
     
     return progressView
