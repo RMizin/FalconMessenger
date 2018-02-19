@@ -744,19 +744,28 @@ extension ChatsController {
         
         if Int(cell.badgeLabel.text!)! > 0 {
           cell.badgeLabel.isHidden = false
+          cell.badgeLabelWidthConstraint.constant = cell.badgeLabelWidthConstant
+          cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstant
           cell.newMessageIndicator.isHidden = false
         } else {
           cell.newMessageIndicator.isHidden = true
           cell.badgeLabel.isHidden = true
+          cell.badgeLabelWidthConstraint.constant = 0
+          cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
+          
         }
       } else {
         cell.newMessageIndicator.isHidden = true
         cell.badgeLabel.isHidden = true
+        cell.badgeLabelWidthConstraint.constant = 0
+        cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
         cell.badgeLabel.text = filteredPinnedConversations[indexPath.row].chatMetaData?.badge?.toString()
       }
     } else {
       cell.newMessageIndicator.isHidden = true
       cell.badgeLabel.isHidden = true
+      cell.badgeLabelWidthConstraint.constant = 0
+      cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
       cell.badgeLabel.text = filteredPinnedConversations[indexPath.row].chatMetaData?.badge?.toString()
     }
     
@@ -786,9 +795,9 @@ extension ChatsController {
     } else if (filtededConversations[indexPath.row].message?.imageUrl != nil ||
       filtededConversations[indexPath.row].message?.localImage != nil) &&
       filtededConversations[indexPath.row].message?.videoUrl != nil {
-      cell.messageLabel.text =  MessageSubtitle.video
+      cell.messageLabel.text = MessageSubtitle.video
     } else if filtededConversations[indexPath.row].message?.voiceEncodedString != nil {
-      cell.messageLabel.text =  MessageSubtitle.audio
+      cell.messageLabel.text = MessageSubtitle.audio
     } else {
       cell.messageLabel.text = filtededConversations[indexPath.row].message?.text
     }
@@ -811,19 +820,27 @@ extension ChatsController {
         
         if Int(cell.badgeLabel.text!)! > 0 {
           cell.badgeLabel.isHidden = false
+          cell.badgeLabelWidthConstraint.constant = cell.badgeLabelWidthConstant
+          cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstant
           cell.newMessageIndicator.isHidden = false
         } else {
           cell.newMessageIndicator.isHidden = true
           cell.badgeLabel.isHidden = true
+          cell.badgeLabelRightConstraint.constant = 0
+          cell.badgeLabelWidthConstraint.constant = cell.badgeLabelRightConstantForHidden
         }
       } else {
         cell.newMessageIndicator.isHidden = true
         cell.badgeLabel.isHidden = true
+        cell.badgeLabelWidthConstraint.constant = 0
+        cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
         cell.badgeLabel.text = filtededConversations[indexPath.row].chatMetaData?.badge?.toString()
       }
     } else {
       cell.newMessageIndicator.isHidden = true
       cell.badgeLabel.isHidden = true
+      cell.badgeLabelWidthConstraint.constant = 0
+      cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
       cell.badgeLabel.text = filtededConversations[indexPath.row].chatMetaData?.badge?.toString()
     }
     return cell

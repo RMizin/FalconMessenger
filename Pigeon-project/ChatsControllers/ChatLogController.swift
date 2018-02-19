@@ -387,7 +387,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     if uid == toId { /* If you are chatting with yourself */
-        return
+      return
     }
     
     let userIsTypingRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorDatabaseID)
@@ -402,7 +402,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     if uid == toId { /* If you are chatting with yourself */
-        return
+      return
     }
     
     let internalTypingIndicatorRef = Database.database().reference().child("user-messages").child(uid).child(toId).child(typingIndicatorDatabaseID)
@@ -445,13 +445,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             return
           }
           
-           if #available(iOS 11.0, *) {
+          if #available(iOS 11.0, *) {
             let currentContentOffset = self.collectionView?.contentOffset
             let newContentOffset = CGPoint(x: 0, y: currentContentOffset!.y + 40)
             self.collectionView?.setContentOffset(newContentOffset, animated: true)
-           } else {
+          } else {
             self.scrollToBottomOfTypingIndicator()
-           }
+          }
         }
       })
       

@@ -78,6 +78,12 @@ class UserCell: UITableViewCell {
       return label
     }()
   
+  var badgeLabelWidthConstraint: NSLayoutConstraint!
+  var badgeLabelRightConstraint: NSLayoutConstraint!
+  var badgeLabelWidthConstant:CGFloat = 20
+  var badgeLabelRightConstant:CGFloat = -15
+  var badgeLabelRightConstantForHidden:CGFloat = -10
+  
   let badgeLabel: UILabel = {
     let badgeLabel = UILabel()
     badgeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -125,15 +131,19 @@ class UserCell: UITableViewCell {
   
         timeLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor).isActive = true
         timeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -15).isActive = true
-        timeLabel.widthAnchor.constraint(equalToConstant: 55).isActive = true
+        timeLabel.widthAnchor.constraint(equalToConstant: 58).isActive = true
    
         muteIndicator.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 3).isActive = true
         muteIndicator.centerYAnchor.constraint(equalTo: timeLabel.centerYAnchor, constant: 1).isActive = true
         muteIndicator.widthAnchor.constraint(equalToConstant: 12).isActive = true
         muteIndicator.heightAnchor.constraint(equalToConstant: 12).isActive = true
     
-        badgeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -15).isActive = true
-        badgeLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        badgeLabelRightConstraint = badgeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: badgeLabelRightConstant)
+        badgeLabelRightConstraint.isActive = true
+      
+        badgeLabelWidthConstraint = badgeLabel.widthAnchor.constraint(equalToConstant: badgeLabelWidthConstant)
+        badgeLabelWidthConstraint.isActive = true
+      
         badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         badgeLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     }
