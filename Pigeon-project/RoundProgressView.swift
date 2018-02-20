@@ -1,440 +1,396 @@
-////
-////  RPCircularProgress.swift
-////  RPCircularProgress
-////
-////  Created by Rob Phillips on 4/5/16.
-////  Copyright © 2016 Glazed Donut, LLC. All rights reserved.
-////
-////  See LICENSE for full license agreement.
-////
-//import UIKit
-//
-//open class RPCircularProgress: UIView {
-//  
-//  // MARK: - Completion
-//  public typealias CompletionBlock = () -> Void
-//  
-//  // MARK: - Public API
-//  /**
-//   The color of the empty progress track (gets drawn over)
-//   */
-//  @IBInspectable open var trackTintColor: UIColor {
-//    get {
-//      return progressLayer.trackTintColor
-//    }
-//    set {
-//      progressLayer.trackTintColor = newValue
-//      progressLayer.setNeedsDisplay()
-//    }
-//  }
-//  
-//  /**
-//   The color of the progress bar
-//   */
-//  @IBInspectable open var progressTintColor: UIColor {
-//    get {
-//      return progressLayer.progressTintColor
-//    }
-//    set {
-//      progressLayer.progressTintColor = newValue
-//      progressLayer.setNeedsDisplay()
-//    }
-//  }
-//  
-//  /**
-//   The color the notched out circle within the progress area (if there is one)
-//   */
-//  @IBInspectable open var innerTintColor: UIColor? {
-//    get {
-//      return progressLayer.innerTintColor
-//    }
-//    set {
-//      progressLayer.innerTintColor = newValue
-//      progressLayer.setNeedsDisplay()
-//    }
-//  }
-//  
-//  /**
-//   Sets whether or not the corners of the progress bar should be rounded
-//   */
-//  @IBInspectable open var roundedCorners: Bool {
-//    get {
-//      return progressLayer.roundedCorners
-//    }
-//    set {
-//      progressLayer.roundedCorners = newValue
-//      progressLayer.setNeedsDisplay()
-//    }
-//  }
-//  
-//  /**
-//   Sets how thick the progress bar should be (pinned between `0.01` and `1`)
-//   */
-//  @IBInspectable open var thicknessRatio: CGFloat {
-//    get {
-//      return progressLayer.thicknessRatio
-//    }
-//    set {
-//      progressLayer.thicknessRatio = pin(newValue, minValue: 0.01, maxValue: 1)
-//      progressLayer.setNeedsDisplay()
-//    }
-//  }
-//  
-//  /**
-//   Sets whether or not the animation should be clockwise
-//   */
-//  @IBInspectable open var clockwiseProgress: Bool {
-//    get {
-//      return progressLayer.clockwiseProgress
-//    }
-//    set {
-//      progressLayer.clockwiseProgress = newValue
-//      progressLayer.setNeedsDisplay()
-//    }
-//  }
-//  
-//  /**
-//   A timing function defining the pacing of the animation. Defaults to ease in, ease out.
-//   */
-//  open var timingFunction: CAMediaTimingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-//  
-//  /**
-//   Getter for the current progress (not observed from any active animations)
-//   */
-//  @IBInspectable open var progress: CGFloat {
-//    get {
-//      return progressLayer.progress
-//    }
-//  }
-//  
-//  /**
-//   Sets how much of the progress bar should be filled during an indeterminate animation, pinned between `0.05` and `0.9`
-//   
-//   **Note:** This can be overriden / animated from by using updateProgress(...)
-//   */
-//  @IBInspectable open var indeterminateProgress: CGFloat {
-//    get {
-//      return progressLayer.indeterminateProgress
-//    }
-//    set {
-//      progressLayer.indeterminateProgress = pin(newValue, minValue: 0.05, maxValue: 0.9)
-//    }
-//  }
-//  
-//  /**
-//   Controls the speed at which the indeterminate progress bar animates
-//   */
-//  @IBInspectable open var indeterminateDuration: CFTimeInterval = Defaults.indeterminateDuration
-//  
-//  // MARK: - Custom Base Layer
-//  fileprivate var progressLayer: ProgressLayer! {
-//    get {
-//      return layer as! ProgressLayer
-//    }
-//  }
-//  
-//  open override class var layerClass : AnyClass {
-//    return ProgressLayer.self
-//  }
-//  
-//  // Lifecycle
-//  /**
-//   Default initializer for the class
-//   - returns: A configured instance of self
-//   */
-//  required public init() {
-//    super.init(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-//    
-//    setupDefaults()
-//  }
-//  
-//  required public init?(coder aDecoder: NSCoder) {
-//    super.init(coder: aDecoder)
-//    
-//    setupDefaults()
-//  }
-//  
-//  open override func didMoveToWindow() {
-//    super.didMoveToWindow()
-//    
-//    if let window = window {
-//      progressLayer.contentsScale = window.screen.scale
-//      progressLayer.setNeedsDisplay()
-//    }
-//  }
-//  
-//  // MARK: - Indeterminate
-//  /**
-//   Enables or disables the indeterminate (spinning) animation
-//   - parameter enabled:    Whether or not to enable the animation (defaults to `true`)
-//   - parameter completion: An optional closure to execute after the animation completes
-//   */
-//  open func enableIndeterminate(_ enabled: Bool = true, completion: CompletionBlock? = nil) {
-//    if let animation = progressLayer.animation(forKey: AnimationKeys.indeterminate) {
-//      // Check if there are any closures to execute on the existing animation
-//      if let block = animation.value(forKey: AnimationKeys.completionBlock) as? CompletionBlockObject {
-//        block.action()
-//      }
-//      progressLayer.removeAnimation(forKey: AnimationKeys.indeterminate)
-//      
-//      // And notify of disabling completion
-//      completion?()
-//    }
-//    
-//    guard enabled else { return }
-//    
-//    addIndeterminateAnimation(completion)
-//  }
-//  
-//  // MARK: - Progress
-//  /**
-//   Updates the progress bar to the given value with the optional properties
-//   - parameter progress:     The progress to update to, pinned between `0` and `1`
-//   - parameter animated:     Whether or not the update should be animated (defaults to `true`)
-//   - parameter initialDelay: Sets an initial delay before the animation begins
-//   - parameter duration:     Sets the overal duration that the animation should complete within
-//   - parameter completion:   An optional closure to execute after the animation completes
-//   */
-//  open func updateProgress(_ progress: CGFloat, animated: Bool = true, initialDelay: CFTimeInterval = 0, duration: CFTimeInterval? = nil, completion: CompletionBlock? = nil) {
-//    let pinnedProgress = pin(progress)
-//    if animated {
-//      
-//      // Get duration
-//      let animationDuration: CFTimeInterval
-//      if let duration = duration, duration != 0 {
-//        animationDuration = duration
-//      } else {
-//        // Same duration as UIProgressView animation
-//        animationDuration = CFTimeInterval(fabsf(Float(self.progress) - Float(pinnedProgress)))
-//      }
-//      
-//      // Get current progress (to avoid jumpy behavior)
-//      // Basic animations have their value reset to the original once the animation is finished
-//      // since only the presentation layer is animating
-//      var currentProgress: CGFloat = 0
-//      if let presentationLayer = progressLayer.presentation() as ProgressLayer! {
-//        currentProgress = presentationLayer.progress
-//      }
-//      progressLayer.progress = currentProgress
-//      
-//      progressLayer.removeAnimation(forKey: AnimationKeys.progress)
-//      animate(progress, currentProgress: currentProgress, initialDelay: initialDelay, duration: animationDuration, completion: completion)
-//    } else {
-//      progressLayer.removeAnimation(forKey: AnimationKeys.progress)
-//      
-//      progressLayer.progress = pinnedProgress
-//      progressLayer.setNeedsDisplay()
-//      
-//      completion?()
-//    }
-//  }
-//}
-//
-//// MARK: - Private API
-//private extension RPCircularProgress {
-//  
-//  // MARK: - Defaults
-//  func setupDefaults() {
-//    progressLayer.trackTintColor = Defaults.trackTintColor
-//    progressLayer.progressTintColor = Defaults.progressTintColor
-//    progressLayer.innerTintColor = nil
-//    backgroundColor = Defaults.backgroundColor
-//    progressLayer.thicknessRatio = Defaults.thicknessRatio
-//    progressLayer.roundedCorners = Defaults.roundedCorners
-//    progressLayer.clockwiseProgress = Defaults.clockwiseProgress
-//    indeterminateDuration = Defaults.indeterminateDuration
-//    progressLayer.indeterminateProgress = Defaults.indeterminateProgress
-//  }
-//  
-//  // MARK: - Progress
-//  // Pin certain values between 0.0 and 1.0
-//  func pin(_ value: CGFloat, minValue: CGFloat = 0, maxValue: CGFloat = 1) -> CGFloat {
-//    return min(max(value, minValue), maxValue)
-//  }
-//  
-//  func animate(_ pinnedProgress: CGFloat, currentProgress: CGFloat, initialDelay: CFTimeInterval, duration: CFTimeInterval, completion: CompletionBlock?) {
-//    let animation = CABasicAnimation(keyPath: AnimationKeys.progress)
-//    animation.duration = duration
-//    animation.timingFunction = timingFunction
-//    animation.fromValue = currentProgress
-//    animation.fillMode = kCAFillModeForwards
-//    animation.isRemovedOnCompletion = false
-//    animation.toValue = pinnedProgress
-//    animation.beginTime = CACurrentMediaTime() + initialDelay
-//    animation.delegate = self
-//    if let completion = completion {
-//      let completionObject = CompletionBlockObject(action: completion)
-//      animation.setValue(completionObject, forKey: AnimationKeys.completionBlock)
-//    }
-//    progressLayer.add(animation, forKey: AnimationKeys.progress)
-//  }
-//  
-//  // MARK: - Indeterminate
-//  func addIndeterminateAnimation(_ completion: CompletionBlock?) {
-//    guard progressLayer.animation(forKey: AnimationKeys.indeterminate) == nil else { return }
-//    
-//    let animation = CABasicAnimation(keyPath: AnimationKeys.transformRotation)
-//    animation.byValue = clockwiseProgress ? 2 * Double.pi : -2 * Double.pi
-//    animation.duration = indeterminateDuration
-//    animation.repeatCount = Float.infinity
-//    animation.isRemovedOnCompletion = false
-//    progressLayer.progress = indeterminateProgress
-//    if let completion = completion {
-//      let completionObject = CompletionBlockObject(action: completion)
-//      animation.setValue(completionObject, forKey: AnimationKeys.completionBlock)
-//    }
-//    progressLayer.add(animation, forKey: AnimationKeys.indeterminate)
-//  }
-//  
-//  // Completion
-//  class CompletionBlockObject: NSObject {
-//    var action: CompletionBlock
-//    
-//    required init(action: @escaping CompletionBlock) {
-//      self.action = action
-//    }
-//  }
-//  
-//  // MARK: - Private Classes / Structs
-//  class ProgressLayer: CALayer {
-//    @NSManaged var trackTintColor: UIColor
-//    @NSManaged var progressTintColor: UIColor
-//    @NSManaged var innerTintColor: UIColor?
-//    
-//    @NSManaged var roundedCorners: Bool
-//    @NSManaged var clockwiseProgress: Bool
-//    @NSManaged var thicknessRatio: CGFloat
-//    
-//    @NSManaged var indeterminateProgress: CGFloat
-//    // This needs to have a setter/getter for it to work with CoreAnimation
-//    @NSManaged var progress: CGFloat
-//    
-//    override class func needsDisplay(forKey key: String) -> Bool {
-//      return key == AnimationKeys.progress ? true : super.needsDisplay(forKey: key)
-//    }
-//    
-//    override func draw(in ctx: CGContext) {
-//      let rect = bounds
-//      let centerPoint = CGPoint(x: rect.size.width / 2, y: rect.size.height / 2)
-//      let radius = min(rect.size.height, rect.size.width) / 2
-//      
-//      let progress: CGFloat = min(self.progress, CGFloat(1 - Float.ulpOfOne))
-//      var radians: CGFloat = 0
-//      if clockwiseProgress {
-//        radians = CGFloat((Double(progress) * 2 * Double.pi) - (Double.pi / 2))
-//      } else {
-//        radians = CGFloat(3 * (Double.pi / 2) - (Double(progress) * 2 * Double.pi))
-//      }
-//      
-//      func fillTrack() {
-//        ctx.setFillColor(trackTintColor.cgColor)
-//        let trackPath = CGMutablePath()
-//        trackPath.move(to: centerPoint)
-//        trackPath.addArc(center: centerPoint, radius: radius, startAngle: CGFloat(2 * Double.pi), endAngle: 0, clockwise: true)
-//        trackPath.closeSubpath()
-//        ctx.addPath(trackPath)
-//        ctx.fillPath()
-//      }
-//      
-//      func fillProgressIfNecessary() {
-//        if progress == 0.0 {
-//          return
-//        }
-//        
-//        func fillProgress() {
-//          ctx.setFillColor(progressTintColor.cgColor)
-//          let progressPath = CGMutablePath()
-//          progressPath.move(to: centerPoint)
-//          progressPath.addArc(center: centerPoint, radius: radius, startAngle: CGFloat(3 * (Double.pi / 2)), endAngle: radians, clockwise: !clockwiseProgress)
-//          progressPath.closeSubpath()
-//          ctx.addPath(progressPath)
-//          ctx.fillPath()
-//        }
-//        
-//        func roundCornersIfNecessary() {
-//          if !roundedCorners {
-//            return
-//          }
-//          
-//          let pathWidth = radius * thicknessRatio
-//          let xOffset = radius * (1 + ((1 - (thicknessRatio / 2)) * CGFloat(cosf(Float(radians)))))
-//          let yOffset = radius * (1 + ((1 - (thicknessRatio / 2)) * CGFloat(sinf(Float(radians)))))
-//          let endpoint = CGPoint(x: xOffset, y: yOffset)
-//          
-//          let startEllipseRect = CGRect(x: centerPoint.x - pathWidth / 2, y: 0, width: pathWidth, height: pathWidth)
-//          ctx.addEllipse(in: startEllipseRect)
-//          ctx.fillPath()
-//          
-//          let endEllipseRect = CGRect(x: endpoint.x - pathWidth / 2, y: endpoint.y - pathWidth / 2, width: pathWidth, height: pathWidth)
-//          ctx.addEllipse(in: endEllipseRect)
-//          ctx.fillPath()
-//        }
-//        
-//        fillProgress()
-//        roundCornersIfNecessary()
-//      }
-//      
-//      func notchCenterCircle() {
-//        ctx.setBlendMode(.clear)
-//        let innerRadius = radius * (1 - thicknessRatio)
-//        let clearRect = CGRect(x: centerPoint.x - innerRadius, y: centerPoint.y - innerRadius, width: innerRadius * 2, height: innerRadius * 2)
-//        ctx.addEllipse(in: clearRect)
-//        ctx.fillPath()
-//        
-//        func fillInnerTintIfNecessary() {
-//          if let innerTintColor = innerTintColor {
-//            ctx.setBlendMode(.normal)
-//            ctx.setFillColor(innerTintColor.cgColor)
-//            ctx.addEllipse(in: clearRect)
-//            ctx.fillPath()
-//          }
-//        }
-//        
-//        fillInnerTintIfNecessary()
-//      }
-//      
-//      fillTrack()
-//      fillProgressIfNecessary()
-//      notchCenterCircle()
-//    }
-//  }
-//  
-//  struct Defaults {
-//    static let trackTintColor = UIColor(white: 1.0, alpha: 0.3)
-//    static let progressTintColor = UIColor.white
-//    static let backgroundColor = UIColor.clear
-//    
-//    static let progress: CGFloat = 0
-//    static let thicknessRatio: CGFloat = 0.3
-//    static let roundedCorners = true
-//    static let clockwiseProgress = true
-//    static let indeterminateDuration: CFTimeInterval = 1.0
-//    static let indeterminateProgress: CGFloat = 0.3
-//  }
-//  
-//  struct AnimationKeys {
-//    static let indeterminate = "indeterminateAnimation"
-//    static let progress = "progress"
-//    static let transformRotation = "transform.rotation"
-//    static let completionBlock = "completionBlock"
-//    static let toValue = "toValue"
-//  }
-//  
-//}
-//
-//// MARK: - Animation Delegate
-//extension RPCircularProgress: CAAnimationDelegate {
-//  
-//  public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-//    let completedValue = anim.value(forKey: AnimationKeys.toValue)
-//    if let completedValue = completedValue as? CGFloat {
-//      progressLayer.progress = completedValue
-//    }
-//    
-//    if let block = anim.value(forKey: AnimationKeys.completionBlock) as? CompletionBlockObject {
-//      block.action()
-//    }
-//  }
-//  
-//}
+import UIKit
 
+let dhRingStorkeAnimationKey = "IDLoading.stroke"
+let dhRingRotationAnimationKey = "IDLoading.rotation"
+let dhCompletionAnimationDuration: TimeInterval = 0.3
+let dhHidesWhenCompletedDelay: TimeInterval = 0.5
+
+public typealias Block = () -> Void
+
+
+public class CircleProgress: UIView, CAAnimationDelegate {
+  public enum ProgressStatus: Int {
+    case Unknown, Loading, Progress, Completion
+  }
+  
+  @IBInspectable public var lineWidth: CGFloat = 2.0 {
+    didSet {
+      progressLayer.lineWidth = lineWidth
+      shapeLayer.lineWidth = lineWidth
+      
+      setProgressLayerPath()
+    }
+  }
+  
+  @IBInspectable public var strokeColor: UIColor = UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0){
+    didSet{
+      progressLayer.strokeColor = strokeColor.cgColor
+      shapeLayer.strokeColor = strokeColor.cgColor
+      progressLabel.textColor = strokeColor
+    }
+  }
+  
+  @IBInspectable public var fontSize: Float = 25 {
+    didSet{
+      progressLabel.font = UIFont.systemFont(ofSize: CGFloat(fontSize))
+    }
+  }
+  
+  public var hidesWhenCompleted: Bool = false
+  public var hideAfterTime: TimeInterval = dhHidesWhenCompletedDelay
+  public private(set) var status: ProgressStatus = .Unknown
+  
+  private var _progress: Double = 0.0
+  public var progress: Double {
+    get {
+      setNeedsDisplay()
+      return _progress
+    }
+    set(newProgress) {
+      //Avoid calling excessively
+      if (newProgress - _progress >= 0.001 || newProgress >= 100.0) {
+        _progress = min(max(0, newProgress), 1)
+        progressLayer.strokeEnd = CGFloat(_progress)
+        
+        if status == .Loading {
+          progressLayer.removeAllAnimations()
+        } else if(status == .Completion) {
+          shapeLayer.strokeStart = 0
+          shapeLayer.strokeEnd = 0
+          shapeLayer.removeAllAnimations()
+        }
+        
+        status = .Progress
+        
+       // progressLabel.isHidden = false
+        let progressInt: Int = Int(_progress * 100)
+        progressLabel.text = "\(progressInt)"
+         setNeedsDisplay()
+      }
+    }
+  }
+  
+  private let progressLayer: CAShapeLayer! = CAShapeLayer()
+  private let shapeLayer: CAShapeLayer! = CAShapeLayer()
+  private let progressLabel: UILabel! = UILabel()
+  
+  private var completionBlock: Block?
+  public override init(frame: CGRect) {
+    super.init(frame: frame)
+    initialize()
+  }
+  
+  required public init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    initialize()
+  }
+  
+  deinit{
+    NotificationCenter.default.removeObserver(self)
+  }
+  
+  override public func layoutSubviews() {
+    super.layoutSubviews()
+    
+    let width = self.bounds.width
+    let height = self.bounds.height
+    let square = min(width, height)
+    
+    let bounds = CGRect(origin: CGPoint(x:0, y:0), size: CGSize(width:square, height:square))
+    
+    progressLayer.frame = CGRect(origin:CGPoint(x:0, y:0), size:CGSize(width:width, height:height))
+    setProgressLayerPath()
+    
+    shapeLayer.bounds = bounds
+    shapeLayer.position = CGPoint(x:self.bounds.midX, y:self.bounds.midY)
+    
+    let labelSquare = sqrt(2) / 2.0 * square
+    progressLabel.bounds = CGRect(origin:CGPoint(x:0, y:0), size:CGSize(width:labelSquare, height:labelSquare))
+    progressLabel.center = CGPoint(x:self.bounds.midX, y:self.bounds.midY)
+  }
+  
+  public func startLoading() {
+    if status == .Loading {
+      return
+    }
+    
+    status = .Loading
+    
+    //progressLabel.isHidden = true
+    progressLabel.text = "0"
+    _progress = 0
+    
+    shapeLayer.strokeStart = 0
+    shapeLayer.strokeEnd = 0
+    shapeLayer.removeAllAnimations()
+    
+    //self.isHidden = false
+    progressLayer.strokeEnd = 0.0
+    progressLayer.removeAllAnimations()
+    
+    let animation = CABasicAnimation(keyPath: "transform.rotation")
+    animation.duration = 4.0
+    animation.fromValue = 0.0
+    animation.toValue = 2 * Double.pi
+    animation.repeatCount = Float.infinity
+    progressLayer.add(animation, forKey: dhRingRotationAnimationKey)
+    
+    let totalDuration = 1.0
+    let firstDuration = 2.0 * totalDuration / 3.0
+    let secondDuration = totalDuration / 3.0
+    
+    let headAnimation = CABasicAnimation(keyPath: "strokeStart")
+    headAnimation.duration = firstDuration
+    headAnimation.fromValue = 0.0
+    headAnimation.toValue = 0.25
+    
+    let tailAnimation = CABasicAnimation(keyPath: "strokeEnd")
+    tailAnimation.duration = firstDuration
+    tailAnimation.fromValue = 0.0
+    tailAnimation.toValue = 1.0
+    
+    let endHeadAnimation = CABasicAnimation(keyPath: "strokeStart")
+    endHeadAnimation.beginTime = firstDuration
+    endHeadAnimation.duration = secondDuration
+    endHeadAnimation.fromValue = 0.25
+    endHeadAnimation.toValue = 1.0
+    
+    let endTailAnimation = CABasicAnimation(keyPath: "strokeEnd")
+    endTailAnimation.beginTime = firstDuration
+    endTailAnimation.duration = secondDuration
+    endTailAnimation.fromValue = 1.0
+    endTailAnimation.toValue = 1.0
+    
+    let animations = CAAnimationGroup()
+    animations.duration = firstDuration + secondDuration
+    animations.repeatCount = Float.infinity
+    animations.animations = [headAnimation, tailAnimation, endHeadAnimation, endTailAnimation]
+    progressLayer.add(animations, forKey: dhRingRotationAnimationKey)
+  }
+  
+  public func completeLoading(success: Bool, completion: Block? = nil) {
+    if status == .Completion {
+      return
+    }
+    
+    completionBlock = completion
+    
+   // progressLabel.isHidden = true
+    progressLayer.strokeEnd = 1.0
+    progressLayer.removeAllAnimations()
+    
+    if success {
+      setStrokeSuccessShapePath()
+      self.strokeColor = UIColor.green
+    } else {
+      setStrokeFailureShapePath()
+      self.strokeColor = UIColor.red
+    }
+    
+    var strokeStart :CGFloat = 0.25
+    var strokeEnd :CGFloat = 0.8
+    var phase1Duration = 0.7 * dhCompletionAnimationDuration
+    var phase2Duration = 0.3 * dhCompletionAnimationDuration
+    var phase3Duration = 0.0
+    
+    if !success {
+      let square = min(self.bounds.width, self.bounds.height)
+      let point = errorJoinPoint()
+      let increase = 1.0/3 * square - point.x
+      let sum = 2.0/3 * square
+      strokeStart = increase / (sum + increase)
+      strokeEnd = (increase + sum/2) / (sum + increase)
+      
+      phase1Duration = 0.5 * dhCompletionAnimationDuration
+      phase2Duration = 0.2 * dhCompletionAnimationDuration
+      phase3Duration = 0.3 * dhCompletionAnimationDuration
+    }
+    
+    shapeLayer.strokeEnd = 1.0
+    shapeLayer.strokeStart = strokeStart
+    let timeFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+    
+    let headStartAnimation = CABasicAnimation(keyPath: "strokeStart")
+    headStartAnimation.fromValue = 0.0
+    headStartAnimation.toValue = 0.0
+    headStartAnimation.duration = phase1Duration
+    headStartAnimation.timingFunction = timeFunction
+    
+    let headEndAnimation = CABasicAnimation(keyPath: "strokeEnd")
+    headEndAnimation.fromValue = 0.0
+    headEndAnimation.toValue = strokeEnd
+    headEndAnimation.duration = phase1Duration
+    headEndAnimation.timingFunction = timeFunction
+    
+    let tailStartAnimation = CABasicAnimation(keyPath: "strokeStart")
+    tailStartAnimation.fromValue = 0.0
+    tailStartAnimation.toValue = strokeStart
+    tailStartAnimation.beginTime = phase1Duration
+    tailStartAnimation.duration = phase2Duration
+    tailStartAnimation.timingFunction = timeFunction
+    
+    let tailEndAnimation = CABasicAnimation(keyPath: "strokeEnd")
+    tailEndAnimation.fromValue = strokeEnd
+    tailEndAnimation.toValue = success ? 1.0 : strokeEnd
+    tailEndAnimation.beginTime = phase1Duration
+    tailEndAnimation.duration = phase2Duration
+    tailEndAnimation.timingFunction = timeFunction
+    
+    let extraAnimation = CABasicAnimation(keyPath: "strokeEnd")
+    extraAnimation.fromValue = strokeEnd
+    extraAnimation.toValue = 1.0
+    extraAnimation.beginTime = phase1Duration + phase2Duration
+    extraAnimation.duration = phase3Duration
+    extraAnimation.timingFunction = timeFunction
+    
+    let groupAnimation = CAAnimationGroup()
+    groupAnimation.animations = [headEndAnimation, headStartAnimation, tailStartAnimation, tailEndAnimation]
+    if !success {
+      groupAnimation.animations?.append(extraAnimation)
+    }
+    groupAnimation.duration = phase1Duration + phase2Duration + phase3Duration
+    groupAnimation.delegate = self
+    shapeLayer.add(groupAnimation, forKey: nil)
+  }
+  
+  public func animationDidStop(_: CAAnimation, finished flag: Bool) {
+    if hidesWhenCompleted {
+      Timer.scheduledTimer(timeInterval: dhHidesWhenCompletedDelay, target: self, selector: #selector(hiddenLoadingView), userInfo: nil, repeats: false)
+    } else {
+      status = .Completion
+      if completionBlock != nil {
+        completionBlock!()
+      }
+    }
+  }
+  
+  //MARK: - Private
+  private func initialize() {
+    //progressLabel
+    progressLabel.font = UIFont.systemFont(ofSize: CGFloat(fontSize))
+    progressLabel.textColor = strokeColor
+    progressLabel.textAlignment = .center
+    progressLabel.adjustsFontSizeToFitWidth = true
+   // progressLabel.isHidden = true
+    self.addSubview(progressLabel)
+    
+    //progressLayer
+    progressLayer.strokeColor = strokeColor.cgColor
+    progressLayer.fillColor = nil
+    progressLayer.lineWidth = lineWidth
+    self.layer.addSublayer(progressLayer)
+    
+    //shapeLayer
+    shapeLayer.strokeColor = UIColor.gray.cgColor//strokeColor.cgColor
+    shapeLayer.fillColor = nil
+    shapeLayer.lineWidth = lineWidth
+    shapeLayer.lineCap = kCALineCapRound
+    shapeLayer.lineJoin = kCALineJoinRound
+    shapeLayer.strokeStart = 0.0
+    shapeLayer.strokeEnd = 0.0
+    self.layer.addSublayer(shapeLayer)
+    
+    NotificationCenter.default.addObserver(self, selector:#selector(resetAnimations), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+  }
+  
+  private func setProgressLayerPath() {
+    let center = CGPoint(x:self.bounds.midX, y:self.bounds.midY)
+    let radius = (min(self.bounds.width, self.bounds.height) - progressLayer.lineWidth) / 2
+    let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(0.0), endAngle: CGFloat(2 * Double.pi), clockwise: true)
+    progressLayer.path = path.cgPath
+    progressLayer.strokeStart = 0.0
+    progressLayer.strokeEnd = 0.0
+  }
+  
+  private func setStrokeSuccessShapePath() {
+    let width = self.bounds.width
+    let height = self.bounds.height
+    let square = min(width, height)
+    let b = square/2
+    let oneTenth = square/10
+    let xOffset = oneTenth
+    let yOffset = 1.5 * oneTenth
+    let ySpace = 3.2 * oneTenth
+    let point = correctJoinPoint()
+    
+    
+    let path = CGMutablePath()
+    path.move(to: CGPoint(x:point.x, y:point.y))
+    path.addLine(to: CGPoint(x:point.x, y:point.y))
+    path.addLine(to: CGPoint(x: b - xOffset, y: b + yOffset))
+    path.addLine(to: CGPoint(x: 2 * b - xOffset + yOffset - ySpace, y:ySpace ))
+    
+    shapeLayer.path = path
+    shapeLayer.cornerRadius = square/2
+    shapeLayer.masksToBounds = true
+    shapeLayer.strokeStart = 0.0
+    shapeLayer.strokeEnd = 0.0
+  }
+  
+  private func setStrokeFailureShapePath() {
+    let width = self.bounds.width
+    let height = self.bounds.height
+    let square = min(width, height)
+    let b = square/2
+    let space = square/3
+    let point = errorJoinPoint()
+    
+    
+    let path = CGMutablePath()
+    path.move(to: CGPoint(x:point.x, y:point.y))
+    path.addLine(to: CGPoint(x:2 * b - space, y: 2 * b - space))
+    path.move(to: CGPoint(x:2 * b - space, y: space))
+    path.addLine(to: CGPoint(x:space, y:2 * b - space))
+    
+    shapeLayer.path = path
+    shapeLayer.cornerRadius = square/2
+    shapeLayer.masksToBounds = true
+    shapeLayer.strokeStart = 0
+    shapeLayer.strokeEnd = 0.0
+  }
+  
+  private func correctJoinPoint() -> CGPoint {
+    let r = min(self.bounds.width, self.bounds.height)/2
+    let m = r/2
+    let k = lineWidth/2
+    
+    let a: CGFloat = 2.0
+    let b = -4 * r + 2 * m
+    let c = (r - m) * (r - m) + 2 * r * k - k * k
+    let x = (-b - sqrt(b * b - 4 * a * c))/(2 * a)
+    let y = x + m
+    
+    return CGPoint(x:x, y:y)
+  }
+  
+  private func errorJoinPoint() -> CGPoint {
+    let r = min(self.bounds.width, self.bounds.height)/2
+    let k = lineWidth/2
+    
+    let a: CGFloat = 2.0
+    let b = -4 * r
+    let c = r * r + 2 * r * k - k * k
+    let x = (-b - sqrt(b * b - 4 * a * c))/(2 * a)
+    
+    return CGPoint(x:x, y:x)
+  }
+  
+  @objc private func resetAnimations() {
+    if status == .Loading {
+      status = .Unknown
+      progressLayer.removeAnimation(forKey: dhRingRotationAnimationKey)
+      progressLayer.removeAnimation(forKey: dhRingStorkeAnimationKey)
+      
+      startLoading()
+    }
+  }
+  
+  @objc private func hiddenLoadingView() {
+    status = .Completion
+   // self.isHidden = true
+    
+    if completionBlock != nil {
+      completionBlock!()
+    }
+  }
+}

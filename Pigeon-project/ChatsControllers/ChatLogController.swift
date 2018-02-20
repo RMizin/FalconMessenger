@@ -183,8 +183,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
         
           if self.isInitialChatMessagesLoad {
-            appendingMessages.append(Message(dictionary: dictionary))
-  
+            let message = Message(dictionary: dictionary)
+            appendingMessages.append(message)
+            //self.addNewDownloadTask(for: message)
+          
             initialLoadGroup.leave()
           
           } else {
@@ -220,7 +222,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
               }
               
               self.collectionView?.performBatchUpdates ({
-                self.messages.append(Message(dictionary: dictionary))
+                
+                let message = Message(dictionary: dictionary)
+                self.messages.append(message)
+                //self.addNewDownloadTask(for: message)
                 
                 if self.messages.count - 1 >= 0 {
                   let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
@@ -347,7 +352,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 dictionary.updateValue(convertedTimestamp, forKey: "convertedTimestamp")
               }
               
-              self.messages.append(Message(dictionary: dictionary))
+              let message = Message(dictionary: dictionary)
+              self.messages.append(message)
+              //self.addNewDownloadTask(for: message)
             
               oldestMessagesLoadingGroup.leave()
             }, withCancel: nil) // messagesRef
@@ -478,11 +485,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   
+//  fileprivate func addNewDownloadTask(for message: Message) {
+//    if let downloadTaskUrl = message.imageUrl {
+//      let newDownloadTaskDictionary = ["id": message.messageUID, "url": downloadTaskUrl]
+//      let newDownloadTask = DownloadTask(dictionary: newDownloadTaskDictionary as [String : AnyObject])
+//      downloadTask.append(newDownloadTask)
+//    }
+//  }
+  
+  
   fileprivate func updateMessageStatus(messageRef: DatabaseReference) {
     
-    guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else {
-      return
-    }
+    guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else { return }
   
     var recieverID: String?
     messageRef.child("toId").observeSingleEvent(of: .value, with: { (snapshot) in
@@ -679,6 +693,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       extendedLayoutIncludesOpaqueBars = true
       automaticallyAdjustsScrollViewInsets = false
       navigationItem.largeTitleDisplayMode = .never
+      
   
       collectionView?.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
       collectionView?.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
@@ -1002,23 +1017,30 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         if let messageImageUrl = message.imageUrl {
-         cell.progressView.isHidden = false
-          cell.progressView.startAnimating()
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages, .lowPriority], completed: { (image, error, cacheType, url) in
-            if error != nil {
-               cell.progressView.isHidden = false
-               cell.messageImageView.isUserInteractionEnabled = false
-               cell.playButton.isHidden = true
-               return
+          
+          cell.progressView.startLoading()
+          cell.progressView.isHidden = false
+        
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
+         
+            DispatchQueue.main.async {
+              cell.progressView.progress = cell.messageImageView.sd_imageProgress.fractionCompleted
             }
-            cell.progressView.stopAnimating()
+            
+          }, completed: { (image, error, cacheType, url) in
+            
+            if error != nil {
+              cell.progressView.isHidden = false
+              cell.messageImageView.isUserInteractionEnabled = false
+              cell.playButton.isHidden = true
+              return
+            }
             cell.progressView.isHidden = true
             cell.messageImageView.isUserInteractionEnabled = true
             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
           })
+           return cell
         }
-        
-        return cell
         
       } else { /* Incoming photo/video message with grey bubble */
         
@@ -1046,22 +1068,28 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
         
         if let messageImageUrl = message.imageUrl {
+          
+          cell.progressView.startLoading()
           cell.progressView.isHidden = false
-          cell.progressView.startAnimating()
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options:  [.continueInBackground, .lowPriority, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
+          
+          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
+            
+            DispatchQueue.main.async {
+              cell.progressView.progress = cell.messageImageView.sd_imageProgress.fractionCompleted
+              
+            }
+          }, completed: { (image, error, cacheType, url) in
             if error != nil {
               cell.progressView.isHidden = false
               cell.messageImageView.isUserInteractionEnabled = false
               cell.playButton.isHidden = true
               return
             }
-            cell.progressView.stopAnimating()
             cell.progressView.isHidden = true
             cell.messageImageView.isUserInteractionEnabled = true
             cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
           })
         }
-        
         return cell
       }
     
@@ -1240,8 +1268,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if message.text != nil {
         cellHeight = message.estimatedFrameForText!.height + 20
       } else if message.imageWidth?.floatValue != nil && message.imageHeight?.floatValue != nil {
-        
-        cellHeight = CGFloat(truncating: message.imageCellHeight!)// CGFloat(imageHeight / imageWidth * 200).rounded()
+        if CGFloat(truncating: message.imageCellHeight!) < 66 {
+           cellHeight = 66
+        } else {
+           cellHeight = CGFloat(truncating: message.imageCellHeight!)// CGFloat(imageHeight / imageWidth * 200).rounded()
+        }
+       
       } else if message.voiceEncodedString != nil {
         cellHeight = 40
       }
@@ -1527,7 +1559,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     self.collectionView?.performBatchUpdates ({
       
-      self.messages.append(Message(dictionary: values ))
+      let message = Message(dictionary: values)
+      self.messages.append(message)
+      // self.addNewDownloadTask(for: message)
       
       let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
    

@@ -24,12 +24,8 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.frame.size.width = 200
     
-    progressView.color = .black
-    
-    //progressView.progressColor = .darkGray
-    
-    //progressView.progressBackgroundColor = UIColor(red: 0.78, green: 0.78, blue: 0.80, alpha: 1.0)
-
+    progressView.strokeColor = .black
+   
     bubbleView.image = grayBubbleImage
 
     messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 4).isActive = true
@@ -46,12 +42,15 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     bubbleView.addSubview(progressView)
     progressView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
     progressView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-    progressView.widthAnchor.constraint(equalToConstant: 75).isActive = true
-    progressView.heightAnchor.constraint(equalToConstant: 75).isActive = true
+    progressView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+    progressView.heightAnchor.constraint(equalToConstant: 60).isActive = true
   }
   
   override func prepareViewsForReuse() {
+     super.prepareViewsForReuse()
     bubbleView.image = grayBubbleImage
     playButton.isHidden = true
+    messageImageView.sd_cancelCurrentImageLoad()
+    messageImageView.image = nil
   }
 }

@@ -5,48 +5,65 @@
 //  Created by Roman Mizin on 2/17/18.
 //  Copyright © 2018 Roman Mizin. All rights reserved.
 //
+//
 
+/*
+ 
 import UIKit
 import SDWebImage
 
+var downloadTask:[DownloadTask] = []
 
 extension ChatLogController {
+ 
+  func handleMediaDownload(for message: Message) {
+    
+    guard let index = downloadTask.index(where: { (task) -> Bool in
+      return task.id == message.messageUID
+    }) else {
+      return
+    }
+    
+    guard let url = downloadTask[index].url else { return }
   
-}
-protocol DownloadDelegate: class {
-  func downloadProgressUpdate(for cell: RevealableCollectionViewCell, progress: Float)
-}
+    downloadTask[index].imageView.sd_setImage(with: url, placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground], progress: { (downloaded, expected, url) in
+      
+      downloadTask[index].progress = downloadTask[index].imageView.sd_imageProgress.fractionCompleted
+      
+    }, completed: { (image, error, cacheType, url) in
+      downloadTask[index].finished = true
+      downloadTask[index].downloading = false
+    })
+  }
+}// ext
 
 
-final class DownloadTask {
+class DownloadTask {
   
-  weak var delegate: DownloadDelegate?
-  
-  // Other properties
-  var cell: RevealableCollectionViewCell!
-  var progress: Float = 0.0 {
+  var id: String?
+  var url: URL?
+  var imageView = UIImageView()
+  var progress: Double = 0.0 {
     didSet {
-      updateProgress()
+      if progress >= 100 {
+        finished = true
+        downloading = false
+      } else {
+        finished = false
+        downloading = true
+      }
     }
   }
   
-  // Gives float for download progress - for delegate
+  var finished = false
+  var downloading = false
   
-  private func updateProgress() {
-    delegate?.downloadProgressUpdate(for: cell, progress: progress)
+  init(dictionary: [String: AnyObject]) {
+    self.id = dictionary["id"] as? String
+    self.url = dictionary["url"] as? URL
   }
-  
-  // Initialization
 }
+ 
+*/
 
-extension ChatLogController: DownloadDelegate {
-  func downloadProgressUpdate(for cell: RevealableCollectionViewCell, progress: Float) {
-  //  cell.progres
-//    DispatchQueue.main.async {
-//      self.progressView.progress += progress
-//      self.downloadProgressLabel.text =  String(format: "%.1f%%", progress * 100)
-//    }
-  }
-  
 
-}

@@ -27,26 +27,18 @@ class BaseMediaMessageCell: BaseMessageCell {
     messageImageView.layer.cornerRadius = 15
     messageImageView.layer.masksToBounds = true
     messageImageView.isUserInteractionEnabled = true
-    
     messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:  #selector(handleZoomTap)))
     
     return messageImageView
   }()
   
-  var progressView: UIActivityIndicatorView = {
-    let progressView = UIActivityIndicatorView()
-    progressView.activityIndicatorViewStyle = .whiteLarge
+  var progressView: CircleProgress = {
+    let progressView = CircleProgress()
     progressView.translatesAutoresizingMaskIntoConstraints = false
     
     return progressView
   }()
-
   
-  override func prepareViewsForReuse() {
-    
-    messageImageView.image = nil
-    playButton.isHidden = true
-  }
   
   @objc func handlePlay() {
     
@@ -69,16 +61,11 @@ class BaseMediaMessageCell: BaseMessageCell {
   
   
   @objc func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
-  
     if message?.videoUrl != nil || message?.localVideoUrl != nil {
-      
-     handlePlay()
-      
+      handlePlay()
       return
     }
-    guard  let indexPath = chatLogController?.collectionView?.indexPath(for: self) else {
-      return
-    }
+    guard let indexPath = chatLogController?.collectionView?.indexPath(for: self) else { return }
     self.chatLogController?.openSelectedPhoto(at: indexPath)
   }    
 }
