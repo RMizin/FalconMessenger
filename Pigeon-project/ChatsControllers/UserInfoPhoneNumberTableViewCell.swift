@@ -164,7 +164,7 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
       bio.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
       bio.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
     } else {
-      bio.leftAnchor.constraint(equalTo: leadingAnchor, constant: 15).isActive = true
+      bio.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
       bio.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
     }
   }

@@ -52,11 +52,11 @@ class UserProfileController: UIViewController {
       userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     }
   
-    override func viewWillLayoutSubviews() {
-      super.viewWillLayoutSubviews()
-      userProfileContainerView.frame = view.bounds
-      userProfileContainerView.layoutIfNeeded()
-    }
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    userProfileContainerView.frame = view.bounds
+    userProfileContainerView.layoutIfNeeded()
+  }
   
     @objc fileprivate func openUserProfilePicture() {
       userProfilePictureOpener.controllerWithUserProfilePhoto = self

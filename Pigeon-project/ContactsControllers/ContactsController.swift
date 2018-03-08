@@ -54,9 +54,6 @@ class ContactsController: UITableViewController {
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-      tableView.sectionIndexBackgroundColor = view.backgroundColor
-      tableView.backgroundColor = view.backgroundColor
 
       setupTableView()
       setupSearchController()
@@ -72,7 +69,7 @@ class ContactsController: UITableViewController {
       
       if shouldReFetchUsers {
         DispatchQueue.main.async {
-          self.fetchPigeonUsers()
+          self.fetchFalconUsers()
         }
         
         shouldReFetchUsers = false
@@ -103,6 +100,9 @@ class ContactsController: UITableViewController {
   }
   
     fileprivate func setupTableView() {
+        tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+        tableView.sectionIndexBackgroundColor = view.backgroundColor
+        tableView.backgroundColor = view.backgroundColor
         tableView.register(ContactsTableViewCell.self, forCellReuseIdentifier: contactsCellID)
         tableView.register(PigeonUsersTableViewCell.self, forCellReuseIdentifier: pigeonUsersCellID)
         tableView.register(CurrentUserTableViewCell.self, forCellReuseIdentifier: currentUserCellID)
@@ -148,9 +148,7 @@ class ContactsController: UITableViewController {
 
   
   fileprivate func fetchCurrentUser() {
-    guard let uid = Auth.auth().currentUser?.uid else {
-      return
-    }
+    guard let uid = Auth.auth().currentUser?.uid else { return }
     
     let userReference = Database.database().reference().child("users").child(uid)
     userReference.observe(.value) { (snapshot) in
@@ -204,7 +202,7 @@ class ContactsController: UITableViewController {
         }
       }
       
-      self.fetchPigeonUsers()
+      self.fetchFalconUsers()
       self.sendUserContactsToDatabase()
     }
   }
@@ -238,9 +236,7 @@ class ContactsController: UITableViewController {
   
   
  fileprivate func sendUserContactsToDatabase() {
-    guard let uid = Auth.auth().currentUser?.uid else {
-      return
-    }
+    guard let uid = Auth.auth().currentUser?.uid else { return }
     
     let userReference = Database.database().reference().child("users").child(uid)
     var preparedNumbers = [String]()
@@ -259,7 +255,7 @@ class ContactsController: UITableViewController {
   }
   
   
-@objc fileprivate func fetchPigeonUsers() {
+@objc fileprivate func fetchFalconUsers() {
 
     var preparedNumber = String()
     users.removeAll()
@@ -408,8 +404,7 @@ class ContactsController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    
-     return selectCell(for: indexPath)!
+      return selectCell(for: indexPath)!
     }
   
   
@@ -450,22 +445,16 @@ class ContactsController: UITableViewController {
         cell.subtitle.text = subtitle
       }
       
-        if let url = filteredUsers[indexPath.row].thumbnailPhotoURL {          
-          cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
-            if image != nil {
-              if (cacheType != SDImageCacheType.memory && cacheType != SDImageCacheType.disk) {
-                cell.icon.alpha = 0
-                UIView.animate(withDuration: 0.25, animations: {
-                  cell.icon.alpha = 1
-                })
-              } else {
-                cell.icon.alpha = 1
-              }
-            }
-
-          })
+      guard let url = filteredUsers[indexPath.row].thumbnailPhotoURL else { return cell }
+      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
+        guard image != nil else { return }
+        guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
+          cell.icon.alpha = 1
+          return
         }
-      
+        cell.icon.alpha = 0
+        UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
+      })
       return cell
       
     } else if indexPath.section == 2 {

@@ -131,10 +131,17 @@ class ChatsController: UITableViewController {
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     tableView.backgroundColor = view.backgroundColor
     navigationItem.leftBarButtonItem = editButtonItem
+    let newChatBarButton =  UIBarButtonItem(image: UIImage(named: "composeButton"), style: .done, target: self, action: #selector(newChat))
+    navigationItem.rightBarButtonItem = newChatBarButton
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
     tableView.separatorStyle = .none
     definesPresentationContext = true
+  }
+  
+  @objc fileprivate func newChat() {
+    let destination = UINavigationController(rootViewController: SelectChatTableViewController())
+    present(destination, animated: true, completion: nil)
   }
   
   fileprivate func setupSearchController() {
