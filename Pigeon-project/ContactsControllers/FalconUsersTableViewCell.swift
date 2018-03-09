@@ -1,5 +1,5 @@
 //
-//  PigeonUsersTableViewCell.swift
+//  FalconUsersTableViewCell.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/8/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PigeonUsersTableViewCell: UITableViewCell {
+class FalconUsersTableViewCell: UITableViewCell {
 
   var icon: UIImageView = {
     var icon = UIImageView()

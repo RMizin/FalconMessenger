@@ -58,7 +58,7 @@ class CreateContactTableViewController: UITableViewController {
       do {
         try store.execute(request)
         ARSLineProgress.showSuccess()
-        shouldReFetchUsers = true
+        shouldReFetchFalconUsers = true
         localPhones.append(phoneCell.textField.text?.digits ?? "")
         
         dismiss(animated: true, completion: nil)

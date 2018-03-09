@@ -14,14 +14,13 @@ import Contacts
 
 class SelectChatTableViewController: UITableViewController {
   
-  let pigeonUsersCellID = "pigeonUsersCellID"
+  let falconUsersCellID = "falconUsersCellID"
   
   let newGroupCellID = "newGroupCellID"
   
- // let newGroupAction = "New Group"
+  let newGroupAction = "New Group"
 
-//  var actions = ["New Group"]
-   var actions = [String]()
+  var actions = ["New Group"]
   
   var users = [User]()
   
@@ -37,16 +36,39 @@ class SelectChatTableViewController: UITableViewController {
   
   let contactsAuthorizationDeniedContainer:ContactsAuthorizationDeniedContainer! = ContactsAuthorizationDeniedContainer()
   
+  let falconUsersFetcher = FalconUsersFetcher()
   
     override func viewDidLoad() {
       super.viewDidLoad()
-
+     
       setupMainView()
       setupTableView()
-      fetchFalconUsers()
+      
+      falconUsersFetcher.delegate = self
+      falconUsersFetcher.fetchFalconUsers()
+      
       setupSearchController()
-      setUpColorsAccordingToTheme()
       checkContactsAuthorizationStatus()
+  }
+  
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    if self.navigationController?.visibleViewController is ChatLogController ||
+      self.navigationController?.visibleViewController is SelectParticipantsTableViewController {
+      return
+    }
+
+    if falconUsersFetcher.userReference != nil {
+      for handle in falconUsersFetcher.userHandle {
+        falconUsersFetcher.userReference.removeObserver(withHandle: handle)
+      }
+    }
+  }
+  
+  deinit {
+    print("new chat deinit")
   }
   
   override func viewWillLayoutSubviews() {
@@ -82,22 +104,10 @@ class SelectChatTableViewController: UITableViewController {
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     tableView.sectionIndexBackgroundColor = view.backgroundColor
     tableView.backgroundColor = view.backgroundColor
-    tableView.register(PigeonUsersTableViewCell.self, forCellReuseIdentifier: pigeonUsersCellID)
+    tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
     tableView.prefetchDataSource = self
     definesPresentationContext = true
-  }
-  
-  fileprivate func setUpColorsAccordingToTheme() {
-    if shouldReloadContactsControllerAfterChangingTheme {
-      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      tableView.sectionIndexBackgroundColor = view.backgroundColor
-      tableView.backgroundColor = view.backgroundColor
-      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-      tableView.reloadData()
-      print("reloading")
-      shouldReloadContactsControllerAfterChangingTheme = false
-    }
   }
   
   fileprivate func setupSearchController() {
@@ -134,130 +144,36 @@ class SelectChatTableViewController: UITableViewController {
     }
   }
   
-  fileprivate func rearrangeUsers() { /* Moves Online users to the top  */
-    for index in 0...self.users.count - 1 {
-      if self.users[index].onlineStatus as? String == statusOnline {
-        self.users = rearrange(array: self.users, fromIndex: index, toIndex: 0)
-      }
-    }
-  }
-  
-  fileprivate func rearrangeFilteredUsers() { /* Moves Online users to the top  */
-    for index in 0...self.filteredUsers.count - 1 {
-      if self.filteredUsers[index].onlineStatus as? String == statusOnline {
-        self.filteredUsers = rearrange(array: self.filteredUsers, fromIndex: index, toIndex: 0)
-      }
-    }
-  }
-  
-  fileprivate func sortUsers() { /* Sort users by last online date  */
-    self.users.sort(by: { (user1, user2) -> Bool in
-      if let firstUserOnlineStatus = user1.onlineStatus as? TimeInterval , let secondUserOnlineStatus = user2.onlineStatus as? TimeInterval {
-        return (firstUserOnlineStatus, user1.phoneNumber ?? "") > ( secondUserOnlineStatus, user2.phoneNumber ?? "")
-      } else {
-        return ( user1.phoneNumber ?? "") > (user2.phoneNumber ?? "") // sort
-      }
-    })
-  }
-  
-  
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
+  fileprivate func reloadTableView(updatedUsers: [User]) {
     
-    if userReference != nil {
-      for handle in userHandle {
-        userReference.removeObserver(withHandle: handle)
-      }
-    }
-  }
-  
-  deinit {
-    print("new chat deinit")
-   
-  }
-
-  var userReference: DatabaseReference!
-  var userQuery: DatabaseQuery!
-  var userHandle = [DatabaseHandle]()
-  
-  @objc fileprivate func fetchFalconUsers() {
+    self.users = updatedUsers
+    self.users = falconUsersFetcher.rearrangeUsers(users: self.users)
     
-    var preparedNumber = String()
+    let searchBar = correctSearchBarForCurrentIOSVersion()
+    let isSearchInProgress = searchBar.text != ""
+    let isSearchControllerEmpty = self.filteredUsers.count == 0
     
-    for number in localPhones {
-      do {
-        let countryCode = try self.phoneNumberKit.parse(number).countryCode
-        let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
-        preparedNumber = "+" + String(describing: countryCode) + String(describing: nationalNumber)
-      } catch {
-        // print("Generic parser error")
-      }
-  
-       userReference = Database.database().reference().child("users")
-       userQuery = userReference.queryOrdered(byChild: "phoneNumber")
-       let databaseHandle = DatabaseHandle()
-       userHandle.insert(databaseHandle, at: 0 )
-       userHandle[0] = userQuery.queryEqual(toValue: preparedNumber).observe(.value, with: { (snapshot) in
-        
-        if snapshot.exists() {
-          
-          for child in snapshot.children.allObjects as! [DataSnapshot]  {
-            guard var dictionary = child.value as? [String: AnyObject] else { return }
-            dictionary.updateValue(child.key as AnyObject, forKey: "id")
-            
-            let newUser = User(dictionary: dictionary)
-            if let index = self.users.index(where: { ($0.id) == newUser.id }) {
-               self.users[index] = newUser
-            } else {
-              self.users.append(newUser)
-            }
-
-            self.sortUsers()
-            self.rearrangeUsers()
-
-            if let index = self.users.index(where: { ($0.id) == Auth.auth().currentUser?.uid }) {
-              self.users.remove(at: index)
-            }
-            self.filteredUsers = self.users
-          }
-          self.reloadTableView(snap: snapshot)
-        }
-      }, withCancel: nil)
-    }
-  }
-  
-  fileprivate func reloadTableView(snap: DataSnapshot) {
-    var searchBar: UISearchBar?
-
-      if #available(iOS 11.0, *) {
-        searchBar = self.searchContactsController?.searchBar
-      } else {
-        searchBar = self.searchBar
-      }
-
-    if searchBar?.text != "" && self.filteredUsers.count != 0 {
-      guard var dictionary = snap.value as? [String: AnyObject] else { return }
-
-      dictionary.updateValue(snap.key as AnyObject, forKey: "id")
-      for index in 0...self.filteredUsers.count - 1  {
-        if self.filteredUsers[index].id == snap.key {
-          self.filteredUsers[index] = User(dictionary: dictionary)
-          rearrangeUsers()
-          rearrangeFilteredUsers()
-          self.tableView.beginUpdates()
-          for indexOfIndexPath in 0...self.filteredUsers.count - 1 {
-            self.tableView.reloadRows(at: [IndexPath(row: indexOfIndexPath, section: 1)], with: self.reloadAnimation)
-          }
-          self.tableView.endUpdates()
-        }
-      }
-    } else if self.filteredUsers.count == 0 {
+    if isSearchInProgress && !isSearchControllerEmpty {
+      return
     } else {
+      self.filteredUsers = self.users
+      guard self.filteredUsers.count != 0 else { return }
       DispatchQueue.main.async {
         self.tableView.reloadData()
       }
     }
   }
+  
+  fileprivate func correctSearchBarForCurrentIOSVersion() -> UISearchBar {
+    var searchBar: UISearchBar!
+    if #available(iOS 11.0, *) {
+      searchBar = self.searchContactsController?.searchBar
+    } else {
+      searchBar = self.searchBar
+    }
+    return searchBar
+  }
+  
 
     // MARK: - Table view data source
 
@@ -289,6 +205,7 @@ class SelectChatTableViewController: UITableViewController {
       }
     }
   }
+  
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
     view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
     
@@ -316,7 +233,7 @@ class SelectChatTableViewController: UITableViewController {
     
     if indexPath.section == 1 {
       
-       let cell = tableView.dequeueReusableCell(withIdentifier: pigeonUsersCellID, for: indexPath) as! PigeonUsersTableViewCell
+       let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
       
       if let name = filteredUsers[indexPath.row].name {
         cell.title.text = name
@@ -375,6 +292,12 @@ class SelectChatTableViewController: UITableViewController {
       chatLogController?.hidesBottomBarWhenPushed = true
       chatLogController?.user = filteredUsers[indexPath.row]
     }
+  }
+}
+
+extension SelectChatTableViewController: FalconUsersUpdatesDelegate {
+  func falconUsers(shouldBeUpdatedTo users: [User]) {
+    self.reloadTableView(updatedUsers: users)
   }
 }
 
