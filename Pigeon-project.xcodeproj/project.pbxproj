@@ -197,7 +197,7 @@
 		4BF6F94F1FD2340E0011686B /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF6F94E1FD2340E0011686B /* Conversation.swift */; };
 		4BFAA0D32025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */; };
 		4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */; };
-		4BFD07761FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFD07751FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift */; };
+		4BFD07761FB08005003791D7 /* ViewControllerPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFD07751FB08005003791D7 /* ViewControllerPlaceholder.swift */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
 
@@ -409,7 +409,7 @@
 		4BF6F94E1FD2340E0011686B /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = ChatsControllers/Conversation.swift; sourceTree = "<group>"; };
 		4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoCreateContactTableViewController.swift; path = ChatsControllers/UserInfoCreateContactTableViewController.swift; sourceTree = "<group>"; };
 		4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactDataTableViewCell.swift; path = ChatsControllers/ContactDataTableViewCell.swift; sourceTree = "<group>"; };
-		4BFD07751FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactsAuthorizationDeniedContainer.swift; path = ContactsControllers/ContactsAuthorizationDeniedContainer.swift; sourceTree = "<group>"; };
+		4BFD07751FB08005003791D7 /* ViewControllerPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewControllerPlaceholder.swift; path = ContactsControllers/ViewControllerPlaceholder.swift; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
 		A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pigeon_project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -610,7 +610,7 @@
 				4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */,
 				4BF07B302053437000A68023 /* ContactsController+SearchHandlers.swift */,
 				4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */,
-				4BFD07751FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift */,
+				4BFD07751FB08005003791D7 /* ViewControllerPlaceholder.swift */,
 			);
 			name = Contacts;
 			sourceTree = "<group>";
@@ -1373,7 +1373,7 @@
 				4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */,
 				4BE72A71204E9E2D009A22EA /* SelectChatTableViewController.swift in Sources */,
 				4BE571641F4D87A4009D9AB4 /* UIImage+Crop.swift in Sources */,
-				4BFD07761FB08005003791D7 /* ContactsAuthorizationDeniedContainer.swift in Sources */,
+				4BFD07761FB08005003791D7 /* ViewControllerPlaceholder.swift in Sources */,
 				4BE5715F1F4D87A4009D9AB4 /* PhotoEditorViewController.swift in Sources */,
 				4B2820EF1FE424DF00791AB1 /* ChatsController+NotificationsHandlers.swift in Sources */,
 				4B2820EC1FE4025600791AB1 /* AnnouncementShowing.swift in Sources */,

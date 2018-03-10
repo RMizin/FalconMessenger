@@ -44,7 +44,7 @@ class ContactsController: UITableViewController {
     
   var searchContactsController: UISearchController?
   
-  let contactsAuthorizationDeniedContainer:ContactsAuthorizationDeniedContainer! = ContactsAuthorizationDeniedContainer()
+  let viewControllerPlaceholder = ViewControllerPlaceholder()
   
   let falconUsersFetcher = FalconUsersFetcher()
 
@@ -71,16 +71,15 @@ class ContactsController: UITableViewController {
       if shouldReFetchFalconUsers {
         shouldReFetchFalconUsers = false
         DispatchQueue.main.async {
-          self.falconUsersFetcher.fetchFalconUsers()
+          self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
         }
       }
     }
   
-    override func viewWillLayoutSubviews() {
-      super.viewWillLayoutSubviews()
-      contactsAuthorizationDeniedContainer.frame = CGRect(x: 0, y: 135, width: self.view.bounds.width, height: 100)
-      contactsAuthorizationDeniedContainer.layoutIfNeeded()
-    }
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    setupViewControllerPlaceholder()
+  }
   
     override var preferredStatusBarStyle: UIStatusBarStyle {
       return ThemeManager.currentTheme().statusBarStyle
@@ -127,21 +126,27 @@ class ContactsController: UITableViewController {
       }
     }
   
+  fileprivate func setupViewControllerPlaceholder() {
+    viewControllerPlaceholder.backgroundColor = .clear
+    DispatchQueue.main.async {
+      if #available(iOS 11.0, *) {
+       self.viewControllerPlaceholder.frame = CGRect(x: 0, y: 135, width: self.view.frame.width, height: self.view.frame.height-135)
+      } else {
+        self.viewControllerPlaceholder.frame = CGRect(x: 0, y: 175, width: self.view.frame.width, height: self.view.frame.height-175)
+      }
+    }
+  }
   
   fileprivate func checkContactsAuthorizationStatus() {
+    setupViewControllerPlaceholder()
     let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
     
     switch contactsAuthorityCheck {
     case .denied, .notDetermined, .restricted:
-      self.view.addSubview(contactsAuthorizationDeniedContainer)
-      contactsAuthorizationDeniedContainer.frame = CGRect(x: 0, y: 135, width: self.view.bounds.width, height: 100)
+      viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
       
     case .authorized:
-      for subview in self.view.subviews {
-        if subview is ContactsAuthorizationDeniedContainer {
-          subview.removeFromSuperview()
-        }
-      }
+      viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
     }
   }
 
@@ -200,7 +205,7 @@ class ContactsController: UITableViewController {
           localPhones.append(phone.value.stringValue.digits)
         }
       }
-      self.falconUsersFetcher.fetchFalconUsers()
+      self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
       self.sendUserContactsToDatabase()
     }
   }

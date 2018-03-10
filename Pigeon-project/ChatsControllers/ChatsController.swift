@@ -652,10 +652,15 @@ extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISe
     func updateSearchResults(for searchController: UISearchController) {}
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = nil
-        filtededConversations = conversations
-        filteredPinnedConversations = pinnedConversations
-        handleReloadTable()
+      searchBar.text = nil
+      filtededConversations = conversations
+      filteredPinnedConversations = pinnedConversations
+      handleReloadTable()
+      guard #available(iOS 11.0, *) else {
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.resignFirstResponder()
+        return
+      }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -675,6 +680,10 @@ extension ChatsController: UISearchBarDelegate, UISearchControllerDelegate, UISe
   
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    guard #available(iOS 11.0, *) else {
+      searchBar.setShowsCancelButton(true, animated: true)
+      return true
+    }
     return true
   }
 }

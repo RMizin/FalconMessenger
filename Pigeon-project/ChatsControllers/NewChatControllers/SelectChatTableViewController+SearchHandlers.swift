@@ -15,8 +15,14 @@ extension SelectChatTableViewController: UISearchBarDelegate, UISearchController
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     searchBar.text = nil
     filteredUsers = users
+    guard users.count > 0 else { return }
     actions.append(newGroupAction)
     tableView.reloadData()
+    guard #available(iOS 11.0, *) else {
+     searchBar.setShowsCancelButton(false, animated: true)
+      searchBar.resignFirstResponder()
+      return
+    }
   }
   
   func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -26,7 +32,10 @@ extension SelectChatTableViewController: UISearchBarDelegate, UISearchController
   
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
-  
+    guard #available(iOS 11.0, *) else {
+      searchBar.setShowsCancelButton(true, animated: true)
+      return true
+    }
     return true
   }
   
@@ -58,6 +67,7 @@ extension SelectChatTableViewController { /* hiding keyboard */
       searchContactsController?.searchBar.endEditing(true)
     } else {
       self.searchBar?.endEditing(true)
+     
     }
   }
 }

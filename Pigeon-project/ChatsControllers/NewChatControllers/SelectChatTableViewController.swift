@@ -33,10 +33,11 @@ class SelectChatTableViewController: UITableViewController {
   private let reloadAnimation = UITableViewRowAnimation.none
   
   var phoneNumberKit = PhoneNumberKit()
-  
-  let contactsAuthorizationDeniedContainer:ContactsAuthorizationDeniedContainer! = ContactsAuthorizationDeniedContainer()
+
+  let viewControllerPlaceholder = ViewControllerPlaceholder()
   
   let falconUsersFetcher = FalconUsersFetcher()
+  
   
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -45,12 +46,12 @@ class SelectChatTableViewController: UITableViewController {
       setupTableView()
       
       falconUsersFetcher.delegate = self
-      falconUsersFetcher.fetchFalconUsers()
+      falconUsersFetcher.fetchFalconUsers(asynchronously: false)
       
       setupSearchController()
+      setupViewControllerPlaceholder()
       checkContactsAuthorizationStatus()
   }
-  
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
@@ -71,10 +72,9 @@ class SelectChatTableViewController: UITableViewController {
     print("new chat deinit")
   }
   
-  override func viewWillLayoutSubviews() {
-    super.viewWillLayoutSubviews()
-    contactsAuthorizationDeniedContainer.frame = CGRect(x: 0, y: 135, width: self.view.bounds.width, height: 100)
-    contactsAuthorizationDeniedContainer.layoutIfNeeded()
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    setupViewControllerPlaceholder()
   }
   
   override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -122,8 +122,16 @@ class SelectChatTableViewController: UITableViewController {
       searchBar = UISearchBar()
       searchBar?.delegate = self
       searchBar?.searchBarStyle = .minimal
+      
       searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
       tableView.tableHeaderView = searchBar
+    }
+  }
+  
+  fileprivate func setupViewControllerPlaceholder() {
+    viewControllerPlaceholder.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    DispatchQueue.main.async {
+      self.viewControllerPlaceholder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 300)
     }
   }
   
@@ -132,15 +140,9 @@ class SelectChatTableViewController: UITableViewController {
     
     switch contactsAuthorityCheck {
     case .denied, .notDetermined, .restricted:
-      self.view.addSubview(contactsAuthorizationDeniedContainer)
-      contactsAuthorizationDeniedContainer.frame = CGRect(x: 0, y: 135, width: self.view.bounds.width, height: 100)
-      
+      viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .center)
     case .authorized:
-      for subview in self.view.subviews {
-        if subview is ContactsAuthorizationDeniedContainer {
-          subview.removeFromSuperview()
-        }
-      }
+      viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
     }
   }
   
@@ -148,7 +150,7 @@ class SelectChatTableViewController: UITableViewController {
     
     self.users = updatedUsers
     self.users = falconUsersFetcher.rearrangeUsers(users: self.users)
-    
+
     let searchBar = correctSearchBarForCurrentIOSVersion()
     let isSearchInProgress = searchBar.text != ""
     let isSearchControllerEmpty = self.filteredUsers.count == 0
@@ -157,13 +159,20 @@ class SelectChatTableViewController: UITableViewController {
       return
     } else {
       self.filteredUsers = self.users
-      guard self.filteredUsers.count != 0 else { return }
+      guard self.filteredUsers.count != 0 else {
+        handleFalconContactsAbsence()
+        return
+      }
       DispatchQueue.main.async {
         self.tableView.reloadData()
       }
     }
   }
   
+  fileprivate func handleFalconContactsAbsence() {
+    viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.emptyFalconUsersTitle, subtitle: viewControllerPlaceholder.emptyFalconUsersSubtitle, priority: .low, position: .center)
+  }
+
   fileprivate func correctSearchBarForCurrentIOSVersion() -> UISearchBar {
     var searchBar: UISearchBar!
     if #available(iOS 11.0, *) {

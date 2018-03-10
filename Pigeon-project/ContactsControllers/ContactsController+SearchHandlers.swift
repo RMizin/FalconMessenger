@@ -17,14 +17,23 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
     searchBar.text = nil
     filteredUsers = users
     filteredContacts = contacts
-    
     tableView.reloadData()
+    guard #available(iOS 11.0, *) else {
+      searchBar.setShowsCancelButton(false, animated: true)
+      searchBar.resignFirstResponder()
+      return
+    }
   }
   
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    guard #available(iOS 11.0, *) else {
+     searchBar.setShowsCancelButton(true, animated: true)
+      return true
+    }
     return true
   }
+  
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     
