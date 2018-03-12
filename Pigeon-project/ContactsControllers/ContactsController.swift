@@ -15,8 +15,8 @@ import PhoneNumberKit
 
 public var shouldReloadContactsControllerAfterChangingTheme = false
 
-public var localPhones = [String]()
-
+var localPhones = [String]()
+var globalUsers = [User]()
 
 class ContactsController: UITableViewController {
   
@@ -120,6 +120,7 @@ class ContactsController: UITableViewController {
       } else {
         searchBar = UISearchBar()
         searchBar?.delegate = self
+          searchBar?.placeholder = "Search"
         searchBar?.searchBarStyle = .minimal
         searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         tableView.tableHeaderView = searchBar
@@ -432,6 +433,7 @@ class ContactsController: UITableViewController {
 
 extension ContactsController: FalconUsersUpdatesDelegate {
   func falconUsers(shouldBeUpdatedTo users: [User]) {
+    globalUsers = users
     self.reloadTableView(updatedUsers: users)
   }
 }

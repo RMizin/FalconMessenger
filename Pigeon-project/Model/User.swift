@@ -18,6 +18,8 @@ class User: NSObject {
   var phoneNumber: String?
   var onlineStatus: AnyObject?
   
+  var isSelected:Bool! = false // local only
+  
   init(dictionary: [String: AnyObject]) {
     self.id = dictionary["id"] as? String
     self.name = dictionary["name"] as? String
@@ -26,5 +28,12 @@ class User: NSObject {
     self.thumbnailPhotoURL = dictionary["thumbnailPhotoURL"] as? String
     self.phoneNumber = dictionary["phoneNumber"] as? String
     self.onlineStatus = dictionary["OnlineStatus"]// as? AnyObject
+  }
+}
+
+extension User { // local only
+  var titleFirstLetter: String {
+    guard let name = name else {return "" }
+    return String(name[name.startIndex]).uppercased()
   }
 }

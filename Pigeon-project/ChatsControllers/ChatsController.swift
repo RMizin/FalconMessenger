@@ -140,8 +140,11 @@ class ChatsController: UITableViewController {
   }
   
   @objc fileprivate func newChat() {
-    let destination = UINavigationController(rootViewController: SelectChatTableViewController())
-    present(destination, animated: true, completion: nil)
+    let destination = SelectChatTableViewController()
+    destination.hidesBottomBarWhenPushed = true
+    destination.users = globalUsers
+    destination.filteredUsers = globalUsers
+    navigationController?.pushViewController(destination, animated: true)
   }
   
   fileprivate func setupSearchController() {
@@ -156,6 +159,7 @@ class ChatsController: UITableViewController {
       } else {
         searchBar = UISearchBar()
         searchBar?.delegate = self
+        searchBar?.placeholder = "Search"
         searchBar?.searchBarStyle = .minimal
         searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         tableView.tableHeaderView = searchBar

@@ -1,14 +1,14 @@
 //
-//  SelectChatTableViewController+SearchHandlers.swift
+//  SelectParticipantsViewController+SearchHandlers.swift
 //  Pigeon-project
 //
-//  Created by Roman Mizin on 3/8/18.
+//  Created by Roman Mizin on 3/11/18.
 //  Copyright © 2018 Roman Mizin. All rights reserved.
 //
 
 import UIKit
 
-extension SelectChatTableViewController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
+extension SelectParticipantsViewController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
   
   func updateSearchResults(for searchController: UISearchController) {}
   
@@ -16,14 +16,8 @@ extension SelectChatTableViewController: UISearchBarDelegate, UISearchController
     searchBar.text = nil
     filteredUsers = users
     guard users.count > 0 else { return }
-    actions.append(newGroupAction)
-    tableView.reloadData()
     searchBar.setShowsCancelButton(false, animated: true)
     searchBar.resignFirstResponder()
-  }
-  
-  func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-    actions.removeAll()
     tableView.reloadData()
   }
   
@@ -35,18 +29,17 @@ extension SelectChatTableViewController: UISearchBarDelegate, UISearchController
   }
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-  
     filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
       return User.name!.lowercased().contains(searchText.lowercased())
     })
-    
+
     tableView.reloadData()
   }
 }
 
-extension SelectChatTableViewController { /* hiding keyboard */
+extension SelectParticipantsViewController { /* hiding keyboard */
   
-  override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+   func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     searchBar?.resignFirstResponder()
   }
   
@@ -54,4 +47,5 @@ extension SelectChatTableViewController { /* hiding keyboard */
     self.searchBar?.endEditing(true)
   }
 }
+
 

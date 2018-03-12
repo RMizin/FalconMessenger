@@ -438,6 +438,28 @@ public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array
   return arr
 }
 
+extension UISearchBar {
+  func changeBackgroundColor(to color: UIColor) {
+    if let textfield = self.value(forKey: "searchField") as? UITextField {
+      textfield.textColor = UIColor.blue
+      if let backgroundview = textfield.subviews.first {
+        backgroundview.backgroundColor = color
+        backgroundview.layer.cornerRadius = 10
+        backgroundview.clipsToBounds = true
+      }
+    }
+  }
+}
+
+extension UITableView {
+  
+  func indexPathForView(_ view: UIView) -> IndexPath? {
+    let center = view.center
+    let viewCenter = self.convert(center, from: view.superview)
+    let indexPath = self.indexPathForRow(at: viewCenter)
+    return indexPath
+  }
+}
 
 extension UIScrollView {
   

@@ -52,6 +52,7 @@ class SelectCountryCodeController: UITableViewController {
   fileprivate func configureSearchBar() {
     searchBar.delegate = self
     searchBar.searchBarStyle = .minimal
+    searchBar.placeholder = "Search"
     searchBar.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     searchBar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)

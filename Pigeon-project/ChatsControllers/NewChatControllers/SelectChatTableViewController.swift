@@ -28,16 +28,13 @@ class SelectChatTableViewController: UITableViewController {
   
   var searchBar: UISearchBar?
   
-  var searchContactsController: UISearchController?
-  
   private let reloadAnimation = UITableViewRowAnimation.none
   
   var phoneNumberKit = PhoneNumberKit()
 
   let viewControllerPlaceholder = ViewControllerPlaceholder()
   
-  let falconUsersFetcher = FalconUsersFetcher()
-  
+ // let falconUsersFetcher = FalconUsersFetcher()
   
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -45,28 +42,28 @@ class SelectChatTableViewController: UITableViewController {
       setupMainView()
       setupTableView()
       
-      falconUsersFetcher.delegate = self
-      falconUsersFetcher.fetchFalconUsers(asynchronously: false)
-      
+    //falconUsersFetcher.delegate = self
+    //self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
+
       setupSearchController()
       setupViewControllerPlaceholder()
       checkContactsAuthorizationStatus()
   }
   
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    
-    if self.navigationController?.visibleViewController is ChatLogController ||
-      self.navigationController?.visibleViewController is SelectParticipantsTableViewController {
-      return
-    }
-
-    if falconUsersFetcher.userReference != nil {
-      for handle in falconUsersFetcher.userHandle {
-        falconUsersFetcher.userReference.removeObserver(withHandle: handle)
-      }
-    }
-  }
+//  override func viewDidDisappear(_ animated: Bool) {
+//    super.viewDidDisappear(animated)
+//
+//    if self.navigationController?.visibleViewController is ChatLogController ||
+//      self.navigationController?.visibleViewController is SelectParticipantsViewController {
+//      return
+//    }
+//
+//    if falconUsersFetcher.userReference != nil {
+//      for handle in falconUsersFetcher.userHandle {
+//        falconUsersFetcher.userReference.removeObserver(withHandle: handle)
+//      }
+//    }
+//  }
   
   deinit {
     print("new chat deinit")
@@ -84,15 +81,13 @@ class SelectChatTableViewController: UITableViewController {
   fileprivate func setupMainView() {
     navigationItem.title = "New Message"
     
-    let newChatBarButton = UIBarButtonItem(barButtonSystemItem: .cancel , target: self, action: #selector(dismissNavigationController))
-    navigationItem.leftBarButtonItem =  newChatBarButton
-
     if #available(iOS 11.0, *) {
       navigationItem.largeTitleDisplayMode = .always
       navigationController?.navigationBar.prefersLargeTitles = true
     }
     extendedLayoutIncludesOpaqueBars = true
-    edgesForExtendedLayout = UIRectEdge.top
+    definesPresentationContext = true
+    edgesForExtendedLayout = [UIRectEdge.top, UIRectEdge.bottom]
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
   }
   
@@ -107,25 +102,16 @@ class SelectChatTableViewController: UITableViewController {
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
     tableView.prefetchDataSource = self
-    definesPresentationContext = true
   }
   
   fileprivate func setupSearchController() {
-    
-    if #available(iOS 11.0, *) {
-      searchContactsController = UISearchController(searchResultsController: nil)
-      searchContactsController?.searchResultsUpdater = self
-      searchContactsController?.obscuresBackgroundDuringPresentation = false
-      searchContactsController?.searchBar.delegate = self
-      navigationItem.searchController = searchContactsController
-    } else {
-      searchBar = UISearchBar()
-      searchBar?.delegate = self
-      searchBar?.searchBarStyle = .minimal
-      
-      searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-      tableView.tableHeaderView = searchBar
-    }
+    searchBar = UISearchBar()
+    searchBar?.delegate = self
+    searchBar?.searchBarStyle = .minimal
+    searchBar?.changeBackgroundColor(to: ThemeManager.currentTheme().searchBarColor)
+    searchBar?.placeholder = "Search"
+    searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+    tableView.tableHeaderView = searchBar
   }
   
   fileprivate func setupViewControllerPlaceholder() {
@@ -146,28 +132,28 @@ class SelectChatTableViewController: UITableViewController {
     }
   }
   
-  fileprivate func reloadTableView(updatedUsers: [User]) {
-    
-    self.users = updatedUsers
-    self.users = falconUsersFetcher.rearrangeUsers(users: self.users)
-
-    let searchBar = correctSearchBarForCurrentIOSVersion()
-    let isSearchInProgress = searchBar.text != ""
-    let isSearchControllerEmpty = self.filteredUsers.count == 0
-    
-    if isSearchInProgress && !isSearchControllerEmpty {
-      return
-    } else {
-      self.filteredUsers = self.users
-      guard self.filteredUsers.count != 0 else {
-        handleFalconContactsAbsence()
-        return
-      }
-      DispatchQueue.main.async {
-        self.tableView.reloadData()
-      }
-    }
-  }
+//  fileprivate func reloadTableView(updatedUsers: [User]) {
+//
+//    self.users = updatedUsers
+//    self.users = falconUsersFetcher.rearrangeUsers(users: self.users)
+//
+//    let searchBar = correctSearchBarForCurrentIOSVersion()
+//    let isSearchInProgress = searchBar.text != ""
+//    let isSearchControllerEmpty = self.filteredUsers.count == 0
+//
+//    if isSearchInProgress && !isSearchControllerEmpty {
+//      return
+//    } else {
+//      self.filteredUsers = self.users
+//      guard self.filteredUsers.count != 0 else {
+//        handleFalconContactsAbsence()
+//        return
+//      }
+//      DispatchQueue.main.async {
+//        self.tableView.reloadData()
+//      }
+//    }
+//  }
   
   fileprivate func handleFalconContactsAbsence() {
     viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.emptyFalconUsersTitle, subtitle: viewControllerPlaceholder.emptyFalconUsersSubtitle, priority: .low, position: .center)
@@ -175,11 +161,8 @@ class SelectChatTableViewController: UITableViewController {
 
   fileprivate func correctSearchBarForCurrentIOSVersion() -> UISearchBar {
     var searchBar: UISearchBar!
-    if #available(iOS 11.0, *) {
-      searchBar = self.searchContactsController?.searchBar
-    } else {
-      searchBar = self.searchBar
-    }
+    searchBar = self.searchBar
+   
     return searchBar
   }
   
@@ -289,7 +272,12 @@ class SelectChatTableViewController: UITableViewController {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    if indexPath.section == 0 {}
+    if indexPath.section == 0 {
+      let destination = SelectParticipantsViewController()
+      destination.users = self.users
+      destination.filteredUsers = self.filteredUsers
+      self.navigationController?.pushViewController(destination, animated: true)
+    }
     
     if indexPath.section == 1 {
       
@@ -304,11 +292,11 @@ class SelectChatTableViewController: UITableViewController {
   }
 }
 
-extension SelectChatTableViewController: FalconUsersUpdatesDelegate {
-  func falconUsers(shouldBeUpdatedTo users: [User]) {
-    self.reloadTableView(updatedUsers: users)
-  }
-}
+//extension SelectChatTableViewController: FalconUsersUpdatesDelegate {
+//  func falconUsers(shouldBeUpdatedTo users: [User]) {
+//    self.reloadTableView(updatedUsers: users)
+//  }
+//}
 
 extension SelectChatTableViewController: UITableViewDataSourcePrefetching {
   

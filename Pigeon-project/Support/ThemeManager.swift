@@ -70,6 +70,15 @@ enum Theme: Int {
     }
   }
   
+  var searchBarColor: UIColor {
+    switch self {
+    case .Default:
+      return UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 0.5)
+    case .Dark:
+      return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 0.8)
+    }
+  }
+  
   var mediaPickerControllerBackgroundColor: UIColor {
     switch self {
     case .Default:
