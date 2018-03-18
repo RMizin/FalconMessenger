@@ -45,13 +45,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     didSet {
       
       if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-        DispatchQueue.global(qos: .background).async {
-          self.loadGroupChatUsersAndMessages()
-        }
+        self.loadGroupChatUsersAndMessages()
       } else {
-          DispatchQueue.global(qos: .background).async {
        self.loadMessages(isGroupChat: false)
-        }
       }
      
       self.navigationItem.title = conversation?.chatName
@@ -120,10 +116,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   fileprivate var isInitialChatMessagesLoad = true
   
-  var groupChatUserData = [GroupChatUserData]()
+  fileprivate var groupChatUserData = [GroupChatUserData]()
   
   func loadGroupChatUsersAndMessages() {
-    
+    groupChatUserData.removeAll()
     let chatUserDataGroup = DispatchGroup()
     
     for _ in conversation!.chatParticipantsIDs! {
@@ -159,7 +155,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       .child(currentUserID).child(conversationID)
       .child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
     
-    userMessagesLoadingReference?.observeSingleEvent(of: .value, with: { (snapshot) in
+     userMessagesLoadingReference?.observeSingleEvent(of: .value, with: { (snapshot) in
     
       for _ in 0 ..< snapshot.childrenCount {
         initialLoadGroup.enter()
@@ -188,9 +184,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         self.messagesLoadingReference = Database.database().reference().child("messages").child(messageUID)
         self.messagesLoadingReference.observeSingleEvent(of: .value, with: { (snapshot) in
         
-          guard var dictionary = snapshot.value as? [String: AnyObject] else {
-            return
-          }
+          guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
           
           dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
           dictionary = self.preloadCellData(to: dictionary, isGroupChat: isGroupChat)
@@ -260,9 +254,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }, withCancel: { (error) in
         print("error loading message")
       })
-    }, withCancel: { (error) in
-      print("error loading message iDS")
-    })
+    }, withCancel: { (error) in print("error loading message iDS") })
     })
   }
   
@@ -385,74 +377,80 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     get {
       return localTyping
     }
-    
     set {
       localTyping = newValue
-      let typingData: NSDictionary = [typingIndicatorStateDatabaseKeyID : newValue]
+      let typingData: NSDictionary = [Auth.auth().currentUser!.uid : newValue] //??
       if localTyping {
         sendTypingStatus(data: typingData)
       } else {
-        guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID else { return }
-        let userIsTypingRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
-        userIsTypingRef.removeValue()
+        if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+          guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID else { return }
+          let userIsTypingRef = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID).child(currentUserID)
+          userIsTypingRef.removeValue()
+        } else {
+          guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID else { return }
+          let userIsTypingRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
+          userIsTypingRef.removeValue()
+        }
       }
     }
   }
   
   func sendTypingStatus(data: NSDictionary) {
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
-    let userIsTypingRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
-    userIsTypingRef.setValue(data)
+
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+      let userIsTypingRef = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
+      userIsTypingRef.updateChildValues(data as! [AnyHashable : Any])
+    } else {
+      let userIsTypingRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
+      userIsTypingRef.setValue(data)
+    }
   }
   
   func observeTypingIndicator () {
-    
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
     
-    guard var chatPatricipantIDs = conversation?.chatParticipantsIDs else {  print("no chat participants"); return }
-    
-    if let yourIndex = chatPatricipantIDs.index(where: { (id) -> Bool in
-      return id == currentUserID
-    }) {
-      chatPatricipantIDs.remove(at: yourIndex)
-    }
-    
-    let indicatorRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
-    indicatorRemovingReference.onDisconnectRemoveValue()
-    
-    for chatPatricipantID in chatPatricipantIDs {
-      typingIndicatorReference = Database.database().reference().child("user-messages")
-      if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-        typingIndicatorReference = typingIndicatorReference.child(chatPatricipantID).child(conversationID)
-      } else {
-        typingIndicatorReference = typingIndicatorReference.child(chatPatricipantID).child(currentUserID)// shoud be current user for default chat
-      }
-     
-      typingIndicatorReference = typingIndicatorReference.child(typingIndicatorDatabaseID).child(typingIndicatorStateDatabaseKeyID)
-      typingIndicatorReference.observe(.value, with: { (isTyping) in
-        guard let isParticipantTyping = isTyping.value! as? Bool else {
-          self.handleTypingIndicatorAppearance(isEnabled: false, typingParticipantID: chatPatricipantID)
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+      let indicatorRemovingReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID).child(currentUserID)
+      indicatorRemovingReference.onDisconnectRemoveValue()
+      typingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
+      typingIndicatorReference.observe(.value, with: { (snapshot) in
+        
+        guard let dictionary = snapshot.value as? [String:AnyObject], let firstKey = dictionary.first?.key else {
+          self.handleTypingIndicatorAppearance(isEnabled: false)
           return
         }
         
-        guard isParticipantTyping else {
-          self.handleTypingIndicatorAppearance(isEnabled: false, typingParticipantID: chatPatricipantID)
+        if firstKey == currentUserID && dictionary.count == 1 {
+          self.handleTypingIndicatorAppearance(isEnabled: false)
           return
         }
-        print("Participant: ", chatPatricipantID, " is typing a message...")
-        self.handleTypingIndicatorAppearance(isEnabled: true, typingParticipantID: chatPatricipantID)
+        
+        self.handleTypingIndicatorAppearance(isEnabled: true)
+      })
+
+    } else {
+      let indicatorRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
+      indicatorRemovingReference.onDisconnectRemoveValue()
+      typingIndicatorReference = Database.database().reference().child("user-messages").child(conversationID).child(currentUserID).child(typingIndicatorDatabaseID).child(conversationID)
+      typingIndicatorReference.onDisconnectRemoveValue()
+      typingIndicatorReference.observe(.value, with: { (isTyping) in
+        guard let isParticipantTyping = isTyping.value! as? Bool, isParticipantTyping else {
+          self.handleTypingIndicatorAppearance(isEnabled: false)
+          return
+        }
+        self.handleTypingIndicatorAppearance(isEnabled: true)
       })
     }
   }
   
-  fileprivate var typingParticipants = [String]()
-  fileprivate func handleTypingIndicatorAppearance(isEnabled: Bool, typingParticipantID: String) {
+
+  fileprivate func handleTypingIndicatorAppearance(isEnabled: Bool) {
     
     let sectionsIndexSet: IndexSet = [1]
     
     if isEnabled {
-      typingParticipants.append(typingParticipantID)
-      print(typingParticipants.count, "isenabled")
       guard sections.count < 2 else { return }
       self.collectionView?.performBatchUpdates ({
         
@@ -478,13 +476,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
     } else {
      
-      if typingParticipants.count > 0 {
-        typingParticipants.remove(at: 0)
-        print(typingParticipants.count, "false in if")
-        guard typingParticipants.count == 0 else { return }
-      }
-      
-        print(typingParticipants.count, "false should be 0")
       guard sections.count == 2 else { return }
       self.collectionView?.performBatchUpdates ({
         
@@ -575,7 +566,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     super.viewDidDisappear(animated)
     
     if self.navigationController?.visibleViewController is UserInfoTableViewController {
-        return
+      return
     }
     
     if userMessagesLoadingReference != nil {
@@ -596,10 +587,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
     isTyping = false
     
-  
-    guard voiceRecordingViewController != nil, voiceRecordingViewController.recorder != nil else {
-      return
-    }
+    groupChatUserData.removeAll()
+    
+    guard voiceRecordingViewController != nil, voiceRecordingViewController.recorder != nil else { return }
     
     voiceRecordingViewController.stop()
     voiceRecordingViewController.deleteAllRecordings()
@@ -1195,10 +1185,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           cell.nameLabel.sizeToFit()
           cell.nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingTextViewLeftInset+5, y: BaseMessageCell.incomingTextViewTopInset)
           cell.playerView.frame.origin.y = 20
+          cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+          cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height - 20).rounded())
+        } else {
+          cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
+          cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height).rounded())
         }
-        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-        cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height - 20).rounded())
-
+       
         DispatchQueue.main.async {
           if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
             view.titleLabel.text = message.convertedTimestamp
