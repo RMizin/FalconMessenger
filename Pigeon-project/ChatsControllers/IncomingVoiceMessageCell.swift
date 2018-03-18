@@ -31,6 +31,7 @@ class IncomingVoiceMessageCell: BaseMessageCell {
     bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(playerView)
+    bubbleView.addSubview(nameLabel)
     bubbleView.image = grayBubbleImage
     bubbleView.frame.origin = CGPoint(x: 10, y: 0)
     bubbleView.frame.size.width = 150
@@ -48,5 +49,6 @@ class IncomingVoiceMessageCell: BaseMessageCell {
     playerView.play.setImage(UIImage(named: "playBlack"), for: .normal)
     playerView.play.isSelected = false
     bubbleView.image = grayBubbleImage
+    nameLabel.text = ""
   }
 }

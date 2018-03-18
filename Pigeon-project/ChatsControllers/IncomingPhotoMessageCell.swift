@@ -12,6 +12,7 @@ import UIKit
 class IncomingPhotoMessageCell: BaseMediaMessageCell {
   
 
+  var messageImageViewTopAnchor:NSLayoutConstraint!
   override func setupViews() {
     
     bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
@@ -19,6 +20,8 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     contentView.addSubview(bubbleView)
     
     bubbleView.addSubview(messageImageView)
+    
+    bubbleView.addSubview(nameLabel)
     
     bubbleView.frame.origin = CGPoint(x: 10, y: 0)
     
@@ -28,7 +31,9 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
    
     bubbleView.image = grayBubbleImage
 
-    messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 4).isActive = true
+    messageImageViewTopAnchor = messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 4)
+    messageImageViewTopAnchor.isActive = true
+    
     messageImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -4).isActive = true
     messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 9).isActive = true
     messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -4).isActive = true
@@ -52,5 +57,6 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     playButton.isHidden = true
     messageImageView.sd_cancelCurrentImageLoad()
     messageImageView.image = nil
+    messageImageViewTopAnchor.constant = 4
   }
 }

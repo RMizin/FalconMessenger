@@ -83,6 +83,19 @@ extension String {
   }
 }
 
+extension UINavigationController {
+  
+  func backToViewController(viewController: Swift.AnyClass) {
+    
+    for element in viewControllers {
+      if element.isKind(of: viewController) {
+        self.popToViewController(element, animated: true)
+        break
+      }
+    }
+  }
+}
+
 extension Array {
   
   func shift(withDistance distance: Int = 1) -> Array<Element> {
@@ -235,7 +248,7 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
     if (numericDates){
       return "1 day ago"
     } else {
-      return "yesterday"
+      return "yesterday at \(date.getTimeStringFromUTC())"
     }
   } else if (components.hour! >= 2) {
     return "\(components.hour!) hours ago"

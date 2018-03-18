@@ -98,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
   }
   
-  let chatsController = ChatsController()
+  let chatsController = ChatsTableViewController()
   let contactsController = ContactsController()
   let settingsController = AccountSettingsController()
   
@@ -112,7 +112,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       contactsNavigationController.navigationBar.prefersLargeTitles = true
     }
     
-    chatsController.delegate = mainController as? ManageAppearance
+     chatsController.delegate = mainController as? ManageAppearance
     _ = chatsController.view
     chatsController.title = "Chats"
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)

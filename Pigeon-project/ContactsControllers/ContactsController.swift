@@ -392,30 +392,47 @@ class ContactsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    //  let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
       if indexPath.section == 0 {
         
         guard currentUser != nil else { return }
         
-        autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-        autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
-        chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
-        chatLogController?.delegate = self
-        chatLogController?.allMessagesRemovedDelegate = appDelegate.chatsController
-        chatLogController?.hidesBottomBarWhenPushed = true
-        chatLogController?.user = currentUser
-      }
-      
-      if indexPath.section == 1 {
+        let conversationDictionary: [String: AnyObject] = ["chatID": currentUser?.id as AnyObject, "chatName": currentUser?.name as AnyObject,
+                                                          "isGroupChat": false  as AnyObject,
+                                                          "chatOriginalPhotoURL": currentUser?.photoURL as AnyObject,
+                                                          "chatThumbnailPhotoURL": currentUser?.thumbnailPhotoURL as AnyObject,
+                                                          "chatParticipantsIDs": [currentUser?.id] as AnyObject]
+        
+        let conversation = Conversation(dictionary: conversationDictionary)
+
         
         autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
         autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
         chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
         chatLogController?.delegate = self
-        chatLogController?.allMessagesRemovedDelegate = appDelegate.chatsController
+     //   chatLogController?.allMessagesRemovedDelegate = appDelegate.chatsController
         chatLogController?.hidesBottomBarWhenPushed = true
-        chatLogController?.user = filteredUsers[indexPath.row]
+        chatLogController?.conversation = conversation
+      }
+      
+      if indexPath.section == 1 {
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+        let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject, "chatName": filteredUsers[indexPath.row].name as AnyObject,
+                                                           "isGroupChat": false  as AnyObject,
+                                                           "chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
+                                                           "chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
+                                                           "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
+        
+        let conversation = Conversation(dictionary: conversationDictionary)
+        
+        autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
+        autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
+        chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
+        chatLogController?.delegate = self
+       // chatLogController?.allMessagesRemovedDelegate = appDelegate.chatsController
+        chatLogController?.hidesBottomBarWhenPushed = true
+        chatLogController?.conversation = conversation
       }
     
       if indexPath.section == 2 {

@@ -69,9 +69,9 @@ PODS:
   - PhoneNumberKit/UIKit (2.1.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.5.0)
-  - SDWebImage (4.3.2):
-    - SDWebImage/Core (= 4.3.2)
-  - SDWebImage/Core (4.3.2)
+  - SDWebImage (4.3.3):
+    - SDWebImage/Core (= 4.3.3)
+  - SDWebImage/Core (4.3.3)
 
 DEPENDENCIES:
   - Firebase/Auth
@@ -101,7 +101,7 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
-  SDWebImage: 29bd3c0bc1f01e5eb59720847c64ad4c4ca1af5d
+  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
 
 PODFILE CHECKSUM: 3bd2ee175ae767b4353648cebca1c0fdaf285db7
 

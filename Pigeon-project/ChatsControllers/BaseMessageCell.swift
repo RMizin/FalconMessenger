@@ -17,6 +17,11 @@ class BaseMessageCell: RevealableCollectionViewCell {
   static let selectedOutgoingBubble = UIImage(named: "OutgoingSelected")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
   static let selectedIncomingBubble = UIImage(named: "IncomingSelected")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
   
+  static let incomingTextViewTopInset:CGFloat = 10
+  static let incomingTextViewBottomInset:CGFloat = 10
+  static let incomingTextViewLeftInset:CGFloat = 12
+  static let incomingTextViewRightInset:CGFloat = 7
+  
   let bubbleView: UIImageView = {
     let bubbleView = UIImageView()
     bubbleView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
@@ -35,6 +40,17 @@ class BaseMessageCell: RevealableCollectionViewCell {
     
     return deliveryStatus
   }()
+  
+  let nameLabel: UILabel = {
+    let nameLabel = UILabel()
+    nameLabel.font = UIFont.systemFont(ofSize: 13)
+    nameLabel.numberOfLines = 1
+    nameLabel.backgroundColor = .clear
+    nameLabel.textColor = FalconPalette.falconPaletteBlue
+    
+    return nameLabel
+  }()
+  
   
   override init(frame: CGRect) {
     super.init(frame: frame.integral)

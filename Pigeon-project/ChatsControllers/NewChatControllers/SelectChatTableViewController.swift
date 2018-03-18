@@ -12,6 +12,7 @@ import PhoneNumberKit
 import SDWebImage
 import Contacts
 
+
 class SelectChatTableViewController: UITableViewController {
   
   let falconUsersCellID = "falconUsersCellID"
@@ -33,37 +34,17 @@ class SelectChatTableViewController: UITableViewController {
   var phoneNumberKit = PhoneNumberKit()
 
   let viewControllerPlaceholder = ViewControllerPlaceholder()
-  
- // let falconUsersFetcher = FalconUsersFetcher()
+
   
     override func viewDidLoad() {
       super.viewDidLoad()
      
       setupMainView()
       setupTableView()
-      
-    //falconUsersFetcher.delegate = self
-    //self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
-
       setupSearchController()
       setupViewControllerPlaceholder()
       checkContactsAuthorizationStatus()
   }
-  
-//  override func viewDidDisappear(_ animated: Bool) {
-//    super.viewDidDisappear(animated)
-//
-//    if self.navigationController?.visibleViewController is ChatLogController ||
-//      self.navigationController?.visibleViewController is SelectParticipantsViewController {
-//      return
-//    }
-//
-//    if falconUsersFetcher.userReference != nil {
-//      for handle in falconUsersFetcher.userHandle {
-//        falconUsersFetcher.userReference.removeObserver(withHandle: handle)
-//      }
-//    }
-//  }
   
   deinit {
     print("new chat deinit")
@@ -132,29 +113,6 @@ class SelectChatTableViewController: UITableViewController {
     }
   }
   
-//  fileprivate func reloadTableView(updatedUsers: [User]) {
-//
-//    self.users = updatedUsers
-//    self.users = falconUsersFetcher.rearrangeUsers(users: self.users)
-//
-//    let searchBar = correctSearchBarForCurrentIOSVersion()
-//    let isSearchInProgress = searchBar.text != ""
-//    let isSearchControllerEmpty = self.filteredUsers.count == 0
-//
-//    if isSearchInProgress && !isSearchControllerEmpty {
-//      return
-//    } else {
-//      self.filteredUsers = self.users
-//      guard self.filteredUsers.count != 0 else {
-//        handleFalconContactsAbsence()
-//        return
-//      }
-//      DispatchQueue.main.async {
-//        self.tableView.reloadData()
-//      }
-//    }
-//  }
-  
   fileprivate func handleFalconContactsAbsence() {
     viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.emptyFalconUsersTitle, subtitle: viewControllerPlaceholder.emptyFalconUsersSubtitle, priority: .low, position: .center)
   }
@@ -166,7 +124,6 @@ class SelectChatTableViewController: UITableViewController {
     return searchBar
   }
   
-
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -270,8 +227,6 @@ class SelectChatTableViewController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
     if indexPath.section == 0 {
       let destination = SelectParticipantsViewController()
       destination.users = self.users
@@ -281,22 +236,24 @@ class SelectChatTableViewController: UITableViewController {
     
     if indexPath.section == 1 {
       
+      guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+      let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject, "chatName": filteredUsers[indexPath.row].name as AnyObject,
+                                                         "isGroupChat": false  as AnyObject,
+                                                         "chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
+                                                         "chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
+                                                         "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
+      
+      let conversation = Conversation(dictionary: conversationDictionary)
+      
       autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
       autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
       chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
       chatLogController?.delegate = self
-      chatLogController?.allMessagesRemovedDelegate = appDelegate.chatsController
       chatLogController?.hidesBottomBarWhenPushed = true
-      chatLogController?.user = filteredUsers[indexPath.row]
+      chatLogController?.conversation = conversation
     }
   }
 }
-
-//extension SelectChatTableViewController: FalconUsersUpdatesDelegate {
-//  func falconUsers(shouldBeUpdatedTo users: [User]) {
-//    self.reloadTableView(updatedUsers: users)
-//  }
-//}
 
 extension SelectChatTableViewController: UITableViewDataSourcePrefetching {
   

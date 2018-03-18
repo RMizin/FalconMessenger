@@ -16,58 +16,76 @@ private let bioCellIdentifier = "bioCellIdentifier"
 
 class UserInfoTableViewController: UITableViewController {
 
-  var user: User?
-  var contactName = String()
+  var user: User? {
+    didSet {
+      contactPhoneNumber = user?.phoneNumber ?? ""
+      DispatchQueue.main.async {
+        self.tableView.reloadData()
+      }
+    }
+  }
+  
+  var conversationID = String()
+  
+  var onlineStatus = String()
+ 
   var contactPhoneNumber = String()
-  var contactPhoto: NSURL?
-  var contactBio: String?
-  var onlineStatus: String?
-  var bioRef: DatabaseReference!
+
+  var userReference: DatabaseReference!
+  
+  var handle: DatabaseHandle!
+  
   var shouldDisplayContactAdder:Bool?
+  
 
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    title = "Info"
-    extendedLayoutIncludesOpaqueBars = true
-    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    
-    configureTableView()
-    if #available(iOS 11.0, *) {
-      navigationItem.largeTitleDisplayMode = .always
-    }
+    setupMainView()
+    setupTableView()
+    getUserInfo()
   }
-
+  
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     
-    if bioRef != nil {
-      bioRef.removeAllObservers()
+    if userReference != nil {
+      userReference.removeObserver(withHandle: handle)
     }
   }
   
   deinit {
     print("user info deinit")
   }
-    
-  fileprivate func configureTableView() {
+  
+  
+  fileprivate func setupMainView() {
+    title = "Info"
+    extendedLayoutIncludesOpaqueBars = true
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    if #available(iOS 11.0, *) {
+      navigationItem.largeTitleDisplayMode = .always
+    }
+  }
+  
+  fileprivate func setupTableView() {
     tableView.separatorStyle = .none
     tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
     tableView.register(UserInfoPhoneNumberTableViewCell.self, forCellReuseIdentifier: phoneNumberCellIdentifier)
-    
-    configureBioDisplaying()
   }
   
-  fileprivate func configureBioDisplaying() {
-    guard let toId = self.user?.id else { return }
-    bioRef = Database.database().reference().child("users").child(toId).child("bio")
-    bioRef.observe( .value, with: { (snapshot) in
-      guard let stringSnapshot = snapshot.value as? String  else { return }
-      self.contactBio = stringSnapshot
-      self.tableView.reloadData()
-    })
+  fileprivate func getUserInfo() {
+    
+  userReference = Database.database().reference().child("users").child(conversationID)
+    
+   handle = userReference.observe(.value) { (snapshot) in
+      if snapshot.exists() {
+        guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+        dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
+        self.user = User(dictionary: dictionary)
+      }
+    }
   }
-
 
   override func numberOfSections(in tableView: UITableView) -> Int {
     return 2
@@ -103,21 +121,44 @@ class UserInfoTableViewController: UITableViewController {
       phoneNumberCell.contactStatusHeightConstraint.constant = 40
     }
   }
+  
+  fileprivate func stringTimestamp(onlineStatusObject: AnyObject) -> String {
+  
+    if let onlineStatusStringStamp = onlineStatusObject as? String {
+      if onlineStatusStringStamp == statusOnline { // user online
+        return statusOnline
+      } else { // user got a timstamp converted to string (was in earlier versions of app)
+        let date = Date(timeIntervalSince1970: TimeInterval(onlineStatusStringStamp)!)
+        let subtitle = "Last seen " + timeAgoSinceDate(date)
+        return subtitle
+      }
+    } else if let onlineStatusTimeIntervalStamp = onlineStatusObject as? TimeInterval { //user got server timestamp in miliseconds
+      let date = Date(timeIntervalSince1970: onlineStatusTimeIntervalStamp/1000)
+      let subtitle = "Last seen " + timeAgoSinceDate(date)
+      return subtitle
+    }
+    return ""
+  }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
     if indexPath.section == 0 {
+      
       let headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath) as! UserinfoHeaderTableViewCell
-      headerCell.title.text = contactName
+      
+      headerCell.title.text = user?.name ?? ""
       headerCell.title.font = UIFont.boldSystemFont(ofSize: 20)
-      headerCell.subtitle.text = onlineStatus
+      
+      if let timestamp = user?.onlineStatus {
+        headerCell.subtitle.text = stringTimestamp(onlineStatusObject: timestamp)
+      }
+    
       headerCell.selectionStyle = .none
       
-      guard contactPhoto != nil else { headerCell.icon.image = UIImage(named: "UserpicIcon"); return headerCell }
-      headerCell.icon.sd_setImage(with: contactPhoto! as URL, placeholderImage: UIImage(named: "UserpicIcon"), options: [], completed: { (image, error, cacheType, url) in
+      guard self.user?.thumbnailPhotoURL != nil else { headerCell.icon.image = UIImage(named: "UserpicIcon"); return headerCell }
+      headerCell.icon.sd_setImage(with: URL(string: user!.thumbnailPhotoURL!), placeholderImage: UIImage(named: "UserpicIcon"), options: [], completed: { (image, error, cacheType, url) in
         guard error == nil else { return }
         headerCell.icon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openPhoto)))
-
       })
     
       return headerCell
@@ -140,9 +181,9 @@ class UserInfoTableViewController: UITableViewController {
       
       phoneNumberCell.phoneLabel.textColor = ThemeManager.currentTheme().generalTitleColor
       phoneNumberCell.userInfoTableViewController = self
-      phoneNumberCell.phoneLabel.text = contactPhoneNumber
+      phoneNumberCell.phoneLabel.text = user?.phoneNumber ?? ""
       phoneNumberCell.phoneLabel.font = UIFont.systemFont(ofSize: 17)
-      phoneNumberCell.bio.text = contactBio
+      phoneNumberCell.bio.text = user?.bio ?? ""
       phoneNumberCell.bio.textColor = ThemeManager.currentTheme().generalTitleColor
       
       return phoneNumberCell

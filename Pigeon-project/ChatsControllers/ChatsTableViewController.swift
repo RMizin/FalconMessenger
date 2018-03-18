@@ -1,0 +1,727 @@
+//
+//  ChatsTableViewController.swift
+//  Pigeon-project
+//
+//  Created by Roman Mizin on 3/13/18.
+//  Copyright © 2018 Roman Mizin. All rights reserved.
+//
+
+import UIKit
+import Firebase
+import SDWebImage
+
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
+
+protocol ManageAppearance: class {
+  func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool )
+}
+
+public var shouldReloadChatsControllerAfterChangingTheme = false
+
+
+class ChatsTableViewController: UITableViewController {
+  
+  let noChatsYetContainer:NoChatsYetContainer! = NoChatsYetContainer()
+  
+  let navigationItemActivityIndicator = NavigationItemActivityIndicator()
+  
+  let userCellID = "userCellID"
+  
+  fileprivate let group = DispatchGroup()
+  
+  weak var delegate: ManageAppearance?
+  
+  var searchBar: UISearchBar?
+  
+  var searchChatsController: UISearchController?
+
+  var conversations = [Conversation]()
+  
+  var filtededConversations = [Conversation]()
+  
+  var pinnedConversations = [Conversation]()
+  
+  var filteredPinnedConversations = [Conversation]()
+  
+  fileprivate var isAppLoaded = false
+  
+  fileprivate var isGroupAlreadyFinished = false
+  
+  fileprivate var userReference: DatabaseReference!
+  
+  fileprivate var currentUserConversationsReference: DatabaseReference!
+  
+  fileprivate var lastMessageForConverstaionRef: DatabaseReference!
+  
+  fileprivate var conversationReference: DatabaseReference!
+  
+  fileprivate var connectedReference: DatabaseReference!
+
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+   
+    configureTableView()
+    setupSearchController()
+    managePresense()
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    if let testSelected = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: testSelected, animated: true)
+    }
+    super.viewDidAppear(animated)
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    if !isAppLoaded {
+      fetchConversations()
+    }
+    
+    setUpColorsAccordingToTheme()
+  }
+  
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    return ThemeManager.currentTheme().statusBarStyle
+  }
+  
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    
+    if tableView.isEditing {
+      tableView.endEditing(true)
+      tableView.reloadData()
+    }
+  }
+  
+  fileprivate func configureTableView() {
+    
+    tableView.register(UserCell.self, forCellReuseIdentifier: userCellID)
+    tableView.allowsMultipleSelectionDuringEditing = false
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+    tableView.backgroundColor = view.backgroundColor
+    navigationItem.leftBarButtonItem = editButtonItem
+    let newChatBarButton =  UIBarButtonItem(image: UIImage(named: "composeButton"), style: .done, target: self, action: #selector(newChat))
+    navigationItem.rightBarButtonItem = newChatBarButton
+    extendedLayoutIncludesOpaqueBars = true
+    edgesForExtendedLayout = UIRectEdge.top
+    tableView.separatorStyle = .none
+    definesPresentationContext = true
+  }
+  
+  @objc fileprivate func newChat() {
+    let destination = SelectChatTableViewController()
+    destination.hidesBottomBarWhenPushed = true
+    destination.users = globalUsers
+    destination.filteredUsers = globalUsers
+    navigationController?.pushViewController(destination, animated: true)
+  }
+  
+  fileprivate func setUpColorsAccordingToTheme() {
+    if shouldReloadChatsControllerAfterChangingTheme {
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+      tableView.sectionIndexBackgroundColor = view.backgroundColor
+      tableView.backgroundColor = view.backgroundColor
+      tableView.reloadData()
+      shouldReloadChatsControllerAfterChangingTheme = false
+    }
+  }
+  
+  fileprivate func setupSearchController() {
+    
+    if #available(iOS 11.0, *) {
+      searchChatsController = UISearchController(searchResultsController: nil)
+      searchChatsController?.searchResultsUpdater = self
+      searchChatsController?.obscuresBackgroundDuringPresentation = false
+      searchChatsController?.searchBar.delegate = self
+      searchChatsController?.definesPresentationContext = true
+      navigationItem.searchController = searchChatsController
+    } else {
+      searchBar = UISearchBar()
+      searchBar?.delegate = self
+      searchBar?.placeholder = "Search"
+      searchBar?.searchBarStyle = .minimal
+      searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+      tableView.tableHeaderView = searchBar
+    }
+  }
+  
+ fileprivate func managePresense() {
+    
+    if currentReachabilityStatus == .notReachable {
+      navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .connecting, activityPriority: .high, color: ThemeManager.currentTheme().generalTitleColor)
+    }
+    
+    connectedReference = Database.database().reference(withPath: ".info/connected")
+    connectedReference.observe(.value, with: { (snapshot) in
+      
+      if self.currentReachabilityStatus != .notReachable {
+       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .crazy)
+      } else {
+        self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .noInternet, activityPriority: .crazy, color: ThemeManager.currentTheme().generalTitleColor)
+      }
+      
+    }) { (error) in
+      print(error.localizedDescription)
+    }
+  }
+  
+  fileprivate func checkIfThereAnyActiveChats(isEmpty: Bool) {
+    
+    if isEmpty {
+      self.view.addSubview(noChatsYetContainer)
+      noChatsYetContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+      
+    } else {
+      for subview in self.view.subviews {
+        if subview is NoChatsYetContainer {
+          subview.removeFromSuperview()
+        }
+      }
+    }
+  }
+  
+
+  var shouldDisplayNotification = false
+  fileprivate var inAppNotificationsObserverHandler: DatabaseHandle!
+  func observersForNotifications() {
+    var allConversations = [Conversation]()
+    
+    allConversations.insert(contentsOf: conversations, at: 0)
+    allConversations.insert(contentsOf: pinnedConversations, at: 0)
+    
+    let allConversationsGroup = DispatchGroup()
+    var allConversationsGroupFinished = false
+    
+    for _ in allConversations {
+      allConversationsGroup.enter()
+        print("entering all convs group")
+    }
+    
+    allConversationsGroup.notify(queue: DispatchQueue.main, execute: {
+     print("notifying  all convs group")
+      allConversationsGroupFinished = true
+      self.shouldDisplayNotification = true
+    })
+    
+    for conversation in allConversations {
+      
+      let notificationReference = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).child(conversation.chatID!).child(userMessagesFirebaseFolder)
+      
+      inAppNotificationsObserverHandler = notificationReference.queryLimited(toLast: 1).observe(.value, with: { (snapshot) in
+        if !allConversationsGroupFinished {
+          allConversationsGroup.leave()
+          return
+        }
+        
+        guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+        guard let lastMessageID = dictionary.keys.first else { return }
+    
+        self.lastMessageForConverstaionRef = Database.database().reference().child("messages").child(lastMessageID)
+        self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
+          print("single event of value")
+          guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+          dictionary.updateValue(lastMessageID as AnyObject, forKey: "messageUID")
+          
+          let message = Message(dictionary: dictionary)
+          guard let uid = Auth.auth().currentUser?.uid, message.fromId != uid else { return }
+          self.handleInAppSoundPlaying(message: message, conversation: conversation)
+        })
+        print("\n in query last one update for \(conversation.chatID!)\n")
+      })
+    }
+  }
+  
+  
+fileprivate var shouldDisableUpdatingIndicator = true
+ fileprivate func fetchConversations() {
+  
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+    if !isAppLoaded {
+      navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .loadingFromCache, activityPriority: .mediumHigh, color: ThemeManager.currentTheme().generalTitleColor)
+    }
+  
+    currentUserConversationsReference = Database.database().reference().child("user-messages").child(currentUserID)
+    currentUserConversationsReference.observeSingleEvent(of: .value) { (snapshot) in
+      
+      for _ in 0 ..< snapshot.childrenCount { self.group.enter();print("entering group") }
+      
+      self.group.notify(queue: DispatchQueue.main, execute: {
+        self.handleReloadTable()
+        self.isGroupAlreadyFinished = true
+        self.observersForNotifications()
+        self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
+        self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updating, activityPriority: .lowMedium, color: ThemeManager.currentTheme().generalTitleColor)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+          if self.shouldDisableUpdatingIndicator {
+            print("disabling")
+            self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
+          }
+        }
+      })
+      
+      if !snapshot.exists() {
+        self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
+        self.handleReloadTable()
+        print("\ncurrentUserConversationsReference snap not exists\n")
+        return
+      }
+    }
+  
+    currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
+      print("child added")
+      let chatID = snapshot.key
+      
+
+      
+      self.conversationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
+      self.conversationReference.observe(.value, with: { (snapshot) in
+        
+        guard var conversationDictionary = snapshot.value as? [String: AnyObject] else { return }
+        
+        if self.isGroupAlreadyFinished {
+          self.shouldDisableUpdatingIndicator = false
+        }
+          self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updating, activityPriority: .lowMedium, color: ThemeManager.currentTheme().generalTitleColor)
+      
+        
+        conversationDictionary.updateValue(chatID as AnyObject, forKey: "chatID")
+        let conversation = Conversation(dictionary: conversationDictionary)
+        
+        guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
+          
+          guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
+            print("is not group chat 1")
+            self.updateConversations(with: conversation, isGroupChat: false, notificationAtTheEnd: false)
+            return
+          }
+            print("is  group chat1 ")
+          self.updateConversations(with: conversation, isGroupChat: true, notificationAtTheEnd: false)
+         
+         return
+        }
+        
+        self.lastMessageForConverstaionRef = Database.database().reference().child("messages").child(lastMessageID)
+        self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
+           print("single event of value")
+          guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+          dictionary.updateValue(lastMessageID as AnyObject, forKey: "messageUID")
+          
+          let message = Message(dictionary: dictionary)
+          conversation.lastMessage = message
+          
+          guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
+            self.updateConversations(with: conversation, isGroupChat: false, notificationAtTheEnd: true)
+            return
+          }
+          
+          self.updateConversations(with: conversation, isGroupChat: true, notificationAtTheEnd: true)
+        })
+      }, withCancel: { (error) in
+        print(error.localizedDescription)
+      })
+    })
+    currentUserConversationsReference.observe(.childRemoved) { (snapshot) in }
+  }
+  
+  fileprivate func updateConversations(with conversation: Conversation, isGroupChat: Bool, notificationAtTheEnd: Bool) {
+    
+    guard isGroupChat else {
+      self.updateDefaultChat(with: conversation)
+      return
+    }
+    self.updateGroupChat(with: conversation)
+  }
+  
+  fileprivate func updateGroupChat(with conversation: Conversation ) {
+    updateConversationArrays(with: conversation)
+  }
+  
+  fileprivate func updateDefaultChat(with conversation: Conversation ) {
+    
+    guard let userID = conversation.chatID, let currentUserID = Auth.auth().currentUser?.uid else {print("default chat returning from chat id "); return }
+    
+    userReference = Database.database().reference().child("users").child(userID)
+    userReference.observeSingleEvent(of: .value, with: { (snapshot) in
+      
+      guard var dictionary = snapshot.value as? [String: AnyObject] else { print("default chat returning from dictionary"); return }
+      dictionary.updateValue(userID as AnyObject, forKey: "id")
+      
+      let user = User(dictionary: dictionary)
+      
+      conversation.chatName = user.name
+      conversation.chatPhotoURL = user.photoURL
+      conversation.chatThumbnailPhotoURL = user.thumbnailPhotoURL
+      conversation.chatParticipantsIDs = [userID, currentUserID]
+      print("up conv arrays from default chat")
+      self.updateConversationArrays(with: conversation)
+    })
+    
+    userReference.observe(.childChanged) { (snapshot) in
+      print("child changed")
+      if let unpinnedIndex = self.filtededConversations.index(where: { (unpinnedConversation) -> Bool in
+        return unpinnedConversation.chatID == userID }) {
+        
+        if snapshot.key == "name" {
+          self.filtededConversations[unpinnedIndex].chatName = snapshot.value as? String
+          self.handleGroupOrReloadTable()
+        } else if snapshot.key == "thumbnailPhotoURL" {
+          self.filtededConversations[unpinnedIndex].chatThumbnailPhotoURL = snapshot.value as? String
+          self.handleGroupOrReloadTable()
+        } else {
+          return
+        }
+      } else if let pinnedIndex = self.filteredPinnedConversations.index(where: { (pinnedConversation) -> Bool in
+        return pinnedConversation.chatID == userID }) {
+        
+        if snapshot.key == "name" {
+          self.filteredPinnedConversations[pinnedIndex].chatName = snapshot.value as? String
+          self.handleGroupOrReloadTable()
+        } else if snapshot.key == "thumbnailPhotoURL" {
+          self.filteredPinnedConversations[pinnedIndex].chatThumbnailPhotoURL = snapshot.value as? String
+          self.handleGroupOrReloadTable()
+        } else { return }
+      } else { return }
+    }
+  }
+
+ fileprivate func updateConversationArrays(with conversation: Conversation) {
+  
+    guard let userID = conversation.chatID else { return }
+    if let unpinnedIndex = self.conversations.index(where: { (unpinnedConversation) -> Bool in
+      return unpinnedConversation.chatID == userID }) {
+      
+      self.conversations[unpinnedIndex] = conversation
+      self.handleGroupOrReloadTable()
+      
+    } else if let pinnedIndex = self.pinnedConversations.index(where: { (pinnedConversation) -> Bool in
+      return pinnedConversation.chatID == userID }) {
+      
+      self.pinnedConversations[pinnedIndex] = conversation
+      self.handleGroupOrReloadTable()
+      
+    } else {
+      if conversation.pinned != nil && conversation.pinned! {
+        self.pinnedConversations.append(conversation)
+      } else {
+        self.conversations.append(conversation)
+      }
+      self.handleGroupOrReloadTable()
+    }
+  }
+  
+
+  func configureTabBarBadge() {
+    
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    
+    let tabItems = tabBarController?.tabBar.items as NSArray!
+    let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
+    var badge = 0
+    
+    for conversation in filtededConversations {
+      guard let lastMessage = conversation.lastMessage, let seenStatus = lastMessage.seen, !seenStatus, lastMessage.fromId != uid  else { continue }
+      badge += 1
+    }
+    
+    for conversation in filteredPinnedConversations {
+      guard let lastMessage = conversation.lastMessage, let seenStatus = lastMessage.seen, !seenStatus, lastMessage.fromId != uid  else { continue }
+      badge += 1
+    }
+    
+    guard badge > 0 else {
+      tabItem.badgeValue = nil
+      UIApplication.shared.applicationIconBadgeNumber = 0
+      return
+    }
+    
+    tabItem.badgeValue = badge.toString()
+    UIApplication.shared.applicationIconBadgeNumber = badge
+  }
+  
+  fileprivate func handleGroupOrReloadTable() {
+    print("in handle reload")
+    if self.isGroupAlreadyFinished {
+      handleReloadTable()
+    } else {
+      group.leave()
+      print("leaving group")
+    }
+  }
+  
+  func handleReloadTable() {
+    
+    conversations.sort { (conversation1, conversation2) -> Bool in
+      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+    }
+    
+    pinnedConversations.sort { (conversation1, conversation2) -> Bool in
+      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+    }
+    
+    filteredPinnedConversations = pinnedConversations
+    filtededConversations = conversations
+    
+    if !isAppLoaded {
+      UIView.transition(with: tableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+    } else {
+      self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
+      self.tableView.reloadData()
+    }
+    
+    if filtededConversations.count == 0 && filteredPinnedConversations.count == 0 {
+      checkIfThereAnyActiveChats(isEmpty: true)
+    } else {
+      checkIfThereAnyActiveChats(isEmpty: false)
+    }
+    
+    configureTabBarBadge()
+    
+    if !isAppLoaded {
+      delegate?.manageAppearance(self, didFinishLoadingWith: true)
+      isAppLoaded = true
+    }
+  }
+  
+  func handleReloadTableAfterSearch() {
+    filtededConversations.sort { (conversation1, conversation2) -> Bool in
+      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+    }
+    tableView.reloadData()
+  }
+
+
+    // MARK: - Table view data source
+  override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    return true
+  }
+  
+  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    if section == 0 {
+      if filteredPinnedConversations.count == 0 {
+        return ""
+      }
+      return "PINNED"
+    } else {
+      return " "
+    }
+  }
+  
+  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    if section == 0 {
+      return 20
+    } else {
+      if self.filteredPinnedConversations.count == 0 {
+        return 0
+      }
+      return 8
+    }
+  }
+  
+  fileprivate func delayWithSeconds(_ seconds: Double, completion: @escaping () -> ()) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+      completion()
+    }
+  }
+  
+  override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    if section == 0 {
+      view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
+    } else {
+      view.tintColor = ThemeManager.currentTheme().inputTextViewColor
+    }
+    
+    if let headerTitle = view as? UITableViewHeaderFooterView {
+      headerTitle.textLabel?.textColor = ThemeManager.currentTheme().generalSubtitleColor
+      headerTitle.textLabel?.font = UIFont.systemFont(ofSize: 10)
+    }
+  }
+  
+  override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    
+    let mute = UITableViewRowAction(style: .default, title: "Mute") { action, index in
+      if indexPath.section == 0 {
+        if #available(iOS 11.0, *) {
+          self.delayWithSeconds(1, completion: {
+            self.handleMuteConversation(section: indexPath.section, for: self.filteredPinnedConversations[indexPath.row])
+          })
+        } else {
+          self.tableView.setEditing(false, animated: true)
+          self.delayWithSeconds(1, completion: {
+            self.handleMuteConversation(section: indexPath.section, for: self.filteredPinnedConversations[indexPath.row])
+          })
+        }
+      } else if indexPath.section == 1 {
+        if #available(iOS 11.0, *) {
+          self.delayWithSeconds(1, completion: {
+            self.handleMuteConversation(section: indexPath.section, for: self.filtededConversations[indexPath.row])
+          })
+        } else {
+          self.tableView.setEditing(false, animated: true)
+          self.delayWithSeconds(1, completion: {
+            self.handleMuteConversation(section: indexPath.section, for: self.filtededConversations[indexPath.row])
+          })
+        }
+      }
+    }
+    
+    let pin = UITableViewRowAction(style: .default, title: "Pin") { action, index in
+      if indexPath.section == 0 {
+        self.unpinConversation(at: indexPath)
+      } else if indexPath.section == 1 {
+        self.pinConversation(at: indexPath)
+      }
+    }
+    
+    let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+      if self.currentReachabilityStatus == .notReachable {
+        basicErrorAlertWith(title: "Error deleting message", message: noInternetError, controller: self)
+        return
+      }
+      
+      if indexPath.section == 0 {
+        self.deletePinnedConversation(at: indexPath)
+      } else if indexPath.section == 1 {
+        self.deleteUnPinnedConversation(at: indexPath)
+      }
+    }
+    
+    if indexPath.section == 0 {
+      pin.title = "Unpin"
+    } else if indexPath.section == 1 {
+      pin.title = "Pin"
+    }
+    
+    if indexPath.section == 0 {
+      if filteredPinnedConversations[indexPath.row].muted != nil {
+        if filteredPinnedConversations[indexPath.row].muted! {
+          mute.title = "Unmute"
+        } else {
+          mute.title = "Mute"
+        }
+      } else {
+        mute.title = "Mute"
+      }
+    } else if indexPath.section == 1 {
+      if filtededConversations[indexPath.row].muted != nil {
+        if filtededConversations[indexPath.row].muted! {
+          mute.title = "Unmute"
+        } else {
+          mute.title = "Mute"
+        }
+      } else {
+        mute.title = "Mute"
+      }
+    }
+    
+    pin.backgroundColor = UIColor(red:0.96, green:0.49, blue:0.00, alpha:1.0)
+    delete.backgroundColor = UIColor(red:0.90, green:0.22, blue:0.21, alpha:1.0)
+    mute.backgroundColor = UIColor(red:0.56, green:0.64, blue:0.68, alpha:1.0)
+    
+    return [delete, pin, mute]
+  }
+  
+  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 85
+  }
+  
+  override func numberOfSections(in tableView: UITableView) -> Int {
+    return 2
+  }
+
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if section == 0 {
+      return filteredPinnedConversations.count
+    } else {
+      return filtededConversations.count
+    }
+  }
+  
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    if indexPath.section == 0 {
+      return configurePinnedCell(for: indexPath)
+    } else {
+      return configuredCell(for: indexPath)
+    }
+  }
+  
+  var chatLogController: ChatLogController? = nil
+
+  var autoSizingCollectionViewFlowLayout: AutoSizingCollectionViewFlowLayout? = nil
+
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    var conversation:Conversation!
+
+    if indexPath.section == 0 {
+      let pinnedConversation = filteredPinnedConversations[indexPath.row]
+      conversation = pinnedConversation
+    } else {
+      let unpinnedConversation = filtededConversations[indexPath.row]
+      conversation = unpinnedConversation
+    }
+
+    autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
+    autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
+    chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
+    chatLogController?.delegate = self
+    chatLogController?.conversation = conversation
+    chatLogController?.hidesBottomBarWhenPushed = true
+  }
+}
+
+extension ChatsTableViewController: MessagesLoaderDelegate {
+  
+  func messagesLoader( didFinishLoadingWith messages: [Message]) {
+    
+    self.chatLogController?.messages = messages
+    
+    var indexPaths = [IndexPath]()
+    
+    if messages.count - 1 >= 0 {
+      for index in 0...messages.count - 1 {
+        
+        indexPaths.append(IndexPath(item: index, section: 0))
+      }
+      
+      UIView.performWithoutAnimation {
+        DispatchQueue.main.async {
+          self.chatLogController?.collectionView?.reloadItems(at:indexPaths)
+        }
+      }
+    }
+    
+    if #available(iOS 11.0, *) {
+    } else {
+      self.chatLogController?.startCollectionViewAtBottom()
+    }
+    if let destination = self.chatLogController {
+      self.visibleNavigationController()?.pushViewController(destination, animated: true)
+      self.chatLogController = nil
+      self.autoSizingCollectionViewFlowLayout = nil
+    }
+  }
+}

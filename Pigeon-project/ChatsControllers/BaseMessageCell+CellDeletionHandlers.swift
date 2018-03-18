@@ -100,9 +100,15 @@ extension BaseMessageCell {
             basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerToDisplayOn)
             return
         }
+
+        var deletionReference:DatabaseReference!
+        if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
+          guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
+          deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child("userMessages").child(messageID)
+        } else {
+          deletionReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child("userMessages").child(messageID)
+        }
         
-       
-        let deletionReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child("userMessages").child(messageID)
         deletionReference.removeValue(completionBlock: { (error, reference) in
           if error != nil {
             self.chatLogController?.deletedMessagesNumber -= 1
@@ -112,14 +118,34 @@ extension BaseMessageCell {
           self.chatLogController?.collectionView?.performBatchUpdates ({
             
             self.chatLogController?.messages.remove(at: indexPath.item)
+            
             self.chatLogController?.collectionView?.deleteItems(at: [indexPath])
             
-          }, completion: { (isCompleted) in
             
+            if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
+              guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
+              var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(messageMetaDataFirebaseFolder)
+              if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
+                lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
+              } else {
+                lastMessageReference = lastMessageReference.child("lastMessageID")
+                lastMessageReference.removeValue()
+              }
+            } else {
+              var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(messageMetaDataFirebaseFolder)
+              if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
+                lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
+              } else {
+                lastMessageReference = lastMessageReference.child("lastMessageID")
+                lastMessageReference.removeValue()
+              }
+            }
+
+            
+          }, completion: { (isCompleted) in
+       
             if self.chatLogController?.messages.count == 0 {
               print("CHAT LOG IS EMPTY")
-              self.chatLogController?.allMessagesRemovedDelegate?.allMessagesRemoved(for: partnerID, state: true)
-              
               self.chatLogController?.navigationController?.popViewController(animated: true)
             } else {
               guard shouldReloadMessageStatus, let lastMessage = self.chatLogController?.messages.last else { return }

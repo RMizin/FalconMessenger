@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class IncomingTextMessageCell: BaseMessageCell {
   
   let textView: FalconTextView = {
@@ -16,7 +17,7 @@ class IncomingTextMessageCell: BaseMessageCell {
     textView.backgroundColor = .clear
     textView.isEditable = false
     textView.isScrollEnabled = false
-    textView.textContainerInset = UIEdgeInsetsMake(10, 12, 10, 7)
+    textView.textContainerInset = UIEdgeInsetsMake(incomingTextViewTopInset, incomingTextViewLeftInset, incomingTextViewBottomInset, incomingTextViewRightInset)
     textView.dataDetectorTypes = .all
     textView.textColor = .darkText
     textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
@@ -28,11 +29,14 @@ class IncomingTextMessageCell: BaseMessageCell {
     bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
+    textView.addSubview(nameLabel)
     bubbleView.image = grayBubbleImage
     bubbleView.frame.origin = CGPoint(x: 10, y: 0)
   }
   
   override func prepareViewsForReuse() {
     bubbleView.image = grayBubbleImage
+    nameLabel.text = ""
+    textView.textContainerInset = UIEdgeInsetsMake(10, 12, 10, 7)
   }
 }

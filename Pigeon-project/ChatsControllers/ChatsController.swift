@@ -5,7 +5,7 @@
 //  Created by Roman Mizin on 8/8/17.
 //  Copyright © 2017 Roman Mizin. All rights reserved.
 //
-
+/*
 import UIKit
 import Firebase
 import SDWebImage
@@ -34,8 +34,10 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 private let userCellID = "userCellID"
 
 protocol ManageAppearance: class {
-  func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool )
+  func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool )
 }
+
+
 
 public var shouldReloadChatsControllerAfterChangingTheme = false
 
@@ -222,12 +224,12 @@ class ChatsController: UITableViewController {
       self.showActivityIndicator(title: ChatsController.updatingMessage)
     }
   }
-  
+ 
 @objc func fetchConversations() {
     
-    guard let uid = Auth.auth().currentUser?.uid else { return }
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
   
-    currentUserConversationsReference = Database.database().reference().child("user-messages").child(uid)
+    currentUserConversationsReference = Database.database().reference().child("user-messages").child(currentUserID)
     currentUserConversationsReference.observeSingleEvent(of: .value) { (snapshot) in
     
       for _ in 0 ..< snapshot.childrenCount {
@@ -248,16 +250,21 @@ class ChatsController: UITableViewController {
 
     currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
      
-        let otherUserID = snapshot.key
-        self.lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(uid).child(otherUserID).child(userMessagesFirebaseFolder)
-        self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.value, with: { (snapshot) in
-
-          guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
-          guard let lastMessageID = dictionary.keys.first else { return }
-          self.handleActivityIndicatorAppearance()
-          self.unhandledNewMessages += 1
-          self.fetchMessageWith(lastMessageID)
-        })
+        let chatID = snapshot.key // otherUserID
+        self.lastMessageForConverstaionRef = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(userMessagesFirebaseFolder)
+      self.lastMessageForConverstaionRef.queryLimited(toLast: 1).observe(.value, with: { (snapshot) in
+      
+        guard let dictionary = snapshot.value as? [String: AnyObject] else { if !self.isGroupAlreadyFinished { self.group.leave()}; return }
+        guard let lastMessageID = dictionary.keys.first else { return }
+        self.handleActivityIndicatorAppearance()
+        self.unhandledNewMessages += 1
+        self.fetchMessageWith(lastMessageID)
+      }, withCancel: { (error) in
+     //   if error != nil {
+          print(error.localizedDescription, "ERRRRR11")
+        //  self.handleReloadTable()
+       // }
+      })
     })
   
     currentUserConversationsReference.observe(.childRemoved) { (snapshot) in
@@ -412,7 +419,7 @@ class ChatsController: UITableViewController {
   
     if !isAppLoaded {
       hideActivityIndicator()
-      delegate?.manageAppearance(self, didFinishLoadingWith: true)
+     // delegate?.manageAppearance(self, didFinishLoadingWith: true)
       isAppLoaded = true
     } else {
       hideActivityIndicatorWithDelay()
@@ -936,3 +943,6 @@ extension ChatsController { /* activity indicator handling */
     self.navigationItem.titleView = nil
   }
 }
+ 
+ 
+ */

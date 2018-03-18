@@ -63,7 +63,7 @@ class GeneralTabBarController: UITabBarController {
 
 
 extension GeneralTabBarController: ManageAppearance {
-  func manageAppearance(_ chatsController: ChatsController, didFinishLoadingWith state: Bool) {
+  func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool) {
     if state {
       splash.removeFromSuperview()
     }

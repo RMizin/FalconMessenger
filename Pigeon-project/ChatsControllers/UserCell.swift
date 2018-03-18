@@ -16,10 +16,9 @@ class UserCell: UITableViewCell {
     let profileImageView: UIImageView = {
       let imageView = UIImageView()
       imageView.translatesAutoresizingMaskIntoConstraints = false
-      imageView.layer.cornerRadius = 29
+      imageView.layer.cornerRadius = 28
       imageView.layer.masksToBounds = true
       imageView.contentMode = .scaleAspectFill
-      imageView.image = UIImage(named: "UserpicIcon")
       
       return imageView
     }()
@@ -148,16 +147,15 @@ class UserCell: UITableViewCell {
         badgeLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     }
   
-  
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+      fatalError("init(coder:) has not been implemented")
     }
  
   
   override func prepareForReuse() {
     super.prepareForReuse()
     
-    profileImageView.image = UIImage(named: "UserpicIcon")
+    profileImageView.image = nil
     nameLabel.text = ""
     messageLabel.text = nil
     timeLabel.text = nil

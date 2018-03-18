@@ -18,7 +18,6 @@ extension ChatLogController: PhotoEditorDelegate {
     inputContainerView.attachedImages.reloadItems(at: [indexPath])
   }
   
-  
   func canceledEditing() {
     print("Canceled")
   }

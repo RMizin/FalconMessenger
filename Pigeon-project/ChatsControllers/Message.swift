@@ -15,6 +15,21 @@ struct MessageSubtitle {
   static let audio = "Audio message"
 }
 
+class GroupChatUserData: NSObject  {
+  
+  var id: String?
+  var name: String?
+ 
+  
+  init(dictionary: [String: String]) {
+    super.init()
+    
+    id = dictionary["id"] //as? String
+    name = dictionary["name"]// as? String
+  
+  }
+}
+
 class Message: NSObject  {
   
     var messageUID: String?
@@ -45,6 +60,8 @@ class Message: NSObject  {
   
     var estimatedFrameForText:CGRect?
     var imageCellHeight: NSNumber?
+  
+    var senderName: String? //local only, group messages only
       
     func chatPartnerId() -> String? {
         return fromId == Auth.auth().currentUser?.uid ? toId : fromId
@@ -80,5 +97,7 @@ class Message: NSObject  {
       
         estimatedFrameForText = dictionary["estimatedFrameForText"] as? CGRect
         imageCellHeight = dictionary["imageCellHeight"] as? NSNumber
+      
+        senderName = dictionary["senderName"] as? String
     }
 }

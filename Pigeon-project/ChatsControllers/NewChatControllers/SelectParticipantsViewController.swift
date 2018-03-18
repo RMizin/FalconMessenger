@@ -53,6 +53,7 @@ class SelectParticipantsViewController: UIViewController {
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
+    if navigationController?.visibleViewController is GroupProfileTableViewController { return }
     deselectAll()
   }
   
@@ -73,14 +74,25 @@ class SelectParticipantsViewController: UIViewController {
    _ = users.map { $0.isSelected = false }
     filteredUsers = users
     sections = [users]
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
+    }
+ 
   }
   
+  fileprivate var isInitialLoad = true
   fileprivate func configureSections() {
+    
+    if isInitialLoad {
+      _ = filteredUsers.map { $0.isSelected = false }
+      isInitialLoad = false
+    }
+    
     let firstLetters = filteredUsers.map { $0.titleFirstLetter }
     let uniqueFirstLetters = Array(Set(firstLetters))
-    
     sortedFirstLetters = uniqueFirstLetters.sorted()
     sections = sortedFirstLetters.map { firstLetter in
+      
       return self.filteredUsers
         .filter { $0.titleFirstLetter == firstLetter }
         .sorted { $0.name! < $1.name! }
@@ -91,6 +103,23 @@ class SelectParticipantsViewController: UIViewController {
     navigationItem.title = "New Group"
     definesPresentationContext = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(nextButtonTapped))
+    navigationItem.rightBarButtonItem?.isEnabled = false
+    
+    let rightBarButton = UIButton(type: .system)
+    rightBarButton.setTitle("Next", for: .normal)
+    rightBarButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+    rightBarButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+    navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButton)
+    navigationItem.rightBarButtonItem?.isEnabled = false
+  }
+  
+  
+  @objc fileprivate func nextButtonTapped() {
+    let destination = GroupProfileTableViewController()
+    destination.selectedFlaconUsers = selectedFalconUsers
+    navigationController?.pushViewController(destination, animated: true)
   }
   
   fileprivate func setupTableView() {
@@ -193,8 +222,10 @@ class SelectParticipantsViewController: UIViewController {
       UIView.animate(withDuration: 0.3) {
         self.view.layoutIfNeeded()
       }
+      self.navigationItem.rightBarButtonItem?.isEnabled = false
       return
     }
+    navigationItem.rightBarButtonItem?.isEnabled = true
     
     if selectedFalconUsers.count == 1 {
       collectionViewHeightAnchor.constant = 75
