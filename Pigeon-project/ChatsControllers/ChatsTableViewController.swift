@@ -443,14 +443,15 @@ fileprivate var shouldDisableUpdatingIndicator = true
     let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
     var badge = 0
     
+    
     for conversation in filtededConversations {
-      guard let lastMessage = conversation.lastMessage, let seenStatus = lastMessage.seen, !seenStatus, lastMessage.fromId != uid  else { continue }
-      badge += 1
+      guard let lastMessage = conversation.lastMessage, let conversationBadge = conversation.badge, lastMessage.fromId != uid  else { continue }
+      badge += conversationBadge
     }
     
     for conversation in filteredPinnedConversations {
-      guard let lastMessage = conversation.lastMessage, let seenStatus = lastMessage.seen, !seenStatus, lastMessage.fromId != uid  else { continue }
-      badge += 1
+      guard let lastMessage = conversation.lastMessage, let conversationBadge = conversation.badge, lastMessage.fromId != uid  else { continue }
+      badge += conversationBadge
     }
     
     guard badge > 0 else {

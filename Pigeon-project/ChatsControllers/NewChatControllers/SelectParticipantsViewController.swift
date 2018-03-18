@@ -104,15 +104,17 @@ class SelectParticipantsViewController: UIViewController {
     definesPresentationContext = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(nextButtonTapped))
-    navigationItem.rightBarButtonItem?.isEnabled = false
-    
-    let rightBarButton = UIButton(type: .system)
-    rightBarButton.setTitle("Next", for: .normal)
-    rightBarButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-    rightBarButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
-    navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButton)
-    navigationItem.rightBarButtonItem?.isEnabled = false
+    if #available(iOS 11.0, *) {
+      let rightBarButton = UIButton(type: .system)
+      rightBarButton.setTitle("Next", for: .normal)
+      rightBarButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+      rightBarButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+      navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButton)
+      navigationItem.rightBarButtonItem?.isEnabled = false
+    } else {
+      navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(nextButtonTapped))
+      navigationItem.rightBarButtonItem?.isEnabled = false
+    }
   }
   
   

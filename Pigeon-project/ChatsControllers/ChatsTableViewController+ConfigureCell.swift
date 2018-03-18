@@ -77,25 +77,7 @@ extension ChatsTableViewController {
     let badgeString = filteredPinnedConversations[indexPath.row].badge?.toString()
     let badgeInt = filteredPinnedConversations[indexPath.row].badge ?? 0
     
-    guard let seen = filteredPinnedConversations[indexPath.row].lastMessage?.seen else {
-      cell.newMessageIndicator.isHidden = true
-      cell.badgeLabel.isHidden = true
-      cell.badgeLabelWidthConstraint.constant = 0
-      cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
-      cell.badgeLabel.text = badgeString
-      return cell
-    }
-    
-    guard !seen, filteredPinnedConversations[indexPath.row].lastMessage?.fromId != Auth.auth().currentUser?.uid else {
-      cell.newMessageIndicator.isHidden = true
-      cell.badgeLabel.isHidden = true
-      cell.badgeLabelWidthConstraint.constant = 0
-      cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
-      cell.badgeLabel.text = badgeString
-      return cell
-    }
-    
-    guard badgeInt > 0 else {
+    guard badgeInt > 0, filteredPinnedConversations[indexPath.row].lastMessage?.fromId != Auth.auth().currentUser?.uid else {
       cell.newMessageIndicator.isHidden = true
       cell.badgeLabel.isHidden = true
       cell.badgeLabelRightConstraint.constant = 0
@@ -176,25 +158,7 @@ extension ChatsTableViewController {
     let badgeString = filtededConversations[indexPath.row].badge?.toString()
     let badgeInt = filtededConversations[indexPath.row].badge ?? 0
     
-    guard let seen = filtededConversations[indexPath.row].lastMessage?.seen else {
-      cell.newMessageIndicator.isHidden = true
-      cell.badgeLabel.isHidden = true
-      cell.badgeLabelWidthConstraint.constant = 0
-      cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
-      cell.badgeLabel.text = badgeString
-      return cell
-    }
-    
-    guard !seen, filtededConversations[indexPath.row].lastMessage?.fromId != Auth.auth().currentUser?.uid else {
-      cell.newMessageIndicator.isHidden = true
-      cell.badgeLabel.isHidden = true
-      cell.badgeLabelWidthConstraint.constant = 0
-      cell.badgeLabelRightConstraint.constant = cell.badgeLabelRightConstantForHidden
-      cell.badgeLabel.text = badgeString
-      return cell
-    }
-    
-    guard badgeInt > 0 else {
+    guard badgeInt > 0, filtededConversations[indexPath.row].lastMessage?.fromId != Auth.auth().currentUser?.uid  else {
       cell.newMessageIndicator.isHidden = true
       cell.badgeLabel.isHidden = true
       cell.badgeLabelRightConstraint.constant = 0
