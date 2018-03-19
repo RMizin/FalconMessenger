@@ -116,30 +116,29 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   fileprivate var isInitialChatMessagesLoad = true
   
-  fileprivate var groupChatUserData = [GroupChatUserData]()
+  fileprivate var groupMembers = [User]()
   
   func loadGroupChatUsersAndMessages() {
-    groupChatUserData.removeAll()
-    let chatUserDataGroup = DispatchGroup()
+    groupMembers.removeAll()
+    let membersGroup = DispatchGroup()
     
     for _ in conversation!.chatParticipantsIDs! {
-      chatUserDataGroup.enter()
+      membersGroup.enter()
     }
     
-    chatUserDataGroup.notify(queue: DispatchQueue.main, execute: {
+    membersGroup.notify(queue: DispatchQueue.main, execute: {
       self.loadMessages(isGroupChat: true)
     })
     
     for participantID in conversation!.chatParticipantsIDs! {
       
-      let senderNameReferene = Database.database().reference().child("users").child(participantID).child("name")
+      let senderNameReferene = Database.database().reference().child("users").child(participantID)//.child("name")
       senderNameReferene.observeSingleEvent(of: .value, with: { (snapshot) in
+        guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+        dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
+        self.groupMembers.append(User(dictionary: dictionary))
         
-        let name = (snapshot.value as? String) ?? ""
-        let dictionary = ["id": participantID, "name": name]
-        self.groupChatUserData.append(GroupChatUserData(dictionary: dictionary))
-        
-        chatUserDataGroup.leave()
+        membersGroup.leave()
       })
     }
   }
@@ -284,7 +283,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       endingIDRef.observeSingleEvent(of: .childAdded, with: { (snapshot) in
         self.queryEndingID = snapshot.key
         
-        if self.queryStartingID == self.queryEndingID {
+        if (self.queryStartingID == self.queryEndingID) && self.messages.contains(where: { (message) -> Bool in
+          return message.messageUID == self.queryEndingID
+        }) {
+          print("self.queryStartingID == self.queryEndingID")
           self.refreshControl.endRefreshing()
           return
         }
@@ -339,14 +341,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   func preloadCellData(to dictionary: [String:AnyObject], isGroupChat: Bool) -> [String:AnyObject] {
     var dictionary = dictionary
-    if let indexOfParticipant = self.groupChatUserData.index(where: { (data) -> Bool in  /* pre-defining senders names */
-      return (data.id == Message(dictionary: dictionary).fromId) && (Message(dictionary: dictionary).fromId != Auth.auth().currentUser!.uid)
+    if let indexOfMember = groupMembers.index(where: { (user) -> Bool in  /* pre-defining senders names */
+      return user.id == Message(dictionary: dictionary).fromId//&& (Message(dictionary: dictionary).fromId != Auth.auth().currentUser!.uid)
     }), isGroupChat {
-      dictionary.updateValue(self.groupChatUserData[indexOfParticipant].name as AnyObject, forKey: "senderName")
+      dictionary.updateValue(groupMembers[indexOfMember].name as AnyObject, forKey: "senderName")
     }
     
     if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
-      dictionary.updateValue(self.estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
+      dictionary.updateValue(estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
     } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight = Message(dictionary: dictionary).imageHeight?.floatValue {
       let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
       dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
@@ -565,7 +567,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     
-    if self.navigationController?.visibleViewController is UserInfoTableViewController {
+    if self.navigationController?.visibleViewController is UserInfoTableViewController ||
+      self.navigationController?.visibleViewController is  GroupAdminControlsTableViewController {
       return
     }
     
@@ -587,7 +590,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
     isTyping = false
     
-    groupChatUserData.removeAll()
+    groupMembers.removeAll()
     
     guard voiceRecordingViewController != nil, voiceRecordingViewController.recorder != nil else { return }
     
@@ -796,11 +799,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 
     guard let uid = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, uid != conversationID  else { return }
-//    if uid != toId {
       navigationItem.rightBarButtonItem = infoBarButtonItem
-  //  }
   }
-   var destination: UserInfoTableViewController!
+ 
   @objc func getInfoAction() {
 
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
@@ -809,21 +810,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         // regular group info controller
         return
       }
-      // admin group info controller
     
+      let destination = GroupAdminControlsTableViewController()
+      destination.chatID = conversation?.chatID ?? ""
+      destination.members = groupMembers
+      self.navigationController?.pushViewController(destination, animated: true)
+      // admin group info controller
     } else {
       // regular default chat info controller
-      destination = UserInfoTableViewController()
+      let destination = UserInfoTableViewController()
       destination.conversationID = conversation?.chatID ?? ""
       self.navigationController?.pushViewController(destination, animated: true)
-      destination = nil
     }
-//    destination.contactName = user?.name ?? "Error loading name"
-//    destination.contactPhoneNumber = user?.phoneNumber ?? ""
-//    destination.contactPhoto = NSURL(string: user?.photoURL ?? "")
-//    destination.user = user
-  //  destination.onlineStatus = onlineStatusInString
-  
   }
   
   

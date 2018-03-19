@@ -1,8 +1,8 @@
 //
-//  GroupPictureOpener.swift
+//  GroupAdminControlsPictureOpener.swift
 //  Pigeon-project
 //
-//  Created by Roman Mizin on 3/13/18.
+//  Created by Roman Mizin on 3/19/18.
 //  Copyright © 2018 Roman Mizin. All rights reserved.
 //
 
@@ -11,16 +11,21 @@ import Photos
 import Firebase
 
 
+
 private let deletionErrorMessage = "There was a problem when deleting. Try again later."
 private let cameraNotExistsMessage = "You don't have camera"
 private let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
 private let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
 
-class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  
+
   weak var controllerWithUserProfilePhoto: UIViewController?
   weak var userProfileContainerView: GroupProfileTableHeaderContainer?
+  var photoURL = String()
+  var members = [User]()
+  var chatID = String()
   
   
   private var referenceView: UIView!
@@ -34,6 +39,7 @@ class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigatio
     picker.delegate = self
     if userProfileContainerView?.profileImageView.image == nil {
       handleSelectProfileImageView()
+      
       return
     }
     
@@ -81,21 +87,36 @@ class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigatio
     alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
       
       self.overlay.photosViewController?.dismiss(animated: true, completion: nil)
-         self.openCamera()
+      self.openCamera()
     }))
     
     alert.addAction(UIAlertAction(title: "Choose photo", style: .default, handler: { _ in
       
       self.overlay.photosViewController?.dismiss(animated: true, completion: nil)
-         self.openGallery()
+      self.openGallery()
       
     }))
     
     if userProfileContainerView?.profileImageView.image != nil {
       alert.addAction(UIAlertAction(title: "Delete photo", style: .destructive, handler: { _ in
-        self.userProfileContainerView?.profileImageView.image = nil
-        self.managePhotoPlaceholderLabelAppearance()
-        self.overlay.photosViewController?.dismiss(animated: true, completion: nil)
+        self.overlay.photosViewController?.dismiss(animated: true, completion: {
+          self.deleteCurrentPhoto(completion: { (isDeleted) in
+            if isDeleted {
+              if self.userProfileContainerView?.profileImageView.image != nil {
+                self.userProfileContainerView?.profileImageView.image = nil
+              }
+              self.managePhotoPlaceholderLabelAppearance()
+              self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+              print("deleted")
+              
+            } else {
+              
+              self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+              basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self.controllerWithUserProfilePhoto!)
+              // print("in error", userProfileContainerView?.profileImageView)
+            }
+          })
+        })
       }))
     }
     
@@ -106,6 +127,52 @@ class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigatio
     } else {
       galleryPreview.navigationController?.navigationBar.barStyle = .blackTranslucent
       galleryPreview.present(alert, animated: true, completion: nil)
+    }
+  }
+  
+  
+  fileprivate typealias currentPictureDeletionCompletionHandler = (_ success: Bool) -> Void
+  
+  fileprivate func deleteCurrentPhoto(completion: @escaping currentPictureDeletionCompletionHandler) {
+    
+    if currentReachabilityStatus == .notReachable {
+      userProfileContainerView?.profileImageView.hideActivityIndicator()
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerWithUserProfilePhoto!)
+      return
+    }
+    
+    guard (Auth.auth().currentUser?.uid) != nil else {
+      completion(false)
+      return
+    }
+    
+    userProfileContainerView?.profileImageView.showActivityIndicator()
+    
+    let storage = Storage.storage()//.reference()//.child("userProfilePictures").
+    
+    let storageRef = storage.reference(forURL: photoURL)
+    
+    //Removes image from storage
+    storageRef.delete { error in
+      if let error = error {
+        print(error, "!!!!")
+           completion(false)
+        self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+        basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self.controllerWithUserProfilePhoto!)
+      } else {
+        
+        for member in self.members {
+          guard let memberID = member.id else { continue }
+          let chatOriginalPhotoURLReference = Database.database().reference().child("user-messages").child(memberID).child(self.chatID).child(messageMetaDataFirebaseFolder).child("chatOriginalPhotoURL")
+          let chatThumbnailPhotoURLReference = Database.database().reference().child("user-messages").child(memberID).child(self.chatID).child(messageMetaDataFirebaseFolder).child("chatThumbnailPhotoURL")
+          chatOriginalPhotoURLReference.removeValue()
+          chatThumbnailPhotoURLReference.removeValue()
+          print("removing for member: \(memberID)")
+        }
+        completion(true)
+        print("file deleted")
+        // File deleted successfully
+      }
     }
   }
   
@@ -196,6 +263,7 @@ class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigatio
     }
   }
   
+  
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     
     var selectedImageFromPicker: UIImage?
@@ -207,17 +275,111 @@ class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigatio
     }
     
     if let selectedImage = selectedImageFromPicker {
-       self.userProfileContainerView?.profileImageView.image = selectedImage //temporary
-      self.managePhotoPlaceholderLabelAppearance() // temporary
+      
       if currentReachabilityStatus == .notReachable {
         basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerWithUserProfilePhoto!)
         return
       }
+      
+      guard self.userProfileContainerView?.profileImageView.image != nil else {
+        self.userProfileContainerView?.profileImageView.image = selectedImage
+        self.updateUserProfile(with: self.userProfileContainerView!.profileImageView.image!)
+        self.userProfileContainerView?.profileImageView.showActivityIndicator()
+        controllerWithUserProfilePhoto?.dismiss(animated: true, completion: nil)
+        return
+      }
+      
+      deleteCurrentPhoto(completion: { (isDeleted) in
+        if isDeleted {
+          self.userProfileContainerView?.profileImageView.image = selectedImage
+          self.updateUserProfile(with: self.userProfileContainerView!.profileImageView.image!)   /////23/23//42/423/423/42/42/42/342
+        } else {
+          if self.userProfileContainerView?.profileImageView.image != nil {
+            self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+            basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self.controllerWithUserProfilePhoto!)
+          } else {
+            self.userProfileContainerView?.profileImageView.image = selectedImage
+            self.updateUserProfile(with: self.userProfileContainerView!.profileImageView.image!)
+          }
+          
+        }
+      })
     }
     
+    self.userProfileContainerView?.profileImageView.showActivityIndicator()
     controllerWithUserProfilePhoto?.dismiss(animated: true, completion: nil)
   }
+  
+  
+  @objc func updateUserProfile(with image: UIImage) {
+    
+    guard currentReachabilityStatus != .notReachable else {
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller:  self.controllerWithUserProfilePhoto!)
+      return
+    }
 
+    let chatImage = image
+
+    let chatCreatingGroup = DispatchGroup()
+    
+
+    
+    for _ in members {
+      chatCreatingGroup.enter()
+    }
+    
+    chatCreatingGroup.notify(queue: DispatchQueue.main, execute: {
+      print("group finished Notifiying...")
+      self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+    })
+    
+    for member in members {
+      guard let memberID = member.id else { continue }
+      
+      let reference = Database.database().reference().child("user-messages").child(memberID).child(chatID).child(messageMetaDataFirebaseFolder)
+   
+        
+        let chatThumbnailImage = createImageThumbnail(chatImage)
+        let imagesToUpload = [chatThumbnailImage, chatImage]
+        let imagesUploadGroup = DispatchGroup()
+        
+        for _ in imagesToUpload {
+          imagesUploadGroup.enter()
+        }
+        
+        imagesUploadGroup.notify(queue: DispatchQueue.main, execute: {
+          print("images uploading finished for one of the participants, leaving main group...")
+          chatCreatingGroup.leave()
+        })
+        
+        
+        for image in imagesToUpload {
+          
+          var quality:CGFloat = 1.0
+          var imageType:ImageType = .thumbnail
+          
+          if image == chatImage {
+            quality = 0.5
+            imageType = .original
+          }
+          
+          uploadAvatarForUserToFirebaseStorageUsingImage(image, quality: quality) { (imageURL, path) in
+            reference.updateChildValues([imageType.rawValue : String(describing: imageURL)], withCompletionBlock: { (error, ref) in
+              guard error == nil else {
+                imagesUploadGroup.leave()
+                print("leaving imagesUploadGroup in error")
+                print(error?.localizedDescription ?? "")
+                return
+              }
+              
+              imagesUploadGroup.leave()
+              print("leaving imagesUploadGroup in success")
+            })// reference
+          }// avatar upload
+        } // for loop
+      } // for loop
+  } //func
+  
   fileprivate func managePhotoPlaceholderLabelAppearance() {
     DispatchQueue.main.async {
       if self.userProfileContainerView?.profileImageView.image != nil {
@@ -233,4 +395,3 @@ class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigatio
     controllerWithUserProfilePhoto?.dismiss(animated: true, completion: nil)
   }
 }
-

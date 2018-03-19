@@ -68,7 +68,6 @@ extension ChatsTableViewController {
     }) {
       if let muted = allConversations[index].muted, !muted {
         self.playNotificationSound()
-        
         if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
           self.showInAppNotification(title: conversation.chatName ?? "" , subtitle: self.subtitleForMessage(message: message))//, user: user)
         }

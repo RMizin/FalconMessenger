@@ -21,8 +21,8 @@ private let fullsizePictureUploadError = "Failed to upload fullsize image to dat
 class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   
-  var controllerWithUserProfilePhoto: UIViewController?
-  var userProfileContainerView: UserProfileContainerView?
+  weak var controllerWithUserProfilePhoto: UIViewController?
+  weak var userProfileContainerView: UserProfileContainerView?
  
 
   private var referenceView: UIView!
