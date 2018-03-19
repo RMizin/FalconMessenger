@@ -59,10 +59,20 @@ extension ChatsTableViewController {
   func handleInAppSoundPlaying(message: Message, conversation: Conversation) {
 
     if self.visibleTab() is ChatLogController { return }
-     self.playNotificationSound()
+
+    var allConversations = conversations
+    allConversations.insert(contentsOf: pinnedConversations, at: 0)
     
-    if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
-      self.showInAppNotification(title: conversation.chatName ?? "" , subtitle: self.subtitleForMessage(message: message))//, user: user)
+    if let index = allConversations.index(where: { (conv) -> Bool in
+      return conv.chatID == conversation.chatID
+    }) {
+      if let muted = allConversations[index].muted, !muted {
+        self.playNotificationSound()
+        
+        if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
+          self.showInAppNotification(title: conversation.chatName ?? "" , subtitle: self.subtitleForMessage(message: message))//, user: user)
+        }
+      }
     }
   }
    

@@ -173,14 +173,20 @@ extension GroupProfileTableViewController {
     ARSLineProgress.show()
     view.isUserInteractionEnabled = false
     
+    //to group chats meta
+    //+ chatID
+    //+chat thumbnail
     let chatName = groupProfileTableHeaderContainer.name.text ?? "Group Chat"
     let chatImage = groupProfileTableHeaderContainer.profileImageView.image
+    var chatParticipantsIDs = [String]()
+    let chatCreatingGroup = DispatchGroup()
+    
+    //for everybody
     let badge = 0
     let muted = false
     let pinned = false
     let isGroupChat = true
-    var chatParticipantsIDs = [String]()
-    let chatCreatingGroup = DispatchGroup()
+   
     
     chatParticipantsIDs.append(Auth.auth().currentUser!.uid)
     for selectedUser in selectedFlaconUsers {

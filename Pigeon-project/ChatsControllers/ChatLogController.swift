@@ -985,10 +985,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           cell.nameLabel.sizeToFit()
           cell.nameLabel.frame.origin = CGPoint(x: cell.textView.textContainerInset.left+5, y: cell.textView.textContainerInset.top)
       
-          if message.estimatedFrameForText!.width < cell.nameLabel.frame.size.width {
-              cell.bubbleView.frame.size = CGSize(width: (cell.nameLabel.frame.size.width + 30).rounded(), height: cell.frame.size.height.rounded())
+          if (message.estimatedFrameForText!.width < cell.nameLabel.frame.size.width) {
+            if cell.nameLabel.frame.size.width >= 170 {
+              cell.nameLabel.frame.size.width = 170
+              cell.bubbleView.frame.size = CGSize(width: 200, height: cell.frame.size.height.rounded())
+            } else {
+               cell.bubbleView.frame.size = CGSize(width: (cell.nameLabel.frame.size.width + 30).rounded(), height: cell.frame.size.height.rounded())
+            }
           } else {
-              cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
+            cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
           }
 
           cell.textView.textContainerInset.top = 25
@@ -1091,6 +1096,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           cell.nameLabel.sizeToFit()
           cell.nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingTextViewLeftInset+5, y: BaseMessageCell.incomingTextViewTopInset)
           cell.messageImageViewTopAnchor.constant = 34
+          if cell.nameLabel.frame.size.width >= 170 {
+            cell.nameLabel.frame.size.width = 170
+          }
         }
         
         DispatchQueue.main.async {
@@ -1187,6 +1195,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           cell.playerView.frame.origin.y = 20
           cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
           cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height - 20).rounded())
+          
+          if cell.nameLabel.frame.size.width >= 170 {
+            cell.nameLabel.frame.size.width = cell.playerView.frame.size.width - 24
+          }
         } else {
           cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
           cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height).rounded())
