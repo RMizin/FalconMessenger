@@ -71,6 +71,13 @@ let basicTitleForAccessError = "Please Allow Access"
 let noInternetError = "Internet is not available. Please try again later"
 let copyingImageError = "You cannot copy not downloaded image, please wait until downloading finished"
 
+
+let deletionErrorMessage = "There was a problem when deleting. Try again later."
+let cameraNotExistsMessage = "You don't have camera"
+let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
+let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
+
+
 extension String {
   
   var digits: String {

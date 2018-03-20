@@ -11,7 +11,7 @@ import UIKit
 
 class UserProfilePictureOverlayView: UIView {
   
-  let navigationItem = UINavigationItem(title: "Profile photo")
+  var navigationItem = UINavigationItem(title: "Profile photo")
   
   weak var photosViewController: INSPhotosViewController?
   

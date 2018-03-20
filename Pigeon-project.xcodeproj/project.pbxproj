@@ -642,8 +642,7 @@
 			children = (
 				4BE72A6F204E9DE5009A22EA /* NewChatControllers */,
 				4B6364691F97441300A5D3BF /* UserInfoViewControllers */,
-				4BBBCC07205D2A2C00926800 /* GroupInfoViewControllers */,
-				4BBBCC08205D2A4700926800 /* GroupAdminControlsVeiwControllers */,
+				4BBBCC08205D2A4700926800 /* GroupAdminControlsViewControllers */,
 				4BC26B2C1F3A236A0093A9D2 /* Model */,
 				4BC26B251F3A22B80093A9D2 /* Views */,
 				4BE72A6D204E9DB1009A22EA /* ChatLogControllers */,
@@ -833,21 +832,14 @@
 			name = OldChatsControllers;
 			sourceTree = "<group>";
 		};
-		4BBBCC07205D2A2C00926800 /* GroupInfoViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = GroupInfoViewControllers;
-			sourceTree = "<group>";
-		};
-		4BBBCC08205D2A4700926800 /* GroupAdminControlsVeiwControllers */ = {
+		4BBBCC08205D2A4700926800 /* GroupAdminControlsViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				4B25598B20615FA500594FAB /* Model */,
 				4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */,
 				4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureOpener.swift */,
 			);
-			name = GroupAdminControlsVeiwControllers;
+			name = GroupAdminControlsViewControllers;
 			sourceTree = "<group>";
 		};
 		4BC26B221F3A227E0093A9D2 /* Media */ = {

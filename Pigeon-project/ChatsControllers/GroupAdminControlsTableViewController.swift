@@ -13,9 +13,9 @@ import Firebase
 
 class GroupAdminControlsTableViewController: UITableViewController {
   
-  fileprivate var membersCellID = "membersCellID"
+  fileprivate let membersCellID = "membersCellID"
   
-  fileprivate var adminControlsCellID = "adminControlsCellID"
+  fileprivate let adminControlsCellID = "adminControlsCellID"
   
   let groupProfileTableHeaderContainer = GroupProfileTableHeaderContainer()
   
@@ -25,38 +25,32 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   var chatHandle: DatabaseHandle!
   
-  var chatID: String!
+  var chatID = String()
   
-  var conversationAdminID:String!
-  var adminControls:[GroupAdminControlls] =  [GroupAdminControlls(name: "Manage users", icon: UIImage(named: "addUser")!),
-                                              GroupAdminControlls(name: "Manage administrators", icon: UIImage(named: "manageAdmins")!),
-                                              GroupAdminControlls(name: "Leave the group", icon: UIImage(named: "leaveGroup")!),
-                                              GroupAdminControlls(name: "Dissolve the group", icon: UIImage(named: "dissolveGroup")!)]
-  var members: [User]! {
+  var isCurrentUserAdministrator = false
+  var conversationAdminID = String() {
+    didSet {
+      manageControlsAppearance()
+    }
+  }
+  
+  var adminControls:[GroupAdminControlls] = [GroupAdminControlls(name: "Manage members", icon: UIImage(named: "addUser")!),
+                                             GroupAdminControlls(name: "Change administrator", icon: UIImage(named: "manageAdmins")!),
+                                             GroupAdminControlls(name: "Leave the group", icon: UIImage(named: "leaveGroup")!)]//,
+                                           //   GroupAdminControlls(name: "Dissolve the group", icon: UIImage(named: "dissolveGroup")!)]
+  var members = [User]() {
     didSet {
       setConversationData()
     }
   }
   
-  var initialAvatarSet = true
-  
-  var groupAvatarURL:String! {
+  var groupAvatarURL = String() {
     didSet {
-
-      if conversationAdminID != Auth.auth().currentUser!.uid {
-        groupProfileTableHeaderContainer.name.isUserInteractionEnabled = false
-        groupProfileTableHeaderContainer.addPhotoLabel.isHidden = true
-        groupProfileTableHeaderContainer.name.isUserInteractionEnabled = false
-      }
-
-      if groupAvatarURL != "" && initialAvatarSet {
-        self.groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
-        groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string:groupAvatarURL), placeholderImage: nil, options: [], completed: { (image, error, cacheType, url) in
-          self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
-          self.groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openUserProfilePicture)))
-          self.initialAvatarSet = false
-        })
-      }
+      groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
+      groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string:groupAvatarURL), placeholderImage: nil, options: [], completed: { (image, error, cacheType, url) in
+        self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
+        self.groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openUserProfilePicture)))
+      })
     }
   }
   
@@ -72,7 +66,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    print("view did dissappear")
+
     if chatReference != nil {
       chatReference.removeObserver(withHandle: chatHandle)
       chatReference = nil
@@ -90,7 +84,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       navigationItem.largeTitleDisplayMode = .always
       navigationController?.navigationBar.prefersLargeTitles = true
     }
-    navigationItem.title = "Info"
+    navigationItem.title = "Group Info"
     extendedLayoutIncludesOpaqueBars = true
     definesPresentationContext = true
     edgesForExtendedLayout = [UIRectEdge.top, UIRectEdge.bottom]
@@ -122,28 +116,35 @@ class GroupAdminControlsTableViewController: UITableViewController {
     groupProfileTableHeaderContainer.name.textColor = ThemeManager.currentTheme().generalTitleColor
     groupProfileTableHeaderContainer.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
   }
+  
+  fileprivate func manageControlsAppearance() {
+    if conversationAdminID != Auth.auth().currentUser!.uid {
+      groupProfileTableHeaderContainer.addPhotoLabel.isHidden = true
+      groupProfileTableHeaderContainer.name.isUserInteractionEnabled = false
+      isCurrentUserAdministrator = false
+    } else {
+      groupProfileTableHeaderContainer.addPhotoLabel.isHidden = false
+      groupProfileTableHeaderContainer.name.isUserInteractionEnabled = true
+      isCurrentUserAdministrator = true
+    }
+  }
 
   fileprivate func setConversationData() {
     chatReference = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).child(chatID).child(messageMetaDataFirebaseFolder)
     chatHandle = chatReference.observe( .value) { (snapshot) in
       guard let conversationDictionary = snapshot.value as? [String: AnyObject] else { return }
       let conversation = Conversation(dictionary: conversationDictionary)
+      
       if let url = conversation.chatPhotoURL {
          self.groupAvatarURL = url
-      } else {
-        self.groupAvatarURL = ""
       }
       
       if let name = conversation.chatName {
         self.groupProfileTableHeaderContainer.name.text = name
-      } else {
-        self.groupProfileTableHeaderContainer.name.text = ""
       }
       
       if let admin = conversation.admin {
         self.conversationAdminID = admin
-      } else {
-       self.conversationAdminID = ""
       }
 
       DispatchQueue.main.async {
@@ -152,70 +153,9 @@ class GroupAdminControlsTableViewController: UITableViewController {
     }
   }
   
-  /*fileprivate func observeConversationChanges() {
-    
-    changesReference = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).child(chatID).child(messageMetaDataFirebaseFolder)
-    changesHandle = changesReference.observe(.childChanged) { (snapshot) in
-      
-      print("child changed")
-      
-      if snapshot.key == "chatOriginalPhotoURL" {
-        self.setChangedURL(from: snapshot)
-      } else if snapshot.key == "chatParticipantsIDs" {
-        self.setChangedMembers(from: snapshot)
-      }
-    }
-    
-  }*/
-  
-  
-  /*
-  fileprivate func setChangedURL( from snapshot: DataSnapshot) {
-    print("url changed")
-    guard let newURL = snapshot.value as? String else { self.groupAvatarURL = ""; print(self.groupAvatarURL, "gravurl return"); return }
-    self.groupAvatarURL = newURL
-    print(self.groupAvatarURL, "gravurl")
-  }
-  
-  fileprivate func setChangedMembers(from snapshot: DataSnapshot) {
-    print("members changed")
-    guard let newMembers = snapshot.value as? [String] else  { return }
-    
-    var newMembersArray = [User]()
-    let group = DispatchGroup()
-    
-    for _ in newMembers {
-      group.enter()
-    }
-    
-    group.notify(queue: DispatchQueue.main, execute: {
-      self.members = newMembersArray
-      DispatchQueue.main.async {
-        self.tableView.reloadData()
-      }
-    })
-    
-    for newMember in newMembers {
-      let userRef = Database.database().reference().child("users").child(newMember)
-      userRef.observeSingleEvent(of: .value, with: { (snapshot) in
-        guard var userDictionary = snapshot.value as? [String: AnyObject] else {group.leave(); return }
-        userDictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
-        let user = User(dictionary: userDictionary)
-        newMembersArray.append(user)
-        group.leave()
-      })
-    }
-  }
-  */
-  
   @objc fileprivate func openUserProfilePicture() {
     userProfilePictureOpener.controllerWithUserProfilePhoto = self
     userProfilePictureOpener.userProfileContainerView = groupProfileTableHeaderContainer
-    userProfilePictureOpener.members = members
-    userProfilePictureOpener.chatID = chatID
-    if conversationAdminID == Auth.auth().currentUser!.uid {
-      userProfilePictureOpener.isAdminToolsEnabled = true
-    }
     userProfilePictureOpener.openUserProfilePicture()
   }
   
@@ -291,7 +231,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       if members[indexPath.row].id == conversationAdminID {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
         label.text = "admin"
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = ThemeManager.currentTheme().generalSubtitleColor
         cell.accessoryType = UITableViewCellAccessoryType.none
         cell.accessoryView = label

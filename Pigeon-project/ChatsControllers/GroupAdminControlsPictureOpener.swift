@@ -11,23 +11,10 @@ import Photos
 import Firebase
 
 
-
-private let deletionErrorMessage = "There was a problem when deleting. Try again later."
-private let cameraNotExistsMessage = "You don't have camera"
-private let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
-private let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
-
-
 class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-
-  weak var controllerWithUserProfilePhoto: GroupAdminControlsTableViewController?
-  weak var userProfileContainerView: GroupProfileTableHeaderContainer?
-  var members = [User]()
-  var chatID = String()
-  var isAdminToolsEnabled = false
-  
-  
+  weak var controllerWithUserProfilePhoto: GroupAdminControlsTableViewController!
+  weak var userProfileContainerView: GroupProfileTableHeaderContainer!
   private var referenceView: UIView!
   private var currentPhoto: INSPhoto!
   private var galleryPreview: INSPhotosViewController!
@@ -39,7 +26,6 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     picker.delegate = self
     if userProfileContainerView?.profileImageView.image == nil {
       handleSelectProfileImageView()
-      
       return
     }
     
@@ -48,8 +34,9 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     galleryPreview = INSPhotosViewController(photos: [currentPhoto], initialPhoto: currentPhoto, referenceView: referenceView)
     
     overlay.photosViewController = galleryPreview
+    overlay.navigationItem.title = "Group avatar"
     galleryPreview.overlayView = overlay
-    if isAdminToolsEnabled {
+    if controllerWithUserProfilePhoto.isCurrentUserAdministrator {
       overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(handleSelectProfileImageView))
     }
    
@@ -154,33 +141,25 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
       completion(true)
       return
     }
+    
     let storage = Storage.storage()
-    
     let storageRef = storage.reference(forURL: controllerWithUserProfilePhoto!.groupAvatarURL)
-    
-    //Removes image from storage
+
     storageRef.delete { error in
-      if let error = error {
-        print(error, "!!!!")
-           completion(false)
-        self.userProfileContainerView?.profileImageView.hideActivityIndicator()
-        basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self.controllerWithUserProfilePhoto!)
-      } else {
-        
-        for member in self.members {
-          guard let memberID = member.id else { continue }
-          let chatOriginalPhotoURLReference = Database.database().reference().child("user-messages").child(memberID).child(self.chatID).child(messageMetaDataFirebaseFolder).child("chatOriginalPhotoURL")
-          let chatThumbnailPhotoURLReference = Database.database().reference().child("user-messages").child(memberID).child(self.chatID).child(messageMetaDataFirebaseFolder).child("chatThumbnailPhotoURL")
-          chatOriginalPhotoURLReference.removeValue()
-          chatThumbnailPhotoURLReference.removeValue()
-          print("removing for member: \(memberID)")
-        }
-        completion(true)
-        print("file deleted")
-        // File deleted successfully
+      
+      for member in self.controllerWithUserProfilePhoto.members {
+        guard let memberID = member.id else { continue }
+        let chatOriginalPhotoURLReference = Database.database().reference().child("user-messages").child(memberID).child(self.controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder).child("chatOriginalPhotoURL")
+        let chatThumbnailPhotoURLReference = Database.database().reference().child("user-messages").child(memberID).child(self.controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder).child("chatThumbnailPhotoURL")
+        chatOriginalPhotoURLReference.removeValue()
+        chatThumbnailPhotoURLReference.removeValue()
+        print("removing for member: \(memberID)")
       }
+      completion(true)
+      print("file deleted")
     }
   }
+  
   
   func openGallery() {
     
@@ -330,7 +309,7 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     
 
     
-    for _ in members {
+    for _ in controllerWithUserProfilePhoto.members {
       chatCreatingGroup.enter()
     }
     
@@ -339,10 +318,10 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
       self.userProfileContainerView?.profileImageView.hideActivityIndicator()
     })
     
-    for member in members {
+    for member in controllerWithUserProfilePhoto.members {
       guard let memberID = member.id else { continue }
       
-      let reference = Database.database().reference().child("user-messages").child(memberID).child(chatID).child(messageMetaDataFirebaseFolder)
+      let reference = Database.database().reference().child("user-messages").child(memberID).child(controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder)
    
         
         let chatThumbnailImage = createImageThumbnail(chatImage)

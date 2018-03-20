@@ -11,14 +11,8 @@ import Photos
 import Firebase
 
 
-private let deletionErrorMessage = "There was a problem when deleting. Try again later."
-private let cameraNotExistsMessage = "You don't have camera"
-private let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
-private let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
-
 class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  
-  
+    
   weak var controllerWithUserProfilePhoto: UIViewController?
   weak var userProfileContainerView: GroupProfileTableHeaderContainer?
   
@@ -43,6 +37,7 @@ class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigatio
     
     overlay.photosViewController = galleryPreview
     galleryPreview.overlayView = overlay
+    overlay.navigationItem.title = "Group avatar"
     
     overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(handleSelectProfileImageView))
     overlay.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(backButtonTapped))
