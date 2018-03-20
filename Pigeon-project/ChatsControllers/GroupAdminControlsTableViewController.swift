@@ -15,6 +15,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   fileprivate var membersCellID = "membersCellID"
   
+  fileprivate var adminControlsCellID = "adminControlsCellID"
+  
   let groupProfileTableHeaderContainer = GroupProfileTableHeaderContainer()
   
   let userProfilePictureOpener = GroupAdminControlsPictureOpener()
@@ -26,8 +28,10 @@ class GroupAdminControlsTableViewController: UITableViewController {
   var chatID: String!
   
   var conversationAdminID:String!
-
-  
+  var adminControls:[GroupAdminControlls] =  [GroupAdminControlls(name: "Manage users", icon: UIImage(named: "addUser")!),
+                                              GroupAdminControlls(name: "Manage administrators", icon: UIImage(named: "manageAdmins")!),
+                                              GroupAdminControlls(name: "Leave the group", icon: UIImage(named: "leaveGroup")!),
+                                              GroupAdminControlls(name: "Dissolve the group", icon: UIImage(named: "dissolveGroup")!)]
   var members: [User]! {
     didSet {
       setConversationData()
@@ -38,11 +42,18 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   var groupAvatarURL:String! {
     didSet {
-     
+
+      if conversationAdminID != Auth.auth().currentUser!.uid {
+        groupProfileTableHeaderContainer.name.isUserInteractionEnabled = false
+        groupProfileTableHeaderContainer.addPhotoLabel.isHidden = true
+        groupProfileTableHeaderContainer.name.isUserInteractionEnabled = false
+      }
+
       if groupAvatarURL != "" && initialAvatarSet {
         self.groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
         groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string:groupAvatarURL), placeholderImage: nil, options: [], completed: { (image, error, cacheType, url) in
           self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
+          self.groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openUserProfilePicture)))
           self.initialAvatarSet = false
         })
       }
@@ -91,13 +102,14 @@ class GroupAdminControlsTableViewController: UITableViewController {
     tableView.sectionIndexBackgroundColor = view.backgroundColor
     tableView.backgroundColor = view.backgroundColor
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: membersCellID)
+    tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
     tableView.separatorStyle = .none
     tableView.allowsSelection = false
     tableView.prefetchDataSource = self
   }
   
   fileprivate func setupContainerView() {
-    groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
+ 
     groupProfileTableHeaderContainer.name.delegate = self
     groupProfileTableHeaderContainer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 170)
     groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -110,8 +122,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     groupProfileTableHeaderContainer.name.textColor = ThemeManager.currentTheme().generalTitleColor
     groupProfileTableHeaderContainer.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
   }
-  
-  
+
   fileprivate func setConversationData() {
     chatReference = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).child(chatID).child(messageMetaDataFirebaseFolder)
     chatHandle = chatReference.observe( .value) { (snapshot) in
@@ -200,9 +211,11 @@ class GroupAdminControlsTableViewController: UITableViewController {
   @objc fileprivate func openUserProfilePicture() {
     userProfilePictureOpener.controllerWithUserProfilePhoto = self
     userProfilePictureOpener.userProfileContainerView = groupProfileTableHeaderContainer
-    userProfilePictureOpener.photoURL = groupAvatarURL
     userProfilePictureOpener.members = members
     userProfilePictureOpener.chatID = chatID
+    if conversationAdminID == Auth.auth().currentUser!.uid {
+      userProfilePictureOpener.isAdminToolsEnabled = true
+    }
     userProfilePictureOpener.openUserProfilePicture()
   }
   
@@ -218,16 +231,26 @@ class GroupAdminControlsTableViewController: UITableViewController {
   // MARK: - Table view data source
   
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
+    return 2
   }
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    if section == 0 {
+      if adminControls.count == 0 {
+        return ""
+      }
+      return "Group management"
+    }
     return "\(members.count) members"
   }
 
   
   override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return 20
+    
+    if section == 0 {
+      return 20
+    }
+    return 50
   }
   
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -239,6 +262,9 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if section == 0 {
+      return adminControls.count
+    }
     return members.count
   }
   
@@ -247,56 +273,70 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: membersCellID, for: indexPath) as! FalconUsersTableViewCell
+ 
+    if indexPath.section == 0 {
+        let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! AccountSettingsTableViewCell
+      cell.title.text = adminControls[indexPath.row].controlName
+      cell.icon.image = adminControls[indexPath.row].controlIcon
+      if indexPath.row == 0 || indexPath.row == 1 {
+        cell.title.textColor = FalconPalette.falconPaletteBlue
+      } else {
+        cell.title.textColor = .red
+      }
+      return cell
     
-    if  members[indexPath.row].id == conversationAdminID {
-      let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
-      label.text = "admin"
-      label.font = UIFont.systemFont(ofSize: 12)
-      label.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      cell.accessoryType = UITableViewCellAccessoryType.none
-      cell.accessoryView = label
-      cell.accessoryView?.backgroundColor = UIColor.clear
-    }
-    
-    if let name = members[indexPath.row].name {
-      cell.title.text = name
-    }
-    if members[indexPath.row].id == Auth.auth().currentUser?.uid {
-      cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      cell.subtitle.text = "You"
     } else {
-      if let statusString = members[indexPath.row].onlineStatus as? String {
-        if statusString == statusOnline {
-          cell.subtitle.textColor = FalconPalette.falconPaletteBlue
-          cell.subtitle.text = statusString
-        } else {
+      let cell = tableView.dequeueReusableCell(withIdentifier: membersCellID, for: indexPath) as! FalconUsersTableViewCell
+      
+      if members[indexPath.row].id == conversationAdminID {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
+        label.text = "admin"
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = ThemeManager.currentTheme().generalSubtitleColor
+        cell.accessoryType = UITableViewCellAccessoryType.none
+        cell.accessoryView = label
+        cell.accessoryView?.backgroundColor = UIColor.clear
+      } else {
+        cell.accessoryView = nil
+      }
+      
+      if let name = members[indexPath.row].name {
+        cell.title.text = name
+      }
+      if members[indexPath.row].id == Auth.auth().currentUser?.uid {
+        cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+        cell.subtitle.text = "You"
+      } else {
+        if let statusString = members[indexPath.row].onlineStatus as? String {
+          if statusString == statusOnline {
+            cell.subtitle.textColor = FalconPalette.falconPaletteBlue
+            cell.subtitle.text = statusString
+          } else {
+            cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+            let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
+            let subtitle = "Last seen " + timeAgoSinceDate(date)
+            cell.subtitle.text = subtitle
+          }
+        } else if let statusTimeinterval = members[indexPath.row].onlineStatus as? TimeInterval {
           cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-          let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
+          let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
           let subtitle = "Last seen " + timeAgoSinceDate(date)
           cell.subtitle.text = subtitle
         }
-        
-      } else if let statusTimeinterval = members[indexPath.row].onlineStatus as? TimeInterval {
-        cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
-        let subtitle = "Last seen " + timeAgoSinceDate(date)
-        cell.subtitle.text = subtitle
       }
+      
+      guard let url = members[indexPath.row].thumbnailPhotoURL else { return cell }
+      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
+        guard image != nil else { return }
+        guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
+          cell.icon.alpha = 1
+          return
+        }
+        cell.icon.alpha = 0
+        UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
+      })
+      return cell
     }
-    
-    
-    guard let url = members[indexPath.row].thumbnailPhotoURL else { return cell }
-    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
-      guard image != nil else { return }
-      guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-        cell.icon.alpha = 1
-        return
-      }
-      cell.icon.alpha = 0
-      UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
-    })
-    return cell
   }
 }
 

@@ -805,15 +805,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   @objc func getInfoAction() {
 
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      
-      guard conversation?.admin == Auth.auth().currentUser?.uid else {
-        // regular group info controller
-        return
-      }
-    
+
       let destination = GroupAdminControlsTableViewController()
       destination.chatID = conversation?.chatID ?? ""
       destination.members = groupMembers
+      if conversation?.admin != Auth.auth().currentUser?.uid {
+        destination.adminControls.removeAll()
+      }
       self.navigationController?.pushViewController(destination, animated: true)
       // admin group info controller
     } else {

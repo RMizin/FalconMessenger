@@ -21,11 +21,11 @@ private let fullsizePictureUploadError = "Failed to upload fullsize image to dat
 class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
 
-  weak var controllerWithUserProfilePhoto: UIViewController?
+  weak var controllerWithUserProfilePhoto: GroupAdminControlsTableViewController?
   weak var userProfileContainerView: GroupProfileTableHeaderContainer?
-  var photoURL = String()
   var members = [User]()
   var chatID = String()
+  var isAdminToolsEnabled = false
   
   
   private var referenceView: UIView!
@@ -49,8 +49,10 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     
     overlay.photosViewController = galleryPreview
     galleryPreview.overlayView = overlay
-    
-    overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(handleSelectProfileImageView))
+    if isAdminToolsEnabled {
+      overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(handleSelectProfileImageView))
+    }
+   
     overlay.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton" ), style: .done, target: self, action: #selector(backButtonTapped))
     overlay.navigationBar.setItems([overlay.navigationItem], animated: true)
     overlay.navigationBar.barStyle = .blackTranslucent
@@ -148,9 +150,13 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     
     userProfileContainerView?.profileImageView.showActivityIndicator()
     
-    let storage = Storage.storage()//.reference()//.child("userProfilePictures").
+    if controllerWithUserProfilePhoto!.groupAvatarURL == "" {
+      completion(true)
+      return
+    }
+    let storage = Storage.storage()
     
-    let storageRef = storage.reference(forURL: photoURL)
+    let storageRef = storage.reference(forURL: controllerWithUserProfilePhoto!.groupAvatarURL)
     
     //Removes image from storage
     storageRef.delete { error in

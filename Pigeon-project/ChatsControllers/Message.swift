@@ -15,20 +15,6 @@ struct MessageSubtitle {
   static let audio = "Audio message"
 }
 
-class GroupChatUserData: NSObject  {
-  
-  var id: String?
-  var name: String?
- 
-  
-  init(dictionary: [String: String]) {
-    super.init()
-    
-    id = dictionary["id"] //as? String
-    name = dictionary["name"]// as? String
-  
-  }
-}
 
 class Message: NSObject  {
   

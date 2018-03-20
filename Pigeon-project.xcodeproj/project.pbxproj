@@ -19,6 +19,7 @@
 		4B2143041F51C76F00F7A4B8 /* TimestampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143031F51C76F00F7A4B8 /* TimestampView.swift */; };
 		4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */; };
 		4B2143081F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143071F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift */; };
+		4B25598D20615FCA00594FAB /* GroupAdminControlls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B25598C20615FCA00594FAB /* GroupAdminControlls.swift */; };
 		4B2820E91FE4025600791AB1 /* AnnouncementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E41FE4025500791AB1 /* AnnouncementFactory.swift */; };
 		4B2820EB1FE4025600791AB1 /* Announcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E61FE4025500791AB1 /* Announcement.swift */; };
 		4B2820EC1FE4025600791AB1 /* AnnouncementShowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E71FE4025500791AB1 /* AnnouncementShowing.swift */; };
@@ -242,6 +243,7 @@
 		4B2143031F51C76F00F7A4B8 /* TimestampView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimestampView.swift; path = ChatsControllers/RevealableCell/TimestampView.swift; sourceTree = "<group>"; };
 		4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingPhotoMessageCell.swift; path = ChatsControllers/OutgoingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4B2143071F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+ImageZoomHandlers.swift"; path = "ChatsControllers/ChatLogController+ImageZoomHandlers.swift"; sourceTree = "<group>"; };
+		4B25598C20615FCA00594FAB /* GroupAdminControlls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlls.swift; path = ChatsControllers/GroupAdminControlls.swift; sourceTree = "<group>"; };
 		4B2820E41FE4025500791AB1 /* AnnouncementFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementFactory.swift; path = "Support/In-AppNotificationBanner/AnnouncementFactory.swift"; sourceTree = "<group>"; };
 		4B2820E61FE4025500791AB1 /* Announcement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Announcement.swift; path = "Support/In-AppNotificationBanner/Announcement.swift"; sourceTree = "<group>"; };
 		4B2820E71FE4025500791AB1 /* AnnouncementShowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementShowing.swift; path = "Support/In-AppNotificationBanner/AnnouncementShowing.swift"; sourceTree = "<group>"; };
@@ -510,6 +512,14 @@
 				4B2143011F51C74000F7A4B8 /* TimestampView.xib */,
 			);
 			name = RevealableCell;
+			sourceTree = "<group>";
+		};
+		4B25598B20615FA500594FAB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4B25598C20615FCA00594FAB /* GroupAdminControlls.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		4B2820DE1FE3FECE00791AB1 /* In-AppAnnouncement */ = {
@@ -833,6 +843,7 @@
 		4BBBCC08205D2A4700926800 /* GroupAdminControlsVeiwControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4B25598B20615FA500594FAB /* Model */,
 				4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */,
 				4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureOpener.swift */,
 			);
@@ -1412,6 +1423,7 @@
 				4BE8BB421FCA836A00EB35FA /* SelectedMediaCollectionCell+timerHandlers.swift in Sources */,
 				4BED6EB31F476A2F004EF2E0 /* TransitionController.swift in Sources */,
 				4BED6EB21F476A2F004EF2E0 /* ImagePickerTrayController.swift in Sources */,
+				4B25598D20615FCA00594FAB /* GroupAdminControlls.swift in Sources */,
 				4B3E634C1FB9F06F00E200CD /* NoChatsYetContainer.swift in Sources */,
 				4B48D3201F361E490050C797 /* ARSLineProgressExtensions.swift in Sources */,
 				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
