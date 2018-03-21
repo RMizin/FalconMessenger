@@ -14,33 +14,35 @@ import Firebase
 class GroupAdminControlsTableViewController: UITableViewController {
   
   fileprivate let membersCellID = "membersCellID"
-  
   fileprivate let adminControlsCellID = "adminControlsCellID"
   
   let groupProfileTableHeaderContainer = GroupProfileTableHeaderContainer()
-  
   let userProfilePictureOpener = GroupAdminControlsPictureOpener()
   
   var chatReference: DatabaseReference!
-  
   var chatHandle: DatabaseHandle!
+  var membersAddingReference: DatabaseReference!
+  var membersAddingHandle: DatabaseHandle!
+  var membersRemovingHandle: DatabaseHandle!
   
-  var chatID = String()
-  
-  var isCurrentUserAdministrator = false
-  var conversationAdminID = String() {
-    didSet {
-      manageControlsAppearance()
-    }
-  }
-  
+  var members = [User]()
   var adminControls:[GroupAdminControlls] = [GroupAdminControlls(name: "Manage members", icon: UIImage(named: "addUser")!),
                                              GroupAdminControlls(name: "Change administrator", icon: UIImage(named: "manageAdmins")!),
                                              GroupAdminControlls(name: "Leave the group", icon: UIImage(named: "leaveGroup")!)]//,
-                                           //   GroupAdminControlls(name: "Dissolve the group", icon: UIImage(named: "dissolveGroup")!)]
-  var members = [User]() {
+  //   GroupAdminControlls(name: "Dissolve the group", icon: UIImage(named: "dissolveGroup")!)]
+  
+  var chatID = String() {
     didSet {
-      setConversationData()
+      observeConversationDataChanges()
+      observeMembersChanges()
+    }
+  }
+  
+  var isCurrentUserAdministrator = false
+  
+  var conversationAdminID = String() {
+    didSet {
+      manageControlsAppearance()
     }
   }
   
@@ -70,12 +72,20 @@ class GroupAdminControlsTableViewController: UITableViewController {
     if chatReference != nil {
       chatReference.removeObserver(withHandle: chatHandle)
       chatReference = nil
-      chatReference = nil
+      chatHandle = nil
+    }
+    
+    if membersAddingReference != nil && membersAddingHandle != nil {
+      membersAddingReference.removeObserver(withHandle: membersAddingHandle)
+    }
+    
+    if membersAddingReference != nil && membersRemovingHandle != nil {
+      membersAddingReference.removeObserver(withHandle: membersRemovingHandle)
     }
   }
   
   deinit {
-    print("admin deinit")
+    print("\nadmin deinit\n")
   }
   
 
@@ -129,7 +139,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
     }
   }
 
-  fileprivate func setConversationData() {
+  fileprivate func observeConversationDataChanges() {
+    
     chatReference = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).child(chatID).child(messageMetaDataFirebaseFolder)
     chatHandle = chatReference.observe( .value) { (snapshot) in
       guard let conversationDictionary = snapshot.value as? [String: AnyObject] else { return }
@@ -146,9 +157,50 @@ class GroupAdminControlsTableViewController: UITableViewController {
       if let admin = conversation.admin {
         self.conversationAdminID = admin
       }
-
+    }
+  }
+  
+  func observeMembersChanges() {
+    
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    membersAddingReference = Database.database().reference().child("user-messages").child(uid).child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
+    
+    membersAddingHandle = membersAddingReference.observe(.childAdded) { (snapshot) in
+      guard let id = snapshot.value as? String else { return }
+      
+      let newMemberReference = Database.database().reference().child("users").child(id)
+      
+      newMemberReference.observeSingleEvent(of: .value, with: { (snapshot) in
+        
+        guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+        dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
+      
+        let user = User(dictionary: dictionary)
+        
+        if let userIndex = self.members.index(where: { (member) -> Bool in
+          return member.id == snapshot.key }) {
+          self.members[userIndex] = user
+        } else {
+          self.members.append(user)
+        }
+        
+        DispatchQueue.main.async {
+          self.tableView.reloadSections([1], with: .none)
+        }
+      })
+    }
+    
+    membersRemovingHandle = membersAddingReference.observe(.childRemoved) { (snapshot) in
+      guard let id = snapshot.value as? String else { return }
+      
+      guard let memberIndex = self.members.index(where: { (member) -> Bool in
+        return member.id == id
+      }) else { return }
+      
+      self.members.remove(at: memberIndex)
+      
       DispatchQueue.main.async {
-        self.tableView.reloadData()
+        self.tableView.reloadSections([1], with: .none)
       }
     }
   }

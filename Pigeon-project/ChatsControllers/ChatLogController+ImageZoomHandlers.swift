@@ -39,9 +39,16 @@ extension ChatLogController {
   func configurePhotoToolbarInfo(for messagesWithPhotos: [Message], at photoIndex: Int) -> NSMutableAttributedString? {
     
     guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = conversation?.chatName  else { return nil }
+  
+    var titleString = String()
+  
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let senderName = messagesWithPhotos[photoIndex].senderName {
+      titleString = senderName + "\n"
+    } else {
+      titleString = chatPartnerName + "\n"
+    }
     
-    let isChattingWithSelf = conversation?.chatID == uid ?  true : false
-    var titleString = (messagesWithPhotos[photoIndex].fromId == conversation?.chatID ? chatPartnerName + "\n" : "You\n")
+    let isChattingWithSelf = messagesWithPhotos[photoIndex].fromId == uid ?  true : false
     if isChattingWithSelf { titleString = "You\n" }
     
     let title = NSMutableAttributedString(string: titleString , attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
