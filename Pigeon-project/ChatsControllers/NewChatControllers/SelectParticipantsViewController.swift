@@ -108,17 +108,17 @@ class SelectParticipantsViewController: UIViewController {
       let rightBarButton = UIButton(type: .system)
       rightBarButton.setTitle("Next", for: .normal)
       rightBarButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-      rightBarButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+      rightBarButton.addTarget(self, action: #selector(rightBarButtonTapped), for: .touchUpInside)
       navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButton)
       navigationItem.rightBarButtonItem?.isEnabled = false
     } else {
-      navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(nextButtonTapped))
+      navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(rightBarButtonTapped))
       navigationItem.rightBarButtonItem?.isEnabled = false
     }
   }
   
   
-  @objc fileprivate func nextButtonTapped() {
+  @objc fileprivate func rightBarButtonTapped() {
     let destination = GroupProfileTableViewController()
     destination.selectedFlaconUsers = selectedFalconUsers
     navigationController?.pushViewController(destination, animated: true)

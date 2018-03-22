@@ -14,7 +14,7 @@ class VoiceRecordingContainerView: UIView {
     var recordButton = UIButton()
      recordButton.translatesAutoresizingMaskIntoConstraints = false
      recordButton.setTitle("Record", for: .normal)
-    recordButton.setTitleColor(FalconPalette.falconPaletteBlue, for: .normal)
+    recordButton.setTitleColor(FalconPalette.defaultBlue, for: .normal)
     
     return recordButton
   }()

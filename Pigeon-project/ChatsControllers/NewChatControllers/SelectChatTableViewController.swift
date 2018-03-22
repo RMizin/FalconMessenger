@@ -176,7 +176,7 @@ class SelectChatTableViewController: UITableViewController {
       cell.imageView?.contentMode = .scaleAspectFit
       cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
       cell.textLabel?.text = actions[indexPath.row]
-      cell.textLabel?.textColor = FalconPalette.falconPaletteBlue
+      cell.textLabel?.textColor = FalconPalette.defaultBlue
       return cell
     }
     
@@ -190,7 +190,7 @@ class SelectChatTableViewController: UITableViewController {
       
       if let statusString = filteredUsers[indexPath.row].onlineStatus as? String {
         if statusString == statusOnline {
-          cell.subtitle.textColor = FalconPalette.falconPaletteBlue
+          cell.subtitle.textColor = FalconPalette.defaultBlue
           cell.subtitle.text = statusString
         } else {
           cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor

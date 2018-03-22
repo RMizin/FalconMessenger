@@ -46,7 +46,7 @@ class BaseMessageCell: RevealableCollectionViewCell {
     nameLabel.font = UIFont.systemFont(ofSize: 13)
     nameLabel.numberOfLines = 1
     nameLabel.backgroundColor = .clear
-    nameLabel.textColor = FalconPalette.falconPaletteBlue
+    nameLabel.textColor = FalconPalette.defaultBlue
     
     return nameLabel
   }()

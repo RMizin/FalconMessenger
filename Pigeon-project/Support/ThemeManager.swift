@@ -70,6 +70,17 @@ enum Theme: Int {
     }
   }
   
+  var controlButtonsColor: UIColor {
+    switch self {
+    case .Default:
+      return   UIColor(red:0.94, green:0.94, blue:0.96, alpha:1.0)
+    case .Dark:
+      return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
+    }
+  }
+  
+
+  
   var searchBarColor: UIColor {
     switch self {
     case .Default:
@@ -246,5 +257,7 @@ struct ThemeManager {
 
 
 struct FalconPalette {
-  static let falconPaletteBlue = UIColor(red:0.00, green:0.50, blue:1.00, alpha: 1.0)
+  static let defaultBlue = UIColor(red:0.00, green:0.50, blue:1.00, alpha: 1.0)
+  static let dismissRed = UIColor(red:1.00, green:0.23, blue:0.19, alpha:1.0)
+  static let appStoreGrey = UIColor(red:0.94, green:0.94, blue:0.96, alpha:1.0)
 }

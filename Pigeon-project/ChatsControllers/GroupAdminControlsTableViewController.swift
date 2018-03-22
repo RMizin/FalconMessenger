@@ -26,10 +26,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   var membersRemovingHandle: DatabaseHandle!
   
   var members = [User]()
-  var adminControls:[GroupAdminControlls] = [GroupAdminControlls(name: "Manage members", icon: UIImage(named: "addUser")!),
-                                             GroupAdminControlls(name: "Change administrator", icon: UIImage(named: "manageAdmins")!),
-                                             GroupAdminControlls(name: "Leave the group", icon: UIImage(named: "leaveGroup")!)]//,
-  //   GroupAdminControlls(name: "Dissolve the group", icon: UIImage(named: "dissolveGroup")!)]
+  var adminControls = [ "Add members", "Change administrator", "Remove members", "Leave the group"]
   
   var chatID = String() {
     didSet {
@@ -111,7 +108,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     tableView.sectionIndexBackgroundColor = view.backgroundColor
     tableView.backgroundColor = view.backgroundColor
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: membersCellID)
-    tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
+    tableView.register(GroupAdminControlsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
     tableView.separatorStyle = .none
     tableView.allowsSelection = true
     tableView.prefetchDataSource = self
@@ -265,22 +262,27 @@ class GroupAdminControlsTableViewController: UITableViewController {
     return 60
   }
   
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+  }
+  
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
  
     if indexPath.section == 0 {
-        let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! AccountSettingsTableViewCell
-      cell.title.text = adminControls[indexPath.row].controlName
-      cell.icon.image = adminControls[indexPath.row].controlIcon
+        let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! GroupAdminControlsTableViewCell
+      cell.selectionStyle = .none
+      cell.title.text = adminControls[indexPath.row]
+    
       if indexPath.row == 0 || indexPath.row == 1 {
-        cell.title.textColor = FalconPalette.falconPaletteBlue
+        cell.title.textColor = FalconPalette.defaultBlue
       } else {
-        cell.title.textColor = .red
+        cell.title.textColor = FalconPalette.dismissRed
       }
       return cell
     
     } else {
       let cell = tableView.dequeueReusableCell(withIdentifier: membersCellID, for: indexPath) as! FalconUsersTableViewCell
-      
+      cell.selectionStyle = .default
       if members[indexPath.row].id == conversationAdminID {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
         label.text = "admin"
@@ -302,7 +304,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       } else {
         if let statusString = members[indexPath.row].onlineStatus as? String {
           if statusString == statusOnline {
-            cell.subtitle.textColor = FalconPalette.falconPaletteBlue
+            cell.subtitle.textColor = FalconPalette.defaultBlue
             cell.subtitle.text = statusString
           } else {
             cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor

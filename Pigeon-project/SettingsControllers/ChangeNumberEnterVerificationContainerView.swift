@@ -51,7 +51,7 @@ class ChangeNumberEnterVerificationContainerView: UIView {
     resend.setTitle("Resend", for: .normal)
     resend.contentVerticalAlignment = .center
     resend.contentHorizontalAlignment = .center
-    resend.setTitleColor(FalconPalette.falconPaletteBlue, for: .normal)
+    resend.setTitleColor(FalconPalette.defaultBlue, for: .normal)
     resend.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .highlighted)
     resend.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .disabled )
     

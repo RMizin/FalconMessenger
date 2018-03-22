@@ -116,7 +116,7 @@ class GroupProfileTableViewController: UITableViewController {
       
       if let statusString = selectedFlaconUsers[indexPath.row].onlineStatus as? String {
         if statusString == statusOnline {
-          cell.subtitle.textColor = FalconPalette.falconPaletteBlue
+          cell.subtitle.textColor = FalconPalette.defaultBlue
           cell.subtitle.text = statusString
         } else {
           cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor

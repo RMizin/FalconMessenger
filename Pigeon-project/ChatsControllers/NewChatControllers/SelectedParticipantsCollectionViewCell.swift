@@ -27,7 +27,7 @@ class SelectedParticipantsCollectionViewCell: UICollectionViewCell {
     super.init(frame: frame)
 
     contentView.layer.cornerRadius = 10
-    contentView.backgroundColor = FalconPalette.falconPaletteBlue
+    contentView.backgroundColor = FalconPalette.defaultBlue
     
     backgroundColor = .clear
     title.backgroundColor = backgroundColor

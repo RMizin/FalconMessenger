@@ -32,7 +32,7 @@ class OnboardingContainerView: UIView {
     let startMessaging = UIButton()
     startMessaging.translatesAutoresizingMaskIntoConstraints = false
     startMessaging.setTitle("Start messaging", for: .normal)
-    startMessaging.setTitleColor(FalconPalette.falconPaletteBlue, for: .normal)
+    startMessaging.setTitleColor(FalconPalette.defaultBlue, for: .normal)
     startMessaging.titleLabel?.backgroundColor = .clear
     startMessaging.titleLabel?.font = UIFont.systemFont(ofSize: 20)
     startMessaging.addTarget(self, action: #selector(OnboardingController.startMessagingDidTap), for: .touchUpInside)
