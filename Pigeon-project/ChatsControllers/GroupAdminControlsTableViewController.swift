@@ -56,6 +56,11 @@ class GroupAdminControlsTableViewController: UITableViewController {
     }
   }
   
+  let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
+  let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
+  
+  var currentName = String()
+  
  
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -108,7 +113,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: membersCellID)
     tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
     tableView.separatorStyle = .none
-    tableView.allowsSelection = false
+    tableView.allowsSelection = true
     tableView.prefetchDataSource = self
   }
   
@@ -116,7 +121,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
  
     groupProfileTableHeaderContainer.name.delegate = self
     groupProfileTableHeaderContainer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 170)
-    groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
+    groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
     tableView.tableHeaderView = groupProfileTableHeaderContainer
   }
   
@@ -152,6 +158,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       
       if let name = conversation.chatName {
         self.groupProfileTableHeaderContainer.name.text = name
+        self.currentName = name
       }
       
       if let admin = conversation.admin {
@@ -211,13 +218,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     userProfilePictureOpener.openUserProfilePicture()
   }
   
-  @objc func textFieldDidChange(_ textField: UITextField) {
-    if textField.text?.count == 0 {
-      navigationItem.rightBarButtonItem?.isEnabled = false
-    } else {
-      navigationItem.rightBarButtonItem?.isEnabled = true
-    }
-  }
+  
   
   
   // MARK: - Table view data source
@@ -339,10 +340,4 @@ extension GroupAdminControlsTableViewController: UITableViewDataSourcePrefetchin
   }
 }
 
-extension GroupAdminControlsTableViewController: UITextFieldDelegate {
-  
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    textField.resignFirstResponder()
-    return true
-  }
-}
+

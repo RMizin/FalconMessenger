@@ -56,6 +56,7 @@ class UserProfileContainerView: UIView {
   var name: PasteRestrictedTextField = {
     let name = PasteRestrictedTextField()
     name.font = UIFont.systemFont(ofSize: 20)
+    name.enablesReturnKeyAutomatically = true
     name.translatesAutoresizingMaskIntoConstraints = false
     name.textAlignment = .center
     name.placeholder = "Enter name"

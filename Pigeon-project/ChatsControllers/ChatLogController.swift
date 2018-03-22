@@ -71,6 +71,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var userStatusReference: DatabaseReference!
   
+  var chatNameReference: DatabaseReference!
+  
+  var chatNameHandle: DatabaseHandle!
+  
   var messages = [Message]()
   
   var sections = ["Messages"]
@@ -142,6 +146,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   fileprivate func observeMembersChanges() {
     
     guard let uid = Auth.auth().currentUser?.uid, let chatID = conversation?.chatID else { return }
+    
+    chatNameReference = Database.database().reference().child("user-messages").child(uid).child(chatID).child(messageMetaDataFirebaseFolder).child("chatName")
+    chatNameHandle = chatNameReference.observe(.value, with: { (snapshot) in
+      guard let newName = snapshot.value as? String else { return }
+      self.conversation?.chatName = newName
+      self.configureTitleViewWithOnlineStatus()
+    })
+    
     membersReference = Database.database().reference().child("user-messages").child(uid).child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
     
     membersAddingHandle = membersReference.observe(.childAdded) { (snapshot) in
@@ -617,6 +629,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if membersReference != nil && membersRemovingHandle != nil {
       membersReference.removeObserver(withHandle: membersRemovingHandle)
+    }
+    
+    if chatNameReference != nil && chatNameHandle != nil {
+      chatNameReference.removeObserver(withHandle: chatNameHandle)
     }
 
     isTyping = false

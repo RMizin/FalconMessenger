@@ -66,10 +66,10 @@ extension ChatsTableViewController {
     if let index = allConversations.index(where: { (conv) -> Bool in
       return conv.chatID == conversation.chatID
     }) {
-      if let muted = allConversations[index].muted, !muted {
+      if let muted = allConversations[index].muted, !muted, let chatName = allConversations[index].chatName {
         self.playNotificationSound()
         if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
-          self.showInAppNotification(title: conversation.chatName ?? "" , subtitle: self.subtitleForMessage(message: message))//, user: user)
+          self.showInAppNotification(title: chatName, subtitle: self.subtitleForMessage(message: message))//, user: user)
         }
       }
     }

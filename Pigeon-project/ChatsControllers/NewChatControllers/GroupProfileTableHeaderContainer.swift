@@ -37,6 +37,7 @@ class GroupProfileTableHeaderContainer: UIView {
 
   var name: PasteRestrictedTextField = {
     let name = PasteRestrictedTextField()
+    name.enablesReturnKeyAutomatically = true
     name.font = UIFont.systemFont(ofSize: 20)
     name.translatesAutoresizingMaskIntoConstraints = false
     name.textAlignment = .center
