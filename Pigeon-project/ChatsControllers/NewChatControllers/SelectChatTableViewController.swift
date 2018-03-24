@@ -248,7 +248,7 @@ class SelectChatTableViewController: UITableViewController {
       autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
       autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
       chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
-      chatLogController?.delegate = self
+     // chatLogController?.delegate = self
       chatLogController?.hidesBottomBarWhenPushed = true
       chatLogController?.conversation = conversation
     }
@@ -263,34 +263,35 @@ extension SelectChatTableViewController: UITableViewDataSourcePrefetching {
   }
 }
 
-extension SelectChatTableViewController: MessagesLoaderDelegate {
-  
-  func messagesLoader( didFinishLoadingWith messages: [Message]) {
-    
-    self.chatLogController?.messages = messages
-    
-    var indexPaths = [IndexPath]()
-    
-    if messages.count - 1 >= 0 {
-      for index in 0...messages.count - 1 {
-        indexPaths.append(IndexPath(item: index, section: 1))
-      }
-      
-      UIView.performWithoutAnimation {
-        DispatchQueue.main.async {
-          self.chatLogController?.collectionView?.reloadItems(at:indexPaths)
-        }
-      }
-    }
-    
-    if #available(iOS 11.0, *) {
-    } else {
-      self.chatLogController?.startCollectionViewAtBottom()
-    }
-    if let destination = self.chatLogController {
-      navigationController?.pushViewController( destination, animated: true)
-      self.chatLogController = nil
-      self.autoSizingCollectionViewFlowLayout = nil
-    }
-  }
-}
+//extension SelectChatTableViewController: MessagesLoaderDelegate {
+//  
+//  func messagesLoader( didFinishLoadingWith messages: [Message]) {
+//    
+//    self.chatLogController?.messages = messages
+//    
+//    var indexPaths = [IndexPath]()
+//    
+//    if messages.count - 1 >= 0 {
+//      for index in 0...messages.count - 1 {
+//        indexPaths.append(IndexPath(item: index, section: 1))
+//      }
+//      
+//      UIView.performWithoutAnimation {
+//        DispatchQueue.main.async {
+//          self.chatLogController?.collectionView?.reloadItems(at:indexPaths)
+//        }
+//      }
+//    }
+//    
+//    if #available(iOS 11.0, *) {
+//    } else {
+//     // self.chatLogController?.startCollectionViewAtBottom()
+//    }
+//    if let destination = self.chatLogController {
+//      navigationController?.pushViewController( destination, animated: true)
+//      self.chatLogController = nil
+//      self.autoSizingCollectionViewFlowLayout = nil
+//    }
+//  }
+//}
+

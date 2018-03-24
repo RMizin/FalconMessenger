@@ -36,6 +36,7 @@ extension ChatLogController {
     }
   }
   
+  
   func getAudioDurationInHours(from data: Data) -> String? {
     do {
       chatLogAudioPlayer = try AVAudioPlayer(data: data)

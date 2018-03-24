@@ -52,29 +52,30 @@ extension GroupAdminControlsTableViewController: UITextFieldDelegate { /* user n
       return
     }
     
-    let nameUpdatingGroup = DispatchGroup()
+   // let nameUpdatingGroup = DispatchGroup()
     navigationItem.leftBarButtonItem = nil
     navigationItem.rightBarButtonItem = nil
     groupProfileTableHeaderContainer.name.resignFirstResponder()
     ARSLineProgress.ars_showOnView(view)
   
-    for _ in members {
-      nameUpdatingGroup.enter()
-    }
+//    for _ in members {
+//      nameUpdatingGroup.enter()
+//    }
     
-    nameUpdatingGroup.notify(queue: DispatchQueue.main, execute: {
-      ARSLineProgress.showSuccess()
-    })
+//    nameUpdatingGroup.notify(queue: DispatchQueue.main, execute: {
+//      ARSLineProgress.showSuccess()
+//    })
     
-    for member in members {
-      guard let memberID = member.id, let newChatName = groupProfileTableHeaderContainer.name.text else { return }
-      let nameUpdateReference = Database.database().reference().child("user-messages").child(memberID).child(chatID).child(messageMetaDataFirebaseFolder)
-      print("Updating chat name for \(String(describing: member.name)) with id: \(String(describing: member.id))")
+  //  for member in members {
+      guard let newChatName = groupProfileTableHeaderContainer.name.text else { return }
+      let nameUpdateReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
+    //  print("Updating chat name for \(String(describing: member.name)) with id: \(String(describing: member.id))")
    
       nameUpdateReference.updateChildValues(["chatName": newChatName], withCompletionBlock: { (error, reference) in
-        nameUpdatingGroup.leave()
+        ARSLineProgress.showSuccess()
+        //nameUpdatingGroup.leave()
       })
-    }
+   // }
   }
 }
 

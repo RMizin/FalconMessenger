@@ -26,7 +26,10 @@ class GroupProfileTableViewController: UITableViewController {
   let groupProfileTableHeaderContainer = GroupProfileTableHeaderContainer()
   
   let userProfilePictureOpener = GroupPictureOpener()
+  
+  let chatCreatingGroup = DispatchGroup()
 
+  
   override func viewDidLoad() {
     super.viewDidLoad()
       
@@ -163,110 +166,110 @@ extension GroupProfileTableViewController: UITextFieldDelegate {
 
 extension GroupProfileTableViewController {
   
+  
+  
   @objc func createGroupChat() {
     
-    guard currentReachabilityStatus != .notReachable else {
+    guard currentReachabilityStatus != .notReachable, let chatName = groupProfileTableHeaderContainer.name.text, let currentUserID = Auth.auth().currentUser?.uid else {
       basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
       return
     }
     
-    ARSLineProgress.show()
-    view.isUserInteractionEnabled = false
-    
-    //to group chats meta
-    //+ chatID
-    //+chat thumbnail
-    let chatName = groupProfileTableHeaderContainer.name.text ?? "Group Chat"
+    let membersIDs = fetchMembersIDs()
     let chatImage = groupProfileTableHeaderContainer.profileImageView.image
-    var chatParticipantsIDs = [String]()
-    let chatCreatingGroup = DispatchGroup()
+    let chatID = Database.database().reference().child("user-messages").child(currentUserID).childByAutoId().key
+    let groupChatsReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
+    let childValues: [String: Any] = ["chatID": chatID, "chatName": chatName, "chatParticipantsIDs": membersIDs, "admin": currentUserID,"isGroupChat": true]
     
-    //for everybody
-    let badge = 0
-    let muted = false
-    let pinned = false
-    let isGroupChat = true
-   
-    
-    chatParticipantsIDs.append(Auth.auth().currentUser!.uid)
-    for selectedUser in selectedFlaconUsers {
-      if let id = selectedUser.id {
-        chatParticipantsIDs.append(id)
-      }
-    }
-    
-    let chatID = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).childByAutoId().key
-    
-    for _ in chatParticipantsIDs {
-      chatCreatingGroup.enter()
-    }
+    chatCreatingGroup.enter()
+    chatCreatingGroup.enter()
+    chatCreatingGroup.enter()
+    createGroupNode(reference: groupChatsReference, childValues: childValues, noImagesToUpload: chatImage == nil)
+    uploadAvatar(chatImage: chatImage, reference: groupChatsReference)
+    connectMembersToGroup(memberIDs: membersIDs, chatID: chatID)
     
     chatCreatingGroup.notify(queue: DispatchQueue.main, execute: {
-      self.view.isUserInteractionEnabled = true
-      print("group finished Notifiying...")
-      ARSLineProgress.showSuccess()
+      self.hideActivityIndicator()
+      print("Chat creating finished...")
       self.navigationController?.backToViewController(viewController: ChatsTableViewController.self)
     })
+  }
+  
+  
+  
+  func fetchMembersIDs() -> [String] {
+    var membersIDs = [String]()
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return membersIDs }
+    membersIDs.append(currentUserID)
+    for selectedUser in selectedFlaconUsers {
+      guard let id = selectedUser.id else { continue }
+      membersIDs.append(id)
+    }
+    return membersIDs
+  }
+  
+  func showActivityIndicator() {
+    ARSLineProgress.show()
+    view.isUserInteractionEnabled = false
+  }
+  
+  func hideActivityIndicator() {
+    self.view.isUserInteractionEnabled = true
+    ARSLineProgress.showSuccess()
+  }
+  
+  func uploadAvatar(chatImage: UIImage?, reference: DatabaseReference) {
+    guard let unwrappedChatImage = chatImage else { return }
+    let chatThumbnailImage = createImageThumbnail(unwrappedChatImage)
+    let imagesToUpload = [chatThumbnailImage, unwrappedChatImage]
+    let imagesUploaingdGroup = DispatchGroup()
     
-    for participantID in chatParticipantsIDs {
+    for _ in imagesToUpload { imagesUploaingdGroup.enter() }
+    
+    imagesUploaingdGroup.notify(queue: DispatchQueue.main, execute: {
+      print("images uploading finished for one of the participants, leaving main group...")
+      self.chatCreatingGroup.leave()
+    })
+    
+    for image in imagesToUpload {
+      var quality: CGFloat = 1.0
+      var imageType: ImageType = .thumbnail
+      if image == chatImage { quality = 0.5; imageType = .original }
       
-      let reference = Database.database().reference().child("user-messages").child(participantID).child(chatID).child(messageMetaDataFirebaseFolder)
-      if let unwrappedChatImage = chatImage {
-        
-        let chatThumbnailImage = createImageThumbnail(unwrappedChatImage)
-        let imagesToUpload = [chatThumbnailImage, unwrappedChatImage]
-        let imagesUploadGroup = DispatchGroup()
-        
-        for _ in imagesToUpload {
-          imagesUploadGroup.enter()
-        }
-        
-        imagesUploadGroup.notify(queue: DispatchQueue.main, execute: {
-          print("images uploading finished for one of the participants, leaving main group...")
-          chatCreatingGroup.leave()
+      uploadAvatarForUserToFirebaseStorageUsingImage(image, quality: quality) { (imageURL, path) in
+        reference.updateChildValues([imageType.rawValue : String(describing: imageURL)], withCompletionBlock: { (error, ref) in
+          imagesUploaingdGroup.leave()
         })
-        
-        
-        for image in imagesToUpload {
-          
-          var quality:CGFloat = 1.0
-          var imageType:ImageType = .thumbnail
-          
-          if image == chatImage {
-            quality = 0.5
-            imageType = .original
-          }
-          
-          uploadAvatarForUserToFirebaseStorageUsingImage(image, quality: quality) { (imageURL, path) in
-            reference.updateChildValues([imageType.rawValue : String(describing: imageURL)], withCompletionBlock: { (error, ref) in
-              guard error == nil else {
-                imagesUploadGroup.leave()
-                print("leaving imagesUploadGroup in error")
-                print(error?.localizedDescription ?? "")
-                return
-              }
-              
-              imagesUploadGroup.leave()
-              print("leaving imagesUploadGroup in success")
-            })// reference
-          }// avatar upload
-        } // for loop
-      }// if let
-      
-      
-      let childValues: [String: Any] = ["chatID": chatID, "chatName": chatName, /*"lastMessageID": "",*/ "badge": badge, "muted": muted, "pinned": pinned, "isGroupChat": isGroupChat, "chatParticipantsIDs": chatParticipantsIDs, "admin": Auth.auth().currentUser!.uid]
-      
-      reference.updateChildValues(childValues) { (error, reference) in
-        if error != nil {
-          chatCreatingGroup.leave()
-          print(error?.localizedDescription ?? "")
-          return
-        }
-        
-        guard chatImage == nil else { return }
-        chatCreatingGroup.leave()
-        print("leaving group in data upload")
       }
-    } // for loop
-  } //func
-} // extension
+    }
+  }
+  
+  func connectMembersToGroup(memberIDs: [String], chatID: String) {
+    let connectingMembersGroup = DispatchGroup()
+    for _ in memberIDs {
+      connectingMembersGroup.enter()
+    }
+    connectingMembersGroup.notify(queue: DispatchQueue.main, execute: {
+      self.chatCreatingGroup.leave()
+    })
+    for memberID in memberIDs {
+      let userReference = Database.database().reference().child("user-messages").child(memberID).child(chatID).child(messageMetaDataFirebaseFolder)
+      let values:[String : Any] = ["isGroupChat": true, "chatID": chatID]
+      userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
+        connectingMembersGroup.leave()
+      })
+    }
+  }
+  
+  func createGroupNode(reference: DatabaseReference, childValues: [String: Any], noImagesToUpload: Bool) {
+    showActivityIndicator()
+    let nodeCreationGroup = DispatchGroup()
+    nodeCreationGroup.enter()
+    nodeCreationGroup.notify(queue: DispatchQueue.main, execute: {
+      self.chatCreatingGroup.leave()
+    })
+    reference.updateChildValues(childValues) { (error, reference) in
+      nodeCreationGroup.leave()
+    }
+  }
+}

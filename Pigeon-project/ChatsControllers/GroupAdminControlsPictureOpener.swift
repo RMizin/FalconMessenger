@@ -146,15 +146,13 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     let storageRef = storage.reference(forURL: controllerWithUserProfilePhoto!.groupAvatarURL)
 
     storageRef.delete { error in
-      
-      for member in self.controllerWithUserProfilePhoto.members {
-        guard let memberID = member.id else { continue }
-        let chatOriginalPhotoURLReference = Database.database().reference().child("user-messages").child(memberID).child(self.controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder).child("chatOriginalPhotoURL")
-        let chatThumbnailPhotoURLReference = Database.database().reference().child("user-messages").child(memberID).child(self.controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder).child("chatThumbnailPhotoURL")
+
+      let chatOriginalPhotoURLReference = Database.database().reference().child("groupChats").child(self.controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder).child("chatOriginalPhotoURL")
+      let chatThumbnailPhotoURLReference = Database.database().reference().child("groupChats").child(self.controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder).child("chatThumbnailPhotoURL")
         chatOriginalPhotoURLReference.removeValue()
         chatThumbnailPhotoURLReference.removeValue()
-        print("removing for member: \(memberID)")
-      }
+  
+    //  }
       completion(true)
       print("file deleted")
     }
@@ -304,65 +302,35 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     }
 
     let chatImage = image
-
-    let chatCreatingGroup = DispatchGroup()
-    
-
-    
-    for _ in controllerWithUserProfilePhoto.members {
-      chatCreatingGroup.enter()
+    let reference = Database.database().reference().child("groupChats").child(controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder)
+    let chatThumbnailImage = createImageThumbnail(chatImage)
+    let imagesToUpload = [chatThumbnailImage, chatImage]
+    let imagesUploadGroup = DispatchGroup()
+  
+    for _ in imagesToUpload {
+      imagesUploadGroup.enter()
     }
-    
-    chatCreatingGroup.notify(queue: DispatchQueue.main, execute: {
-      print("group finished Notifiying...")
+  
+    imagesUploadGroup.notify(queue: DispatchQueue.main, execute: {
       self.userProfileContainerView?.profileImageView.hideActivityIndicator()
     })
-    
-    for member in controllerWithUserProfilePhoto.members {
-      guard let memberID = member.id else { continue }
+
+    for image in imagesToUpload {
+      var quality: CGFloat = 1.0
+      var imageType: ImageType = .thumbnail
       
-      let reference = Database.database().reference().child("user-messages").child(memberID).child(controllerWithUserProfilePhoto.chatID).child(messageMetaDataFirebaseFolder)
-   
-        
-        let chatThumbnailImage = createImageThumbnail(chatImage)
-        let imagesToUpload = [chatThumbnailImage, chatImage]
-        let imagesUploadGroup = DispatchGroup()
-        
-        for _ in imagesToUpload {
-          imagesUploadGroup.enter()
-        }
-        
-        imagesUploadGroup.notify(queue: DispatchQueue.main, execute: {
-          print("images uploading finished for one of the participants, leaving main group...")
-          chatCreatingGroup.leave()
-        })
-        
-        
-        for image in imagesToUpload {
-          
-          var quality:CGFloat = 1.0
-          var imageType:ImageType = .thumbnail
-          
-          if image == chatImage {
-            quality = 0.5
-            imageType = .original
-          }
-          
-          uploadAvatarForUserToFirebaseStorageUsingImage(image, quality: quality) { (imageURL, path) in
-            reference.updateChildValues([imageType.rawValue : String(describing: imageURL)], withCompletionBlock: { (error, ref) in
-              guard error == nil else {
-                imagesUploadGroup.leave()
-                print("leaving imagesUploadGroup in error")
-                print(error?.localizedDescription ?? "")
-                return
-              }
-              
-              imagesUploadGroup.leave()
-              print("leaving imagesUploadGroup in success")
-            })// reference
-          }// avatar upload
-        } // for loop
-      } // for loop
+      if image == chatImage {
+        quality = 0.5
+        imageType = .original
+      }
+      
+      uploadAvatarForUserToFirebaseStorageUsingImage(image, quality: quality) { (imageURL, path) in
+        reference.updateChildValues([imageType.rawValue : String(describing: imageURL)], withCompletionBlock: { (error, ref) in
+          imagesUploadGroup.leave()
+          print("leaving imagesUploadGroup in success")
+        })// reference
+      }// avatar upload
+    } // for loop
   } //func
   
   fileprivate func managePhotoPlaceholderLabelAppearance() {

@@ -144,7 +144,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
 
   fileprivate func observeConversationDataChanges() {
     
-    chatReference = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).child(chatID).child(messageMetaDataFirebaseFolder)
+    chatReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
     chatHandle = chatReference.observe( .value) { (snapshot) in
       guard let conversationDictionary = snapshot.value as? [String: AnyObject] else { return }
       let conversation = Conversation(dictionary: conversationDictionary)
@@ -166,8 +166,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   func observeMembersChanges() {
     
-    guard let uid = Auth.auth().currentUser?.uid else { return }
-    membersAddingReference = Database.database().reference().child("user-messages").child(uid).child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
+  //  guard let uid = Auth.auth().currentUser?.uid else { return }
+    membersAddingReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
     
     membersAddingHandle = membersAddingReference.observe(.childAdded) { (snapshot) in
       guard let id = snapshot.value as? String else { return }

@@ -93,7 +93,6 @@ extension BaseMessageCell {
           return
         }
       } else {
-        self.chatLogController?.deletedMessagesNumber += 1
         guard let uid = Auth.auth().currentUser?.uid, let partnerID = self.message?.chatPartnerId(), let messageID = self.message?.messageUID, self.currentReachabilityStatus != .notReachable else {
             self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
             guard let controllerToDisplayOn = self.chatLogController else { return }
@@ -102,35 +101,33 @@ extension BaseMessageCell {
         }
 
         var deletionReference:DatabaseReference!
-        if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
+      if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
           guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
-          deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child("userMessages").child(messageID)
+       //   deletionReference = Database.database().reference().child("groupChats").child(conversationID).child("userMessages").child(messageID)
+          deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(userMessagesFirebaseFolder).child(messageID)
         } else {
-          deletionReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child("userMessages").child(messageID)
+          deletionReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(userMessagesFirebaseFolder).child(messageID)
         }
         
         deletionReference.removeValue(completionBlock: { (error, reference) in
-          if error != nil {
-            self.chatLogController?.deletedMessagesNumber -= 1
-            return
-          }
+          if error != nil { return }
           let shouldReloadMessageStatus = self.shouldReloadMessageSatus()
           self.chatLogController?.collectionView?.performBatchUpdates ({
-            
             self.chatLogController?.messages.remove(at: indexPath.item)
-            
             self.chatLogController?.collectionView?.deleteItems(at: [indexPath])
             
-            
             if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
+              
               guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
-              var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(messageMetaDataFirebaseFolder)
+              
+               var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(messageMetaDataFirebaseFolder)
               if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
                 lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
               } else {
                 lastMessageReference = lastMessageReference.child("lastMessageID")
                 lastMessageReference.removeValue()
               }
+              
             } else {
               var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(messageMetaDataFirebaseFolder)
               if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
@@ -140,8 +137,6 @@ extension BaseMessageCell {
                 lastMessageReference.removeValue()
               }
             }
-
-            
           }, completion: { (isCompleted) in
        
             if self.chatLogController?.messages.count == 0 {
