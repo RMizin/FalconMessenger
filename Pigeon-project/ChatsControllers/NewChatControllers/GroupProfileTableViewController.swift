@@ -210,16 +210,16 @@ extension GroupProfileTableViewController {
   
   func showActivityIndicator() {
     ARSLineProgress.show()
-    view.isUserInteractionEnabled = false
+    self.navigationController?.view.isUserInteractionEnabled = false
   }
   
   func hideActivityIndicator() {
-    self.view.isUserInteractionEnabled = true
+    self.navigationController?.view.isUserInteractionEnabled = true
     ARSLineProgress.showSuccess()
   }
   
   func uploadAvatar(chatImage: UIImage?, reference: DatabaseReference) {
-    guard let unwrappedChatImage = chatImage else { return }
+    guard let unwrappedChatImage = chatImage else { self.chatCreatingGroup.leave(); return }
     let chatThumbnailImage = createImageThumbnail(unwrappedChatImage)
     let imagesToUpload = [chatThumbnailImage, unwrappedChatImage]
     let imagesUploaingdGroup = DispatchGroup()
@@ -254,7 +254,7 @@ extension GroupProfileTableViewController {
     })
     for memberID in memberIDs {
       let userReference = Database.database().reference().child("user-messages").child(memberID).child(chatID).child(messageMetaDataFirebaseFolder)
-      let values:[String : Any] = ["isGroupChat": true, "chatID": chatID]
+      let values:[String : Any] = ["isGroupChat": true]
       userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
         connectingMembersGroup.leave()
       })

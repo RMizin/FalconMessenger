@@ -1534,8 +1534,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       let messageId = childRef.key
       
-      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
-        for memberID in self.conversation!.chatParticipantsIDs! {
+      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat, let membersIDs = self.conversation?.chatParticipantsIDs {
+        for memberID in membersIDs {
           let userMessagesRef = Database.database().reference().child("user-messages").child(memberID).child(toId).child(userMessagesFirebaseFolder)
           userMessagesRef.updateChildValues([messageId: 1])
         }

@@ -96,11 +96,13 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
               }
               self.managePhotoPlaceholderLabelAppearance()
               self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+              self.controllerWithUserProfilePhoto.navigationController?.view.isUserInteractionEnabled = true
               print("deleted")
               
             } else {
               
               self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+              self.controllerWithUserProfilePhoto.navigationController?.view.isUserInteractionEnabled = true
               basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self.controllerWithUserProfilePhoto!)
               // print("in error", userProfileContainerView?.profileImageView)
             }
@@ -126,6 +128,7 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     
     if currentReachabilityStatus == .notReachable {
       userProfileContainerView?.profileImageView.hideActivityIndicator()
+      controllerWithUserProfilePhoto.navigationController?.view.isUserInteractionEnabled = true
       basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerWithUserProfilePhoto!)
       return
     }
@@ -136,6 +139,7 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     }
     
     userProfileContainerView?.profileImageView.showActivityIndicator()
+     controllerWithUserProfilePhoto.navigationController?.view.isUserInteractionEnabled = false
     
     if controllerWithUserProfilePhoto!.groupAvatarURL == "" {
       completion(true)
@@ -268,6 +272,7 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
         self.userProfileContainerView?.profileImageView.image = selectedImage
         self.updateUserProfile(with: self.userProfileContainerView!.profileImageView.image!)
         self.userProfileContainerView?.profileImageView.showActivityIndicator()
+        self.controllerWithUserProfilePhoto.navigationController?.view.isUserInteractionEnabled = false
         controllerWithUserProfilePhoto?.dismiss(animated: true, completion: nil)
         return
       }
@@ -279,6 +284,7 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
         } else {
           if self.userProfileContainerView?.profileImageView.image != nil {
             self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+            self.controllerWithUserProfilePhoto.navigationController?.view.isUserInteractionEnabled = true
             basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self.controllerWithUserProfilePhoto!)
           } else {
             self.userProfileContainerView?.profileImageView.image = selectedImage
@@ -290,6 +296,7 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
     }
     
     self.userProfileContainerView?.profileImageView.showActivityIndicator()
+     self.controllerWithUserProfilePhoto.navigationController?.view.isUserInteractionEnabled = false
     controllerWithUserProfilePhoto?.dismiss(animated: true, completion: nil)
   }
   
@@ -313,6 +320,7 @@ class GroupAdminControlsPictureOpener: NSObject, UIImagePickerControllerDelegate
   
     imagesUploadGroup.notify(queue: DispatchQueue.main, execute: {
       self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+      self.controllerWithUserProfilePhoto.navigationController?.view.isUserInteractionEnabled = true
     })
 
     for image in imagesToUpload {

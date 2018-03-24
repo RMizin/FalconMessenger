@@ -189,7 +189,7 @@ class ChatsTableViewController: UITableViewController {
     }
   }
   
-  fileprivate func checkIfThereAnyActiveChats(isEmpty: Bool) {
+  func checkIfThereAnyActiveChats(isEmpty: Bool) {
     
     if isEmpty {
       self.view.addSubview(noChatsYetContainer)
@@ -205,47 +205,57 @@ class ChatsTableViewController: UITableViewController {
   }
   
 
-  var shouldDisplayNotification = false
+  //var shouldDisplayNotification = false
+  var notificationReference: DatabaseReference!
+  var notificationHandle = [DatabaseHandle]()
   fileprivate var inAppNotificationsObserverHandler: DatabaseHandle!
   
   func observersForNotifications() {
+    
+    
+    if notificationReference != nil {
+      for handle in notificationHandle {
+        notificationReference.removeObserver(withHandle: handle)
+      }
+    }
+    
     var allConversations = [Conversation]()
     
     allConversations.insert(contentsOf: conversations, at: 0)
     allConversations.insert(contentsOf: pinnedConversations, at: 0)
     
-    let allConversationsGroup = DispatchGroup()
-    var allConversationsGroupFinished = false
+    //let allConversationsGroup = DispatchGroup()
+    //var allConversationsGroupFinished = false
     
-    for _ in allConversations {
-      allConversationsGroup.enter()
-        print("entering all convs group")
-    }
-    
-    allConversationsGroup.notify(queue: DispatchQueue.main, execute: {
-     print("notifying  all convs group")
-      allConversationsGroupFinished = true
-      self.shouldDisplayNotification = true
-    })
+//    for _ in allConversations {
+//      allConversationsGroup.enter()
+//        print("entering all convs group")
+//    }
+//
+//    allConversationsGroup.notify(queue: DispatchQueue.main, execute: {
+//     print("notifying  all convs group")
+//    //  allConversationsGroupFinished = true
+//      self.shouldDisplayNotification = true
+//    })
     
     for conversation in allConversations {
+      
       guard let currentUserID = Auth.auth().currentUser?.uid, let chatID = conversation.chatID else { continue }
-      var notificationReference: DatabaseReference!
-   //   if let isGroupChat = conversation.isGroupChat, isGroupChat {
-   //     notificationReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("lastMessageID")
-      
-  //    } else {
-        notificationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder).child("lastMessageID")
-  //    }
-      
-      notificationReference.observe(.value, with: { (snapshot) in
-        guard let messageID = snapshot.value as? String, allConversationsGroupFinished else {  allConversationsGroup.leave(); return }
+
+      notificationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)//.child("lastMessageID")
+      let handle = DatabaseHandle()
+      notificationHandle.insert(handle, at: 0)
+      notificationHandle[0] = notificationReference.observe(.childChanged, with: { (snapshot) in
+        guard snapshot.key == "lastMessageID" else { return }
+        guard let messageID = snapshot.value as? String else { return }
         self.lastMessageForConverstaionRef = Database.database().reference().child("messages").child(messageID)
+        
         self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
-          guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+          
+          guard var dictionary = snapshot.value as? [String: AnyObject] else { print("returnun2"); return }
           dictionary.updateValue(messageID as AnyObject, forKey: "messageUID")
           let message = Message(dictionary: dictionary)
-          guard let uid = Auth.auth().currentUser?.uid, message.fromId != uid else { return }
+          guard let uid = Auth.auth().currentUser?.uid, message.fromId != uid else { print("returnun3"); return }
           self.handleInAppSoundPlaying(message: message, conversation: conversation)
         })
       })
@@ -319,7 +329,7 @@ fileprivate var shouldDisableUpdatingIndicator = true
       self.conversationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
       self.conversationReference.observe(.value, with: { (snapshot) in
         
-        guard var conversationDictionary = snapshot.value as? [String: AnyObject] else { return }
+        guard var conversationDictionary = snapshot.value as? [String: AnyObject], snapshot.exists() else { return }
          conversationDictionary.updateValue(chatID as AnyObject, forKey: "chatID")
     
         if self.isGroupAlreadyFinished { self.shouldDisableUpdatingIndicator = false }
@@ -331,8 +341,6 @@ fileprivate var shouldDisableUpdatingIndicator = true
 
             
             guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
-              
-            //  let conversation = Conversation(dictionary: dictionary)
               
               guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
                 print("is not group chat 1")
@@ -366,7 +374,6 @@ fileprivate var shouldDisableUpdatingIndicator = true
         print(error.localizedDescription)
       })
     })
-    currentUserConversationsReference.observe(.childRemoved) { (snapshot) in }
   }
   
   
@@ -452,6 +459,10 @@ fileprivate var shouldDisableUpdatingIndicator = true
       } else {
         self.conversations.append(conversation)
       }
+      if isGroupAlreadyFinished {
+        self.observersForNotifications()
+      }
+     
       self.handleGroupOrReloadTable()
     }
   }
@@ -461,10 +472,9 @@ fileprivate var shouldDisableUpdatingIndicator = true
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    let tabItems = tabBarController?.tabBar.items as NSArray!
-    let tabItem = tabItems?[tabs.chats.rawValue] as! UITabBarItem
+    guard let tabItems = tabBarController?.tabBar.items as NSArray? else { return }
+    guard let tabItem = tabItems[tabs.chats.rawValue] as? UITabBarItem else { return }
     var badge = 0
-    
     
     for conversation in filtededConversations {
       guard let lastMessage = conversation.lastMessage, let conversationBadge = conversation.badge, lastMessage.fromId != uid  else { continue }

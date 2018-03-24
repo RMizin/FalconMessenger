@@ -26,7 +26,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   var membersRemovingHandle: DatabaseHandle!
   
   var members = [User]()
-  var adminControls = [ "Add members", "Change administrator", "Remove members", "Leave the group"]
+  var adminControls = [ "Add members"/*, "Change administrator"*/, "Remove members", "Leave the group"]
   
   var chatID = String() {
     didSet {
@@ -45,10 +45,9 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   var groupAvatarURL = String() {
     didSet {
-      groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
+      groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()      
       groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string:groupAvatarURL), placeholderImage: nil, options: [], completed: { (image, error, cacheType, url) in
         self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
-        self.groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openUserProfilePicture)))
       })
     }
   }
@@ -121,6 +120,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
     groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
     tableView.tableHeaderView = groupProfileTableHeaderContainer
+     self.groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openUserProfilePicture)))
   }
   
   fileprivate func setupColorsAccordingToTheme() {
@@ -210,13 +210,13 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   @objc fileprivate func openUserProfilePicture() {
+    
+    if !isCurrentUserAdministrator && groupProfileTableHeaderContainer.profileImageView.image == nil { return }
     userProfilePictureOpener.controllerWithUserProfilePhoto = self
     userProfilePictureOpener.userProfileContainerView = groupProfileTableHeaderContainer
     userProfilePictureOpener.openUserProfilePicture()
   }
-  
-  
-  
+
   
   // MARK: - Table view data source
   

@@ -123,9 +123,15 @@ extension ChatsTableViewController {
     self.pinnedConversations.remove(at: index)
     self.tableView.deleteRows(at: [indexPath], with: .left)
     self.tableView.endUpdates()
-        
+    
+    Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
     configureTabBarBadge()
+    if self.pinnedConversations.count <= 0 {
+      DispatchQueue.main.async {
+        self.checkIfThereAnyActiveChats(isEmpty: true)
+      }
+    }
   }
   
   func deleteUnPinnedConversation(at indexPath: IndexPath) {
@@ -142,8 +148,15 @@ extension ChatsTableViewController {
     self.tableView.deleteRows(at: [indexPath], with: .left)
     self.tableView.endUpdates()
     
+    Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
+   
     configureTabBarBadge()
+    if self.conversations.count <= 0 {
+      DispatchQueue.main.async {
+         self.checkIfThereAnyActiveChats(isEmpty: true)
+      }
+    }
   }
   
   fileprivate func updateMutedDatabaseValue(to state: Bool, currentUserID: String, conversationID: String) {
