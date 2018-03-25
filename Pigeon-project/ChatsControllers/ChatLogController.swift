@@ -31,6 +31,7 @@ private let typingIndicatorStateDatabaseKeyID = "Is typing"
 
 private let incomingPhotoMessageCellID = "incomingPhotoMessageCellID"
 
+private let informationMessageCellID = "informationMessageCellID"
 
 
 class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
@@ -599,6 +600,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.register(IncomingPhotoMessageCell.self, forCellWithReuseIdentifier: incomingPhotoMessageCellID)
     collectionView?.register(OutgoingVoiceMessageCell.self, forCellWithReuseIdentifier: outgoingVoiceMessageCellID)
     collectionView?.register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
+    collectionView?.register(InformationMessageCell.self, forCellWithReuseIdentifier: informationMessageCellID)
     collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
     
     configureRefreshControlInitialTintColor()
@@ -830,6 +832,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let message = messages[indexPath.item]
     
     if let messageText = message.text { /* If current message is a text message */
+      
+      if let isInfoMessage = message.isInformationMessage, isInfoMessage {
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: informationMessageCellID, for: indexPath) as! InformationMessageCell
+        cell.information.text = messageText
+        cell.information.sizeToFit()
+        return cell
+      }
       
       if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing text message with blue bubble */
       
@@ -1216,6 +1225,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let message = messages[indexPath.row]
     
       if message.text != nil {
+        if let isInfoMessage = message.isInformationMessage, isInfoMessage {
+          return CGSize(width: self.collectionView!.frame.width, height: 20)
+        }
         
         if let isGroupChat = conversation?.isGroupChat, isGroupChat, message.fromId != Auth.auth().currentUser!.uid {
           cellHeight = message.estimatedFrameForText!.height + 20 + 15
@@ -1588,18 +1600,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
     guard let conversationID = conversation?.chatID, let participantsIDs = conversation?.chatParticipantsIDs else { return }
     
-   // let chatName = conversation?.chatName ?? ""
+ 
     let isGroupChat = conversation?.isGroupChat ?? false
-   // let admin = conversation?.admin ?? ""
-   // let chatPhotoURL = conversation?.chatPhotoURL ?? ""
-  //  let chatThumbnailPhotoURL = conversation?.chatThumbnailPhotoURL ?? ""
+  
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
   
-//      let ref = Database.database().reference().child("groupChats").child(conversationID).child(messageMetaDataFirebaseFolder)
-//      let childValues: [String: Any] = ["chatID": conversationID, "chatName": chatName, "chatParticipantsIDs": participantsIDs, "admin": admin ,"chatOriginalPhotoURL": chatPhotoURL, "chatThumbnailPhotoURL": chatThumbnailPhotoURL, "isGroupChat": isGroupChat]
-//      ref.updateChildValues(childValues)
-//
       for memberID in participantsIDs {
        let ref = Database.database().reference().child("user-messages").child(memberID).child(conversationID).child(messageMetaDataFirebaseFolder)
         let childValues: [String: Any] = ["lastMessageID": messageID]

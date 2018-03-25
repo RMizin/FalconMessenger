@@ -208,6 +208,7 @@
 		4BEDC37B1F3386160005B8E6 /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */; };
 		4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */; };
 		4BEDC3851F33C0A10005B8E6 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDC3841F33C0A10005B8E6 /* Country.swift */; };
+		4BEDE4272067C77400C52EF4 /* InformationMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDE4262067C77400C52EF4 /* InformationMessageCell.swift */; };
 		4BF07B2F2053429F00A68023 /* FalconUsersFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF07B2E2053429F00A68023 /* FalconUsersFetcher.swift */; };
 		4BF07B312053437000A68023 /* ContactsController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF07B302053437000A68023 /* ContactsController+SearchHandlers.swift */; };
 		4BF6F94D1FD188110011686B /* typingindicatorDark.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BF6F94C1FD188110011686B /* typingindicatorDark.gif */; };
@@ -437,6 +438,7 @@
 		4BEDC37A1F3386160005B8E6 /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterVerificationContainerView.swift; path = AuthenticationControllers/EnterVerificationContainerView.swift; sourceTree = "<group>"; };
 		4BEDC37C1F3388770005B8E6 /* SelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectCountryCodeController.swift; path = AuthenticationControllers/SelectCountryCodeController.swift; sourceTree = "<group>"; };
 		4BEDC3841F33C0A10005B8E6 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Country.swift; path = AuthenticationControllers/Country.swift; sourceTree = "<group>"; };
+		4BEDE4262067C77400C52EF4 /* InformationMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InformationMessageCell.swift; path = ChatsControllers/InformationMessageCell.swift; sourceTree = "<group>"; };
 		4BF07B2E2053429F00A68023 /* FalconUsersFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FalconUsersFetcher.swift; path = ContactsControllers/FalconUsersFetcher.swift; sourceTree = "<group>"; };
 		4BF07B302053437000A68023 /* ContactsController+SearchHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ContactsController+SearchHandlers.swift"; path = "ContactsControllers/ContactsController+SearchHandlers.swift"; sourceTree = "<group>"; };
 		4BF6F94C1FD188110011686B /* typingindicatorDark.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingindicatorDark.gif; path = ChatsControllers/Media/typingindicatorDark.gif; sourceTree = "<group>"; };
@@ -728,6 +730,7 @@
 				4BE72A74204E9E95009A22EA /* OutgoingCells */,
 				4BE72A75204E9EA0009A22EA /* IncomingCells */,
 				4BE72A76204E9EAB009A22EA /* TypingIndicatorCell */,
+				4BEDE4252067C73500C52EF4 /* InformationCell */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -1136,6 +1139,14 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		4BEDE4252067C73500C52EF4 /* InformationCell */ = {
+			isa = PBXGroup;
+			children = (
+				4BEDE4262067C77400C52EF4 /* InformationMessageCell.swift */,
+			);
+			name = InformationCell;
+			sourceTree = "<group>";
+		};
 		4BF07B322053438C00A68023 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -1470,6 +1481,7 @@
 				4BFD07761FB08005003791D7 /* ViewControllerPlaceholder.swift in Sources */,
 				4BE5715F1F4D87A4009D9AB4 /* PhotoEditorViewController.swift in Sources */,
 				4B2820EC1FE4025600791AB1 /* AnnouncementShowing.swift in Sources */,
+				4BEDE4272067C77400C52EF4 /* InformationMessageCell.swift in Sources */,
 				4BE8BB3B1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift in Sources */,
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
 				4B0FA7DE2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift in Sources */,

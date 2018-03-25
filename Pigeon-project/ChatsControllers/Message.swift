@@ -19,6 +19,7 @@ struct MessageSubtitle {
 class Message: NSObject  {
   
     var messageUID: String?
+    var isInformationMessage: Bool?
 
     var fromId: String?
     var text: String?
@@ -57,6 +58,7 @@ class Message: NSObject  {
         super.init()
       
         messageUID = dictionary["messageUID"] as? String
+        isInformationMessage = dictionary["isInformationMessage"] as? Bool
         fromId = dictionary["fromId"] as? String
         text = dictionary["text"] as? String
         toId = dictionary["toId"] as? String
