@@ -179,14 +179,15 @@ extension GroupProfileTableViewController {
     let chatImage = groupProfileTableHeaderContainer.profileImageView.image
     let chatID = Database.database().reference().child("user-messages").child(currentUserID).childByAutoId().key
     let groupChatsReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
-    let childValues: [String: Any] = ["chatID": chatID, "chatName": chatName, "chatParticipantsIDs": membersIDs, "admin": currentUserID,"isGroupChat": true]
+    let childValues: [String: AnyObject] = ["chatID": chatID as AnyObject, "chatName": chatName as AnyObject, "chatParticipantsIDs": membersIDs.1 as AnyObject, "admin": currentUserID as AnyObject,"isGroupChat": true as AnyObject]
+  
     
     chatCreatingGroup.enter()
     chatCreatingGroup.enter()
     chatCreatingGroup.enter()
     createGroupNode(reference: groupChatsReference, childValues: childValues, noImagesToUpload: chatImage == nil)
     uploadAvatar(chatImage: chatImage, reference: groupChatsReference)
-    connectMembersToGroup(memberIDs: membersIDs, chatID: chatID)
+    connectMembersToGroup(memberIDs: membersIDs.0, chatID: chatID)
     
     chatCreatingGroup.notify(queue: DispatchQueue.main, execute: {
       self.hideActivityIndicator()
@@ -195,17 +196,22 @@ extension GroupProfileTableViewController {
     })
   }
   
-  
-  
-  func fetchMembersIDs() -> [String] {
+  func fetchMembersIDs() -> ([String], [String:AnyObject]) {
     var membersIDs = [String]()
-    guard let currentUserID = Auth.auth().currentUser?.uid else { return membersIDs }
+    var membersIDsDictionary = [String:AnyObject]()
+    
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return (membersIDs, membersIDsDictionary) }
+    
+    membersIDsDictionary.updateValue(currentUserID as AnyObject, forKey: currentUserID)
     membersIDs.append(currentUserID)
+    
     for selectedUser in selectedFlaconUsers {
       guard let id = selectedUser.id else { continue }
+      membersIDsDictionary.updateValue(id as AnyObject, forKey: id)
       membersIDs.append(id)
     }
-    return membersIDs
+  
+    return (membersIDs, membersIDsDictionary)
   }
   
   func showActivityIndicator() {

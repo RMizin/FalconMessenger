@@ -283,6 +283,9 @@ fileprivate var shouldDisableUpdatingIndicator = true
       chatDictionary.updateValue(conversation.muted as AnyObject, forKey: "muted")
       chatDictionary.updateValue(conversation.badge as AnyObject, forKey: "badge")
       chatDictionary.updateValue(conversation.lastMessageID as AnyObject, forKey: "lastMessageID")
+      if let membersIDs = chatDictionary["chatParticipantsIDs"] as? [String:AnyObject] {
+        chatDictionary.updateValue(Array(membersIDs.values) as AnyObject, forKey: "chatParticipantsIDs")
+      }
       completion(true, chatDictionary)
     }
   }
@@ -701,7 +704,7 @@ fileprivate var shouldDisableUpdatingIndicator = true
       return configuredCell(for: indexPath)
     }
   }
-  
+  var chatLogController:ChatLogController? = nil
   var messagesFetcher:MessagesFetcher? = nil
   var destinationLayout:AutoSizingCollectionViewFlowLayout? = nil
 
@@ -717,14 +720,13 @@ fileprivate var shouldDisableUpdatingIndicator = true
     }
     
     destinationLayout = AutoSizingCollectionViewFlowLayout()
-    destinationLayout?.minimumLineSpacing = 4
+    destinationLayout?.minimumLineSpacing = 3
     chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
     
     messagesFetcher = MessagesFetcher()
     messagesFetcher?.delegate = self
     messagesFetcher?.loadMessagesData(for: conversation)
   }
-  var chatLogController:ChatLogController? = nil
 }
 
 extension ChatsTableViewController: MessagesDelegate {

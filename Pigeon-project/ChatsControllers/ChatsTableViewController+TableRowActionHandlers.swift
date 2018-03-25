@@ -127,7 +127,7 @@ extension ChatsTableViewController {
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
     configureTabBarBadge()
-    if self.pinnedConversations.count <= 0 {
+     if self.conversations.count <= 0 && self.pinnedConversations.count <= 0 {
       DispatchQueue.main.async {
         self.checkIfThereAnyActiveChats(isEmpty: true)
       }
@@ -152,7 +152,7 @@ extension ChatsTableViewController {
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
    
     configureTabBarBadge()
-    if self.conversations.count <= 0 {
+    if self.conversations.count <= 0 && self.pinnedConversations.count <= 0 {
       DispatchQueue.main.async {
          self.checkIfThereAnyActiveChats(isEmpty: true)
       }

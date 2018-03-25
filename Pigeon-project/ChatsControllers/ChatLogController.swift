@@ -431,8 +431,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     setupCollectionView()
     setRightBarButtonItem()
-    self.navigationItem.title = conversation?.chatName
-  
+    setupTitleName()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -627,6 +626,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   fileprivate var userHandler: UInt = 01
   fileprivate var onlineStatusInString:String?
   
+  func setupTitleName() {
+    guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
+    if currentUserID == toId {
+      self.navigationItem.title = NameConstants.personalStorage
+    } else {
+      self.navigationItem.title = conversation?.chatName
+    }
+  }
+  
   func configureTitleViewWithOnlineStatus() {
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs?.count {
@@ -634,9 +642,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       self.navigationItem.setTitle(title: title, subtitle: subtitle)
       return
     }
-    
+  
     guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
+    
     if currentUserID == toId {
+       print(currentUserID, toId)
       self.navigationItem.title = NameConstants.personalStorage
       return
     }
@@ -1415,9 +1425,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       let messageId = childRef.key
       
-      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
+      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat, let membersIDs = self.conversation?.chatParticipantsIDs {
         
-        for memberID in self.conversation!.chatParticipantsIDs! {
+        for memberID in membersIDs {
           let userMessagesRef = Database.database().reference().child("user-messages").child(memberID).child(toId).child(userMessagesFirebaseFolder)
           userMessagesRef.updateChildValues([messageId: 1])
         }
@@ -1578,18 +1588,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
     guard let conversationID = conversation?.chatID, let participantsIDs = conversation?.chatParticipantsIDs else { return }
     
-    let chatName = conversation?.chatName ?? ""
+   // let chatName = conversation?.chatName ?? ""
     let isGroupChat = conversation?.isGroupChat ?? false
-    let admin = conversation?.admin ?? ""
-    let chatPhotoURL = conversation?.chatPhotoURL ?? ""
-    let chatThumbnailPhotoURL = conversation?.chatThumbnailPhotoURL ?? ""
+   // let admin = conversation?.admin ?? ""
+   // let chatPhotoURL = conversation?.chatPhotoURL ?? ""
+  //  let chatThumbnailPhotoURL = conversation?.chatThumbnailPhotoURL ?? ""
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
   
-      let ref = Database.database().reference().child("groupChats").child(conversationID).child(messageMetaDataFirebaseFolder)
-      let childValues: [String: Any] = ["chatID": conversationID, "chatName": chatName, "chatParticipantsIDs": participantsIDs, "admin": admin ,"chatOriginalPhotoURL": chatPhotoURL, "chatThumbnailPhotoURL": chatThumbnailPhotoURL, "isGroupChat": isGroupChat]
-      ref.updateChildValues(childValues)
-      
+//      let ref = Database.database().reference().child("groupChats").child(conversationID).child(messageMetaDataFirebaseFolder)
+//      let childValues: [String: Any] = ["chatID": conversationID, "chatName": chatName, "chatParticipantsIDs": participantsIDs, "admin": admin ,"chatOriginalPhotoURL": chatPhotoURL, "chatThumbnailPhotoURL": chatThumbnailPhotoURL, "isGroupChat": isGroupChat]
+//      ref.updateChildValues(childValues)
+//
       for memberID in participantsIDs {
        let ref = Database.database().reference().child("user-messages").child(memberID).child(conversationID).child(messageMetaDataFirebaseFolder)
         let childValues: [String: Any] = ["lastMessageID": messageID]
@@ -1600,11 +1610,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       guard let toID = conversation?.chatID, let uID = Auth.auth().currentUser?.uid else { return }
 
       let ref = Database.database().reference().child("user-messages").child(uID).child(toID).child(messageMetaDataFirebaseFolder)
-       let childValues: [String: Any] = ["chatID": toID, "lastMessageID": messageID, "isGroupChat": isGroupChat, "chatParticipantsIDs": participantsIDs]
+       let childValues: [String: Any] = ["chatID": toID, "lastMessageID": messageID, "isGroupChat": isGroupChat/*, "chatParticipantsIDs": participantsIDs*/]
       ref.updateChildValues(childValues)
       
       let ref1 = Database.database().reference().child("user-messages").child(toID).child(uID).child(messageMetaDataFirebaseFolder)
-      let childValues1: [String: Any] = ["chatID": uID, "lastMessageID": messageID, "isGroupChat": isGroupChat, "chatParticipantsIDs": participantsIDs]
+      let childValues1: [String: Any] = ["chatID": uID, "lastMessageID": messageID, "isGroupChat": isGroupChat/*, "chatParticipantsIDs": participantsIDs*/]
       ref1.updateChildValues(childValues1)
     }
   }
@@ -1656,7 +1666,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
       }
     } else {
-      guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
+      guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid, toId != fromId else { return }
       self.runTransaction(firstChild: toId, secondChild: fromId)
     }
   }

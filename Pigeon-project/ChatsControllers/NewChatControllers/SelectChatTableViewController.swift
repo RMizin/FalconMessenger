@@ -223,7 +223,8 @@ class SelectChatTableViewController: UITableViewController {
 
   
   var chatLogController:ChatLogController? = nil
-  var autoSizingCollectionViewFlowLayout:AutoSizingCollectionViewFlowLayout? = nil
+  var messagesFetcher:MessagesFetcher? = nil
+  var destinationLayout:AutoSizingCollectionViewFlowLayout? = nil
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
@@ -245,12 +246,13 @@ class SelectChatTableViewController: UITableViewController {
       
       let conversation = Conversation(dictionary: conversationDictionary)
       
-      autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-      autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
-      chatLogController = ChatLogController(collectionViewLayout: autoSizingCollectionViewFlowLayout!)
-     // chatLogController?.delegate = self
-      chatLogController?.hidesBottomBarWhenPushed = true
-      chatLogController?.conversation = conversation
+      destinationLayout = AutoSizingCollectionViewFlowLayout()
+      destinationLayout?.minimumLineSpacing = 3
+      chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
+      
+      messagesFetcher = MessagesFetcher()
+      messagesFetcher?.delegate = self
+      messagesFetcher?.loadMessagesData(for: conversation)
     }
   }
 }
@@ -260,6 +262,35 @@ extension SelectChatTableViewController: UITableViewDataSourcePrefetching {
   func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
     let urls = users.map { URL(string: $0.photoURL ?? "")  }
     SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
+  }
+}
+
+extension SelectChatTableViewController: MessagesDelegate {
+  
+  func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
+    chatLogController?.updateMessageStatus(messageRef: reference)
+  }
+  
+  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
+    
+    chatLogController?.hidesBottomBarWhenPushed = true
+    chatLogController?.messagesFetcher = messagesFetcher
+    chatLogController?.messages = messages
+    chatLogController?.conversation = conversation
+    chatLogController?.observeTypingIndicator()
+    chatLogController?.configureTitleViewWithOnlineStatus()
+    //chatLogController?.observeMembersChanges()
+    chatLogController?.messagesFetcher.collectionDelegate = chatLogController
+    guard let destination = chatLogController else { return }
+    
+    if #available(iOS 11.0, *) {
+    } else {
+      self.chatLogController?.startCollectionViewAtBottom()
+    }
+    
+    navigationController?.pushViewController(destination, animated: true)
+    chatLogController = nil
+    destinationLayout = nil
   }
 }
 
