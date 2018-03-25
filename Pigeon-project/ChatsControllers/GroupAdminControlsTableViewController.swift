@@ -25,8 +25,10 @@ class GroupAdminControlsTableViewController: UITableViewController {
   var membersAddingHandle: DatabaseHandle!
   var membersRemovingHandle: DatabaseHandle!
   
+  let informationMessageSender = InformationMessageSender()
+  
   var members = [User]()
-  var adminControls = [ "Add members"/*, "Change administrator"*/, "Remove members", "Leave the group"]
+  var adminControls = [ "Add members",/* "Manage administrators",*/ "Leave the group"]
   
   var chatID = String() {
     didSet {
@@ -39,6 +41,10 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   var conversationAdminID = String() {
     didSet {
+      if conversationAdminID == Auth.auth().currentUser?.uid {
+        tableView.allowsMultipleSelectionDuringEditing = false
+        navigationItem.rightBarButtonItem = editButtonItem
+      }
       manageControlsAppearance()
     }
   }
@@ -52,12 +58,9 @@ class GroupAdminControlsTableViewController: UITableViewController {
     }
   }
   
-  let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
-  let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
-  
   var currentName = String()
   
- 
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -132,11 +135,13 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   fileprivate func manageControlsAppearance() {
     if conversationAdminID != Auth.auth().currentUser!.uid {
-      groupProfileTableHeaderContainer.addPhotoLabel.isHidden = true
+      groupProfileTableHeaderContainer.addPhotoLabel.isHidden = false
+      groupProfileTableHeaderContainer.addPhotoLabel.text = groupProfileTableHeaderContainer.addPhotoLabelRegularText
       groupProfileTableHeaderContainer.name.isUserInteractionEnabled = false
       isCurrentUserAdministrator = false
     } else {
       groupProfileTableHeaderContainer.addPhotoLabel.isHidden = false
+      groupProfileTableHeaderContainer.addPhotoLabel.text = groupProfileTableHeaderContainer.addPhotoLabelAdminText
       groupProfileTableHeaderContainer.name.isUserInteractionEnabled = true
       isCurrentUserAdministrator = true
     }
@@ -166,7 +171,6 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   func observeMembersChanges() {
     
-  //  guard let uid = Auth.auth().currentUser?.uid else { return }
     membersAddingReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
     
     membersAddingHandle = membersAddingReference.observe(.childAdded) { (snapshot) in
@@ -183,14 +187,19 @@ class GroupAdminControlsTableViewController: UITableViewController {
         
         if let userIndex = self.members.index(where: { (member) -> Bool in
           return member.id == snapshot.key }) {
+           self.tableView.beginUpdates()
           self.members[userIndex] = user
+          self.tableView.reloadRows(at: [IndexPath(row:userIndex,section:1)], with: .none)
         } else {
+          self.tableView.beginUpdates()
           self.members.append(user)
+          self.tableView.headerView(forSection: 1)?.textLabel?.text = "\(self.members.count) members"
+           self.tableView.headerView(forSection: 1)?.textLabel?.sizeToFit()
+          var index = 0
+          if self.members.count-1 >= 0 { index = self.members.count-1 }
+          self.tableView.insertRows(at: [IndexPath(row: index, section:1)], with: .top)
         }
-        
-        DispatchQueue.main.async {
-          self.tableView.reloadSections([1], with: .none)
-        }
+        self.tableView.endUpdates()
       })
     }
     
@@ -201,13 +210,23 @@ class GroupAdminControlsTableViewController: UITableViewController {
         return member.id == id
       }) else { return }
       
+      self.tableView.beginUpdates()
       self.members.remove(at: memberIndex)
-      
-      DispatchQueue.main.async {
-        self.tableView.reloadSections([1], with: .none)
+      self.tableView.deleteRows(at: [IndexPath(row:memberIndex, section: 1)], with: .left)
+      self.tableView.headerView(forSection: 1)?.textLabel?.text = "\(self.members.count) members"
+      self.tableView.headerView(forSection: 1)?.textLabel?.sizeToFit()
+      self.tableView.endUpdates()
+      if !self.isCurrentUserMemberOfCurrentGroup() {
+        self.navigationController?.popViewController(animated: true)
       }
     }
   }
+  func isCurrentUserMemberOfCurrentGroup() -> Bool {
+    let membersIDs = members.map({ $0.id ?? "" })
+    guard let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) else { return false }
+    return true
+  }
+
   
   @objc fileprivate func openUserProfilePicture() {
     
@@ -262,6 +281,22 @@ class GroupAdminControlsTableViewController: UITableViewController {
     return 60
   }
   
+  override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    guard indexPath.section == 1, members[indexPath.row].id != conversationAdminID, members[indexPath.row].id != Auth.auth().currentUser!.uid else { return false }
+    return true
+  }
+  
+ override  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+      let membersIDs = self.members.map { $0.id ?? "" }
+      let text = "Admin removed user \(self.members[indexPath.row].name ?? "") from the group"
+      informationMessageSender.sendInformatoinMessage(chatID: chatID, membersIDs: membersIDs, text: text )
+      let memberID = members[indexPath.row].id ?? ""
+      let reference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs").child(memberID)
+      reference.removeValue()
+    }
+  }
+  
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
   }
@@ -273,10 +308,11 @@ class GroupAdminControlsTableViewController: UITableViewController {
       cell.selectionStyle = .none
       cell.title.text = adminControls[indexPath.row]
     
-      if indexPath.row == 0 || indexPath.row == 1 {
-        cell.title.textColor = FalconPalette.defaultBlue
-      } else {
+      
+      if cell.title.text == adminControls.last {
         cell.title.textColor = FalconPalette.dismissRed
+      } else {
+        cell.title.textColor = FalconPalette.defaultBlue
       }
       return cell
     

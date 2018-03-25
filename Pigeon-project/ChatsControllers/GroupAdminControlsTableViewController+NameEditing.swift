@@ -13,8 +13,8 @@ import Firebase
 extension GroupAdminControlsTableViewController: UITextFieldDelegate { /* user name editing */
   
   func setEditingBarButtons() {
-    navigationItem.leftBarButtonItem = cancelBarButton
-    navigationItem.rightBarButtonItem = doneBarButton
+    navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
   }
   
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -31,9 +31,9 @@ extension GroupAdminControlsTableViewController: UITextFieldDelegate { /* user n
     
     if groupProfileTableHeaderContainer.name.text!.count == 0 ||
       groupProfileTableHeaderContainer.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
-      doneBarButton.isEnabled = false
+      navigationItem.rightBarButtonItem?.isEnabled = false
     } else {
-      doneBarButton.isEnabled = true
+      navigationItem.rightBarButtonItem?.isEnabled = true
     }
   }
   
@@ -42,7 +42,8 @@ extension GroupAdminControlsTableViewController: UITextFieldDelegate { /* user n
     groupProfileTableHeaderContainer.name.text = currentName
     groupProfileTableHeaderContainer.name.resignFirstResponder()
     navigationItem.leftBarButtonItem = nil
-    navigationItem.rightBarButtonItem = nil
+    guard isCurrentUserAdministrator else { navigationItem.rightBarButtonItem = nil; return }
+    navigationItem.rightBarButtonItem = editButtonItem
   }
   
   @objc func doneBarButtonPressed() {
@@ -51,31 +52,19 @@ extension GroupAdminControlsTableViewController: UITextFieldDelegate { /* user n
       basicErrorAlertWith(title: "No internet", message: noInternetError, controller: self)
       return
     }
-    
-   // let nameUpdatingGroup = DispatchGroup()
-    navigationItem.leftBarButtonItem = nil
-    navigationItem.rightBarButtonItem = nil
+  
     groupProfileTableHeaderContainer.name.resignFirstResponder()
     ARSLineProgress.ars_showOnView(view)
-  
-//    for _ in members {
-//      nameUpdatingGroup.enter()
-//    }
     
-//    nameUpdatingGroup.notify(queue: DispatchQueue.main, execute: {
-//      ARSLineProgress.showSuccess()
-//    })
-    
-  //  for member in members {
-      guard let newChatName = groupProfileTableHeaderContainer.name.text else { return }
-      let nameUpdateReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
-    //  print("Updating chat name for \(String(describing: member.name)) with id: \(String(describing: member.id))")
-   
-      nameUpdateReference.updateChildValues(["chatName": newChatName], withCompletionBlock: { (error, reference) in
-        ARSLineProgress.showSuccess()
-        //nameUpdatingGroup.leave()
-      })
-   // }
+    guard let newChatName = groupProfileTableHeaderContainer.name.text else { return }
+    let nameUpdateReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
+    nameUpdateReference.updateChildValues(["chatName": newChatName], withCompletionBlock: { (error, reference) in
+      ARSLineProgress.showSuccess()
+    })
+
+    navigationItem.leftBarButtonItem = nil
+    guard isCurrentUserAdministrator else { navigationItem.rightBarButtonItem = nil; return }
+    navigationItem.rightBarButtonItem = editButtonItem
   }
 }
 

@@ -737,13 +737,19 @@ extension ChatsTableViewController: MessagesDelegate {
   
   func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
    
+   
     chatLogController?.hidesBottomBarWhenPushed = true
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
     chatLogController?.conversation = conversation
-    chatLogController?.observeTypingIndicator()
-    chatLogController?.configureTitleViewWithOnlineStatus()
-    chatLogController?.observeMembersChanges()
+ 
+    if let membersIDs = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
+      chatLogController?.observeTypingIndicator()
+      chatLogController?.configureTitleViewWithOnlineStatus()
+     
+    }
+     chatLogController?.observeMembersChanges()
+    
     chatLogController?.messagesFetcher.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
     

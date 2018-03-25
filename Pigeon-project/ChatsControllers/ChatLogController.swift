@@ -109,7 +109,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     chatNameHandle = chatNameReference.observe(.value, with: { (snapshot) in
       guard let newName = snapshot.value as? String else { return }
       self.conversation?.chatName = newName
-      self.configureTitleViewWithOnlineStatus()
+      if self.isCurrentUserMemberOfCurrentGroup() {
+        self.configureTitleViewWithOnlineStatus()
+      }
     })
     
     membersReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
@@ -121,7 +123,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         return memberID == id }) {
       } else {
         self.conversation?.chatParticipantsIDs?.append(id)
-        self.configureTitleViewWithOnlineStatus()
+        self.changeUIAfterChildAddedIfNeeded()
         print("NEW MEMBER JOINED THE GROUP")
       }
     }
@@ -133,12 +135,48 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         return memberID == id
       }) else { return }
       self.conversation?.chatParticipantsIDs?.remove(at: memberIndex)
-      self.configureTitleViewWithOnlineStatus()
+      self.changeUIAfterChildRemovedIfNeeded()
       print("MEMBER LEFT THE GROUP")
     }
   }
+  
+  func isCurrentUserMemberOfCurrentGroup() -> Bool {
+    guard let membersIDs = conversation?.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) else { return false }
+    return true
+  }
+  
+  func changeUIAfterChildAddedIfNeeded() {
+    if isCurrentUserMemberOfCurrentGroup() {
+      configureTitleViewWithOnlineStatus()
+      if typingIndicatorReference == nil {
+        reloadInputViews()
+        observeTypingIndicator()
+        navigationItem.rightBarButtonItem?.isEnabled = true
+      }
+    }
+  }
+  
+  func changeUIAfterChildRemovedIfNeeded() {
+    if isCurrentUserMemberOfCurrentGroup() {
+      configureTitleViewWithOnlineStatus()
+    } else {
+      inputContainerView.inputTextView.resignFirstResponder()
+      handleTypingIndicatorAppearance(isEnabled: false)
+      removeSubtitleInGroupChat()
+      reloadInputViews()
+      navigationItem.rightBarButtonItem?.isEnabled = false
+      if typingIndicatorReference != nil { typingIndicatorReference.removeAllObservers(); typingIndicatorReference = nil }
+    }
+  }
 
-
+  func removeSubtitleInGroupChat() {
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName {
+      let subtitle = ""
+      navigationItem.setTitle(title: title, subtitle: subtitle)
+      return
+    }
+  }
+  
  
   var startingIDReference: DatabaseReference!
   var endingIDReference: DatabaseReference!
@@ -631,9 +669,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   func setupTitleName() {
     guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
     if currentUserID == toId {
-      self.navigationItem.title = NameConstants.personalStorage
+      self.navigationItem.setTitle(title: NameConstants.personalStorage, subtitle: "")
     } else {
-      self.navigationItem.title = conversation?.chatName
+      self.navigationItem.setTitle(title: conversation?.chatName ?? "", subtitle: "")
     }
   }
   
@@ -698,6 +736,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
     guard let uid = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, uid != conversationID  else { return }
       navigationItem.rightBarButtonItem = infoBarButtonItem
+    if isCurrentUserMemberOfCurrentGroup() {
+      navigationItem.rightBarButtonItem?.isEnabled = true
+    } else {
+        navigationItem.rightBarButtonItem?.isEnabled = false
+    }
   }
  
   @objc func getInfoAction() {
@@ -707,7 +750,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let destination = GroupAdminControlsTableViewController()
       destination.chatID = conversation?.chatID ?? ""
       if conversation?.admin != Auth.auth().currentUser?.uid {
-        destination.adminControls.removeAll()
+        destination.adminControls.removeFirst()
       }
       self.navigationController?.pushViewController(destination, animated: true)
       // admin group info controller
@@ -726,6 +769,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     chatInputContainerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 50)
     
     return chatInputContainerView
+  }()
+  
+  lazy var inputBlockerContainerView: InputBlockerContainerView = {
+    var inputBlockerContainerView = InputBlockerContainerView()
+   // chatInputContainerView.chatLogController = self
+    inputBlockerContainerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 50)
+    
+    return inputBlockerContainerView
   }()
   
   
@@ -777,12 +828,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   override var inputAccessoryView: UIView? {
     get {
-      return inputContainerView
+      if let membersIDs = conversation?.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid)  {
+         return inputContainerView
+      }
+    return inputBlockerContainerView
     }
   }
   
   
   override var canBecomeFirstResponder : Bool {
+  
     return true
   }
   
@@ -1226,7 +1281,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
       if message.text != nil {
         if let isInfoMessage = message.isInformationMessage, isInfoMessage {
-          return CGSize(width: self.collectionView!.frame.width, height: 20)
+          return CGSize(width: self.collectionView!.frame.width, height: 25)
         }
         
         if let isGroupChat = conversation?.isGroupChat, isGroupChat, message.fromId != Auth.auth().currentUser!.uid {

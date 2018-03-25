@@ -30,6 +30,7 @@ class InformationMessageCell: RevealableCollectionViewCell {
     
     addSubview(information)
     information.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+    information.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
   }
   
   required init?(coder aDecoder: NSCoder) {

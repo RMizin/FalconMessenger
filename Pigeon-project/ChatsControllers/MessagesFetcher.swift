@@ -137,7 +137,11 @@ class MessagesFetcher: NSObject {
       if !isOutBoxMessage {
         self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,reference:self.messagesReference)
       } else {
-        self.collectionDelegate?.collectionView(shouldUpdateOutgoingMessageStatusFrom: self.messagesReference, message: messageWithName)
+        if let isInformationMessage = message.isInformationMessage, isInformationMessage {
+          self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,reference:self.messagesReference)
+        } else {
+          self.collectionDelegate?.collectionView(shouldUpdateOutgoingMessageStatusFrom: self.messagesReference, message: messageWithName)
+        }
       }
     }
   }

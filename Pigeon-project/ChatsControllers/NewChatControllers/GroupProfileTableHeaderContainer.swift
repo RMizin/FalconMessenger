@@ -24,10 +24,14 @@ class GroupProfileTableHeaderContainer: UIView {
     return profileImageView
   }()
 
+  
+  let addPhotoLabelAdminText = "Add\nphoto"
+  let addPhotoLabelRegularText = "No photo\nprovided"
+  
   let addPhotoLabel: UILabel = {
     let addPhotoLabel = UILabel()
     addPhotoLabel.translatesAutoresizingMaskIntoConstraints = false
-    addPhotoLabel.text = "Add\nphoto"
+  
     addPhotoLabel.numberOfLines = 2
     addPhotoLabel.textColor = FalconPalette.defaultBlue
     addPhotoLabel.textAlignment = .center
@@ -71,6 +75,7 @@ class GroupProfileTableHeaderContainer: UIView {
     userData.addSubview(name)
    
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    addPhotoLabel.text = addPhotoLabelAdminText
     
     NSLayoutConstraint.activate([
       profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 30),
