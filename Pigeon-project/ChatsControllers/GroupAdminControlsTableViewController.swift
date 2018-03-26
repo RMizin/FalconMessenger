@@ -72,6 +72,10 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
+    
+    if self.navigationController?.visibleViewController is SelectParticipantsViewController {
+      return
+    }
 
     if chatReference != nil {
       chatReference.removeObserver(withHandle: chatHandle)
@@ -298,6 +302,23 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+    if indexPath.section == 0 {
+      if indexPath.row == 0 {
+        let filteredMemebrs = globalUsers.filter { user in
+          return !members.contains { member in
+            user.id == member.id
+          }
+        }
+       let destination = SelectParticipantsViewController()
+       destination.controllerType = .newMembers
+       destination.filteredUsers = filteredMemebrs
+       destination.users = filteredMemebrs
+       destination.chatIDForUsersUpdate = chatID
+     
+      self.navigationController?.pushViewController(destination, animated: true)
+      }
+    }
     tableView.deselectRow(at: indexPath, animated: true)
   }
   

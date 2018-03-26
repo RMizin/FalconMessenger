@@ -8,38 +8,39 @@
 
 import UIKit
 import SDWebImage
+import Firebase
+
+enum ControllerType {
+  case newGroup
+  case newMembers
+  case changeAdmin
+}
 
 class SelectParticipantsViewController: UIViewController {
   
   let falconUsersCellID = "falconUsersCellID"
   let selectedParticipantsCollectionViewCellID = "SelectedParticipantsCollectionViewCellID"
   
-  var filteredUsers:[User] = [User]() {
+  var filteredUsers = [User]() {
     didSet {
       configureSections()
     }
   }
   
-  var users:[User] = [User]()
-  
-  var sortedFirstLetters: [String] = []
-  
-  var sections: [[User]] = [[]]
-  
+  var controllerType:ControllerType = .newGroup
+  var users = [User]()
+  var sortedFirstLetters = [String]()
+  var sections = [[User]]()
   var selectedFalconUsers = [User]()
-  
   var searchBar: UISearchBar?
-  
   let tableView = UITableView()
   
   var selectedParticipantsCollectionView: UICollectionView = {
     var selectedParticipantsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    
     return selectedParticipantsCollectionView
   }()
   
   let alignedFlowLayout = CollectionViewLeftAlignFlowLayout()
-  
   var collectionViewHeightAnchor: NSLayoutConstraint!
 
   
@@ -71,18 +72,17 @@ class SelectParticipantsViewController: UIViewController {
   }
   
   fileprivate func deselectAll() {
+    guard users.count > 0 else { return }
    _ = users.map { $0.isSelected = false }
     filteredUsers = users
     sections = [users]
     DispatchQueue.main.async {
       self.tableView.reloadData()
     }
- 
   }
   
   fileprivate var isInitialLoad = true
   fileprivate func configureSections() {
-    
     if isInitialLoad {
       _ = filteredUsers.map { $0.isSelected = false }
       isInitialLoad = false
@@ -95,33 +95,104 @@ class SelectParticipantsViewController: UIViewController {
       
       return self.filteredUsers
         .filter { $0.titleFirstLetter == firstLetter }
-        .sorted { $0.name! < $1.name! }
+        .sorted { $0.name ?? "" < $1.name ?? "" }
     }
   }
 
   fileprivate func setupMainView() {
-    navigationItem.title = "New Group"
     definesPresentationContext = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    configureControllerAccordintToType()
+  }
+  
+ fileprivate func configureControllerAccordintToType() {
+    var rightBarButtonTitle = String()
+    var navigationItemTitle = String()
+    switch controllerType {
+    case .newGroup:
+      rightBarButtonTitle = "Next"
+      navigationItemTitle =  "New Group"
+    case .newMembers:
+      rightBarButtonTitle = "Add"
+      navigationItemTitle = "Add users"
+    case .changeAdmin:
+      rightBarButtonTitle = "Leave"
+      navigationItemTitle = "Select new admin"
+    }
     
+    setupRightBarButton(with: rightBarButtonTitle)
+    navigationItem.title = navigationItemTitle
+  }
+  
+  fileprivate func setupRightBarButton(with title: String) {
     if #available(iOS 11.0, *) {
       let rightBarButton = UIButton(type: .system)
-      rightBarButton.setTitle("Next", for: .normal)
+      rightBarButton.setTitle(title, for: .normal)
       rightBarButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
       rightBarButton.addTarget(self, action: #selector(rightBarButtonTapped), for: .touchUpInside)
       navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButton)
-      navigationItem.rightBarButtonItem?.isEnabled = false
     } else {
-      navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(rightBarButtonTapped))
-      navigationItem.rightBarButtonItem?.isEnabled = false
+      navigationItem.rightBarButtonItem = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(rightBarButtonTapped))
+    }
+    navigationItem.rightBarButtonItem?.isEnabled = false
+  }
+  
+  @objc fileprivate func rightBarButtonTapped() {
+    switch controllerType {
+    case .newGroup:
+      createGroup()
+    case .newMembers:
+      addNewMembers()
+    case .changeAdmin:
+      changeAdminAndLeave()
     }
   }
   
+  fileprivate func changeAdminAndLeave() {
+    
+  }
   
-  @objc fileprivate func rightBarButtonTapped() {
+  fileprivate func createGroup() {
     let destination = GroupProfileTableViewController()
     destination.selectedFlaconUsers = selectedFalconUsers
     navigationController?.pushViewController(destination, animated: true)
+  }
+  
+  var chatIDForUsersUpdate = String()
+  var informationMessageSender = InformationMessageSender()
+  
+  fileprivate func addNewMembers() {
+    
+    ARSLineProgress.ars_showOnView(view)
+    navigationController?.view.isUserInteractionEnabled = false
+    
+    let reference = Database.database().reference().child("groupChats").child(chatIDForUsersUpdate).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
+    reference.observeSingleEvent(of: .value) { (snapshot) in
+      
+      guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+      guard var membersIDs = Array(dictionary.values) as? [String] else { return }
+      
+      var values = [String: AnyObject]()
+      var selectedUserNames = [String]()
+      
+      for selectedUser in self.selectedFalconUsers {
+        guard let selectedID = selectedUser.id, let selectedUserName = selectedUser.name else { continue }
+        values.updateValue(selectedID as AnyObject, forKey: selectedID)
+        selectedUserNames.append(selectedUserName)
+        membersIDs.append(selectedID)
+      }
+      
+      reference.updateChildValues(values, withCompletionBlock: { (_, _) in
+     
+        for selectedUserName in selectedUserNames {
+          let text = "Admin added user \(selectedUserName) to the group"
+          self.informationMessageSender.sendInformatoinMessage(chatID: self.chatIDForUsersUpdate, membersIDs: membersIDs, text: text)
+        }
+        ARSLineProgress.showSuccess()
+        self.navigationController?.view.isUserInteractionEnabled = true
+        self.navigationController?.popViewController(animated: true)
+      })
+    }
   }
   
   fileprivate func setupTableView() {
