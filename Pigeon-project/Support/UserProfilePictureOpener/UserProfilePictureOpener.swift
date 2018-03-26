@@ -30,7 +30,6 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
     picker.delegate = self
     if userProfileContainerView?.profileImageView.image == nil {
       handleSelectProfileImageView()
-      
       return
     }
   
@@ -76,49 +75,44 @@ class UserProfilePictureOpener: NSObject, UIImagePickerControllerDelegate, UINav
     
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
-
       self.overlay.photosViewController?.dismiss(animated: true, completion: nil)
       self.openCamera()
     }))
     
     alert.addAction(UIAlertAction(title: "Choose photo", style: .default, handler: { _ in
-   
       self.overlay.photosViewController?.dismiss(animated: true, completion: nil)
       self.openGallery()
-     
     }))
     
     if userProfileContainerView?.profileImageView.image != nil {
       alert.addAction(UIAlertAction(title: "Delete photo", style: .destructive, handler: { _ in
-        self.overlay.photosViewController?.dismiss(animated: true, completion: {
-          self.deleteCurrentPhoto(completion: { (isDeleted) in
-            if isDeleted {
-              if self.userProfileContainerView?.profileImageView.image != nil {
-                self.userProfileContainerView?.profileImageView.image = nil
-              }
-              self.managePhotoPlaceholderLabelAppearance()
-              self.userProfileContainerView?.profileImageView.hideActivityIndicator()
-              print("deleted")
-              
-            } else {
-              
-              self.userProfileContainerView?.profileImageView.hideActivityIndicator()
-              basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self.controllerWithUserProfilePhoto!)
-             // print("in error", userProfileContainerView?.profileImageView)
-            }
-          })
-        })
+        self.dismissAndDelete()
       }))
     }
     
    alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
-    
-    if userProfileContainerView?.profileImageView.image == nil {
+    guard userProfileContainerView?.profileImageView.image != nil else {
       controllerWithUserProfilePhoto?.present(alert, animated: true, completion: nil)
-      } else {
-       galleryPreview.navigationController?.navigationBar.barStyle = .blackTranslucent
-       galleryPreview.present(alert, animated: true, completion: nil)
-      }
+      return
+    }
+    galleryPreview.navigationController?.navigationBar.barStyle = .blackTranslucent
+    galleryPreview.present(alert, animated: true, completion: nil)
+  }
+  
+ fileprivate func dismissAndDelete() {
+    self.overlay.photosViewController?.dismiss(animated: true, completion: {
+      self.deleteCurrentPhoto(completion: { (isDeleted) in
+        guard isDeleted else {
+          self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+          basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self.controllerWithUserProfilePhoto!)
+          return
+        }
+        self.userProfileContainerView?.profileImageView.image = nil
+        self.managePhotoPlaceholderLabelAppearance()
+        self.userProfileContainerView?.profileImageView.hideActivityIndicator()
+        print("deleted")
+      })
+    })
   }
   
   

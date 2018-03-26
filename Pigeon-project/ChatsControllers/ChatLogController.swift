@@ -773,12 +773,19 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   lazy var inputBlockerContainerView: InputBlockerContainerView = {
     var inputBlockerContainerView = InputBlockerContainerView()
-   // chatInputContainerView.chatLogController = self
     inputBlockerContainerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 50)
     
     return inputBlockerContainerView
   }()
   
+  var refreshControl: UIRefreshControl = {
+    var refreshControl = UIRefreshControl()
+    refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+    refreshControl.tintColor = ThemeManager.currentTheme().generalTitleColor
+    refreshControl.addTarget(self, action: #selector(performRefresh), for: .valueChanged)
+    
+    return refreshControl
+  }()
   
   var canRefresh = true
   var isScrollViewAtTheBottom = true
@@ -806,17 +813,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  
- var refreshControl: UIRefreshControl = {
-    var refreshControl = UIRefreshControl()
-    refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
-    refreshControl.tintColor = ThemeManager.currentTheme().generalTitleColor
-    refreshControl.addTarget(self, action: #selector(performRefresh), for: .valueChanged)
-    
-    return refreshControl
-  }()
-  
-  
   @objc func performRefresh () {
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       loadPreviousMessages(isGroupChat: true)
@@ -825,30 +821,24 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  
   override var inputAccessoryView: UIView? {
     get {
       if let membersIDs = conversation?.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid)  {
          return inputContainerView
       }
-    return inputBlockerContainerView
+      return inputBlockerContainerView
     }
   }
   
-  
   override var canBecomeFirstResponder : Bool {
-  
     return true
   }
-  
 
   override func numberOfSections(in collectionView: UICollectionView) -> Int {
     return sections.count
   }
   
-  
   override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    
     if section == 0 {
       return messages.count
     } else {
@@ -856,342 +846,124 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    if indexPath.section == 0 {
-      if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-         return selectCell(for: indexPath, isGroupChat: true)!
-      } else {
-        return selectCell(for: indexPath, isGroupChat: false)!
-      }
-     
+    guard indexPath.section == 0 else { return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell }
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+      return selectCell(for: indexPath, isGroupChat: true)!
     } else {
-      return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell
+      return selectCell(for: indexPath, isGroupChat: false)!
     }
   }
 
-  
   fileprivate func showTypingIndicator(indexPath: IndexPath) -> UICollectionViewCell? {
-    
     let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: typingIndicatorCellID, for: indexPath) as! TypingIndicatorCell
     guard let gifURL = ThemeManager.currentTheme().typingIndicatorURL else { return nil }
     guard let gifData = NSData(contentsOf: gifURL) else { return nil }
     cell.typingIndicator.animatedImage = FLAnimatedImage(animatedGIFData: gifData as Data)
-    
     return cell
   }
-  
 
   fileprivate func selectCell(for indexPath: IndexPath, isGroupChat: Bool) -> RevealableCollectionViewCell? {
     
     let message = messages[indexPath.item]
+    let isTextMessage = message.text != nil
+    let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
+    let isVoiceMessage = message.voiceEncodedString != nil
+    let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
+    let isInformationMessage = message.isInformationMessage ?? false
+
+    if isInformationMessage {
+      let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: informationMessageCellID, for: indexPath) as! InformationMessageCell
+      cell.setupData(message: message)
+      return cell
+    } else
     
-    if let messageText = message.text { /* If current message is a text message */
-      
-      if let isInfoMessage = message.isInformationMessage, isInfoMessage {
-        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: informationMessageCellID, for: indexPath) as! InformationMessageCell
-        cell.information.text = messageText
-        cell.information.sizeToFit()
-        return cell
-      }
-      
-      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing text message with blue bubble */
-      
+    if isTextMessage {
+      switch isOutgoingMessage {
+      case true:
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
-          cell.chatLogController = self
-          cell.message = message
-          cell.textView.text = messageText
-          cell.bubbleView.frame = CGRect(x: collectionView!.frame.width - message.estimatedFrameForText!.width - 40, y: 0,
-                                         width: message.estimatedFrameForText!.width + 30, height: cell.frame.size.height).integral
-          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
-            
-          DispatchQueue.main.async {
-            switch indexPath.row == self.messages.count - 1 {
-            case true:
-              cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
-              cell.deliveryStatus.text = self.messages[indexPath.row].status
-              cell.deliveryStatus.isHidden = false
-              break
-              
-            default:
-              cell.deliveryStatus.isHidden = true
-              break
-            }
-            if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              view.titleLabel.text = message.convertedTimestamp
-              cell.setRevealableView(view, style: .slide, direction: .left)
-            }
-          }
-        
+        cell.chatLogController = self
+        cell.setupData(message: message)
+        DispatchQueue.global(qos: .background).async {
+          cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
+        }
+      
         return cell
-      
-        } else { /* Incoming text message with grey bubble */
-        
-          let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
-          cell.chatLogController = self
-          cell.message = message
-        
-          cell.textView.text = messageText
-        
-        if isGroupChat {
-          
-          cell.nameLabel.text = message.senderName ?? ""
-          cell.nameLabel.frame.size.height = 10
-          cell.nameLabel.sizeToFit()
-          cell.nameLabel.frame.origin = CGPoint(x: cell.textView.textContainerInset.left+5, y: cell.textView.textContainerInset.top)
-      
-          if (message.estimatedFrameForText!.width < cell.nameLabel.frame.size.width) {
-            if cell.nameLabel.frame.size.width >= 170 {
-              cell.nameLabel.frame.size.width = 170
-              cell.bubbleView.frame.size = CGSize(width: 200, height: cell.frame.size.height.rounded())
-            } else {
-               cell.bubbleView.frame.size = CGSize(width: (cell.nameLabel.frame.size.width + 30).rounded(), height: cell.frame.size.height.rounded())
-            }
-          } else {
-            cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
-          }
-
-          cell.textView.textContainerInset.top = 25
-          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
-          
-        } else {
-          cell.bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + 30).rounded(), height: cell.frame.size.height.rounded())
-          cell.textView.frame.size = CGSize(width: cell.bubbleView.frame.width.rounded(), height: cell.bubbleView.frame.height.rounded())
-        }
-
-          DispatchQueue.main.async {
-            if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-              view.titleLabel.text = message.convertedTimestamp
-              cell.setRevealableView(view, style: .over, direction: .left)
-            }
-          }
-
-          return cell
-        }
-      
-    } else if message.imageUrl != nil || message.localImage != nil { /* If current message is a photo/video message */
-      
-      if message.fromId == Auth.auth().currentUser?.uid { /* Outgoing photo/video message with blue bubble */
-        
-        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
-        
+      case false:
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
         cell.chatLogController = self
-        cell.message = message
-        cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 210).rounded(), y: 0)
-        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-    
-        DispatchQueue.main.async {
-          switch indexPath.row == self.messages.count - 1 {
-          case true:
-            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y: cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
-            cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
-            cell.deliveryStatus.isHidden = false
-            break
-            
-          default:
-            cell.deliveryStatus.isHidden = true
-            break
-          }
-          
-          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-            view.titleLabel.text = message.convertedTimestamp
-            cell.setRevealableView(view, style: .slide, direction: .left)
-          }
-        }
-        
-        cell.messageImageView.isUserInteractionEnabled = false
-        
-        if let image = message.localImage {
-          cell.messageImageView.image = image
-          cell.progressView.isHidden = true
-          cell.messageImageView.isUserInteractionEnabled = true
-          cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
-          
-          return cell
-        }
-        
-        if let messageImageUrl = message.imageUrl {
-          
-          cell.progressView.startLoading()
-          cell.progressView.isHidden = false
-        
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
-         
-            DispatchQueue.main.async {
-              cell.progressView.progress = cell.messageImageView.sd_imageProgress.fractionCompleted
-            }
-            
-          }, completed: { (image, error, cacheType, url) in
-            
-            if error != nil {
-              cell.progressView.isHidden = false
-              cell.messageImageView.isUserInteractionEnabled = false
-              cell.playButton.isHidden = true
-              return
-            }
-            cell.progressView.isHidden = true
-            cell.messageImageView.isUserInteractionEnabled = true
-            cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
-          })
-           return cell
-        }
-        
-      } else { /* Incoming photo/video message with grey bubble */
-        
-        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
-        
-        cell.chatLogController = self
-        cell.message = message
-        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-        
-        
-        if isGroupChat {
-          cell.nameLabel.text = message.senderName ?? ""
-          cell.nameLabel.frame.size.height = 10
-          cell.nameLabel.sizeToFit()
-          cell.nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingTextViewLeftInset+5, y: BaseMessageCell.incomingTextViewTopInset)
-          cell.messageImageViewTopAnchor.constant = 34
-          if cell.nameLabel.frame.size.width >= 170 {
-            cell.nameLabel.frame.size.width = 170
-          }
-        }
-        
-        DispatchQueue.main.async {
-          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-            view.titleLabel.text = message.convertedTimestamp
-            cell.setRevealableView(view, style: .over, direction: .left)
-          }
-        }
-        
-        cell.messageImageView.isUserInteractionEnabled = false
-        if let image = message.localImage {
-          cell.messageImageView.image = image
-          cell.progressView.isHidden = true
-          cell.messageImageView.isUserInteractionEnabled = true
-          cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
-          
-          return cell
-        }
-        
-        if let messageImageUrl = message.imageUrl {
-          
-          cell.progressView.startLoading()
-          cell.progressView.isHidden = false
-          
-          cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
-            
-            DispatchQueue.main.async {
-              cell.progressView.progress = cell.messageImageView.sd_imageProgress.fractionCompleted
-              
-            }
-          }, completed: { (image, error, cacheType, url) in
-            if error != nil {
-              cell.progressView.isHidden = false
-              cell.messageImageView.isUserInteractionEnabled = false
-              cell.playButton.isHidden = true
-              return
-            }
-            cell.progressView.isHidden = true
-            cell.messageImageView.isUserInteractionEnabled = true
-            cell.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
-          })
-        }
+        cell.setupData(message: message, isGroupChat: isGroupChat)
         return cell
       }
+    } else
     
-    } else if message.voiceEncodedString != nil { // if current message is a Voice message
-      
-      if message.fromId == Auth.auth().currentUser?.uid { /* MARK: Outgoing Voice message with blue bubble */
-          
+    if isPhotoVideoMessage {
+      switch isOutgoingMessage {
+      case true:
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
+        cell.chatLogController = self
+        cell.setupData(message: message)
+        if let image = message.localImage {
+          cell.setupImageFromLocalData(message: message, image: image)
+          DispatchQueue.global(qos: .background).async {
+            cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
+          }
+          return cell
+        }
+        if let messageImageUrl = message.imageUrl {
+          cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
+          DispatchQueue.global(qos: .background).async {
+            cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
+          }
+          return cell
+        }
+        break
+      case false:
+        let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
+        cell.chatLogController = self
+        cell.setupData(message: message, isGroupChat: isGroupChat)
+        if let image = message.localImage {
+          cell.setupImageFromLocalData(message: message, image: image)
+          return cell
+        }
+        if let messageImageUrl = message.imageUrl {
+          cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
+          return cell
+        }
+        break
+      }
+    } else 
+    
+    if isVoiceMessage {
+      switch isOutgoingMessage {
+      case true:
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
         cell.chatLogController = self
-        cell.message = message
-        cell.bubbleView.frame.origin = CGPoint(x: (cell.frame.width - 160).rounded(), y: 0)
-        cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-        cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:( cell.bubbleView.frame.height).rounded())
-        
-        DispatchQueue.main.async {
-          switch indexPath.row == self.messages.count - 1 {
-          case true:
-            cell.deliveryStatus.frame = CGRect(x: cell.frame.width - 80, y:  cell.bubbleView.frame.height + 2, width: 70, height: 10).integral
-            cell.deliveryStatus.text = self.messages[indexPath.row].status//messageStatus
-            cell.deliveryStatus.isHidden = false
-            break
-          default:
-            cell.deliveryStatus.isHidden = true
-            break
-          }
-            
-          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-            view.titleLabel.text = message.convertedTimestamp
-            cell.setRevealableView(view, style: .slide, direction: .left)
-          }
+        cell.setupData(message: message)
+        DispatchQueue.global(qos: .background).async {
+          cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
         }
-      
-        if message.voiceEncodedString != nil {
-          cell.playerView.timerLabel.text = message.voiceDuration
-          cell.playerView.startingTime = message.voiceStartTime ?? 0
-          cell.playerView.seconds = message.voiceStartTime ?? 0
-        }
-        
         return cell
-            
-      } else { /* MARK: Incoming Voice message with blue bubble */
-          
+      case false:
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
         cell.chatLogController = self
-        cell.message = message
-        
-        if isGroupChat {
-          cell.nameLabel.text = message.senderName ?? ""
-          cell.nameLabel.frame.size.height = 10
-          cell.nameLabel.sizeToFit()
-          cell.nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingTextViewLeftInset+5, y: BaseMessageCell.incomingTextViewTopInset)
-          cell.playerView.frame.origin.y = 20
-          cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-          cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height - 20).rounded())
-          
-          if cell.nameLabel.frame.size.width >= 170 {
-            cell.nameLabel.frame.size.width = cell.playerView.frame.size.width - 24
-          }
-        } else {
-          cell.bubbleView.frame.size.height = cell.frame.size.height.rounded()
-          cell.playerView.frame.size = CGSize(width: (cell.bubbleView.frame.width).rounded(), height:(cell.bubbleView.frame.height).rounded())
-        }
-       
-        DispatchQueue.main.async {
-          if let view = self.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-            view.titleLabel.text = message.convertedTimestamp
-            cell.setRevealableView(view, style: .over, direction: .left)
-          }
-        }
-      
-        if message.voiceEncodedString != nil {
-          cell.playerView.timerLabel.text = message.voiceDuration
-          cell.playerView.startingTime = message.voiceStartTime ?? 0
-          cell.playerView.seconds = message.voiceStartTime ?? 0
-        }
-        
+        cell.setupData(message: message, isGroupChat: isGroupChat)
         return cell
       }
     }
-     return nil
+    return nil
   }
 
   override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 
     if let cell = cell as? OutgoingVoiceMessageCell {
-      guard cell.isSelected, chatLogAudioPlayer != nil else  {
-        return
-      }
+      guard cell.isSelected, chatLogAudioPlayer != nil else { return }
       chatLogAudioPlayer.stop()
       cell.playerView.resetTimer()
       cell.playerView.play.isSelected = false
     
     } else if let cell = cell as? IncomingVoiceMessageCell {
-      guard cell.isSelected, chatLogAudioPlayer != nil else  {
-        return
-      }
+      guard cell.isSelected, chatLogAudioPlayer != nil else { return }
       chatLogAudioPlayer.stop()
       cell.playerView.resetTimer()
       cell.playerView.play.isSelected = false
@@ -1273,49 +1045,56 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
 
   func selectSize(indexPath: IndexPath) -> CGSize  {
-    
+   
+    guard indexPath.section == 0 else {  return CGSize(width: self.collectionView!.frame.width, height: 40) }
     var cellHeight: CGFloat = 80
+    let message = messages[indexPath.row]
+    let isTextMessage = message.text != nil
+    let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
+    let isVoiceMessage = message.voiceEncodedString != nil
+    let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
+    let isInformationMessage = message.isInformationMessage ?? false
+    let isGroupChat = conversation?.isGroupChat != nil
+
+    guard !isInformationMessage else { return CGSize(width: self.collectionView!.frame.width, height: 25) }
+   
+    if isTextMessage {
+      if let isInfoMessage = message.isInformationMessage, isInfoMessage {
+        return CGSize(width: self.collectionView!.frame.width, height: 25)
+      }
+      
+      if isGroupChat, !isOutgoingMessage {
+        cellHeight = message.estimatedFrameForText!.height + 35
+      } else {
+        cellHeight = message.estimatedFrameForText!.height + 20
+      }
+    } else
     
-    if indexPath.section == 0 {
-      let message = messages[indexPath.row]
-    
-      if message.text != nil {
-        if let isInfoMessage = message.isInformationMessage, isInfoMessage {
-          return CGSize(width: self.collectionView!.frame.width, height: 25)
-        }
-        
-        if let isGroupChat = conversation?.isGroupChat, isGroupChat, message.fromId != Auth.auth().currentUser!.uid {
-          cellHeight = message.estimatedFrameForText!.height + 20 + 15
+    if isPhotoVideoMessage {
+      if CGFloat(truncating: message.imageCellHeight!) < 66 {
+        if isGroupChat, !isOutgoingMessage {
+          cellHeight = 86
         } else {
-          cellHeight = message.estimatedFrameForText!.height + 20
+          cellHeight = 66
         }
-        
-      } else if message.imageWidth?.floatValue != nil && message.imageHeight?.floatValue != nil {
-        if CGFloat(truncating: message.imageCellHeight!) < 66 {
-          if let isGroupChat = conversation?.isGroupChat, isGroupChat, message.fromId != Auth.auth().currentUser!.uid {
-            cellHeight = 86
-          } else {
-            cellHeight = 66
-          }
-          
+      } else {
+        if isGroupChat, !isOutgoingMessage {
+          cellHeight = CGFloat(truncating: message.imageCellHeight!) + 20
         } else {
-           if let isGroupChat = conversation?.isGroupChat, isGroupChat, message.fromId != Auth.auth().currentUser!.uid {
-           cellHeight = CGFloat(truncating: message.imageCellHeight!) + 20// CGFloat(imageHeight / imageWidth * 200).rounded()
-           } else {
-            cellHeight = CGFloat(truncating: message.imageCellHeight!)
-          }
-        }
-      } else if message.voiceEncodedString != nil {
-        if let isGroupChat = conversation?.isGroupChat, isGroupChat, message.fromId != Auth.auth().currentUser!.uid {
-          cellHeight = 55
-        } else {
-          cellHeight = 40
+          cellHeight = CGFloat(truncating: message.imageCellHeight!)
         }
       }
-      return CGSize(width: self.collectionView!.frame.width, height: cellHeight)
-    } else {
-      return CGSize(width: self.collectionView!.frame.width, height: 40)
+    } else
+    
+    if isVoiceMessage {
+      if isGroupChat, !isOutgoingMessage {
+        cellHeight = 55
+      } else {
+        cellHeight = 40
+      }
     }
+    
+    return CGSize(width: self.collectionView!.frame.width, height: cellHeight)
   }
   
   @objc func handleSend() {
@@ -1324,13 +1103,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
       inputContainerView.inputTextView.isScrollEnabled = false
       inputContainerView.invalidateIntrinsicContentSize()
-
       inputContainerView.sendButton.isEnabled = false
     
       if inputContainerView.inputTextView.text != "" {
         let properties = ["text": inputContainerView.inputTextView.text!]
-    
-          sendMessageWithProperties(properties as [String : AnyObject])
+        sendMessageWithProperties(properties as [String : AnyObject])
       }
     
       isTyping = false
@@ -1343,7 +1120,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-
   func handleMediaMessageSending () {
     
     if !inputContainerView.selectedMedia.isEmpty {
@@ -1429,7 +1205,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           })
         }
         
-        
         if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video { // video
 
           guard let path = selectedMedia.fileURL else {
@@ -1467,12 +1242,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  
   fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage, childRef: DatabaseReference) {
     let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
     sendMediaMessageWithProperties(properties, childRef: childRef)
   }
-  
   
   func sendMediaMessageWithProperties(_ properties: [String: AnyObject], childRef: DatabaseReference) {
     
@@ -1498,8 +1271,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           let userMessagesRef = Database.database().reference().child("user-messages").child(memberID).child(toId).child(userMessagesFirebaseFolder)
           userMessagesRef.updateChildValues([messageId: 1])
         }
-       
-
       } else {
         
         let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
@@ -1520,40 +1291,26 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let imageName = UUID().uuidString
     let ref = Storage.storage().reference().child("messageImages").child(imageName)
     
-    if let uploadData = UIImageJPEGRepresentation(image, 1) {
-      ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
-        
-        if error != nil {
-          print("Failed to upload image:", error as Any)
-          return
-        }
-        
-        if let imageUrl = metadata?.downloadURL()?.absoluteString {
-          completion(imageUrl)
-        }
-      })
-    }
+    guard let uploadData = UIImageJPEGRepresentation(image, 1) else { return }
+    ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+      guard error == nil else { return }
+      guard let imageUrl = metadata?.downloadURL()?.absoluteString else  { return }
+      completion(imageUrl)
+    })
   }
   
   fileprivate func uploadToFirebaseStorageUsingVideo(_ uploadData: Data, completion: @escaping (_ videoUrl: String) -> ()) {
-    let videoName = UUID().uuidString + ".mov"
     
+    let videoName = UUID().uuidString + ".mov"
     let ref = Storage.storage().reference().child("messageMovies").child(videoName)
     
-      ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
-        
-        if error != nil {
-          print("Failed to upload image:", error as Any)
-          return
-        }
-        
-        if let videoUrl = metadata?.downloadURL()?.absoluteString {
-          completion(videoUrl)
-        }
-      })
+    ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+      guard error == nil else { return }
+      guard let videoUrl = metadata?.downloadURL()?.absoluteString else  { return }
+      completion(videoUrl)
+    })
   }
   
-
   fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
     
     var values = values
@@ -1587,16 +1344,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }, completion: nil)
   }
   
-  
   fileprivate func sendMessageWithProperties(_ properties: [String: AnyObject]) {
     
     let ref = Database.database().reference().child("messages")
     let childRef = ref.childByAutoId()
     let defaultMessageStatus = messageStatusDelivered
     
-    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else {
-      return
-    }
+    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     var values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
@@ -1616,10 +1370,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           let userMessagesRef = Database.database().reference().child("user-messages").child(memberID).child(toId).child(userMessagesFirebaseFolder)
           userMessagesRef.updateChildValues([messageId: 1])
         }
-        
-//        let userMessagesRef = Database.database().reference().child("groupChats").child(toId).child(userMessagesFirebaseFolder)
-//        userMessagesRef.updateChildValues([messageId: 1])
-  
       } else {
         
         let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
@@ -1655,9 +1405,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
     guard let conversationID = conversation?.chatID, let participantsIDs = conversation?.chatParticipantsIDs else { return }
     
- 
     let isGroupChat = conversation?.isGroupChat ?? false
-  
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
   
@@ -1695,7 +1443,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     var ref = Database.database().reference().child("user-messages").child(firstChild).child(secondChild)
     ref.observeSingleEvent(of: .value, with: { (snapshot) in
       
-      
       if snapshot.hasChild(messageMetaDataFirebaseFolder) {
         ref = ref.child(messageMetaDataFirebaseFolder).child("badge")
         ref.runTransactionBlock({ (mutableData) -> TransactionResult in
@@ -1706,11 +1453,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           mutableData.value = value! + 1
           return TransactionResult.success(withValue: mutableData)
         })
-        
       } else {
         ref = ref.child(messageMetaDataFirebaseFolder)
         ref.updateChildValues(["badge": 1], withCompletionBlock: { (error, reference) in
-          
         })
       }
     })
@@ -1719,8 +1464,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   func incrementBadgeForReciever() {
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      guard let conversationID = conversation?.chatID, let participantsIDs = conversation?.chatParticipantsIDs, let currentUserID = Auth.auth().currentUser?.uid else { return }
-      
+      guard let conversationID = conversation?.chatID, let participantsIDs = conversation?.chatParticipantsIDs, let currentUserID = Auth.auth().currentUser?.uid else {
+        return
+      }
+    
       for participantID in participantsIDs {
         if participantID != currentUserID {
           self.runTransaction(firstChild: participantID, secondChild: conversationID)

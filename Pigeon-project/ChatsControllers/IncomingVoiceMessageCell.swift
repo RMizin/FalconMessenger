@@ -42,6 +42,34 @@ class IncomingVoiceMessageCell: BaseMessageCell {
     playerView.timerLabel.font = UIFont.systemFont(ofSize: 12)
   }
   
+  func setupData(message: Message, isGroupChat:Bool) {
+    self.message = message
+    
+    if isGroupChat {
+      nameLabel.text = message.senderName ?? ""
+      nameLabel.frame.size.height = 10
+      nameLabel.sizeToFit()
+      nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingTextViewLeftInset+5, y: BaseMessageCell.incomingTextViewTopInset)
+      playerView.frame.origin.y = 20
+      bubbleView.frame.size.height = frame.size.height.rounded()
+      playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height:(bubbleView.frame.height - 20).rounded())
+      
+      if nameLabel.frame.size.width >= 170 {
+        nameLabel.frame.size.width = playerView.frame.size.width - 24
+      }
+    } else {
+      bubbleView.frame.size.height = frame.size.height.rounded()
+      playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height:(bubbleView.frame.height).rounded())
+    }
+  
+    setupTimestampView(message: message, isOutgoing: false)
+    guard message.voiceEncodedString != nil else { return }
+
+    playerView.timerLabel.text = message.voiceDuration
+    playerView.startingTime = message.voiceStartTime ?? 0
+    playerView.seconds = message.voiceStartTime ?? 0
+  }
+  
   override func prepareViewsForReuse() {
     playerView.seconds = 0
     playerView.startingTime = 0

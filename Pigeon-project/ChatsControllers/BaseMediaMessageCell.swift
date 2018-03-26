@@ -39,6 +39,37 @@ class BaseMediaMessageCell: BaseMessageCell {
     return progressView
   }()
   
+  func setupImageFromLocalData(message: Message, image: UIImage) {
+    messageImageView.image = image
+    progressView.isHidden = true
+    messageImageView.isUserInteractionEnabled = true
+    playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
+  }
+  
+  func setupImageFromURL(message: Message, messageImageUrl: URL) {
+    progressView.startLoading()
+    progressView.isHidden = false
+    
+    messageImageView.sd_setImage(with:  messageImageUrl, placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
+      
+      DispatchQueue.main.async {
+        self.progressView.progress = self.messageImageView.sd_imageProgress.fractionCompleted
+      }
+      
+    }, completed: { (image, error, cacheType, url) in
+      
+      if error != nil {
+        self.progressView.isHidden = false
+        self.messageImageView.isUserInteractionEnabled = false
+        self.playButton.isHidden = true
+        return
+      }
+      self.progressView.isHidden = true
+      self.messageImageView.isUserInteractionEnabled = true
+      self.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
+    })
+  }
+  
   
   @objc func handlePlay() {
     

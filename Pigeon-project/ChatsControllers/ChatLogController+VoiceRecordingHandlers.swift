@@ -9,8 +9,6 @@
 import UIKit
 import AVFoundation
 
-
-
 extension ChatLogController {
   
   @objc func toggleVoiceRecording () {
@@ -28,14 +26,12 @@ extension ChatLogController {
       inputContainerView.inputTextView.reloadInputViews()
       inputContainerView.inputTextView.becomeFirstResponder()
       inputContainerView.inputTextView.addGestureRecognizer(inputTextViewTapGestureRecognizer)
-      
     } else {
       inputContainerView.inputTextView.inputView = nil
       inputContainerView.inputTextView.reloadInputViews()
       inputContainerView.inputTextView.removeGestureRecognizer(inputTextViewTapGestureRecognizer)
     }
   }
-  
   
   func getAudioDurationInHours(from data: Data) -> String? {
     do {
@@ -49,7 +45,6 @@ extension ChatLogController {
       print("error playing")
       return String(format:"%02i:%02i:%02i", 0, 0, 0)
     }
-    
   }
   
   func getAudioDurationInSeconds(from data: Data) -> Int? {

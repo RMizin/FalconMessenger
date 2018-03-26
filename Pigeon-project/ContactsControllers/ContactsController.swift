@@ -408,7 +408,7 @@ class ContactsController: UITableViewController {
         let conversation = Conversation(dictionary: conversationDictionary)
 
         destinationLayout = AutoSizingCollectionViewFlowLayout()
-      //  destinationLayout?.minimumLineSpacing = 4
+        destinationLayout?.minimumLineSpacing = 3
         chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
         
         messagesFetcher = MessagesFetcher()

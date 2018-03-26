@@ -10,10 +10,11 @@ import UIKit
 import Photos
 import AVKit
 
+private let nibName = "PhotoEditorViewController"
+
 extension ChatLogController: PhotoEditorDelegate {
   
   func doneEditing(image: UIImage, indexPath: IndexPath) {
-  
     inputContainerView.selectedMedia[indexPath.row].object = UIImageJPEGRepresentation(image, 1)
     inputContainerView.attachedImages.reloadItems(at: [indexPath])
   }
@@ -22,9 +23,8 @@ extension ChatLogController: PhotoEditorDelegate {
     print("Canceled")
   }
   
-
   func presentPhotoEditor(forImageAt indexPath: IndexPath) {
-    let photoEditor = PhotoEditorViewController(nibName:"PhotoEditorViewController",bundle: Bundle(for: PhotoEditorViewController.self))
+    let photoEditor = PhotoEditorViewController(nibName: nibName, bundle: Bundle(for: PhotoEditorViewController.self))
     
     photoEditor.photoEditorDelegate = self
     
@@ -41,12 +41,9 @@ extension ChatLogController: PhotoEditorDelegate {
     present(photoEditor, animated: true, completion: nil)
   }
   
-  
   func presentVideoPlayer(forUrlAt indexPath: IndexPath) {
     
-    guard let pathURL = inputContainerView.selectedMedia[indexPath.item].fileURL else {
-      return
-    }
+    guard let pathURL = inputContainerView.selectedMedia[indexPath.item].fileURL else { return }
     
     let videoURL = URL(string: pathURL)
     

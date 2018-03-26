@@ -25,6 +25,19 @@ class OutgoingTextMessageCell: BaseMessageCell {
     return textView
   }()
   
+  func setupData(message: Message) {
+    
+    self.message = message
+    guard let messageText = message.text else { return }
+    textView.text = messageText
+    
+    bubbleView.frame = CGRect(x: frame.width - message.estimatedFrameForText!.width - 40, y: 0,
+                                   width: message.estimatedFrameForText!.width + 30, height: frame.size.height).integral
+    textView.frame.size = CGSize(width: bubbleView.frame.width.rounded(), height: bubbleView.frame.height.rounded())
+    
+    setupTimestampView(message: message, isOutgoing: true)
+  }
+  
   override func setupViews() {
     bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
     contentView.addSubview(bubbleView)

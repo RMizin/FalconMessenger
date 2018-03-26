@@ -63,6 +63,38 @@ class BaseMessageCell: RevealableCollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
+  func configureDeliveryStatus(at indexPath: IndexPath, lastMessageIndex: Int, message:Message ) {
+    switch indexPath.row == lastMessageIndex {
+    case true:
+      DispatchQueue.main.async {
+        self.deliveryStatus.frame = CGRect(x: self.frame.width - 80, y: self.bubbleView.frame.height + 2, width: 70, height: 10).integral
+        self.deliveryStatus.text = message.status
+        self.deliveryStatus.isHidden = false
+        self.deliveryStatus.layoutIfNeeded()
+      }
+      break
+      
+    default:
+      DispatchQueue.main.async {
+        self.deliveryStatus.isHidden = true
+        self.deliveryStatus.layoutIfNeeded()
+      }
+      break
+    }
+  }
+  
+  func setupTimestampView(message: Message, isOutgoing:Bool) {
+    DispatchQueue.main.async {
+      if let view = self.chatLogController?.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+        view.titleLabel.text = message.convertedTimestamp
+        let style:RevealStyle = isOutgoing ? .slide : .over
+        self.setRevealableView(view, style: style, direction: .left)
+      }
+    }
+  }
+
+  
+  
   func setupViews() {
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     contentView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
@@ -73,5 +105,6 @@ class BaseMessageCell: RevealableCollectionViewCell {
   override func prepareForReuse() {
     super.prepareForReuse()
     prepareViewsForReuse()
+    deliveryStatus.text = ""
   }
 }

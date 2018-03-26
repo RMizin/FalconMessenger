@@ -51,6 +51,25 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     progressView.heightAnchor.constraint(equalToConstant: 60).isActive = true
   }
   
+  func setupData(message: Message, isGroupChat:Bool) {
+    
+    self.message = message
+    bubbleView.frame.size.height = frame.size.height.rounded()
+    
+    if isGroupChat {
+      nameLabel.text = message.senderName ?? ""
+      nameLabel.frame.size.height = 10
+      nameLabel.sizeToFit()
+      nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingTextViewLeftInset+5, y: BaseMessageCell.incomingTextViewTopInset)
+      messageImageViewTopAnchor.constant = 34
+      if nameLabel.frame.size.width >= 170 {
+        nameLabel.frame.size.width = 170
+      }
+    }
+    messageImageView.isUserInteractionEnabled = false
+    setupTimestampView(message: message, isOutgoing: false)
+  }
+  
   override func prepareViewsForReuse() {
      super.prepareViewsForReuse()
     bubbleView.image = grayBubbleImage

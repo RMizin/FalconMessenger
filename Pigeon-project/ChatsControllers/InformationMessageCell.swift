@@ -21,6 +21,11 @@ class InformationMessageCell: RevealableCollectionViewCell {
     return information
   }()
   
+  func setupData(message: Message) {
+    guard let messageText = message.text else { return }
+    information.text = messageText
+    information.sizeToFit()
+  }
   
   override init(frame: CGRect) {
     super.init(frame: frame.integral)

@@ -43,6 +43,14 @@ class PhotoMessageCell: BaseMediaMessageCell {
     progressView.heightAnchor.constraint(equalToConstant: 60).isActive = true
   }
   
+  func setupData(message: Message) {
+    self.message = message
+    bubbleView.frame.origin = CGPoint(x: (frame.width - 210).rounded(), y: 0)
+    bubbleView.frame.size.height = frame.size.height.rounded()
+    setupTimestampView(message: message, isOutgoing: true)
+    messageImageView.isUserInteractionEnabled = false
+  }
+
   override func prepareViewsForReuse() {
      super.prepareViewsForReuse()
     bubbleView.image = blueBubbleImage
