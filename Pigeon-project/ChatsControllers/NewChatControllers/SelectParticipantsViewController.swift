@@ -183,11 +183,11 @@ class SelectParticipantsViewController: UIViewController {
       }
       
       reference.updateChildValues(values, withCompletionBlock: { (_, _) in
-     
-        for selectedUserName in selectedUserNames {
-          let text = "Admin added user \(selectedUserName) to the group"
-          self.informationMessageSender.sendInformatoinMessage(chatID: self.chatIDForUsersUpdate, membersIDs: membersIDs, text: text)
-        }
+        let userNamesString = selectedUserNames.joined(separator: ", ")
+        let usersTitleString = selectedUserNames.count > 1 ? "users" : "user"
+        let text = "Admin added \(usersTitleString) \(userNamesString) to the group"
+        self.informationMessageSender.sendInformatoinMessage(chatID: self.chatIDForUsersUpdate, membersIDs: membersIDs, text: text)
+
         ARSLineProgress.showSuccess()
         self.navigationController?.view.isUserInteractionEnabled = true
         self.navigationController?.popViewController(animated: true)
@@ -275,7 +275,6 @@ class SelectParticipantsViewController: UIViewController {
     searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
     tableView.tableHeaderView = searchBar
   }
-  
   
   func reloadCollectionView() {
     if #available(iOS 11.0, *) {

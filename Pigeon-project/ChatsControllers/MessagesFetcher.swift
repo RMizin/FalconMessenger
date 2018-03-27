@@ -17,9 +17,7 @@ protocol MessagesDelegate: class {
 
 protocol CollectionDelegate: class {
   func collectionView(shouldBeUpdatedWith message: Message, reference:DatabaseReference)
-//  func collectionView(shouldUpdateInitialMessageStatusFrom reference: DatabaseReference)
   func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message)
-//  func collectionView(shouldStartObservingTypingIndcicator: Bool)
 }
 
 class MessagesFetcher: NSObject {
@@ -50,15 +48,9 @@ class MessagesFetcher: NSObject {
     
     var isGroupChat = Bool()
     if let groupChat = conversation.isGroupChat, groupChat { isGroupChat = true } else { isGroupChat = false }
-    
-//    if isGroupChat {
-//      userMessagesReference = Database.database().reference().child("groupChats")
-//        .child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
-//      userMessagesReference.keepSynced(true)
-//    } else {
+
       userMessagesReference = Database.database().reference().child("user-messages")
         .child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
-  //  }
     
     loadingMessagesGroup.enter()
     newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
@@ -84,14 +76,6 @@ class MessagesFetcher: NSObject {
       })
     })
   }
-  
-//  func callDelegateMethods(conversation:Conversation) {
-//    self.isInitialChatMessagesLoad = false
-//    self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
-//   // guard self.messagesReference != nil else { return }
-//    self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
-//  }
-  
   
   func newLoadMessages(reference: DatabaseQuery, isGroupChat: Bool) {
     var loadedMessages = [Message]()
@@ -227,6 +211,12 @@ class MessagesFetcher: NSObject {
     let size = CGSize(width: 200, height: 10000)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
     return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13)], context: nil).integral
+  }
+  
+  func estimateFrameForText(width: CGFloat, text: String, font: UIFont) -> CGRect {
+    let size = CGSize(width: width, height: 10000)
+    let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: font], context: nil).integral
   }
   
   func getAudioDurationInHours(from data: Data) -> String? {

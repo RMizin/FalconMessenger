@@ -24,7 +24,6 @@ class InformationMessageCell: RevealableCollectionViewCell {
   func setupData(message: Message) {
     guard let messageText = message.text else { return }
     information.text = messageText
-    information.sizeToFit()
   }
   
   override init(frame: CGRect) {
@@ -34,8 +33,9 @@ class InformationMessageCell: RevealableCollectionViewCell {
     information.backgroundColor = backgroundColor
     
     addSubview(information)
-    information.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
     information.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+    information.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+    information.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
   }
   
   required init?(coder aDecoder: NSCoder) {

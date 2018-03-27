@@ -115,7 +115,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     })
     
     membersReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
-    
     membersAddingHandle = membersReference.observe(.childAdded) { (snapshot) in
       guard let id = snapshot.value as? String, let members = self.conversation?.chatParticipantsIDs else { return }
       
@@ -177,13 +176,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
- 
   var startingIDReference: DatabaseReference!
   var endingIDReference: DatabaseReference!
   var startingIDQuery: DatabaseQuery!
   var endingIDQuery: DatabaseQuery!
   var userMessagesReference: DatabaseReference!
   var userMessagesQuery: DatabaseQuery!
+  var userMessageHande: DatabaseHandle!
   
   func loadPreviousMessages(isGroupChat: Bool) {
     
@@ -193,30 +192,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let oldestMessagesLoadingGroup = DispatchGroup()
     if messages.count <= 0 { self.refreshControl.endRefreshing() }
 
-    
-//    if isGroupChat {
-//      startingIDReference = Database.database().reference().child("groupChats").child(conversationID).child(userMessagesFirebaseFolder)
-//      startingIDQuery = startingIDReference.queryLimited(toLast: UInt(numberOfMessagesToLoad))
-//    } else {
-      startingIDReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
-      startingIDQuery = startingIDReference.queryLimited(toLast: UInt(numberOfMessagesToLoad))
-//    }
-  
+    startingIDReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
+    startingIDQuery = startingIDReference.queryLimited(toLast: UInt(numberOfMessagesToLoad))
+
     startingIDQuery.keepSynced(true)
-   
     startingIDQuery.observeSingleEvent(of: .childAdded, with: { (snapshot) in
       let queryStartingID = snapshot.key
+      self.endingIDReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
+      self.endingIDQuery = self.endingIDReference.queryLimited(toLast: UInt(nextMessageIndex))
       
-//      if isGroupChat {
-//        self.endingIDReference = Database.database().reference().child("groupChats").child(conversationID).child(userMessagesFirebaseFolder)
-//        self.endingIDQuery = self.endingIDReference.queryLimited(toLast: UInt(nextMessageIndex))
-//      } else {
-        self.endingIDReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
-        self.endingIDQuery = self.endingIDReference.queryLimited(toLast: UInt(nextMessageIndex))
-    //  }
-    
       self.endingIDQuery.keepSynced(true)
-      
       self.endingIDQuery.observeSingleEvent(of: .childAdded, with: { (snapshot) in
         let queryEndingID = snapshot.key
         if (queryStartingID == queryEndingID) && self.messages.contains(where: { (message) -> Bool in
@@ -227,20 +212,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           return
         }
         
-//        if isGroupChat {
-//          self.userMessagesReference = Database.database().reference().child("groupChats").child(conversationID).child(userMessagesFirebaseFolder)
-//          self.userMessagesQuery = self.userMessagesReference.queryOrderedByKey().queryStarting(atValue: queryStartingID).queryEnding(atValue: queryEndingID)
-//        } else {
-          self.userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
-          self.userMessagesQuery = self.userMessagesReference.queryOrderedByKey().queryStarting(atValue: queryStartingID).queryEnding(atValue: queryEndingID)
-    //    }
-        
+        self.userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
+        self.userMessagesQuery = self.userMessagesReference.queryOrderedByKey().queryStarting(atValue: queryStartingID).queryEnding(atValue: queryEndingID)
+    
         self.userMessagesQuery.keepSynced(true)
-        
         self.userMessagesQuery.observeSingleEvent(of: .value, with: { (snapshot) in
-          for _ in 0 ..< snapshot.childrenCount {
-            oldestMessagesLoadingGroup.enter()
-          }
+          for _ in 0 ..< snapshot.childrenCount { oldestMessagesLoadingGroup.enter() }
 
           oldestMessagesLoadingGroup.notify(queue: DispatchQueue.main, execute: {
             var arrayWithShiftedMessages = self.messages
@@ -248,8 +225,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
 
             self.messages = arrayWithShiftedMessages
-            self.userMessagesReference.removeAllObservers()
-            self.userMessagesQuery.removeAllObservers()
+            self.userMessagesReference.removeObserver(withHandle: self.userMessageHande)
+            self.userMessagesQuery.removeObserver(withHandle: self.userMessageHande)
 
             contentSizeWhenInsertingToTop = self.collectionView?.contentSize
             isInsertingCellsToTop = true
@@ -260,13 +237,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             }
           })
 
-          self.userMessagesQuery.observe(.childAdded, with: { (snapshot) in
+          self.userMessageHande = self.userMessagesQuery.observe(.childAdded, with: { (snapshot) in
             let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
             let messageUID = snapshot.key
             messagesRef.keepSynced(true)
             messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
               guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
-
               dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
               dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: isGroupChat)
               let message = Message(dictionary: dictionary)
@@ -354,7 +330,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       })
     }
   }
-  
 
   fileprivate func handleTypingIndicatorAppearance(isEnabled: Bool) {
     
@@ -407,7 +382,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
 
-  
   func updateMessageStatus(messageRef: DatabaseReference) {
     
     guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else { return }
@@ -523,7 +497,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     print("\n CHATLOG CONTROLLER DE INIT \n")
   }
   
-  
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     configureProgressBar()
@@ -537,7 +510,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       self.collectionView?.contentOffset = targetContentOffset
     }
   }
-  
   
   private var didLayoutFlag: Bool = false
   override func viewDidLayoutSubviews() { // start chat log at bottom for iOS 11
@@ -562,41 +534,32 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-         super.willTransition(to: newCollection, with: coordinator)
-        collectionView?.collectionViewLayout.invalidateLayout()
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-         super.viewWillTransition(to: size, with: coordinator)
-      
-        collectionView?.collectionViewLayout.invalidateLayout()
-        inputContainerView.inputTextView.invalidateIntrinsicContentSize()
-        inputContainerView.invalidateIntrinsicContentSize()
+  override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.willTransition(to: newCollection, with: coordinator)
+    collectionView?.collectionViewLayout.invalidateLayout()
+  }
   
-        DispatchQueue.main.async {
-           self.inputContainerView.attachedImages.frame.size.width = self.inputContainerView.inputTextView.frame.width
-            self.collectionView?.reloadData()
-        }
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    collectionView?.collectionViewLayout.invalidateLayout()
+    inputContainerView.inputTextView.invalidateIntrinsicContentSize()
+    inputContainerView.invalidateIntrinsicContentSize()
+    DispatchQueue.main.async {
+      self.inputContainerView.attachedImages.frame.size.width = self.inputContainerView.inputTextView.frame.width
+      self.collectionView?.reloadData()
     }
-  
- 
+  }
   
   fileprivate func configureProgressBar() {
     
-    guard navigationController?.navigationBar != nil else {
-      return
-    }
-    
-    if uploadProgressBar.isDescendant(of: navigationController!.navigationBar) {
-      return
-    } else {
-      navigationController?.navigationBar.addSubview(uploadProgressBar)
-      uploadProgressBar.translatesAutoresizingMaskIntoConstraints = false
-      uploadProgressBar.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor).isActive = true
-      uploadProgressBar.leftAnchor.constraint(equalTo: navigationController!.navigationBar.leftAnchor).isActive = true
-      uploadProgressBar.rightAnchor.constraint(equalTo: navigationController!.navigationBar.rightAnchor).isActive = true
-    }
+    guard navigationController?.navigationBar != nil else { return }
+    guard !uploadProgressBar.isDescendant(of: navigationController!.navigationBar) else { return }
+
+    navigationController?.navigationBar.addSubview(uploadProgressBar)
+    uploadProgressBar.translatesAutoresizingMaskIntoConstraints = false
+    uploadProgressBar.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor).isActive = true
+    uploadProgressBar.leftAnchor.constraint(equalTo: navigationController!.navigationBar.leftAnchor).isActive = true
+    uploadProgressBar.rightAnchor.constraint(equalTo: navigationController!.navigationBar.rightAnchor).isActive = true
   }
   
   fileprivate func setupCollectionView () {
@@ -626,10 +589,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       collectionView?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - inputContainerView.frame.height  )
       automaticallyAdjustsScrollViewInsets = true
       extendedLayoutIncludesOpaqueBars = true
-   }
-
- 
-    
+    }
     collectionView?.addSubview(refreshControl)
     collectionView?.register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
     collectionView?.register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)
@@ -663,6 +623,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     refreshControl.beginRefreshing()
     refreshControl.endRefreshing()
   }
+  
   fileprivate var userHandler: UInt = 01
   fileprivate var onlineStatusInString:String?
   
@@ -729,9 +690,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   func setRightBarButtonItem () {
     
     let infoButton = UIButton(type: .infoLight)
-
     infoButton.addTarget(self, action: #selector(getInfoAction), for: .touchUpInside)
-
     let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 
     guard let uid = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, uid != conversationID  else { return }
@@ -761,7 +720,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       self.navigationController?.pushViewController(destination, animated: true)
     }
   }
-  
   
   lazy var inputContainerView: ChatInputContainerView = {
     var chatInputContainerView = ChatInputContainerView()
@@ -1055,8 +1013,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
     let isInformationMessage = message.isInformationMessage ?? false
     let isGroupChat = conversation?.isGroupChat != nil
-
-    guard !isInformationMessage else { return CGSize(width: self.collectionView!.frame.width, height: 25) }
+   
+    guard !isInformationMessage else {
+      guard let infoMessageWidth = self.collectionView?.frame.width, let messageText = message.text else { return CGSize(width: 0, height: 0 ) }
+      let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth, text: messageText, font: UIFont.systemFont(ofSize: 12)).height + 10
+      return CGSize(width: infoMessageWidth, height: infoMessageHeight)
+    }
    
     if isTextMessage {
       if let isInfoMessage = message.isInformationMessage, isInfoMessage {
@@ -1285,7 +1247,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       self.updateLastMessageForParticipants(messageID: messageId)
     }
   }
-  
   
   fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
     let imageName = UUID().uuidString
