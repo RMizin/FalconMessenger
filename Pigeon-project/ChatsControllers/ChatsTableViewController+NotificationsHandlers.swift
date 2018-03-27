@@ -120,7 +120,6 @@ extension ChatsTableViewController {
        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
      }
    }
-  
 }
 
 

@@ -33,6 +33,10 @@ private let incomingPhotoMessageCellID = "incomingPhotoMessageCellID"
 
 private let informationMessageCellID = "informationMessageCellID"
 
+protocol DeleteAndExitDelegate: class {
+  func deleteAndExit(from conversationID: String)
+}
+
 
 class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
@@ -63,6 +67,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var mediaPickerController: MediaPickerControllerNew! = nil
   
   var voiceRecordingViewController: VoiceRecordingViewController! = nil
+  
+  weak var deleteAndExitDelegate: DeleteAndExitDelegate?
   
   var chatLogAudioPlayer: AVAudioPlayer!
   
@@ -732,6 +738,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   lazy var inputBlockerContainerView: InputBlockerContainerView = {
     var inputBlockerContainerView = InputBlockerContainerView()
     inputBlockerContainerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 50)
+    inputBlockerContainerView.backButton.addTarget(self, action: #selector(inputBlockerAction), for: .touchUpInside)
+    
     
     return inputBlockerContainerView
   }()
@@ -744,6 +752,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     return refreshControl
   }()
+  
+  @objc func inputBlockerAction() {
+    guard let chatID = conversation?.chatID else { return }
+    navigationController?.popViewController(animated: true)
+    deleteAndExitDelegate?.deleteAndExit(from: chatID)
+  }
   
   var canRefresh = true
   var isScrollViewAtTheBottom = true

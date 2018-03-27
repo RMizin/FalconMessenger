@@ -29,6 +29,10 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
+private let pinErrorTitle = "Error pinning/unpinning"
+private let pinErrorMessage = "Changes won't be saved across app restarts. Check your internet connection, re-launch the app, and try again."
+private let muteErrorTitle = "Error muting/unmuting"
+private let muteErrorMessage = "Check your internet connection and try again."
 extension ChatsTableViewController {
   
   func unpinConversation(at indexPath: IndexPath) {
@@ -63,8 +67,7 @@ extension ChatsTableViewController {
     let metadataRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataRef.updateChildValues(["pinned": false], withCompletionBlock: { (error, reference) in
       if error != nil {
-        basicErrorAlertWith(title: "Error pinning/unpinning", message: "Changes won't be saved across app restarts. Check your internet connection, re-launch the app, and try again.", controller: self)
-        print(error?.localizedDescription ?? "")
+        basicErrorAlertWith(title: pinErrorTitle , message: pinErrorMessage, controller: self)
         return
       }
     })
@@ -103,8 +106,7 @@ extension ChatsTableViewController {
     let metadataReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataReference.updateChildValues(["pinned": true], withCompletionBlock: { (error, reference) in
       if error != nil {
-        basicErrorAlertWith(title: "Error pinning/unpinning", message: "Changes won't be saved across app restarts. Check your internet connection, re-launch the app, and try again.", controller: self)
-        print(error?.localizedDescription ?? "")
+        basicErrorAlertWith(title: pinErrorTitle, message: pinErrorMessage, controller: self)
         return
       }
     })
@@ -164,7 +166,7 @@ extension ChatsTableViewController {
     let metadataReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataReference.updateChildValues(["muted": state], withCompletionBlock: { (error, reference) in
       if error != nil {
-        basicErrorAlertWith(title: "Error muting/unmuting", message: "Check your internet connection and try again.", controller: self)
+        basicErrorAlertWith(title: muteErrorTitle, message: muteErrorMessage, controller: self)
       }
     })
   }

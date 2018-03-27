@@ -183,7 +183,6 @@ class ChatsTableViewController: UITableViewController {
       } else {
         self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .noInternet, activityPriority: .crazy, color: ThemeManager.currentTheme().generalTitleColor)
       }
-      
     }) { (error) in
       print(error.localizedDescription)
     }
@@ -191,27 +190,24 @@ class ChatsTableViewController: UITableViewController {
   
   func checkIfThereAnyActiveChats(isEmpty: Bool) {
     
-    if isEmpty {
+    guard !isEmpty else {
       self.view.addSubview(noChatsYetContainer)
       noChatsYetContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-      
-    } else {
-      for subview in self.view.subviews {
-        if subview is NoChatsYetContainer {
-          subview.removeFromSuperview()
-        }
+      return
+    }
+    
+    for subview in self.view.subviews {
+      if subview is NoChatsYetContainer {
+        subview.removeFromSuperview()
       }
     }
   }
   
-
-  //var shouldDisplayNotification = false
   var notificationReference: DatabaseReference!
   var notificationHandle = [DatabaseHandle]()
   fileprivate var inAppNotificationsObserverHandler: DatabaseHandle!
   
   func observersForNotifications() {
-    
     
     if notificationReference != nil {
       for handle in notificationHandle {
@@ -224,25 +220,11 @@ class ChatsTableViewController: UITableViewController {
     allConversations.insert(contentsOf: conversations, at: 0)
     allConversations.insert(contentsOf: pinnedConversations, at: 0)
     
-    //let allConversationsGroup = DispatchGroup()
-    //var allConversationsGroupFinished = false
-    
-//    for _ in allConversations {
-//      allConversationsGroup.enter()
-//        print("entering all convs group")
-//    }
-//
-//    allConversationsGroup.notify(queue: DispatchQueue.main, execute: {
-//     print("notifying  all convs group")
-//    //  allConversationsGroupFinished = true
-//      self.shouldDisplayNotification = true
-//    })
-    
     for conversation in allConversations {
-      
+    
       guard let currentUserID = Auth.auth().currentUser?.uid, let chatID = conversation.chatID else { continue }
-
-      notificationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)//.child("lastMessageID")
+      
+      notificationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
       let handle = DatabaseHandle()
       notificationHandle.insert(handle, at: 0)
       notificationHandle[0] = notificationReference.observe(.childChanged, with: { (snapshot) in
@@ -262,13 +244,11 @@ class ChatsTableViewController: UITableViewController {
     }
   }
   
-  
-fileprivate var shouldDisableUpdatingIndicator = true
-    
-  
+  fileprivate var shouldDisableUpdatingIndicator = true
   var groupChatReference: DatabaseReference!
   var groupChatHandle:DatabaseHandle!
   fileprivate typealias groupChatMetaInfoCompletionHandler = (_ success: Bool, _ dictionary: [String:AnyObject]) -> Void
+  
   fileprivate func groupChatMetaInfo( dictionary: [String:AnyObject], completion: @escaping groupChatMetaInfoCompletionHandler) {
 
     let conversation = Conversation(dictionary: dictionary)
@@ -341,24 +321,18 @@ fileprivate var shouldDisableUpdatingIndicator = true
           self.groupChatMetaInfo(dictionary: conversationDictionary, completion: { (isCompleted, dictionary) in
 
             let conversation = Conversation(dictionary: dictionary)
-
             
             guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
-              
               guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
-                print("is not group chat 1")
                 self.updateConversations(with: conversation, isGroupChat: false, notificationAtTheEnd: false)
                 return
               }
-              
-              print("is  group chat1 ")
               self.updateConversations(with: conversation, isGroupChat: true, notificationAtTheEnd: false)
               return
             }
             
             self.lastMessageForConverstaionRef = Database.database().reference().child("messages").child(lastMessageID)
             self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
-              print("single event of value")
               guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
               dictionary.updateValue(lastMessageID as AnyObject, forKey: "messageUID")
               
@@ -470,7 +444,6 @@ fileprivate var shouldDisableUpdatingIndicator = true
     }
   }
   
-
   func configureTabBarBadge() {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -550,7 +523,6 @@ fileprivate var shouldDisableUpdatingIndicator = true
     tableView.reloadData()
   }
 
-
     // MARK: - Table view data source
   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     return true
@@ -599,32 +571,46 @@ fileprivate var shouldDisableUpdatingIndicator = true
   
   override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
     
+    let delete = setupDeleteAction(at: indexPath)
+    let pin = setupPinAction(at: indexPath)
+    let mute = setupMuteAction(at: indexPath)
+ 
+    return [delete, pin, mute]
+  }
+  
+  func setupMuteAction(at indexPath: IndexPath) -> UITableViewRowAction  {
     let mute = UITableViewRowAction(style: .default, title: "Mute") { action, index in
       if indexPath.section == 0 {
-        if #available(iOS 11.0, *) {
-          self.delayWithSeconds(1, completion: {
-            self.handleMuteConversation(section: indexPath.section, for: self.filteredPinnedConversations[indexPath.row])
-          })
-        } else {
+        if #available(iOS 11.0, *) {} else {
           self.tableView.setEditing(false, animated: true)
-          self.delayWithSeconds(1, completion: {
-            self.handleMuteConversation(section: indexPath.section, for: self.filteredPinnedConversations[indexPath.row])
-          })
         }
+        self.delayWithSeconds(1, completion: {
+          self.handleMuteConversation(section: indexPath.section, for: self.filteredPinnedConversations[indexPath.row])
+        })
       } else if indexPath.section == 1 {
-        if #available(iOS 11.0, *) {
-          self.delayWithSeconds(1, completion: {
-            self.handleMuteConversation(section: indexPath.section, for: self.filtededConversations[indexPath.row])
-          })
-        } else {
+        if #available(iOS 11.0, *) {} else {
           self.tableView.setEditing(false, animated: true)
-          self.delayWithSeconds(1, completion: {
-            self.handleMuteConversation(section: indexPath.section, for: self.filtededConversations[indexPath.row])
-          })
         }
+        self.delayWithSeconds(1, completion: {
+          self.handleMuteConversation(section: indexPath.section, for: self.filtededConversations[indexPath.row])
+        })
       }
     }
     
+    if indexPath.section == 0 {
+      let isPinnedConversationMuted = filteredPinnedConversations[indexPath.row].muted == true
+      let muteTitle = isPinnedConversationMuted ? "Unmute" : "Mute"
+      mute.title = muteTitle
+    } else if indexPath.section == 1 {
+      let isConversationMuted = filtededConversations[indexPath.row].muted == true
+      let muteTitle = isConversationMuted ? "Unmute" : "Mute"
+      mute.title = muteTitle
+    }
+    mute.backgroundColor = UIColor(red:0.56, green:0.64, blue:0.68, alpha:1.0)
+    return mute
+  }
+  
+  func setupPinAction(at indexPath: IndexPath) -> UITableViewRowAction {
     let pin = UITableViewRowAction(style: .default, title: "Pin") { action, index in
       if indexPath.section == 0 {
         self.unpinConversation(at: indexPath)
@@ -633,12 +619,19 @@ fileprivate var shouldDisableUpdatingIndicator = true
       }
     }
     
+    let pinTitle = indexPath.section == 0 ? "Unpin" : "Pin"
+    pin.title = pinTitle
+    pin.backgroundColor = UIColor(red:0.96, green:0.49, blue:0.00, alpha:1.0)
+    return pin
+  }
+  
+  func setupDeleteAction(at indexPath: IndexPath) -> UITableViewRowAction {
+    
     let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
       if self.currentReachabilityStatus == .notReachable {
         basicErrorAlertWith(title: "Error deleting message", message: noInternetError, controller: self)
         return
       }
-      
       if indexPath.section == 0 {
         self.deletePinnedConversation(at: indexPath)
       } else if indexPath.section == 1 {
@@ -646,39 +639,8 @@ fileprivate var shouldDisableUpdatingIndicator = true
       }
     }
     
-    if indexPath.section == 0 {
-      pin.title = "Unpin"
-    } else if indexPath.section == 1 {
-      pin.title = "Pin"
-    }
-    
-    if indexPath.section == 0 {
-      if filteredPinnedConversations[indexPath.row].muted != nil {
-        if filteredPinnedConversations[indexPath.row].muted! {
-          mute.title = "Unmute"
-        } else {
-          mute.title = "Mute"
-        }
-      } else {
-        mute.title = "Mute"
-      }
-    } else if indexPath.section == 1 {
-      if filtededConversations[indexPath.row].muted != nil {
-        if filtededConversations[indexPath.row].muted! {
-          mute.title = "Unmute"
-        } else {
-          mute.title = "Mute"
-        }
-      } else {
-        mute.title = "Mute"
-      }
-    }
-    
-    pin.backgroundColor = UIColor(red:0.96, green:0.49, blue:0.00, alpha:1.0)
     delete.backgroundColor = UIColor(red:0.90, green:0.22, blue:0.21, alpha:1.0)
-    mute.backgroundColor = UIColor(red:0.56, green:0.64, blue:0.68, alpha:1.0)
-    
-    return [delete, pin, mute]
+    return delete
   }
   
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -704,6 +666,7 @@ fileprivate var shouldDisableUpdatingIndicator = true
       return configuredCell(for: indexPath)
     }
   }
+  
   var chatLogController:ChatLogController? = nil
   var messagesFetcher:MessagesFetcher? = nil
   var destinationLayout:AutoSizingCollectionViewFlowLayout? = nil
@@ -729,6 +692,28 @@ fileprivate var shouldDisableUpdatingIndicator = true
   }
 }
 
+extension ChatsTableViewController: DeleteAndExitDelegate {
+  
+  func deleteAndExit(from conversationID: String) {
+    
+    let pinnedIDs = pinnedConversations.map({$0.chatID ?? ""})
+    let section = pinnedIDs.contains(conversationID) ? 0 : 1
+    guard let row = conversationIndex(for: conversationID, at: section) else { return }
+  
+    let indexPath = IndexPath(row: row, section: section)
+    section == 0 ? deletePinnedConversation(at: indexPath) : deleteUnPinnedConversation(at: indexPath)
+  }
+  
+  func conversationIndex(for conversationID: String, at section: Int) -> Int? {
+    let conversationsArray = section == 0 ? filteredPinnedConversations : filtededConversations
+    guard let index = conversationsArray.index(where: { (conversation) -> Bool in
+      guard let chatID = conversation.chatID else { return false }
+      return chatID == conversationID
+    }) else { return nil }
+    return index
+  }
+}
+
 extension ChatsTableViewController: MessagesDelegate {
   
   func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
@@ -737,18 +722,18 @@ extension ChatsTableViewController: MessagesDelegate {
   
   func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
    
-   
     chatLogController?.hidesBottomBarWhenPushed = true
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
     chatLogController?.conversation = conversation
+    chatLogController?.deleteAndExitDelegate = self
  
     if let membersIDs = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
       chatLogController?.observeTypingIndicator()
       chatLogController?.configureTitleViewWithOnlineStatus()
-     
     }
-     chatLogController?.observeMembersChanges()
+    
+    chatLogController?.observeMembersChanges()
     
     chatLogController?.messagesFetcher.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
