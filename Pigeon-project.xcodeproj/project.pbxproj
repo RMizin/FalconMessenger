@@ -15,6 +15,7 @@
 		4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */; };
 		4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */; };
 		4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */; };
+		4B210A56206A8A4300A3ACFA /* SelectNewAdminTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B210A55206A8A4300A3ACFA /* SelectNewAdminTableViewController.swift */; };
 		4B2142FE1F51C72700F7A4B8 /* RevealableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2142FB1F51C72700F7A4B8 /* RevealableCollectionViewCell.swift */; };
 		4B2142FF1F51C72700F7A4B8 /* RevealableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2142FC1F51C72700F7A4B8 /* RevealableView.swift */; };
 		4B2143001F51C72700F7A4B8 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2142FD1F51C72700F7A4B8 /* UICollectionView+Extension.swift */; };
@@ -242,6 +243,7 @@
 		4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CenteredCollectionViewFlowLayout.swift; path = Support/CenteredCollectionViewFlowLayout/CenteredCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectedMediaCollectionCell.swift; path = ChatsControllers/SelectedMediaCollectionCell.swift; sourceTree = "<group>"; };
 		4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatInputContainer+AttachedImagesCollectionConfig.swift"; path = "ChatsControllers/ChatInputContainer+AttachedImagesCollectionConfig.swift"; sourceTree = "<group>"; };
+		4B210A55206A8A4300A3ACFA /* SelectNewAdminTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectNewAdminTableViewController.swift; path = ChatsControllers/SelectNewAdminTableViewController.swift; sourceTree = "<group>"; };
 		4B2142FB1F51C72700F7A4B8 /* RevealableCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RevealableCollectionViewCell.swift; path = Support/RevealableCell/RevealableCollectionViewCell.swift; sourceTree = "<group>"; };
 		4B2142FC1F51C72700F7A4B8 /* RevealableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RevealableView.swift; path = Support/RevealableCell/RevealableView.swift; sourceTree = "<group>"; };
 		4B2142FD1F51C72700F7A4B8 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UICollectionView+Extension.swift"; path = "Support/RevealableCell/UICollectionView+Extension.swift"; sourceTree = "<group>"; };
@@ -499,6 +501,14 @@
 				4BE8BB431FCA83D200EB35FA /* PlayerCellView.swift */,
 			);
 			name = ChatInputContainer;
+			sourceTree = "<group>";
+		};
+		4B210A54206A8A0100A3ACFA /* SelectNewAdminControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4B210A55206A8A4300A3ACFA /* SelectNewAdminTableViewController.swift */,
+			);
+			name = SelectNewAdminControllers;
 			sourceTree = "<group>";
 		};
 		4B2142E91F51B77200F7A4B8 /* RevealableCell */ = {
@@ -825,6 +835,7 @@
 		4BBBCC08205D2A4700926800 /* GroupAdminControlsViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4B210A54206A8A0100A3ACFA /* SelectNewAdminControllers */,
 				4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */,
 				4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureOpener.swift */,
 				4B88F2D9206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift */,
@@ -1434,6 +1445,7 @@
 				4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */,
 				4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */,
 				4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */,
+				4B210A56206A8A4300A3ACFA /* SelectNewAdminTableViewController.swift in Sources */,
 				4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */,
 				4B5419561FB392570014C4FB /* INSPhotosTransitionAnimator.swift in Sources */,
 				4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */,

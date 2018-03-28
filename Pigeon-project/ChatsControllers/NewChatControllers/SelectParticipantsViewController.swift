@@ -13,7 +13,6 @@ import Firebase
 enum ControllerType {
   case newGroup
   case newMembers
-  case changeAdmin
 }
 
 class SelectParticipantsViewController: UIViewController {
@@ -115,9 +114,6 @@ class SelectParticipantsViewController: UIViewController {
     case .newMembers:
       rightBarButtonTitle = "Add"
       navigationItemTitle = "Add users"
-    case .changeAdmin:
-      rightBarButtonTitle = "Leave"
-      navigationItemTitle = "Select new admin"
     }
     
     setupRightBarButton(with: rightBarButtonTitle)
@@ -143,8 +139,6 @@ class SelectParticipantsViewController: UIViewController {
       createGroup()
     case .newMembers:
       addNewMembers()
-    case .changeAdmin:
-      changeAdminAndLeave()
     }
   }
   

@@ -304,32 +304,75 @@ class GroupAdminControlsTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     if indexPath.section == 0 {
-      if indexPath.row == 0 {
+      if adminControls[indexPath.row] == "Leave the group" {
+        groupLeaveAlert()
+      } else {
         let filteredMemebrs = globalUsers.filter { user in
           return !members.contains { member in
             user.id == member.id
           }
         }
-       let destination = SelectParticipantsViewController()
-       destination.controllerType = .newMembers
-       destination.filteredUsers = filteredMemebrs
-       destination.users = filteredMemebrs
-       destination.chatIDForUsersUpdate = chatID
-     
-      self.navigationController?.pushViewController(destination, animated: true)
+        let destination = SelectParticipantsViewController()
+        destination.controllerType = .newMembers
+        destination.filteredUsers = filteredMemebrs
+        destination.users = filteredMemebrs
+        destination.chatIDForUsersUpdate = chatID
+        
+        self.navigationController?.pushViewController(destination, animated: true)
       }
     }
     tableView.deselectRow(at: indexPath, animated: true)
   }
   
+  fileprivate func groupLeaveAlert() {
+    
+    let alertAdminTitle = "Your are admin of this group. If you want to leave the group, you must select new admin first."
+    let alertDefaultTitle = "Are you sure?"
+    let message = isCurrentUserAdministrator ? alertAdminTitle : alertDefaultTitle
+    let okActionTitle = isCurrentUserAdministrator ? "Choose admin" : "Leave"
+    let alertController = UIAlertController(title: "Warning", message: message , preferredStyle: .alert)
+    
+    let okAction = UIAlertAction(title: okActionTitle, style: UIAlertActionStyle.default) {
+      UIAlertAction in
+      if self.isCurrentUserAdministrator {
+        
+      } else {
+        self.leaveTheGroup()
+      }
+      NSLog("OK Pressed")
+    }
+   
+    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+    alertController.addAction(okAction)
+    alertController.addAction(cancelAction)
+    self.present(alertController, animated: true, completion: nil)
+  }
+  
+  func leaveTheGroup() {
+    ARSLineProgress.ars_showOnView(self.view)
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    guard let index = members.index(where: { (user) -> Bool in
+      return user.id == uid
+    }) else { return }
+    guard let memberName = members[index].name else { return }
+    let text = "\(memberName) left the group"
+    let reference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs").child(uid)
+    reference.removeValue { (_, _) in
+      var membersIDs = self.members.map({$0.id ?? ""})
+      membersIDs.append(uid)
+      self.informationMessageSender.sendInformatoinMessage(chatID: self.chatID, membersIDs: membersIDs, text: text)
+      ARSLineProgress.hide()
+      self.navigationController?.popViewController(animated: true)
+    }
+  }
+  
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
  
     if indexPath.section == 0 {
-        let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! GroupAdminControlsTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! GroupAdminControlsTableViewCell
       cell.selectionStyle = .none
       cell.title.text = adminControls[indexPath.row]
     
-      
       if cell.title.text == adminControls.last {
         cell.title.textColor = FalconPalette.dismissRed
       } else {
