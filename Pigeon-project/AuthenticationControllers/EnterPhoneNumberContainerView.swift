@@ -26,7 +26,7 @@ class EnterPhoneNumberContainerView: UIView {
     let instructions = UILabel()
     instructions.translatesAutoresizingMaskIntoConstraints = false
     instructions.textAlignment = .center
-    instructions.text = "Please confirm your country code\nand enter your phone number."
+  
     instructions.numberOfLines = 2
     instructions.textColor = ThemeManager.currentTheme().generalTitleColor
     instructions.font = UIFont.systemFont(ofSize: 17)
@@ -45,7 +45,7 @@ class EnterPhoneNumberContainerView: UIView {
     selectCountry.contentVerticalAlignment = .center
     selectCountry.titleEdgeInsets = UIEdgeInsetsMake(-10, 10.0, 0.0, 0.0)
     selectCountry.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-    selectCountry.addTarget(self, action: #selector(ChangeNumberEnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
+    selectCountry.addTarget(self, action: #selector(EnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
     
     return selectCountry
   }()
@@ -67,9 +67,6 @@ class EnterPhoneNumberContainerView: UIView {
     phoneNumber.textAlignment = .center
     phoneNumber.keyboardType = .numberPad
     phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
-    phoneNumber.attributedPlaceholder = NSAttributedString(string: "Phone number",
-                                                           attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
-    
     phoneNumber.textColor = ThemeManager.currentTheme().generalTitleColor
     phoneNumber.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
     
@@ -172,7 +169,6 @@ class EnterPhoneNumberContainerView: UIView {
     termsAndPrivacy.attributedText = termsAttributedString
   }
 }
-
 
 extension EnterPhoneNumberContainerView: UITextFieldDelegate {
   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

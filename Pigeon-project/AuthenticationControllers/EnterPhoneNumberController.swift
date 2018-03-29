@@ -11,10 +11,16 @@ import FirebaseAuth
 import SafariServices
 
 
+enum PhoneNumberControllerType {
+  case authentication
+  case numberChanging
+}
+
 class EnterPhoneNumberController: UIViewController {
   
   let phoneNumberContainerView = EnterPhoneNumberContainerView()
   let countries = Country().countries
+  var phoneNumberControllerType: PhoneNumberControllerType = .authentication
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +35,24 @@ class EnterPhoneNumberController: UIViewController {
     view.addSubview(phoneNumberContainerView)
     phoneNumberContainerView.frame = view.bounds
     phoneNumberContainerView.termsAndPrivacy.delegate = self
+  
+    if phoneNumberControllerType == .authentication {
+      phoneNumberContainerView.termsAndPrivacy.isHidden = false
+      phoneNumberContainerView.instructions.text = "Please confirm your country code\nand enter your phone number."
+      phoneNumberContainerView.phoneNumber.attributedPlaceholder = NSAttributedString(string: "Phone number", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
+    } else {
+      let leftBarButton = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(leftBarButtonDidTap))
+      navigationItem.leftBarButtonItem = leftBarButton
+      phoneNumberContainerView.termsAndPrivacy.isHidden = true
+      phoneNumberContainerView.instructions.text = "Please confirm your country code\nand enter your NEW phone number."
+      phoneNumberContainerView.phoneNumber.attributedPlaceholder = NSAttributedString(string: "New phone number", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
+    }
+  }
+  @objc func leftBarButtonDidTap() {
+    phoneNumberContainerView.phoneNumber.resignFirstResponder()
+    self.dismiss(animated: true) {
+      AppUtility.lockOrientation(.allButUpsideDown)
+    }
   }
   
   fileprivate func setCountry() {
@@ -39,7 +63,6 @@ class EnterPhoneNumberController: UIViewController {
       }
     }
   }
-  
   
   fileprivate func configureNavigationBar () {
     let rightBarButton = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(rightBarButtonDidTap))
@@ -54,11 +77,9 @@ class EnterPhoneNumberController: UIViewController {
     navigationController?.pushViewController(picker, animated: true)
   }
   
-  
   @objc func textFieldDidChange(_ textField: UITextField) {
       setRightBarButtonStatus()
   }
-  
   
   func setRightBarButtonStatus() {
     if phoneNumberContainerView.phoneNumber.text!.count < 9 || phoneNumberContainerView.countryCode.text == " - " {
@@ -67,7 +88,6 @@ class EnterPhoneNumberController: UIViewController {
       self.navigationItem.rightBarButtonItem?.isEnabled = true
     }
   }
-
   
   var isVerificationSent = false
   
@@ -79,7 +99,7 @@ class EnterPhoneNumberController: UIViewController {
     }
     
     let destination = EnterVerificationCodeController()
-    
+    destination.phoneNumberControllerType = phoneNumberControllerType
     destination.enterVerificationContainerView.titleNumber.text = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
     
     navigationController?.pushViewController(destination, animated: true)
@@ -90,7 +110,6 @@ class EnterPhoneNumberController: UIViewController {
       print("verification has already been sent once")
     }
   }
-  
   
   func sendSMSConfirmation () {
     
@@ -129,4 +148,3 @@ extension EnterPhoneNumberController : UITextViewDelegate {
     return false
   }
 }
-

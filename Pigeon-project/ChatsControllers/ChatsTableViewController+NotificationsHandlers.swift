@@ -14,20 +14,20 @@ extension ChatsTableViewController {
   
   fileprivate func visibleTab() -> UIViewController? {
     
-    var appDelegate:AppDelegate! = UIApplication.shared.delegate as! AppDelegate
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
     
     switch self.tabBarController!.selectedIndex {
     case 0:
       let controller = appDelegate.contactsController.navigationController?.visibleViewController
-      appDelegate = nil
+   
       return controller
     case 1:
       let controller = self.navigationController?.visibleViewController
-      appDelegate = nil
+  
       return controller
     case 2:
       let controller = appDelegate.settingsController.navigationController?.visibleViewController
-      appDelegate = nil
+  
       return controller
     default: break
     }
@@ -36,20 +36,20 @@ extension ChatsTableViewController {
   
   func visibleNavigationController() -> UINavigationController? {
     
-    var appDelegate:AppDelegate! = UIApplication.shared.delegate as! AppDelegate
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
     
     switch self.tabBarController!.selectedIndex {
     case 0:
       let controller = appDelegate.contactsController.navigationController
-      appDelegate = nil
+     
       return controller
     case 1:
       let controller = navigationController
-      appDelegate = nil
+     
       return controller
     case 2:
       let controller = appDelegate.settingsController.navigationController
-      appDelegate = nil
+     
       return controller
     default: break
     }

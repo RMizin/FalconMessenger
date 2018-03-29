@@ -20,11 +20,9 @@ extension EnterVerificationContainerView {
   
   @objc func updateTimer() {
     if seconds < 1 {
-      
       resetTimer()
       timerLabel.isHidden = true
       resend.isEnabled = true
-      
     } else {
       seconds -= 1
       timerLabel.text =  "The message has been sent!\nYou can try again in \(timeString(time: TimeInterval(seconds)))"
@@ -43,5 +41,4 @@ extension EnterVerificationContainerView {
     let seconds = Int(time) % 60
     return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
   }
-  
 }

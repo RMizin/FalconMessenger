@@ -138,15 +138,13 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
     }
     
     @objc private func actionButtonTapped(_ sender: UIBarButtonItem) {
-        if let currentPhoto = currentPhoto {
-            currentPhoto.loadImageWithCompletionHandler({ [weak self] (image, error) -> () in
-                if let image = (image ?? currentPhoto.thumbnailImage) {
-                    let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-                    activityController.popoverPresentationController?.barButtonItem = sender
-                    self?.photosViewController?.present(activityController, animated: true, completion: nil)
-                }
-            });
-        }
+      guard let currentPhoto = currentPhoto else { return }
+      currentPhoto.loadImageWithCompletionHandler({ [weak self] (image, error) -> () in
+        guard let image = (image ?? currentPhoto.thumbnailImage) else { return }
+        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        activityController.popoverPresentationController?.barButtonItem = sender
+        self?.photosViewController?.present(activityController, animated: true, completion: nil)
+      })
     }
     
     @objc private func deleteButtonTapped(_ sender: UIBarButtonItem) {
@@ -169,7 +167,6 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
          topConstraint = NSLayoutConstraint(item: navigationBar, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0)
       }
         let widthConstraint = NSLayoutConstraint(item: navigationBar, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0, constant: 0.0)
-      // let hConstraint = NSLayoutConstraint(item: navigationBar, attribute: .height, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0, constant: 0.0)
         let horizontalPositionConstraint = NSLayoutConstraint(item: navigationBar, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         self.addConstraints([topConstraint,widthConstraint,horizontalPositionConstraint])
         
@@ -182,8 +179,6 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
         
         rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(INSPhotosOverlayView.actionButtonTapped(_:)))
     }
-    
- 
     
     private func setupCaptionLabel() {
         captionLabel = UILabel()

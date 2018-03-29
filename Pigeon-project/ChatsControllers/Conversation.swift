@@ -19,7 +19,6 @@ class Conversation: NSObject {
   var isGroupChat: Bool?
   var chatParticipantsIDs:[String]?
   var admin: String?
-  
   var badge: Int?
   var pinned: Bool?
   var muted: Bool?
@@ -36,11 +35,8 @@ class Conversation: NSObject {
     isGroupChat = dictionary?["isGroupChat"] as? Bool
     chatParticipantsIDs = dictionary?["chatParticipantsIDs"] as? [String]
     admin = dictionary?["admin"] as? String
-    
     badge = dictionary?["badge"] as? Int
     pinned = dictionary?["pinned"] as? Bool
     muted = dictionary?["muted"] as? Bool
   }
 }
-
-

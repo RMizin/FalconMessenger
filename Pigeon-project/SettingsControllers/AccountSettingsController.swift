@@ -277,8 +277,9 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       
       if indexPath.row == 1 {
          AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-        let destination = UINavigationController(rootViewController: ChangeNumberEnterPhoneNumberController())
-      //  destination.navigationBar.barStyle = .default
+        let controller = EnterPhoneNumberController()
+        controller.phoneNumberControllerType = .numberChanging
+        let destination = UINavigationController(rootViewController: controller)
         destination.hidesBottomBarWhenPushed = true
         destination.navigationBar.isTranslucent = false
         self.present(destination, animated: true, completion: nil)
@@ -315,7 +316,6 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
   override  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 55
   }
-  
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     

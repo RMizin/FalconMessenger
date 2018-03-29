@@ -1427,29 +1427,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     })
   }
   
-  func runTransaction(firstChild: String, secondChild: String) {
-    
-    var ref = Database.database().reference().child("user-messages").child(firstChild).child(secondChild)
-    ref.observeSingleEvent(of: .value, with: { (snapshot) in
-      
-      if snapshot.hasChild(messageMetaDataFirebaseFolder) {
-        ref = ref.child(messageMetaDataFirebaseFolder).child("badge")
-        ref.runTransactionBlock({ (mutableData) -> TransactionResult in
-          var value = mutableData.value as? Int
-          if value == nil  {
-            value = 0
-          }
-          mutableData.value = value! + 1
-          return TransactionResult.success(withValue: mutableData)
-        })
-      } else {
-        ref = ref.child(messageMetaDataFirebaseFolder)
-        ref.updateChildValues(["badge": 1], withCompletionBlock: { (error, reference) in
-        })
-      }
-    })
-  }
-  
   func incrementBadgeForReciever() {
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
@@ -1459,12 +1436,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
       for participantID in participantsIDs {
         if participantID != currentUserID {
-          self.runTransaction(firstChild: participantID, secondChild: conversationID)
+          runTransaction(firstChild: participantID, secondChild: conversationID)
         }
       }
     } else {
       guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid, toId != fromId else { return }
-      self.runTransaction(firstChild: toId, secondChild: fromId)
+      runTransaction(firstChild: toId, secondChild: fromId)
     }
   }
 }

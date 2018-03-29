@@ -15,7 +15,6 @@ struct MessageSubtitle {
   static let audio = "Audio message"
 }
 
-
 class Message: NSObject  {
   
     var messageUID: String?

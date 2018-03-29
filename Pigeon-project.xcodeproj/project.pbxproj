@@ -36,12 +36,6 @@
 		4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */; };
 		4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */; };
 		4B3E634C1FB9F06F00E200CD /* NoChatsYetContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */; };
-		4B3E63531FBA73F600E200CD /* ChangeNumberSelectCountryCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634D1FBA73F500E200CD /* ChangeNumberSelectCountryCodeController.swift */; };
-		4B3E63541FBA73F600E200CD /* ChangeNumberEnterVerificationCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634E1FBA73F600E200CD /* ChangeNumberEnterVerificationCodeController.swift */; };
-		4B3E63551FBA73F600E200CD /* ChangeNumberEnterPhoneNumberContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634F1FBA73F600E200CD /* ChangeNumberEnterPhoneNumberContainerView.swift */; };
-		4B3E63561FBA73F600E200CD /* ChangeNumberEnterPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E63501FBA73F600E200CD /* ChangeNumberEnterPhoneNumberController.swift */; };
-		4B3E63571FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E63511FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView.swift */; };
-		4B3E63581FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView+timerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E63521FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView+timerHandlers.swift */; };
 		4B40807420552C8500913142 /* SelectParticipantsViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40807320552C8500913142 /* SelectParticipantsViewController+SearchHandlers.swift */; };
 		4B40808E2056AE9B00913142 /* SelectedParticipantsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40808D2056AE9B00913142 /* SelectedParticipantsCollectionView.swift */; };
 		4B4080902056AECE00913142 /* SelectedParticipantsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40808F2056AECE00913142 /* SelectedParticipantsCollectionViewCell.swift */; };
@@ -266,12 +260,6 @@
 		4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsTableViewCell.swift; path = ContactsControllers/ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoPhoneNumberTableViewCell.swift; path = ChatsControllers/UserInfoPhoneNumberTableViewCell.swift; sourceTree = "<group>"; };
 		4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NoChatsYetContainer.swift; path = ChatsControllers/NoChatsYetContainer.swift; sourceTree = "<group>"; };
-		4B3E634D1FBA73F500E200CD /* ChangeNumberSelectCountryCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangeNumberSelectCountryCodeController.swift; path = SettingsControllers/ChangeNumberSelectCountryCodeController.swift; sourceTree = "<group>"; };
-		4B3E634E1FBA73F600E200CD /* ChangeNumberEnterVerificationCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangeNumberEnterVerificationCodeController.swift; path = SettingsControllers/ChangeNumberEnterVerificationCodeController.swift; sourceTree = "<group>"; };
-		4B3E634F1FBA73F600E200CD /* ChangeNumberEnterPhoneNumberContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangeNumberEnterPhoneNumberContainerView.swift; path = SettingsControllers/ChangeNumberEnterPhoneNumberContainerView.swift; sourceTree = "<group>"; };
-		4B3E63501FBA73F600E200CD /* ChangeNumberEnterPhoneNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangeNumberEnterPhoneNumberController.swift; path = SettingsControllers/ChangeNumberEnterPhoneNumberController.swift; sourceTree = "<group>"; };
-		4B3E63511FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangeNumberEnterVerificationContainerView.swift; path = SettingsControllers/ChangeNumberEnterVerificationContainerView.swift; sourceTree = "<group>"; };
-		4B3E63521FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView+timerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChangeNumberEnterVerificationContainerView+timerHandlers.swift"; path = "SettingsControllers/ChangeNumberEnterVerificationContainerView+timerHandlers.swift"; sourceTree = "<group>"; };
 		4B40807320552C8500913142 /* SelectParticipantsViewController+SearchHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SelectParticipantsViewController+SearchHandlers.swift"; path = "ChatsControllers/NewChatControllers/SelectParticipantsViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
 		4B40808D2056AE9B00913142 /* SelectedParticipantsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectedParticipantsCollectionView.swift; path = ChatsControllers/NewChatControllers/SelectedParticipantsCollectionView.swift; sourceTree = "<group>"; };
 		4B40808F2056AECE00913142 /* SelectedParticipantsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectedParticipantsCollectionViewCell.swift; path = ChatsControllers/NewChatControllers/SelectedParticipantsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -578,7 +566,6 @@
 			isa = PBXGroup;
 			children = (
 				4B8D05331F738FBB001735BC /* NotificationsAndSounds */,
-				4B8D05321F738FB6001735BC /* ChangeNumber */,
 				4B48D3091F35C9E20050C797 /* Storage */,
 				4BCA3BF31FB47705006AE321 /* Legal */,
 			);
@@ -743,19 +730,6 @@
 				4BEDE4252067C73500C52EF4 /* InformationCell */,
 			);
 			name = Cells;
-			sourceTree = "<group>";
-		};
-		4B8D05321F738FB6001735BC /* ChangeNumber */ = {
-			isa = PBXGroup;
-			children = (
-				4B3E634F1FBA73F600E200CD /* ChangeNumberEnterPhoneNumberContainerView.swift */,
-				4B3E63501FBA73F600E200CD /* ChangeNumberEnterPhoneNumberController.swift */,
-				4B3E634E1FBA73F600E200CD /* ChangeNumberEnterVerificationCodeController.swift */,
-				4B3E63511FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView.swift */,
-				4B3E63521FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView+timerHandlers.swift */,
-				4B3E634D1FBA73F500E200CD /* ChangeNumberSelectCountryCodeController.swift */,
-			);
-			name = ChangeNumber;
 			sourceTree = "<group>";
 		};
 		4B8D05331F738FBB001735BC /* NotificationsAndSounds */ = {
@@ -1491,7 +1465,6 @@
 				4B4080922056B0A200913142 /* SelectParticipantsTableView.swift in Sources */,
 				4BBBCBFB205851E100926800 /* ChatsTableViewController.swift in Sources */,
 				4BE571541F4D87A4009D9AB4 /* CropViewController.swift in Sources */,
-				4B3E63581FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView+timerHandlers.swift in Sources */,
 				4B2820E91FE4025600791AB1 /* AnnouncementFactory.swift in Sources */,
 				4BE571601F4D87A4009D9AB4 /* Protocols.swift in Sources */,
 				4BBBCC0320588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */,
@@ -1507,7 +1480,6 @@
 				4BE8BB3B1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift in Sources */,
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
 				4B0FA7DE2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift in Sources */,
-				4B3E63541FBA73F600E200CD /* ChangeNumberEnterVerificationCodeController.swift in Sources */,
 				4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */,
 				4B2142FE1F51C72700F7A4B8 /* RevealableCollectionViewCell.swift in Sources */,
 				4B2820EB1FE4025600791AB1 /* Announcement.swift in Sources */,
@@ -1520,14 +1492,12 @@
 				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
 				4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */,
 				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
-				4B3E63571FBA73F600E200CD /* ChangeNumberEnterVerificationContainerView.swift in Sources */,
 				4B88F2DA206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift in Sources */,
 				4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */,
 				4BE571551F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift in Sources */,
 				4B29BB6520572C91002A4F5D /* RoundProgressView.swift in Sources */,
 				4BC26B2E1F3A24E70093A9D2 /* ChatLogController.swift in Sources */,
 				4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */,
-				4B3E63561FBA73F600E200CD /* ChangeNumberEnterPhoneNumberController.swift in Sources */,
 				4BED6EB61F476A3A004EF2E0 /* UIEdgeInsetsExtensions.swift in Sources */,
 				4B86C0C620513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift in Sources */,
 				4B9498701F32448A008DA07F /* EnterPhoneNumberController.swift in Sources */,
@@ -1540,7 +1510,6 @@
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,
 				4B9498811F324C84008DA07F /* ThemeManager.swift in Sources */,
 				4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */,
-				4B3E63551FBA73F600E200CD /* ChangeNumberEnterPhoneNumberContainerView.swift in Sources */,
 				4B2143041F51C76F00F7A4B8 /* TimestampView.swift in Sources */,
 				4BED6EBE1F476A46004EF2E0 /* CameraOverlayView.swift in Sources */,
 				4BE571511F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift in Sources */,
@@ -1558,7 +1527,6 @@
 				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
 				4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */,
 				4BE571671F4D87A4009D9AB4 /* UIView+Image.swift in Sources */,
-				4B3E63531FBA73F600E200CD /* ChangeNumberSelectCountryCodeController.swift in Sources */,
 				4B48D31F1F361E490050C797 /* ARSLineProgressCustomization.swift in Sources */,
 				4BE8BB471FCA98D600EB35FA /* SwiftSiriWaveformView.swift in Sources */,
 				4B9498761F32474E008DA07F /* EnterPhoneNumberContainerView.swift in Sources */,

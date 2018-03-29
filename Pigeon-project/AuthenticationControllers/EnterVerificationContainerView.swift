@@ -10,7 +10,6 @@ import UIKit
 
 class EnterVerificationContainerView: UIView {
 
-  
   let titleNumber: UILabel = {
     let titleNumber = UILabel()
     titleNumber.translatesAutoresizingMaskIntoConstraints = false
@@ -77,7 +76,6 @@ class EnterVerificationContainerView: UIView {
     return timerLabel
   }()
   
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
   
@@ -119,6 +117,3 @@ class EnterVerificationContainerView: UIView {
     super.init(coder: aDecoder)!
   }
 }
-
-
- 

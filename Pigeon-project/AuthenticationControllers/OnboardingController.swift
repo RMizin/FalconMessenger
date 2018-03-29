@@ -30,6 +30,7 @@ class OnboardingController: UIViewController {
   
   @objc func startMessagingDidTap () {
     let destination = EnterPhoneNumberController()
+    destination.phoneNumberControllerType = .authentication
     navigationController?.pushViewController(destination, animated: true)
   }
 

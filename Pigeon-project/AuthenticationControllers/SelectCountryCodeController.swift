@@ -14,7 +14,6 @@ protocol CountryPickerDelegate: class {
 }
 
 public var countryCode = NSLocale.current.regionCode
-
 fileprivate var savedContentOffset = CGPoint(x: 0, y: -50)
 fileprivate var savedCountryCode = String()
 
@@ -66,7 +65,6 @@ class SelectCountryCodeController: UITableViewController {
     filteredCountries = countries
   }
 }
-
 
 extension SelectCountryCodeController {
  
@@ -135,7 +133,6 @@ extension SelectCountryCodeController {
   }
 }
 
-
 extension SelectCountryCodeController: UISearchBarDelegate {
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -147,12 +144,10 @@ extension SelectCountryCodeController: UISearchBarDelegate {
     tableView.reloadData()
   }
   
-  
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     self.searchBar.endEditing(true)
   }
 }
-
 
 extension SelectCountryCodeController {
   override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -161,7 +156,3 @@ extension SelectCountryCodeController {
     }
   }
 }
-
-
-
-

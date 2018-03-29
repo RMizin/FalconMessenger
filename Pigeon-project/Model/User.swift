@@ -17,7 +17,6 @@ class User: NSObject {
   var thumbnailPhotoURL: String?
   var phoneNumber: String?
   var onlineStatus: AnyObject?
-  
   var isSelected:Bool! = false // local only
   
   init(dictionary: [String: AnyObject]) {
