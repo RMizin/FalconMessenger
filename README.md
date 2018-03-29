@@ -30,6 +30,8 @@ Also, it makes possible for you to send messages, photos, and videos to people w
 
 - Night mode<br>
 
+- Group chats<br>
+
 
 ## User Interface
 ### Day color theme
