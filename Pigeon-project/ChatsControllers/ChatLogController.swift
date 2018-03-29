@@ -58,6 +58,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var chatNameHandle: DatabaseHandle!
   
+  var chatAdminReference: DatabaseReference!
+  
+  var chatAdminHandle: DatabaseHandle!
+  
   var messages = [Message]()
   
   var sections = ["Messages"]
@@ -118,6 +122,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if self.isCurrentUserMemberOfCurrentGroup() {
         self.configureTitleViewWithOnlineStatus()
       }
+    })
+    
+    chatAdminReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("admin")
+    chatAdminHandle = chatAdminReference.observe(.value, with: { (snapshot) in
+      guard let newAdmin = snapshot.value as? String else { return }
+      self.conversation?.admin = newAdmin
     })
     
     membersReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
@@ -489,6 +499,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if chatNameReference != nil && chatNameHandle != nil {
       chatNameReference.removeObserver(withHandle: chatNameHandle)
+    }
+    
+    if chatAdminReference != nil && chatAdminHandle != nil {
+      chatAdminReference.removeObserver(withHandle: chatAdminHandle)
     }
 
     isTyping = false

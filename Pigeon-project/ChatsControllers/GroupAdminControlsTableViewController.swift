@@ -44,8 +44,19 @@ class GroupAdminControlsTableViewController: UITableViewController {
       if conversationAdminID == Auth.auth().currentUser?.uid {
         tableView.allowsMultipleSelectionDuringEditing = false
         navigationItem.rightBarButtonItem = editButtonItem
-      }
+      }       
       manageControlsAppearance()
+    }
+  }
+  
+  func setAdminControls() {
+    if isCurrentUserAdministrator {
+      adminControls =  [ "Add members",/* "Manage administrators",*/ "Leave the group"]
+    } else {
+      adminControls = ["Leave the group"]
+    }
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
     }
   }
   
@@ -59,7 +70,6 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   var currentName = String()
-  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -96,7 +106,6 @@ class GroupAdminControlsTableViewController: UITableViewController {
     print("\nadmin deinit\n")
   }
   
-
   fileprivate func setupMainView() {
     if #available(iOS 11.0, *) {
       navigationItem.largeTitleDisplayMode = .always
@@ -149,6 +158,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       groupProfileTableHeaderContainer.name.isUserInteractionEnabled = true
       isCurrentUserAdministrator = true
     }
+    setAdminControls()
   }
 
   fileprivate func observeConversationDataChanges() {
@@ -225,21 +235,19 @@ class GroupAdminControlsTableViewController: UITableViewController {
       }
     }
   }
+  
   func isCurrentUserMemberOfCurrentGroup() -> Bool {
     let membersIDs = members.map({ $0.id ?? "" })
     guard let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) else { return false }
     return true
   }
-
   
   @objc fileprivate func openUserProfilePicture() {
-    
     if !isCurrentUserAdministrator && groupProfileTableHeaderContainer.profileImageView.image == nil { return }
     userProfilePictureOpener.controllerWithUserProfilePhoto = self
     userProfilePictureOpener.userProfileContainerView = groupProfileTableHeaderContainer
     userProfilePictureOpener.openUserProfilePicture()
   }
-
   
   // MARK: - Table view data source
   
@@ -257,7 +265,6 @@ class GroupAdminControlsTableViewController: UITableViewController {
     return "\(members.count) members"
   }
 
-  
   override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     
     if section == 0 {
@@ -335,17 +342,33 @@ class GroupAdminControlsTableViewController: UITableViewController {
     let okAction = UIAlertAction(title: okActionTitle, style: UIAlertActionStyle.default) {
       UIAlertAction in
       if self.isCurrentUserAdministrator {
-        
+        self.selectNewAdminAndLeaveTheGroup()
       } else {
         self.leaveTheGroup()
       }
-      NSLog("OK Pressed")
     }
    
     let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
     alertController.addAction(okAction)
     alertController.addAction(cancelAction)
     self.present(alertController, animated: true, completion: nil)
+  }
+  
+  func selectNewAdminAndLeaveTheGroup() {
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    let membersWithNoAdmin = members.filter { (member) -> Bool in
+      return member.id ?? "" != uid
+    }
+    guard let index = members.index(where: { (user) -> Bool in
+       return user.id == uid
+    }), let currentUserName = members[index].name else { return }
+  
+    let destination = SelectNewAdminTableViewController()
+    destination.chatID = chatID
+    destination.filteredUsers = membersWithNoAdmin
+    destination.users = membersWithNoAdmin
+    destination.currentUserName = currentUserName
+    self.navigationController?.pushViewController(destination, animated: true)
   }
   
   func leaveTheGroup() {
@@ -441,5 +464,3 @@ extension GroupAdminControlsTableViewController: UITableViewDataSourcePrefetchin
     SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
   }
 }
-
-

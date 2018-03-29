@@ -101,6 +101,8 @@
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
 		4B9498811F324C84008DA07F /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* ThemeManager.swift */; };
 		4B9CD8691F4B2B6800EF8AB0 /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */; };
+		4BA6866A206CF039006F151C /* SelectNewAdminTableViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA68669206CF039006F151C /* SelectNewAdminTableViewController+SearchHandlers.swift */; };
+		4BA6866C206CFEB1006F151C /* NewAdminTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA6866B206CFEB1006F151C /* NewAdminTableViewCell.swift */; };
 		4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */; };
 		4BB782441FDEE00E00BB2A33 /* FalconTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB782431FDEE00E00BB2A33 /* FalconTextView.swift */; };
 		4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */; };
@@ -332,6 +334,8 @@
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
 		4B9498801F324C84008DA07F /* ThemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ThemeManager.swift; path = Support/ThemeManager.swift; sourceTree = "<group>"; };
 		4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = ChatsControllers/MediaObject.swift; sourceTree = "<group>"; };
+		4BA68669206CF039006F151C /* SelectNewAdminTableViewController+SearchHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SelectNewAdminTableViewController+SearchHandlers.swift"; path = "ChatsControllers/SelectNewAdminTableViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
+		4BA6866B206CFEB1006F151C /* NewAdminTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewAdminTableViewCell.swift; path = ChatsControllers/NewAdminTableViewCell.swift; sourceTree = "<group>"; };
 		4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrentUserTableViewCell.swift; path = ContactsControllers/CurrentUserTableViewCell.swift; sourceTree = "<group>"; };
 		4BB782431FDEE00E00BB2A33 /* FalconTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FalconTextView.swift; path = Support/FlaconTextView/FalconTextView.swift; sourceTree = "<group>"; };
 		4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableViewController.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableViewController.swift; sourceTree = "<group>"; };
@@ -507,6 +511,8 @@
 			isa = PBXGroup;
 			children = (
 				4B210A55206A8A4300A3ACFA /* SelectNewAdminTableViewController.swift */,
+				4BA68669206CF039006F151C /* SelectNewAdminTableViewController+SearchHandlers.swift */,
+				4BA6866B206CFEB1006F151C /* NewAdminTableViewCell.swift */,
 			);
 			name = SelectNewAdminControllers;
 			sourceTree = "<group>";
@@ -1443,6 +1449,7 @@
 				4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */,
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
 				4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */,
+				4BA6866C206CFEB1006F151C /* NewAdminTableViewCell.swift in Sources */,
 				4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */,
 				4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */,
 				4B210A56206A8A4300A3ACFA /* SelectNewAdminTableViewController.swift in Sources */,
@@ -1544,6 +1551,7 @@
 				4B573FD22052DE7700DB3FB3 /* ParticipantTableViewCell.swift in Sources */,
 				4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */,
 				4BE72A73204E9E4E009A22EA /* SelectParticipantsViewController.swift in Sources */,
+				4BA6866A206CF039006F151C /* SelectNewAdminTableViewController+SearchHandlers.swift in Sources */,
 				4B48D3231F361E490050C797 /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BED6EBD1F476A46004EF2E0 /* CameraCell.swift in Sources */,
 				4BEDC37D1F3388770005B8E6 /* SelectCountryCodeController.swift in Sources */,
