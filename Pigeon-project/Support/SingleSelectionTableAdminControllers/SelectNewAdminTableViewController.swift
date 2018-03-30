@@ -15,6 +15,8 @@ class SelectNewAdminTableViewController: UITableViewController {
   
   let falconUsersCellID = "falconUsersCellID"
   
+  weak var adminControlsController: GroupAdminControlsTableViewController?
+  
   var filteredUsers = [User]() {
     didSet {
       configureSections()
@@ -82,7 +84,7 @@ class SelectNewAdminTableViewController: UITableViewController {
     setupRightBarButton(with: "Leave the group")
   }
   
-  fileprivate func setupRightBarButton(with title: String) {
+  func setupRightBarButton(with title: String) {
     if #available(iOS 11.0, *) {
       let rightBarButton = UIButton(type: .system)
       rightBarButton.setTitle(title, for: .normal)
@@ -97,23 +99,37 @@ class SelectNewAdminTableViewController: UITableViewController {
   
   @objc func rightBarButtonTapped() {
     ARSLineProgress.ars_showOnView(self.view)
+    adminControlsController?.removeObservers()
+    print("rbb")
+  }
+  
+  func leaveTheGroupAndSetAdmin() {
     guard let uid = Auth.auth().currentUser?.uid else { return }
-    var membersIDs = self.users.map({$0.id ?? ""})
-    membersIDs.append(uid)
-    guard let newAdminID = selectedFalconUsers[0].id, let newAdminName = selectedFalconUsers[0].name else { return }
+    let membersIDs = getMembersIDs()
     let reference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs").child(uid)
     reference.removeValue { (_, _) in
       let referenceText = "Administrator \(self.currentUserName) left the group"
       self.informationMessageSender.sendInformatoinMessage(chatID: self.chatID, membersIDs: membersIDs, text: referenceText)
-      
-      let adminReference = Database.database().reference().child("groupChats").child(self.chatID).child(messageMetaDataFirebaseFolder)
-      adminReference.updateChildValues(["admin": newAdminID]) { (_, _) in
-        let newAdminText = "\(newAdminName) is new group administrator"
-        self.informationMessageSender.sendInformatoinMessage(chatID: self.chatID, membersIDs: membersIDs, text: newAdminText)
-        ARSLineProgress.hide()
-        self.navigationController?.backToViewController(viewController: ChatLogController.self)
-      }
+      self.setNewAdmin(membersIDs: membersIDs)
     }
+  }
+  
+  func setNewAdmin(membersIDs: [String]) {
+    guard let newAdminID = selectedFalconUsers[0].id, let newAdminName = selectedFalconUsers[0].name else { return }
+    let adminReference = Database.database().reference().child("groupChats").child(self.chatID).child(messageMetaDataFirebaseFolder)
+    adminReference.updateChildValues(["admin": newAdminID]) { (_, _) in
+      let newAdminText = "\(newAdminName) is new group administrator"
+      self.informationMessageSender.sendInformatoinMessage(chatID: self.chatID, membersIDs: membersIDs, text: newAdminText)
+      ARSLineProgress.hide()
+      self.navigationController?.backToViewController(viewController: ChatLogController.self)
+    }
+  }
+  
+  func getMembersIDs() -> [String] {
+    guard let uid = Auth.auth().currentUser?.uid else { return [] }
+    var membersIDs = self.users.map({$0.id ?? ""})
+    membersIDs.append(uid)
+    return membersIDs
   }
 
   fileprivate func setupSearchController() {

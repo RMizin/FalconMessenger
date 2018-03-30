@@ -729,7 +729,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let destination = GroupAdminControlsTableViewController()
       destination.chatID = conversation?.chatID ?? ""
       if conversation?.admin != Auth.auth().currentUser?.uid {
-        destination.adminControls.removeFirst()
+        destination.adminControls = destination.defaultAdminControlls
       }
       self.navigationController?.pushViewController(destination, animated: true)
       // admin group info controller

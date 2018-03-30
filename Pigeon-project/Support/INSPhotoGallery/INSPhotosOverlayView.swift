@@ -20,7 +20,7 @@
 import UIKit
 
 public protocol INSPhotosOverlayViewable:class {
-    weak var photosViewController: INSPhotosViewController? { get set }
+    var photosViewController: INSPhotosViewController? { get set }
     
     func populateWithPhoto(_ photo: INSPhotoViewable)
     func setHidden(_ hidden: Bool, animated: Bool)

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class BaseMediaMessageCell: BaseMessageCell {
   
@@ -49,14 +50,14 @@ class BaseMediaMessageCell: BaseMessageCell {
   func setupImageFromURL(message: Message, messageImageUrl: URL) {
     progressView.startLoading()
     progressView.isHidden = false
-    
-    messageImageView.sd_setImage(with:  messageImageUrl, placeholderImage: nil, options: [.continueInBackground, .lowPriority, .scaleDownLargeImages], progress: { (downloadedSize, expectedSize, url) in
+    let options:SDWebImageOptions = [.continueInBackground, .lowPriority, .scaleDownLargeImages]
+    messageImageView.sd_setImage(with: messageImageUrl, placeholderImage: nil, options: options, progress: { (_, _, _) in
       
       DispatchQueue.main.async {
         self.progressView.progress = self.messageImageView.sd_imageProgress.fractionCompleted
       }
       
-    }, completed: { (image, error, cacheType, url) in
+    }, completed: { (_, error, _, _) in
       
       if error != nil {
         self.progressView.isHidden = false
@@ -69,7 +70,6 @@ class BaseMediaMessageCell: BaseMessageCell {
       self.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
     })
   }
-  
   
   @objc func handlePlay() {
     
@@ -89,7 +89,6 @@ class BaseMediaMessageCell: BaseMessageCell {
       return
     }
   }
-  
   
   @objc func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
     if message?.videoUrl != nil || message?.localVideoUrl != nil {

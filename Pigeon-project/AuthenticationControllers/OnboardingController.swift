@@ -12,13 +12,14 @@ class OnboardingController: UIViewController {
 
   let onboardingContainerView = OnboardingContainerView()
   
-    override func viewDidLoad() {
-        super.viewDidLoad()
-      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      view.addSubview(onboardingContainerView)
-      onboardingContainerView.frame = view.bounds
-      setColorsAccordingToTheme()
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    view.addSubview(onboardingContainerView)
+    onboardingContainerView.frame = view.bounds
+    setColorsAccordingToTheme()
+  }
   
   fileprivate func setColorsAccordingToTheme() {
     let theme = ThemeManager.currentTheme()
@@ -27,10 +28,8 @@ class OnboardingController: UIViewController {
     onboardingContainerView.backgroundColor = view.backgroundColor
   }
   
-  
   @objc func startMessagingDidTap () {
-    let destination = EnterPhoneNumberController()
-    destination.phoneNumberControllerType = .authentication
+    let destination = AuthPhoneNumberController()
     navigationController?.pushViewController(destination, animated: true)
   }
 

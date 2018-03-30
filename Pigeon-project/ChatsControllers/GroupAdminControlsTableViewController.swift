@@ -28,7 +28,9 @@ class GroupAdminControlsTableViewController: UITableViewController {
   let informationMessageSender = InformationMessageSender()
   
   var members = [User]()
-  var adminControls = [ "Add members",/* "Manage administrators",*/ "Leave the group"]
+  let fullAdminControlls = ["Add members", "Change administrator", "Leave the group"]
+  let defaultAdminControlls = ["Leave the group"]
+  var adminControls = [String]()
   
   var chatID = String() {
     didSet {
@@ -51,9 +53,9 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   func setAdminControls() {
     if isCurrentUserAdministrator {
-      adminControls =  [ "Add members",/* "Manage administrators",*/ "Leave the group"]
+      adminControls = fullAdminControlls
     } else {
-      adminControls = ["Leave the group"]
+      adminControls = defaultAdminControlls
     }
     DispatchQueue.main.async {
       self.tableView.reloadData()
@@ -83,10 +85,17 @@ class GroupAdminControlsTableViewController: UITableViewController {
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     
-    if self.navigationController?.visibleViewController is SelectParticipantsViewController {
+    if self.navigationController?.visibleViewController is AddGroupMembersController ||
+      self.navigationController?.visibleViewController is ChangeGroupAdminController ||
+      self.navigationController?.visibleViewController is LeaveGroupAndChangeAdminController {
       return
     }
-
+    removeObservers()
+   
+  }
+  
+  func removeObservers() {
+    print("removing observers")
     if chatReference != nil {
       chatReference.removeObserver(withHandle: chatHandle)
       chatReference = nil
@@ -311,23 +320,19 @@ class GroupAdminControlsTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     if indexPath.section == 0 {
-      if adminControls[indexPath.row] == "Leave the group" {
+      if adminControls == defaultAdminControlls {
         groupLeaveAlert()
       } else {
-        let filteredMemebrs = globalUsers.filter { user in
-          return !members.contains { member in
-            user.id == member.id
-          }
+        if indexPath.row == 0 {
+          addMembers()
+        } else if indexPath.row == 1 {
+          self.changeAdministrator(shouldLeaveTheGroup: false)
+        } else {
+          groupLeaveAlert()
         }
-        let destination = SelectParticipantsViewController()
-        destination.controllerType = .newMembers
-        destination.filteredUsers = filteredMemebrs
-        destination.users = filteredMemebrs
-        destination.chatIDForUsersUpdate = chatID
-        
-        self.navigationController?.pushViewController(destination, animated: true)
       }
     }
+    
     tableView.deselectRow(at: indexPath, animated: true)
   }
   
@@ -342,7 +347,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     let okAction = UIAlertAction(title: okActionTitle, style: UIAlertActionStyle.default) {
       UIAlertAction in
       if self.isCurrentUserAdministrator {
-        self.selectNewAdminAndLeaveTheGroup()
+        self.changeAdministrator(shouldLeaveTheGroup: true)
       } else {
         self.leaveTheGroup()
       }
@@ -354,16 +359,38 @@ class GroupAdminControlsTableViewController: UITableViewController {
     self.present(alertController, animated: true, completion: nil)
   }
   
-  func selectNewAdminAndLeaveTheGroup() {
+  func addMembers() {
+    let filteredMemebrs = globalUsers.filter { user in
+      return !members.contains { member in
+        user.id == member.id
+      }
+    }
+    let destination = AddGroupMembersController()
+    destination.filteredUsers = filteredMemebrs
+    destination.users = filteredMemebrs
+    destination.chatIDForUsersUpdate = chatID
+    
+    self.navigationController?.pushViewController(destination, animated: true)
+  }
+  
+  func changeAdministrator(shouldLeaveTheGroup: Bool) {
+    
     guard let uid = Auth.auth().currentUser?.uid else { return }
     let membersWithNoAdmin = members.filter { (member) -> Bool in
       return member.id ?? "" != uid
     }
     guard let index = members.index(where: { (user) -> Bool in
-       return user.id == uid
+      return user.id == uid
     }), let currentUserName = members[index].name else { return }
-  
-    let destination = SelectNewAdminTableViewController()
+    
+    var destination: SelectNewAdminTableViewController!
+    
+    if shouldLeaveTheGroup {
+      destination = LeaveGroupAndChangeAdminController()
+    } else {
+      destination = ChangeGroupAdminController()
+    }
+    destination.adminControlsController = self
     destination.chatID = chatID
     destination.filteredUsers = membersWithNoAdmin
     destination.users = membersWithNoAdmin

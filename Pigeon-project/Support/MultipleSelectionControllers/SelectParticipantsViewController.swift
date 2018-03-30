@@ -10,10 +10,6 @@ import UIKit
 import SDWebImage
 import Firebase
 
-enum ControllerType {
-  case newGroup
-  case newMembers
-}
 
 class SelectParticipantsViewController: UIViewController {
   
@@ -26,7 +22,6 @@ class SelectParticipantsViewController: UIViewController {
     }
   }
   
-  var controllerType:ControllerType = .newGroup
   var users = [User]()
   var sortedFirstLetters = [String]()
   var sections = [[User]]()
@@ -101,26 +96,13 @@ class SelectParticipantsViewController: UIViewController {
   fileprivate func setupMainView() {
     definesPresentationContext = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    configureControllerAccordintToType()
   }
   
- fileprivate func configureControllerAccordintToType() {
-    var rightBarButtonTitle = String()
-    var navigationItemTitle = String()
-    switch controllerType {
-    case .newGroup:
-      rightBarButtonTitle = "Next"
-      navigationItemTitle =  "New Group"
-    case .newMembers:
-      rightBarButtonTitle = "Add"
-      navigationItemTitle = "Add users"
-    }
-    
-    setupRightBarButton(with: rightBarButtonTitle)
-    navigationItem.title = navigationItemTitle
+  func setupNavigationItemTitle(title: String) {
+    navigationItem.title = title
   }
   
-  fileprivate func setupRightBarButton(with title: String) {
+  func setupRightBarButton(with title: String) {
     if #available(iOS 11.0, *) {
       let rightBarButton = UIButton(type: .system)
       rightBarButton.setTitle(title, for: .normal)
@@ -133,20 +115,11 @@ class SelectParticipantsViewController: UIViewController {
     navigationItem.rightBarButtonItem?.isEnabled = false
   }
   
-  @objc fileprivate func rightBarButtonTapped() {
-    switch controllerType {
-    case .newGroup:
-      createGroup()
-    case .newMembers:
-      addNewMembers()
-    }
+  @objc func rightBarButtonTapped() {
+
   }
-  
-  fileprivate func changeAdminAndLeave() {
-    
-  }
-  
-  fileprivate func createGroup() {
+
+  func createGroup() {
     let destination = GroupProfileTableViewController()
     destination.selectedFlaconUsers = selectedFalconUsers
     navigationController?.pushViewController(destination, animated: true)
@@ -155,7 +128,7 @@ class SelectParticipantsViewController: UIViewController {
   var chatIDForUsersUpdate = String()
   var informationMessageSender = InformationMessageSender()
   
-  fileprivate func addNewMembers() {
+  func addNewMembers() {
     
     ARSLineProgress.ars_showOnView(view)
     navigationController?.view.isUserInteractionEnabled = false

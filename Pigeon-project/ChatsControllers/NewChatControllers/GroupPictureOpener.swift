@@ -16,7 +16,6 @@ class GroupPictureOpener: NSObject, UIImagePickerControllerDelegate, UINavigatio
   weak var controllerWithUserProfilePhoto: UIViewController?
   weak var userProfileContainerView: GroupProfileTableHeaderContainer?
   
-  
   private var referenceView: UIView!
   private var currentPhoto: INSPhoto!
   private var galleryPreview: INSPhotosViewController!

@@ -11,43 +11,28 @@ import FirebaseAuth
 import SafariServices
 
 
-enum PhoneNumberControllerType {
-  case authentication
-  case numberChanging
-}
 
 class EnterPhoneNumberController: UIViewController {
   
   let phoneNumberContainerView = EnterPhoneNumberContainerView()
   let countries = Country().countries
-  var phoneNumberControllerType: PhoneNumberControllerType = .authentication
   
-    override func viewDidLoad() {
-        super.viewDidLoad()
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
       
-      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      configurePhoneNumberContainerView()
-      configureNavigationBar()
-      setCountry()
-    }
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    configurePhoneNumberContainerView()
+    configureNavigationBar()
+    setCountry()
+  }
   
- fileprivate func configurePhoneNumberContainerView() {
+  func configurePhoneNumberContainerView() {
     view.addSubview(phoneNumberContainerView)
     phoneNumberContainerView.frame = view.bounds
     phoneNumberContainerView.termsAndPrivacy.delegate = self
-  
-    if phoneNumberControllerType == .authentication {
-      phoneNumberContainerView.termsAndPrivacy.isHidden = false
-      phoneNumberContainerView.instructions.text = "Please confirm your country code\nand enter your phone number."
-      phoneNumberContainerView.phoneNumber.attributedPlaceholder = NSAttributedString(string: "Phone number", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
-    } else {
-      let leftBarButton = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(leftBarButtonDidTap))
-      navigationItem.leftBarButtonItem = leftBarButton
-      phoneNumberContainerView.termsAndPrivacy.isHidden = true
-      phoneNumberContainerView.instructions.text = "Please confirm your country code\nand enter your NEW phone number."
-      phoneNumberContainerView.phoneNumber.attributedPlaceholder = NSAttributedString(string: "New phone number", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
-    }
   }
+  
   @objc func leftBarButtonDidTap() {
     phoneNumberContainerView.phoneNumber.resignFirstResponder()
     self.dismiss(animated: true) {
@@ -71,7 +56,7 @@ class EnterPhoneNumberController: UIViewController {
   }
   
   
-  @objc func openCountryCodesList () {
+  @objc func openCountryCodesList() {
     let picker = SelectCountryCodeController()
     picker.delegate = self
     navigationController?.pushViewController(picker, animated: true)
@@ -97,12 +82,6 @@ class EnterPhoneNumberController: UIViewController {
       basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
       return
     }
-    
-    let destination = EnterVerificationCodeController()
-    destination.phoneNumberControllerType = phoneNumberControllerType
-    destination.enterVerificationContainerView.titleNumber.text = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
-    
-    navigationController?.pushViewController(destination, animated: true)
     
     if !isVerificationSent {
       sendSMSConfirmation()

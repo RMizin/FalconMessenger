@@ -13,7 +13,7 @@ import Firebase
 class EnterVerificationCodeController: UIViewController {
 
   let enterVerificationContainerView = EnterVerificationContainerView()
-  var phoneNumberControllerType: PhoneNumberControllerType = .authentication
+ // var phoneNumberControllerType: PhoneNumberControllerType = .authentication
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -27,16 +27,13 @@ class EnterVerificationCodeController: UIViewController {
   }
   
   fileprivate func configureNavigationBar () {
-    var title = String()
-    
-    if phoneNumberControllerType == .authentication {
-      title = "Next"
-    } else {
-      title = "Confirm"
-    }
+    self.navigationItem.hidesBackButton = true
+  }
+  
+  func setRightBarButton(with title: String) {
     let rightBarButton = UIBarButtonItem(title: title, style: .done, target: self, action: #selector(rightBarButtonDidTap))
     self.navigationItem.rightBarButtonItem = rightBarButton
-    self.navigationItem.hidesBackButton = true
+   
   }
   
   @objc fileprivate func sendSMSConfirmation () {
@@ -66,11 +63,7 @@ class EnterVerificationCodeController: UIViewController {
   }
   
   @objc func rightBarButtonDidTap () {
-    if phoneNumberControllerType == .authentication {
-      authenticate()
-    } else {
-      changeNumber()
-    }
+
   }
   
   func changeNumber () {

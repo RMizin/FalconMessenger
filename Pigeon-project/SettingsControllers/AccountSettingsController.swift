@@ -277,8 +277,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       
       if indexPath.row == 1 {
          AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-        let controller = EnterPhoneNumberController()
-        controller.phoneNumberControllerType = .numberChanging
+        let controller = ChangePhoneNumberController()
         let destination = UINavigationController(rootViewController: controller)
         destination.hidesBottomBarWhenPushed = true
         destination.navigationBar.isTranslucent = false
