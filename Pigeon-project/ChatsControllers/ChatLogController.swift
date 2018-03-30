@@ -1040,7 +1040,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let isVoiceMessage = message.voiceEncodedString != nil
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
     let isInformationMessage = message.isInformationMessage ?? false
-    let isGroupChat = conversation?.isGroupChat != nil
+    let isGroupChat = conversation!.isGroupChat ?? false
    
     guard !isInformationMessage else {
       guard let infoMessageWidth = self.collectionView?.frame.width, let messageText = message.text else { return CGSize(width: 0, height: 0 ) }

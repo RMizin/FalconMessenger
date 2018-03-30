@@ -90,8 +90,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
       self.navigationController?.visibleViewController is LeaveGroupAndChangeAdminController {
       return
     }
+    
     removeObservers()
-   
   }
   
   func removeObservers() {
