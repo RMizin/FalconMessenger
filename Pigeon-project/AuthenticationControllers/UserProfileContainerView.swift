@@ -108,18 +108,17 @@ class UserProfileContainerView: UIView {
   let bio: BioTextView = {
     let bio = BioTextView()
     bio.translatesAutoresizingMaskIntoConstraints = false
-    bio.layer.cornerRadius = 30
+    bio.layer.cornerRadius = 28
     bio.layer.borderWidth = 1
     bio.textAlignment = .center
     bio.font = UIFont.systemFont(ofSize: 16)
     bio.isScrollEnabled = false
-    bio.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
+    bio.textContainerInset = UIEdgeInsets(top: 15, left: 35, bottom: 15, right: 35)
     bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     bio.backgroundColor = .clear
     bio.textColor = ThemeManager.currentTheme().generalTitleColor
     bio.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     bio.layer.borderColor = ThemeManager.currentTheme().generalSubtitleColor.cgColor
-    bio.textContainer.maximumNumberOfLines = 3
     bio.textContainer.lineBreakMode = .byTruncatingTail
     bio.returnKeyType = .done
     
@@ -177,7 +176,6 @@ class UserProfileContainerView: UIView {
         phone.heightAnchor.constraint(equalToConstant: 50),
         
         bio.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
-        bio.heightAnchor.constraint(equalToConstant: 80),
 
         countLabel.widthAnchor.constraint(equalToConstant: 30),
         countLabel.heightAnchor.constraint(equalToConstant: 30),

@@ -22,6 +22,7 @@
 		4B2143041F51C76F00F7A4B8 /* TimestampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143031F51C76F00F7A4B8 /* TimestampView.swift */; };
 		4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */; };
 		4B2143081F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143071F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift */; };
+		4B24ADD9206EA5900072171A /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B24ADD8206EA5900072171A /* Country.swift */; };
 		4B2820E91FE4025600791AB1 /* AnnouncementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E41FE4025500791AB1 /* AnnouncementFactory.swift */; };
 		4B2820EB1FE4025600791AB1 /* Announcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E61FE4025500791AB1 /* Announcement.swift */; };
 		4B2820EC1FE4025600791AB1 /* AnnouncementShowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E71FE4025500791AB1 /* AnnouncementShowing.swift */; };
@@ -84,7 +85,6 @@
 		4B9498781F324919008DA07F /* OnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498771F324919008DA07F /* OnboardingController.swift */; };
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
 		4B9498811F324C84008DA07F /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498801F324C84008DA07F /* ThemeManager.swift */; };
-		4B9CD8691F4B2B6800EF8AB0 /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */; };
 		4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */; };
 		4BAD9749206E349E008ADF6B /* ParticipantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9741206E349E008ADF6B /* ParticipantTableViewCell.swift */; };
 		4BAD974A206E349E008ADF6B /* SelectedParticipantsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9742206E349E008ADF6B /* SelectedParticipantsCollectionView.swift */; };
@@ -100,6 +100,9 @@
 		4BAD9761206E376E008ADF6B /* SelectNewAdminTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD975E206E376E008ADF6B /* SelectNewAdminTableViewController.swift */; };
 		4BAD9762206E376E008ADF6B /* NewAdminTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD975F206E376E008ADF6B /* NewAdminTableViewCell.swift */; };
 		4BAD9763206E376E008ADF6B /* SelectNewAdminTableViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9760206E376E008ADF6B /* SelectNewAdminTableViewController+SearchHandlers.swift */; };
+		4BB6D196206EA62F00FEF72E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D193206EA62F00FEF72E /* Message.swift */; };
+		4BB6D197206EA62F00FEF72E /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D194206EA62F00FEF72E /* Conversation.swift */; };
+		4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D195206EA62F00FEF72E /* MediaObject.swift */; };
 		4BB749FC206E2F460014837E /* ChangeNumberVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB749FB206E2F460014837E /* ChangeNumberVerificationController.swift */; };
 		4BB749FE206E2F7F0014837E /* ChangePhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB749FD206E2F7F0014837E /* ChangePhoneNumberController.swift */; };
 		4BB74A01206E2FFB0014837E /* AuthPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */; };
@@ -111,7 +114,6 @@
 		4BB74A14206E311D0014837E /* EnterVerificationCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A0D206E311D0014837E /* EnterVerificationCodeController.swift */; };
 		4BB74A15206E311D0014837E /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A0E206E311D0014837E /* EnterVerificationContainerView.swift */; };
 		4BB74A16206E311D0014837E /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BB74A0F206E311D0014837E /* CallingCodes.plist */; };
-		4BB74A19206E316D0014837E /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A18206E316D0014837E /* Country.swift */; };
 		4BB782441FDEE00E00BB2A33 /* FalconTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB782431FDEE00E00BB2A33 /* FalconTextView.swift */; };
 		4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */; };
 		4BBBCBF52057D01000926800 /* GroupProfileTableHeaderContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF42057D01000926800 /* GroupProfileTableHeaderContainer.swift */; };
@@ -135,7 +137,6 @@
 		4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */; };
 		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
 		4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC26B231F3A22890093A9D2 /* typingIndicator.gif */; };
-		4BC26B291F3A234A0093A9D2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B261F3A234A0093A9D2 /* Message.swift */; };
 		4BC26B2E1F3A24E70093A9D2 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */; };
 		4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC2C58C1F40545200B5C825 /* UserCell.swift */; };
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
@@ -218,7 +219,6 @@
 		4BF07B2F2053429F00A68023 /* FalconUsersFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF07B2E2053429F00A68023 /* FalconUsersFetcher.swift */; };
 		4BF07B312053437000A68023 /* ContactsController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF07B302053437000A68023 /* ContactsController+SearchHandlers.swift */; };
 		4BF6F94D1FD188110011686B /* typingindicatorDark.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BF6F94C1FD188110011686B /* typingindicatorDark.gif */; };
-		4BF6F94F1FD2340E0011686B /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF6F94E1FD2340E0011686B /* Conversation.swift */; };
 		4BFAA0D32025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */; };
 		4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */; };
 		4BFD07761FB08005003791D7 /* ViewControllerPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFD07751FB08005003791D7 /* ViewControllerPlaceholder.swift */; };
@@ -254,6 +254,7 @@
 		4B2143031F51C76F00F7A4B8 /* TimestampView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimestampView.swift; path = ChatsControllers/RevealableCell/TimestampView.swift; sourceTree = "<group>"; };
 		4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingPhotoMessageCell.swift; path = ChatsControllers/OutgoingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4B2143071F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+ImageZoomHandlers.swift"; path = "ChatsControllers/ChatLogController+ImageZoomHandlers.swift"; sourceTree = "<group>"; };
+		4B24ADD8206EA5900072171A /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		4B2820E41FE4025500791AB1 /* AnnouncementFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementFactory.swift; path = "Support/In-AppNotificationBanner/AnnouncementFactory.swift"; sourceTree = "<group>"; };
 		4B2820E61FE4025500791AB1 /* Announcement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Announcement.swift; path = "Support/In-AppNotificationBanner/Announcement.swift"; sourceTree = "<group>"; };
 		4B2820E71FE4025500791AB1 /* AnnouncementShowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementShowing.swift; path = "Support/In-AppNotificationBanner/AnnouncementShowing.swift"; sourceTree = "<group>"; };
@@ -319,7 +320,6 @@
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
 		4B9498801F324C84008DA07F /* ThemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ThemeManager.swift; path = Support/ThemeManager.swift; sourceTree = "<group>"; };
-		4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = ChatsControllers/MediaObject.swift; sourceTree = "<group>"; };
 		4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrentUserTableViewCell.swift; path = ContactsControllers/CurrentUserTableViewCell.swift; sourceTree = "<group>"; };
 		4BAD9741206E349E008ADF6B /* ParticipantTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantTableViewCell.swift; sourceTree = "<group>"; };
 		4BAD9742206E349E008ADF6B /* SelectedParticipantsCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedParticipantsCollectionView.swift; sourceTree = "<group>"; };
@@ -335,6 +335,9 @@
 		4BAD975E206E376E008ADF6B /* SelectNewAdminTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectNewAdminTableViewController.swift; sourceTree = "<group>"; };
 		4BAD975F206E376E008ADF6B /* NewAdminTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewAdminTableViewCell.swift; sourceTree = "<group>"; };
 		4BAD9760206E376E008ADF6B /* SelectNewAdminTableViewController+SearchHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SelectNewAdminTableViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
+		4BB6D193206EA62F00FEF72E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Model/Message.swift; sourceTree = "<group>"; };
+		4BB6D194206EA62F00FEF72E /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = Model/Conversation.swift; sourceTree = "<group>"; };
+		4BB6D195206EA62F00FEF72E /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = Model/MediaObject.swift; sourceTree = "<group>"; };
 		4BB749FB206E2F460014837E /* ChangeNumberVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangeNumberVerificationController.swift; path = SettingsControllers/ChangeNumberVerificationController.swift; sourceTree = "<group>"; };
 		4BB749FD206E2F7F0014837E /* ChangePhoneNumberController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangePhoneNumberController.swift; path = SettingsControllers/ChangePhoneNumberController.swift; sourceTree = "<group>"; };
 		4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthPhoneNumberController.swift; path = AuthenticationControllers/AuthPhoneNumberController.swift; sourceTree = "<group>"; };
@@ -346,7 +349,6 @@
 		4BB74A0D206E311D0014837E /* EnterVerificationCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterVerificationCodeController.swift; sourceTree = "<group>"; };
 		4BB74A0E206E311D0014837E /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterVerificationContainerView.swift; sourceTree = "<group>"; };
 		4BB74A0F206E311D0014837E /* CallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = CallingCodes.plist; path = Support/PhoneAuth/CallingCodes.plist; sourceTree = "<group>"; };
-		4BB74A18206E316D0014837E /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Country.swift; path = "Pigeon-project/Support/PhoneAuth/Model/Country.swift"; sourceTree = SOURCE_ROOT; };
 		4BB782431FDEE00E00BB2A33 /* FalconTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FalconTextView.swift; path = Support/FlaconTextView/FalconTextView.swift; sourceTree = "<group>"; };
 		4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableViewController.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableViewController.swift; sourceTree = "<group>"; };
 		4BBBCBF42057D01000926800 /* GroupProfileTableHeaderContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableHeaderContainer.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableHeaderContainer.swift; sourceTree = "<group>"; };
@@ -370,7 +372,6 @@
 		4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatInputContainerView.swift; path = ChatsControllers/ChatInputContainerView.swift; sourceTree = "<group>"; };
 		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
 		4BC26B231F3A22890093A9D2 /* typingIndicator.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingIndicator.gif; path = ChatsControllers/Media/typingIndicator.gif; sourceTree = "<group>"; };
-		4BC26B261F3A234A0093A9D2 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = ChatsControllers/Message.swift; sourceTree = "<group>"; };
 		4BC26B2D1F3A24E70093A9D2 /* ChatLogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatLogController.swift; path = ChatsControllers/ChatLogController.swift; sourceTree = "<group>"; };
 		4BC2C58C1F40545200B5C825 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = ChatsControllers/UserCell.swift; sourceTree = "<group>"; };
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
@@ -454,7 +455,6 @@
 		4BF07B2E2053429F00A68023 /* FalconUsersFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FalconUsersFetcher.swift; path = ContactsControllers/FalconUsersFetcher.swift; sourceTree = "<group>"; };
 		4BF07B302053437000A68023 /* ContactsController+SearchHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ContactsController+SearchHandlers.swift"; path = "ContactsControllers/ContactsController+SearchHandlers.swift"; sourceTree = "<group>"; };
 		4BF6F94C1FD188110011686B /* typingindicatorDark.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingindicatorDark.gif; path = ChatsControllers/Media/typingindicatorDark.gif; sourceTree = "<group>"; };
-		4BF6F94E1FD2340E0011686B /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = ChatsControllers/Conversation.swift; sourceTree = "<group>"; };
 		4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoCreateContactTableViewController.swift; path = ChatsControllers/UserInfoCreateContactTableViewController.swift; sourceTree = "<group>"; };
 		4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactDataTableViewCell.swift; path = ChatsControllers/ContactDataTableViewCell.swift; sourceTree = "<group>"; };
 		4BFD07751FB08005003791D7 /* ViewControllerPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewControllerPlaceholder.swift; path = ContactsControllers/ViewControllerPlaceholder.swift; sourceTree = "<group>"; };
@@ -528,6 +528,15 @@
 				4B2143011F51C74000F7A4B8 /* TimestampView.xib */,
 			);
 			name = RevealableCell;
+			sourceTree = "<group>";
+		};
+		4B24ADD7206EA5900072171A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4B24ADD8206EA5900072171A /* Country.swift */,
+			);
+			name = Model;
+			path = Support/PhoneAuth/Model;
 			sourceTree = "<group>";
 		};
 		4B2820DE1FE3FECE00791AB1 /* In-AppAnnouncement */ = {
@@ -857,7 +866,7 @@
 			isa = PBXGroup;
 			children = (
 				4BB74A0F206E311D0014837E /* CallingCodes.plist */,
-				4BB74A17206E31510014837E /* Model */,
+				4B24ADD7206EA5900072171A /* Model */,
 				4BB74A07206E311D0014837E /* EnterPhoneControllers */,
 				4BB74A0B206E311D0014837E /* VerificationControllers */,
 			);
@@ -884,15 +893,6 @@
 			);
 			name = VerificationControllers;
 			path = Support/PhoneAuth/VerificationControllers;
-			sourceTree = "<group>";
-		};
-		4BB74A17206E31510014837E /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				4BB74A18206E316D0014837E /* Country.swift */,
-			);
-			name = Model;
-			path = "New Group";
 			sourceTree = "<group>";
 		};
 		4BB782421FDEDA8F00BB2A33 /* FalconTextView */ = {
@@ -953,10 +953,10 @@
 		4BC26B2C1F3A236A0093A9D2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4BC26B261F3A234A0093A9D2 /* Message.swift */,
-				4BF6F94E1FD2340E0011686B /* Conversation.swift */,
+				4BB6D193206EA62F00FEF72E /* Message.swift */,
+				4BB6D194206EA62F00FEF72E /* Conversation.swift */,
 				4BCE1AB91F3714A000C0EBF7 /* User.swift */,
-				4B9CD8681F4B2B6800EF8AB0 /* MediaObject.swift */,
+				4BB6D195206EA62F00FEF72E /* MediaObject.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1514,12 +1514,12 @@
 				4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */,
 				4BAD974E206E349E008ADF6B /* SelectParticipantsViewController.swift in Sources */,
 				4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */,
+				4B24ADD9206EA5900072171A /* Country.swift in Sources */,
 				4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */,
-				4BB74A19206E316D0014837E /* Country.swift in Sources */,
 				4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */,
 				4B5419561FB392570014C4FB /* INSPhotosTransitionAnimator.swift in Sources */,
+				4BB6D197206EA62F00FEF72E /* Conversation.swift in Sources */,
 				4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */,
-				4B9CD8691F4B2B6800EF8AB0 /* MediaObject.swift in Sources */,
 				4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */,
 				4BE5715C1F4D87A4009D9AB4 /* PhotoEditor+Keyboard.swift in Sources */,
 				4BE5715A1F4D87A4009D9AB4 /* PhotoEditor+Drawing.swift in Sources */,
@@ -1535,7 +1535,6 @@
 				4BBBCBF52057D01000926800 /* GroupProfileTableHeaderContainer.swift in Sources */,
 				4BE571651F4D87A4009D9AB4 /* UIImage+Size.swift in Sources */,
 				4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */,
-				4BC26B291F3A234A0093A9D2 /* Message.swift in Sources */,
 				4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */,
 				4BAD974D206E349E008ADF6B /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
 				4BF07B312053437000A68023 /* ContactsController+SearchHandlers.swift in Sources */,
@@ -1548,13 +1547,13 @@
 				4BEDE42C2068172C00C52EF4 /* InputBlockerContainerView.swift in Sources */,
 				4BB749FE206E2F7F0014837E /* ChangePhoneNumberController.swift in Sources */,
 				4BE8BB441FCA83D200EB35FA /* PlayerCellView.swift in Sources */,
-				4BF6F94F1FD2340E0011686B /* Conversation.swift in Sources */,
 				4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */,
 				4BE571561F4D87A4009D9AB4 /* EmojisCollectionViewDelegate.swift in Sources */,
 				4BE5715E1F4D87A4009D9AB4 /* PhotoEditor+UITextView.swift in Sources */,
 				4BBBCBFB205851E100926800 /* ChatsTableViewController.swift in Sources */,
 				4BE571541F4D87A4009D9AB4 /* CropViewController.swift in Sources */,
 				4B2820E91FE4025600791AB1 /* AnnouncementFactory.swift in Sources */,
+				4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */,
 				4BB74A14206E311D0014837E /* EnterVerificationCodeController.swift in Sources */,
 				4BE571601F4D87A4009D9AB4 /* Protocols.swift in Sources */,
 				4BBBCC0320588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */,
@@ -1589,6 +1588,7 @@
 				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
 				4B88F2DA206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift in Sources */,
 				4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */,
+				4BB6D196206EA62F00FEF72E /* Message.swift in Sources */,
 				4BE571551F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift in Sources */,
 				4B29BB6520572C91002A4F5D /* RoundProgressView.swift in Sources */,
 				4BC26B2E1F3A24E70093A9D2 /* ChatLogController.swift in Sources */,

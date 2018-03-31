@@ -29,7 +29,7 @@ enum Theme: Int {
     case .Default:
       return .white
     case .Dark:
-      return .black//UIColor(red:0.07, green:0.07, blue:0.07, alpha:1.0)
+      return .black
     }
   }
   
@@ -78,8 +78,6 @@ enum Theme: Int {
       return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
     }
   }
-  
-
   
   var searchBarColor: UIColor {
     switch self {

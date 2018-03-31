@@ -21,6 +21,16 @@ extension AccountSettingsController: UITextFieldDelegate {
 
 extension AccountSettingsController: UITextViewDelegate {
   
+  func estimateFrameForText(_ text: String, width: CGFloat) -> CGRect {
+    let size = CGSize(width: width, height: 10000)
+    let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil).integral
+  }
+  
+  func tableHeaderHeight() -> CGFloat {
+    return 190 + estimateFrameForText(userProfileContainerView.bio.text, width: userProfileContainerView.bio.textContainer.size.width - 10).height
+  }
+  
   func textViewDidBeginEditing(_ textView: UITextView) {
    setEditingBarButtons()
    userProfileContainerView.bioPlaceholderLabel.isHidden = true
@@ -34,8 +44,9 @@ extension AccountSettingsController: UITextViewDelegate {
   }
   
   func textViewDidChange(_ textView: UITextView) {
+    view.setNeedsLayout()
     if textView.isFirstResponder && textView.text == "" {
-       userProfileContainerView.bioPlaceholderLabel.isHidden = true
+      userProfileContainerView.bioPlaceholderLabel.isHidden = true
     } else {
       userProfileContainerView.bioPlaceholderLabel.isHidden = !textView.text.isEmpty
     }
@@ -77,7 +88,6 @@ extension AccountSettingsController { /* user name editing */
     navigationItem.rightBarButtonItem = doneBarButton
   }
   
-  
   @objc func cancelBarButtonPressed() {
     
     userProfileContainerView.name.text = currentName
@@ -87,6 +97,7 @@ extension AccountSettingsController { /* user name editing */
     navigationItem.leftBarButtonItem = nil
     navigationItem.rightBarButtonItem = nil
     configureNavigationBarDefaultRightBarButton()
+    view.setNeedsLayout()
   }
   
   @objc func doneBarButtonPressed() {

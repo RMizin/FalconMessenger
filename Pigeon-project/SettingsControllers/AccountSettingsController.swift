@@ -53,6 +53,21 @@ class AccountSettingsController: UITableViewController {
     }
   }
   
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    if let headerView = tableView.tableHeaderView {
+      
+      let height = tableHeaderHeight()
+      var headerFrame = headerView.frame
+      
+      if height != headerFrame.size.height {
+        headerFrame.size.height = height
+        headerView.frame = headerFrame
+        tableView.tableHeaderView = headerView
+      }
+    }
+  }
+  
   fileprivate func managePhotoPlaceholderLabelAppearance() {
     DispatchQueue.main.async {
       if self.userProfileContainerView.profileImageView.image != nil {
@@ -162,10 +177,11 @@ class AccountSettingsController: UITableViewController {
   }
 
   fileprivate func configureTableView() {
+    
     tableView.separatorStyle = .none
+    tableView.sectionHeaderHeight = 0
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     tableView.tableHeaderView = userProfileContainerView
-    tableView.translatesAutoresizingMaskIntoConstraints = false
     tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
   }
   
@@ -174,11 +190,10 @@ class AccountSettingsController: UITableViewController {
     userProfileContainerView.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
     userProfileContainerView.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
     userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
-    userProfileContainerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 250)
     userProfileContainerView.bio.delegate = self
     userProfileContainerView.name.delegate = self
   }
-  
+
   @objc fileprivate func openUserProfilePicture() {
     
     userProfilePictureOpener.userProfileContainerView = userProfileContainerView
@@ -268,7 +283,6 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     if indexPath.section == 0 {
-      
       if indexPath.row == 0 {
         let destination = NotificationsAndSoundsTableViewController()
         destination.hidesBottomBarWhenPushed = true
@@ -291,22 +305,19 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       }
     }
       
-      if indexPath.section == 1 {
-        
-        if indexPath.row == 0 {
-          let destination = LegalTableViewController()
-          destination.hidesBottomBarWhenPushed = true
-          self.navigationController?.pushViewController(destination, animated: true)
-        }
-        
-        if indexPath.row == 1 {
-          logoutButtonTapped()
-        }
+    if indexPath.section == 1 {
+      if indexPath.row == 0 {
+        let destination = LegalTableViewController()
+        destination.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(destination, animated: true)
       }
-    
+        
+      if indexPath.row == 1 {
+        logoutButtonTapped()
+      }
+    }
     tableView.deselectRow(at: indexPath, animated: true)
   }
-  
   
   override func numberOfSections(in tableView: UITableView) -> Int {
    return 2
