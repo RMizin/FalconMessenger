@@ -29,10 +29,21 @@ extension ChatLogController:CropViewControllerDelegate {
     guard selectedPhotoIndexPath != nil else { return }
     self.inputContainerView.selectedMedia[selectedPhotoIndexPath.row].object = UIImageJPEGRepresentation(image, 1)
     self.inputContainerView.attachedImages.reloadItems(at: [selectedPhotoIndexPath])
+    dismissCropController(cropViewController: cropViewController)
+  }
+  
+  func cropViewController(_ cropViewController: CropViewController, didFinishCancelled cancelled: Bool) {
+    dismissCropController(cropViewController: cropViewController)
+  }
+  
+  func dismissCropController(cropViewController: CropViewController) {
     selectedPhotoIndexPath = nil
     cropViewController.dismiss(animated: true, completion: nil)
     cropViewController.delegate = nil //to avoid memory leaks
-    
+    updateContainerViewLayout()
+  }
+  
+  func updateContainerViewLayout() {
     //needed to update input container layout if device was rotated during the image editing
     inputContainerView.inputTextView.invalidateIntrinsicContentSize()
     inputContainerView.invalidateIntrinsicContentSize()
