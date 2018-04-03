@@ -124,15 +124,6 @@
 		4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */; };
 		4BBBCC0320588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */; };
 		4BBBCC06205C3F6600926800 /* NavigationItemActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC05205C3F6600926800 /* NavigationItemActivityIndicator.swift */; };
-		4BBE9A1D1F4D8A2C00053935 /* stickers.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1A1F4D8A2C00053935 /* stickers.png */; };
-		4BBE9A1E1F4D8A2C00053935 /* stickers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1B1F4D8A2C00053935 /* stickers@2x.png */; };
-		4BBE9A1F1F4D8A2C00053935 /* stickers@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A1C1F4D8A2C00053935 /* stickers@3x.png */; };
-		4BBE9A231F4D8CF600053935 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A201F4D8CF600053935 /* trash.png */; };
-		4BBE9A241F4D8CF600053935 /* trash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A211F4D8CF600053935 /* trash@2x.png */; };
-		4BBE9A251F4D8CF600053935 /* trash@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A221F4D8CF600053935 /* trash@3x.png */; };
-		4BBE9A291F4DA8FF00053935 /* Trash Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A261F4DA8FF00053935 /* Trash Icon.png */; };
-		4BBE9A2A1F4DA8FF00053935 /* Trash Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A271F4DA8FF00053935 /* Trash Icon@2x.png */; };
-		4BBE9A2B1F4DA8FF00053935 /* Trash Icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE9A281F4DA8FF00053935 /* Trash Icon@3x.png */; };
 		4BC0AE331FD6F8A400C39A61 /* typingindicatorGray.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC0AE321FD6F8A300C39A61 /* typingindicatorGray.gif */; };
 		4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */; };
 		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
@@ -146,53 +137,6 @@
 		4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */; };
 		4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
-		4BE571501F4D87A4009D9AB4 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */; };
-		4BE571511F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571391F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift */; };
-		4BE571521F4D87A4009D9AB4 /* CropRectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5713A1F4D87A4009D9AB4 /* CropRectView.swift */; };
-		4BE571531F4D87A4009D9AB4 /* CropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5713B1F4D87A4009D9AB4 /* CropView.swift */; };
-		4BE571541F4D87A4009D9AB4 /* CropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5713C1F4D87A4009D9AB4 /* CropViewController.swift */; };
-		4BE571551F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5713D1F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift */; };
-		4BE571561F4D87A4009D9AB4 /* EmojisCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5713E1F4D87A4009D9AB4 /* EmojisCollectionViewDelegate.swift */; };
-		4BE571571F4D87A4009D9AB4 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5713F1F4D87A4009D9AB4 /* GradientView.swift */; };
-		4BE571581F4D87A4009D9AB4 /* PhotoEditor+Controls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571401F4D87A4009D9AB4 /* PhotoEditor+Controls.swift */; };
-		4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571411F4D87A4009D9AB4 /* PhotoEditor+Crop.swift */; };
-		4BE5715A1F4D87A4009D9AB4 /* PhotoEditor+Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571421F4D87A4009D9AB4 /* PhotoEditor+Drawing.swift */; };
-		4BE5715B1F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571431F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift */; };
-		4BE5715C1F4D87A4009D9AB4 /* PhotoEditor+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571441F4D87A4009D9AB4 /* PhotoEditor+Keyboard.swift */; };
-		4BE5715D1F4D87A4009D9AB4 /* PhotoEditor+StickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571451F4D87A4009D9AB4 /* PhotoEditor+StickersViewController.swift */; };
-		4BE5715E1F4D87A4009D9AB4 /* PhotoEditor+UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571461F4D87A4009D9AB4 /* PhotoEditor+UITextView.swift */; };
-		4BE5715F1F4D87A4009D9AB4 /* PhotoEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571471F4D87A4009D9AB4 /* PhotoEditorViewController.swift */; };
-		4BE571601F4D87A4009D9AB4 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571481F4D87A4009D9AB4 /* Protocols.swift */; };
-		4BE571611F4D87A4009D9AB4 /* ResizeControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE571491F4D87A4009D9AB4 /* ResizeControl.swift */; };
-		4BE571621F4D87A4009D9AB4 /* StickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5714A1F4D87A4009D9AB4 /* StickerCollectionViewCell.swift */; };
-		4BE571631F4D87A4009D9AB4 /* StickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5714B1F4D87A4009D9AB4 /* StickersViewController.swift */; };
-		4BE571641F4D87A4009D9AB4 /* UIImage+Crop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5714C1F4D87A4009D9AB4 /* UIImage+Crop.swift */; };
-		4BE571651F4D87A4009D9AB4 /* UIImage+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5714D1F4D87A4009D9AB4 /* UIImage+Size.swift */; };
-		4BE571661F4D87A4009D9AB4 /* UIImageView+Alpha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5714E1F4D87A4009D9AB4 /* UIImageView+Alpha.swift */; };
-		4BE571671F4D87A4009D9AB4 /* UIView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5714F1F4D87A4009D9AB4 /* UIView+Image.swift */; };
-		4BE5716D1F4D87BC009D9AB4 /* ColorCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571681F4D87BC009D9AB4 /* ColorCollectionViewCell.xib */; };
-		4BE5716E1F4D87BC009D9AB4 /* EmojiCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571691F4D87BC009D9AB4 /* EmojiCollectionViewCell.xib */; };
-		4BE5716F1F4D87BC009D9AB4 /* PhotoEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5716A1F4D87BC009D9AB4 /* PhotoEditorViewController.xib */; };
-		4BE571701F4D87BC009D9AB4 /* StickerCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5716B1F4D87BC009D9AB4 /* StickerCollectionViewCell.xib */; };
-		4BE571711F4D87BC009D9AB4 /* StickersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5716C1F4D87BC009D9AB4 /* StickersViewController.xib */; };
-		4BE571841F4D8816009D9AB4 /* clear.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571721F4D8816009D9AB4 /* clear.png */; };
-		4BE571851F4D8816009D9AB4 /* clear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571731F4D8816009D9AB4 /* clear@2x.png */; };
-		4BE571861F4D8816009D9AB4 /* clear@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571741F4D8816009D9AB4 /* clear@3x.png */; };
-		4BE571871F4D8816009D9AB4 /* crop.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571751F4D8816009D9AB4 /* crop.png */; };
-		4BE571881F4D8816009D9AB4 /* crop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571761F4D8816009D9AB4 /* crop@2x.png */; };
-		4BE571891F4D8816009D9AB4 /* crop@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571771F4D8816009D9AB4 /* crop@3x.png */; };
-		4BE5718A1F4D8816009D9AB4 /* draw.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571781F4D8816009D9AB4 /* draw.png */; };
-		4BE5718B1F4D8816009D9AB4 /* draw@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571791F4D8816009D9AB4 /* draw@2x.png */; };
-		4BE5718C1F4D8816009D9AB4 /* draw@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5717A1F4D8816009D9AB4 /* draw@3x.png */; };
-		4BE5718D1F4D8816009D9AB4 /* PhotoCropEditorBorder.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5717B1F4D8816009D9AB4 /* PhotoCropEditorBorder.png */; };
-		4BE5718E1F4D8816009D9AB4 /* PhotoCropEditorBorder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5717C1F4D8816009D9AB4 /* PhotoCropEditorBorder@2x.png */; };
-		4BE5718F1F4D8816009D9AB4 /* PhotoCropEditorBorder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5717D1F4D8816009D9AB4 /* PhotoCropEditorBorder@3x.png */; };
-		4BE571901F4D8816009D9AB4 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5717E1F4D8816009D9AB4 /* share.png */; };
-		4BE571911F4D8816009D9AB4 /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE5717F1F4D8816009D9AB4 /* share@2x.png */; };
-		4BE571921F4D8816009D9AB4 /* share@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571801F4D8816009D9AB4 /* share@3x.png */; };
-		4BE571931F4D8816009D9AB4 /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571811F4D8816009D9AB4 /* text.png */; };
-		4BE571941F4D8816009D9AB4 /* text@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571821F4D8816009D9AB4 /* text@2x.png */; };
-		4BE571951F4D8816009D9AB4 /* text@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BE571831F4D8816009D9AB4 /* text@3x.png */; };
 		4BE72A71204E9E2D009A22EA /* SelectChatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE72A70204E9E2D009A22EA /* SelectChatTableViewController.swift */; };
 		4BE8BB371FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB361FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift */; };
 		4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB381FC9F8C100EB35FA /* VoiceRecordingViewController.swift */; };
@@ -359,15 +303,6 @@
 		4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+TableRowActionHandlers.swift"; path = "ChatsControllers/ChatsTableViewController+TableRowActionHandlers.swift"; sourceTree = "<group>"; };
 		4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+NotificationsHandlers.swift"; path = "ChatsControllers/ChatsTableViewController+NotificationsHandlers.swift"; sourceTree = "<group>"; };
 		4BBBCC05205C3F6600926800 /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NavigationItemActivityIndicator.swift; path = Support/NavigationControllerActivityIndicator/NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
-		4BBE9A1A1F4D8A2C00053935 /* stickers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stickers.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers.png"; sourceTree = "<group>"; };
-		4BBE9A1B1F4D8A2C00053935 /* stickers@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stickers@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers@2x.png"; sourceTree = "<group>"; };
-		4BBE9A1C1F4D8A2C00053935 /* stickers@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stickers@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/stickers@3x.png"; sourceTree = "<group>"; };
-		4BBE9A201F4D8CF600053935 /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trash.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/trash.png"; sourceTree = "<group>"; };
-		4BBE9A211F4D8CF600053935 /* trash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trash@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/trash@2x.png"; sourceTree = "<group>"; };
-		4BBE9A221F4D8CF600053935 /* trash@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trash@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/trash@3x.png"; sourceTree = "<group>"; };
-		4BBE9A261F4DA8FF00053935 /* Trash Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Trash Icon.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/Trash Icon.png"; sourceTree = "<group>"; };
-		4BBE9A271F4DA8FF00053935 /* Trash Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Trash Icon@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/Trash Icon@2x.png"; sourceTree = "<group>"; };
-		4BBE9A281F4DA8FF00053935 /* Trash Icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Trash Icon@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/Trash Icon@3x.png"; sourceTree = "<group>"; };
 		4BC0AE321FD6F8A300C39A61 /* typingindicatorGray.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingindicatorGray.gif; path = ChatsControllers/Media/typingindicatorGray.gif; sourceTree = "<group>"; };
 		4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatInputContainerView.swift; path = ChatsControllers/ChatInputContainerView.swift; sourceTree = "<group>"; };
 		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
@@ -381,53 +316,6 @@
 		4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaPickerControllerNew.swift; path = ChatsControllers/MediaPickerControllerNew.swift; sourceTree = "<group>"; };
 		4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MediaPicerControllerNew+ImagePicker.swift"; path = "ChatsControllers/MediaPicerControllerNew+ImagePicker.swift"; sourceTree = "<group>"; };
 		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
-		4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorCollectionViewCell.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/ColorCollectionViewCell.swift"; sourceTree = "<group>"; };
-		4BE571391F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorsCollectionViewDelegate.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/ColorsCollectionViewDelegate.swift"; sourceTree = "<group>"; };
-		4BE5713A1F4D87A4009D9AB4 /* CropRectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CropRectView.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/CropRectView.swift"; sourceTree = "<group>"; };
-		4BE5713B1F4D87A4009D9AB4 /* CropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CropView.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/CropView.swift"; sourceTree = "<group>"; };
-		4BE5713C1F4D87A4009D9AB4 /* CropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CropViewController.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/CropViewController.swift"; sourceTree = "<group>"; };
-		4BE5713D1F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmojiCollectionViewCell.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/EmojiCollectionViewCell.swift"; sourceTree = "<group>"; };
-		4BE5713E1F4D87A4009D9AB4 /* EmojisCollectionViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmojisCollectionViewDelegate.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/EmojisCollectionViewDelegate.swift"; sourceTree = "<group>"; };
-		4BE5713F1F4D87A4009D9AB4 /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientView.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/GradientView.swift"; sourceTree = "<group>"; };
-		4BE571401F4D87A4009D9AB4 /* PhotoEditor+Controls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PhotoEditor+Controls.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/PhotoEditor+Controls.swift"; sourceTree = "<group>"; };
-		4BE571411F4D87A4009D9AB4 /* PhotoEditor+Crop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PhotoEditor+Crop.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/PhotoEditor+Crop.swift"; sourceTree = "<group>"; };
-		4BE571421F4D87A4009D9AB4 /* PhotoEditor+Drawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PhotoEditor+Drawing.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/PhotoEditor+Drawing.swift"; sourceTree = "<group>"; };
-		4BE571431F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PhotoEditor+Gestures.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/PhotoEditor+Gestures.swift"; sourceTree = "<group>"; };
-		4BE571441F4D87A4009D9AB4 /* PhotoEditor+Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PhotoEditor+Keyboard.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/PhotoEditor+Keyboard.swift"; sourceTree = "<group>"; };
-		4BE571451F4D87A4009D9AB4 /* PhotoEditor+StickersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PhotoEditor+StickersViewController.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/PhotoEditor+StickersViewController.swift"; sourceTree = "<group>"; };
-		4BE571461F4D87A4009D9AB4 /* PhotoEditor+UITextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PhotoEditor+UITextView.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/PhotoEditor+UITextView.swift"; sourceTree = "<group>"; };
-		4BE571471F4D87A4009D9AB4 /* PhotoEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoEditorViewController.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/PhotoEditorViewController.swift"; sourceTree = "<group>"; };
-		4BE571481F4D87A4009D9AB4 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Protocols.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/Protocols.swift"; sourceTree = "<group>"; };
-		4BE571491F4D87A4009D9AB4 /* ResizeControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResizeControl.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/ResizeControl.swift"; sourceTree = "<group>"; };
-		4BE5714A1F4D87A4009D9AB4 /* StickerCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StickerCollectionViewCell.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/StickerCollectionViewCell.swift"; sourceTree = "<group>"; };
-		4BE5714B1F4D87A4009D9AB4 /* StickersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StickersViewController.swift; path = "Support/iOSPhotoEditor/Photo Editor/Core/StickersViewController.swift"; sourceTree = "<group>"; };
-		4BE5714C1F4D87A4009D9AB4 /* UIImage+Crop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Crop.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/UIImage+Crop.swift"; sourceTree = "<group>"; };
-		4BE5714D1F4D87A4009D9AB4 /* UIImage+Size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Size.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/UIImage+Size.swift"; sourceTree = "<group>"; };
-		4BE5714E1F4D87A4009D9AB4 /* UIImageView+Alpha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImageView+Alpha.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/UIImageView+Alpha.swift"; sourceTree = "<group>"; };
-		4BE5714F1F4D87A4009D9AB4 /* UIView+Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+Image.swift"; path = "Support/iOSPhotoEditor/Photo Editor/Core/UIView+Image.swift"; sourceTree = "<group>"; };
-		4BE571681F4D87BC009D9AB4 /* ColorCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ColorCollectionViewCell.xib; path = "Support/iOSPhotoEditor/Photo Editor/Recources/ColorCollectionViewCell.xib"; sourceTree = "<group>"; };
-		4BE571691F4D87BC009D9AB4 /* EmojiCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EmojiCollectionViewCell.xib; path = "Support/iOSPhotoEditor/Photo Editor/Recources/EmojiCollectionViewCell.xib"; sourceTree = "<group>"; };
-		4BE5716A1F4D87BC009D9AB4 /* PhotoEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoEditorViewController.xib; path = "Support/iOSPhotoEditor/Photo Editor/Recources/PhotoEditorViewController.xib"; sourceTree = "<group>"; };
-		4BE5716B1F4D87BC009D9AB4 /* StickerCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = StickerCollectionViewCell.xib; path = "Support/iOSPhotoEditor/Photo Editor/Recources/StickerCollectionViewCell.xib"; sourceTree = "<group>"; };
-		4BE5716C1F4D87BC009D9AB4 /* StickersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = StickersViewController.xib; path = "Support/iOSPhotoEditor/Photo Editor/Recources/StickersViewController.xib"; sourceTree = "<group>"; };
-		4BE571721F4D8816009D9AB4 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clear.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/clear.png"; sourceTree = "<group>"; };
-		4BE571731F4D8816009D9AB4 /* clear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/clear@2x.png"; sourceTree = "<group>"; };
-		4BE571741F4D8816009D9AB4 /* clear@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/clear@3x.png"; sourceTree = "<group>"; };
-		4BE571751F4D8816009D9AB4 /* crop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = crop.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/crop.png"; sourceTree = "<group>"; };
-		4BE571761F4D8816009D9AB4 /* crop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "crop@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/crop@2x.png"; sourceTree = "<group>"; };
-		4BE571771F4D8816009D9AB4 /* crop@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "crop@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/crop@3x.png"; sourceTree = "<group>"; };
-		4BE571781F4D8816009D9AB4 /* draw.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = draw.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/draw.png"; sourceTree = "<group>"; };
-		4BE571791F4D8816009D9AB4 /* draw@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "draw@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/draw@2x.png"; sourceTree = "<group>"; };
-		4BE5717A1F4D8816009D9AB4 /* draw@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "draw@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/draw@3x.png"; sourceTree = "<group>"; };
-		4BE5717B1F4D8816009D9AB4 /* PhotoCropEditorBorder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PhotoCropEditorBorder.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/PhotoCropEditorBorder.png"; sourceTree = "<group>"; };
-		4BE5717C1F4D8816009D9AB4 /* PhotoCropEditorBorder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PhotoCropEditorBorder@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/PhotoCropEditorBorder@2x.png"; sourceTree = "<group>"; };
-		4BE5717D1F4D8816009D9AB4 /* PhotoCropEditorBorder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PhotoCropEditorBorder@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/PhotoCropEditorBorder@3x.png"; sourceTree = "<group>"; };
-		4BE5717E1F4D8816009D9AB4 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/share.png"; sourceTree = "<group>"; };
-		4BE5717F1F4D8816009D9AB4 /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "share@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/share@2x.png"; sourceTree = "<group>"; };
-		4BE571801F4D8816009D9AB4 /* share@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "share@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/share@3x.png"; sourceTree = "<group>"; };
-		4BE571811F4D8816009D9AB4 /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = text.png; path = "Support/iOSPhotoEditor/Photo Editor/Images/text.png"; sourceTree = "<group>"; };
-		4BE571821F4D8816009D9AB4 /* text@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "text@2x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/text@2x.png"; sourceTree = "<group>"; };
-		4BE571831F4D8816009D9AB4 /* text@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "text@3x.png"; path = "Support/iOSPhotoEditor/Photo Editor/Images/text@3x.png"; sourceTree = "<group>"; };
 		4BE72A70204E9E2D009A22EA /* SelectChatTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectChatTableViewController.swift; path = ChatsControllers/NewChatControllers/SelectChatTableViewController.swift; sourceTree = "<group>"; };
 		4BE8BB361FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogController+VoiceRecordingHandlers.swift"; path = "ChatsControllers/ChatLogController+VoiceRecordingHandlers.swift"; sourceTree = "<group>"; };
 		4BE8BB381FC9F8C100EB35FA /* VoiceRecordingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceRecordingViewController.swift; path = ChatsControllers/VoiceRecordingViewController.swift; sourceTree = "<group>"; };
@@ -768,7 +656,6 @@
 				4B0D9E591FC082F100FEDE24 /* UserProfilePictureOpener */,
 				4B5419491FB3923C0014C4FB /* INSPhotoGallery */,
 				4B2142E91F51B77200F7A4B8 /* RevealableCell */,
-				4BE571321F4D86E2009D9AB4 /* PhotoEditor */,
 				4B1A36941F498DAD00B4AA0A /* CenteredCollectionViewFlowLayout */,
 				4BED6EA81F47697D004EF2E0 /* PickerTrayController */,
 				4B48D3111F361E300050C797 /* ProgressIndicator */,
@@ -967,93 +854,6 @@
 				4BCA3BF41FB4966E006AE321 /* LegalTableViewController.swift */,
 			);
 			name = Legal;
-			sourceTree = "<group>";
-		};
-		4BE571321F4D86E2009D9AB4 /* PhotoEditor */ = {
-			isa = PBXGroup;
-			children = (
-				4BE571371F4D8790009D9AB4 /* Core */,
-				4BE571361F4D8789009D9AB4 /* Recources */,
-				4BE571351F4D8781009D9AB4 /* Images */,
-			);
-			name = PhotoEditor;
-			sourceTree = "<group>";
-		};
-		4BE571351F4D8781009D9AB4 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				4BBE9A261F4DA8FF00053935 /* Trash Icon.png */,
-				4BBE9A271F4DA8FF00053935 /* Trash Icon@2x.png */,
-				4BBE9A281F4DA8FF00053935 /* Trash Icon@3x.png */,
-				4BBE9A201F4D8CF600053935 /* trash.png */,
-				4BBE9A211F4D8CF600053935 /* trash@2x.png */,
-				4BBE9A221F4D8CF600053935 /* trash@3x.png */,
-				4BBE9A1A1F4D8A2C00053935 /* stickers.png */,
-				4BBE9A1B1F4D8A2C00053935 /* stickers@2x.png */,
-				4BBE9A1C1F4D8A2C00053935 /* stickers@3x.png */,
-				4BE571721F4D8816009D9AB4 /* clear.png */,
-				4BE571731F4D8816009D9AB4 /* clear@2x.png */,
-				4BE571741F4D8816009D9AB4 /* clear@3x.png */,
-				4BE571751F4D8816009D9AB4 /* crop.png */,
-				4BE571761F4D8816009D9AB4 /* crop@2x.png */,
-				4BE571771F4D8816009D9AB4 /* crop@3x.png */,
-				4BE571781F4D8816009D9AB4 /* draw.png */,
-				4BE571791F4D8816009D9AB4 /* draw@2x.png */,
-				4BE5717A1F4D8816009D9AB4 /* draw@3x.png */,
-				4BE5717B1F4D8816009D9AB4 /* PhotoCropEditorBorder.png */,
-				4BE5717C1F4D8816009D9AB4 /* PhotoCropEditorBorder@2x.png */,
-				4BE5717D1F4D8816009D9AB4 /* PhotoCropEditorBorder@3x.png */,
-				4BE5717E1F4D8816009D9AB4 /* share.png */,
-				4BE5717F1F4D8816009D9AB4 /* share@2x.png */,
-				4BE571801F4D8816009D9AB4 /* share@3x.png */,
-				4BE571811F4D8816009D9AB4 /* text.png */,
-				4BE571821F4D8816009D9AB4 /* text@2x.png */,
-				4BE571831F4D8816009D9AB4 /* text@3x.png */,
-			);
-			name = Images;
-			sourceTree = "<group>";
-		};
-		4BE571361F4D8789009D9AB4 /* Recources */ = {
-			isa = PBXGroup;
-			children = (
-				4BE571681F4D87BC009D9AB4 /* ColorCollectionViewCell.xib */,
-				4BE571691F4D87BC009D9AB4 /* EmojiCollectionViewCell.xib */,
-				4BE5716A1F4D87BC009D9AB4 /* PhotoEditorViewController.xib */,
-				4BE5716B1F4D87BC009D9AB4 /* StickerCollectionViewCell.xib */,
-				4BE5716C1F4D87BC009D9AB4 /* StickersViewController.xib */,
-			);
-			name = Recources;
-			sourceTree = "<group>";
-		};
-		4BE571371F4D8790009D9AB4 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				4BE571381F4D87A4009D9AB4 /* ColorCollectionViewCell.swift */,
-				4BE571391F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift */,
-				4BE5713A1F4D87A4009D9AB4 /* CropRectView.swift */,
-				4BE5713B1F4D87A4009D9AB4 /* CropView.swift */,
-				4BE5713C1F4D87A4009D9AB4 /* CropViewController.swift */,
-				4BE5713D1F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift */,
-				4BE5713E1F4D87A4009D9AB4 /* EmojisCollectionViewDelegate.swift */,
-				4BE5713F1F4D87A4009D9AB4 /* GradientView.swift */,
-				4BE571401F4D87A4009D9AB4 /* PhotoEditor+Controls.swift */,
-				4BE571411F4D87A4009D9AB4 /* PhotoEditor+Crop.swift */,
-				4BE571421F4D87A4009D9AB4 /* PhotoEditor+Drawing.swift */,
-				4BE571431F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift */,
-				4BE571441F4D87A4009D9AB4 /* PhotoEditor+Keyboard.swift */,
-				4BE571451F4D87A4009D9AB4 /* PhotoEditor+StickersViewController.swift */,
-				4BE571461F4D87A4009D9AB4 /* PhotoEditor+UITextView.swift */,
-				4BE571471F4D87A4009D9AB4 /* PhotoEditorViewController.swift */,
-				4BE571481F4D87A4009D9AB4 /* Protocols.swift */,
-				4BE571491F4D87A4009D9AB4 /* ResizeControl.swift */,
-				4BE5714A1F4D87A4009D9AB4 /* StickerCollectionViewCell.swift */,
-				4BE5714B1F4D87A4009D9AB4 /* StickersViewController.swift */,
-				4BE5714C1F4D87A4009D9AB4 /* UIImage+Crop.swift */,
-				4BE5714D1F4D87A4009D9AB4 /* UIImage+Size.swift */,
-				4BE5714E1F4D87A4009D9AB4 /* UIImageView+Alpha.swift */,
-				4BE5714F1F4D87A4009D9AB4 /* UIView+Image.swift */,
-			);
-			name = Core;
 			sourceTree = "<group>";
 		};
 		4BE72A6B204E9D65009A22EA /* MediaPickerControllers */ = {
@@ -1335,49 +1135,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BE571851F4D8816009D9AB4 /* clear@2x.png in Resources */,
-				4BE5718C1F4D8816009D9AB4 /* draw@3x.png in Resources */,
 				4BC0AE331FD6F8A400C39A61 /* typingindicatorGray.gif in Resources */,
 				4BB74A16206E311D0014837E /* CallingCodes.plist in Resources */,
-				4BE5718B1F4D8816009D9AB4 /* draw@2x.png in Resources */,
 				4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */,
-				4BE571921F4D8816009D9AB4 /* share@3x.png in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
-				4BBE9A1F1F4D8A2C00053935 /* stickers@3x.png in Resources */,
-				4BE571931F4D8816009D9AB4 /* text.png in Resources */,
-				4BBE9A1D1F4D8A2C00053935 /* stickers.png in Resources */,
-				4BBE9A241F4D8CF600053935 /* trash@2x.png in Resources */,
-				4BBE9A1E1F4D8A2C00053935 /* stickers@2x.png in Resources */,
-				4BE5716D1F4D87BC009D9AB4 /* ColorCollectionViewCell.xib in Resources */,
-				4BE5716E1F4D87BC009D9AB4 /* EmojiCollectionViewCell.xib in Resources */,
-				4BE571881F4D8816009D9AB4 /* crop@2x.png in Resources */,
-				4BBE9A251F4D8CF600053935 /* trash@3x.png in Resources */,
-				4BE5718A1F4D8816009D9AB4 /* draw.png in Resources */,
 				4B45263D1F5EBCFA003FBA29 /* sent.caf in Resources */,
 				4B45263C1F5EBCFA003FBA29 /* notification.caf in Resources */,
-				4BE5718D1F4D8816009D9AB4 /* PhotoCropEditorBorder.png in Resources */,
-				4BE571951F4D8816009D9AB4 /* text@3x.png in Resources */,
 				4BF6F94D1FD188110011686B /* typingindicatorDark.gif in Resources */,
 				4B5419551FB392570014C4FB /* INSPhotoGallery.bundle in Resources */,
-				4BE571871F4D8816009D9AB4 /* crop.png in Resources */,
-				4BBE9A2A1F4DA8FF00053935 /* Trash Icon@2x.png in Resources */,
-				4BE571901F4D8816009D9AB4 /* share.png in Resources */,
 				4B2143021F51C74000F7A4B8 /* TimestampView.xib in Resources */,
-				4BBE9A2B1F4DA8FF00053935 /* Trash Icon@3x.png in Resources */,
-				4BBE9A291F4DA8FF00053935 /* Trash Icon.png in Resources */,
-				4BE5716F1F4D87BC009D9AB4 /* PhotoEditorViewController.xib in Resources */,
-				4BE571861F4D8816009D9AB4 /* clear@3x.png in Resources */,
-				4BE5718E1F4D8816009D9AB4 /* PhotoCropEditorBorder@2x.png in Resources */,
-				4BE571701F4D87BC009D9AB4 /* StickerCollectionViewCell.xib in Resources */,
-				4BE571711F4D87BC009D9AB4 /* StickersViewController.xib in Resources */,
-				4BE571891F4D8816009D9AB4 /* crop@3x.png in Resources */,
-				4BE571911F4D8816009D9AB4 /* share@2x.png in Resources */,
-				4BE5718F1F4D8816009D9AB4 /* PhotoCropEditorBorder@3x.png in Resources */,
 				4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */,
-				4BE571841F4D8816009D9AB4 /* clear.png in Resources */,
-				4BBE9A231F4D8CF600053935 /* trash.png in Resources */,
 				4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */,
-				4BE571941F4D8816009D9AB4 /* text@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1406,6 +1174,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CropViewController/CropViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/FTPopOverMenu_Swift/FTPopOverMenu_Swift.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
@@ -1418,6 +1187,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CropViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FTPopOverMenu_Swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
@@ -1466,7 +1236,6 @@
 				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
 				4BED6EB71F476A3A004EF2E0 /* UIImageExtensions.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
-				4BE571581F4D87A4009D9AB4 /* PhotoEditor+Controls.swift in Sources */,
 				4B0D9E5B1FC08AC800FEDE24 /* UserProfilePictureOpener.swift in Sources */,
 				4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */,
 				4BAD974A206E349E008ADF6B /* SelectedParticipantsCollectionView.swift in Sources */,
@@ -1475,17 +1244,13 @@
 				4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
 				4BE8BB491FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift in Sources */,
-				4BE571501F4D87A4009D9AB4 /* ColorCollectionViewCell.swift in Sources */,
 				4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
 				4BED6EB01F476A2F004EF2E0 /* AnimationController.swift in Sources */,
-				4BE571521F4D87A4009D9AB4 /* CropRectView.swift in Sources */,
 				4BAD9749206E349E008ADF6B /* ParticipantTableViewCell.swift in Sources */,
 				4BBBCBF72057DCD800926800 /* GroupPictureOpener.swift in Sources */,
 				4B48D3241F361E490050C797 /* ARSProgressLoader.swift in Sources */,
-				4BE571571F4D87A4009D9AB4 /* GradientView.swift in Sources */,
 				4BB74A03206E300C0014837E /* AuthVerificationController.swift in Sources */,
-				4BE571531F4D87A4009D9AB4 /* CropView.swift in Sources */,
 				4BB782441FDEE00E00BB2A33 /* FalconTextView.swift in Sources */,
 				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
@@ -1494,7 +1259,6 @@
 				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
-				4BE571611F4D87A4009D9AB4 /* ResizeControl.swift in Sources */,
 				4B5419541FB392570014C4FB /* INSPhotosDataSource.swift in Sources */,
 				4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */,
 				4B2820ED1FE4025600791AB1 /* UIView+Extensions.swift in Sources */,
@@ -1515,25 +1279,18 @@
 				4BAD974E206E349E008ADF6B /* SelectParticipantsViewController.swift in Sources */,
 				4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */,
 				4B24ADD9206EA5900072171A /* Country.swift in Sources */,
-				4BE571591F4D87A4009D9AB4 /* PhotoEditor+Crop.swift in Sources */,
 				4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */,
 				4B5419561FB392570014C4FB /* INSPhotosTransitionAnimator.swift in Sources */,
 				4BB6D197206EA62F00FEF72E /* Conversation.swift in Sources */,
 				4B48D31C1F361E490050C797 /* ARSInfiniteLoader.swift in Sources */,
 				4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */,
-				4BE5715C1F4D87A4009D9AB4 /* PhotoEditor+Keyboard.swift in Sources */,
-				4BE5715A1F4D87A4009D9AB4 /* PhotoEditor+Drawing.swift in Sources */,
 				4BE8BB371FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift in Sources */,
-				4BE571661F4D87A4009D9AB4 /* UIImageView+Alpha.swift in Sources */,
 				4B54195C1FB392570014C4FB /* INSScalingImageView.swift in Sources */,
 				4B5419591FB392570014C4FB /* INSPhotoViewController.swift in Sources */,
-				4BE5715B1F4D87A4009D9AB4 /* PhotoEditor+Gestures.swift in Sources */,
 				4B5419581FB392570014C4FB /* INSPhoto.swift in Sources */,
 				4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */,
-				4BE571631F4D87A4009D9AB4 /* StickersViewController.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4BBBCBF52057D01000926800 /* GroupProfileTableHeaderContainer.swift in Sources */,
-				4BE571651F4D87A4009D9AB4 /* UIImage+Size.swift in Sources */,
 				4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */,
 				4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */,
 				4BAD974D206E349E008ADF6B /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
@@ -1548,14 +1305,10 @@
 				4BB749FE206E2F7F0014837E /* ChangePhoneNumberController.swift in Sources */,
 				4BE8BB441FCA83D200EB35FA /* PlayerCellView.swift in Sources */,
 				4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */,
-				4BE571561F4D87A4009D9AB4 /* EmojisCollectionViewDelegate.swift in Sources */,
-				4BE5715E1F4D87A4009D9AB4 /* PhotoEditor+UITextView.swift in Sources */,
 				4BBBCBFB205851E100926800 /* ChatsTableViewController.swift in Sources */,
-				4BE571541F4D87A4009D9AB4 /* CropViewController.swift in Sources */,
 				4B2820E91FE4025600791AB1 /* AnnouncementFactory.swift in Sources */,
 				4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */,
 				4BB74A14206E311D0014837E /* EnterVerificationCodeController.swift in Sources */,
-				4BE571601F4D87A4009D9AB4 /* Protocols.swift in Sources */,
 				4BBBCC0320588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */,
 				4BAD975B206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift in Sources */,
 				4BB74A10206E311D0014837E /* SelectCountryCodeController.swift in Sources */,
@@ -1564,9 +1317,7 @@
 				4BB74A15206E311D0014837E /* EnterVerificationContainerView.swift in Sources */,
 				4BE72A71204E9E2D009A22EA /* SelectChatTableViewController.swift in Sources */,
 				4BAD9755206E35FE008ADF6B /* AddGroupMembersController.swift in Sources */,
-				4BE571641F4D87A4009D9AB4 /* UIImage+Crop.swift in Sources */,
 				4BFD07761FB08005003791D7 /* ViewControllerPlaceholder.swift in Sources */,
-				4BE5715F1F4D87A4009D9AB4 /* PhotoEditorViewController.swift in Sources */,
 				4B2820EC1FE4025600791AB1 /* AnnouncementShowing.swift in Sources */,
 				4BEDE4272067C77400C52EF4 /* InformationMessageCell.swift in Sources */,
 				4BE8BB3B1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift in Sources */,
@@ -1580,7 +1331,6 @@
 				4B2A9589205FDDE000FE4DF7 /* GroupAdminControlsPictureOpener.swift in Sources */,
 				4BB74A13206E311D0014837E /* EnterVerificationContainerView+timerHandlers.swift in Sources */,
 				4B5419481FB30F920014C4FB /* UserProfilePictureOverlayView.swift in Sources */,
-				4BE5715D1F4D87A4009D9AB4 /* PhotoEditor+StickersViewController.swift in Sources */,
 				4B91B8BC1F34E9D60025C67F /* Public.swift in Sources */,
 				4BEB13F31F39CE3E0048A984 /* FalconUsersTableViewCell.swift in Sources */,
 				4B48D3221F361E490050C797 /* ARSLineProgressProtocols.swift in Sources */,
@@ -1589,7 +1339,6 @@
 				4B88F2DA206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift in Sources */,
 				4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */,
 				4BB6D196206EA62F00FEF72E /* Message.swift in Sources */,
-				4BE571551F4D87A4009D9AB4 /* EmojiCollectionViewCell.swift in Sources */,
 				4B29BB6520572C91002A4F5D /* RoundProgressView.swift in Sources */,
 				4BC26B2E1F3A24E70093A9D2 /* ChatLogController.swift in Sources */,
 				4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */,
@@ -1608,8 +1357,6 @@
 				4B2143041F51C76F00F7A4B8 /* TimestampView.swift in Sources */,
 				4BED6EBE1F476A46004EF2E0 /* CameraOverlayView.swift in Sources */,
 				4BAD974F206E349E008ADF6B /* SelectedParticipantsCollectionViewCell.swift in Sources */,
-				4BE571511F4D87A4009D9AB4 /* ColorsCollectionViewDelegate.swift in Sources */,
-				4BE571621F4D87A4009D9AB4 /* StickerCollectionViewCell.swift in Sources */,
 				4BBBCBFF205883CC00926800 /* ChatsTableViewController+ConfigureCell.swift in Sources */,
 				4BED6EBF1F476A46004EF2E0 /* ImageCell.swift in Sources */,
 				4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */,
@@ -1618,7 +1365,6 @@
 				4BED6EBD1F476A46004EF2E0 /* CameraCell.swift in Sources */,
 				4B9498781F324919008DA07F /* OnboardingController.swift in Sources */,
 				4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */,
-				4BE571671F4D87A4009D9AB4 /* UIView+Image.swift in Sources */,
 				4B48D31F1F361E490050C797 /* ARSLineProgressCustomization.swift in Sources */,
 				4BE8BB471FCA98D600EB35FA /* SwiftSiriWaveformView.swift in Sources */,
 				4BB74A12206E311D0014837E /* EnterPhoneNumberContainerView.swift in Sources */,

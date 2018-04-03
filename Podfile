@@ -17,5 +17,6 @@ pod 'SDWebImage'
 pod 'PhoneNumberKit'
 pod 'FLAnimatedImage'
 pod 'FTPopOverMenu_Swift'
+pod 'CropViewController'
 
 end

@@ -9,59 +9,46 @@
 import UIKit
 import Photos
 import AVKit
+import CropViewController
 
 private let nibName = "PhotoEditorViewController"
+private var selectedPhotoIndexPath: IndexPath!
 
-extension ChatLogController: PhotoEditorDelegate {
-  
-  func doneEditing(image: UIImage, indexPath: IndexPath) {
-    inputContainerView.selectedMedia[indexPath.row].object = UIImageJPEGRepresentation(image, 1)
-    inputContainerView.attachedImages.reloadItems(at: [indexPath])
-  }
-  
-  func canceledEditing() {
-    print("Canceled")
-  }
+extension ChatLogController:CropViewControllerDelegate {
   
   func presentPhotoEditor(forImageAt indexPath: IndexPath) {
-    let photoEditor = PhotoEditorViewController(nibName: nibName, bundle: Bundle(for: PhotoEditorViewController.self))
-    
-    photoEditor.photoEditorDelegate = self
-    
-    photoEditor.image = inputContainerView.selectedMedia[indexPath.row].object?.asUIImage
-    
-    photoEditor.hiddenControls = [.text]
-    
-    photoEditor.modalPresentationStyle = .overCurrentContext
-    
-    photoEditor.sentIndexPath = indexPath
-    
+    guard let image = inputContainerView.selectedMedia[indexPath.row].object?.asUIImage else { return }
     inputContainerView.inputTextView.resignFirstResponder()
+    let cropController = CropViewController(croppingStyle: .default, image: image)
+    cropController.delegate = self
+    selectedPhotoIndexPath = indexPath
+    self.present(cropController, animated: true, completion: nil)
+  }
+
+  func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+    guard selectedPhotoIndexPath != nil else { return }
+    self.inputContainerView.selectedMedia[selectedPhotoIndexPath.row].object = UIImageJPEGRepresentation(image, 1)
+    self.inputContainerView.attachedImages.reloadItems(at: [selectedPhotoIndexPath])
+    selectedPhotoIndexPath = nil
+    cropViewController.dismiss(animated: true, completion: nil)
+    cropViewController.delegate = nil //to avoid memory leaks
     
-    present(photoEditor, animated: true, completion: nil)
+    //needed to update input container layout if device was rotated during the image editing
+    inputContainerView.inputTextView.invalidateIntrinsicContentSize()
+    inputContainerView.invalidateIntrinsicContentSize()
+    DispatchQueue.main.async {
+      self.inputContainerView.attachedImages.frame.size.width = self.inputContainerView.inputTextView.frame.width
+    }
   }
   
   func presentVideoPlayer(forUrlAt indexPath: IndexPath) {
-    
     guard let pathURL = inputContainerView.selectedMedia[indexPath.item].fileURL else { return }
-    
     let videoURL = URL(string: pathURL)
-    
     let player = AVPlayer(url: videoURL!)
-    
     let playerViewController = AVPlayerViewController()
-    
     playerViewController.modalPresentationStyle = .overCurrentContext
-    
     playerViewController.player = player
-    
     inputContainerView.inputTextView.resignFirstResponder()
-    
     present(playerViewController, animated: true, completion: nil)
   }
 }
-
-
-
-
-

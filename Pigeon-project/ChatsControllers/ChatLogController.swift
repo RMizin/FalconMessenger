@@ -12,6 +12,7 @@ import Photos
 import AudioToolbox
 import FLAnimatedImage
 import FTPopOverMenu_Swift
+import CropViewController
 
 private let incomingTextMessageCellID = "incomingTextMessageCellID"
 
@@ -467,16 +468,19 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     super.viewDidDisappear(animated)
     
     if self.navigationController?.visibleViewController is UserInfoTableViewController ||
-      self.navigationController?.visibleViewController is  GroupAdminControlsTableViewController {
+      self.navigationController?.visibleViewController is  GroupAdminControlsTableViewController ||
+      topViewController(rootViewController: self) is CropViewController {
       return
     }
-    
+
     if messagesFetcher.userMessagesReference != nil {
       messagesFetcher.userMessagesReference.removeAllObservers()
     }
+    
     if messagesFetcher.messagesReference != nil {
       messagesFetcher.messagesReference.removeAllObservers()
     }
+    
     messagesFetcher.collectionDelegate = nil
     messagesFetcher.delegate = nil
     messagesFetcher = nil
