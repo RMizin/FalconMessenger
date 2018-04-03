@@ -9,13 +9,11 @@
 import UIKit
 import Firebase
 
-
 enum tabs: Int {
   case contacts = 0
   case chats = 1
   case settings = 2
 }
-
 
 class GeneralTabBarController: UITabBarController {
   
@@ -27,7 +25,6 @@ class GeneralTabBarController: UITabBarController {
     
     return splash
   }()
-  
   
   override func viewDidLoad() {
       super.viewDidLoad()
@@ -48,6 +45,9 @@ class GeneralTabBarController: UITabBarController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
+    /* sometimes on iPhone X if after device rotation if tabbar wasn't visible, tabBar height is not updating, next line fixes this bug */
+    tabBar.sizeToFit()
+    
     if onceToken == 0 {
       splash.image = ThemeManager.currentTheme().splashImage
       splash.tag = 13
@@ -60,7 +60,6 @@ class GeneralTabBarController: UITabBarController {
     onceToken = 1
   }
 }
-
 
 extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool) {
