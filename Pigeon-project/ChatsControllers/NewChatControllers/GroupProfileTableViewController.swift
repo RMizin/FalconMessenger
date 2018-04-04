@@ -11,24 +11,13 @@ import SDWebImage
 import Firebase
 
 
-enum ImageType:String {
-  case thumbnail = "chatThumbnailPhotoURL"
-  case original = "chatOriginalPhotoURL"
-}
-
-
 class GroupProfileTableViewController: UITableViewController {
   
   fileprivate var selectedFlaconUsersCellID = "selectedFlaconUsersCellID"
-  
   var selectedFlaconUsers = [User]()
-  
   let groupProfileTableHeaderContainer = GroupProfileTableHeaderContainer()
-  
-  let userProfilePictureOpener = GroupPictureOpener()
-  
+  let avatarOpener = AvatarOpener()
   let chatCreatingGroup = DispatchGroup()
-  
   let informationMessageSender = InformationMessageSender()
 
   
@@ -82,11 +71,14 @@ class GroupProfileTableViewController: UITableViewController {
     groupProfileTableHeaderContainer.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
   }
   
-
   @objc fileprivate func openUserProfilePicture() {
-    userProfilePictureOpener.controllerWithUserProfilePhoto = self
-    userProfilePictureOpener.userProfileContainerView = groupProfileTableHeaderContainer
-    userProfilePictureOpener.openUserProfilePicture()
+    guard currentReachabilityStatus != .notReachable else {
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
+      return
+    }
+    avatarOpener.delegate = self 
+    avatarOpener.handleAvatarOpening(avatarView: groupProfileTableHeaderContainer.profileImageView, at: self,
+                                     isEditButtonEnabled: true, title: .group)
   }
   
   @objc func textFieldDidChange(_ textField: UITextField) {
@@ -97,58 +89,55 @@ class GroupProfileTableViewController: UITableViewController {
     }
   }
   
+  override func numberOfSections(in tableView: UITableView) -> Int {
+    return 1
+  }
 
-    // MARK: - Table view data source
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return selectedFlaconUsers.count
+  }
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-      return 1
+  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 60
+  }
+
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: selectedFlaconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
+
+    if let name = selectedFlaconUsers[indexPath.row].name {
+      cell.title.text = name
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return selectedFlaconUsers.count
-    }
-  
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      return 60
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      let cell = tableView.dequeueReusableCell(withIdentifier: selectedFlaconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
-
-      if let name = selectedFlaconUsers[indexPath.row].name {
-        cell.title.text = name
-      }
-      
-      if let statusString = selectedFlaconUsers[indexPath.row].onlineStatus as? String {
-        if statusString == statusOnline {
-          cell.subtitle.textColor = FalconPalette.defaultBlue
-          cell.subtitle.text = statusString
-        } else {
-          cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-          let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-          let subtitle = "Last seen " + timeAgoSinceDate(date)
-          cell.subtitle.text = subtitle
-        }
-        
-      } else if let statusTimeinterval = selectedFlaconUsers[indexPath.row].onlineStatus as? TimeInterval {
+    
+    if let statusString = selectedFlaconUsers[indexPath.row].onlineStatus as? String {
+      if statusString == statusOnline {
+        cell.subtitle.textColor = FalconPalette.defaultBlue
+        cell.subtitle.text = statusString
+      } else {
         cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
+        let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
         let subtitle = "Last seen " + timeAgoSinceDate(date)
         cell.subtitle.text = subtitle
       }
       
-      guard let url = selectedFlaconUsers[indexPath.row].thumbnailPhotoURL else { return cell }
-      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
-        guard image != nil else { return }
-        guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-          cell.icon.alpha = 1
-          return
-        }
-        cell.icon.alpha = 0
-        UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
-      })
-      return cell
+    } else if let statusTimeinterval = selectedFlaconUsers[indexPath.row].onlineStatus as? TimeInterval {
+      cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+      let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
+      let subtitle = "Last seen " + timeAgoSinceDate(date)
+      cell.subtitle.text = subtitle
     }
+    
+    guard let url = selectedFlaconUsers[indexPath.row].thumbnailPhotoURL else { return cell }
+    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
+      guard image != nil else { return }
+      guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
+        cell.icon.alpha = 1
+        return
+      }
+      cell.icon.alpha = 0
+      UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
+    })
+    return cell
+  }
 }
 
 extension GroupProfileTableViewController: UITableViewDataSourcePrefetching {
@@ -181,7 +170,6 @@ extension GroupProfileTableViewController {
     let groupChatsReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
     let childValues: [String: AnyObject] = ["chatID": chatID as AnyObject, "chatName": chatName as AnyObject, "chatParticipantsIDs": membersIDs.1 as AnyObject, "admin": currentUserID as AnyObject,"isGroupChat": true as AnyObject]
   
-    
     chatCreatingGroup.enter()
     chatCreatingGroup.enter()
     chatCreatingGroup.enter()
@@ -226,26 +214,22 @@ extension GroupProfileTableViewController {
   }
   
   func uploadAvatar(chatImage: UIImage?, reference: DatabaseReference) {
-    guard let unwrappedChatImage = chatImage else { self.chatCreatingGroup.leave(); return }
-    let chatThumbnailImage = createImageThumbnail(unwrappedChatImage)
-    let imagesToUpload = [chatThumbnailImage, unwrappedChatImage]
-    let imagesUploaingdGroup = DispatchGroup()
-    
-    for _ in imagesToUpload { imagesUploaingdGroup.enter() }
-    
-    imagesUploaingdGroup.notify(queue: DispatchQueue.main, execute: {
-      print("images uploading finished for one of the participants, leaving main group...")
+    guard let image = chatImage else { self.chatCreatingGroup.leave(); return }
+    let thumbnailImage = createImageThumbnail(image)
+    var images = [(image: UIImage, quality: CGFloat, key: String)]()
+    images.append((image: image, quality: 0.5, key: "chatOriginalPhotoURL"))
+    images.append((image: thumbnailImage, quality: 1, key: "chatThumbnailPhotoURL"))
+    let photoUpdatingGroup = DispatchGroup()
+    for _ in images { photoUpdatingGroup.enter() }
+
+    photoUpdatingGroup.notify(queue: DispatchQueue.main, execute: {
       self.chatCreatingGroup.leave()
     })
     
-    for image in imagesToUpload {
-      var quality: CGFloat = 1.0
-      var imageType: ImageType = .thumbnail
-      if image == chatImage { quality = 0.5; imageType = .original }
-      
-      uploadAvatarForUserToFirebaseStorageUsingImage(image, quality: quality) { (imageURL, path) in
-        reference.updateChildValues([imageType.rawValue : String(describing: imageURL)], withCompletionBlock: { (error, ref) in
-          imagesUploaingdGroup.leave()
+    for imageElement in images {
+      uploadAvatarForUserToFirebaseStorageUsingImage(imageElement.image, quality: imageElement.quality) { (url) in
+        reference.updateChildValues([imageElement.key: url], withCompletionBlock: { (_, _) in
+          photoUpdatingGroup.leave()
         })
       }
     }

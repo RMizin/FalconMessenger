@@ -9,11 +9,11 @@
 import UIKit
 import Firebase
 
-
 class AccountSettingsController: UITableViewController {
 
   let userProfileContainerView = UserProfileContainerView()
-  let userProfilePictureOpener = UserProfilePictureOpener()
+  let avatarOpener = AvatarOpener()
+  let userProfileDataDatabaseUpdater = UserProfileDataDatabaseUpdater()
   
   let accountSettingsCellId = "userProfileCell"
 
@@ -38,7 +38,6 @@ class AccountSettingsController: UITableViewController {
     edgesForExtendedLayout = UIRectEdge.top
     tableView = UITableView(frame: tableView.frame, style: .grouped)
     NotificationCenter.default.addObserver(self, selector:#selector(clearUserData),name:NSNotification.Name(rawValue: "clearUserData"), object: nil)
-    
     configureTableView()
     configureContainerView()
     listenChanges()
@@ -68,14 +67,15 @@ class AccountSettingsController: UITableViewController {
     }
   }
   
-  fileprivate func managePhotoPlaceholderLabelAppearance() {
-    DispatchQueue.main.async {
-      if self.userProfileContainerView.profileImageView.image != nil {
-        self.userProfileContainerView.addPhotoLabel.isHidden = true
-      } else {
-        self.userProfileContainerView.addPhotoLabel.isHidden = false
-      }
+  @objc fileprivate func openUserProfilePicture() {
+    guard currentReachabilityStatus != .notReachable else {
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
+      return
     }
+    avatarOpener.delegate = self
+    avatarOpener.handleAvatarOpening(avatarView: userProfileContainerView.profileImageView, at: self,
+                                     isEditButtonEnabled: true, title: .user)
+    cancelBarButtonPressed()
   }
   
   func configureNavigationBarDefaultRightBarButton () {
@@ -145,7 +145,6 @@ class AccountSettingsController: UITableViewController {
             if error != nil {
               //basicErrorAlertWith(title: "Error loading profile picture", message: "It seems like you are not connected to the internet.", controller: self)
             }
-             self.managePhotoPlaceholderLabelAppearance()
           })
         }
       })
@@ -192,14 +191,6 @@ class AccountSettingsController: UITableViewController {
     userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
     userProfileContainerView.bio.delegate = self
     userProfileContainerView.name.delegate = self
-  }
-
-  @objc fileprivate func openUserProfilePicture() {
-    
-    userProfilePictureOpener.userProfileContainerView = userProfileContainerView
-    userProfilePictureOpener.controllerWithUserProfilePhoto = self
-    cancelBarButtonPressed()
-    userProfilePictureOpener.openUserProfilePicture()
   }
   
   func logoutButtonTapped () {

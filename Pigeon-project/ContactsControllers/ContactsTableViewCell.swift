@@ -58,6 +58,6 @@ class ContactsTableViewCell: UITableViewCell {
     super.prepareForReuse()
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     title.text = ""
-    
+    icon.image = UIImage(named: "UserpicIcon")
   }
 }

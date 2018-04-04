@@ -692,7 +692,7 @@ public extension UIView {
   }
 }
 
-func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, quality: CGFloat, completion: @escaping (_  imageUrl: String, _ path: String) -> ()) {
+func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, quality: CGFloat, completion: @escaping (_  imageUrl: String) -> ()) {
   let imageName = UUID().uuidString
   let ref = Storage.storage().reference().child("userProfilePictures").child(imageName)
   
@@ -701,16 +701,13 @@ func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, quality: C
       
       if error != nil {
         print("Failed to upload image:", error as Any)
-        completion("", "")
+        completion("")
         return
       }
    
-      
       if let imageUrl = metadata?.downloadURL()?.absoluteString {
-        completion(imageUrl, metadata!.name!)
-        
+        completion(imageUrl)
       }
-      
     })
   }
 }

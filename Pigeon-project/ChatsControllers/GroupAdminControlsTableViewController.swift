@@ -17,7 +17,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   fileprivate let adminControlsCellID = "adminControlsCellID"
   
   let groupProfileTableHeaderContainer = GroupProfileTableHeaderContainer()
-  let userProfilePictureOpener = GroupAdminControlsPictureOpener()
+  let avatarOpener = AvatarOpener()
   
   var chatReference: DatabaseReference!
   var chatHandle: DatabaseHandle!
@@ -90,7 +90,6 @@ class GroupAdminControlsTableViewController: UITableViewController {
       self.navigationController?.visibleViewController is LeaveGroupAndChangeAdminController {
       return
     }
-    
     removeObservers()
   }
   
@@ -253,9 +252,13 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   @objc fileprivate func openUserProfilePicture() {
     if !isCurrentUserAdministrator && groupProfileTableHeaderContainer.profileImageView.image == nil { return }
-    userProfilePictureOpener.controllerWithUserProfilePhoto = self
-    userProfilePictureOpener.userProfileContainerView = groupProfileTableHeaderContainer
-    userProfilePictureOpener.openUserProfilePicture()
+    guard currentReachabilityStatus != .notReachable else {
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
+      return
+    }
+    avatarOpener.delegate = self
+    avatarOpener.handleAvatarOpening(avatarView: groupProfileTableHeaderContainer.profileImageView, at: self,
+                                     isEditButtonEnabled: isCurrentUserAdministrator, title: .group)
   }
   
   // MARK: - Table view data source

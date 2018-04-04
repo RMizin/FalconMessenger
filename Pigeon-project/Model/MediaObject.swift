@@ -19,7 +19,6 @@ class MediaObject: NSObject {
   var filename: String?
   var fileURL: String?
   
-  
   init(dictionary: [String: AnyObject]) {
     super.init()
     

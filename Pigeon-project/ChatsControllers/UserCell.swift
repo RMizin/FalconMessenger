@@ -161,6 +161,7 @@ class UserCell: UITableViewCell {
     timeLabel.text = nil
     badgeLabel.isHidden = true
     muteIndicator.isHidden = true
+    newMessageIndicator.isHidden = true
     nameLabel.textColor = ThemeManager.currentTheme().generalTitleColor
   }
 }

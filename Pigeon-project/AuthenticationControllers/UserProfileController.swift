@@ -9,11 +9,11 @@
 import UIKit
 import Firebase
 
-
 class UserProfileController: UIViewController {
   
   let userProfileContainerView = UserProfileContainerView()
-  let userProfilePictureOpener = UserProfilePictureOpener()
+  let avatarOpener = AvatarOpener()
+  let userProfileDataDatabaseUpdater = UserProfileDataDatabaseUpdater()
   typealias CompletionHandler = (_ success: Bool) -> Void
 
     override func viewDidLoad() {
@@ -59,12 +59,15 @@ class UserProfileController: UIViewController {
   }
   
     @objc fileprivate func openUserProfilePicture() {
-      userProfilePictureOpener.controllerWithUserProfilePhoto = self
-      userProfilePictureOpener.userProfileContainerView = userProfileContainerView
-      userProfilePictureOpener.openUserProfilePicture()
+      guard currentReachabilityStatus != .notReachable else {
+        basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
+        return
+      }
+      avatarOpener.delegate = self
+      avatarOpener.handleAvatarOpening(avatarView: userProfileContainerView.profileImageView, at: self,
+                                       isEditButtonEnabled: true, title: .user)
     }
 }
-
 
 extension UserProfileController {
   
@@ -179,4 +182,3 @@ extension UserProfileController: UITextFieldDelegate {
     return true
   }
 }
-
