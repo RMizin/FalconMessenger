@@ -18,14 +18,14 @@ PODS:
   - FirebaseAnalytics (4.1.0):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (~> 0.3)
   - FirebaseAuth (4.5.0):
     - FirebaseAnalytics (~> 4.1)
-    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
     - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseCore (4.0.18):
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseDatabase (4.1.5):
     - FirebaseAnalytics (~> 4.1)
     - FirebaseCore (~> 4.0)
@@ -49,13 +49,13 @@ PODS:
   - GoogleToolboxForMac/Defines (2.1.3)
   - GoogleToolboxForMac/Logger (2.1.3):
     - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GoogleToolboxForMac/NSData+zlib (2.1.3):
+  - "GoogleToolboxForMac/NSData+zlib (2.1.3)":
     - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3):
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3)":
     - GoogleToolboxForMac/DebugUtils (= 2.1.3)
     - GoogleToolboxForMac/Defines (= 2.1.3)
-    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
-  - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.1.3)"
   - GTMSessionFetcher/Core (1.1.14)
   - leveldb-library (1.20)
   - nanopb (0.3.8):
@@ -86,6 +86,27 @@ DEPENDENCIES:
   - PhoneNumberKit
   - SDWebImage
 
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - CropViewController
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseAuth
+    - FirebaseCore
+    - FirebaseDatabase
+    - FirebaseInstanceID
+    - FirebaseMessaging
+    - FirebaseStorage
+    - FLAnimatedImage
+    - FTPopOverMenu_Swift
+    - GoogleToolboxForMac
+    - GTMSessionFetcher
+    - leveldb-library
+    - nanopb
+    - PhoneNumberKit
+    - Protobuf
+    - SDWebImage
+
 SPEC CHECKSUMS:
   CropViewController: e6d4bd512d15a1709e9ddf71fe7d98ffd05dda0f
   Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
@@ -106,6 +127,6 @@ SPEC CHECKSUMS:
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
 
-PODFILE CHECKSUM: 0cb93d42ad7afe57c2f0342141f558a27c6a976d
+PODFILE CHECKSUM: dae448a4b1f19e8a29f872a34978ef9e7e74de52
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.0

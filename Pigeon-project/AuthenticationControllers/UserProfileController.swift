@@ -115,7 +115,7 @@ extension UserProfileController {
       
       if snapshot.exists() {
         let urlString:String = snapshot.value as! String
-        self.userProfileContainerView.profileImageView.sd_setImage(with:  URL(string: urlString) , placeholderImage: nil, options: [ .highPriority, .continueInBackground, .progressiveDownload], completed: { (image, error, cacheType, url) in
+        self.userProfileContainerView.profileImageView.sd_setImage(with:  URL(string: urlString) , placeholderImage: nil, options: [.scaleDownLargeImages , .continueInBackground], completed: { (image, error, cacheType, url) in
     
            completionHandler(true)
         })

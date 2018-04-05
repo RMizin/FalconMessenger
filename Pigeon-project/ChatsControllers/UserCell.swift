@@ -9,6 +9,7 @@
 
 import UIKit
 import Firebase
+import SDWebImage
 
 
 class UserCell: UITableViewCell {
@@ -156,6 +157,7 @@ class UserCell: UITableViewCell {
     super.prepareForReuse()
     
     profileImageView.image = nil
+    profileImageView.sd_cancelCurrentImageLoad()
     nameLabel.text = ""
     messageLabel.text = nil
     timeLabel.text = nil

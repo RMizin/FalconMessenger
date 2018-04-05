@@ -60,10 +60,10 @@ extension ChatsTableViewController {
     } else if let url = filteredPinnedConversations[indexPath.row].chatThumbnailPhotoURL {
   
       if let isGroupChat = filteredPinnedConversations[indexPath.row].isGroupChat, isGroupChat {
-        cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "GroupIcon"), options: [.continueInBackground, .progressiveDownload,.scaleDownLargeImages ], completed: nil)
+        cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "GroupIcon"), options: [.continueInBackground, .scaleDownLargeImages], completed: nil)
       } else {
         //GroupIcon
-        cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload,.scaleDownLargeImages ], completed: nil)
+        cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .scaleDownLargeImages], completed: nil)
       }
     } else {
       if let isGroupChat = filteredPinnedConversations[indexPath.row].isGroupChat, isGroupChat {
@@ -141,10 +141,10 @@ extension ChatsTableViewController {
       cell.profileImageView.image = UIImage(named: "PersonalStorage")
     } else if let url = filtededConversations[indexPath.row].chatThumbnailPhotoURL {
       if let isGroupChat = filtededConversations[indexPath.row].isGroupChat, isGroupChat {
-          cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "GroupIcon"), options: [.continueInBackground, .progressiveDownload,.scaleDownLargeImages ], completed: nil)
+          cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "GroupIcon"), options: [.continueInBackground, .scaleDownLargeImages], completed: nil)
       } else {
         //GroupIcon
-          cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .progressiveDownload,.scaleDownLargeImages ], completed: nil)
+        cell.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .scaleDownLargeImages], completed: nil)
       }
     } else {
       if let isGroupChat = filtededConversations[indexPath.row].isGroupChat, isGroupChat {

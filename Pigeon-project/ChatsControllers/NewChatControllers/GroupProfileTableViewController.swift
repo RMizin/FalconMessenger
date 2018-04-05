@@ -127,7 +127,7 @@ class GroupProfileTableViewController: UITableViewController {
     }
     
     guard let url = selectedFlaconUsers[indexPath.row].thumbnailPhotoURL else { return cell }
-    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
+    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground], completed: { (image, error, cacheType, url) in
       guard image != nil else { return }
       guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
         cell.icon.alpha = 1
@@ -217,7 +217,9 @@ extension GroupProfileTableViewController {
     guard let image = chatImage else { self.chatCreatingGroup.leave(); return }
     let thumbnailImage = createImageThumbnail(image)
     var images = [(image: UIImage, quality: CGFloat, key: String)]()
-    images.append((image: image, quality: 0.5, key: "chatOriginalPhotoURL"))
+    let compressedImageData = compressImage(image: image)
+    let compressedImage = UIImage(data: compressedImageData)
+    images.append((image: compressedImage!, quality: 0.5, key: "chatOriginalPhotoURL"))
     images.append((image: thumbnailImage, quality: 1, key: "chatThumbnailPhotoURL"))
     let photoUpdatingGroup = DispatchGroup()
     for _ in images { photoUpdatingGroup.enter() }

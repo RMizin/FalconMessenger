@@ -50,19 +50,19 @@ class OnboardingContainerView: UIView {
     addSubview(startMessaging)
     
     NSLayoutConstraint.activate([
-    logoImageView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-    logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50),
-    logoImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -50),
-    logoImageView.heightAnchor.constraint(equalToConstant: deviceScreen.width),
-    
-    startMessaging.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-    startMessaging.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-    startMessaging.heightAnchor.constraint(equalToConstant: 50),
-    
-    welcomeTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-    welcomeTitle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-    welcomeTitle.heightAnchor.constraint(equalToConstant: 50),
-    welcomeTitle.bottomAnchor.constraint(equalTo: startMessaging.topAnchor, constant: -10)
+      logoImageView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+      logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50),
+      logoImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -50),
+      logoImageView.heightAnchor.constraint(equalTo: logoImageView.widthAnchor),
+      
+      startMessaging.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+      startMessaging.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+      startMessaging.heightAnchor.constraint(equalToConstant: 50),
+      
+      welcomeTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+      welcomeTitle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+      welcomeTitle.heightAnchor.constraint(equalToConstant: 50),
+      welcomeTitle.bottomAnchor.constraint(equalTo: startMessaging.topAnchor, constant: -10)
     ])
     
     if #available(iOS 11.0, *) {

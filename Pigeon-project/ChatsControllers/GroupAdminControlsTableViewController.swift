@@ -65,7 +65,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   var groupAvatarURL = String() {
     didSet {
       groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()      
-      groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string:groupAvatarURL), placeholderImage: nil, options: [], completed: { (image, error, cacheType, url) in
+      groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string:groupAvatarURL), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
         self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
       })
     }
@@ -474,7 +474,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       }
       
       guard let url = members[indexPath.row].thumbnailPhotoURL else { return cell }
-      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
+      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground], completed: { (image, error, cacheType, url) in
         guard image != nil else { return }
         guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
           cell.icon.alpha = 1

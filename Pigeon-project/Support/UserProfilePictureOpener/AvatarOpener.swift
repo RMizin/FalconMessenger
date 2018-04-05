@@ -214,7 +214,12 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
   
   func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
     cropViewController.delegate = nil
-    delegate?.avatarOpener(avatarPickerDidPick: image)
+    
+    let compressedImageData = compressImage(image: image)
+    if let compressedImage = UIImage(data: compressedImageData) {
+      delegate?.avatarOpener(avatarPickerDidPick: compressedImage)
+    }
+  
     parentController?.dismiss(animated: true, completion: nil)
   }
   

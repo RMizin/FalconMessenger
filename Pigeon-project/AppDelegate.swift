@@ -10,11 +10,7 @@ import UIKit
 import Firebase
 import UserNotifications
 
-
-public let deviceScreen = UIScreen.main.bounds
-
 func setUserNotificationToken(token: String) {
-  
   guard let uid = Auth.auth().currentUser?.uid else { return }
   let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
   userReference.updateChildValues([token : true])
@@ -31,16 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     ThemeManager.applyTheme(theme: theme)
     
     if #available(iOS 10.0, *) {
-      // For iOS 10 display notification (sent via APNS)
       UNUserNotificationCenter.current().delegate = self
-      
       let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-      UNUserNotificationCenter.current().requestAuthorization(
-        options: authOptions,
-        completionHandler: {_, _ in })
+      UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_, _ in })
     } else {
-      let settings: UIUserNotificationSettings =
-        UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+      let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
       application.registerUserNotificationSettings(settings)
     }
     
@@ -49,85 +40,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      FirebaseApp.configure()
      Database.database().isPersistenceEnabled = true
     
-     window = UIWindow(frame: UIScreen.main.bounds)
-  
+     _ = contactsController.view
+     _ = settingsController.view
+    
      let mainController = GeneralTabBarController()
-    
      setTabs(mainController: mainController)
-      
-     self.window?.rootViewController = mainController
-     self.window?.makeKeyAndVisible()
-     self.window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    
-    
-    let userDefaults = UserDefaults.standard
-    
-    if userDefaults.bool(forKey: "hasRunBefore") == false {
+     window = UIWindow(frame: UIScreen.main.bounds)
+     window?.rootViewController = mainController
+     window?.makeKeyAndVisible()
+     window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
   
-      do {
-        try Auth.auth().signOut()
-      } catch {}
-      
-      userDefaults.set(true, forKey: "hasRunBefore")
-      userDefaults.synchronize()
-      
-      presentController(with: mainController)
-    } else {
-     presentController(with: mainController)
+    if UserDefaults.standard.bool(forKey: "hasRunBefore") == false {
+      do { try Auth.auth().signOut() } catch {}
+      UserDefaults.standard.set(true, forKey: "hasRunBefore")
+      UserDefaults.standard.synchronize()
     }
     
+    presentOnboardingController(above: mainController)
     setDeaultsForSettings()
     
     return true
   }
   
-  func presentController(with mainController: UITabBarController) {
-    
-    if Auth.auth().currentUser == nil {
-   
-      let destination = OnboardingController()
-      destination.onboardingContainerView.backgroundColor = .white
-      destination.view.backgroundColor = .white
-      mainController.view.backgroundColor = .white
-      let newNavigationController = UINavigationController(rootViewController: destination)
-      newNavigationController.navigationBar.shadowImage = UIImage()
-      newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-      newNavigationController.modalTransitionStyle = .crossDissolve
-      mainController.present(newNavigationController, animated: false, completion: {
-      })
-    }
+  func presentOnboardingController(above controller: UITabBarController) {
+    guard Auth.auth().currentUser == nil else { return }
+    let destination = OnboardingController()
+    let newNavigationController = UINavigationController(rootViewController: destination)
+    newNavigationController.navigationBar.shadowImage = UIImage()
+    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+    newNavigationController.modalTransitionStyle = .crossDissolve
+    controller.present(newNavigationController, animated: false, completion: nil)
   }
   
   let chatsController = ChatsTableViewController()
   let contactsController = ContactsController()
   let settingsController = AccountSettingsController()
   
-  func setTabs(mainController : UITabBarController) {
-    
-    _ = contactsController.view
-    contactsController.title = "Contacts"
-    let contactsNavigationController = UINavigationController(rootViewController: contactsController)
-    
-    if #available(iOS 11.0, *) {
-      contactsNavigationController.navigationBar.prefersLargeTitles = true
-    }
-    
-     chatsController.delegate = mainController as? ManageAppearance
-    _ = chatsController.view
-    chatsController.title = "Chats"
-    let chatsNavigationController = UINavigationController(rootViewController: chatsController)
+  func setTabs(mainController: UITabBarController) {
 
-    if #available(iOS 11.0, *) {
-      chatsNavigationController.navigationBar.prefersLargeTitles = true
-    }
-    
-    _ = settingsController.view
+    contactsController.title = "Contacts"
+    chatsController.title = "Chats"
     settingsController.title = "Settings"
+    chatsController.delegate = mainController as? ManageAppearance
+    
+    let contactsNavigationController = UINavigationController(rootViewController: contactsController)
+    let chatsNavigationController = UINavigationController(rootViewController: chatsController)
     let settingsNavigationController = UINavigationController(rootViewController: settingsController)
 
-   // settingsNavigationController.navigationBar.isTranslucent = false
     if #available(iOS 11.0, *) {
       settingsNavigationController.navigationBar.prefersLargeTitles = true
+      chatsNavigationController.navigationBar.prefersLargeTitles = true
+      contactsNavigationController.navigationBar.prefersLargeTitles = true
     }
     
     let contactsImage =  UIImage(named:"user")
@@ -148,20 +111,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
     
   func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-    print("Firebase registration token: \(fcmToken)")
     setUserNotificationToken(token: fcmToken)
   }
 
   func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-    
-    Messaging.messaging()
-      .setAPNSToken(deviceToken, type: MessagingAPNSTokenType.prod)
-    
-     Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.prod)
-        Messaging.messaging().apnsToken = deviceToken// as Data
-    
-        let token = Messaging.messaging().fcmToken
-        print("FCM token: \(token ?? "")")
+    Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.prod)
+    Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.prod)
+    Messaging.messaging().apnsToken = deviceToken
   }
   
   func setDeaultsForSettings() {

@@ -156,7 +156,7 @@ class UserInfoTableViewController: UITableViewController {
       headerCell.selectionStyle = .none
       
       guard self.user?.thumbnailPhotoURL != nil else { headerCell.icon.image = UIImage(named: "UserpicIcon"); return headerCell }
-      headerCell.icon.sd_setImage(with: URL(string: user!.thumbnailPhotoURL!), placeholderImage: UIImage(named: "UserpicIcon"), options: [], completed: { (image, error, cacheType, url) in
+      headerCell.icon.sd_setImage(with: URL(string: user!.thumbnailPhotoURL!), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
         guard error == nil else { return }
         headerCell.icon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openPhoto)))
       })

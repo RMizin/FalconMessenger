@@ -106,7 +106,7 @@ class EnterPhoneNumberContainerView: UIView {
     
     phoneNumber.delegate = self
    
-   let countryCodeWidth = deviceScreen.width * 0.295
+   let countryCodeWidth = UIScreen.main.bounds.width * 0.295
     
     configureTextViewText()
  

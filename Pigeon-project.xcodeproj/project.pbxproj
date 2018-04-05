@@ -1083,7 +1083,6 @@
 				4B4F45281F32230C00A6FF96 /* Frameworks */,
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				7EC59B7540CDC8D78F177BD4 /* [CP] Embed Pods Frameworks */,
-				085F04C9F8CEBD972C1F68B4 /* [CP] Copy Pods Resources */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
 			);
 			buildRules = (
@@ -1161,21 +1160,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		085F04C9F8CEBD972C1F68B4 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		7EC59B7540CDC8D78F177BD4 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1507,6 +1491,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

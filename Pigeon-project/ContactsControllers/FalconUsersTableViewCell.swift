@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class FalconUsersTableViewCell: UITableViewCell {
 
@@ -76,6 +77,7 @@ class FalconUsersTableViewCell: UITableViewCell {
     super.prepareForReuse()
    
     icon.image = UIImage(named: "UserpicIcon")
+    icon.sd_cancelCurrentImageLoad()
     title.text = ""
     subtitle.text = ""
     title.textColor = ThemeManager.currentTheme().generalTitleColor
