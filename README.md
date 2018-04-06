@@ -74,6 +74,10 @@ Note before last step:<i> if you don't have cocoapods installed on your computer
 ## Compatibility
 Falcon Messenger is written in Swift 4 and requires iOS 10.0 or later.
 
+## Contact me
+If you have an idea regarding implementing new features in the app, you can contact me by e-mail provided below.
+<br>E-mail: falconmessenger.help@gmail.com
+
 
 ## License
 
