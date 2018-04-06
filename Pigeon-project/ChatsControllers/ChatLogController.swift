@@ -82,23 +82,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
 
   
-  func scrollToBottom() {
+  func scrollToBottom(at position: UICollectionViewScrollPosition) {
     if self.messages.count - 1 <= 0 {
       return
     }
     let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
     DispatchQueue.main.async {
-      self.collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
-    }
-  }
-  
-  func scrollToBottomOnNewLine() {
-    if self.messages.count - 1 <= 0 {
-      return
-    }
-    let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-    DispatchQueue.main.async {
-      self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+      self.collectionView?.scrollToItem(at: indexPath, at: position, animated: true)
     }
   }
   
@@ -392,7 +382,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           cell.typingIndicator.animatedImage = nil
           if self.collectionView!.contentOffset.y >= (self.collectionView!.contentSize.height - self.collectionView!.frame.size.height + 200) {
-            self.scrollToBottomOnNewLine()
+            self.scrollToBottom(at: .bottom)
           }
         }
       }, completion: nil)
@@ -961,72 +951,37 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-  
-    if let cell = collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell  {
-      if chatLogAudioPlayer != nil {
-        chatLogAudioPlayer.stop()
-        cell.playerView.resetTimer()
-        cell.playerView.play.isSelected = false
-      }
-    }
-    
-    if let cell = collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell  {
-      if chatLogAudioPlayer != nil {
-        chatLogAudioPlayer.stop()
-        cell.playerView.resetTimer()
-        cell.playerView.play.isSelected = false
-      }
-    }
+    guard let cell = collectionView.cellForItem(at: indexPath) as? BaseVoiceMessageCell, chatLogAudioPlayer != nil else { return }
+    chatLogAudioPlayer.stop()
+    cell.playerView.resetTimer()
+    cell.playerView.play.isSelected = false
   }
     
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     
     let message = messages[indexPath.item]
-    
-    guard let voiceEncodedString = message.voiceEncodedString else  { return }
+    guard let voiceEncodedString = message.voiceEncodedString else { return }
     guard let data = Data(base64Encoded: voiceEncodedString) else { return }
+    guard let cell = collectionView.cellForItem(at: indexPath) as? BaseVoiceMessageCell else { return }
+    let isAlreadyPlaying = chatLogAudioPlayer != nil && chatLogAudioPlayer.isPlaying
     
-    if let cell = collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell  {
-      
-      if chatLogAudioPlayer != nil && chatLogAudioPlayer.isPlaying {
-        chatLogAudioPlayer.stop()
-        cell.playerView.resetTimer()
-        cell.playerView.play.isSelected = false
-        return
-      }
-      
-      do {
-        chatLogAudioPlayer = try AVAudioPlayer(data:  data)
-        chatLogAudioPlayer.prepareToPlay()
-        chatLogAudioPlayer.volume = 1.0
-        chatLogAudioPlayer.play()
-        cell.playerView.runTimer()
-        cell.playerView.play.isSelected = true
-      } catch {
-        chatLogAudioPlayer = nil
-        print(error.localizedDescription)
-      }
+    guard !isAlreadyPlaying else {
+      chatLogAudioPlayer.stop()
+      cell.playerView.resetTimer()
+      cell.playerView.play.isSelected = false
+      return
     }
     
-    if let cell = collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
-      if chatLogAudioPlayer != nil && chatLogAudioPlayer.isPlaying {
-        chatLogAudioPlayer.stop()
-        cell.playerView.resetTimer()
-        cell.playerView.play.isSelected = false
-        return
-      }
-      
-      do {
-        chatLogAudioPlayer = try AVAudioPlayer(data:  data)
-        chatLogAudioPlayer.prepareToPlay()
-        chatLogAudioPlayer.volume = 1.0
-        chatLogAudioPlayer.play()
-        cell.playerView.runTimer()
-        cell.playerView.play.isSelected = true
-      } catch {
-        chatLogAudioPlayer = nil
-        print(error.localizedDescription)
-      }
+    do {
+      chatLogAudioPlayer = try AVAudioPlayer(data:  data)
+      chatLogAudioPlayer.prepareToPlay()
+      chatLogAudioPlayer.volume = 1.0
+      chatLogAudioPlayer.play()
+      cell.playerView.runTimer()
+      cell.playerView.play.isSelected = true
+    } catch {
+      chatLogAudioPlayer = nil
+      print(error.localizedDescription)
     }
   }
   
@@ -1165,17 +1120,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           let properties: [String: AnyObject] = ["voiceEncodedString": bae64string as AnyObject]
           let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "voiceEncodedString": bae64string as AnyObject]
           
-          self.reloadCollectionViewAfterSending(values: values)
-          
+          reloadCollectionViewAfterSending(values: values)
           sendMediaMessageWithProperties(properties, childRef: childRef)
           
           percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
-          self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
-          if percentCompleted >= 0.9999 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-              self.uploadProgressBar.setProgress(0.0, animated: false)
-            })
-          }
+          self.updateProgressBar(percentCompleted: percentCompleted)
         }
         
         if (selectedMedia.phAsset?.mediaType == PHAssetMediaType.image || selectedMedia.phAsset == nil) && selectedMedia.audioObject == nil { //photo
@@ -1186,16 +1135,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageURL) in
             self.sendMessageWithImageUrl(imageURL, image: selectedMedia.object!.asUIImage!, childRef: childRef)
-            
-           percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
-           self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
-            
-            if percentCompleted >= 0.9999 {
-              DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-               self.uploadProgressBar.setProgress(0.0, animated: false)
-              
-              })
-            }
+            percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
+            self.updateProgressBar(percentCompleted: percentCompleted)
           })
         }
         
@@ -1211,24 +1152,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           self.reloadCollectionViewAfterSending(values: valuesForVideo)
           
           uploadToFirebaseStorageUsingVideo(selectedMedia.videoObject!, completion: { (videoURL) in
-            
             self.uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageUrl) in
-              
-              print("\n UPLOAD COMPLETED \n")
-              
+
               let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": selectedMedia.object!.asUIImage?.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage?.size.height as AnyObject, "videoUrl": videoURL as AnyObject]
-              
               self.sendMediaMessageWithProperties(properties, childRef: childRef)
-              
               percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
-              
-              self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
-              
-              if percentCompleted >= 0.9999 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-                  self.uploadProgressBar.setProgress(0.0, animated: false)
-                })
-              }
+              self.updateProgressBar(percentCompleted: percentCompleted)
             })
           })
         }
@@ -1236,10 +1165,21 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
+  fileprivate func updateProgressBar(percentCompleted: CGFloat) {
+    self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
+    if percentCompleted >= 0.9999 {
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+        self.uploadProgressBar.setProgress(0.0, animated: false)
+      })
+    }
+  }
+  
   fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage, childRef: DatabaseReference) {
     let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
     sendMediaMessageWithProperties(properties, childRef: childRef)
   }
+  
+  
   
   func sendMediaMessageWithProperties(_ properties: [String: AnyObject], childRef: DatabaseReference) {
     
@@ -1252,34 +1192,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     var values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
     
     properties.forEach({values[$0] = $1})
-    
-    childRef.updateChildValues(values) { (error, ref) in
-      
-      guard error == nil else { return }
-      
-      let messageId = childRef.key
-      
-      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat, let membersIDs = self.conversation?.chatParticipantsIDs {
-        
-        for memberID in membersIDs {
-          let userMessagesRef = Database.database().reference().child("user-messages").child(memberID).child(toId).child(userMessagesFirebaseFolder)
-          userMessagesRef.updateChildValues([messageId: 1])
-        }
-      } else {
-        
-        let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
-        userMessagesRef.updateChildValues([messageId: 1])
-        
-        let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(userMessagesFirebaseFolder)
-        recipientUserMessagesRef.updateChildValues([messageId: 1])
-      }
-
-      self.incrementBadgeForReciever()
-      self.setupMetadataForSender()
-      self.updateLastMessageForParticipants(messageID: messageId)
-    }
+    updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
   }
-  
+
   fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
     let imageName = UUID().uuidString
     let ref = Storage.storage().reference().child("messageImages").child(imageName)
@@ -1349,9 +1264,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     var values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
     
     properties.forEach({values[$0] = $1})
-    
-    self.reloadCollectionViewAfterSending(values: values)
+    reloadCollectionViewAfterSending(values: values)
+    updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
+  }
   
+  fileprivate func updateConversationsData(childRef: DatabaseReference, values: [String: AnyObject],
+                                           toId: String, fromId: String ) {
+    
     childRef.updateChildValues(values) { (error, ref) in
       
       guard error == nil else { return }

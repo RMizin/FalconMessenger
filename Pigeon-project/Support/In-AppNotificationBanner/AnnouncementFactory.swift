@@ -159,17 +159,21 @@ open class ShoutView: UIView {
           $0.frame.size.width = totalWidth - (Dimensions.imageOffset * 2)
           $0.sizeToFit()
         }
-        
+      
+        let oldInternalHeight = self.internalHeight
         self.internalHeight += self.safeYCoordinate
         self.internalHeight += self.subtitleLabel.frame.height
-
+      
+        if self.internalHeight >= 141.0 {
+          self.internalHeight = oldInternalHeight
+        }
+      
         let textOffsetX: CGFloat = 20
         var textOffsetY:CGFloat = 0
       
-        if #available(iOS 11.0, *) {
-          textOffsetY = 10 + UIApplication.shared.statusBarFrame.height//+ self.safeYCoordinate
-        } else {
-           textOffsetY = UIApplication.shared.isStatusBarHidden ? 10 : 30 + self.safeYCoordinate
+          textOffsetY = UIApplication.shared.isStatusBarHidden ? 10 : 30
+        if DeviceType.iPhoneX {
+          textOffsetY = 10 + UIApplication.shared.statusBarFrame.height
         }
         
         self.titleLabel.frame.origin = CGPoint(x: textOffsetX, y: textOffsetY)

@@ -247,18 +247,18 @@ class ChatsTableViewController: UITableViewController {
   fileprivate var shouldDisableUpdatingIndicator = true
   var groupChatReference: DatabaseReference!
   var groupChatHandle:DatabaseHandle!
-  fileprivate typealias groupChatMetaInfoCompletionHandler = (_ success: Bool, _ dictionary: [String:AnyObject]) -> Void
+  fileprivate typealias GroupChatMetaInfoCompletionHandler = (_ success: Bool, _ dictionary: [String:AnyObject]) -> Void
   
-  fileprivate func groupChatMetaInfo( dictionary: [String:AnyObject], completion: @escaping groupChatMetaInfoCompletionHandler) {
+  fileprivate func groupChatMetaInfo( dictionary: [String:AnyObject], completion: @escaping GroupChatMetaInfoCompletionHandler) {
 
     let conversation = Conversation(dictionary: dictionary)
-    guard let chatID = conversation.chatID else { print("NOID"); return }
+    guard let chatID = conversation.chatID else { return }
     groupChatReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
     if groupChatHandle != nil {
       groupChatReference.removeObserver(withHandle: groupChatHandle)
     }
     groupChatHandle = groupChatReference.observe(.value) { (snapshot) in
-      guard var chatDictionary = snapshot.value as? [String: AnyObject] else {print("not grooooo\(conversation.chatID, conversation.chatName)"); completion(true, dictionary); return }
+      guard var chatDictionary = snapshot.value as? [String: AnyObject] else {completion(true, dictionary); return }
       chatDictionary.updateValue(conversation.pinned as AnyObject, forKey: "pinned")
       chatDictionary.updateValue(conversation.muted as AnyObject, forKey: "muted")
       chatDictionary.updateValue(conversation.badge as AnyObject, forKey: "badge")
@@ -280,7 +280,7 @@ class ChatsTableViewController: UITableViewController {
     currentUserConversationsReference = Database.database().reference().child("user-messages").child(currentUserID)
     currentUserConversationsReference.observeSingleEvent(of: .value) { (snapshot) in
       
-      for _ in 0 ..< snapshot.childrenCount { self.group.enter();print("entering group") }
+      for _ in 0 ..< snapshot.childrenCount { self.group.enter() }
       
       self.group.notify(queue: DispatchQueue.main, execute: {
         self.handleReloadTable()
@@ -318,7 +318,7 @@ class ChatsTableViewController: UITableViewController {
         if self.isGroupAlreadyFinished { self.shouldDisableUpdatingIndicator = false }
         self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updating, activityPriority: .lowMedium, color: ThemeManager.currentTheme().generalTitleColor)
     
-          self.groupChatMetaInfo(dictionary: conversationDictionary, completion: { (isCompleted, dictionary) in
+          self.groupChatMetaInfo(dictionary: conversationDictionary, completion: { (_, dictionary) in
 
             let conversation = Conversation(dictionary: dictionary)
             
@@ -578,8 +578,8 @@ class ChatsTableViewController: UITableViewController {
     return [delete, pin, mute]
   }
   
-  func setupMuteAction(at indexPath: IndexPath) -> UITableViewRowAction  {
-    let mute = UITableViewRowAction(style: .default, title: "Mute") { action, index in
+  func setupMuteAction(at indexPath: IndexPath) -> UITableViewRowAction {
+    let mute = UITableViewRowAction(style: .default, title: "Mute") { _, _ in
       if indexPath.section == 0 {
         if #available(iOS 11.0, *) {} else {
           self.tableView.setEditing(false, animated: true)
@@ -611,7 +611,7 @@ class ChatsTableViewController: UITableViewController {
   }
   
   func setupPinAction(at indexPath: IndexPath) -> UITableViewRowAction {
-    let pin = UITableViewRowAction(style: .default, title: "Pin") { action, index in
+    let pin = UITableViewRowAction(style: .default, title: "Pin") { _, _ in
       if indexPath.section == 0 {
         self.unpinConversation(at: indexPath)
       } else if indexPath.section == 1 {
@@ -660,11 +660,16 @@ class ChatsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
+    
     if indexPath.section == 0 {
-      return configurePinnedCell(for: indexPath)
+      cell.configureCell(for: indexPath, conversations: filteredPinnedConversations)
     } else {
-      return configuredCell(for: indexPath)
+      cell.configureCell(for: indexPath, conversations: filtededConversations)
     }
+    
+    return cell
   }
   
   var chatLogController:ChatLogController? = nil

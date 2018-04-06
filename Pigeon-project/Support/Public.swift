@@ -663,7 +663,6 @@ func dataFromAsset(asset: PHAsset) -> Data? {
   options.resizeMode = .exact
   options.normalizedCropRect = CGRect(x: 0, y: 0, width: 1000, height: 1000)
   manager.requestImageData(for: asset, options: options) { data, _, _, _ in
-    
     finalData = data
   }
   
@@ -688,7 +687,6 @@ public extension UIView {
     animation.autoreverses = true
     animation.byValue = translation ?? defaultTranslation
     layer.add(animation, forKey: "shake")
-    
   }
 }
 
@@ -712,14 +710,13 @@ func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, quality: C
   }
 }
 
-
 private var backgroundView: UIView = {
   let backgroundView = UIView()
   backgroundView.backgroundColor = UIColor.black
   backgroundView.alpha = 0.8
   backgroundView.layer.cornerRadius = 0
   backgroundView.layer.masksToBounds = true
-  backgroundView.frame = CGRect(origin: CGPoint(x: 0 , y: 0), size: CGSize(width: 100, height: 100))
+  //backgroundView.frame = CGRect(origin: CGPoint(x: 0 , y: 0), size: CGSize(width: 100, height: 100))
   
   return backgroundView
 }()
@@ -742,10 +739,13 @@ extension UIImageView {
     
     self.addSubview(backgroundView)
     self.addSubview(activityIndicator)
-    
+    activityIndicator.activityIndicatorViewStyle = .white
     activityIndicator.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
-    backgroundView.center = activityIndicator.center
-
+    backgroundView.translatesAutoresizingMaskIntoConstraints = false
+    backgroundView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+    backgroundView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
+    backgroundView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+    backgroundView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     DispatchQueue.main.async {
       activityIndicator.startAnimating()
     }
@@ -761,8 +761,6 @@ extension UIImageView {
       backgroundView.removeFromSuperview()
   }
 }
-
-
 
 protocol Utilities {}
 

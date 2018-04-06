@@ -64,7 +64,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   var groupAvatarURL = String() {
     didSet {
-      groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()      
+      groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
       groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string:groupAvatarURL), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
         self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
       })
@@ -474,15 +474,23 @@ class GroupAdminControlsTableViewController: UITableViewController {
       }
       
       guard let url = members[indexPath.row].thumbnailPhotoURL else { return cell }
-      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground], completed: { (image, error, cacheType, url) in
+      
+      
+      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage], completed: { (image, error, cacheType, url) in
+        
         guard image != nil else { return }
         guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-          cell.icon.alpha = 1
+          cell.icon.image = image
           return
         }
-        cell.icon.alpha = 0
-        UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
+        
+        UIView.transition(with:  cell.icon,
+                          duration: 0.2,
+                          options: .transitionCrossDissolve,
+                          animations: { cell.icon.image = image },
+                          completion: nil)
       })
+      
       return cell
     }
   }

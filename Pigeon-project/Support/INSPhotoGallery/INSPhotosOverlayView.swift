@@ -231,8 +231,8 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
     
     private func setupDeleteButton() {
         deleteToolbar = UIToolbar()
-      deleteToolbar.backgroundColor = .black
-      deleteToolbar.alpha = 0.8
+        deleteToolbar.backgroundColor = .black
+        deleteToolbar.alpha = 0.8
         deleteToolbar.translatesAutoresizingMaskIntoConstraints = false
        // deleteToolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
        // deleteToolbar.setShadowImage(UIImage(), forToolbarPosition: .any)

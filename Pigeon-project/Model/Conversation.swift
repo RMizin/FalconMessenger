@@ -23,6 +23,40 @@ class Conversation: NSObject {
   var pinned: Bool?
   var muted: Bool?
   
+  func messageText() -> String {
+    
+    let isImageMessage = (lastMessage?.imageUrl != nil || lastMessage?.localImage != nil) && lastMessage?.videoUrl == nil
+    let isVideoMessage = (lastMessage?.imageUrl != nil || lastMessage?.localImage != nil) && lastMessage?.videoUrl != nil
+    let isVoiceMessage = lastMessage?.voiceEncodedString != nil
+    let isTextMessage = lastMessage?.text != nil
+    
+    guard !isImageMessage else { return  MessageSubtitle.image }
+    guard !isVideoMessage else { return MessageSubtitle.video }
+    guard !isVoiceMessage else { return MessageSubtitle.audio }
+    guard !isTextMessage else { return lastMessage?.text ?? "" }
+    
+    return MessageSubtitle.empty
+    
+    
+//    if (lastMessage?.imageUrl != nil || lastMessage?.localImage != nil) && lastMessage?.videoUrl == nil {
+//
+//     // cell.messageLabel.text = MessageSubtitle.image
+//
+//    } else if (lastMessage?.imageUrl != nil || lastMessage?.localImage != nil) && lastMessage?.videoUrl != nil {
+//    //  cell.messageLabel.text = MessageSubtitle.video
+//
+//    } else if lastMessage?.voiceEncodedString != nil {
+//    //  cell.messageLabel.text = MessageSubtitle.audio
+//
+//    } else {
+//      if lastMessage?.text == nil {
+//       // cell.messageLabel.text = "No messages here yet."
+//      } else {
+//      //  cell.messageLabel.text = conversations[indexPath.row].lastMessage?.text
+//      }
+//   return ""
+  }
+  
   init(dictionary: [String: AnyObject]?) {
     super.init()
     
@@ -40,3 +74,31 @@ class Conversation: NSObject {
     muted = dictionary?["muted"] as? Bool
   }
 }
+
+
+/*
+ // last message text
+ if (conversations[indexPath.row].lastMessage?.imageUrl != nil ||
+ conversations[indexPath.row].lastMessage?.localImage != nil) &&
+ conversations[indexPath.row].lastMessage?.videoUrl == nil {
+ 
+ cell.messageLabel.text = MessageSubtitle.image
+ 
+ } else if (conversations[indexPath.row].lastMessage?.imageUrl != nil ||
+ conversations[indexPath.row].lastMessage?.localImage != nil) &&
+ conversations[indexPath.row].lastMessage?.videoUrl != nil {
+ cell.messageLabel.text = MessageSubtitle.video
+ 
+ } else if conversations[indexPath.row].lastMessage?.voiceEncodedString != nil {
+ cell.messageLabel.text = MessageSubtitle.audio
+ 
+ } else {
+ if conversations[indexPath.row].lastMessage?.text == nil {
+ cell.messageLabel.text = "No messages here yet."
+ } else {
+ cell.messageLabel.text = conversations[indexPath.row].lastMessage?.text
+ }
+ }
+ 
+ 
+ */

@@ -265,7 +265,7 @@ extension ChatInputContainerView: UITextViewDelegate {
   
   func textViewDidBeginEditing(_ textView: UITextView) {
     
-    chatLogController?.scrollToBottom()
+    chatLogController?.scrollToBottom(at: .top)
   }
   
   func textViewDidChange(_ textView: UITextView) {
@@ -310,7 +310,7 @@ extension ChatInputContainerView: UITextViewDelegate {
         if chatLogController?.collectionView?.numberOfSections == 2 {
           chatLogController?.scrollToBottomOfTypingIndicator()
         } else {
-          chatLogController?.scrollToBottomOnNewLine()
+          chatLogController?.scrollToBottom(at: .bottom)
         }
       }
     }

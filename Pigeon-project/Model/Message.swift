@@ -13,6 +13,7 @@ struct MessageSubtitle {
   static let video = "Attachment: Video"
   static let image = "Attachment: Image"
   static let audio = "Audio message"
+  static let empty = "No messages here yet."
 }
 
 class Message: NSObject  {
