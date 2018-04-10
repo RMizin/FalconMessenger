@@ -62,7 +62,7 @@ Follow these simple steps:
 3. Go to Firebase and create new project.
 4. Select "Add Firebase to your iOS app" option, type the bundle Identifier & click continue.
 5. Download "GoogleService-Info.plist" file and add to the project. Make sure file name is "GoogleService-Info.plist".
-6. Enable reCaptcha:
+6. Enable reCaptcha:<br>
 	6.1. Go to your GoogleService-Info.plist;<br>
 	6.2. Find the key “REVERSED_CLIENT_ID” and copy its value;<br>
 	6.3. Go to Project/targets/info/URLTypes;<br>
