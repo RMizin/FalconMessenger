@@ -17,9 +17,7 @@ extension UserCell {
     let isPersonalStorage = conversations[indexPath.row].chatID == Auth.auth().currentUser?.uid
     let isConversationMuted = conversations[indexPath.row].muted != nil && conversations[indexPath.row].muted!
     let chatName = isPersonalStorage ? NameConstants.personalStorage : conversations[indexPath.row].chatName
-    
-    let isGroupChatProperty = conversations[indexPath.row].isGroupChat ?? false
-    let isGroupChat = isGroupChatProperty == true
+    let isGroupChat = conversations[indexPath.row].isGroupChat ?? false
     
     var placeHolderImage = isGroupChat ? UIImage(named: "GroupIcon") : UIImage(named: "UserpicIcon")
     placeHolderImage = isPersonalStorage ? UIImage(named: "PersonalStorage") : placeHolderImage
@@ -35,7 +33,7 @@ extension UserCell {
   
     profileImageView.image = placeHolderImage
     
-    if let url = conversations[indexPath.row].chatThumbnailPhotoURL, !isPersonalStorage {
+    if let url = conversations[indexPath.row].chatThumbnailPhotoURL, !isPersonalStorage, url != "" {
       profileImageView.sd_setImage(with: URL(string: url), placeholderImage: placeHolderImage, options:
       [.continueInBackground, .scaleDownLargeImages, .avoidAutoSetImage]) { (image, error, cacheType, url) in
         guard image != nil, cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {

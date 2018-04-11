@@ -21,7 +21,6 @@ class GroupAdminControlsTableViewCell: UITableViewCell {
     return title
   }()
 
-
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
@@ -30,11 +29,18 @@ class GroupAdminControlsTableViewCell: UITableViewCell {
     contentView.layer.cornerRadius = 25
     contentView.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
     contentView.translatesAutoresizingMaskIntoConstraints = false
+
     contentView.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
     contentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
-    contentView.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-    contentView.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
     
+    if #available(iOS 11.0, *) {
+      contentView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
+      contentView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
+    } else {
+      contentView.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+      contentView.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+    }
+   
     contentView.addSubview(title)
     title.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
     title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true

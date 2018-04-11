@@ -140,7 +140,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   fileprivate func setupContainerView() {
  
     groupProfileTableHeaderContainer.name.delegate = self
-    groupProfileTableHeaderContainer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 170)
+    groupProfileTableHeaderContainer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 150)
     groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
     groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
     tableView.tableHeaderView = groupProfileTableHeaderContainer
@@ -211,15 +211,16 @@ class GroupAdminControlsTableViewController: UITableViewController {
           return member.id == snapshot.key }) {
            self.tableView.beginUpdates()
           self.members[userIndex] = user
-          self.tableView.reloadRows(at: [IndexPath(row:userIndex,section:1)], with: .none)
+          self.tableView.reloadRows(at: [IndexPath(row:userIndex,section: 1)], with: .none)
         } else {
           self.tableView.beginUpdates()
           self.members.append(user)
+          
           self.tableView.headerView(forSection: 1)?.textLabel?.text = "\(self.members.count) members"
            self.tableView.headerView(forSection: 1)?.textLabel?.sizeToFit()
           var index = 0
-          if self.members.count-1 >= 0 { index = self.members.count-1 }
-          self.tableView.insertRows(at: [IndexPath(row: index, section:1)], with: .top)
+          if self.members.count-1 >= 0 { index = self.members.count - 1 }
+          self.tableView.insertRows(at: [IndexPath(row: index, section: 1)], with: .fade)
         }
         self.tableView.endUpdates()
       })
@@ -272,7 +273,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       if adminControls.count == 0 {
         return ""
       }
-      return "Group management"
+      return ""
     }
     return "\(members.count) members"
   }
@@ -282,7 +283,14 @@ class GroupAdminControlsTableViewController: UITableViewController {
     if section == 0 {
       return 20
     }
-    return 50
+    return 20
+  }
+  
+  override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    let height: CGFloat = 40
+    let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height))
+    footerView.backgroundColor = UIColor.clear
+    return footerView
   }
   
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {

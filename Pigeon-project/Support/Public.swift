@@ -73,7 +73,6 @@ struct NameConstants {
 }
 
 public let messageStatusRead = "Read"
-//public let messageStatusSent = "Sent"
 public let messageStatusSending = "Sending"
 public let messageStatusDelivered = "Delivered"
 
@@ -92,12 +91,10 @@ let basicTitleForAccessError = "Please Allow Access"
 let noInternetError = "Internet is not available. Please try again later"
 let copyingImageError = "You cannot copy not downloaded image, please wait until downloading finished"
 
-
 let deletionErrorMessage = "There was a problem when deleting. Try again later."
 let cameraNotExistsMessage = "You don't have camera"
 let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
 let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
-
 
 extension String {
   
@@ -157,7 +154,6 @@ extension Array {
     return lo // not found, would be inserted at position lo
   }
 }
-
 
 extension Collection {
   func insertionIndex(of element: Self.Iterator.Element,
@@ -370,21 +366,15 @@ func libraryAccessChecking() -> Bool {
 func cameraAccessChecking() -> Bool  {
   
   if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
-    
     return true
-    
   } else {
-    
     return false
   }
 }
 
-
-
 public let statusOnline = "Online"
 public let userMessagesFirebaseFolder = "userMessages"
 public let messageMetaDataFirebaseFolder = "metaData"
-
 
 func setOnlineStatus()  {
   
@@ -401,7 +391,6 @@ func setOnlineStatus()  {
   }
 }
 
-
 extension UINavigationItem {
   
   func setTitle(title:String, subtitle:String) {
@@ -409,10 +398,8 @@ extension UINavigationItem {
     let one = UILabel()
     one.text = title
     one.textColor = ThemeManager.currentTheme().generalTitleColor
-  //  one.textAlignment = .center
     one.font = UIFont.systemFont(ofSize: 17)
     one.sizeToFit()
-    
     
     let two = UILabel()
     two.text = subtitle
@@ -420,8 +407,6 @@ extension UINavigationItem {
     two.textAlignment = .center
     two.textColor = ThemeManager.currentTheme().generalSubtitleColor
     two.sizeToFit()
-    
-    
     
     let stackView = UIStackView(arrangedSubviews: [one, two])
     stackView.distribution = .equalCentering
@@ -445,7 +430,6 @@ extension UIImage {
   }
 }
 
-
 extension PHAsset {
   
   var originalFilename: String? {
@@ -468,7 +452,6 @@ extension PHAsset {
   }
 }
 
-
 extension Data {
   var asUIImage: UIImage? {
     return UIImage(data: self)
@@ -488,7 +471,6 @@ extension FileManager {
     }
   }
 }
-
 
 public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array<T>{
   var arr = array
@@ -540,36 +522,6 @@ extension UIScrollView {
   }
 }
 
-
-
-//func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage? {
-//  let oldWidth = sourceImage.size.width
-//  let scaleFactor = scaledToWidth / oldWidth
-//
-//  let newHeight = sourceImage.size.height * scaleFactor
-//  let newWidth = oldWidth * scaleFactor
-//
-//  UIGraphicsBeginImageContext(CGSize(width:newWidth, height:newHeight))
-//  sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
-//  let newImage = UIGraphicsGetImageFromCurrentImageContext()
-//  UIGraphicsEndImageContext()
-//  return newImage
-//}
-//
-//func imageWithImageHeight (sourceImage:UIImage, scaledToHeight: CGFloat) -> UIImage {
-//  let oldHeight = sourceImage.size.height
-//  let scaleFactor = scaledToHeight / oldHeight
-//
-//  let newWidth = sourceImage.size.width * scaleFactor
-//  let newHeight = oldHeight * scaleFactor
-//
-//  UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
-//  sourceImage.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
-//  let newImage = UIGraphicsGetImageFromCurrentImageContext()
-//  UIGraphicsEndImageContext()
-//  return newImage!
-//}
-
 func createImageThumbnail (_ image: UIImage) -> UIImage {
   
   let actualHeight:CGFloat = image.size.height
@@ -588,7 +540,6 @@ func createImageThumbnail (_ image: UIImage) -> UIImage {
   
   return UIImage(data: imageData)!
 }
-
 
 func compressImage(image: UIImage) -> Data {
   // Reducing file size to a 10th
@@ -669,7 +620,6 @@ func dataFromAsset(asset: PHAsset) -> Data? {
   return finalData
 }
 
-
 public extension UIView {
   
   func shake(count : Float? = nil,for duration : TimeInterval? = nil,withTranslation translation : Float? = nil) {
@@ -695,18 +645,14 @@ func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, quality: C
   let ref = Storage.storage().reference().child("userProfilePictures").child(imageName)
   
   if let uploadData = UIImageJPEGRepresentation(image, quality) {
-    ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+    ref.putData(uploadData, metadata: nil) { (metadata, error) in
+      guard error == nil else { completion(""); return }
       
-      if error != nil {
-        print("Failed to upload image:", error as Any)
-        completion("")
-        return
-      }
-   
-      if let imageUrl = metadata?.downloadURL()?.absoluteString {
-        completion(imageUrl)
-      }
-    })
+      ref.downloadURL(completion: { (url, error) in
+        guard error == nil, let imageURL = url else { completion(""); return }
+         completion(imageURL.absoluteString)
+      })
+    }
   }
 }
 
@@ -716,7 +662,6 @@ private var backgroundView: UIView = {
   backgroundView.alpha = 0.8
   backgroundView.layer.cornerRadius = 0
   backgroundView.layer.masksToBounds = true
-  //backgroundView.frame = CGRect(origin: CGPoint(x: 0 , y: 0), size: CGSize(width: 100, height: 100))
   
   return backgroundView
 }()
@@ -751,14 +696,13 @@ extension UIImageView {
     }
   }
   
-  
   func hideActivityIndicator() {
     DispatchQueue.main.async {
       activityIndicator.stopAnimating()
     }
     
-      activityIndicator.removeFromSuperview()
-      backgroundView.removeFromSuperview()
+    activityIndicator.removeFromSuperview()
+    backgroundView.removeFromSuperview()
   }
 }
 
@@ -771,7 +715,6 @@ extension NSObject: Utilities {
     case reachableViaWWAN
     case reachableViaWiFi
   }
-  
   
   var currentReachabilityStatus: ReachabilityStatus {
     
@@ -812,6 +755,4 @@ extension NSObject: Utilities {
       return .notReachable
     }
   }
-  
 }
-

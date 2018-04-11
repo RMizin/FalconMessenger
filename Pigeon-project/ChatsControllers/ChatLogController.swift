@@ -1202,8 +1202,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     guard let uploadData = UIImageJPEGRepresentation(image, 1) else { return }
     ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
       guard error == nil else { return }
-      guard let imageUrl = metadata?.downloadURL()?.absoluteString else  { return }
-      completion(imageUrl)
+
+      ref.downloadURL(completion: { (url, error) in
+        guard error == nil, let imageURL = url else { completion(""); return }
+        completion(imageURL.absoluteString)
+      })
     })
   }
   
@@ -1214,8 +1217,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
       guard error == nil else { return }
-      guard let videoUrl = metadata?.downloadURL()?.absoluteString else  { return }
-      completion(videoUrl)
+      ref.downloadURL(completion: { (url, error) in
+        guard error == nil, let videoURL = url else { completion(""); return }
+        completion(videoURL.absoluteString)
+      })
     })
   }
   
