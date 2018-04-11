@@ -61,14 +61,19 @@ Follow these simple steps:
 2. Change the Bundle Identifier to match your domain.
 3. Go to Firebase and create new project.
 4. Select "Add Firebase to your iOS app" option, type the bundle Identifier & click continue.
-
 5. Download "GoogleService-Info.plist" file and add to the project. Make sure file name is "GoogleService-Info.plist".
-6. Go to Firebase Console, select your project, choose "Authentication" from left menu
-7. Select "SIGN-IN METHOD" and enable "Phone" option.
+6. Enable reCaptcha:<br>
+	6.1. Go to your GoogleService-Info.plist;<br>
+	6.2. Find the key “REVERSED_CLIENT_ID” and copy its value;<br>
+	6.3. Go to Project/targets/info/URLTypes;<br>
+	6.4. Paste the Value to URL schemes field;<br>
+	6.5. Select “Editor” in the “Role“ field. <br>
+7. Go to Firebase Console, select your project, choose "Authentication" from left menu
+8. Select "SIGN-IN METHOD" and enable "Phone" option.
 
 Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
-8. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
+9. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
 
 ## Compatibility
