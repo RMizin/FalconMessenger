@@ -317,6 +317,11 @@ class GroupAdminControlsTableViewController: UITableViewController {
     return true
   }
   
+  override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    guard isCurrentUserAdministrator else { return .none }
+    return .delete
+  }
+  
  override  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     if editingStyle == .delete {
       let membersIDs = self.members.map { $0.id ?? "" }
