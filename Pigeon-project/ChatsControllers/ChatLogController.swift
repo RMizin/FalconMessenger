@@ -514,6 +514,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     configureProgressBar()
+    
+    if inputContainerView.inputTextView.isFirstResponder {
+      UIView.performWithoutAnimation {
+        self.inputContainerView.inputTextView.resignFirstResponder()
+      }
+    }
+    
   }
 
   func startCollectionViewAtBottom () { // start chat log at bottom for iOS 10
