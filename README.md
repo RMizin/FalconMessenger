@@ -30,21 +30,20 @@ SIMPLE AUTHENTICATION PROCESS: No emails and passwords anymore. Authenticate wit
 ## User Interface
 ### Day color theme
 <p align="center">
-
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/WelcomeiPhoneX.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ContactsiPhoneX.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ChatsiphoneX.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/ChatLogiPhoneX.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SettingsiPhoneX.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightWelcome.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightContacts.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightChats.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightGroupChat.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightSettings.png" width="171"/>
 </p>
 
 ### Night color theme
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackWelcomeIPhoneX.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackContactsIPhoneX.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackChatsIPhoneX.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackChatLogIPhoneX.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/BlackSettingsIPhoneX.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkWelcome.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkContacts.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkChats.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkGroupChat.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkSettings.png" width="171"/>
 </p> 
 
 
