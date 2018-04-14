@@ -7,7 +7,7 @@
 
 # Falcon Messenger
 
-Falcon Messenger is a simple cloud-based messaging app.
+Falcon Messenger is a fast and beautiful cloud-based messaging app.
 
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="http://www.binpress.com/uploads/store33364/itunes-app-store-logo.png" width="290" height="100" alt="App Store" /></a>
 
@@ -15,23 +15,17 @@ Falcon Messenger is a simple cloud-based messaging app.
 
 ## Features
 
-- Synchronization<br>
-Your messages sync seamlessly across any number of your devices.
+CLOUD-BASED: You won't lose any of your data when you change your mobile phone or reinstall the app. All you need is to re-authenticate with your phone number.
 
-- Cloud-based<br>
-You will not lose any of your data when you change your mobile phone or re-install the app. All you need is to re-authenticate with your phone number.
+SYNCED: Your messages sync seamlessly across any number of your devices.
 
-- Personal cloud storage<br>
-You can store text, photos, videos and voice messages in the cloud, by sending them to your personal storage and get access to your data across all of your devices. 
+GROUP CHATS: Create group chats, and have fun together with your friends, family or even enemies.
 
-- Simple authentication process<br>
-Falcon uses your phone number for authentication. No emails and passwords.
-Also, it makes possible for you to send messages, photos, and videos to people who are in your phone contacts and have Falcon.
+NIGHT MODE: Falcon messenger has a beautiful pure black night mode, which looks especially amazing on iPhone X.
 
-- Night mode<br>
+PERSONAL CLOUD STORAGE: You can store text, photos, videos and voice messages in the cloud, by sending them to your personal storage.
 
-- Group chats<br>
-
+SIMPLE AUTHENTICATION PROCESS: No emails and passwords anymore. Authenticate with your phone number and start using Falcon Messenger within a minute.
 
 ## User Interface
 ### Day color theme
@@ -70,10 +64,31 @@ Follow these simple steps:
 	6.5. Select “Editor” in the “Role“ field. <br>
 7. Go to Firebase Console, select your project, choose "Authentication" from left menu
 8. Select "SIGN-IN METHOD" and enable "Phone" option.
+9. Paste this rules into your "Rules" tab in Database (in Firebase project):
+<br>
 
+	{
+	  "rules": {
+	    ".read": true,
+	    ".write": "auth != null",
+	    
+	    "users": {
+	      ".read": true,
+	      ".write": "auth != null",
+	      ".indexOn": "phoneNumber",
+	    },
+
+	    "messages" : {
+		  ".read": true,
+		  ".write": "auth != null",
+
+	    }
+	  }   
+	}
+  
 Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
-9. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
+10. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
 
 ## Compatibility
