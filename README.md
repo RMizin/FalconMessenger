@@ -64,10 +64,31 @@ Follow these simple steps:
 	6.5. Select “Editor” in the “Role“ field. <br>
 7. Go to Firebase Console, select your project, choose "Authentication" from left menu
 8. Select "SIGN-IN METHOD" and enable "Phone" option.
+9. Paste this rules into your "Rules" tab in Database (in Firebase project):
+<br>
 
+	{
+	  "rules": {
+	    ".read": true,
+	    ".write": "auth != null",
+	    
+	    "users": {
+	      ".read": true,
+	      ".write": "auth != null",
+	      ".indexOn": "phoneNumber",
+	    },
+
+	    "messages" : {
+		  ".read": true,
+		  ".write": "auth != null",
+
+	    }
+	  }   
+	}
+  
 Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
-9. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
+10. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
 
 ## Compatibility
