@@ -83,7 +83,6 @@ extension BaseMessageCell {
             basicErrorAlertWith(title: basicErrorTitleForAlert, message: copyingImageError, controller: controllerToDisplayOn)
             return
           }
-
           UIPasteboard.general.image = cell.messageImageView.image
         } else if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
           UIPasteboard.general.string = cell.textView.text
@@ -98,13 +97,12 @@ extension BaseMessageCell {
             guard let controllerToDisplayOn = self.chatLogController else { return }
             basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerToDisplayOn)
             return
-        }
+      }
 
-        var deletionReference:DatabaseReference!
+      var deletionReference: DatabaseReference!
       if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
-          guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
-       //   deletionReference = Database.database().reference().child("groupChats").child(conversationID).child("userMessages").child(messageID)
-          deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(userMessagesFirebaseFolder).child(messageID)
+        guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
+        deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(userMessagesFirebaseFolder).child(messageID)
         } else {
           deletionReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(userMessagesFirebaseFolder).child(messageID)
         }
@@ -112,9 +110,11 @@ extension BaseMessageCell {
         deletionReference.removeValue(completionBlock: { (error, reference) in
           if error != nil { return }
           let shouldReloadMessageStatus = self.shouldReloadMessageSatus()
+
           self.chatLogController?.collectionView?.performBatchUpdates ({
-            self.chatLogController?.messages.remove(at: indexPath.item)
-            self.chatLogController?.collectionView?.deleteItems(at: [indexPath])
+            guard let freshIndexPath = self.chatLogController?.collectionView?.indexPath(for: self) else { return }
+            self.chatLogController?.messages.remove(at: freshIndexPath.row)
+            self.chatLogController?.collectionView?.deleteItems(at: [freshIndexPath])
             
             if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
               

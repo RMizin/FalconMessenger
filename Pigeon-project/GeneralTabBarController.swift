@@ -44,10 +44,7 @@ class GeneralTabBarController: UITabBarController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
-    /* sometimes on iPhone X if after device rotation if tabbar wasn't visible, tabBar height is not updating, next line fixes this bug */
-    tabBar.sizeToFit()
-    
+ 
     if onceToken == 0 {
       splash.image = ThemeManager.currentTheme().splashImage
       splash.tag = 13
