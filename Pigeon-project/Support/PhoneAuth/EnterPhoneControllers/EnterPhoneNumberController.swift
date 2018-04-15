@@ -97,7 +97,7 @@ class EnterPhoneNumberController: UIViewController {
     let phoneNumberForVerification = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
     
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
-      
+      print("\n Recieved Phone number verification ID: \(verificationID ?? "nil")\n")
       if let error = error {
         basicErrorAlertWith(title: "Error", message: error.localizedDescription + "\nPlease try again later.", controller: self)
         return
