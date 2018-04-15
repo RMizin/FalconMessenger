@@ -49,7 +49,6 @@
 	<string>To select a profile photo or send photo or video via message</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
