@@ -69,6 +69,9 @@
 		4B54195B1FB392570014C4FB /* INSPhotosOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419511FB392560014C4FB /* INSPhotosOverlayView.swift */; };
 		4B54195C1FB392570014C4FB /* INSScalingImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419521FB392570014C4FB /* INSScalingImageView.swift */; };
 		4B54195D1FB392570014C4FB /* UIVIew+INSPhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419531FB392570014C4FB /* UIVIew+INSPhotoViewer.swift */; };
+		4B54EAB02084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54EAAF2084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift */; };
+		4B54EAB22084EDD000BDFA25 /* SplashScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54EAB12084EDD000BDFA25 /* SplashScreenContainer.swift */; };
+		4B54EAB52084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54EAB42084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift */; };
 		4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */; };
 		4B62E5FE2077EC7900546294 /* BaseVoiceMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B62E5FD2077EC7900546294 /* BaseVoiceMessageCell.swift */; };
 		4B63646B1F977AAC00A5D3BF /* UserInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */; };
@@ -251,6 +254,9 @@
 		4B5419511FB392560014C4FB /* INSPhotosOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSPhotosOverlayView.swift; path = Support/INSPhotoGallery/INSPhotosOverlayView.swift; sourceTree = "<group>"; };
 		4B5419521FB392570014C4FB /* INSScalingImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = INSScalingImageView.swift; path = Support/INSPhotoGallery/INSScalingImageView.swift; sourceTree = "<group>"; };
 		4B5419531FB392570014C4FB /* UIVIew+INSPhotoViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIVIew+INSPhotoViewer.swift"; path = "Support/INSPhotoGallery/UIVIew+INSPhotoViewer.swift"; sourceTree = "<group>"; };
+		4B54EAAF2084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SplashScreenContainer+BiometricalControl.swift"; path = "SplashScreenControllers/SplashScreenContainer+BiometricalControl.swift"; sourceTree = "<group>"; };
+		4B54EAB12084EDD000BDFA25 /* SplashScreenContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SplashScreenContainer.swift; path = SplashScreenControllers/SplashScreenContainer.swift; sourceTree = "<group>"; };
+		4B54EAB42084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrivacyAndSecurityTableViewController.swift; path = SettingsControllers/PrivacyAndSecurityTableViewController.swift; sourceTree = "<group>"; };
 		4B56B3661F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+MediaPickerHandlers.swift"; path = "ChatsControllers/ChatLogController+MediaPickerHandlers.swift"; sourceTree = "<group>"; };
 		4B62E5FD2077EC7900546294 /* BaseVoiceMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BaseVoiceMessageCell.swift; path = ChatsControllers/BaseVoiceMessageCell.swift; sourceTree = "<group>"; };
 		4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoTableViewController.swift; path = ChatsControllers/UserInfoTableViewController.swift; sourceTree = "<group>"; };
@@ -468,6 +474,7 @@
 		4B48D30B1F35CA0D0050C797 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				4B54EAB32084F13400BDFA25 /* PrivacyAndSecurity */,
 				4B8D05331F738FBB001735BC /* NotificationsAndSounds */,
 				4BB749FA206E2F210014837E /* ChangeNumber */,
 				4B48D3091F35C9E20050C797 /* Storage */,
@@ -523,8 +530,8 @@
 				4B4F45501F3225F100A6FF96 /* Settings */,
 				4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */,
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
+				4B54EAAE2084E77000BDFA25 /* SplashScreenControllers */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
-				4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */,
 				4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */,
 				4B4F453C1F32230C00A6FF96 /* Info.plist */,
 			);
@@ -586,6 +593,24 @@
 				4B5419531FB392570014C4FB /* UIVIew+INSPhotoViewer.swift */,
 			);
 			name = INSPhotoGallery;
+			sourceTree = "<group>";
+		};
+		4B54EAAE2084E77000BDFA25 /* SplashScreenControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */,
+				4B54EAB12084EDD000BDFA25 /* SplashScreenContainer.swift */,
+				4B54EAAF2084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift */,
+			);
+			name = SplashScreenControllers;
+			sourceTree = "<group>";
+		};
+		4B54EAB32084F13400BDFA25 /* PrivacyAndSecurity */ = {
+			isa = PBXGroup;
+			children = (
+				4B54EAB42084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift */,
+			);
+			name = PrivacyAndSecurity;
 			sourceTree = "<group>";
 		};
 		4B573FCF2052DE4200DB3FB3 /* SelectChatsControllers */ = {
@@ -1236,6 +1261,7 @@
 				4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */,
 				4BAD974A206E349E008ADF6B /* SelectedParticipantsCollectionView.swift in Sources */,
 				4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */,
+				4B54EAB52084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift in Sources */,
 				4B5419571FB392570014C4FB /* INSPhotosInteractionAnimator.swift in Sources */,
 				4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
@@ -1315,6 +1341,7 @@
 				4BB74A15206E311D0014837E /* EnterVerificationContainerView.swift in Sources */,
 				4BE72A71204E9E2D009A22EA /* SelectChatTableViewController.swift in Sources */,
 				4BAD9755206E35FE008ADF6B /* AddGroupMembersController.swift in Sources */,
+				4B54EAB02084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift in Sources */,
 				4BFD07761FB08005003791D7 /* ViewControllerPlaceholder.swift in Sources */,
 				4B2820EC1FE4025600791AB1 /* AnnouncementShowing.swift in Sources */,
 				4BEDE4272067C77400C52EF4 /* InformationMessageCell.swift in Sources */,
@@ -1369,6 +1396,7 @@
 				4BE8BB471FCA98D600EB35FA /* SwiftSiriWaveformView.swift in Sources */,
 				4BB74A12206E311D0014837E /* EnterPhoneNumberContainerView.swift in Sources */,
 				4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */,
+				4B54EAB22084EDD000BDFA25 /* SplashScreenContainer.swift in Sources */,
 				4B2143001F51C72700F7A4B8 /* UICollectionView+Extension.swift in Sources */,
 				4BEDE4292067F54100C52EF4 /* InformationMessageSender.swift in Sources */,
 				4BED6EB11F476A2F004EF2E0 /* ImagePickerAction.swift in Sources */,

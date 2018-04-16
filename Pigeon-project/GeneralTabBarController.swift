@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import LocalAuthentication
 
 enum tabs: Int {
   case contacts = 0
@@ -19,11 +20,11 @@ class GeneralTabBarController: UITabBarController {
   
   var onceToken = 0
   
-  let splash: UIImageView  = {
-    let splash = UIImageView()
-    splash.translatesAutoresizingMaskIntoConstraints = false
+  let splashContainer: SplashScreenContainer = {
+    let splashContainer = SplashScreenContainer()
+    splashContainer.translatesAutoresizingMaskIntoConstraints = false
     
-    return splash
+    return splashContainer
   }()
   
   override func viewDidLoad() {
@@ -46,22 +47,26 @@ class GeneralTabBarController: UITabBarController {
     super.viewWillAppear(animated)
  
     if onceToken == 0 {
-      splash.image = ThemeManager.currentTheme().splashImage
-      splash.tag = 13
-      view.addSubview(splash)
-      splash.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-      splash.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-      splash.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-      splash.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+      view.addSubview(splashContainer)
+      splashContainer.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+      splashContainer.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+      splashContainer.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+      splashContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
+    
     onceToken = 1
   }
 }
 
 extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool) {
+    let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
     if state {
-      splash.removeFromSuperview()
+      if isBiometricalAuthEnabled {
+        splashContainer.authenticationWithTouchID()
+      } else {
+        self.splashContainer.showSecuredData()
+      }
     }
   }
 }

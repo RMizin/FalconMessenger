@@ -18,6 +18,7 @@ class AccountSettingsController: UITableViewController {
   let accountSettingsCellId = "userProfileCell"
 
   var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and sounds" ),
+                      ( icon: UIImage(named: "Privacy") , title: "Privacy and security" ),
                       ( icon: UIImage(named: "ChangeNumber") , title: "Change number"),
                       ( icon: UIImage(named: "Storage") , title: "Data and storage")]
   
@@ -281,6 +282,12 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       }
       
       if indexPath.row == 1 {
+        let destination = PrivacyAndSecurityTableViewController()
+        destination.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(destination, animated: true)
+      }
+      
+      if indexPath.row == 2 {
          AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         let controller = ChangePhoneNumberController()
         let destination = UINavigationController(rootViewController: controller)
@@ -289,7 +296,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
         self.present(destination, animated: true, completion: nil)
       }
       
-      if indexPath.row == 2 {
+      if indexPath.row == 3 {
         let destination = StorageTableViewController()
         destination.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(destination, animated: true)

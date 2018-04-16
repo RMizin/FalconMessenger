@@ -133,6 +133,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     if UserDefaults.standard.object(forKey: "In-AppVibration") == nil {
       UserDefaults.standard.set(true, forKey: "In-AppVibration")
     }
+    
+    if UserDefaults.standard.object(forKey: "BiometricalAuth") == nil {
+      UserDefaults.standard.set(false, forKey: "BiometricalAuth")
+    }
   }
   
   var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
