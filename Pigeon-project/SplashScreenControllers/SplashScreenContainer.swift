@@ -23,9 +23,9 @@ class SplashScreenContainer: UIView {
   
   let localAuthenticationContext = LAContext()
   
-  var bannersState = Bool()
-  var soundsState = Bool()
-  var vibrationState = Bool()
+  var bannersState: Bool!
+  var soundsState: Bool!
+  var vibrationState: Bool!
   var notificationsDisabledAlready = false
   
   var viewForSatausbarSafeArea: UIView = {

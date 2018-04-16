@@ -31,6 +31,7 @@ extension SplashScreenContainer {
   }
   
   func restoreNotificationsState() {
+    guard bannersState != nil, soundsState != nil, vibrationState != nil else { return }
     UserDefaults.standard.set(bannersState, forKey: "In-AppNotifications")
     UserDefaults.standard.set(soundsState, forKey: "In-AppSounds")
     UserDefaults.standard.set(vibrationState, forKey: "In-AppVibration")
