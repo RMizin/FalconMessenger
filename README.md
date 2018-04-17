@@ -27,6 +27,8 @@ PERSONAL CLOUD STORAGE: You can store text, photos, videos and voice messages in
 
 SIMPLE AUTHENTICATION PROCESS: No emails and passwords anymore. Authenticate with your phone number and start using Falcon Messenger within a minute.
 
+BIOMETRICS SUPPORT: Keep your conversations away from unwanted eyes by using your Touch ID, Face ID or Passcode to unlock Falcon Messenger.
+
 ## User Interface
 ### Day color theme
 <p align="center">
@@ -100,6 +102,9 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
 
+A few key points:
+- You cannot copy this project and publish to the app store as your own.
+- Falcon Messenger project's code cannot be used in a proprietary program. Products in which you use "Falcon Messenger” project’s code, must also be open-source and under the same(GPL v3) license.
 
 ## Contact me
 
