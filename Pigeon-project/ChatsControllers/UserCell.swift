@@ -88,7 +88,7 @@ class UserCell: UITableViewCell {
     let badgeLabel = UILabel()
     badgeLabel.translatesAutoresizingMaskIntoConstraints = false
     badgeLabel.backgroundColor = FalconPalette.defaultBlue
-    badgeLabel.layer.cornerRadius = 7
+    badgeLabel.layer.cornerRadius = 10
     badgeLabel.text = "1"
     badgeLabel.isHidden = true
     badgeLabel.textColor = .white

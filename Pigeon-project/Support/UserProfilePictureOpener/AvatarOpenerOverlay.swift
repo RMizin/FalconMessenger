@@ -28,10 +28,21 @@ class AvatarOpenerOverlay: UIView {
     return viewForSatausbarSafeArea
   }()
   
+  var viewForBottomSafeArea: UIView = {
+    var viewForBottomSafeArea = UIView()
+    viewForBottomSafeArea.backgroundColor = UIColor.black
+    viewForBottomSafeArea.alpha = 0.8
+    viewForBottomSafeArea.translatesAutoresizingMaskIntoConstraints = false
+    
+    return viewForBottomSafeArea
+  }()
+  
   var navigationBar: UINavigationBar = {
     var navigationBar = UINavigationBar()
     navigationBar.alpha = 0.8
-    navigationBar.barStyle = .blackTranslucent
+    navigationBar.barStyle = .black
+    navigationBar.isTranslucent = false
+    navigationBar.clipsToBounds = true
     navigationBar.barTintColor = .black
     navigationBar.translatesAutoresizingMaskIntoConstraints = false
     
@@ -42,6 +53,10 @@ class AvatarOpenerOverlay: UIView {
     var toolbar = UIToolbar()
     toolbar.alpha = 0.8
     toolbar.barTintColor = .black
+    toolbar.barStyle = .black
+    toolbar.isTranslucent = false
+    toolbar.clipsToBounds = true
+    toolbar.sizeToFit()
     toolbar.translatesAutoresizingMaskIntoConstraints = false
     
     return toolbar
@@ -66,10 +81,11 @@ class AvatarOpenerOverlay: UIView {
     addSubview(navigationBar)
     addSubview(toolbar)
     addSubview(viewForSatausbarSafeArea)
+    addSubview(viewForBottomSafeArea)
     
     toolbar.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
     toolbar.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-    toolbar.heightAnchor.constraint(equalToConstant: 49).isActive = true
+    toolbar.heightAnchor.constraint(equalToConstant: 44).isActive = true
     
     if #available(iOS 11.0, *) {
       toolbar.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
@@ -87,6 +103,11 @@ class AvatarOpenerOverlay: UIView {
     viewForSatausbarSafeArea.bottomAnchor.constraint(equalTo: navigationBar.topAnchor).isActive = true
     viewForSatausbarSafeArea.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
     viewForSatausbarSafeArea.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+    
+    viewForBottomSafeArea.topAnchor.constraint(equalTo: toolbar.bottomAnchor).isActive = true
+    viewForBottomSafeArea.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    viewForBottomSafeArea.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+    viewForBottomSafeArea.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     
     configureNavigationBar()
   }

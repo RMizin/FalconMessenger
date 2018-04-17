@@ -20,13 +20,10 @@ enum BiometricType: Int {
 class SplashScreenContainer: UIView {
 
   var navigationItem = UINavigationItem(title: AvatarOverlayTitle.user.rawValue)
-  
   let localAuthenticationContext = LAContext()
-  
   var bannersState: Bool!
   var soundsState: Bool!
   var vibrationState: Bool!
-  var notificationsDisabledAlready = false
   
   var viewForSatausbarSafeArea: UIView = {
     var viewForSatausbarSafeArea = UIView()
@@ -51,7 +48,6 @@ class SplashScreenContainer: UIView {
     addSubview(viewForSatausbarSafeArea)
     doesDeviceHaveBiometrics()
 
-    
     if #available(iOS 11.0, *) {
       navigationBar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
     } else {
@@ -72,9 +68,7 @@ class SplashScreenContainer: UIView {
     super.init(coder: aDecoder)!
   }
   
-  
   func doesDeviceHaveBiometrics() {
- 
     let type = SplashScreenContainer.biometricType()
     UserDefaults.standard.set(type.rawValue, forKey: "biometricType")
   }
@@ -99,9 +93,7 @@ class SplashScreenContainer: UIView {
   func configureSplashForBiometrics() {
     
     var title = ""
-    
     var image = UIImage()
-    
     let biometricType = SplashScreenContainer.biometricType()
 
     switch biometricType {
@@ -142,7 +134,7 @@ class SplashScreenContainer: UIView {
     biometricsImageView.widthAnchor.constraint(equalToConstant: 200).isActive = true
     
     biometricsImageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-    biometricsImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -50).isActive = true
+    biometricsImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -25).isActive = true
     
     biometricsButton.topAnchor.constraint(equalTo: biometricsImageView.bottomAnchor, constant: 10).isActive = true
     biometricsButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

@@ -37,9 +37,14 @@ class EnterVerificationContainerView: UIView {
     verificationCode.translatesAutoresizingMaskIntoConstraints = false
     verificationCode.textAlignment = .center
     verificationCode.keyboardType = .numberPad
-    verificationCode.placeholder = "Code"
+    verificationCode.textColor = ThemeManager.currentTheme().generalTitleColor
     verificationCode.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
-    verificationCode.borderStyle = .roundedRect
+    verificationCode.backgroundColor = .clear
+    verificationCode.layer.cornerRadius = 25
+    verificationCode.layer.borderWidth = 1
+    verificationCode.attributedPlaceholder = NSAttributedString(string: "Code", attributes: [NSAttributedStringKey.foregroundColor:
+      ThemeManager.currentTheme().generalSubtitleColor])
+    verificationCode.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
     
     return verificationCode
   }()

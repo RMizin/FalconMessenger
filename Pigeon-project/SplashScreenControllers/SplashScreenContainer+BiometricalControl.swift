@@ -19,15 +19,13 @@ extension SplashScreenContainer {
   }
   
   func temporaryDisableNotifications() {
-    guard notificationsDisabledAlready == false else { return }
-    
+    guard bannersState == nil, soundsState == nil, vibrationState == nil else { return }
     bannersState = UserDefaults.standard.bool(forKey: "In-AppNotifications")
     soundsState = UserDefaults.standard.bool(forKey: "In-AppSounds")
     vibrationState = UserDefaults.standard.bool(forKey: "In-AppVibration")
     UserDefaults.standard.set(false, forKey: "In-AppNotifications")
     UserDefaults.standard.set(false, forKey: "In-AppSounds")
     UserDefaults.standard.set(false, forKey: "In-AppVibration")
-    notificationsDisabledAlready = true
   }
   
   func restoreNotificationsState() {

@@ -59,6 +59,7 @@ class EnterPhoneNumberController: UIViewController {
   @objc func openCountryCodesList() {
     let picker = SelectCountryCodeController()
     picker.delegate = self
+    phoneNumberContainerView.phoneNumber.resignFirstResponder()
     navigationController?.pushViewController(picker, animated: true)
   }
   

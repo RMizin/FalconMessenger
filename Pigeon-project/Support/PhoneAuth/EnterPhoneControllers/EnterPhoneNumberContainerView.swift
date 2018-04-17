@@ -15,9 +15,10 @@ class EnterPhoneNumberContainerView: UIView {
     let title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
     title.textAlignment = .center
-    title.text = "Your phone"
+    title.text = "Phone number"
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     title.font = UIFont.systemFont(ofSize: 32)
+    title.sizeToFit()
     
     return title
   }()
@@ -26,10 +27,10 @@ class EnterPhoneNumberContainerView: UIView {
     let instructions = UILabel()
     instructions.translatesAutoresizingMaskIntoConstraints = false
     instructions.textAlignment = .center
-  
     instructions.numberOfLines = 2
     instructions.textColor = ThemeManager.currentTheme().generalTitleColor
-    instructions.font = UIFont.systemFont(ofSize: 17)
+    instructions.font = UIFont.systemFont(ofSize: 18)
+    instructions.sizeToFit()
 
     return instructions
   }()
@@ -37,14 +38,15 @@ class EnterPhoneNumberContainerView: UIView {
   let selectCountry: UIButton = {
     let selectCountry = UIButton()
     selectCountry.translatesAutoresizingMaskIntoConstraints = false
-    selectCountry.setBackgroundImage(ThemeManager.currentTheme().enterPhoneNumberBackground, for: .normal)
-    selectCountry.setBackgroundImage(ThemeManager.currentTheme().enterPhoneNumberBackgroundSelected, for: .highlighted)
     selectCountry.setTitle("Ukraine", for: .normal)
     selectCountry.setTitleColor(ThemeManager.currentTheme().generalTitleColor, for: .normal)
-    selectCountry.contentHorizontalAlignment = .left
+    selectCountry.contentHorizontalAlignment = .center
     selectCountry.contentVerticalAlignment = .center
-    selectCountry.titleEdgeInsets = UIEdgeInsetsMake(-10, 10.0, 0.0, 0.0)
-    selectCountry.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+    selectCountry.titleLabel?.sizeToFit()
+    selectCountry.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
+    selectCountry.layer.cornerRadius = 25
+    selectCountry.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0.0, 10.0)
+    selectCountry.titleLabel?.font = UIFont.systemFont(ofSize: 18)
     selectCountry.addTarget(self, action: #selector(EnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
     
     return selectCountry
@@ -56,30 +58,26 @@ class EnterPhoneNumberContainerView: UIView {
     countryCode.text = "+380"
     countryCode.textAlignment = .center
     countryCode.textColor = ThemeManager.currentTheme().generalTitleColor
-    countryCode.font = UIFont.systemFont(ofSize: 20)
+    countryCode.font = UIFont.systemFont(ofSize: 18)
+    countryCode.sizeToFit()
+   
     return countryCode
   }()
   
   let phoneNumber: UITextField = {
     let phoneNumber = UITextField()
-    phoneNumber.font = UIFont.systemFont(ofSize: 20)
+    phoneNumber.font = UIFont.systemFont(ofSize: 18)
     phoneNumber.translatesAutoresizingMaskIntoConstraints = false
     phoneNumber.textAlignment = .center
     phoneNumber.keyboardType = .numberPad
     phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     phoneNumber.textColor = ThemeManager.currentTheme().generalTitleColor
     phoneNumber.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
+    phoneNumber.addDoneButtonOnKeyboard()
     
     return phoneNumber
   }()
-  
-  let backgroundFrame: UIImageView = {
-    let backgroundFrame = UIImageView()
-    backgroundFrame.translatesAutoresizingMaskIntoConstraints = false
-    backgroundFrame.image = UIImage(named: "AuthCountryBackground")
-    return backgroundFrame
-  }()
-  
+
   let termsAndPrivacy: UITextView = {
     let termsAndPrivacy = UITextView()
     termsAndPrivacy.translatesAutoresizingMaskIntoConstraints = false
@@ -88,10 +86,22 @@ class EnterPhoneNumberContainerView: UIView {
     termsAndPrivacy.textColor = ThemeManager.currentTheme().generalTitleColor
     termsAndPrivacy.dataDetectorTypes = .all
     termsAndPrivacy.isScrollEnabled = false
+    termsAndPrivacy.textContainerInset.top = 0
+    termsAndPrivacy.sizeToFit()
     
     return termsAndPrivacy
   }()
+  
+  var phoneContainer: UIView = {
+    var phoneContainer = UIView()
+    phoneContainer.translatesAutoresizingMaskIntoConstraints = false
+    phoneContainer.layer.cornerRadius = 25
+    phoneContainer.layer.borderWidth = 1
+    phoneContainer.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
 
+    return phoneContainer
+  }()
+  
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -99,53 +109,51 @@ class EnterPhoneNumberContainerView: UIView {
     addSubview(title)
     addSubview(instructions)
     addSubview(selectCountry)
-    addSubview(countryCode)
-    addSubview(phoneNumber)
-    addSubview(backgroundFrame)
     addSubview(termsAndPrivacy)
-    
-    phoneNumber.delegate = self
+    addSubview(phoneContainer)
+    phoneContainer.addSubview(countryCode)
+    phoneContainer.addSubview(phoneNumber)
    
-   let countryCodeWidth = UIScreen.main.bounds.width * 0.295
-    
+    phoneNumber.delegate = self
     configureTextViewText()
  
+    let leftConstant: CGFloat = 10
+    let rightConstant: CGFloat = -10
+    let heightConstant: CGFloat = 50
+    let spacingConstant: CGFloat = 20
+    
     NSLayoutConstraint.activate([
       
-      title.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-      title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-      title.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-      title.heightAnchor.constraint(equalToConstant: 70),
+      title.topAnchor.constraint(equalTo: topAnchor, constant: spacingConstant),
+      title.rightAnchor.constraint(equalTo: rightAnchor, constant: rightConstant),
+      title.leftAnchor.constraint(equalTo: leftAnchor, constant: leftConstant),
       
-      instructions.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 0),
-      instructions.leadingAnchor.constraint(equalTo: title.leadingAnchor, constant: 0),
-      instructions.trailingAnchor.constraint(equalTo: title.trailingAnchor, constant: 0),
-      instructions.heightAnchor.constraint(equalToConstant: 45),
+      instructions.topAnchor.constraint(equalTo: title.bottomAnchor, constant: spacingConstant),
+      instructions.rightAnchor.constraint(equalTo: title.rightAnchor),
+      instructions.leftAnchor.constraint(equalTo: title.leftAnchor),
       
-      selectCountry.topAnchor.constraint(equalTo: instructions.bottomAnchor, constant: 0),
-      selectCountry.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-      selectCountry.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-      selectCountry.heightAnchor.constraint(equalToConstant: 70),
+      selectCountry.topAnchor.constraint(equalTo: instructions.bottomAnchor, constant: spacingConstant),
+      selectCountry.rightAnchor.constraint(equalTo: title.rightAnchor),
+      selectCountry.leftAnchor.constraint(equalTo: title.leftAnchor),
+      selectCountry.heightAnchor.constraint(equalToConstant: heightConstant),
       
-      backgroundFrame.topAnchor.constraint(equalTo: selectCountry.bottomAnchor, constant: -8),
-      backgroundFrame.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-      backgroundFrame.trailingAnchor.constraint(equalTo: selectCountry.trailingAnchor, constant: 0),
-      backgroundFrame.heightAnchor.constraint(equalToConstant: 50),
+      phoneContainer.topAnchor.constraint(equalTo: selectCountry.bottomAnchor, constant: spacingConstant),
+      phoneContainer.rightAnchor.constraint(equalTo: title.rightAnchor),
+      phoneContainer.leftAnchor.constraint(equalTo: title.leftAnchor),
+      phoneContainer.heightAnchor.constraint(equalToConstant: heightConstant),
       
-      countryCode.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-      countryCode.centerYAnchor.constraint(equalTo: backgroundFrame.centerYAnchor, constant: 0),
-      countryCode.widthAnchor.constraint(equalToConstant: countryCodeWidth),
-      countryCode.heightAnchor.constraint(equalTo: backgroundFrame.heightAnchor, constant: 0),
+      countryCode.leftAnchor.constraint(equalTo: phoneContainer.leftAnchor, constant: leftConstant),
+      countryCode.centerYAnchor.constraint(equalTo: phoneContainer.centerYAnchor),
+      countryCode.heightAnchor.constraint(equalTo: phoneContainer.heightAnchor),
+    
+      phoneNumber.rightAnchor.constraint(equalTo: phoneContainer.rightAnchor, constant: rightConstant),
+      phoneNumber.leftAnchor.constraint(equalTo: countryCode.rightAnchor, constant: leftConstant),
+      phoneNumber.centerYAnchor.constraint(equalTo: phoneContainer.centerYAnchor),
+      phoneNumber.heightAnchor.constraint(equalTo: phoneContainer.heightAnchor),
       
-      phoneNumber.leadingAnchor.constraint(equalTo: countryCode.trailingAnchor, constant: 2),
-      phoneNumber.trailingAnchor.constraint(equalTo: backgroundFrame.trailingAnchor, constant: 0),
-      phoneNumber.centerYAnchor.constraint(equalTo: backgroundFrame.centerYAnchor, constant: 0),
-      phoneNumber.heightAnchor.constraint(equalTo: backgroundFrame.heightAnchor, constant: 0),
-      
-      termsAndPrivacy.topAnchor.constraint(equalTo: phoneNumber.bottomAnchor, constant: 10),
-      termsAndPrivacy.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
-      termsAndPrivacy.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
-      termsAndPrivacy.heightAnchor.constraint(equalToConstant: 60)
+      termsAndPrivacy.topAnchor.constraint(equalTo: phoneContainer.bottomAnchor, constant: 15),
+      termsAndPrivacy.rightAnchor.constraint(equalTo: title.rightAnchor),
+      termsAndPrivacy.leftAnchor.constraint(equalTo: title.leftAnchor)
     ])
   }
   
