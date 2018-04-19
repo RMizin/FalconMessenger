@@ -1,8 +1,7 @@
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/FalconMessenger/Assets.xcassets/roundedPigeon.imageset/roundedPigeon%402x.png" width="310"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/FalconMessenger/Assets.xcassets/Other/roundedPigeon.imageset/roundedPigeon%403x.png?token=ASVYwuMkKjv2WoUi7nO-gByCuUzU08ukks5a4X0zwA%3D%3D" width="310"/>
 </p> 
-
 
 
 # Falcon Messenger
