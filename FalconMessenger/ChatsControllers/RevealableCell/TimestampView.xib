@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="100" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" id="pQO-fj-agS" customClass="TimestampView" customModule="Pigeon_project" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="67" height="28"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="12:00" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxG-3r-Lcq">
+                    <rect key="frame" x="0.0" y="0.0" width="55" height="28"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                    <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="OxG-3r-Lcq" secondAttribute="bottom" constant="5" id="97x-V5-6RB"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="leading" secondItem="pQO-fj-agS" secondAttribute="leading" id="LXp-Tz-n9F"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="centerY" secondItem="pQO-fj-agS" secondAttribute="centerY" id="OHc-PJ-Zcl"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="top" secondItem="pQO-fj-agS" secondAttribute="top" constant="5" id="Pb4-RT-Ddc"/>
+                <constraint firstAttribute="trailing" secondItem="OxG-3r-Lcq" secondAttribute="trailing" constant="12" id="Ube-XS-ZVG"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="leading" secondItem="pQO-fj-agS" secondAttribute="leading" constant="5" id="WgF-6x-4Ot"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="top" secondItem="pQO-fj-agS" secondAttribute="top" id="hGT-uQ-GQn"/>
+                <constraint firstItem="OxG-3r-Lcq" firstAttribute="leading" secondItem="pQO-fj-agS" secondAttribute="leading" id="hVu-mn-iJL"/>
+                <constraint firstAttribute="bottom" secondItem="OxG-3r-Lcq" secondAttribute="bottom" id="i0b-VY-NEw"/>
+                <constraint firstAttribute="trailing" secondItem="OxG-3r-Lcq" secondAttribute="trailing" constant="5" id="qAG-Zy-1fp"/>
+                <constraint firstAttribute="trailing" secondItem="OxG-3r-Lcq" secondAttribute="trailing" constant="5" id="wdC-LO-G3W"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="width">
+                    <real key="value" value="67"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="97x-V5-6RB"/>
+                    <exclude reference="Pb4-RT-Ddc"/>
+                    <exclude reference="WgF-6x-4Ot"/>
+                    <exclude reference="qAG-Zy-1fp"/>
+                    <exclude reference="wdC-LO-G3W"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="titleLabel" destination="OxG-3r-Lcq" id="8Le-ag-aB9"/>
+            </connections>
+            <point key="canvasLocation" x="610" y="547"/>
+        </view>
+    </objects>
+</document>
