@@ -172,10 +172,8 @@ extension GroupProfileTableViewController {
   
     chatCreatingGroup.enter()
     chatCreatingGroup.enter()
-   // chatCreatingGroup.enter()
     createGroupNode(reference: groupChatsReference, childValues: childValues, noImagesToUpload: chatImage == nil)
     uploadAvatar(chatImage: chatImage, reference: groupChatsReference)
-  //  connectMembersToGroup(memberIDs: membersIDs.0, chatID: chatID)
     
     chatCreatingGroup.notify(queue: DispatchQueue.main, execute: {
       self.hideActivityIndicator()
@@ -217,9 +215,7 @@ extension GroupProfileTableViewController {
     guard let image = chatImage else { self.chatCreatingGroup.leave(); return }
     let thumbnailImage = createImageThumbnail(image)
     var images = [(image: UIImage, quality: CGFloat, key: String)]()
-    let compressedImageData = compressImage(image: image)
-    let compressedImage = UIImage(data: compressedImageData)
-    images.append((image: compressedImage!, quality: 0.5, key: "chatOriginalPhotoURL"))
+    images.append((image: image, quality: 0.5, key: "chatOriginalPhotoURL"))
     images.append((image: thumbnailImage, quality: 1, key: "chatThumbnailPhotoURL"))
     let photoUpdatingGroup = DispatchGroup()
     for _ in images { photoUpdatingGroup.enter() }
@@ -236,26 +232,6 @@ extension GroupProfileTableViewController {
       }
     }
   }
-  /*
-  func connectMembersToGroup(memberIDs: [String], chatID: String) {
-    let connectingMembersGroup = DispatchGroup()
-    for _ in memberIDs {
-      connectingMembersGroup.enter()
-    }
-    connectingMembersGroup.notify(queue: DispatchQueue.main, execute: {
-      self.chatCreatingGroup.leave()
-    })
-    
-    
-    for memberID in memberIDs {
-      let userReference = Database.database().reference().child("user-messages").child(memberID).child(chatID).child(messageMetaDataFirebaseFolder)
-      let values:[String : Any] = ["isGroupChat": true]
-      userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
-        connectingMembersGroup.leave()
-      })
-    }
-    
-  }*/
   
   func createGroupNode(reference: DatabaseReference, childValues: [String: Any], noImagesToUpload: Bool) {
     showActivityIndicator()

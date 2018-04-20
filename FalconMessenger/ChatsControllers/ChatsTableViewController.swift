@@ -270,6 +270,64 @@ class ChatsTableViewController: UITableViewController {
     }
   }
   
+//  fileprivate func observersForTypingIndicators() {
+//    for conversation in conversations {
+//      guard let chatID = conversation.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
+//        let reff = Database.database().reference().child("user-messages").child(chatID).child(currentUserID)
+//      reff.observe(.childAdded) { (snapshot) in
+//        guard snapshot.exists() else { return }
+//        print("SOMETHING ADDED\(snapshot.value) ")
+//      }
+//
+//      reff.observe(.childRemoved) { (snapshot) in
+//        print("SOMETHING REMOVED")
+//      }
+//    }
+//  }
+  
+//  var typingIndicatorReference: DatabaseReference!
+//  func observeTypingIndicator (conversation: Conversation?) {
+//    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
+//    let typingIndicatorDatabaseID = "typingIndicator"
+//    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+//      let indicatorRemovingReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID).child(currentUserID)
+//      indicatorRemovingReference.onDisconnectRemoveValue()
+//      typingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
+//      typingIndicatorReference.observe(.value, with: { (snapshot) in
+//
+//        guard let dictionary = snapshot.value as? [String:AnyObject], let firstKey = dictionary.first?.key else {
+//        //  self.handleTypingIndicatorAppearance(isEnabled: false)
+//             print("NOT TYPING\(conversation?.chatName)")
+//          return
+//        }
+//
+//        if firstKey == currentUserID && dictionary.count == 1 {
+//         // self.handleTypingIndicatorAppearance(isEnabled: false)
+//             print("NOT TYPING\(conversation?.chatName)")
+//          return
+//        }
+//
+//        //self.handleTypingIndicatorAppearance(isEnabled: true)
+//           print("TYPING\(conversation?.chatName)")
+//      })
+//
+//    } else {
+//      let indicatorRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
+//      indicatorRemovingReference.onDisconnectRemoveValue()
+//      typingIndicatorReference = Database.database().reference().child("user-messages").child(conversationID).child(currentUserID).child(typingIndicatorDatabaseID).child(conversationID)
+//      typingIndicatorReference.onDisconnectRemoveValue()
+//      typingIndicatorReference.observe(.value, with: { (isTyping) in
+//        guard let isParticipantTyping = isTyping.value! as? Bool, isParticipantTyping else {
+//          print("NOT TYPING\(conversation?.chatName)")
+//         // self.handleTypingIndicatorAppearance(isEnabled: false)
+//          return
+//        }
+//           print("TYPING\(conversation?.chatName)")
+//       // self.handleTypingIndicatorAppearance(isEnabled: true)
+//      })
+//    }
+//  }
+  
  fileprivate func fetchConversations() {
   
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
@@ -324,9 +382,11 @@ class ChatsTableViewController: UITableViewController {
             
             guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
               guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
+              //  self.observeTypingIndicator(conversation: conversation)
                 self.updateConversations(with: conversation, isGroupChat: false, notificationAtTheEnd: false)
                 return
               }
+            //  self.observeTypingIndicator(conversation: conversation)
               self.updateConversations(with: conversation, isGroupChat: true, notificationAtTheEnd: false)
               return
             }
@@ -340,10 +400,11 @@ class ChatsTableViewController: UITableViewController {
               conversation.lastMessage = message
               
               guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
+              //  self.observeTypingIndicator(conversation: conversation)
                 self.updateConversations(with: conversation, isGroupChat: false, notificationAtTheEnd: true)
                 return
               }
-              
+             // self.observeTypingIndicator(conversation: conversation)
               self.updateConversations(with: conversation, isGroupChat: true, notificationAtTheEnd: true)
             })
           })

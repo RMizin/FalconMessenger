@@ -757,9 +757,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   lazy var inputBlockerContainerView: InputBlockerContainerView = {
     var inputBlockerContainerView = InputBlockerContainerView()
-    inputBlockerContainerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 50)
+    let subviewsHeight = inputBlockerContainerView.subviewsHeight
+    inputBlockerContainerView.configureHeight(superview: view)
     inputBlockerContainerView.backButton.addTarget(self, action: #selector(inputBlockerAction), for: .touchUpInside)
-    
     
     return inputBlockerContainerView
   }()
