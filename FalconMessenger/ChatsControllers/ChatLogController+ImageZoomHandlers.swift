@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 import AVKit
-import FirebaseAuth
+import Firebase
 
 
 private var inputContainerViewWasFirstResponder = false

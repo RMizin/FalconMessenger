@@ -12,7 +12,6 @@ import Firebase
 import SDWebImage
 import PhoneNumberKit
 
-
 public var shouldReloadContactsControllerAfterChangingTheme = false
 
 var localPhones = [String]()

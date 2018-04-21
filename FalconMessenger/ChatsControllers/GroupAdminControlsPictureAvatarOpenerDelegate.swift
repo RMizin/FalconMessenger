@@ -53,8 +53,8 @@ extension GroupAdminControlsTableViewController { // delete
     storageReference.delete { error in
       let chatOriginalPhotoURLReference = groupChatsMetaReference.child("chatOriginalPhotoURL")
       let chatThumbnailPhotoURLReference = groupChatsMetaReference.child("chatThumbnailPhotoURL")
-      chatOriginalPhotoURLReference.removeValue()
-      chatThumbnailPhotoURLReference.removeValue()
+      chatOriginalPhotoURLReference.setValue("")
+      chatThumbnailPhotoURLReference.setValue("")//.removeValue()
       completion(true)
     }
   }

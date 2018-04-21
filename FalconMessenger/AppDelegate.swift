@@ -26,22 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     let theme = ThemeManager.currentTheme()
     ThemeManager.applyTheme(theme: theme)
     
-    if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self
-      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-      UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_, _ in })
-    } else {
-      let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-      application.registerUserNotificationSettings(settings)
-    }
-    
-    application.registerForRemoteNotifications()
-    
      FirebaseApp.configure()
      Database.database().isPersistenceEnabled = true
-    
-     _ = contactsController.view
-     _ = settingsController.view
     
      let mainController = GeneralTabBarController()
      setTabs(mainController: mainController)
@@ -56,8 +42,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       UserDefaults.standard.synchronize()
     }
     
-    presentOnboardingController(above: mainController)
-    setDeaultsForSettings()
+    presentOnboardingController(above: mainController)    
+    self.setDeaultsForSettings()
+    
+    if #available(iOS 10.0, *) {
+      UNUserNotificationCenter.current().delegate = self
+      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+      UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_, _ in })
+    } else {
+      let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+      application.registerUserNotificationSettings(settings)
+    }
+    
+    application.registerForRemoteNotifications()
     
     return true
   }

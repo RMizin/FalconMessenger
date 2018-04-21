@@ -38,6 +38,13 @@ protocol ManageAppearance: class {
 public var shouldReloadChatsControllerAfterChangingTheme = false
 
 
+
+//extension ChatsTableViewController: TypingIndicatorDelegate {
+//  func typingIndicator(isActive: Bool, for conversation: Conversation) {
+//  //  print("\ntyping indicator if active: \(isActive), for conversation: \(conversation.chatName ?? "no chat name")\n")
+//  }
+//}
+
 class ChatsTableViewController: UITableViewController {
   
   let noChatsYetContainer:NoChatsYetContainer! = NoChatsYetContainer()
@@ -68,6 +75,8 @@ class ChatsTableViewController: UITableViewController {
   
   fileprivate var userReference: DatabaseReference!
   
+  fileprivate var groupChatReference: DatabaseReference!
+  
   fileprivate var currentUserConversationsReference: DatabaseReference!
   
   fileprivate var lastMessageForConverstaionRef: DatabaseReference!
@@ -76,20 +85,15 @@ class ChatsTableViewController: UITableViewController {
   
   fileprivate var connectedReference: DatabaseReference!
 
-  
+  //let typingIndicatorObsever = TypingIndicatorObserver()
+
+
   override func viewDidLoad() {
     super.viewDidLoad()
    
     configureTableView()
     setupSearchController()
     managePresense()
-  }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    if let testSelected = tableView.indexPathForSelectedRow {
-      tableView.deselectRow(at: testSelected, animated: true)
-    }
-    super.viewDidAppear(animated)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -100,6 +104,19 @@ class ChatsTableViewController: UITableViewController {
     }
     
     setUpColorsAccordingToTheme()
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    if let testSelected = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: testSelected, animated: true)
+    }
+    super.viewDidAppear(animated)
+  }
+
+  func initAllTabs() {
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    _ = appDelegate.contactsController.view
+    _ = appDelegate.settingsController.view
   }
   
   override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -129,6 +146,7 @@ class ChatsTableViewController: UITableViewController {
     edgesForExtendedLayout = UIRectEdge.top
     tableView.separatorStyle = .none
     definesPresentationContext = true
+   // typingIndicatorObsever.delegate = self
   }
   
   @objc fileprivate func newChat() {
@@ -145,6 +163,7 @@ class ChatsTableViewController: UITableViewController {
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
+      tableView.isOpaque = true
       tableView.reloadData()
       shouldReloadChatsControllerAfterChangingTheme = false
     }
@@ -184,7 +203,7 @@ class ChatsTableViewController: UITableViewController {
         self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .noInternet, activityPriority: .crazy, color: ThemeManager.currentTheme().generalTitleColor)
       }
     }) { (error) in
-      print(error.localizedDescription)
+     // print(error.localizedDescription)
     }
   }
   
@@ -208,7 +227,6 @@ class ChatsTableViewController: UITableViewController {
   fileprivate var inAppNotificationsObserverHandler: DatabaseHandle!
   
   func observersForNotifications() {
-    
     if notificationReference != nil {
       for handle in notificationHandle {
         notificationReference.removeObserver(withHandle: handle)
@@ -234,105 +252,23 @@ class ChatsTableViewController: UITableViewController {
         
         self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
           
-          guard var dictionary = snapshot.value as? [String: AnyObject] else { print("returnun2"); return }
+          guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
           dictionary.updateValue(messageID as AnyObject, forKey: "messageUID")
           let message = Message(dictionary: dictionary)
-          guard let uid = Auth.auth().currentUser?.uid, message.fromId != uid else { print("returnun3"); return }
+          guard let uid = Auth.auth().currentUser?.uid, message.fromId != uid else { return }
           self.handleInAppSoundPlaying(message: message, conversation: conversation)
         })
       })
     }
   }
   
-  fileprivate var shouldDisableUpdatingIndicator = true
-  var groupChatReference: DatabaseReference!
-  var groupChatHandle:DatabaseHandle!
-  fileprivate typealias GroupChatMetaInfoCompletionHandler = (_ success: Bool, _ dictionary: [String:AnyObject]) -> Void
-  
-  fileprivate func groupChatMetaInfo( dictionary: [String:AnyObject], completion: @escaping GroupChatMetaInfoCompletionHandler) {
+ fileprivate var shouldDisableUpdatingIndicator = true
 
-    let conversation = Conversation(dictionary: dictionary)
-    guard let chatID = conversation.chatID else { return }
-    groupChatReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
-    if groupChatHandle != nil {
-      groupChatReference.removeObserver(withHandle: groupChatHandle)
-    }
-    groupChatHandle = groupChatReference.observe(.value) { (snapshot) in
-      guard var chatDictionary = snapshot.value as? [String: AnyObject] else {completion(true, dictionary); return }
-      chatDictionary.updateValue(conversation.pinned as AnyObject, forKey: "pinned")
-      chatDictionary.updateValue(conversation.muted as AnyObject, forKey: "muted")
-      chatDictionary.updateValue(conversation.badge as AnyObject, forKey: "badge")
-      chatDictionary.updateValue(conversation.lastMessageID as AnyObject, forKey: "lastMessageID")
-      if let membersIDs = chatDictionary["chatParticipantsIDs"] as? [String:AnyObject] {
-        chatDictionary.updateValue(Array(membersIDs.values) as AnyObject, forKey: "chatParticipantsIDs")
-      }
-      completion(true, chatDictionary)
-    }
-  }
-  
-//  fileprivate func observersForTypingIndicators() {
-//    for conversation in conversations {
-//      guard let chatID = conversation.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
-//        let reff = Database.database().reference().child("user-messages").child(chatID).child(currentUserID)
-//      reff.observe(.childAdded) { (snapshot) in
-//        guard snapshot.exists() else { return }
-//        print("SOMETHING ADDED\(snapshot.value) ")
-//      }
-//
-//      reff.observe(.childRemoved) { (snapshot) in
-//        print("SOMETHING REMOVED")
-//      }
-//    }
-//  }
-  
-//  var typingIndicatorReference: DatabaseReference!
-//  func observeTypingIndicator (conversation: Conversation?) {
-//    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
-//    let typingIndicatorDatabaseID = "typingIndicator"
-//    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-//      let indicatorRemovingReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID).child(currentUserID)
-//      indicatorRemovingReference.onDisconnectRemoveValue()
-//      typingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
-//      typingIndicatorReference.observe(.value, with: { (snapshot) in
-//
-//        guard let dictionary = snapshot.value as? [String:AnyObject], let firstKey = dictionary.first?.key else {
-//        //  self.handleTypingIndicatorAppearance(isEnabled: false)
-//             print("NOT TYPING\(conversation?.chatName)")
-//          return
-//        }
-//
-//        if firstKey == currentUserID && dictionary.count == 1 {
-//         // self.handleTypingIndicatorAppearance(isEnabled: false)
-//             print("NOT TYPING\(conversation?.chatName)")
-//          return
-//        }
-//
-//        //self.handleTypingIndicatorAppearance(isEnabled: true)
-//           print("TYPING\(conversation?.chatName)")
-//      })
-//
-//    } else {
-//      let indicatorRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
-//      indicatorRemovingReference.onDisconnectRemoveValue()
-//      typingIndicatorReference = Database.database().reference().child("user-messages").child(conversationID).child(currentUserID).child(typingIndicatorDatabaseID).child(conversationID)
-//      typingIndicatorReference.onDisconnectRemoveValue()
-//      typingIndicatorReference.observe(.value, with: { (isTyping) in
-//        guard let isParticipantTyping = isTyping.value! as? Bool, isParticipantTyping else {
-//          print("NOT TYPING\(conversation?.chatName)")
-//         // self.handleTypingIndicatorAppearance(isEnabled: false)
-//          return
-//        }
-//           print("TYPING\(conversation?.chatName)")
-//       // self.handleTypingIndicatorAppearance(isEnabled: true)
-//      })
-//    }
-//  }
-  
  fileprivate func fetchConversations() {
   
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     if !isAppLoaded {
-      navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .loadingFromCache, activityPriority: .mediumHigh, color: ThemeManager.currentTheme().generalTitleColor)
+      navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .updating, activityPriority: .mediumHigh, color: ThemeManager.currentTheme().generalTitleColor)
     }
   
     currentUserConversationsReference = Database.database().reference().child("user-messages").child(currentUserID)
@@ -349,7 +285,6 @@ class ChatsTableViewController: UITableViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
           if self.shouldDisableUpdatingIndicator {
-            print("disabling")
             self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
           }
         }
@@ -358,127 +293,220 @@ class ChatsTableViewController: UITableViewController {
       if !snapshot.exists() {
         self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
         self.handleReloadTable()
-        print("\ncurrentUserConversationsReference snap not exists\n")
         return
       }
     }
   
-    currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
-      print("child added")
+    currentUserConversationsReference.observe(.childRemoved) { (snapshot) in
       let chatID = snapshot.key
+      if self.userReference != nil {
+        guard let index = self.conversationsChangesHandle.index(where: { (element) -> Bool in
+          return element.chatID == chatID
+        }) else { return }
+        print("removed default chat")
+        self.userReference = Database.database().reference().child("users").child(self.conversationsChangesHandle[index].chatID)
+        self.userReference.removeObserver(withHandle: self.conversationsChangesHandle[index].handle)
+        self.conversationsChangesHandle.remove(at: index)
+      }
+      
+      if self.groupChatReference != nil {
+        guard let index = self.groupConversationsChangesHandle.index(where: { (element) -> Bool in
+          return element.chatID == chatID
+        }) else { return }
+        print("removed group chat")
+        self.groupChatReference = Database.database().reference().child("groupChats").child(self.groupConversationsChangesHandle[index].chatID).child(messageMetaDataFirebaseFolder)
+        self.groupChatReference.removeObserver(withHandle: self.groupConversationsChangesHandle[index].handle)
+        self.groupConversationsChangesHandle.remove(at: index)
+      }
+    }
+  
+    currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
+   //   print("child added")
+      let chatID = snapshot.key
+    
+      self.observeChangesForDefaultConversation(with: chatID)
+      self.observeChangesForGroupConversation(with: chatID)
       
       self.conversationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
       self.conversationReference.observe(.value, with: { (snapshot) in
         
-        guard var conversationDictionary = snapshot.value as? [String: AnyObject], snapshot.exists() else { return }
-         conversationDictionary.updateValue(chatID as AnyObject, forKey: "chatID")
+        guard var dictionary = snapshot.value as? [String: AnyObject], snapshot.exists() else { return }
+         dictionary.updateValue(chatID as AnyObject, forKey: "chatID")
     
         if self.isGroupAlreadyFinished { self.shouldDisableUpdatingIndicator = false }
+        
         self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updating, activityPriority: .lowMedium, color: ThemeManager.currentTheme().generalTitleColor)
     
-          self.groupChatMetaInfo(dictionary: conversationDictionary, completion: { (_, dictionary) in
-
-            let conversation = Conversation(dictionary: dictionary)
-            
-            guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
-              guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
-              //  self.observeTypingIndicator(conversation: conversation)
-                self.updateConversations(with: conversation, isGroupChat: false, notificationAtTheEnd: false)
-                return
-              }
-            //  self.observeTypingIndicator(conversation: conversation)
-              self.updateConversations(with: conversation, isGroupChat: true, notificationAtTheEnd: false)
-              return
-            }
-            
-            self.lastMessageForConverstaionRef = Database.database().reference().child("messages").child(lastMessageID)
-            self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
-              guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
-              dictionary.updateValue(lastMessageID as AnyObject, forKey: "messageUID")
-              
-              let message = Message(dictionary: dictionary)
-              conversation.lastMessage = message
-              
-              guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
-              //  self.observeTypingIndicator(conversation: conversation)
-                self.updateConversations(with: conversation, isGroupChat: false, notificationAtTheEnd: true)
-                return
-              }
-             // self.observeTypingIndicator(conversation: conversation)
-              self.updateConversations(with: conversation, isGroupChat: true, notificationAtTheEnd: true)
-            })
-          })
+        let conversation = Conversation(dictionary: dictionary)
+       
+        guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
+          self.updateConversations(with: conversation)
+        return
+        }
+        
+        self.lastMessageForConverstaionRef = Database.database().reference().child("messages").child(lastMessageID)
+        self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
+          guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+          dictionary.updateValue(lastMessageID as AnyObject, forKey: "messageUID")
+          
+          let message = Message(dictionary: dictionary)
+          conversation.lastMessage = message
+          self.updateConversations(with: conversation)
+        })
       }, withCancel: { (error) in
-        print(error.localizedDescription)
+       // print(error.localizedDescription)
       })
     })
   }
   
-  
-  fileprivate func updateConversations(with conversation: Conversation, isGroupChat: Bool, notificationAtTheEnd: Bool) {
+  fileprivate func updateConversations(with conversation: Conversation) {
     
-    guard isGroupChat else {
-      self.updateDefaultChat(with: conversation)
-      return
-    }
-    self.updateGroupChat(with: conversation)
-  }
-  
-  fileprivate func updateGroupChat(with conversation: Conversation ) {
-    updateConversationArrays(with: conversation)
-  }
-  
-  fileprivate func updateDefaultChat(with conversation: Conversation ) {
+    guard let chatID = conversation.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
     
-    guard let userID = conversation.chatID, let currentUserID = Auth.auth().currentUser?.uid else {print("default chat returning from chat id "); return }
-    print(userID)
-    userReference = Database.database().reference().child("users").child(userID)
-    userReference.observeSingleEvent(of: .value, with: { (snapshot) in
-      
-      guard var dictionary = snapshot.value as? [String: AnyObject] else { print("default chat returning from dictionary"); return }
-      dictionary.updateValue(userID as AnyObject, forKey: "id")
+    let userDataReference = Database.database().reference().child("users").child(chatID)
+    userDataReference.observeSingleEvent(of: .value, with: { (snapshot) in
+      guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+      dictionary.updateValue(chatID as AnyObject, forKey: "id")
       
       let user = User(dictionary: dictionary)
-      
       conversation.chatName = user.name
       conversation.chatPhotoURL = user.photoURL
       conversation.chatThumbnailPhotoURL = user.thumbnailPhotoURL
-      conversation.chatParticipantsIDs = [userID, currentUserID]
-      print("up conv arrays from default chat")
+      conversation.chatParticipantsIDs = [chatID, currentUserID]
       self.updateConversationArrays(with: conversation)
     })
     
-    userReference.observe(.childChanged) { (snapshot) in
-      print("child changed")
-      if let unpinnedIndex = self.filtededConversations.index(where: { (unpinnedConversation) -> Bool in
-        return unpinnedConversation.chatID == userID }) {
-        
-        if snapshot.key == "name" {
-          self.filtededConversations[unpinnedIndex].chatName = snapshot.value as? String
-          self.handleGroupOrReloadTable()
-        } else if snapshot.key == "thumbnailPhotoURL" {
-          self.filtededConversations[unpinnedIndex].chatThumbnailPhotoURL = snapshot.value as? String
-          self.handleGroupOrReloadTable()
-        } else {
-          return
+    let groupChatDataReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
+    groupChatDataReference.observeSingleEvent(of: .value, with: { (snapshot) in
+      guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+      dictionary.updateValue(chatID as AnyObject, forKey: "id")
+      
+      if let membersIDs = dictionary["chatParticipantsIDs"] as? [String:AnyObject] {
+        dictionary.updateValue(Array(membersIDs.values) as AnyObject, forKey: "chatParticipantsIDs")
+      }
+      
+      let metaInfo = Conversation(dictionary: dictionary)
+      conversation.chatName = metaInfo.chatName
+      conversation.chatPhotoURL = metaInfo.chatPhotoURL
+      conversation.chatThumbnailPhotoURL = metaInfo.chatThumbnailPhotoURL
+      conversation.chatParticipantsIDs =  metaInfo.chatParticipantsIDs
+      conversation.isGroupChat = metaInfo.isGroupChat
+      conversation.admin = metaInfo.admin
+      conversation.chatID = metaInfo.chatID
+      self.updateConversationArrays(with: conversation)
+    })
+  }
+  
+  var conversationsChangesHandle = [(handle: DatabaseHandle, chatID: String)]()
+  var groupConversationsChangesHandle = [(handle: DatabaseHandle, chatID: String)]()
+
+  func observeChangesForGroupConversation(with chatID: String) {
+    
+    groupChatReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
+
+    let handle = DatabaseHandle()
+    let element = (handle: handle, chatID: chatID)
+    self.groupConversationsChangesHandle.insert(element, at: 0)
+    self.groupConversationsChangesHandle[0].handle = self.groupChatReference.observe(.childChanged, with: { (snapshot) in
+      print("group child changed")
+      self.handleConversationChildChanges(from: snapshot, conversationNameKey: "chatName", conversationPhotoKey:  "chatThumbnailPhotoURL",
+                                          chatID: chatID, membersIDsKey: "chatParticipantsIDs", adminKey: "admin")
+    })
+  }
+  
+  func observeChangesForDefaultConversation(with chatID: String) {
+    
+    
+    userReference = Database.database().reference().child("users").child(chatID)
+ 
+    let handle = DatabaseHandle()
+    let element = (handle: handle, chatID: chatID)
+    self.conversationsChangesHandle.insert(element, at: 0)
+    self.conversationsChangesHandle[0].handle = self.userReference.observe(.childChanged, with: { (snapshot) in
+    print("child changed")
+    self.handleConversationChildChanges(from: snapshot, conversationNameKey: "name", conversationPhotoKey:  "thumbnailPhotoURL",
+                                          chatID: chatID, membersIDsKey: nil, adminKey: nil)
+    })
+  }
+  
+  
+  func changeConversationData(at conversations: [Conversation], section: Int) {
+    
+    
+    
+  }
+  func handleConversationChildChanges(from snapshot: DataSnapshot,
+                                      conversationNameKey: String, conversationPhotoKey: String,
+                                      chatID: String, membersIDsKey: String?, adminKey: String?) {
+    
+    
+    
+    if let unpinnedIndex = self.filtededConversations.index(where: { (unpinnedConversation) -> Bool in
+      return unpinnedConversation.chatID == chatID }) {
+      
+      
+      if let adminKey = adminKey {
+        if snapshot.key == adminKey {
+          self.filtededConversations[unpinnedIndex].admin = snapshot.value as? String
+          self.reloadCellAfterUpdate(indexPath: IndexPath(row: unpinnedIndex, section: 1))
         }
-      } else if let pinnedIndex = self.filteredPinnedConversations.index(where: { (pinnedConversation) -> Bool in
-        return pinnedConversation.chatID == userID }) {
-        
-        if snapshot.key == "name" {
-          self.filteredPinnedConversations[pinnedIndex].chatName = snapshot.value as? String
-          self.handleGroupOrReloadTable()
-        } else if snapshot.key == "thumbnailPhotoURL" {
-          self.filteredPinnedConversations[pinnedIndex].chatThumbnailPhotoURL = snapshot.value as? String
-          self.handleGroupOrReloadTable()
-        } else { return }
+      }
+      
+      if let membersIDsKey = membersIDsKey {
+        if snapshot.key == membersIDsKey {
+          guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+          self.filtededConversations[unpinnedIndex].chatParticipantsIDs = Array(dictionary.keys)
+          self.reloadCellAfterUpdate(indexPath: IndexPath(row: unpinnedIndex, section: 1))
+        }
+      }
+    
+      if snapshot.key == conversationNameKey {
+        self.filtededConversations[unpinnedIndex].chatName = snapshot.value as? String
+        self.reloadCellAfterUpdate(indexPath: IndexPath(row: unpinnedIndex, section: 1))
+      } else if snapshot.key == conversationPhotoKey {
+        self.filtededConversations[unpinnedIndex].chatThumbnailPhotoURL = snapshot.value as? String
+        self.reloadCellAfterUpdate(indexPath: IndexPath(row: unpinnedIndex, section: 1))
+      } else {
+        return
+      }
+    } else if let pinnedIndex = self.filteredPinnedConversations.index(where: { (pinnedConversation) -> Bool in
+      return pinnedConversation.chatID == chatID }) {
+      
+      if let adminKey = adminKey {
+        if snapshot.key == adminKey {
+          self.filteredPinnedConversations[pinnedIndex].admin = snapshot.value as? String
+          self.reloadCellAfterUpdate(indexPath: IndexPath(row: pinnedIndex, section: 0))
+        }
+      }
+      
+      if let membersIDsKey = membersIDsKey {
+        if snapshot.key == membersIDsKey {
+          guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+          self.filteredPinnedConversations[pinnedIndex].chatParticipantsIDs = Array(dictionary.keys)
+          self.reloadCellAfterUpdate(indexPath: IndexPath(row: pinnedIndex, section: 0))
+        }
+      }
+      
+      if snapshot.key == conversationNameKey {
+        self.filteredPinnedConversations[pinnedIndex].chatName = snapshot.value as? String
+        self.reloadCellAfterUpdate(indexPath: IndexPath(row: pinnedIndex, section: 0))
+      } else if snapshot.key == conversationPhotoKey {
+        self.filteredPinnedConversations[pinnedIndex].chatThumbnailPhotoURL = snapshot.value as? String
+        self.reloadCellAfterUpdate(indexPath: IndexPath(row: pinnedIndex, section: 0))
       } else { return }
-    }
+    } else { return }
+  }
+  
+  
+  func reloadCellAfterUpdate(indexPath: IndexPath) {
+    tableView.beginUpdates()
+    tableView.reloadRows(at: [indexPath], with: .none)
+    tableView.endUpdates()
   }
 
  fileprivate func updateConversationArrays(with conversation: Conversation) {
   
-  guard let userID = conversation.chatID else { print("id nil returning"); return }
+  guard let userID = conversation.chatID else { return }
     if let unpinnedIndex = self.conversations.index(where: { (unpinnedConversation) -> Bool in
       return unpinnedConversation.chatID == userID }) {
       
@@ -534,12 +562,12 @@ class ChatsTableViewController: UITableViewController {
   }
   
   fileprivate func handleGroupOrReloadTable() {
-    print("in handle reload")
+   // print("in handle reload")
     if self.isGroupAlreadyFinished {
       handleReloadTable()
     } else {
       group.leave()
-      print("leaving group")
+    //  print("leaving group")
     }
   }
   
@@ -557,7 +585,10 @@ class ChatsTableViewController: UITableViewController {
     filtededConversations = conversations
     
     if !isAppLoaded {
-      UIView.transition(with: tableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+   
+      UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: { (_) in
+        self.initAllTabs()
+      })
     } else {
       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
       self.tableView.reloadData()

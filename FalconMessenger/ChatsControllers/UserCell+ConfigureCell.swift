@@ -53,7 +53,7 @@ extension UserCell {
       newMessageIndicator.isHidden = true
       badgeLabel.isHidden = true
       badgeLabelRightConstraint.constant = 0
-      badgeLabelWidthConstraint.constant = badgeLabelRightConstantForHidden
+      badgeLabelWidthConstraint.constant = 0
       return
     }
     

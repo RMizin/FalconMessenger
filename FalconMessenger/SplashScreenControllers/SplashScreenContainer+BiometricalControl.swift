@@ -13,6 +13,9 @@ extension SplashScreenContainer {
   
   func showSecuredData() {
     restoreNotificationsState()
+    
+    let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
+    guard isBiometricalAuthEnabled else { return }
     DispatchQueue.main.async {
       self.removeFromSuperview()
     }

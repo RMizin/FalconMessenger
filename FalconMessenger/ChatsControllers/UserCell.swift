@@ -82,7 +82,6 @@ class UserCell: UITableViewCell {
   var badgeLabelRightConstraint: NSLayoutConstraint!
   var badgeLabelWidthConstant:CGFloat = 20
   var badgeLabelRightConstant:CGFloat = -15
-  var badgeLabelRightConstantForHidden:CGFloat = -10
   
   let badgeLabel: UILabel = {
     let badgeLabel = UILabel()

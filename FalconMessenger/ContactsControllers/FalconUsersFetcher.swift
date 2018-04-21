@@ -44,10 +44,8 @@ class FalconUsersFetcher: NSObject {
     clearObserversAndUsersIfNeeded()
     
     if asynchronously {
-      print("fetching async")
       fetchAsynchronously()
     } else {
-      print("fetching sync")
       fetchSynchronously()
     }
   }
@@ -62,7 +60,6 @@ class FalconUsersFetcher: NSObject {
         let nationalNumber = try phoneNumberKit.parse(number).nationalNumber
         preparedNumbers.append("+" + String(countryCode) + String(nationalNumber))
         group.enter()
-        print("entering group")
       } catch {}
     }
     
@@ -129,11 +126,11 @@ class FalconUsersFetcher: NSObject {
       
       if !asynchronously {
         self.group.leave()
-        print("leaving group")
+      //  print("leaving group")
       }
     
     }, withCancel: { (error) in
-      print("error")
+    //  print("error")
       //search error
     })
   }

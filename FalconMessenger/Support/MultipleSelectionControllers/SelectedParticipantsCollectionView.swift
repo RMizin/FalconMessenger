@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SDWebImage
 
 extension SelectParticipantsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
   

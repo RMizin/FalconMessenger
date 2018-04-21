@@ -10,7 +10,6 @@ import UIKit
 import FirebaseStorage
 import Firebase
 import SystemConfiguration
-import SDWebImage
 import Photos
 
 struct ScreenSize {

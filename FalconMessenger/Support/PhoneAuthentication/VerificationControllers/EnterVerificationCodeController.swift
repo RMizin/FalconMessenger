@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+import PhoneNumberKit
 
 
 class EnterVerificationCodeController: UIViewController {
@@ -47,7 +49,6 @@ class EnterVerificationCodeController: UIViewController {
     print("tappped sms confirmation")
     
     let phoneNumberForVerification = enterVerificationContainerView.titleNumber.text!
-    
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
       if let error = error {
         basicErrorAlertWith(title: "Error", message: error.localizedDescription + "\nPlease try again later.", controller: self)

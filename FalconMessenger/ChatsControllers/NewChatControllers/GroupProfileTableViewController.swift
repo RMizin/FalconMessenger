@@ -212,7 +212,14 @@ extension GroupProfileTableViewController {
   }
   
   func uploadAvatar(chatImage: UIImage?, reference: DatabaseReference) {
-    guard let image = chatImage else { self.chatCreatingGroup.leave(); return }
+    
+    guard let image = chatImage else {
+      reference.updateChildValues(["chatOriginalPhotoURL" : "", "chatThumbnailPhotoURL":""]) { (_, _) in
+        self.chatCreatingGroup.leave();
+      }
+      return
+    }
+    
     let thumbnailImage = createImageThumbnail(image)
     var images = [(image: UIImage, quality: CGFloat, key: String)]()
     images.append((image: image, quality: 0.5, key: "chatOriginalPhotoURL"))

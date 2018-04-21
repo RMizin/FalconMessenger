@@ -56,7 +56,7 @@ class MessagesFetcher: NSObject {
     newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
     
     loadingMessagesGroup.notify(queue: .main, execute: {
-      print("loadingMessagesGroup finished")
+   //   print("loadingMessagesGroup finished")
       
       guard self.messages.count != 0 else {
          self.isInitialChatMessagesLoad = false
@@ -67,7 +67,7 @@ class MessagesFetcher: NSObject {
       self.loadingNamesGroup.enter()
       self.newLoadUserames()
       self.loadingNamesGroup.notify(queue: .main, execute: {
-        print("loadingNamesGroup finished")
+   //     print("loadingNamesGroup finished")
         self.messages = self.sortedMessages(unsortedMessages: self.messages)
         self.isInitialChatMessagesLoad = false
          self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
@@ -85,7 +85,7 @@ class MessagesFetcher: NSObject {
       for _ in 0 ..< snapshot.childrenCount { loadedMessagesGroup.enter() }
       
       loadedMessagesGroup.notify(queue: .main, execute: {
-        print("loaded messages group finished initial loading messages")
+      //  print("loaded messages group finished initial loading messages")
         self.messages = loadedMessages
         self.loadingMessagesGroup.leave()
       })
@@ -99,11 +99,11 @@ class MessagesFetcher: NSObject {
           dictionary = self.preloadCellData(to: dictionary, isGroupChat: isGroupChat)
           
           guard self.isInitialChatMessagesLoad else {
-            print("not initial")
+       //     print("not initial")
             self.handleMessageInsertionInRuntime(newDictionary: dictionary)
             return
           }
-          print("initial")
+       //   print("initial")
           
           loadedMessages.append(Message(dictionary: dictionary))
           loadedMessagesGroup.leave()
@@ -150,11 +150,11 @@ class MessagesFetcher: NSObject {
     
     for _ in messages {
       loadedUserNamesGroup.enter()
-      print("names entering")
+    //  print("names entering")
     }
     
     loadedUserNamesGroup.notify(queue: .main, execute: {
-      print("loadedUserNamesGroup group finished ")
+     // print("loadedUserNamesGroup group finished ")
       self.loadingNamesGroup.leave()
     })
     
@@ -167,7 +167,7 @@ class MessagesFetcher: NSObject {
         guard let name = user.name else {  loadedUserNamesGroup.leave(); return }
         self.messages[index].senderName = name
         loadedUserNamesGroup.leave()
-        print("names leaving")
+     //   print("names leaving")
       })
     }
   }
@@ -228,7 +228,7 @@ class MessagesFetcher: NSObject {
       let seconds = Int(duration) % 60
       return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
     } catch {
-      print("error playing")
+     // print("error playing")
       return String(format:"%02i:%02i:%02i", 0, 0, 0)
     }
   }
@@ -239,7 +239,7 @@ class MessagesFetcher: NSObject {
       let duration = Int(chatLogAudioPlayer.duration)
       return duration
     } catch {
-      print("error playing")
+   //   print("error playing")
       return nil
     }
   }

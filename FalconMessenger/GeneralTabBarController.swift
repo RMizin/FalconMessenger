@@ -45,8 +45,8 @@ class GeneralTabBarController: UITabBarController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
- 
-    if onceToken == 0 {
+    let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
+    if onceToken == 0 && isBiometricalAuthEnabled {
       view.addSubview(splashContainer)
       splashContainer.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
       splashContainer.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true

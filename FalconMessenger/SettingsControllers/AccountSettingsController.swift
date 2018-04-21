@@ -142,11 +142,7 @@ class AccountSettingsController: UITableViewController {
       let photoURLReference = Database.database().reference().child("users").child(currentUser).child("photoURL")
       photoURLReference.observe(.value, with: { (snapshot) in
         if let url = snapshot.value as? String {
-          self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url) , placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground], completed: {(image, error, cacheType, url) in
-            if error != nil {
-              //basicErrorAlertWith(title: "Error loading profile picture", message: "It seems like you are not connected to the internet.", controller: self)
-            }
-          })
+          self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url) , placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground], completed: nil)
         }
       })
       
