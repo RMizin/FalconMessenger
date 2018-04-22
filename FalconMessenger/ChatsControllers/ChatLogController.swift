@@ -53,6 +53,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var typingIndicatorReference: DatabaseReference!
   
+  var typingIndicatorHandle: DatabaseHandle!
+  
   var userStatusReference: DatabaseReference!
   
   var chatNameReference: DatabaseReference!
@@ -171,7 +173,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       removeSubtitleInGroupChat()
       reloadInputViews()
       navigationItem.rightBarButtonItem?.isEnabled = false
-      if typingIndicatorReference != nil { typingIndicatorReference.removeAllObservers(); typingIndicatorReference = nil }
+      if typingIndicatorReference != nil { typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle); typingIndicatorReference = nil }
     }
   }
 
@@ -308,7 +310,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let indicatorRemovingReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID).child(currentUserID)
       indicatorRemovingReference.onDisconnectRemoveValue()
       typingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
-      typingIndicatorReference.observe(.value, with: { (snapshot) in
+      typingIndicatorHandle = typingIndicatorReference.observe(.value, with: { (snapshot) in
         
         guard let dictionary = snapshot.value as? [String:AnyObject], let firstKey = dictionary.first?.key else {
           self.handleTypingIndicatorAppearance(isEnabled: false)
@@ -328,7 +330,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       indicatorRemovingReference.onDisconnectRemoveValue()
       typingIndicatorReference = Database.database().reference().child("user-messages").child(conversationID).child(currentUserID).child(typingIndicatorDatabaseID).child(conversationID)
       typingIndicatorReference.onDisconnectRemoveValue()
-      typingIndicatorReference.observe(.value, with: { (isTyping) in
+      typingIndicatorHandle = typingIndicatorReference.observe(.value, with: { (isTyping) in
         guard let isParticipantTyping = isTyping.value! as? Bool, isParticipantTyping else {
           self.handleTypingIndicatorAppearance(isEnabled: false)
           return
@@ -481,7 +483,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     messagesFetcher = nil
 
     if typingIndicatorReference != nil {
-      typingIndicatorReference.removeAllObservers()
+      typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle)
     }
 
     if userStatusReference != nil {

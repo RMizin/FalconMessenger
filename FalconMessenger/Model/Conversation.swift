@@ -22,6 +22,7 @@ class Conversation: NSObject {
   var badge: Int?
   var pinned: Bool?
   var muted: Bool?
+  var isTyping: Bool? // local only
   
   func messageText() -> String {
     

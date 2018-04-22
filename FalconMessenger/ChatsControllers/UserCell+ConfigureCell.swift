@@ -24,7 +24,15 @@ extension UserCell {
     
     nameLabel.text = chatName
     muteIndicator.isHidden = !isConversationMuted
-    messageLabel.text = conversations[indexPath.row].messageText()
+    
+    if let isTyping = conversations[indexPath.row].isTyping, isTyping {
+      messageLabel.text = "typing"
+      typingIndicatorTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateTypingIndicatorTimer), userInfo: nil, repeats: true)
+      RunLoop.main.add(self.typingIndicatorTimer!, forMode: .commonModes)
+    } else {
+      typingIndicatorTimer?.invalidate()
+      messageLabel.text = conversations[indexPath.row].messageText()
+    }
     
     if let lastMessage = conversations[indexPath.row].lastMessage {
       let date = Date(timeIntervalSince1970: lastMessage.timestamp as! TimeInterval)

@@ -11,100 +11,85 @@ import Firebase
 
 
 protocol TypingIndicatorDelegate: class {
-  func typingIndicator(isActive: Bool, for conversation: Conversation)
+  func typingIndicator(isActive: Bool, for chatID: String)
 }
 
 class TypingIndicatorObserver: NSObject {
   
-  var typingIndicatorReference = DatabaseReference()
-  var typingIndicatorHandle = [DatabaseHandle]()
-  
-  var groupTypingIndicatorReference = DatabaseReference()
-  var groupTypingIndicatorHandle = [DatabaseHandle]()
-  
+  var typingIndicatorReference:DatabaseReference!
+ 
+  var groupTypingIndicatorReference:DatabaseReference!
+
   let typingIndicatorDatabaseID = "typingIndicator"
+  
   weak var delegate: TypingIndicatorDelegate?
   
-  func observeTypingIndicator(conversations: [Conversation]?) {
-   // removeTypingObservers()
-   // removeGroupTypingObservers()
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversations = conversations else { return }
-   
-    for conversation in conversations {
-      guard let conversationID = conversation.chatID, currentUserID != conversationID else { return }
-      if let isGroupChat = conversation.isGroupChat, isGroupChat {
-        self.handleGroupChatTypingIndicatorObserving(currentUserID: currentUserID, conversationID: conversationID, conversation: conversation)
-      } else {
-        self.handleDefaultChatTypingIndicatorObserving(currentUserID: currentUserID, conversationID: conversationID, conversation: conversation)
-      }
-    }
-  }
+  var typingChangesHandle = [(handle: DatabaseHandle, chatID: String)]()
   
-//  func observeTypingIndicator(forSingle conversation: Conversation?) {
-//     guard let currentUserID = Auth.auth().currentUser?.uid, let conversation = conversation else { return }
-//     guard let conversationID = conversation.chatID, currentUserID != conversationID else { return }
-//      if let isGroupChat = conversation.isGroupChat, isGroupChat {
-//        self.handleGroupChatTypingIndicatorObserving(currentUserID: currentUserID, conversationID: conversationID, conversation: conversation)
-//      } else {
-//        self.handleDefaultChatTypingIndicatorObserving(currentUserID: currentUserID, conversationID: conversationID, conversation: conversation)
-//      }
-//  }
+  var groupTypingChangesHandle = [(handle: DatabaseHandle, chatID: String)]()
   
-  func handleGroupChatTypingIndicatorObserving(currentUserID: String, conversationID: String, conversation: Conversation) {
-   
-    groupTypingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
+  
+  func observeChangesForGroupTypingIndicator(with chatID: String) {
+    
+    guard let currentUserID = Auth.auth().currentUser?.uid, currentUserID != chatID else { return }
+    groupTypingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(chatID).child(typingIndicatorDatabaseID)
     let handle = DatabaseHandle()
-    groupTypingIndicatorHandle.insert(handle, at: 0)
-    groupTypingIndicatorHandle[0] = groupTypingIndicatorReference.observe(.value, with: { (snapshot) in
+    let element = (handle: handle, chatID: chatID)
+    groupTypingChangesHandle.insert(element, at: 0)
+    groupTypingChangesHandle[0].handle = groupTypingIndicatorReference.observe(.value, with: { (snapshot) in
+   
       guard let dictionary = snapshot.value as? [String:AnyObject], let firstKey = dictionary.first?.key else {
-        self.delegate?.typingIndicator(isActive: false, for: conversation)
+        self.delegate?.typingIndicator(isActive: false, for: chatID)
         return
       }
-      
-      if firstKey == currentUserID && dictionary.count == 1 {
-        self.delegate?.typingIndicator(isActive: false, for: conversation)
+      if firstKey == chatID && dictionary.count == 1 {
+        self.delegate?.typingIndicator(isActive: false, for: chatID)
         return
       }
-      self.delegate?.typingIndicator(isActive: true, for: conversation)
+      self.delegate?.typingIndicator(isActive: true, for: chatID)
     })
   }
   
-  func handleDefaultChatTypingIndicatorObserving(currentUserID: String, conversationID: String, conversation: Conversation) {
-   
-    typingIndicatorReference = Database.database().reference().child("user-messages").child(conversationID).child(currentUserID)
-      .child(typingIndicatorDatabaseID).child(conversationID)
-
+  func observeChangesForDefaultTypingIndicator(with chatID: String) {
+    
+    guard let currentUserID = Auth.auth().currentUser?.uid, currentUserID != chatID else { return }
+    typingIndicatorReference = Database.database().reference().child("user-messages").child(chatID).child(currentUserID).child(typingIndicatorDatabaseID).child(chatID)
     let handle = DatabaseHandle()
-    typingIndicatorHandle.insert(handle, at: 0)
-    typingIndicatorHandle[0] = typingIndicatorReference.observe(.value, with: { (isTyping) in
-      
-      guard let isParticipantTyping = isTyping.value! as? Bool, isParticipantTyping else {
-        self.delegate?.typingIndicator(isActive: false, for: conversation)
+    let element = (handle: handle, chatID: chatID)
+    typingChangesHandle.insert(element, at: 0)
+    typingChangesHandle[0].handle = typingIndicatorReference.observe(.value, with: { (snapshot) in
+
+      guard let isParticipantTyping = snapshot.value! as? Bool, isParticipantTyping else {
+        self.delegate?.typingIndicator(isActive: false, for: chatID)
         return
       }
-      self.delegate?.typingIndicator(isActive: true, for: conversation)
+      self.delegate?.typingIndicator(isActive: true, for: chatID)
     })
   }
   
-//  func removeTypingObservers() {
-//    //guard typingIndicatorReference != nil else { return }
-//   // for handle in typingIndicatorHandle {
-//      typingIndicatorReference.removeAllObservers()//removeObserver(withHandle: handle)
-//   // }
-//    typingIndicatorHandle.removeAll()
-//
-//  }
-//  
-//  func removeGroupTypingObservers() {
-//   // guard groupTypingIndicatorReference != nil else { return }
-//   // for handle in groupTypingIndicatorHandle {
-//      groupTypingIndicatorReference.removeAllObservers()//removeObserver(withHandle: handle)
-//  //  }
-//    groupTypingIndicatorHandle.removeAll()
-//  }
+  func removeTypingIndicator(for removedChatID: String) {
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+    
+    if typingIndicatorReference != nil {
+      guard let index = typingChangesHandle.index(where: { (element) -> Bool in
+        return element.chatID == removedChatID
+      }) else { return }
   
-  
-  deinit {
-    print("\nTyping observer deinit\n")
+      let chatID = typingChangesHandle[index].chatID
+      typingIndicatorReference = Database.database().reference().child("user-messages").child(chatID).child(currentUserID).child(typingIndicatorDatabaseID).child(chatID)
+      typingIndicatorReference.removeObserver(withHandle: typingChangesHandle[index].handle)
+      typingChangesHandle.remove(at: index)
+    }
+    
+    if groupTypingIndicatorReference != nil {
+      guard let index = groupTypingChangesHandle.index(where: { (element) -> Bool in
+        return element.chatID == removedChatID
+      }) else { return }
+   
+      let chatID = groupTypingChangesHandle[index].chatID
+      groupTypingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(chatID).child(typingIndicatorDatabaseID)
+      groupTypingIndicatorReference.removeObserver(withHandle: groupTypingChangesHandle[index].handle)
+      groupTypingChangesHandle.remove(at: index)
+    }
   }
 }

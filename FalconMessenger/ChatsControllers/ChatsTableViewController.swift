@@ -38,13 +38,6 @@ protocol ManageAppearance: class {
 public var shouldReloadChatsControllerAfterChangingTheme = false
 
 
-
-//extension ChatsTableViewController: TypingIndicatorDelegate {
-//  func typingIndicator(isActive: Bool, for conversation: Conversation) {
-//  //  print("\ntyping indicator if active: \(isActive), for conversation: \(conversation.chatName ?? "no chat name")\n")
-//  }
-//}
-
 class ChatsTableViewController: UITableViewController {
   
   let noChatsYetContainer:NoChatsYetContainer! = NoChatsYetContainer()
@@ -85,8 +78,8 @@ class ChatsTableViewController: UITableViewController {
   
   fileprivate var connectedReference: DatabaseReference!
 
-  //let typingIndicatorObsever = TypingIndicatorObserver()
-
+  let typingIndicatorObsever = TypingIndicatorObserver()
+  
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -146,7 +139,7 @@ class ChatsTableViewController: UITableViewController {
     edgesForExtendedLayout = UIRectEdge.top
     tableView.separatorStyle = .none
     definesPresentationContext = true
-   // typingIndicatorObsever.delegate = self
+    typingIndicatorObsever.delegate = self
   }
   
   @objc fileprivate func newChat() {
@@ -318,18 +311,23 @@ class ChatsTableViewController: UITableViewController {
         self.groupChatReference.removeObserver(withHandle: self.groupConversationsChangesHandle[index].handle)
         self.groupConversationsChangesHandle.remove(at: index)
       }
+      
+      self.typingIndicatorObsever.removeTypingIndicator(for: chatID)
     }
   
     currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
-   //   print("child added")
       let chatID = snapshot.key
     
       self.observeChangesForDefaultConversation(with: chatID)
       self.observeChangesForGroupConversation(with: chatID)
       
+      if self.isAppLoaded {
+        self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
+        self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
+      }
+      
       self.conversationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
       self.conversationReference.observe(.value, with: { (snapshot) in
-        
         guard var dictionary = snapshot.value as? [String: AnyObject], snapshot.exists() else { return }
          dictionary.updateValue(chatID as AnyObject, forKey: "chatID")
     
@@ -429,17 +427,9 @@ class ChatsTableViewController: UITableViewController {
     })
   }
   
-  
-  func changeConversationData(at conversations: [Conversation], section: Int) {
-    
-    
-    
-  }
   func handleConversationChildChanges(from snapshot: DataSnapshot,
                                       conversationNameKey: String, conversationPhotoKey: String,
                                       chatID: String, membersIDsKey: String?, adminKey: String?) {
-    
-    
     
     if let unpinnedIndex = self.filtededConversations.index(where: { (unpinnedConversation) -> Bool in
       return unpinnedConversation.chatID == chatID }) {
@@ -510,11 +500,17 @@ class ChatsTableViewController: UITableViewController {
     if let unpinnedIndex = self.conversations.index(where: { (unpinnedConversation) -> Bool in
       return unpinnedConversation.chatID == userID }) {
       
+      let isTyping = self.conversations[unpinnedIndex].isTyping
+      conversation.isTyping = isTyping
+      
       self.conversations[unpinnedIndex] = conversation
       self.handleGroupOrReloadTable()
       
     } else if let pinnedIndex = self.pinnedConversations.index(where: { (pinnedConversation) -> Bool in
       return pinnedConversation.chatID == userID }) {
+      
+      let isTyping = self.pinnedConversations[pinnedIndex].isTyping
+      conversation.isTyping = isTyping
       
       self.pinnedConversations[pinnedIndex] = conversation
       self.handleGroupOrReloadTable()
@@ -588,6 +584,16 @@ class ChatsTableViewController: UITableViewController {
    
       UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: { (_) in
         self.initAllTabs()
+        
+        for conversation in self.filtededConversations {
+          guard let chatID = conversation.chatID else { return }
+          self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
+        }
+        
+        for conversation in self.filteredPinnedConversations {
+          guard let chatID = conversation.chatID else { return }
+          self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
+        }
       })
     } else {
       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
