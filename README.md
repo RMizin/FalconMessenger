@@ -4,13 +4,11 @@
 </p> 
 
 
-
 # Falcon Messenger
 
 Falcon Messenger is a fast and beautiful cloud-based messaging app.
 
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="http://www.binpress.com/uploads/store33364/itunes-app-store-logo.png" width="290" height="100" alt="App Store" /></a>
-
 
 
 ## Features
@@ -65,31 +63,10 @@ Follow these simple steps:
 	6.5. Select “Editor” in the “Role“ field. <br>
 7. Go to Firebase Console, select your project, choose "Authentication" from left menu
 8. Select "SIGN-IN METHOD" and enable "Phone" option.
-9. Paste this rules into your "Rules" tab in Database (in Firebase project):
-<br>
-
-	{
-	  "rules": {
-	    ".read": true,
-	    ".write": "auth != null",
-	    
-	    "users": {
-	      ".read": true,
-	      ".write": "auth != null",
-	      ".indexOn": "phoneNumber",
-	    },
-
-	    "messages" : {
-		  ".read": true,
-		  ".write": "auth != null",
-
-	    }
-	  }   
-	}
   
 Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
-10. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
+9. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
 
 ## Compatibility
@@ -105,8 +82,3 @@ Permissions of this strong copyleft license are conditioned on making available 
 A few key points:
 - You cannot copy this project and publish to the app store as your own.
 - Falcon Messenger project's code cannot be used in a proprietary program. Products in which you use "Falcon Messenger” project’s code, must also be open-source and under the same(GPL v3) license.
-
-## Contact me
-
-If you have an idea regarding implementing new features in the app, you can contact me by e-mail provided below.
-<br>E-mail: falconmessenger.help@gmail.com
