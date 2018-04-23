@@ -8,16 +8,10 @@
 
 import UIKit
 import Firebase
-import UserNotifications
 
-func setUserNotificationToken(token: String) {
-  guard let uid = Auth.auth().currentUser?.uid else { return }
-  let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
-  userReference.updateChildValues([token : true])
-}
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
   
@@ -25,20 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   
     let theme = ThemeManager.currentTheme()
     ThemeManager.applyTheme(theme: theme)
-    
-    if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self
-      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-      UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_, _ in })
-    } else {
-      let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-      application.registerUserNotificationSettings(settings)
-    }
-    
-    application.registerForRemoteNotifications()
-    
-     FirebaseApp.configure()
-     Database.database().isPersistenceEnabled = true
+        
+    FirebaseApp.configure()
     
      _ = contactsController.view
      _ = settingsController.view
@@ -108,16 +90,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     let tabBarControllers = [contactsNavigationController, chatsNavigationController as UIViewController, settingsNavigationController]
     mainController.setViewControllers((tabBarControllers), animated: false)
     mainController.selectedIndex = tabs.chats.rawValue
-  }
-    
-  func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-    setUserNotificationToken(token: fcmToken)
-  }
-
-  func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-    Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
-    Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.unknown)
-    Messaging.messaging().apnsToken = deviceToken
   }
   
   func setDeaultsForSettings() {

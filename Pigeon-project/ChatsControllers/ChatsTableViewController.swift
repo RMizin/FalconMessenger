@@ -147,6 +147,8 @@ class ChatsTableViewController: UITableViewController {
       tableView.backgroundColor = view.backgroundColor
       tableView.reloadData()
       shouldReloadChatsControllerAfterChangingTheme = false
+      noChatsYetContainer.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      
     }
   }
   

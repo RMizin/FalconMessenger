@@ -8,16 +8,15 @@ target 'Pigeon-project' do
   
   # Pods for Pigeon-project
 	
-pod 'Firebase/Core'
-pod 'Firebase/Database'
-pod 'Firebase/Auth'
-pod 'Firebase/Storage'
-pod 'Firebase/Messaging'
+pod 'Firebase/Core', '4.11.0'
+pod 'Firebase/Database', '4.11.0'
+pod 'Firebase/Auth', '4.11.0'
+pod 'Firebase/Storage', '4.11.0'
 
-pod 'SDWebImage'
-pod 'PhoneNumberKit'
-pod 'FLAnimatedImage'
-pod 'FTPopOverMenu_Swift'
-pod 'CropViewController'
+pod 'SDWebImage' , '4.3.3'
+pod 'PhoneNumberKit', '2.1.0'
+pod 'FLAnimatedImage' , '1.0.12'
+pod 'FTPopOverMenu_Swift', '0.1.0'
+pod 'CropViewController', '2.3.6'
 
 end

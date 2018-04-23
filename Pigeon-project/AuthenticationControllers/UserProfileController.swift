@@ -84,11 +84,6 @@ extension UserProfileController {
       }
       
       updateUserData()
-      
-      if Messaging.messaging().fcmToken != nil {
-         setUserNotificationToken(token: Messaging.messaging().fcmToken!)
-      }
-     
       setOnlineStatus()
     }
   }

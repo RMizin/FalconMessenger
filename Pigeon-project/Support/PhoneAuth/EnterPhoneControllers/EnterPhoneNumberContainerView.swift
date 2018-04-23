@@ -73,23 +73,8 @@ class EnterPhoneNumberContainerView: UIView {
     phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     phoneNumber.textColor = ThemeManager.currentTheme().generalTitleColor
     phoneNumber.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
-    phoneNumber.addDoneButtonOnKeyboard()
     
     return phoneNumber
-  }()
-
-  let termsAndPrivacy: UITextView = {
-    let termsAndPrivacy = UITextView()
-    termsAndPrivacy.translatesAutoresizingMaskIntoConstraints = false
-    termsAndPrivacy.isEditable = false
-    termsAndPrivacy.backgroundColor = .clear
-    termsAndPrivacy.textColor = ThemeManager.currentTheme().generalTitleColor
-    termsAndPrivacy.dataDetectorTypes = .all
-    termsAndPrivacy.isScrollEnabled = false
-    termsAndPrivacy.textContainerInset.top = 0
-    termsAndPrivacy.sizeToFit()
-    
-    return termsAndPrivacy
   }()
   
   var phoneContainer: UIView = {
@@ -109,13 +94,11 @@ class EnterPhoneNumberContainerView: UIView {
     addSubview(title)
     addSubview(instructions)
     addSubview(selectCountry)
-    addSubview(termsAndPrivacy)
     addSubview(phoneContainer)
     phoneContainer.addSubview(countryCode)
     phoneContainer.addSubview(phoneNumber)
    
     phoneNumber.delegate = self
-    configureTextViewText()
  
     let leftConstant: CGFloat = 10
     let rightConstant: CGFloat = -10
@@ -149,32 +132,12 @@ class EnterPhoneNumberContainerView: UIView {
       phoneNumber.rightAnchor.constraint(equalTo: phoneContainer.rightAnchor, constant: rightConstant),
       phoneNumber.leftAnchor.constraint(equalTo: countryCode.rightAnchor, constant: leftConstant),
       phoneNumber.centerYAnchor.constraint(equalTo: phoneContainer.centerYAnchor),
-      phoneNumber.heightAnchor.constraint(equalTo: phoneContainer.heightAnchor),
-      
-      termsAndPrivacy.topAnchor.constraint(equalTo: phoneContainer.bottomAnchor, constant: 15),
-      termsAndPrivacy.rightAnchor.constraint(equalTo: title.rightAnchor),
-      termsAndPrivacy.leftAnchor.constraint(equalTo: title.leftAnchor)
+      phoneNumber.heightAnchor.constraint(equalTo: phoneContainer.heightAnchor)
     ])
   }
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
-  }
-  
-  private func configureTextViewText() {
-    
-    let termsAndConditionsAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/19PQFh9LzXz1HO2Zq6U7ysCESIbGoodY6rBJbOeCyjkc/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue] as [NSAttributedStringKey : Any]
-    
-    let privacyPolicyAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue] as [NSAttributedStringKey : Any]
-
-    let termsAttributedString = NSMutableAttributedString(string: "By signing up, you agree to the Terms and Conditions of Service.", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor])
-    termsAttributedString.setAttributes(termsAndConditionsAttributes, range: NSMakeRange(31, 22))
-    
-    let privacyAttributedString = NSMutableAttributedString(string: " Also if you still have not read the Privacy Policy, please take a look before signing up.", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor])
-    privacyAttributedString.setAttributes(privacyPolicyAttributes, range: NSMakeRange(37, 14))
-    termsAttributedString.append(privacyAttributedString)
-    
-    termsAndPrivacy.attributedText = termsAttributedString
   }
 }
 

@@ -30,7 +30,6 @@ class EnterPhoneNumberController: UIViewController {
   func configurePhoneNumberContainerView() {
     view.addSubview(phoneNumberContainerView)
     phoneNumberContainerView.frame = view.bounds
-    phoneNumberContainerView.termsAndPrivacy.delegate = self
   }
   
   @objc func leftBarButtonDidTap() {
@@ -98,7 +97,6 @@ class EnterPhoneNumberController: UIViewController {
     let phoneNumberForVerification = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
     
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
-      print("\n Recieved Phone number verification ID: \(verificationID ?? "nil")\n")
       if let error = error {
         basicErrorAlertWith(title: "Error", message: error.localizedDescription + "\nPlease try again later.", controller: self)
         return
@@ -118,14 +116,5 @@ extension EnterPhoneNumberController: CountryPickerDelegate {
     phoneNumberContainerView.countryCode.text = dialCode
     setRightBarButtonStatus()
     picker.navigationController?.popViewController(animated: true)
-  }
-}
-
-extension EnterPhoneNumberController : UITextViewDelegate {
-  func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-    let safariVC = SFSafariViewController(url: URL)
-    present(safariVC, animated: true, completion: nil)
-    
-    return false
   }
 }

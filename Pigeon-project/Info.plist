@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.013</string>
+	<string>1</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -27,32 +27,28 @@
 			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.543709574996-mhemqpku648jp5c2ef4pmddv5u3sdpfu</string>
+				<string>com.googleusercontent.apps.295893639771-evjlqd3lp80hnt4fe8vm7fr113slgfh5</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1013</string>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.social-networking</string>
+	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSFaceIDUsageDescription</key>
-	<string>To get access to your chats</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To select a profile photo or send photo or video via message</string>
 	<key>NSCameraUsageDescription</key>
 	<string>To take photos and videos and send them via messages </string>
 	<key>NSContactsUsageDescription</key>
-	<string>Falcon messenger uses phone numbers as unique identifiers, so that it is easy for you to switch from other messaging apps and retain your social graph. We store your contacts in order to find your friends who also use Falcon. We only need the number and name (first and last) for this to work and store no other data about your contacts.</string>
+	<string>To find your friends who also use Falcon.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>To get access to your chats</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To record video with the sound.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To select a profile photo or send photo or video via message</string>
 	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
+	<array/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

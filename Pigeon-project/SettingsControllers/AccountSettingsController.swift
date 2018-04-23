@@ -22,8 +22,7 @@ class AccountSettingsController: UITableViewController {
                       ( icon: UIImage(named: "ChangeNumber") , title: "Change number"),
                       ( icon: UIImage(named: "Storage") , title: "Data and storage")]
   
-  var secondSection = [( icon: UIImage(named: "Legal") , title: "Legal"),
-                       ( icon: UIImage(named: "Logout") , title: "Log out")]
+  var secondSection = [( icon: UIImage(named: "Logout") , title: "Log out")]
   
   let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
   let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
@@ -204,47 +203,37 @@ class AccountSettingsController: UITableViewController {
       
     }
     ARSLineProgress.ars_showOnView(self.tableView)
-  
-    let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
-    userReference.removeValue { (error, reference) in
+    
+    let onlineStatusReference = Database.database().reference().child("users").child(uid).child("OnlineStatus")
+    onlineStatusReference.setValue(ServerValue.timestamp())
+    
+    do {
+      try firebaseAuth.signOut()
       
-      if error != nil {
-        ARSLineProgress.hide()
-        basicErrorAlertWith(title: "Error signing out", message: "Try again later", controller: self)
-        return
-      }
-      
-      let onlineStatusReference = Database.database().reference().child("users").child(uid).child("OnlineStatus")
-      onlineStatusReference.setValue(ServerValue.timestamp())
-      
-      do {
-        try firebaseAuth.signOut()
-        
-      } catch let signOutError as NSError {
-        ARSLineProgress.hide()
-        basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
-        return
-      }
-      AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-      UIApplication.shared.applicationIconBadgeNumber = 0
-      
-      let destination = OnboardingController()
-      
-      let newNavigationController = UINavigationController(rootViewController: destination)
-      newNavigationController.navigationBar.shadowImage = UIImage()
-      newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-      
-      newNavigationController.navigationBar.isTranslucent = false
-      newNavigationController.modalTransitionStyle = .crossDissolve
+    } catch let signOutError as NSError {
       ARSLineProgress.hide()
-      self.present(newNavigationController, animated: true, completion: {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
-        
-        self.tabBarController?.selectedIndex = tabs.chats.rawValue
-        
-      })
+      basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
+      return
     }
+    AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+    UIApplication.shared.applicationIconBadgeNumber = 0
+    
+    let destination = OnboardingController()
+    
+    let newNavigationController = UINavigationController(rootViewController: destination)
+    newNavigationController.navigationBar.shadowImage = UIImage()
+    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+    
+    newNavigationController.navigationBar.isTranslucent = false
+    newNavigationController.modalTransitionStyle = .crossDissolve
+    ARSLineProgress.hide()
+    self.present(newNavigationController, animated: true, completion: {
+      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
+      
+      self.tabBarController?.selectedIndex = tabs.chats.rawValue
+      
+    })
   }
 }
 
@@ -305,12 +294,6 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       
     if indexPath.section == 1 {
       if indexPath.row == 0 {
-        let destination = LegalTableViewController()
-        destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination, animated: true)
-      }
-        
-      if indexPath.row == 1 {
         logoutButtonTapped()
       }
     }

@@ -27,7 +27,6 @@
 		4B2820EB1FE4025600791AB1 /* Announcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E61FE4025500791AB1 /* Announcement.swift */; };
 		4B2820EC1FE4025600791AB1 /* AnnouncementShowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E71FE4025500791AB1 /* AnnouncementShowing.swift */; };
 		4B2820ED1FE4025600791AB1 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2820E81FE4025600791AB1 /* UIView+Extensions.swift */; };
-		4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */; };
 		4B29BB6520572C91002A4F5D /* RoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B29BB6420572C91002A4F5D /* RoundProgressView.swift */; };
 		4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */; };
 		4B2A9589205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift */; };
@@ -131,7 +130,6 @@
 		4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */; };
 		4BBBCC0320588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */; };
 		4BBBCC06205C3F6600926800 /* NavigationItemActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC05205C3F6600926800 /* NavigationItemActivityIndicator.swift */; };
-		4BC0AE331FD6F8A400C39A61 /* typingindicatorGray.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC0AE321FD6F8A300C39A61 /* typingindicatorGray.gif */; };
 		4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */; };
 		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
 		4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC26B231F3A22890093A9D2 /* typingIndicator.gif */; };
@@ -139,8 +137,8 @@
 		4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC2C58C1F40545200B5C825 /* UserCell.swift */; };
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
-		4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA3BF41FB4966E006AE321 /* LegalTableViewController.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
+		4BCF96EF208E19130039C278 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCF96EE208E19120039C278 /* GoogleService-Info.plist */; };
 		4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */; };
 		4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
@@ -210,7 +208,6 @@
 		4B2820E61FE4025500791AB1 /* Announcement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Announcement.swift; path = "Support/In-AppNotificationBanner/Announcement.swift"; sourceTree = "<group>"; };
 		4B2820E71FE4025500791AB1 /* AnnouncementShowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementShowing.swift; path = "Support/In-AppNotificationBanner/AnnouncementShowing.swift"; sourceTree = "<group>"; };
 		4B2820E81FE4025600791AB1 /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+Extensions.swift"; path = "Support/In-AppNotificationBanner/UIView+Extensions.swift"; sourceTree = "<group>"; };
-		4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B29BB6420572C91002A4F5D /* RoundProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundProgressView.swift; path = Support/RoundProgressView/RoundProgressView.swift; sourceTree = "<group>"; };
 		4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsTableViewController.swift; path = ChatsControllers/GroupAdminControlsTableViewController.swift; sourceTree = "<group>"; };
 		4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsPictureAvatarOpenerDelegate.swift; path = ChatsControllers/GroupAdminControlsPictureAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
@@ -273,7 +270,6 @@
 		4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileContainerView.swift; path = AuthenticationControllers/UserProfileContainerView.swift; sourceTree = "<group>"; };
 		4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+keyboardHandlers.swift"; path = "AuthenticationControllers/UserProfileController+keyboardHandlers.swift"; sourceTree = "<group>"; };
 		4B91B8BB1F34E9D60025C67F /* Public.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Public.swift; path = Support/Public.swift; sourceTree = "<group>"; };
-		4B94986E1F323B76008DA07F /* Pigeon-project.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pigeon-project.entitlements"; sourceTree = "<group>"; };
 		4B9498731F3244CA008DA07F /* UserProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileController.swift; path = AuthenticationControllers/UserProfileController.swift; sourceTree = "<group>"; };
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
@@ -317,7 +313,6 @@
 		4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+TableRowActionHandlers.swift"; path = "ChatsControllers/ChatsTableViewController+TableRowActionHandlers.swift"; sourceTree = "<group>"; };
 		4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+NotificationsHandlers.swift"; path = "ChatsControllers/ChatsTableViewController+NotificationsHandlers.swift"; sourceTree = "<group>"; };
 		4BBBCC05205C3F6600926800 /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NavigationItemActivityIndicator.swift; path = Support/NavigationControllerActivityIndicator/NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
-		4BC0AE321FD6F8A300C39A61 /* typingindicatorGray.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingindicatorGray.gif; path = ChatsControllers/Media/typingindicatorGray.gif; sourceTree = "<group>"; };
 		4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatInputContainerView.swift; path = ChatsControllers/ChatInputContainerView.swift; sourceTree = "<group>"; };
 		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
 		4BC26B231F3A22890093A9D2 /* typingIndicator.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingIndicator.gif; path = ChatsControllers/Media/typingIndicator.gif; sourceTree = "<group>"; };
@@ -325,8 +320,8 @@
 		4BC2C58C1F40545200B5C825 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = ChatsControllers/UserCell.swift; sourceTree = "<group>"; };
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
-		4BCA3BF41FB4966E006AE321 /* LegalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LegalTableViewController.swift; path = SettingsControllers/LegalTableViewController.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
+		4BCF96EE208E19120039C278 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaPickerControllerNew.swift; path = ChatsControllers/MediaPickerControllerNew.swift; sourceTree = "<group>"; };
 		4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MediaPicerControllerNew+ImagePicker.swift"; path = "ChatsControllers/MediaPicerControllerNew+ImagePicker.swift"; sourceTree = "<group>"; };
 		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
@@ -478,7 +473,6 @@
 				4B8D05331F738FBB001735BC /* NotificationsAndSounds */,
 				4BB749FA206E2F210014837E /* ChangeNumber */,
 				4B48D3091F35C9E20050C797 /* Storage */,
-				4BCA3BF31FB47705006AE321 /* Legal */,
 			);
 			name = Menu;
 			sourceTree = "<group>";
@@ -523,7 +517,6 @@
 		4B4F452D1F32230C00A6FF96 /* Pigeon-project */ = {
 			isa = PBXGroup;
 			children = (
-				4B94986E1F323B76008DA07F /* Pigeon-project.entitlements */,
 				4B94986D1F323AFF008DA07F /* Authentication */,
 				4B4F45521F32260100A6FF96 /* Contacts */,
 				4B4F45511F3225F700A6FF96 /* Chats */,
@@ -532,8 +525,8 @@
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
 				4B54EAAE2084E77000BDFA25 /* SplashScreenControllers */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
-				4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */,
 				4B4F453C1F32230C00A6FF96 /* Info.plist */,
+				4BCF96EE208E19120039C278 /* GoogleService-Info.plist */,
 			);
 			path = "Pigeon-project";
 			sourceTree = "<group>";
@@ -853,7 +846,6 @@
 		4BC26B221F3A227E0093A9D2 /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				4BC0AE321FD6F8A300C39A61 /* typingindicatorGray.gif */,
 				4BF6F94C1FD188110011686B /* typingindicatorDark.gif */,
 				4BC26B231F3A22890093A9D2 /* typingIndicator.gif */,
 			);
@@ -882,14 +874,6 @@
 				4BB6D195206EA62F00FEF72E /* MediaObject.swift */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		4BCA3BF31FB47705006AE321 /* Legal */ = {
-			isa = PBXGroup;
-			children = (
-				4BCA3BF41FB4966E006AE321 /* LegalTableViewController.swift */,
-			);
-			name = Legal;
 			sourceTree = "<group>";
 		};
 		4BE72A6B204E9D65009A22EA /* MediaPickerControllers */ = {
@@ -1110,8 +1094,8 @@
 				4B4F45271F32230C00A6FF96 /* Sources */,
 				4B4F45281F32230C00A6FF96 /* Frameworks */,
 				4B4F45291F32230C00A6FF96 /* Resources */,
-				7EC59B7540CDC8D78F177BD4 /* [CP] Embed Pods Frameworks */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
+				AED3F67074E3E6AFFB950ABD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1134,7 +1118,7 @@
 				TargetAttributes = {
 					4B4F452A1F32230C00A6FF96 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = A3WPJ33XN8;
+						DevelopmentTeam = X9LK79XJU6;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -1142,7 +1126,7 @@
 								enabled = 1;
 							};
 							com.apple.Push = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -1171,7 +1155,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BC0AE331FD6F8A400C39A61 /* typingindicatorGray.gif in Resources */,
 				4BB74A16206E311D0014837E /* CallingCodes.plist in Resources */,
 				4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
@@ -1179,51 +1162,15 @@
 				4B45263C1F5EBCFA003FBA29 /* notification.caf in Resources */,
 				4BF6F94D1FD188110011686B /* typingindicatorDark.gif in Resources */,
 				4B5419551FB392570014C4FB /* INSPhotoGallery.bundle in Resources */,
+				4BCF96EF208E19130039C278 /* GoogleService-Info.plist in Resources */,
 				4B2143021F51C74000F7A4B8 /* TimestampView.xib in Resources */,
 				4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */,
-				4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7EC59B7540CDC8D78F177BD4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CropViewController/CropViewController.framework",
-				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
-				"${BUILT_PRODUCTS_DIR}/FTPopOverMenu_Swift/FTPopOverMenu_Swift.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CropViewController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FTPopOverMenu_Swift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1240,6 +1187,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AED3F67074E3E6AFFB950ABD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CropViewController/CropViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
+				"${BUILT_PRODUCTS_DIR}/FTPopOverMenu_Swift/FTPopOverMenu_Swift.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CropViewController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FTPopOverMenu_Swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1301,7 +1282,6 @@
 				4B48D3251F361E490050C797 /* ARSStatus.swift in Sources */,
 				4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */,
 				4BAD974E206E349E008ADF6B /* SelectParticipantsViewController.swift in Sources */,
-				4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */,
 				4B24ADD9206EA5900072171A /* Country.swift in Sources */,
 				4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */,
 				4B5419561FB392570014C4FB /* INSPhotosTransitionAnimator.swift in Sources */,
@@ -1451,7 +1431,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -1476,7 +1456,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = /Users/romanmizin/Downloads/Pigeon_Messenger_App_Store_Distribution.mobileprovision;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1513,8 +1493,8 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Roman Mizin (A3WPJ33XN8)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roman Mizin (A3WPJ33XN8)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1523,7 +1503,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1533,7 +1513,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = /Users/romanmizin/Downloads/Pigeon_Messenger_App_Store_Distribution.mobileprovision;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
@@ -1544,16 +1524,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Pigeon-project/Pigeon-project.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = A3WPJ33XN8;
+				DEVELOPMENT_TEAM = X9LK79XJU6;
 				INFOPLIST_FILE = "Pigeon-project/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
+				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-git";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1568,17 +1548,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Pigeon-project/Pigeon-project.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Roman Mizin (A3WPJ33XN8)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = A3WPJ33XN8;
+				DEVELOPMENT_TEAM = X9LK79XJU6;
 				INFOPLIST_FILE = "Pigeon-project/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
+				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-git";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
