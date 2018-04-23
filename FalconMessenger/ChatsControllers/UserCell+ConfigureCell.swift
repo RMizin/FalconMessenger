@@ -37,6 +37,7 @@ extension UserCell {
     if let lastMessage = conversations[indexPath.row].lastMessage {
       let date = Date(timeIntervalSince1970: lastMessage.timestamp as! TimeInterval)
       timeLabel.text = timestampOfLastMessage(date)
+      timeLabelWidthAnchor.constant = timeLabelWidth(text: timeLabel.text ?? "")
     }
   
     profileImageView.image = placeHolderImage
@@ -60,7 +61,7 @@ extension UserCell {
     guard badgeInt > 0, conversations[indexPath.row].lastMessage?.fromId != Auth.auth().currentUser?.uid else {
       newMessageIndicator.isHidden = true
       badgeLabel.isHidden = true
-      badgeLabelRightConstraint.constant = 0
+      messageLabelRightConstraint.constant = 0
       badgeLabelWidthConstraint.constant = 0
       return
     }
@@ -68,7 +69,7 @@ extension UserCell {
     badgeLabel.text = badgeString
     badgeLabel.isHidden = false
     badgeLabelWidthConstraint.constant = badgeLabelWidthConstant
-    badgeLabelRightConstraint.constant = badgeLabelRightConstant
+    messageLabelRightConstraint.constant = messageLabelRightConstant
     newMessageIndicator.isHidden = false
     return
   }

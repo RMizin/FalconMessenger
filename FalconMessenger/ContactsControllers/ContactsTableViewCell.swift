@@ -15,7 +15,7 @@ class ContactsTableViewCell: UITableViewCell {
     var icon = UIImageView()
     icon.translatesAutoresizingMaskIntoConstraints = false
     icon.contentMode = .scaleAspectFill
-    icon.layer.cornerRadius = 20
+    icon.layer.cornerRadius = 25
     icon.layer.masksToBounds = true
     
     return icon
@@ -24,7 +24,7 @@ class ContactsTableViewCell: UITableViewCell {
   var title: UILabel = {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
-    title.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.semibold)
+    title.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     
     return title
@@ -40,8 +40,8 @@ class ContactsTableViewCell: UITableViewCell {
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
-    icon.widthAnchor.constraint(equalToConstant: 46).isActive = true
-    icon.heightAnchor.constraint(equalToConstant: 46).isActive = true
+    icon.widthAnchor.constraint(equalToConstant: 50).isActive = true
+    icon.heightAnchor.constraint(equalToConstant: 50).isActive = true
     
     contentView.addSubview(title)
     title.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 0).isActive = true

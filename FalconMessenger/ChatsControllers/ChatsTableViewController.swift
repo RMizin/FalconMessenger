@@ -588,11 +588,14 @@ class ChatsTableViewController: UITableViewController {
         for conversation in self.filtededConversations {
           guard let chatID = conversation.chatID else { return }
           self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
+          self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
         }
         
         for conversation in self.filteredPinnedConversations {
           guard let chatID = conversation.chatID else { return }
+          self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
           self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
+          
         }
       })
     } else {
@@ -742,7 +745,7 @@ class ChatsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 85
+    return 76
   }
   
   override func numberOfSections(in tableView: UITableView) -> Int {

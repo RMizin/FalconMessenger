@@ -15,7 +15,7 @@ class CurrentUserTableViewCell: UITableViewCell {
     icon.translatesAutoresizingMaskIntoConstraints = false
     icon.contentMode = .scaleAspectFill
     
-    icon.layer.cornerRadius = 26
+    icon.layer.cornerRadius = 30
     icon.layer.masksToBounds = true
     icon.image = ThemeManager.currentTheme().personalStorageImage
     
@@ -42,8 +42,8 @@ class CurrentUserTableViewCell: UITableViewCell {
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
-    icon.widthAnchor.constraint(equalToConstant: 55).isActive = true
-    icon.heightAnchor.constraint(equalToConstant: 55).isActive = true
+    icon.widthAnchor.constraint(equalToConstant: 62).isActive = true
+    icon.heightAnchor.constraint(equalToConstant: 62).isActive = true
     
     contentView.addSubview(title)
     title.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 0).isActive = true

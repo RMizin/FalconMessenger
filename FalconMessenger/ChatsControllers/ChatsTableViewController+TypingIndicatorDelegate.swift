@@ -33,8 +33,6 @@ extension ChatsTableViewController: TypingIndicatorDelegate {
       guard isCompleted else { return }
       pinnedConversations = conversations
     }
-    
-    print("\ntyping indicator if active: \(isActive), for conversation: \(chatID)\n")
   }
   
   typealias typingUpdateCompletionHandler = (_ isCompleted: Bool, _ updatedConversations: [Conversation], _ row: Int?) -> Void
@@ -52,8 +50,10 @@ extension ChatsTableViewController: TypingIndicatorDelegate {
   
   func reloadCell(at row: Int, section: Int) {
     let indexPath = IndexPath(row: row, section: section)
-    self.tableView.beginUpdates()
-    self.tableView.reloadRows(at: [indexPath], with: .none)
-    self.tableView.endUpdates()
+    UIView.performWithoutAnimation {
+      tableView.beginUpdates()
+      tableView.reloadRows(at: [indexPath], with: .none)
+      tableView.endUpdates()
+    }
   }
 }

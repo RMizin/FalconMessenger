@@ -291,9 +291,9 @@ class ContactsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       if indexPath.section == 0 {
-         return 85
+         return 76
       } else {
-         return 65
+         return 66
       }
     }
   
@@ -484,7 +484,6 @@ extension ContactsController: MessagesDelegate {
     chatLogController?.conversation = conversation
     chatLogController?.observeTypingIndicator()
     chatLogController?.configureTitleViewWithOnlineStatus()
-    //chatLogController?.observeMembersChanges()
     chatLogController?.messagesFetcher.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
     
@@ -498,38 +497,3 @@ extension ContactsController: MessagesDelegate {
     destinationLayout = nil
   }
 }
-
-//extension ContactsController: MessagesLoaderDelegate {
-//  
-//  func messagesLoader( didFinishLoadingWith messages: [Message]) {
-//    
-//    self.chatLogController?.messages = messages
-//    
-//    var indexPaths = [IndexPath]()
-//    
-//    if messages.count - 1 >= 0 {
-//      for index in 0...messages.count - 1 {
-//        
-//        indexPaths.append(IndexPath(item: index, section: 1))
-//      }
-//      
-//      UIView.performWithoutAnimation {
-//        DispatchQueue.main.async {
-//          self.chatLogController?.collectionView?.reloadItems(at:indexPaths)
-//        }
-//      }
-//    }
-//    
-//    if #available(iOS 11.0, *) {
-//    } else {
-//     // self.chatLogController?.startCollectionViewAtBottom()
-//    }
-//    if let destination = self.chatLogController {
-//      navigationController?.pushViewController( destination, animated: true)
-//      self.chatLogController = nil
-//      self.autoSizingCollectionViewFlowLayout = nil
-//    }
-//  }
-//}
-
-

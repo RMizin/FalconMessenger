@@ -68,7 +68,7 @@ func topViewController(rootViewController: UIViewController?) -> UIViewControlle
 }
 
 struct NameConstants {
-  static let personalStorage = "Personal storage"
+  static let personalStorage = "Personal Storage"
 }
 
 public let messageStatusRead = "Read"
@@ -171,6 +171,13 @@ extension Int {
   func toString() -> String {
     let myString = String(self)
     return myString
+  }
+}
+
+extension String {
+  func sizeOfString(usingFont font: UIFont) -> CGSize {
+    let fontAttributes = [NSAttributedStringKey.font: font]
+    return self.capitalized.size(withAttributes: fontAttributes)
   }
 }
 

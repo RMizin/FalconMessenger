@@ -318,7 +318,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
   }
   
   override  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 55
+    return 50
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

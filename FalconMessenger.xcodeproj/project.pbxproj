@@ -993,11 +993,11 @@
 			children = (
 				4BE72A77204E9EC2009A22EA /* Cells */,
 				4BBBCBFA205851E100926800 /* ChatsTableViewController.swift */,
+				4BFBB107208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift */,
 				4BBBCBFC2058804900926800 /* ChatsTableViewController+SearchHandlers.swift */,
 				4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */,
 				4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */,
 				4B27F6772089C92E0068077E /* TypingIndicatorObserver.swift */,
-				4BFBB107208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift */,
 			);
 			name = ChatsControllers;
 			sourceTree = "<group>";
