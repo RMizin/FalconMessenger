@@ -133,7 +133,7 @@ class ChatsTableViewController: UITableViewController {
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     tableView.backgroundColor = view.backgroundColor
     navigationItem.leftBarButtonItem = editButtonItem
-    let newChatBarButton =  UIBarButtonItem(image: UIImage(named: "composeButton"), style: .done, target: self, action: #selector(newChat))
+    let newChatBarButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(newChat))
     navigationItem.rightBarButtonItem = newChatBarButton
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
@@ -159,6 +159,7 @@ class ChatsTableViewController: UITableViewController {
       tableView.isOpaque = true
       tableView.reloadData()
       shouldReloadChatsControllerAfterChangingTheme = false
+      noChatsYetContainer.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     }
   }
   
@@ -184,7 +185,9 @@ class ChatsTableViewController: UITableViewController {
  fileprivate func managePresense() {
     
     if currentReachabilityStatus == .notReachable {
-      navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .connecting, activityPriority: .high, color: ThemeManager.currentTheme().generalTitleColor)
+      navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .connecting,
+                                                            activityPriority: .high,
+                                                            color: ThemeManager.currentTheme().generalTitleColor)
     }
     
     connectedReference = Database.database().reference(withPath: ".info/connected")
@@ -195,9 +198,7 @@ class ChatsTableViewController: UITableViewController {
       } else {
         self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .noInternet, activityPriority: .crazy, color: ThemeManager.currentTheme().generalTitleColor)
       }
-    }) { (error) in
-     // print(error.localizedDescription)
-    }
+    })
   }
   
   func checkIfThereAnyActiveChats(isEmpty: Bool) {
@@ -500,17 +501,21 @@ class ChatsTableViewController: UITableViewController {
     if let unpinnedIndex = self.conversations.index(where: { (unpinnedConversation) -> Bool in
       return unpinnedConversation.chatID == userID }) {
       
-      let isTyping = self.conversations[unpinnedIndex].isTyping
-      conversation.isTyping = isTyping
-      
+      if conversation.isTyping == nil {
+        let isTyping = self.conversations[unpinnedIndex].isTyping
+        conversation.isTyping = isTyping
+      }
       self.conversations[unpinnedIndex] = conversation
       self.handleGroupOrReloadTable()
       
     } else if let pinnedIndex = self.pinnedConversations.index(where: { (pinnedConversation) -> Bool in
       return pinnedConversation.chatID == userID }) {
       
-      let isTyping = self.pinnedConversations[pinnedIndex].isTyping
-      conversation.isTyping = isTyping
+      if conversation.isTyping == nil {
+        let isTyping = self.pinnedConversations[pinnedIndex].isTyping
+        conversation.isTyping = isTyping
+      }
+    
       
       self.pinnedConversations[pinnedIndex] = conversation
       self.handleGroupOrReloadTable()
@@ -587,15 +592,21 @@ class ChatsTableViewController: UITableViewController {
         
         for conversation in self.filtededConversations {
           guard let chatID = conversation.chatID else { return }
-          self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
-          self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
+     
+          if let isGroupChat = conversation.isGroupChat, isGroupChat {
+            self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
+          } else {
+            self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
+          }
         }
         
         for conversation in self.filteredPinnedConversations {
           guard let chatID = conversation.chatID else { return }
-          self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
-          self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
-          
+          if let isGroupChat = conversation.isGroupChat, isGroupChat {
+            self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
+          } else {
+            self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
+          }
         }
       })
     } else {

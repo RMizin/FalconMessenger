@@ -54,23 +54,23 @@ class ContactsController: UITableViewController {
       edgesForExtendedLayout = UIRectEdge.top
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       falconUsersFetcher.delegate = self
-
       setupTableView()
       setupSearchController()
+      fetchCurrentUser()
       fetchContacts()
       checkContactsAuthorizationStatus()
     }
   
     override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
-        checkContactsAuthorizationStatus()
-        fetchCurrentUser()
-        setUpColorsAccordingToTheme()
+      
+      checkContactsAuthorizationStatus()
+      setUpColorsAccordingToTheme()
       
       if shouldReFetchFalconUsers {
         shouldReFetchFalconUsers = false
         DispatchQueue.main.async {
-          self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
+          self.falconUsersFetcher.fetchFalconUsers()
         }
       }
     }
@@ -155,14 +155,11 @@ class ContactsController: UITableViewController {
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
     let userReference = Database.database().reference().child("users").child(uid)
-    userReference.observe(.value) { (snapshot) in
-      if snapshot.exists() {
-        guard var dictionary = snapshot.value as? [String: AnyObject] else {
-          return
-        }
-        dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
-        self.currentUser = User(dictionary: dictionary)
-      }
+    userReference.observeSingleEvent(of: .value) { (snapshot) in
+      guard snapshot.exists() else { return }
+      guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+      dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
+      self.currentUser = User(dictionary: dictionary)
     }
   }
   
@@ -170,42 +167,25 @@ class ContactsController: UITableViewController {
  fileprivate func fetchContacts () {
     
     let status = CNContactStore.authorizationStatus(for: .contacts)
-    if status == .denied || status == .restricted {
-      presentSettingsActionSheet()
-      return
-    }
-    
-    // open it
     let store = CNContactStore()
+    if status == .denied || status == .restricted { return }
+  
     store.requestAccess(for: .contacts) { granted, error in
-      guard granted else {
-        DispatchQueue.main.async {
-          self.presentSettingsActionSheet()
-        }
-        return
-      }
-      
-      // get the contacts
+      guard granted else { return }
+
       let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey as NSString, CNContactPhoneNumbersKey as NSString, CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
+      
       do {
-        try store.enumerateContacts(with: request) { contact, stop in
-          self.contacts.append(contact)
-        }
-      } catch {
-        print(error)
-      }
+        try store.enumerateContacts(with: request) { contact, stop in self.contacts.append(contact) }
+      } catch {}
       
       localPhones.removeAll()
       self.filteredContacts = self.contacts
 
-      for contact in self.contacts {
-       
-        for phone in contact.phoneNumbers {
-        
-          localPhones.append(phone.value.stringValue.digits)
-        }
-      }
-      self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
+      let phoneNumbers = self.contacts.flatMap({$0.phoneNumbers.map({$0.value.stringValue.digits}) })
+      localPhones.append(contentsOf: phoneNumbers)
+      
+      self.falconUsersFetcher.fetchFalconUsers()
       self.sendUserContactsToDatabase()
     }
   }
@@ -213,19 +193,16 @@ class ContactsController: UITableViewController {
   
  fileprivate func sendUserContactsToDatabase() {
     guard let uid = Auth.auth().currentUser?.uid else { return }
-    
+
     let userReference = Database.database().reference().child("users").child(uid)
     var preparedNumbers = [String]()
-  
+
     for number in localPhones {
       do {
         let countryCode = try self.phoneNumberKit.parse(number).countryCode
         let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
         preparedNumbers.append( ("+" + String(countryCode) + String(nationalNumber)) )
-       
-      } catch {
-        // print("Generic parser error")
-      }
+      } catch {}
     }
     userReference.updateChildValues(["contacts": preparedNumbers])
   }
@@ -233,18 +210,14 @@ class ContactsController: UITableViewController {
   
   fileprivate func reloadTableView(updatedUsers: [User]) {
     
-    self.users = updatedUsers
-    self.users = falconUsersFetcher.rearrangeUsers(users: self.users)
-  
+    users = falconUsersFetcher.rearrangeUsers(users: updatedUsers)
     let searchBar = correctSearchBarForCurrentIOSVersion()
     let isSearchInProgress = searchBar.text != ""
-    let isSearchControllerEmpty = self.filteredUsers.count == 0
+    let isSearchControllerEmpty = filteredUsers.count == 0
     
-    if isSearchInProgress && !isSearchControllerEmpty {
-      return
-    } else {
-      self.filteredUsers = self.users
-      guard self.filteredUsers.count != 0 else { return }
+    if isSearchInProgress && !isSearchControllerEmpty { return } else {
+      filteredUsers = users
+      guard filteredUsers.count != 0 else { return }
       DispatchQueue.main.async {
         self.tableView.reloadData()
       }
@@ -261,16 +234,6 @@ class ContactsController: UITableViewController {
     return searchBar
   }
   
- fileprivate func presentSettingsActionSheet() {
-    let alert = UIAlertController(title: "Permission to Contacts", message: "Falcon messenger uses phone numbers as unique identifiers, so that it is easy for you to switch from other messaging apps and retain your social graph. We store your contacts in order to find your friends who also use Falcon. We only need the number and name (first and last) for this to work and store no other data about your contacts.", preferredStyle: .actionSheet)
-    alert.addAction(UIAlertAction(title: "Go to Settings", style: .default) { _ in
-      let url = URL(string: UIApplicationOpenSettingsURLString)!
-      UIApplication.shared.open(url)
-    })
-    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-    present(alert, animated: true)
-  }
-
 
     // MARK: - Table view data source
 
@@ -398,16 +361,13 @@ class ContactsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       
-    //  let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
       if indexPath.section == 0 {
         
         guard currentUser != nil else { return }
         
-        let conversationDictionary: [String: AnyObject] = ["chatID": currentUser?.id as AnyObject, "chatName": currentUser?.name as AnyObject,
+        let conversationDictionary: [String: AnyObject] = ["chatID": currentUser?.id as AnyObject,
                                                           "isGroupChat": false  as AnyObject,
-                                                          "chatOriginalPhotoURL": currentUser?.photoURL as AnyObject,
-                                                          "chatThumbnailPhotoURL": currentUser?.thumbnailPhotoURL as AnyObject,
                                                           "chatParticipantsIDs": [currentUser?.id] as AnyObject]
         
         let conversation = Conversation(dictionary: conversationDictionary)

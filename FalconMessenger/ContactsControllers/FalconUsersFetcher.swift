@@ -14,22 +14,19 @@ protocol FalconUsersUpdatesDelegate: class {
   func falconUsers(shouldBeUpdatedTo users: [User])
 }
 
-public var shouldReFetchFalconUsers:Bool = false
+public var shouldReFetchFalconUsers: Bool = false
+
 
 class FalconUsersFetcher: NSObject {
   
   let phoneNumberKit = PhoneNumberKit()
-  
   var users = [User]()
-  
   weak var delegate: FalconUsersUpdatesDelegate?
-  
   var userReference: DatabaseReference!
   var userQuery: DatabaseQuery!
   var userHandle = [DatabaseHandle]()
   var group = DispatchGroup()
 
-  
   fileprivate func clearObserversAndUsersIfNeeded() {
     self.users.removeAll()
     if userReference != nil {
@@ -39,43 +36,13 @@ class FalconUsersFetcher: NSObject {
     }
   }
   
-  func fetchFalconUsers(asynchronously: Bool) {
-    
+  func fetchFalconUsers() {
     clearObserversAndUsersIfNeeded()
-    
-    if asynchronously {
-      fetchAsynchronously()
-    } else {
-      fetchSynchronously()
-    }
-  }
-  
-  fileprivate func fetchSynchronously() {
-    
-    var preparedNumbers = [String]()
-    
-    for number in localPhones {
-      do {
-        let countryCode = try phoneNumberKit.parse(number).countryCode
-        let nationalNumber = try phoneNumberKit.parse(number).nationalNumber
-        preparedNumbers.append("+" + String(countryCode) + String(nationalNumber))
-        group.enter()
-      } catch {}
-    }
-    
-    group.notify(queue: DispatchQueue.main, execute: {
-      print("COntacts load finished Falcon")
-      self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
-    })
-    
-    for preparedNumber in preparedNumbers {
-      fetchAndObserveFalconUser(for: preparedNumber, asynchronously: false)
-    }
+    fetchAsynchronously()
   }
   
   fileprivate func fetchAsynchronously() {
     var preparedNumber = String()
-    
     
     for number in localPhones {
       do {
@@ -84,54 +51,36 @@ class FalconUsersFetcher: NSObject {
         preparedNumber = "+" + String(countryCode) + String(nationalNumber)
       } catch {}
       
-      fetchAndObserveFalconUser(for: preparedNumber, asynchronously: true)
+      fetchAndObserveFalconUser(for: preparedNumber)
     }
   }
   
-  fileprivate func fetchAndObserveFalconUser(for preparedNumber: String, asynchronously: Bool) {
+  fileprivate func fetchAndObserveFalconUser(for preparedNumber: String) {
     
     userReference = Database.database().reference().child("users")
-    userQuery = userReference.queryOrdered(byChild: "phoneNumber")
+    userQuery = userReference.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber)
     let databaseHandle = DatabaseHandle()
     userHandle.insert(databaseHandle, at: 0 )
-    userHandle[0] = userQuery.queryEqual(toValue: preparedNumber).observe(.value, with: { (snapshot) in
-      
-      if snapshot.exists() {
-        for child in snapshot.children.allObjects as! [DataSnapshot]  {
-          guard var dictionary = child.value as? [String: AnyObject] else { return }
-          dictionary.updateValue(child.key as AnyObject, forKey: "id")
-          
-          if let index = self.users.index(where: { (user) -> Bool in
-            return user.id == User(dictionary: dictionary).id
-          }) {
-            self.users[index] = User(dictionary: dictionary)
-          } else {
-            self.users.append(User(dictionary: dictionary))
-          }
-          
-          self.users = self.sortUsers(users: self.users)
-          self.users = self.rearrangeUsers(users: self.users)
-          
-          if let index = self.users.index(where: { (user) -> Bool in
-            return user.id == Auth.auth().currentUser?.uid
-          }) {
-            self.users.remove(at: index)
-          }
-        }
-        
-        if asynchronously {
-          self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
-        }
-      }
-      
-      if !asynchronously {
-        self.group.leave()
-      //  print("leaving group")
-      }
+    userHandle[0] = userQuery.observe(.value, with: { (snapshot) in
     
-    }, withCancel: { (error) in
-    //  print("error")
-      //search error
+      guard snapshot.exists(), let userData = (snapshot.value as? [String: AnyObject])?.first,
+            let currentUserID = Auth.auth().currentUser?.uid else { return }
+      
+      let userID = userData.key
+      guard var userDictionary = userData.value as? [String: AnyObject], userID != currentUserID else { return }
+      userDictionary.updateValue(userID as AnyObject, forKey: "id")
+      let fetchedUser = User(dictionary: userDictionary)
+      
+      if let index = self.users.index(where: { (user) -> Bool in
+        return user.id == fetchedUser.id
+      }) {
+        self.users[index] = fetchedUser
+      } else {
+        self.users.append(fetchedUser)
+      }
+      
+      self.users = self.rearrangeUsers(users: self.sortUsers(users: self.users))
+      self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
     })
   }
   
@@ -143,17 +92,16 @@ class FalconUsersFetcher: NSObject {
         users = rearrange(array: users, fromIndex: index, toIndex: 0)
       }
     }
-    
     return users
   }
   
   func sortUsers(users: [User]) -> [User] { /* Sort users by last online date  */
     return users.sorted(by: { (user1, user2) -> Bool in
-      if let firstUserOnlineStatus = user1.onlineStatus as? TimeInterval , let secondUserOnlineStatus = user2.onlineStatus as? TimeInterval {
-        return (firstUserOnlineStatus, user1.phoneNumber ?? "") > ( secondUserOnlineStatus, user2.phoneNumber ?? "")
-      } else {
+      guard let firstUserOnlineStatus = user1.onlineStatus as? TimeInterval , let secondUserOnlineStatus = user2.onlineStatus as? TimeInterval else {
         return ( user1.phoneNumber ?? "") > (user2.phoneNumber ?? "") // sort
       }
+      return (firstUserOnlineStatus, user1.phoneNumber ?? "") > ( secondUserOnlineStatus, user2.phoneNumber ?? "")
     })
   }
+  
 }

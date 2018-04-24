@@ -34,7 +34,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      window = UIWindow(frame: UIScreen.main.bounds)
      window?.rootViewController = mainController
      window?.makeKeyAndVisible()
-     window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
   
     if UserDefaults.standard.bool(forKey: "hasRunBefore") == false {
       do { try Auth.auth().signOut() } catch {}
@@ -43,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     presentOnboardingController(above: mainController)    
-    self.setDeaultsForSettings()
+    setDeaultsForSettings()
     
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self

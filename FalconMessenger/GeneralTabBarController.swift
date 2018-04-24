@@ -23,37 +23,31 @@ class GeneralTabBarController: UITabBarController {
   let splashContainer: SplashScreenContainer = {
     let splashContainer = SplashScreenContainer()
     splashContainer.translatesAutoresizingMaskIntoConstraints = false
-    
     return splashContainer
   }()
   
   override func viewDidLoad() {
       super.viewDidLoad()
-   
+    configureTabBar()
     setOnlineStatus()
-    configureTabBar()   
   }
   
   fileprivate func configureTabBar() {
     UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor], for: .normal)
     tabBar.unselectedItemTintColor = ThemeManager.currentTheme().generalSubtitleColor
     tabBar.isTranslucent = false
-    tabBar.layer.borderWidth = 0.50
-    tabBar.layer.borderColor = UIColor.clear.cgColor
     tabBar.clipsToBounds = true
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
-    if onceToken == 0 && isBiometricalAuthEnabled {
-      view.addSubview(splashContainer)
-      splashContainer.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-      splashContainer.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-      splashContainer.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-      splashContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
-    
+    guard onceToken == 0, isBiometricalAuthEnabled else { onceToken = 1; return }
+    view.addSubview(splashContainer)
+    splashContainer.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+    splashContainer.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+    splashContainer.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    splashContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     onceToken = 1
   }
 }
@@ -61,12 +55,7 @@ class GeneralTabBarController: UITabBarController {
 extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool) {
     let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
-    if state {
-      if isBiometricalAuthEnabled {
-        splashContainer.authenticationWithTouchID()
-      } else {
-        self.splashContainer.showSecuredData()
-      }
-    }
+    guard state, isBiometricalAuthEnabled else { splashContainer.showSecuredData(); return }
+    splashContainer.authenticationWithTouchID()
   }
 }
