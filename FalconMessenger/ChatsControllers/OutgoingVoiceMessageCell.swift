@@ -22,7 +22,7 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.playWidthAnchor.constant = 20
     playerView.playHeightAnchor.constant = -5
     playerView.timelabelLeadingAnchor.constant = playerView.playWidthAnchor.constant + playerView.playLeadingAnchor.constant
-    playerView.timerLabel.font = UIFont.systemFont(ofSize: 14)
+    playerView.timerLabel.font = MessageFontsAppearance.defaultVoiceMessageTextFont
     playerView.play.setImage(UIImage(named: "pause"), for: .selected)
     playerView.play.setImage(UIImage(named: "playWhite"), for: .normal)
     playerView.timerLabel.textColor = .white
@@ -30,9 +30,10 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
   
   func setupData(message: Message) {
     self.message = message
-    bubbleView.frame.origin = CGPoint(x: (frame.width - 160).rounded(), y: 0)
+    let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
+    bubbleView.frame.origin = CGPoint(x: x, y: 0)
     bubbleView.frame.size.height = frame.size.height.rounded()
-    playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height:( bubbleView.frame.height).rounded())
+    playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height: (bubbleView.frame.height).rounded())
 
     setupTimestampView(message: message, isOutgoing: true)
     guard message.voiceEncodedString != nil else { return }

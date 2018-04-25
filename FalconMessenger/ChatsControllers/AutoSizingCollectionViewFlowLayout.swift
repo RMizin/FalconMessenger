@@ -13,6 +13,8 @@ var contentSizeWhenInsertingToTop: CGSize?
 
 class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
   
+  static let lineSpacing: CGFloat = 2
+  
   override func prepare() {
     super.prepare()
     

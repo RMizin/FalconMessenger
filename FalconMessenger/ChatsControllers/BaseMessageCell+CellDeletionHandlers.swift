@@ -31,33 +31,33 @@ extension BaseMessageCell {
     
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
-      cell.bubbleView.image = BaseMessageCell.selectedOutgoingBubble
+      cell.bubbleView.image = ThemeManager.currentTheme().selectedOutgoingBubble
       contextMenuItems = [ContextMenuItems.deleteItem]
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
       contextMenuItems = [ContextMenuItems.deleteItem]
-      cell.bubbleView.image = BaseMessageCell.selectedIncomingBubble
+      cell.bubbleView.image = ThemeManager.currentTheme().selectedIncomingBubble
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? PhotoMessageCell {
-      cell.bubbleView.image = BaseMessageCell.selectedOutgoingBubble
+      cell.bubbleView.image = ThemeManager.currentTheme().selectedOutgoingBubble
       if !cell.playButton.isHidden {
         contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
         config.menuWidth = expandedMenuWidth
       }
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
-      cell.bubbleView.image = BaseMessageCell.selectedIncomingBubble
+      cell.bubbleView.image = ThemeManager.currentTheme().selectedIncomingBubble
       if !cell.playButton.isHidden {
         contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
         config.menuWidth = expandedMenuWidth
       }
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
-      cell.bubbleView.image = BaseMessageCell.selectedOutgoingBubble
+      cell.bubbleView.image = ThemeManager.currentTheme().selectedOutgoingBubble
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingTextMessageCell {
-      cell.bubbleView.image = BaseMessageCell.selectedIncomingBubble
+      cell.bubbleView.image = ThemeManager.currentTheme().selectedIncomingBubble
     }
     
     if self.message?.messageUID == nil || self.message?.status == messageStatusSending {

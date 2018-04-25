@@ -91,6 +91,8 @@ class EnterPhoneNumberController: UIViewController {
     }
   }
   
+  var destinationController: UIViewController!
+
   func sendSMSConfirmation () {
     
     print("tappped sms confirmation")
@@ -100,13 +102,15 @@ class EnterPhoneNumberController: UIViewController {
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
       print("\n Recieved Phone number verification ID: \(verificationID ?? "nil")\n")
       if let error = error {
-        basicErrorAlertWith(title: "Error", message: error.localizedDescription + "\nPlease try again later.", controller: self)
+        basicErrorAlertWith(title: "Error", message: error.localizedDescription, controller: self)
         return
       }
       
       print("verification sent")
       self.isVerificationSent = true
       UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+      guard let destination = self.destinationController else { return }
+      self.navigationController?.pushViewController(destination, animated: true)
     }
   }
 }

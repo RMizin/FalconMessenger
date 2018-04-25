@@ -12,7 +12,7 @@ class InformationMessageCell: RevealableCollectionViewCell {
   
   let information: UILabel = {
     let information = UILabel()
-    information.font = UIFont.systemFont(ofSize: 12)
+    information.font = MessageFontsAppearance.defaultInformationMessageTextFont
     information.numberOfLines = 0
     information.textAlignment = .center
     information.textColor = ThemeManager.currentTheme().generalSubtitleColor
@@ -34,8 +34,8 @@ class InformationMessageCell: RevealableCollectionViewCell {
     
     addSubview(information)
     information.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-    information.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-    information.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+    information.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+    information.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
   }
   
   required init?(coder aDecoder: NSCoder) {

@@ -56,8 +56,6 @@ class MessagesFetcher: NSObject {
     newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
     
     loadingMessagesGroup.notify(queue: .main, execute: {
-   //   print("loadingMessagesGroup finished")
-      
       guard self.messages.count != 0 else {
          self.isInitialChatMessagesLoad = false
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
@@ -67,7 +65,6 @@ class MessagesFetcher: NSObject {
       self.loadingNamesGroup.enter()
       self.newLoadUserames()
       self.loadingNamesGroup.notify(queue: .main, execute: {
-   //     print("loadingNamesGroup finished")
         self.messages = self.sortedMessages(unsortedMessages: self.messages)
         self.isInitialChatMessagesLoad = false
          self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
@@ -85,7 +82,6 @@ class MessagesFetcher: NSObject {
       for _ in 0 ..< snapshot.childrenCount { loadedMessagesGroup.enter() }
       
       loadedMessagesGroup.notify(queue: .main, execute: {
-      //  print("loaded messages group finished initial loading messages")
         self.messages = loadedMessages
         self.loadingMessagesGroup.leave()
       })
@@ -99,12 +95,9 @@ class MessagesFetcher: NSObject {
           dictionary = self.preloadCellData(to: dictionary, isGroupChat: isGroupChat)
           
           guard self.isInitialChatMessagesLoad else {
-       //     print("not initial")
             self.handleMessageInsertionInRuntime(newDictionary: dictionary)
             return
           }
-       //   print("initial")
-          
           loadedMessages.append(Message(dictionary: dictionary))
           loadedMessagesGroup.leave()
         })
@@ -150,24 +143,21 @@ class MessagesFetcher: NSObject {
     
     for _ in messages {
       loadedUserNamesGroup.enter()
-    //  print("names entering")
     }
     
     loadedUserNamesGroup.notify(queue: .main, execute: {
-     // print("loadedUserNamesGroup group finished ")
       self.loadingNamesGroup.leave()
     })
     
     for index in 0...messages.count - 1 {
       guard let senderID = messages[index].fromId else { print("continuing"); continue }
-      let reference = Database.database().reference().child("users").child(senderID)//.child("name")
+      let reference = Database.database().reference().child("users").child(senderID)
       reference.observeSingleEvent(of: .value, with: { (snapshot) in
         guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
         let user = User(dictionary: dictionary)
         guard let name = user.name else {  loadedUserNamesGroup.leave(); return }
         self.messages[index].senderName = name
         loadedUserNamesGroup.leave()
-     //   print("names leaving")
       })
     }
   }
@@ -185,7 +175,10 @@ class MessagesFetcher: NSObject {
     if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
       dictionary.updateValue(estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
     } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight = Message(dictionary: dictionary).imageHeight?.floatValue {
-      let cellHeight = CGFloat(imageHeight / imageWidth * 200).rounded()
+      
+      let aspect = CGFloat(imageHeight / imageWidth)
+      let maxWidth = BaseMessageCell.mediaMaxWidth
+      let cellHeight = aspect * maxWidth
       dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
     }
     
@@ -208,13 +201,13 @@ class MessagesFetcher: NSObject {
   }
   
   func estimateFrameForText(_ text: String) -> CGRect {
-    let size = CGSize(width: 200, height: 10000)
+    let size = CGSize(width: BaseMessageCell.bubbleViewMaxWidth, height: BaseMessageCell.bubbleViewMaxHeight)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)], context: nil).integral
+    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: MessageFontsAppearance.defaultMessageTextFont], context: nil).integral
   }
   
   func estimateFrameForText(width: CGFloat, text: String, font: UIFont) -> CGRect {
-    let size = CGSize(width: width, height: 10000)
+    let size = CGSize(width: width, height: BaseMessageCell.bubbleViewMaxHeight)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
     return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: font], context: nil).integral
   }
@@ -228,7 +221,6 @@ class MessagesFetcher: NSObject {
       let seconds = Int(duration) % 60
       return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
     } catch {
-     // print("error playing")
       return String(format:"%02i:%02i:%02i", 0, 0, 0)
     }
   }
@@ -239,7 +231,6 @@ class MessagesFetcher: NSObject {
       let duration = Int(chatLogAudioPlayer.duration)
       return duration
     } catch {
-   //   print("error playing")
       return nil
     }
   }

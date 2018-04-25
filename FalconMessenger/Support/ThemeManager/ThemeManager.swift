@@ -145,18 +145,36 @@ enum Theme: Int {
   var incomingBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "DarkPigeonBubbleIncomingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))//UIImage(named: "PigeonBubbleIncomingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
+      return UIImage(named: "DarkPigeonBubbleIncomingFull")!.stretchableImage(withLeftCapWidth: 20, topCapHeight: 15)
     case .Dark:
-      return UIImage(named: "DarkPigeonBubbleIncomingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
+      return UIImage(named: "DarkPigeonBubbleIncomingFull")!.stretchableImage(withLeftCapWidth: 20, topCapHeight: 15)
+    }
+  }
+  
+  var selectedIncomingBubble: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named: "IncomingSelected")!.stretchableImage(withLeftCapWidth: 20, topCapHeight: 15)
+    case .Dark:
+      return UIImage(named: "IncomingSelected")!.stretchableImage(withLeftCapWidth: 20, topCapHeight: 15)
     }
   }
   
   var outgoingBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "PigeonBubbleOutgoingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
-    case .Dark: //DarkPigeonBubbleOutgoingFull
-      return UIImage(named: "PigeonBubbleOutgoingFull")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
+      return UIImage(named: "PigeonBubbleOutgoingFull")!.stretchableImage(withLeftCapWidth: 15, topCapHeight: 15)
+    case .Dark:
+      return UIImage(named: "PigeonBubbleOutgoingFull")!.stretchableImage(withLeftCapWidth: 15, topCapHeight: 15)
+    }
+  }
+  
+  var selectedOutgoingBubble: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named: "OutgoingSelected")!.stretchableImage(withLeftCapWidth: 15, topCapHeight: 15)
+    case .Dark:
+      return UIImage(named: "OutgoingSelected")!.stretchableImage(withLeftCapWidth: 15, topCapHeight: 15)
     }
   }
   

@@ -23,9 +23,9 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.addSubview(nameLabel)
     
-    bubbleView.frame.origin = CGPoint(x: 10, y: 0)
+    bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
     
-    bubbleView.frame.size.width = 200
+    bubbleView.frame.size.width = BaseMessageCell.mediaMaxWidth
     
     progressView.strokeColor = .black
    
@@ -58,12 +58,10 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     
     if isGroupChat {
       nameLabel.text = message.senderName ?? ""
-      nameLabel.frame.size.height = 10
       nameLabel.sizeToFit()
-      nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingTextViewLeftInset+5, y: BaseMessageCell.incomingTextViewTopInset)
-      messageImageViewTopAnchor.constant = 34
-      if nameLabel.frame.size.width >= 170 {
-        nameLabel.frame.size.width = 170
+      messageImageViewTopAnchor.constant = BaseMessageCell.incomingGroupMessageAuthorNameLabelHeight + BaseMessageCell.textViewTopInset
+      if nameLabel.frame.size.width >= BaseMessageCell.incomingGroupMessageAuthorNameLabelMaxWidth {
+        nameLabel.frame.size.width = BaseMessageCell.incomingGroupMessageAuthorNameLabelMaxWidth
       }
     }
     messageImageView.isUserInteractionEnabled = false

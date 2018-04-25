@@ -18,7 +18,7 @@ class PhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.addSubview(messageImageView)
     
-    bubbleView.frame.size.width = 200
+    bubbleView.frame.size.width = BaseMessageCell.mediaMaxWidth
     
     bubbleView.image = blueBubbleImage
     
@@ -45,7 +45,8 @@ class PhotoMessageCell: BaseMediaMessageCell {
   
   func setupData(message: Message) {
     self.message = message
-    bubbleView.frame.origin = CGPoint(x: (frame.width - 210).rounded(), y: 0)
+    let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
+    bubbleView.frame.origin = CGPoint(x: x, y: 0)
     bubbleView.frame.size.height = frame.size.height.rounded()
     setupTimestampView(message: message, isOutgoing: true)
     messageImageView.isUserInteractionEnabled = false

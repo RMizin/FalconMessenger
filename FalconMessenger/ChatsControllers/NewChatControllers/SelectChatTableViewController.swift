@@ -247,7 +247,7 @@ class SelectChatTableViewController: UITableViewController {
       let conversation = Conversation(dictionary: conversationDictionary)
       
       destinationLayout = AutoSizingCollectionViewFlowLayout()
-      destinationLayout?.minimumLineSpacing = 3
+      destinationLayout?.minimumLineSpacing = AutoSizingCollectionViewFlowLayout.lineSpacing
       chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
       
       messagesFetcher = MessagesFetcher()
@@ -293,36 +293,3 @@ extension SelectChatTableViewController: MessagesDelegate {
     destinationLayout = nil
   }
 }
-
-//extension SelectChatTableViewController: MessagesLoaderDelegate {
-//  
-//  func messagesLoader( didFinishLoadingWith messages: [Message]) {
-//    
-//    self.chatLogController?.messages = messages
-//    
-//    var indexPaths = [IndexPath]()
-//    
-//    if messages.count - 1 >= 0 {
-//      for index in 0...messages.count - 1 {
-//        indexPaths.append(IndexPath(item: index, section: 1))
-//      }
-//      
-//      UIView.performWithoutAnimation {
-//        DispatchQueue.main.async {
-//          self.chatLogController?.collectionView?.reloadItems(at:indexPaths)
-//        }
-//      }
-//    }
-//    
-//    if #available(iOS 11.0, *) {
-//    } else {
-//     // self.chatLogController?.startCollectionViewAtBottom()
-//    }
-//    if let destination = self.chatLogController {
-//      navigationController?.pushViewController( destination, animated: true)
-//      self.chatLogController = nil
-//      self.autoSizingCollectionViewFlowLayout = nil
-//    }
-//  }
-//}
-

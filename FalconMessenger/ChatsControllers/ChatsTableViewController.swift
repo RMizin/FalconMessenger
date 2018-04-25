@@ -800,7 +800,7 @@ class ChatsTableViewController: UITableViewController {
     }
     
     destinationLayout = AutoSizingCollectionViewFlowLayout()
-    destinationLayout?.minimumLineSpacing = 3
+    destinationLayout?.minimumLineSpacing = AutoSizingCollectionViewFlowLayout.lineSpacing
     chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
     
     messagesFetcher = MessagesFetcher()

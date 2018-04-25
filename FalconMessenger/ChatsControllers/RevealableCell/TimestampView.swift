@@ -9,13 +9,26 @@
 import UIKit
 
 class TimestampView: RevealableView {
-
-  @IBOutlet var titleLabel: UILabel!
   
+  var titleLabel: UILabel = {
+    var titleLabel = UILabel()
+    titleLabel.translatesAutoresizingMaskIntoConstraints = false
+    titleLabel.numberOfLines = 0
+    titleLabel.font = UIFont.systemFont(ofSize: 8)
   
+    return titleLabel
+  }()
   
   override init(frame: CGRect) {
     super.init(frame: frame)
+    
+    width = 47
+    
+    addSubview(titleLabel)
+    titleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+    titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    titleLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+    titleLabel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     
     titleLabel.textColor = ThemeManager.currentTheme().generalSubtitleColor
   }

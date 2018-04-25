@@ -8,12 +8,14 @@
 
 import UIKit
 import Firebase
+import PhoneNumberKit
 
 class UserProfileController: UIViewController {
   
   let userProfileContainerView = UserProfileContainerView()
   let avatarOpener = AvatarOpener()
   let userProfileDataDatabaseUpdater = UserProfileDataDatabaseUpdater()
+  let phoneNumberKit = PhoneNumberKit()
   typealias CompletionHandler = (_ success: Bool) -> Void
 
     override func viewDidLoad() {
@@ -126,13 +128,32 @@ extension UserProfileController {
     })
   }
   
+  fileprivate func preparedPhoneNumber() -> String {
+ 
+    guard let number = userProfileContainerView.phone.text else {
+      return userProfileContainerView.phone.text!
+    }
+    
+    var preparedNumber = String()
+    
+      do {
+        let countryCode = try self.phoneNumberKit.parse(number).countryCode
+        let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
+        preparedNumber = ("+" + String(countryCode) + String(nationalNumber))
+      } catch {
+        return number
+    }
+    return preparedNumber
+  }
+  
   func updateUserData() {
     
     ARSLineProgress.ars_showOnView(self.view)
 
+    let phoneNumber = preparedPhoneNumber()
     let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
     userReference.updateChildValues(["name" : userProfileContainerView.name.text!,
-                                     "phoneNumber" : userProfileContainerView.phone.text!,
+                                     "phoneNumber" : phoneNumber,
                                      "bio" : userProfileContainerView.bio.text!]) { (error, reference) in
       ARSLineProgress.hide()
       self.dismiss(animated: true) {

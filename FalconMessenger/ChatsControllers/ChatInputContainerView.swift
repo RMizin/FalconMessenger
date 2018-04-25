@@ -33,7 +33,7 @@ struct InputContainerViewConstants {
   static let maxContainerViewHeightLandscape47Inch: CGFloat = 125.0
   static let maxContainerViewHeightLandscape5558inch: CGFloat = 125.0
   static let containerInsetsWithAttachedImages = UIEdgeInsets(top: 175, left: 8, bottom: 8, right: 30)
-  static let containerInsetsDefault = UIEdgeInsets(top: 10, left: 8, bottom: 8, right: 30)
+  static let containerInsetsDefault = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 30)
 }
 
 
@@ -73,7 +73,7 @@ class ChatInputContainerView: UIView {
     let textView = UITextView()
     textView.translatesAutoresizingMaskIntoConstraints = false
     textView.delegate = self
-    textView.font = UIFont.systemFont(ofSize: 16)
+    textView.font = UIFont.systemFont(ofSize: 18)
     textView.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     textView.isScrollEnabled = false
     textView.layer.cornerRadius = 18
@@ -317,11 +317,3 @@ extension ChatInputContainerView: UITextViewDelegate {
     return true
   }
 }
-
-//extension UIColor {
-//  
-//  convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
-//    self.init(red: r/255, green: g/255, blue: b/255, alpha: 1)
-//  }
-//}
-

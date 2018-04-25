@@ -13,11 +13,11 @@ class OutgoingTextMessageCell: BaseMessageCell {
   
   let textView: FalconTextView = {
     let textView = FalconTextView()
-    textView.font = UIFont.systemFont(ofSize: 14)
+    textView.font = MessageFontsAppearance.defaultMessageTextFont
     textView.backgroundColor = .clear
     textView.isEditable = false
     textView.isScrollEnabled = false
-    textView.textContainerInset = UIEdgeInsetsMake(10, 7, 10, 7)
+    textView.textContainerInset = UIEdgeInsetsMake(textViewTopInset, outgoingTextViewLeftInset, textViewBottomInset, outgoingTextViewRightInset)
     textView.dataDetectorTypes = .all
     textView.textColor = .white
     textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
@@ -31,9 +31,9 @@ class OutgoingTextMessageCell: BaseMessageCell {
     guard let messageText = message.text else { return }
     textView.text = messageText
     
-    bubbleView.frame = CGRect(x: frame.width - message.estimatedFrameForText!.width - 40, y: 0,
-                                   width: message.estimatedFrameForText!.width + 30, height: frame.size.height).integral
-    textView.frame.size = CGSize(width: bubbleView.frame.width.rounded(), height: bubbleView.frame.height.rounded())
+    let x = frame.width - message.estimatedFrameForText!.width - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
+    bubbleView.frame = CGRect(x: x, y: 0, width: message.estimatedFrameForText!.width + BaseMessageCell.outgoingMessageHorisontalInsets, height: frame.size.height).integral
+    textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
     
     setupTimestampView(message: message, isOutgoing: true)
   }

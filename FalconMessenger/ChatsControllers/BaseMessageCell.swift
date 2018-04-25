@@ -8,6 +8,31 @@
 
 import UIKit
 
+
+struct MessageFontsAppearance {
+  
+  static var defaultMessageTextFont: UIFont {
+    return UIFont.systemFont(ofSize: 15)
+  }
+  
+  static var defaultVoiceMessageTextFont: UIFont {
+    return UIFont.systemFont(ofSize: 14)
+  }
+  
+  static var defaultInformationMessageTextFont: UIFont {
+    return UIFont.systemFont(ofSize: 14)
+  }
+  
+  static var defaultDeliveryStatusTextFont: UIFont {
+    return UIFont.boldSystemFont(ofSize: 10)
+  }
+  
+ static var defaultMessageAuthorNameFont: UIFont {
+    return UIFont.systemFont(ofSize: 14)
+  }
+}
+
+
 class BaseMessageCell: RevealableCollectionViewCell {
   
   weak var message: Message?
@@ -15,13 +40,54 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   let grayBubbleImage = ThemeManager.currentTheme().incomingBubble
   let blueBubbleImage = ThemeManager.currentTheme().outgoingBubble
-  static let selectedOutgoingBubble = UIImage(named: "OutgoingSelected")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
-  static let selectedIncomingBubble = UIImage(named: "IncomingSelected")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
+
+  static let textViewTopInset: CGFloat = 6
   
-  static let incomingTextViewTopInset:CGFloat = 10
-  static let incomingTextViewBottomInset:CGFloat = 10
-  static let incomingTextViewLeftInset:CGFloat = 12
-  static let incomingTextViewRightInset:CGFloat = 7
+  static let textViewBottomInset: CGFloat = 6
+  
+  static let incomingTextViewLeftInset: CGFloat = 8
+  
+  static let incomingTextViewRightInset: CGFloat = 3
+  
+  static let outgoingTextViewLeftInset: CGFloat = 5
+  
+  static let outgoingTextViewRightInset: CGFloat = 8
+  
+  static let incomingMessageHorisontalInsets = 2 * (incomingTextViewLeftInset + incomingTextViewRightInset)
+  
+  static let outgoingMessageHorisontalInsets = (2 * (outgoingTextViewLeftInset + outgoingTextViewRightInset))
+  
+  static let scrollIndicatorInset: CGFloat = 5
+  
+  static let incomingMessageAuthorNameLeftInset = incomingTextViewLeftInset + 5
+  
+  static let bubbleViewMaxWidth: CGFloat = 238
+  
+  static let bubbleViewMaxHeight: CGFloat = 10000
+  
+  static let mediaMaxWidth: CGFloat = 200
+  
+  static let incomingGroupMessageAuthorNameLabelMaxWidth = bubbleViewMaxWidth - incomingMessageHorisontalInsets
+  
+  static let incomingGroupMessageAuthorNameLabelHeight: CGFloat = 25
+  
+  static let groupIncomingTextViewTopInset: CGFloat = incomingGroupMessageAuthorNameLabelHeight
+  
+  static let incomingGroupMessageAuthorNameLabelHeightWithInsets: CGFloat = incomingGroupMessageAuthorNameLabelHeight
+  
+  static let incomingBubbleOrigin = CGPoint(x: 5, y: 0)
+  
+  static let minimumMediaCellHeight: CGFloat = 66
+ 
+  static let incomingGroupMinimumMediaCellHeight: CGFloat = BaseMessageCell.minimumMediaCellHeight + incomingGroupMessageAuthorNameLabelHeight
+  
+  static let groupTextMessageInsets = groupIncomingTextViewTopInset + textViewBottomInset
+  
+  static let defaultTextMessageInsets = textViewBottomInset + textViewTopInset
+  
+  static let defaultVoiceMessageHeight: CGFloat = 35
+  
+  static let groupIncomingVoiceMessageHeight: CGFloat = defaultVoiceMessageHeight + incomingGroupMessageAuthorNameLabelHeightWithInsets
   
   let bubbleView: UIImageView = {
     let bubbleView = UIImageView()
@@ -32,9 +98,10 @@ class BaseMessageCell: RevealableCollectionViewCell {
   }()
   
   var deliveryStatus: UILabel = {
+    
     var deliveryStatus = UILabel()
     deliveryStatus.text = "status"
-    deliveryStatus.font = UIFont.boldSystemFont(ofSize: 10)
+    deliveryStatus.font = MessageFontsAppearance.defaultDeliveryStatusTextFont
     deliveryStatus.textColor =  ThemeManager.currentTheme().generalSubtitleColor
     deliveryStatus.isHidden = true
     deliveryStatus.textAlignment = .right
@@ -44,14 +111,15 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   let nameLabel: UILabel = {
     let nameLabel = UILabel()
-    nameLabel.font = UIFont.systemFont(ofSize: 13)
+    nameLabel.font = MessageFontsAppearance.defaultMessageAuthorNameFont
     nameLabel.numberOfLines = 1
     nameLabel.backgroundColor = .clear
     nameLabel.textColor = FalconPalette.defaultBlue
+    nameLabel.frame.size.height = BaseMessageCell.incomingGroupMessageAuthorNameLabelHeight
+    nameLabel.frame.origin = CGPoint(x: incomingMessageAuthorNameLeftInset, y: BaseMessageCell.textViewTopInset)
     
     return nameLabel
   }()
-  
   
   override init(frame: CGRect) {
     super.init(frame: frame.integral)
@@ -93,8 +161,6 @@ class BaseMessageCell: RevealableCollectionViewCell {
     }
   }
 
-  
-  
   func setupViews() {
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     contentView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor

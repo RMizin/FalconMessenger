@@ -29,8 +29,6 @@ class ContactsController: UITableViewController {
   
   var filteredUsers = [User]()
   
-  var currentUser: User?
-  
   let contactsCellID = "contactsCellID"
   
   let falconUsersCellID = "falconUsersCellID"
@@ -56,7 +54,6 @@ class ContactsController: UITableViewController {
       falconUsersFetcher.delegate = self
       setupTableView()
       setupSearchController()
-      fetchCurrentUser()
       fetchContacts()
       checkContactsAuthorizationStatus()
     }
@@ -150,20 +147,6 @@ class ContactsController: UITableViewController {
     }
   }
 
-  
-  fileprivate func fetchCurrentUser() {
-    guard let uid = Auth.auth().currentUser?.uid else { return }
-    
-    let userReference = Database.database().reference().child("users").child(uid)
-    userReference.observeSingleEvent(of: .value) { (snapshot) in
-      guard snapshot.exists() else { return }
-      guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
-      dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
-      self.currentUser = User(dictionary: dictionary)
-    }
-  }
-  
-  
  fileprivate func fetchContacts () {
     
     let status = CNContactStore.authorizationStatus(for: .contacts)
@@ -361,14 +344,13 @@ class ContactsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       
-    
+      guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+      
       if indexPath.section == 0 {
-        
-        guard currentUser != nil else { return }
-        
-        let conversationDictionary: [String: AnyObject] = ["chatID": currentUser?.id as AnyObject,
+     
+        let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
                                                           "isGroupChat": false  as AnyObject,
-                                                          "chatParticipantsIDs": [currentUser?.id] as AnyObject]
+                                                          "chatParticipantsIDs": [currentUserID] as AnyObject]
         
         let conversation = Conversation(dictionary: conversationDictionary)
 
@@ -383,7 +365,7 @@ class ContactsController: UITableViewController {
       }
       
       if indexPath.section == 1 {
-        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+     
         let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject, "chatName": filteredUsers[indexPath.row].name as AnyObject,
                                                            "isGroupChat": false  as AnyObject,
                                                            "chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
@@ -393,7 +375,7 @@ class ContactsController: UITableViewController {
         let conversation = Conversation(dictionary: conversationDictionary)
         
         destinationLayout = AutoSizingCollectionViewFlowLayout()
-        destinationLayout?.minimumLineSpacing = 3
+        destinationLayout?.minimumLineSpacing = AutoSizingCollectionViewFlowLayout.lineSpacing
         chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
         
         messagesFetcher = MessagesFetcher()

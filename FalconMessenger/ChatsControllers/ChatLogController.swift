@@ -627,7 +627,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     collectionView?.register(OutgoingVoiceMessageCell.self, forCellWithReuseIdentifier: outgoingVoiceMessageCellID)
     collectionView?.register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
     collectionView?.register(InformationMessageCell.self, forCellWithReuseIdentifier: informationMessageCellID)
-    collectionView?.registerNib(UINib(nibName: "TimestampView", bundle: nil), forRevealableViewReuseIdentifier: "timestamp")
+    collectionView?.registerClass(revealableViewClass: TimestampView.self, forRevealableViewReuseIdentifier: "timestamp")
     
     configureRefreshControlInitialTintColor()
     configureCellContextMenuView()
@@ -1017,7 +1017,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
    
     guard !isInformationMessage else {
       guard let infoMessageWidth = self.collectionView?.frame.width, let messageText = message.text else { return CGSize(width: 0, height: 0 ) }
-      let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth, text: messageText, font: UIFont.systemFont(ofSize: 12)).height + 10
+      let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth, text: messageText, font: MessageFontsAppearance.defaultInformationMessageTextFont).height + 10
       return CGSize(width: infoMessageWidth, height: infoMessageHeight)
     }
    
@@ -1027,22 +1027,22 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }
       
       if isGroupChat, !isOutgoingMessage {
-        cellHeight = message.estimatedFrameForText!.height + 35
+        cellHeight = message.estimatedFrameForText!.height + BaseMessageCell.groupTextMessageInsets
       } else {
-        cellHeight = message.estimatedFrameForText!.height + 20
+        cellHeight = message.estimatedFrameForText!.height + BaseMessageCell.defaultTextMessageInsets
       }
     } else
     
     if isPhotoVideoMessage {
-      if CGFloat(truncating: message.imageCellHeight!) < 66 {
+      if CGFloat(truncating: message.imageCellHeight!) < BaseMessageCell.minimumMediaCellHeight {
         if isGroupChat, !isOutgoingMessage {
-          cellHeight = 86
+          cellHeight = BaseMessageCell.incomingGroupMinimumMediaCellHeight
         } else {
-          cellHeight = 66
+          cellHeight = BaseMessageCell.minimumMediaCellHeight
         }
       } else {
         if isGroupChat, !isOutgoingMessage {
-          cellHeight = CGFloat(truncating: message.imageCellHeight!) + 20
+          cellHeight = CGFloat(truncating: message.imageCellHeight!) + BaseMessageCell.incomingGroupMessageAuthorNameLabelHeightWithInsets
         } else {
           cellHeight = CGFloat(truncating: message.imageCellHeight!)
         }
@@ -1051,9 +1051,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if isVoiceMessage {
       if isGroupChat, !isOutgoingMessage {
-        cellHeight = 55
+        cellHeight = BaseMessageCell.groupIncomingVoiceMessageHeight
       } else {
-        cellHeight = 40
+        cellHeight = BaseMessageCell.defaultVoiceMessageHeight
       }
     }
     
@@ -1260,7 +1260,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       
       if self.messages.count - 2 >= 0 {
         
-          self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count-2 ,section:0)])
+          self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count - 2 ,section: 0)])
       }
       
       let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)
