@@ -48,6 +48,8 @@ class Message: NSObject  {
     var estimatedFrameForText:CGRect?
     var imageCellHeight: NSNumber?
   
+    var isCrooked:Bool? // local only
+  
     var senderName: String? //local only, group messages only
       
     func chatPartnerId() -> String? {
@@ -87,5 +89,7 @@ class Message: NSObject  {
         imageCellHeight = dictionary["imageCellHeight"] as? NSNumber
       
         senderName = dictionary["senderName"] as? String
+      
+        isCrooked = dictionary["isCrooked"] as? Bool
     }
 }

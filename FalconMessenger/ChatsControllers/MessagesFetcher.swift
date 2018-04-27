@@ -17,6 +17,7 @@ protocol MessagesDelegate: class {
 
 protocol CollectionDelegate: class {
   func collectionView(shouldBeUpdatedWith message: Message, reference:DatabaseReference)
+  func collectionView(shouldRemoveMessage id: String)
   func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message)
 }
 
@@ -24,8 +25,13 @@ class MessagesFetcher: NSObject {
   
   private var messages = [Message]()
   
-  var userMessagesReference: DatabaseQuery!
   
+  var userMessagesReference: DatabaseQuery!
+  var userMessagesHandle: DatabaseHandle!
+  
+  var manualRemovingReference: DatabaseReference!
+  var manualRemovingHandle: DatabaseHandle!
+
   var messagesReference: DatabaseReference!
   
   private  let messagesToLoad = 50
@@ -43,21 +49,34 @@ class MessagesFetcher: NSObject {
   private var loadingNamesGroup = DispatchGroup()
   
   
+  
+  func cleanAllObservers() {
+    if userMessagesReference != nil {
+      userMessagesReference.removeObserver(withHandle: userMessagesHandle)
+    }
+    
+    if manualRemovingReference != nil {
+      manualRemovingReference.removeObserver(withHandle: manualRemovingHandle)
+    }
+  }
+  
   func loadMessagesData(for conversation: Conversation) {
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
     
     var isGroupChat = Bool()
     if let groupChat = conversation.isGroupChat, groupChat { isGroupChat = true } else { isGroupChat = false }
 
-      userMessagesReference = Database.database().reference().child("user-messages")
-        .child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
+      userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
     
     loadingMessagesGroup.enter()
     newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
+    observeManualRemoving(currentUserID: currentUserID, conversationID: conversationID)
+    
     
     loadingMessagesGroup.notify(queue: .main, execute: {
       guard self.messages.count != 0 else {
          self.isInitialChatMessagesLoad = false
+       
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
         return
       }
@@ -74,6 +93,19 @@ class MessagesFetcher: NSObject {
     })
   }
   
+  func observeManualRemoving(currentUserID:String, conversationID:String) {
+    guard manualRemovingReference == nil else { return }
+    
+    manualRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
+    manualRemovingHandle = manualRemovingReference.observe(.childRemoved, with: { (snapshot) in
+     // print("\nChild removed\n")
+      
+   //   print(snapshot.key)
+      let removedMessageID = snapshot.key
+      self.collectionDelegate?.collectionView(shouldRemoveMessage: removedMessageID)
+    })
+  }
+  
   func newLoadMessages(reference: DatabaseQuery, isGroupChat: Bool) {
     var loadedMessages = [Message]()
     let loadedMessagesGroup = DispatchGroup()
@@ -82,10 +114,11 @@ class MessagesFetcher: NSObject {
       for _ in 0 ..< snapshot.childrenCount { loadedMessagesGroup.enter() }
       
       loadedMessagesGroup.notify(queue: .main, execute: {
-        self.messages = loadedMessages
+        self.messages = self.configureMessageTails(messages: loadedMessages, isGroupChat: isGroupChat)
         self.loadingMessagesGroup.leave()
       })
-      reference.observe(.childAdded, with: { (snapshot) in
+      
+      self.userMessagesHandle = reference.observe(.childAdded, with: { (snapshot) in
         let messageUID = snapshot.key
         self.messagesReference = Database.database().reference().child("messages").child(messageUID)
         self.messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -112,10 +145,10 @@ class MessagesFetcher: NSObject {
     
     self.loadUserNameForOneMessage(message: message) {  [unowned self] (isCompleted, messageWithName) in
       if !isOutBoxMessage {
-        self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,reference:self.messagesReference)
+        self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,reference: self.messagesReference)
       } else {
         if let isInformationMessage = message.isInformationMessage, isInformationMessage {
-          self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,reference:self.messagesReference)
+          self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,reference: self.messagesReference)
         } else {
           self.collectionDelegate?.collectionView(shouldUpdateOutgoingMessageStatusFrom: self.messagesReference, message: messageWithName)
         }
@@ -167,6 +200,35 @@ class MessagesFetcher: NSObject {
       return message1.timestamp!.int32Value < message2.timestamp!.int32Value
     })
     return sortedMessages
+  }
+  
+  func configureMessageTails(messages: [Message], isGroupChat:Bool) -> [Message] {
+    
+    var messages = messages
+    
+    for index in (0..<messages.count) {
+      if messages.indices.contains(index + 1) {
+      
+        if messages[index].fromId == messages[index + 1].fromId {
+          messages[index].isCrooked = false
+          messages[index + 1].isCrooked = true
+        } else if messages[index].fromId != messages[index + 1].fromId {
+          messages[index].isCrooked = true
+          messages[index + 1].isCrooked = true
+        }
+        
+        if let isInfoMessage = messages[index + 1].isInformationMessage, isInfoMessage {
+          messages[index].isCrooked = true
+        }
+    
+        if let isInfoMessage = messages[index].isInformationMessage, isInfoMessage {
+          messages[index + 1].isCrooked = true
+        }
+      } else {
+        messages[index].isCrooked = true
+      }
+    }
+    return messages
   }
   
   func preloadCellData(to dictionary: [String:AnyObject], isGroupChat: Bool) -> [String:AnyObject] {

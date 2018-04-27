@@ -145,36 +145,72 @@ enum Theme: Int {
   var incomingBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "DarkPigeonBubbleIncomingFull")!.stretchableImage(withLeftCapWidth: 20, topCapHeight: 15)
+      return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
     case .Dark:
-      return UIImage(named: "DarkPigeonBubbleIncomingFull")!.stretchableImage(withLeftCapWidth: 20, topCapHeight: 15)
+      return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
     }
   }
   
   var selectedIncomingBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "IncomingSelected")!.stretchableImage(withLeftCapWidth: 20, topCapHeight: 15)
+      return UIImage(named: "FMIncomingFullHighlighted")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
     case .Dark:
-      return UIImage(named: "IncomingSelected")!.stretchableImage(withLeftCapWidth: 20, topCapHeight: 15)
+      return UIImage(named: "FMIncomingFullHighlighted")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
+    }
+  }
+  
+  var incomingPartialBubble: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
+    case .Dark:
+      return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
+    }
+  }
+  
+  var selectedIncomingPartialBubble: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named: "partialSelectedDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
+    case .Dark:
+      return UIImage(named: "partialSelectedDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
     }
   }
   
   var outgoingBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "PigeonBubbleOutgoingFull")!.stretchableImage(withLeftCapWidth: 15, topCapHeight: 15)
+      return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
     case .Dark:
-      return UIImage(named: "PigeonBubbleOutgoingFull")!.stretchableImage(withLeftCapWidth: 15, topCapHeight: 15)
+      return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
     }
   }
   
   var selectedOutgoingBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "OutgoingSelected")!.stretchableImage(withLeftCapWidth: 15, topCapHeight: 15)
+      return UIImage(named: "FMOutgoingFullHighlighted")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
     case .Dark:
-      return UIImage(named: "OutgoingSelected")!.stretchableImage(withLeftCapWidth: 15, topCapHeight: 15)
+      return UIImage(named: "FMOutgoingFullHighlighted")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+    }
+  }
+  
+  var outgoingPartialBubble: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+    case .Dark:
+      return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+    }
+  }
+  
+  var selectedOutgoingPartialBubble: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named: "partialSelectedOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+    case .Dark:
+      return UIImage(named: "partialSelectedOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
     }
   }
   

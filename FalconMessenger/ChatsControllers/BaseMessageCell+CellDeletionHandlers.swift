@@ -19,6 +19,23 @@ struct ContextMenuItems {
 
 extension BaseMessageCell {
   
+  func bubbleImage(currentImage: UIImage) -> UIImage {
+    
+    switch currentImage {
+    case ThemeManager.currentTheme().outgoingBubble:
+      return ThemeManager.currentTheme().selectedOutgoingBubble
+    case ThemeManager.currentTheme().outgoingPartialBubble:
+      return ThemeManager.currentTheme().selectedOutgoingPartialBubble
+    case ThemeManager.currentTheme().incomingBubble:
+      return ThemeManager.currentTheme().selectedIncomingBubble
+    case ThemeManager.currentTheme().incomingPartialBubble:
+      return ThemeManager.currentTheme().selectedIncomingPartialBubble
+      
+    default:
+      return currentImage
+    }
+  }
+  
   @objc func handleLongTap(_ longPressGesture: UILongPressGestureRecognizer) {
     
     var contextMenuItems = [ContextMenuItems.copyItem, ContextMenuItems.deleteItem]
@@ -26,38 +43,40 @@ extension BaseMessageCell {
     let expandedMenuWidth: CGFloat = 150
     let defaultMenuWidth: CGFloat = 100
     config.menuWidth = expandedMenuWidth
-  
-    guard let indexPath = self.chatLogController?.collectionView?.indexPath(for: self) else { return }
+
+   guard let indexPath = self.chatLogController?.collectionView?.indexPath(for: self) else { return }
     
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
-      cell.bubbleView.image = ThemeManager.currentTheme().selectedOutgoingBubble
+      
+      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
       contextMenuItems = [ContextMenuItems.deleteItem]
+     
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
       contextMenuItems = [ContextMenuItems.deleteItem]
-      cell.bubbleView.image = ThemeManager.currentTheme().selectedIncomingBubble
+       cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? PhotoMessageCell {
-      cell.bubbleView.image = ThemeManager.currentTheme().selectedOutgoingBubble
+      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
       if !cell.playButton.isHidden {
         contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
         config.menuWidth = expandedMenuWidth
       }
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
-      cell.bubbleView.image = ThemeManager.currentTheme().selectedIncomingBubble
+      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
       if !cell.playButton.isHidden {
         contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
         config.menuWidth = expandedMenuWidth
       }
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
-      cell.bubbleView.image = ThemeManager.currentTheme().selectedOutgoingBubble
+      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingTextMessageCell {
-      cell.bubbleView.image = ThemeManager.currentTheme().selectedIncomingBubble
+      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
     }
     
     if self.message?.messageUID == nil || self.message?.status == messageStatusSending {
@@ -100,6 +119,7 @@ extension BaseMessageCell {
       }
 
       var deletionReference: DatabaseReference!
+        
       if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
         guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
         deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(userMessagesFirebaseFolder).child(messageID)
@@ -109,54 +129,37 @@ extension BaseMessageCell {
         
         deletionReference.removeValue(completionBlock: { (error, reference) in
           if error != nil { return }
-          let shouldReloadMessageStatus = self.shouldReloadMessageSatus()
-
-          self.chatLogController?.collectionView?.performBatchUpdates ({
-            guard let freshIndexPath = self.chatLogController?.collectionView?.indexPath(for: self) else { return }
-            self.chatLogController?.messages.remove(at: freshIndexPath.row)
-            self.chatLogController?.collectionView?.deleteItems(at: [freshIndexPath])
+  
+          if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
             
-            if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
-              
-              guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
-              
-               var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(messageMetaDataFirebaseFolder)
-              if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
-                lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
-              } else {
-                lastMessageReference = lastMessageReference.child("lastMessageID")
-                lastMessageReference.removeValue()
-              }
-              
+            guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
+            
+             var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(messageMetaDataFirebaseFolder)
+            if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
+              lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
             } else {
-              var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(messageMetaDataFirebaseFolder)
-              if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
-                lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
-              } else {
-                lastMessageReference = lastMessageReference.child("lastMessageID")
-                lastMessageReference.removeValue()
-              }
+              lastMessageReference = lastMessageReference.child("lastMessageID")
+              lastMessageReference.removeValue()
             }
-          }, completion: { (isCompleted) in
-       
-            if self.chatLogController?.messages.count == 0 {
-              print("CHAT LOG IS EMPTY")
-              self.chatLogController?.navigationController?.popViewController(animated: true)
+            
+          } else {
+            var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(messageMetaDataFirebaseFolder)
+            if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
+              lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
             } else {
-              guard shouldReloadMessageStatus, let lastMessage = self.chatLogController?.messages.last else { return }
-              self.chatLogController?.updateMessageStatusUIAfterDeletion(sentMessage: lastMessage)
+              lastMessageReference = lastMessageReference.child("lastMessageID")
+              lastMessageReference.removeValue()
             }
-            print("\ncell deletion completed\n")
-          })
+          }
         })
       }
     }) { //completeion
-      self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
+     self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
     }
   }
   
-  func shouldReloadMessageSatus() -> Bool {
-    guard self.message == self.chatLogController?.messages.last, self.chatLogController!.messages.count > 0 else { return false }
-      return true
-  }
+//  func shouldReloadMessageSatus() -> Bool {
+//    guard self.message == self.chatLogController?.messages.last, self.chatLogController!.messages.count > 0 else { return false }
+//      return true
+//  }
 }

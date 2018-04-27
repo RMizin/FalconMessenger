@@ -12,7 +12,7 @@ import UIKit
 struct MessageFontsAppearance {
   
   static var defaultMessageTextFont: UIFont {
-    return UIFont.systemFont(ofSize: 15)
+    return UIFont.systemFont(ofSize: 16)
   }
   
   static var defaultVoiceMessageTextFont: UIFont {
@@ -28,7 +28,7 @@ struct MessageFontsAppearance {
   }
   
  static var defaultMessageAuthorNameFont: UIFont {
-    return UIFont.systemFont(ofSize: 14)
+    return UIFont.systemFont(ofSize: 15)
   }
 }
 
@@ -37,9 +37,6 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   weak var message: Message?
   weak var chatLogController: ChatLogController?
-  
-  let grayBubbleImage = ThemeManager.currentTheme().incomingBubble
-  let blueBubbleImage = ThemeManager.currentTheme().outgoingBubble
 
   static let textViewTopInset: CGFloat = 6
   

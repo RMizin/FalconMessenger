@@ -65,6 +65,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var chatAdminHandle: DatabaseHandle!
   
+  var messageChangesHandles = [(uid:String, handle:DatabaseHandle)]()
+  
   var messages = [Message]()
   
   var sections = ["Messages"]
@@ -233,7 +235,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messages.count )
             arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
 
-            self.messages = arrayWithShiftedMessages
+            self.messages = self.messagesFetcher.configureMessageTails(messages: arrayWithShiftedMessages, isGroupChat: isGroupChat)
             self.userMessagesReference.removeObserver(withHandle: self.userMessageHande)
             self.userMessagesQuery.removeObserver(withHandle: self.userMessageHande)
 
@@ -504,6 +506,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if chatAdminReference != nil && chatAdminHandle != nil {
       chatAdminReference.removeObserver(withHandle: chatAdminHandle)
+    }
+    
+    for element in messageChangesHandles {
+      let messageID = element.uid
+      let messagesReference = Database.database().reference().child("messages").child(messageID)
+      messagesReference.removeObserver(withHandle: element.handle)
+    }
+  
+    if messagesFetcher != nil {
+      messagesFetcher.cleanAllObservers()
+      messagesFetcher = nil
     }
 
     isTyping = false
@@ -1240,28 +1253,37 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
     
-    var values = values
+     var values = values
+    
      if let isGroupChat = conversation?.isGroupChat, isGroupChat {
        values = messagesFetcher.preloadCellData(to: values, isGroupChat: true)
      } else {
        values = messagesFetcher.preloadCellData(to: values, isGroupChat: true)
+     }
+    
+    let message = Message(dictionary: values)
+    self.messages.append(message)
+    let latMessageIndexPath = IndexPath(item: self.messages.count - 1, section: 0)
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+      self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: true)
+    } else {
+      self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: false)
     }
     
+    self.messages[latMessageIndexPath.item].status = messageStatusSending
+    
     self.collectionView?.performBatchUpdates ({
+ 
+      self.collectionView?.insertItems(at: [latMessageIndexPath])
       
-      let message = Message(dictionary: values)
-      self.messages.append(message)
-      
-      let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-   
-      self.messages[indexPath.item].status = messageStatusSending
-      
-      self.collectionView?.insertItems(at: [indexPath])
-      
-      if self.messages.count - 2 >= 0 {
-        
-          self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count - 2 ,section: 0)])
+      var indexPaths = [IndexPath]()
+      for index in 2..<10 {
+        if self.messages.indices.contains(self.messages.count-index) {
+          let indexPath = IndexPath(item: self.messages.count-index, section: 0)
+          indexPaths.append(indexPath)
+        }
       }
+      self.collectionView?.reloadItems(at: indexPaths)
       
       let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)
       

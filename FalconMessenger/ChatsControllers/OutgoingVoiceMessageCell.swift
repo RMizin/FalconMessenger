@@ -16,7 +16,7 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(playerView)
     contentView.addSubview(deliveryStatus)
-    bubbleView.image = blueBubbleImage
+  //  bubbleView.image = blueBubbleImage
     bubbleView.frame.size.width = 150
     playerView.playLeadingAnchor.constant = 12
     playerView.playWidthAnchor.constant = 20
@@ -40,6 +40,12 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.timerLabel.text = message.voiceDuration
     playerView.startingTime = message.voiceStartTime ?? 0
     playerView.seconds = message.voiceStartTime ?? 0
+    
+    if let isCrooked = self.message?.isCrooked, isCrooked {
+      bubbleView.image = ThemeManager.currentTheme().outgoingBubble
+    } else {
+      bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble
+    }
   }
   
   override func prepareViewsForReuse() {
@@ -47,6 +53,6 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.seconds = 0
     playerView.startingTime = 0
     playerView.play.isSelected = false
-    bubbleView.image = blueBubbleImage
+    bubbleView.image = nil
   }
 }

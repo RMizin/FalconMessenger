@@ -29,6 +29,5 @@ class BaseVoiceMessageCell: BaseMessageCell {
     playerView.seconds = 0
     playerView.startingTime = 0
     playerView.play.isSelected = false
-    bubbleView.image = blueBubbleImage
   }
 }

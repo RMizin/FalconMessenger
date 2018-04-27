@@ -36,6 +36,12 @@ class OutgoingTextMessageCell: BaseMessageCell {
     textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
     
     setupTimestampView(message: message, isOutgoing: true)
+    
+    if let isCrooked = self.message?.isCrooked, isCrooked {
+       bubbleView.image = ThemeManager.currentTheme().outgoingBubble//blueBubbleImage
+    } else {
+       bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble
+    }
   }
   
   override func setupViews() {
@@ -43,11 +49,9 @@ class OutgoingTextMessageCell: BaseMessageCell {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
     contentView.addSubview(deliveryStatus)
-    bubbleView.image = blueBubbleImage
   }
   
   override func prepareViewsForReuse() {
-     bubbleView.image = blueBubbleImage
+     bubbleView.image = nil
   }
 }
-

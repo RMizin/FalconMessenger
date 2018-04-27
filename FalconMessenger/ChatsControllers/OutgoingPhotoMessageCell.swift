@@ -20,15 +20,17 @@ class PhotoMessageCell: BaseMediaMessageCell {
     
     bubbleView.frame.size.width = BaseMessageCell.mediaMaxWidth
     
-    bubbleView.image = blueBubbleImage
+ 
+    
+   // bubbleView.image = blueBubbleImage
     
     progressView.strokeColor = .white
     
     contentView.addSubview(deliveryStatus)
-    messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 4).isActive = true
-    messageImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -4).isActive = true
-    messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 4).isActive = true
-    messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -9).isActive = true
+    messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 0).isActive = true
+    messageImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 0).isActive = true
+    messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 0).isActive = true
+    messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -5).isActive = true
     
     bubbleView.addSubview(playButton)
     playButton.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
@@ -50,11 +52,12 @@ class PhotoMessageCell: BaseMediaMessageCell {
     bubbleView.frame.size.height = frame.size.height.rounded()
     setupTimestampView(message: message, isOutgoing: true)
     messageImageView.isUserInteractionEnabled = false
+    bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble
   }
 
   override func prepareViewsForReuse() {
      super.prepareViewsForReuse()
-    bubbleView.image = blueBubbleImage
+    bubbleView.image = nil
     playButton.isHidden = true
     messageImageView.sd_cancelCurrentImageLoad()
     messageImageView.image = nil
