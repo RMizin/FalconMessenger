@@ -25,11 +25,12 @@ class MessagesFetcher: NSObject {
   
   private var messages = [Message]()
   
-  
   var userMessagesReference: DatabaseQuery!
+  
   var userMessagesHandle: DatabaseHandle!
   
   var manualRemovingReference: DatabaseReference!
+  
   var manualRemovingHandle: DatabaseHandle!
 
   var messagesReference: DatabaseReference!
@@ -49,7 +50,6 @@ class MessagesFetcher: NSObject {
   private var loadingNamesGroup = DispatchGroup()
   
   
-  
   func cleanAllObservers() {
     if userMessagesReference != nil {
       userMessagesReference.removeObserver(withHandle: userMessagesHandle)
@@ -67,7 +67,7 @@ class MessagesFetcher: NSObject {
     if let groupChat = conversation.isGroupChat, groupChat { isGroupChat = true } else { isGroupChat = false }
 
       userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
-    
+   
     loadingMessagesGroup.enter()
     newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
     observeManualRemoving(currentUserID: currentUserID, conversationID: conversationID)
@@ -98,9 +98,6 @@ class MessagesFetcher: NSObject {
     
     manualRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
     manualRemovingHandle = manualRemovingReference.observe(.childRemoved, with: { (snapshot) in
-     // print("\nChild removed\n")
-      
-   //   print(snapshot.key)
       let removedMessageID = snapshot.key
       self.collectionDelegate?.collectionView(shouldRemoveMessage: removedMessageID)
     })
@@ -202,17 +199,14 @@ class MessagesFetcher: NSObject {
     return sortedMessages
   }
   
-  func configureMessageTails(messages: [Message], isGroupChat:Bool) -> [Message] {
-    
+  func configureMessageTails(messages: [Message], isGroupChat: Bool) -> [Message] {
     var messages = messages
-    
     for index in (0..<messages.count) {
       if messages.indices.contains(index + 1) {
-      
         if messages[index].fromId == messages[index + 1].fromId {
           messages[index].isCrooked = false
           messages[index + 1].isCrooked = true
-        } else if messages[index].fromId != messages[index + 1].fromId {
+        } else {
           messages[index].isCrooked = true
           messages[index + 1].isCrooked = true
         }

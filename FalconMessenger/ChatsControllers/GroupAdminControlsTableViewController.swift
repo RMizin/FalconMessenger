@@ -62,14 +62,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     }
   }
   
-  var groupAvatarURL = String() {
-    didSet {
-      groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
-      groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string:groupAvatarURL), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
-        self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
-      })
-    }
-  }
+  var groupAvatarURL: String?
   
   var currentName = String()
   
@@ -169,6 +162,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
     setAdminControls()
   }
 
+  private var onceToken = 0
+  
   fileprivate func observeConversationDataChanges() {
     
     chatReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
@@ -177,7 +172,17 @@ class GroupAdminControlsTableViewController: UITableViewController {
       let conversation = Conversation(dictionary: conversationDictionary)
       
       if let url = conversation.chatPhotoURL {
-         self.groupAvatarURL = url
+        self.groupAvatarURL = url
+        if self.onceToken == 0 {
+          self.groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
+        }
+    
+        self.groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
+           if self.onceToken == 0 {
+            self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
+            self.onceToken = 1
+          }
+        })
       }
       
       if let name = conversation.chatName {

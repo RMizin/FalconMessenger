@@ -12,7 +12,7 @@ import Photos
 
 private let selectedMediaCollectionCellID = "selectedMediaCollectionCellID"
 
-private let selectedMediaCollectionCellHeight:CGFloat = 145
+private let selectedMediaCollectionCellHeight: CGFloat = 160
 
 extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
   

@@ -234,7 +234,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             var arrayWithShiftedMessages = self.messages
             let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messages.count )
             arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
-
+            guard self.messagesFetcher != nil else { return }
             self.messages = self.messagesFetcher.configureMessageTails(messages: arrayWithShiftedMessages, isGroupChat: isGroupChat)
             self.userMessagesReference.removeObserver(withHandle: self.userMessageHande)
             self.userMessagesQuery.removeObserver(withHandle: self.userMessageHande)
@@ -242,9 +242,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             contentSizeWhenInsertingToTop = self.collectionView?.contentSize
             isInsertingCellsToTop = true
             self.refreshControl.endRefreshing()
-
-            DispatchQueue.main.async {
-              self.collectionView?.reloadData()
+       
+            var indexPaths = [IndexPath]()
+            Array(0..<shiftingIndex).forEach({ (index) in
+              indexPaths.append(IndexPath(item: index, section: 0))
+            })
+            UIView.performWithoutAnimation {
+              self.collectionView?.performBatchUpdates ({
+                self.collectionView?.insertItems(at: indexPaths)
+              }, completion: nil)
             }
           })
 
@@ -252,9 +258,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
             let messageUID = snapshot.key
             messagesRef.keepSynced(true)
+           
             messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
               guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
               dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
+          
+              guard self.messagesFetcher != nil else { return }
+             
               dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: isGroupChat)
               let message = Message(dictionary: dictionary)
               self.messagesFetcher.loadUserNameForOneMessage(message: message, completion: { [unowned self] (isCompleted, newMessage)  in
@@ -440,21 +450,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  func updateMessageStatusUIAfterDeletion(sentMessage: Message) {
-    guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable,
-    let lastMessageUID = messages.last?.messageUID, self.messages.count >= 0 else { return }
-  
-    if messages.last!.toId == uid && self.messages.last?.status != messageStatusRead {
-      let messagesRef = Database.database().reference().child("messages").child(lastMessageUID)
-      messagesRef.updateChildValues(["seen" : true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
-        self.messages.last?.status = messageStatusRead
-        self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count - 1 ,section: 0)])
-      })
-    } else {
-      self.collectionView?.reloadItems(at: [IndexPath(row: self.messages.count - 1 ,section: 0)])
-    }
-  }
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -471,18 +466,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       topViewController(rootViewController: self) is CropViewController {
       return
     }
-
-    if messagesFetcher.userMessagesReference != nil {
-      messagesFetcher.userMessagesReference.removeAllObservers()
-    }
-    
-    if messagesFetcher.messagesReference != nil {
-      messagesFetcher.messagesReference.removeAllObservers()
-    }
-    
-    messagesFetcher.collectionDelegate = nil
-    messagesFetcher.delegate = nil
-    messagesFetcher = nil
 
     if typingIndicatorReference != nil {
       typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle)
@@ -513,12 +496,21 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let messagesReference = Database.database().reference().child("messages").child(messageID)
       messagesReference.removeObserver(withHandle: element.handle)
     }
+    
   
     if messagesFetcher != nil {
+      if messagesFetcher.userMessagesReference != nil {
+        messagesFetcher.userMessagesReference.removeAllObservers()
+      }
+      
+      if messagesFetcher.messagesReference != nil {
+        messagesFetcher.messagesReference.removeAllObservers()
+      }
       messagesFetcher.cleanAllObservers()
+      messagesFetcher.collectionDelegate = nil
+      messagesFetcher.delegate = nil
       messagesFetcher = nil
     }
-
     isTyping = false
     
     guard voiceRecordingViewController != nil, voiceRecordingViewController.recorder != nil else { return }
@@ -540,7 +532,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         self.inputContainerView.inputTextView.resignFirstResponder()
       }
     }
-    
   }
 
   func startCollectionViewAtBottom () { // start chat log at bottom for iOS 10
@@ -578,16 +569,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
     super.willTransition(to: newCollection, with: coordinator)
     collectionView?.collectionViewLayout.invalidateLayout()
+    DispatchQueue.main.async {
+      self.inputContainerView.inputTextView.invalidateIntrinsicContentSize()
+    }
   }
   
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
     collectionView?.collectionViewLayout.invalidateLayout()
-    inputContainerView.inputTextView.invalidateIntrinsicContentSize()
-    inputContainerView.invalidateIntrinsicContentSize()
     DispatchQueue.main.async {
       self.inputContainerView.attachedImages.frame.size.width = self.inputContainerView.inputTextView.frame.width
       self.collectionView?.reloadData()
+      self.inputContainerView.invalidateIntrinsicContentSize()
     }
   }
   
@@ -1262,35 +1255,38 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
      }
     
     let message = Message(dictionary: values)
-    self.messages.append(message)
-    let latMessageIndexPath = IndexPath(item: self.messages.count - 1, section: 0)
+    messages.append(message)
+    let latMessageIndexPath = IndexPath(item: messages.count - 1, section: 0)
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: true)
+      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: true)
     } else {
-      self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: false)
+      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
     }
     
-    self.messages[latMessageIndexPath.item].status = messageStatusSending
+    messages[latMessageIndexPath.item].status = messageStatusSending
     
-    self.collectionView?.performBatchUpdates ({
- 
-      self.collectionView?.insertItems(at: [latMessageIndexPath])
-      
-      var indexPaths = [IndexPath]()
-      for index in 2..<10 {
-        if self.messages.indices.contains(self.messages.count-index) {
-          let indexPath = IndexPath(item: self.messages.count-index, section: 0)
-          indexPaths.append(indexPath)
+    UIView.performWithoutAnimation {
+      collectionView?.performBatchUpdates ({
+
+        collectionView?.insertItems(at: [latMessageIndexPath])
+        
+        var indexPaths = [IndexPath]()
+        for index in 2..<10 {
+          if messages.indices.contains(messages.count-index) {
+            let indexPath = IndexPath(item: messages.count-index, section: 0)
+            indexPaths.append(indexPath)
+          }
         }
-      }
-      self.collectionView?.reloadItems(at: indexPaths)
-      
-      let indexPath1 = IndexPath(item: self.messages.count - 1, section: 0)
-      
-      DispatchQueue.main.async {
-        self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
-      }
-    }, completion: nil)
+
+        collectionView?.reloadItems(at: indexPaths)
+    
+        let indexPath1 = IndexPath(item: messages.count - 1, section: 0)
+        
+        DispatchQueue.main.async {
+          self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
+        }
+      }, completion: nil)
+    }
   }
   
   fileprivate func sendMessageWithProperties(_ properties: [String: AnyObject]) {

@@ -45,7 +45,7 @@ extension GroupAdminControlsTableViewController { // delete
   
   typealias CurrentPictureDeletionCompletionHandler = (_ success: Bool) -> Void
   func deleteCurrentPhoto(completion: @escaping CurrentPictureDeletionCompletionHandler) {
-    guard groupAvatarURL != "" else { completion(true); return }
+    guard let groupAvatarURL = groupAvatarURL, groupAvatarURL != "" else { completion(true); return }
     let storage = Storage.storage()
     let storageReference = storage.reference(forURL: groupAvatarURL)
     let groupChatsMetaReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
@@ -54,7 +54,7 @@ extension GroupAdminControlsTableViewController { // delete
       let chatOriginalPhotoURLReference = groupChatsMetaReference.child("chatOriginalPhotoURL")
       let chatThumbnailPhotoURLReference = groupChatsMetaReference.child("chatThumbnailPhotoURL")
       chatOriginalPhotoURLReference.setValue("")
-      chatThumbnailPhotoURLReference.setValue("")//.removeValue()
+      chatThumbnailPhotoURLReference.setValue("")
       completion(true)
     }
   }

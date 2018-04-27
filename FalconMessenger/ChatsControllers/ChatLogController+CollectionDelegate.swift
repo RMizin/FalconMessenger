@@ -17,39 +17,36 @@ extension ChatLogController: CollectionDelegate {
       return message.messageUID == id
     }) else { return }
 
-   // print("\nINDEX IS \(index) - REMOVING \n")
     performBatchUpdates(for: index)
   }
   
   func performBatchUpdates(for index: Int) {
     
-    UIView.performWithoutAnimation {
-      
       messages.remove(at: index)
+    
       if let isGroupChat = conversation?.isGroupChat, isGroupChat {
         messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: true)
       } else {
         messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
       }
+    
+    UIView.performWithoutAnimation {
+      collectionView?.performBatchUpdates ({
+        collectionView?.deleteItems(at: [IndexPath(item: index, section: 0)])
       
-      self.collectionView?.performBatchUpdates ({
-        self.collectionView?.deleteItems(at: [IndexPath(item: index, section: 0)])
-        
         let startIndex = index - 2
         let endIndex = index + 2
         var indexPaths = [IndexPath]()
+        
         for indexToUpdate in startIndex...endIndex {
-          if self.messages.indices.contains(indexToUpdate) && indexToUpdate != index {
+          if messages.indices.contains(indexToUpdate) && indexToUpdate != index {
             let indexPath = IndexPath(item: indexToUpdate, section: 0)
             indexPaths.append(indexPath)
           }
         }
-        self.collectionView?.reloadItems(at: indexPaths)
-        
+        collectionView?.reloadItems(at: indexPaths)
       }, completion: { (completed) in
         guard self.messages.count == 0 else {
-         //  guard shouldReloadMessageStatus, let lastMessage = self.chatLogController?.messages.last else { return }
-        //  self.chatLogController?.updateMessageStatusUIAfterDeletion(sentMessage: lastMessage)
           return
         }
         self.navigationController?.popViewController(animated: true)
@@ -122,5 +119,3 @@ extension ChatLogController: CollectionDelegate {
     })
   }
 }
-
-

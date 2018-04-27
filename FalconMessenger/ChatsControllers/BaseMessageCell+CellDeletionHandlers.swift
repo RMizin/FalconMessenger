@@ -16,7 +16,6 @@ struct ContextMenuItems {
   static let deleteItem = "Delete for myself"
 }
 
-
 extension BaseMessageCell {
   
   func bubbleImage(currentImage: UIImage) -> UIImage {
@@ -157,9 +156,4 @@ extension BaseMessageCell {
      self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
     }
   }
-  
-//  func shouldReloadMessageSatus() -> Bool {
-//    guard self.message == self.chatLogController?.messages.last, self.chatLogController!.messages.count > 0 else { return false }
-//      return true
-//  }
 }

@@ -78,8 +78,8 @@ class FalconUsersFetcher: NSObject {
       } else {
         self.users.append(fetchedUser)
       }
-      
-      self.users = self.rearrangeUsers(users: self.sortUsers(users: self.users))
+      self.users = self.sortUsers(users: self.users)
+      self.users = self.rearrangeUsers(users: self.users)
       self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
     })
   }
@@ -96,12 +96,15 @@ class FalconUsersFetcher: NSObject {
   }
   
   func sortUsers(users: [User]) -> [User] { /* Sort users by last online date  */
-    return users.sorted(by: { (user1, user2) -> Bool in
-      guard let firstUserOnlineStatus = user1.onlineStatus as? TimeInterval , let secondUserOnlineStatus = user2.onlineStatus as? TimeInterval else {
-        return ( user1.phoneNumber ?? "") > (user2.phoneNumber ?? "") // sort
+    let sortedUsers = users.sorted(by: { (user1, user2) -> Bool in
+      guard let timestamp1 = user1.onlineStatus as? TimeInterval , let timestamp2 = user2.onlineStatus as? TimeInterval else {
+        guard let timestamp3 = user1.onlineStatus as? String , let timestamp4 = user2.onlineStatus as? String else {
+          return (user1.name ?? "", user1.phoneNumber ?? "") > (user2.name ?? "", user2.phoneNumber ?? "")
+        }
+        return (timestamp3, user1.name ?? "") > (timestamp4, user2.name ?? "")
       }
-      return (firstUserOnlineStatus, user1.phoneNumber ?? "") > ( secondUserOnlineStatus, user2.phoneNumber ?? "")
+      return (timestamp1, user1.name ?? "" ) > (timestamp2, user2.name ?? "")
     })
+    return sortedUsers
   }
-  
 }

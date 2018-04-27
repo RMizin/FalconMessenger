@@ -11,7 +11,7 @@ import UIKit
 import AVFoundation
 
 
-public func getInputTextViewMaxHeight() -> CGFloat? {
+func getInputTextViewMaxHeight() -> CGFloat {
   if UIDevice.current.orientation.isLandscape {
     if DeviceType.iPhone5orSE {
       return InputContainerViewConstants.maxContainerViewHeightLandscape4Inch
@@ -43,7 +43,10 @@ class ChatInputContainerView: UIView {
   weak var trayDelegate: ImagePickerTrayControllerDelegate?
   var selectedMedia = [MediaObject]()
   weak var mediaPickerController: MediaPickerControllerNew?
-  var maxTextViewHeight: CGFloat = 0.0
+  
+  static let commentOrSendPlaceholder =  "Comment or Send"
+  static let messagePlaceholder = "Message"
+  static let attachedImagesHeight = 165
   
   weak var chatLogController: ChatLogController? {
     didSet {
@@ -56,16 +59,15 @@ class ChatInputContainerView: UIView {
   override var intrinsicContentSize: CGSize {
     get {
       let textSize = self.inputTextView.sizeThatFits(CGSize(width: self.inputTextView.bounds.width, height: CGFloat.greatestFiniteMagnitude))
-    let maxTextViewHeightRelativeToOrientation: CGFloat! = getInputTextViewMaxHeight()
+      let maxHeight: CGFloat = getInputTextViewMaxHeight()
       
-      if textSize.height >= maxTextViewHeightRelativeToOrientation {
-        maxTextViewHeight = maxTextViewHeightRelativeToOrientation
+      if textSize.height >= maxHeight {
         inputTextView.isScrollEnabled = true
+        return CGSize(width: textSize.width, height: maxHeight)
       } else {
         inputTextView.isScrollEnabled = false
-        maxTextViewHeight = textSize.height + 12
+        return CGSize(width: self.bounds.width, height: textSize.height + 12)
       }
-      return CGSize(width: self.bounds.width, height: maxTextViewHeight )
     }
   }
   
@@ -87,7 +89,7 @@ class ChatInputContainerView: UIView {
   
   let placeholderLabel: UILabel = {
     let placeholderLabel = UILabel()
-    placeholderLabel.text = "Message"
+    placeholderLabel.text = messagePlaceholder
     placeholderLabel.sizeToFit()
     placeholderLabel.textColor = ThemeManager.currentTheme().generalSubtitleColor
     placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -124,15 +126,6 @@ class ChatInputContainerView: UIView {
     return sendButton
   }()
   
-  let separator: UIView = {
-    let separator = UIView()
-    separator.translatesAutoresizingMaskIntoConstraints = false
-    separator.backgroundColor = ThemeManager.currentTheme().generalSubtitleColor
-    separator.isHidden = false
-    
-    return separator
-  }()
-  
   var attachedImages: UICollectionView = {
     var attachedImages = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -146,14 +139,13 @@ class ChatInputContainerView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    print("\nCHAT INPUT CONTAINER VIEW INIT\n")
     if centeredCollectionViewFlowLayout == nil {
       centeredCollectionViewFlowLayout = CenteredCollectionViewFlowLayout()
     }
     
     attachedImages = UICollectionView(centeredCollectionViewFlowLayout: centeredCollectionViewFlowLayout)
     backgroundColor = ThemeManager.currentTheme().barBackgroundColor
-    self.autoresizingMask = UIViewAutoresizing.flexibleHeight
+    autoresizingMask = UIViewAutoresizing.flexibleHeight
     
     addSubview(attachButton)
     addSubview(recordVoiceButton)
@@ -161,14 +153,7 @@ class ChatInputContainerView: UIView {
     addSubview(sendButton)
     addSubview(placeholderLabel)
     inputTextView.addSubview(attachedImages)
-    inputTextView.addSubview(separator)
-    
-    separator.translatesAutoresizingMaskIntoConstraints = false
-    separator.heightAnchor.constraint(equalToConstant: 0.3).isActive = true
-    separator.leadingAnchor.constraint(equalTo: attachedImages.leadingAnchor).isActive = true
-    separator.trailingAnchor.constraint(equalTo: attachedImages.trailingAnchor).isActive = true
-    separator.bottomAnchor.constraint(equalTo: attachedImages.bottomAnchor).isActive = true
-    
+
     if #available(iOS 11.0, *) {
       attachButton.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 5).isActive = true
       inputTextView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
@@ -176,6 +161,7 @@ class ChatInputContainerView: UIView {
       attachButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 5).isActive = true
       inputTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
     }
+    
     attachButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     attachButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     attachButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
@@ -186,14 +172,14 @@ class ChatInputContainerView: UIView {
     recordVoiceButton.leftAnchor.constraint(equalTo: attachButton.rightAnchor, constant: 0).isActive = true
     
     inputTextView.topAnchor.constraint(equalTo: topAnchor, constant: 6).isActive = true
-    inputTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6).isActive = true
     inputTextView.leftAnchor.constraint(equalTo: recordVoiceButton.rightAnchor, constant: 3).isActive = true
+    inputTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6).isActive = true
     
-    placeholderLabel.font = UIFont.systemFont(ofSize: (inputTextView.font!.pointSize - 1))
+    placeholderLabel.font = UIFont.systemFont(ofSize: (inputTextView.font!.pointSize))
     placeholderLabel.isHidden = !inputTextView.text.isEmpty
     placeholderLabel.leftAnchor.constraint(equalTo: inputTextView.leftAnchor, constant: 12).isActive = true
     placeholderLabel.rightAnchor.constraint(equalTo: inputTextView.rightAnchor).isActive = true
-    placeholderLabel.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: inputTextView.font!.pointSize / 2).isActive = true
+    placeholderLabel.topAnchor.constraint(equalTo: attachedImages.bottomAnchor, constant: inputTextView.font!.pointSize / 2.3).isActive = true
     placeholderLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
     
     sendButton.rightAnchor.constraint(equalTo: inputTextView.rightAnchor, constant: -4).isActive = true
@@ -212,36 +198,32 @@ class ChatInputContainerView: UIView {
     super.didMoveToWindow()
     if #available(iOS 11.0, *) {
       if let window = window {
-        self.bottomAnchor.constraintLessThanOrEqualToSystemSpacingBelow(window.safeAreaLayoutGuide.bottomAnchor, multiplier: 1.0).isActive = true
+        bottomAnchor.constraintLessThanOrEqualToSystemSpacingBelow(window.safeAreaLayoutGuide.bottomAnchor, multiplier: 1.0).isActive = true
       }
     }
   }
 }
-
 
 extension ChatInputContainerView {
   
   func resetChatInputConntainerViewSettings () {
     
     if selectedMedia.count == 0 {
-      
       attachedImages.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
-      
-      self.inputTextView.textContainerInset = InputContainerViewConstants.containerInsetsDefault
-      
-      separator.isHidden = true
-      placeholderLabel.text = "Message"
+      inputTextView.textContainerInset = InputContainerViewConstants.containerInsetsDefault
+      placeholderLabel.text = ChatInputContainerView.messagePlaceholder
       
       if inputTextView.text == "" {
         sendButton.isEnabled = false
       }
       
       let textBeforeUpdate = inputTextView.text
-      
       inputTextView.text = " "
-      inputTextView.invalidateIntrinsicContentSize()
       invalidateIntrinsicContentSize()
+      layoutIfNeeded()
       inputTextView.text = textBeforeUpdate
+      invalidateIntrinsicContentSize()
+      layoutIfNeeded()
     }
   }
 }
@@ -260,13 +242,12 @@ extension ChatInputContainerView: UIGestureRecognizerDelegate {
   }
 }
 
-
 extension ChatInputContainerView: UITextViewDelegate {
   
   func textViewDidBeginEditing(_ textView: UITextView) {
-    
     chatLogController?.scrollToBottom(at: .top)
   }
+  
   
   func textViewDidChange(_ textView: UITextView) {
     
@@ -282,7 +263,7 @@ extension ChatInputContainerView: UITextViewDelegate {
     if textView.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty {
       sendButton.isEnabled = false
     }
-    
+
     invalidateIntrinsicContentSize()
   }
   
