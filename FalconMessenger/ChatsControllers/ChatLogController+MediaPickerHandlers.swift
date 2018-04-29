@@ -15,26 +15,25 @@ extension ChatLogController {
   @objc func toggleTextView () {
     
     if inputContainerView.attachButton.isSelected || inputContainerView.recordVoiceButton.isSelected {
-      self.inputContainerView.inputTextView.inputView = nil
-      self.inputContainerView.inputTextView.reloadInputViews()
+      inputContainerView.inputTextView.inputView = nil
+      inputContainerView.inputTextView.reloadInputViews()
     } else {
-      UIView.performWithoutAnimation {
-        self.inputContainerView.inputTextView.inputView = nil
-        self.inputContainerView.inputTextView.reloadInputViews()
-        self.inputContainerView.inputTextView.resignFirstResponder()
-      }
-      self.inputContainerView.inputTextView.becomeFirstResponder()
+      guard !inputContainerView.inputTextView.isFirstResponder else { return }
+      inputContainerView.inputTextView.becomeFirstResponder()
     }
-    
-    inputContainerView.attachButton.isSelected = false
-    inputContainerView.recordVoiceButton.isSelected = false
+    setRecordVoiceButtonSelected(isSelected: false)
+    setAttachButtonSelected(isSelected: false)
   }
   
   @objc func togglePhoto () {
     
     checkAuthorisationStatus()
     if mediaPickerController == nil { mediaPickerController = MediaPickerControllerNew() }
-    inputContainerView.attachButton.isSelected = !inputContainerView.attachButton.isSelected
+    if  inputContainerView.attachButton.isSelected {
+      setAttachButtonSelected(isSelected: false)
+    } else {
+      setAttachButtonSelected(isSelected: true)
+    }
     
     guard inputContainerView.attachButton.isSelected else {
       inputContainerView.inputTextView.inputView = nil
@@ -48,11 +47,22 @@ extension ChatLogController {
       inputContainerView.mediaPickerController = mediaPickerController
     }
     
-    inputContainerView.recordVoiceButton.isSelected = false
+    setRecordVoiceButtonSelected(isSelected: false)
     inputContainerView.inputTextView.inputView = mediaPickerController.view
     inputContainerView.inputTextView.reloadInputViews()
     inputContainerView.inputTextView.becomeFirstResponder()
     inputContainerView.inputTextView.addGestureRecognizer(inputTextViewTapGestureRecognizer)
+  }
+  
+  func setRecordVoiceButtonSelected(isSelected: Bool) {
+    UIView.transition(with: inputContainerView.recordVoiceButton, duration: 0.2, options: .transitionCrossDissolve,
+                      animations: { self.inputContainerView.recordVoiceButton.isSelected = isSelected }, completion: nil)
+  }
+  
+  func setAttachButtonSelected(isSelected: Bool) {
+    
+    UIView.transition(with: inputContainerView.attachButton, duration: 0.2, options: .transitionCrossDissolve,
+                      animations: { self.inputContainerView.attachButton.isSelected = isSelected }, completion: nil)
   }
   
   func checkAuthorisationStatus() {

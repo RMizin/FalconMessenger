@@ -98,13 +98,6 @@ class ChatsTableViewController: UITableViewController {
     
     setUpColorsAccordingToTheme()
   }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    if let testSelected = tableView.indexPathForSelectedRow {
-      tableView.deselectRow(at: testSelected, animated: true)
-    }
-    super.viewDidAppear(animated)
-  }
 
   func initAllTabs() {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate

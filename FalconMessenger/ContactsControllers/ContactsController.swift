@@ -156,7 +156,7 @@ class ContactsController: UITableViewController {
     store.requestAccess(for: .contacts) { granted, error in
       guard granted else { return }
 
-      let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey as NSString, CNContactPhoneNumbersKey as NSString, CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
+      let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey as NSString, CNContactPhoneNumbersKey as NSString, CNContactFormatter.descriptorForRequiredKeys(for: .fullName), CNContactImageDataAvailableKey as CNKeyDescriptor, CNContactThumbnailImageDataKey as CNKeyDescriptor])
       
       do {
         try store.enumerateContacts(with: request) { contact, stop in self.contacts.append(contact) }
@@ -237,26 +237,19 @@ class ContactsController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       if indexPath.section == 0 {
-         return 76
+         return 66
       } else {
          return 66
       }
     }
   
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-      
-      if section == 0 {
-        return ""
-      } else if section == 1 {
-      
-        if filteredUsers.count == 0 {
-          return ""
-        } else {
-          return "Falcon contacts"
-        }
-      } else {
-        return "All contacts"
+    
+      if section == 2 {
+        guard filteredContacts.count != 0 else { return "" }
+        return "Contacts"
       }
+      return ""
     }
 
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -285,7 +278,6 @@ class ContactsController: UITableViewController {
       let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
     
         if let name = filteredUsers[indexPath.row].name {
-        
           cell.title.text = name
         }
     
@@ -329,9 +321,17 @@ class ContactsController: UITableViewController {
       
     } else if indexPath.section == 2 {
       
-      let cell = tableView.dequeueReusableCell(withIdentifier: contactsCellID, for: indexPath) as! ContactsTableViewCell
-      cell.icon.image = UIImage(named: "UserpicIcon")
+      let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
+      if filteredContacts[indexPath.row].imageDataAvailable {
+      
+        let image = UIImage(data: filteredContacts[indexPath.row].thumbnailImageData!)
+          cell.icon.image = image
+      } else {
+          cell.icon.image = UIImage(named: "UserpicIcon")
+      }
+    
       cell.title.text = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
+      cell.subtitle.text = filteredContacts[indexPath.row].phoneNumbers[0].value.stringValue
       
       return cell
     }
@@ -386,6 +386,9 @@ class ContactsController: UITableViewController {
       if indexPath.section == 2 {
         let destination = ContactsDetailController()
         destination.contactName = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
+        if let photo = filteredContacts[indexPath.row].thumbnailImageData {
+          destination.contactPhoto = UIImage(data: photo)
+        }
         destination.contactPhoneNumbers.removeAll()
         destination .hidesBottomBarWhenPushed = true
         for phoneNumber in filteredContacts[indexPath.row].phoneNumbers {

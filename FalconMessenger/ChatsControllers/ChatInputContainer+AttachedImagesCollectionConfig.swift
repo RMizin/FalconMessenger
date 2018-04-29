@@ -57,7 +57,7 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     } else {
       selectedMedia.remove(at: row)
       attachedImages.deleteItems(at: [indexPath!])
-      self.resetChatInputConntainerViewSettings()
+      resetChatInputConntainerViewSettings()
     }
       
     } else {
@@ -65,10 +65,9 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
       if selectedMedia[row].phAsset != nil && mediaPickerController!.assets.contains(selectedMedia[row].phAsset!) {
         deselectAsset(row: row)
       } else {
-       
-          selectedMedia.remove(at: row)
-          attachedImages.deleteItems(at: [indexPath!])
-          self.resetChatInputConntainerViewSettings()
+        selectedMedia.remove(at: row)
+        attachedImages.deleteItems(at: [indexPath!])
+        resetChatInputConntainerViewSettings()
       }
     }
   }

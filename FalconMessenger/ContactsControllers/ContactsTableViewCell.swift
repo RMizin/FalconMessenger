@@ -24,7 +24,7 @@ class ContactsTableViewCell: UITableViewCell {
   var title: UILabel = {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
-    title.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)
+    title.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     
     return title

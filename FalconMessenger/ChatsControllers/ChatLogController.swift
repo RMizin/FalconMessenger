@@ -520,6 +520,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   deinit {
+    NotificationCenter.default.removeObserver(self)
     print("\n CHATLOG CONTROLLER DE INIT \n")
   }
   
@@ -599,7 +600,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   fileprivate func setupCollectionView () {
     inputTextViewTapGestureRecognizer = UITapGestureRecognizer(target: inputContainerView.chatLogController, action: #selector(ChatLogController.toggleTextView))
     inputTextViewTapGestureRecognizer.delegate = inputContainerView
-    
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     collectionView?.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     collectionView?.backgroundColor = view.backgroundColor
@@ -637,6 +638,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     configureRefreshControlInitialTintColor()
     configureCellContextMenuView()
+  }
+  
+  @objc func keyboardDidHide(notification: NSNotification) {
+    inputContainerView.inputTextView.inputView = nil
   }
   
   fileprivate func configureCellContextMenuView() {

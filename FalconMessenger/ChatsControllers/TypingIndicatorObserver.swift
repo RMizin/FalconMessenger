@@ -28,7 +28,6 @@ class TypingIndicatorObserver: NSObject {
   
   var groupTypingChangesHandle = [(handle: DatabaseHandle, chatID: String)]()
   
-  
   func observeChangesForGroupTypingIndicator(with chatID: String) {
     
     guard let currentUserID = Auth.auth().currentUser?.uid, currentUserID != chatID else { return }
@@ -42,7 +41,7 @@ class TypingIndicatorObserver: NSObject {
         self.delegate?.typingIndicator(isActive: false, for: chatID)
         return
       }
-      if firstKey == chatID && dictionary.count == 1 {
+      if firstKey == currentUserID && dictionary.count == 1 {
         self.delegate?.typingIndicator(isActive: false, for: chatID)
         return
       }

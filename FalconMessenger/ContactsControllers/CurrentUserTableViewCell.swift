@@ -15,7 +15,7 @@ class CurrentUserTableViewCell: UITableViewCell {
     icon.translatesAutoresizingMaskIntoConstraints = false
     icon.contentMode = .scaleAspectFill
     
-    icon.layer.cornerRadius = 30
+    icon.layer.cornerRadius = 25
     icon.layer.masksToBounds = true
     icon.image = ThemeManager.currentTheme().personalStorageImage
     
@@ -25,16 +25,14 @@ class CurrentUserTableViewCell: UITableViewCell {
   var title: UILabel = {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
-    title.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
+    title.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     return title
   }()
   
-  
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
-
     backgroundColor = .clear
     title.backgroundColor = backgroundColor
     icon.backgroundColor = backgroundColor
@@ -42,8 +40,8 @@ class CurrentUserTableViewCell: UITableViewCell {
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
-    icon.widthAnchor.constraint(equalToConstant: 62).isActive = true
-    icon.heightAnchor.constraint(equalToConstant: 62).isActive = true
+    icon.widthAnchor.constraint(equalToConstant: 50).isActive = true
+    icon.heightAnchor.constraint(equalToConstant: 50).isActive = true
     
     contentView.addSubview(title)
     title.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 0).isActive = true
@@ -58,13 +56,9 @@ class CurrentUserTableViewCell: UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
-    print("prepare for reuser")
-    
-    icon.image = UIImage(named: "PersonalStorage")
+    icon.image = ThemeManager.currentTheme().personalStorageImage
     title.text = ""
     title.textColor = ThemeManager.currentTheme().generalTitleColor
-    
   }
-  
 }
 

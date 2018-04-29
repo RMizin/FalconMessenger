@@ -17,11 +17,15 @@ extension ChatLogController {
       voiceRecordingViewController = VoiceRecordingViewController()
     }
 
-    inputContainerView.recordVoiceButton.isSelected = !inputContainerView.recordVoiceButton.isSelected
+    if inputContainerView.recordVoiceButton.isSelected {
+      setRecordVoiceButtonSelected(isSelected: false)
+    } else {
+      setRecordVoiceButtonSelected(isSelected: true)
+    }
     
     if inputContainerView.recordVoiceButton.isSelected {
       voiceRecordingViewController.inputContainerView = inputContainerView
-      inputContainerView.attachButton.isSelected = false
+      setAttachButtonSelected(isSelected: false)
       inputContainerView.inputTextView.inputView = voiceRecordingViewController.view
       inputContainerView.inputTextView.reloadInputViews()
       inputContainerView.inputTextView.becomeFirstResponder()
