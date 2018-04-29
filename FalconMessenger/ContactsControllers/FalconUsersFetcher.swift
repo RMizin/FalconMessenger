@@ -61,6 +61,7 @@ class FalconUsersFetcher: NSObject {
     userQuery = userReference.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber)
     let databaseHandle = DatabaseHandle()
     userHandle.insert(databaseHandle, at: 0 )
+   
     userHandle[0] = userQuery.observe(.value, with: { (snapshot) in
     
       guard snapshot.exists(), let userData = (snapshot.value as? [String: AnyObject])?.first,
@@ -81,7 +82,9 @@ class FalconUsersFetcher: NSObject {
       self.users = self.sortUsers(users: self.users)
       self.users = self.rearrangeUsers(users: self.users)
       self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
-    })
+    })  { (error) in
+      print("query error", error.localizedDescription)
+    }
   }
   
   func rearrangeUsers(users: [User]) -> [User] { /* Moves Online users to the top  */

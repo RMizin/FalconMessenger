@@ -24,7 +24,7 @@ class LegalTableViewController: UITableViewController {
   }
   
   fileprivate func configureController() {
-    title = "Legal"
+    title = "About"
     tableView = UITableView(frame: self.tableView.frame, style: .grouped)
     tableView.separatorStyle = .none
     extendedLayoutIncludesOpaqueBars = true

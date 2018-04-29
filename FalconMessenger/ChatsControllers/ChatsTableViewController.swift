@@ -197,12 +197,12 @@ class ChatsTableViewController: UITableViewController {
   func checkIfThereAnyActiveChats(isEmpty: Bool) {
     
     guard !isEmpty else {
-      self.view.addSubview(noChatsYetContainer)
-      noChatsYetContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+      view.addSubview(noChatsYetContainer)
+      noChatsYetContainer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
       return
     }
     
-    for subview in self.view.subviews {
+    for subview in view.subviews {
       if subview is NoChatsYetContainer {
         subview.removeFromSuperview()
       }
@@ -711,7 +711,7 @@ class ChatsTableViewController: UITableViewController {
       let muteTitle = isConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
     }
-    mute.backgroundColor = UIColor(red:0.56, green:0.64, blue:0.68, alpha:1.0)
+    mute.backgroundColor =  UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
     return mute
   }
   
@@ -726,7 +726,7 @@ class ChatsTableViewController: UITableViewController {
     
     let pinTitle = indexPath.section == 0 ? "Unpin" : "Pin"
     pin.title = pinTitle
-    pin.backgroundColor = UIColor(red:0.96, green:0.49, blue:0.00, alpha:1.0)
+    pin.backgroundColor = UIColor(red:0.18, green:0.26, blue:0.31, alpha:1.0)
     return pin
   }
   
@@ -744,7 +744,7 @@ class ChatsTableViewController: UITableViewController {
       }
     }
     
-    delete.backgroundColor = UIColor(red:0.90, green:0.22, blue:0.21, alpha:1.0)
+    delete.backgroundColor = UIColor(red:0.93, green:0.11, blue:0.15, alpha:1.0)
     return delete
   }
   

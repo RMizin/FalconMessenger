@@ -15,7 +15,6 @@ extension Double {
     let divisor = pow(10.0, Double(places))
     return Darwin.round(self * divisor) / divisor
   }
-  
 }
 
 class StorageTableViewController: UITableViewController {
@@ -27,7 +26,7 @@ class StorageTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      title = "Data and storage"
+      title = "Data and Storage"
       tableView = UITableView(frame: self.tableView.frame, style: .grouped)
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       tableView.backgroundColor = view.backgroundColor
