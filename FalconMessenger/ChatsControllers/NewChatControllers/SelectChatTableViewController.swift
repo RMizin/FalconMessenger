@@ -143,16 +143,7 @@ class SelectChatTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    
-    if section == 0 {
-      return ""
-    } else {
-      if filteredUsers.count == 0 {
-        return ""
-      } else {
-        return "Falcon contacts"
-      }
-    }
+    return ""
   }
   
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {

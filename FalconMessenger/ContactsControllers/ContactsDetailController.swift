@@ -8,15 +8,17 @@
 
 import UIKit
 import MessageUI
+import Contacts
 
 class ContactsDetailController: UITableViewController {
   
   var contactName = String()
   var contactPhoto: UIImage!
   
-  var contactPhoneNumbers = [String]()
+  var contactPhoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
   let invitationText = "Hey! Download Falcon Messenger on the App Store. https://itunes.apple.com/ua/app/falcon-messenger/id1313765714?mt=8 "
   let currentUserCellID = "currentUserCellID"
+  let contactPhoneNnumberTableViewCellID = "contactPhoneNnumberTableViewCellID"
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +27,7 @@ class ContactsDetailController: UITableViewController {
       extendedLayoutIncludesOpaqueBars = true
       tableView.separatorStyle = .none
       tableView.register(CurrentUserTableViewCell.self, forCellReuseIdentifier: currentUserCellID)
+      tableView.register(ContactPhoneNnumberTableViewCell.self, forCellReuseIdentifier: contactPhoneNnumberTableViewCellID)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -42,29 +45,32 @@ class ContactsDetailController: UITableViewController {
     }
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      let identifier = "cell"
-      
       if indexPath.section == 0 {
         let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as! CurrentUserTableViewCell
         cell.selectionStyle = .none
+        cell.iconWidthAnchor.constant = CurrentUserTableViewCell.iconSizeLargeConstant
+        cell.iconHeightAnchor.constant = CurrentUserTableViewCell.iconSizeLargeConstant
+        cell.icon.layer.cornerRadius = CurrentUserTableViewCell.iconLargreCornerRadius
+        cell.title.font = UIFont.systemFont(ofSize: 18)
         cell.title.text = contactName
+        
         if contactPhoto != nil {
           cell.icon.image = contactPhoto
         } else {
           cell.icon.image = UIImage(named: "UserpicIcon")
         }
+        
         return cell
       } else {
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
-        cell.backgroundColor = view.backgroundColor
+        let cell = tableView.dequeueReusableCell(withIdentifier: contactPhoneNnumberTableViewCellID, for: indexPath) as! ContactPhoneNnumberTableViewCell
         cell.selectionStyle = .none
-        cell.imageView?.image = nil
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+  
         if indexPath.section == 1 {
-          cell.textLabel?.text = contactPhoneNumbers[indexPath.row]
-          cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+          cell.title.text = CNLabeledValue<NSString>.localizedString(forLabel: contactPhoneNumbers[indexPath.row].label ?? "")
+          cell.subtitle.text = contactPhoneNumbers[indexPath.row].value.stringValue
         } else {
           cell.textLabel?.textColor = FalconPalette.defaultBlue
+          cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
           cell.textLabel?.text = "Invite to Falcon"
         }
         return cell
@@ -81,7 +87,7 @@ class ContactsDetailController: UITableViewController {
         if MFMessageComposeViewController.canSendText() {
           let destination = MFMessageComposeViewController()
           destination.body = invitationText
-          destination.recipients = [contactPhoneNumbers[0]]
+          destination.recipients = [contactPhoneNumbers[0].value.stringValue]
           destination.messageComposeDelegate = self
           present(destination, animated: true, completion: nil)
         } else {
@@ -92,9 +98,11 @@ class ContactsDetailController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       if indexPath.section == 0 {
-        return 90
+        return 100
+      } else if indexPath.section == 1 {
+        return 60
       } else {
-        return 50
+        return 80
       }
     }
 }

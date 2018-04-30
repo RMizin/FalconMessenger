@@ -26,16 +26,6 @@ class UserCell: UITableViewCell {
     return imageView
   }()
 
-  let newMessageIndicator: UIImageView = {
-    let newMessageIndicator = UIImageView()
-    newMessageIndicator.translatesAutoresizingMaskIntoConstraints = false
-    newMessageIndicator.layer.masksToBounds = true
-    newMessageIndicator.contentMode = .scaleAspectFill
-    newMessageIndicator.isHidden = true
-    newMessageIndicator.image = UIImage(named: "Oval")
-  
-    return newMessageIndicator
-  }()
   
   let muteIndicator: UIImageView = {
     let muteIndicator = UIImageView()
@@ -115,7 +105,6 @@ class UserCell: UITableViewCell {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)
   
     backgroundColor = .clear
-    contentView.addSubview(newMessageIndicator)
     contentView.addSubview(muteIndicator)
     contentView.addSubview(profileImageView)
     contentView.addSubview(nameLabel)
@@ -123,12 +112,7 @@ class UserCell: UITableViewCell {
     contentView.addSubview(timeLabel)
     contentView.addSubview(badgeLabel)
   
-    newMessageIndicator.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 7).isActive = true
-    newMessageIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-    newMessageIndicator.widthAnchor.constraint(equalToConstant: 12).isActive = true
-    newMessageIndicator.heightAnchor.constraint(equalToConstant: 12).isActive = true
-  
-    profileImageView.leftAnchor.constraint(equalTo: newMessageIndicator.rightAnchor, constant: 7).isActive = true
+    profileImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 7).isActive = true
     profileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
     profileImageView.widthAnchor.constraint(equalToConstant: 62).isActive = true
     profileImageView.heightAnchor.constraint(equalToConstant: 62).isActive = true
@@ -189,7 +173,6 @@ class UserCell: UITableViewCell {
     timeLabel.text = nil
     badgeLabel.isHidden = true
     muteIndicator.isHidden = true
-    newMessageIndicator.isHidden = true
     nameLabel.textColor = ThemeManager.currentTheme().generalTitleColor
     typingIndicatorTimer?.invalidate()
   }

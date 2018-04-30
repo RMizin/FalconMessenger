@@ -59,7 +59,6 @@ extension UserCell {
     let badgeInt = conversations[indexPath.row].badge ?? 0
     
     guard badgeInt > 0, conversations[indexPath.row].lastMessage?.fromId != Auth.auth().currentUser?.uid else {
-      newMessageIndicator.isHidden = true
       badgeLabel.isHidden = true
       messageLabelRightConstraint.constant = 0
       badgeLabelWidthConstraint.constant = 0
@@ -70,7 +69,6 @@ extension UserCell {
     badgeLabel.isHidden = false
     badgeLabelWidthConstraint.constant = badgeLabelWidthConstant
     messageLabelRightConstraint.constant = messageLabelRightConstant
-    newMessageIndicator.isHidden = false
     return
   }
 }

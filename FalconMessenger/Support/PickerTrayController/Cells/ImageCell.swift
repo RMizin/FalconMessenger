@@ -18,7 +18,7 @@ class ImageCell: UICollectionViewCell {
         return imageView
     }()
     
-    fileprivate let shadowView = UIImageView(image: UIImage(bundledName: "ImageCell-Shadow"))
+    //fileprivate let shadowView = UIImageView(image: UIImage(bundledName: "ImageCell-Shadow"))
     
     fileprivate let videoIndicatorView = UIImageView(image: UIImage(bundledName: "ImageCell-Video"))
     
@@ -77,7 +77,7 @@ class ImageCell: UICollectionViewCell {
     fileprivate func reloadAccessoryViews() {
         videoIndicatorView.isHidden = !isVideo
         cloudIndicatorView.isHidden = !isRemote
-        shadowView.isHidden = videoIndicatorView.isHidden && cloudIndicatorView.isHidden
+      //  shadowView.isHidden = videoIndicatorView.isHidden && cloudIndicatorView.isHidden
     }
     
     fileprivate func reloadCheckmarkView() {

@@ -134,7 +134,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       } else {
         self.conversation?.chatParticipantsIDs?.append(id)
         self.changeUIAfterChildAddedIfNeeded()
-        print("NEW MEMBER JOINED THE GROUP")
       }
     }
     
@@ -146,7 +145,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       }) else { return }
       self.conversation?.chatParticipantsIDs?.remove(at: memberIndex)
       self.changeUIAfterChildRemovedIfNeeded()
-      print("MEMBER LEFT THE GROUP")
     }
   }
   
@@ -218,7 +216,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         if (queryStartingID == queryEndingID) && self.messages.contains(where: { (message) -> Bool in
           return message.messageUID == queryEndingID
         }) {
-          print("self.queryStartingID == self.queryEndingID")
           self.refreshControl.endRefreshing()
           return
         }
@@ -414,14 +411,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if !snapshot.exists() { return }
     
       senderID = snapshot.value as? String
-      print("\nupdate message status\n")
       guard uid != senderID,
          (self.navigationController?.visibleViewController is UserInfoTableViewController ||
           self.navigationController?.visibleViewController is ChatLogController ||
           self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
           topViewController(rootViewController: self) is CropViewController) else { senderID = nil; return }
       messageRef.updateChildValues(["seen" : true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
-          print("\nreset badge for self\n")
         self.resetBadgeForSelf()
       })
     })
@@ -432,7 +427,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     guard let index = self.messages.index(where: { (message) -> Bool in
       return message.messageUID == sentMessage.messageUID
     }) else {
-      print("returning in status")
       return
     }
     
@@ -444,9 +438,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
         }
       }
-      print("status successfuly reloaded")
-    } else {
-      print("index invalid")
     }
   }
   
@@ -496,7 +487,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       let messagesReference = Database.database().reference().child("messages").child(messageID)
       messagesReference.removeObserver(withHandle: element.handle)
     }
-    
   
     if messagesFetcher != nil {
       if messagesFetcher.userMessagesReference != nil {
@@ -686,15 +676,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
     
     if currentUserID == toId {
-       print(currentUserID, toId)
       self.navigationItem.title = NameConstants.personalStorage
       return
     }
   
     userStatusReference = Database.database().reference().child("users").child(toId)
     userHandler = userStatusReference.observe(.value, with: { (snapshot) in
-      guard snapshot.exists() else { print("snapshot not exists returning"); return }
-      print("exists")
+      guard snapshot.exists() else { return }
       
       let value = snapshot.value as? NSDictionary
       let status = value?["OnlineStatus"] as AnyObject
@@ -966,12 +954,17 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       chatLogAudioPlayer.stop()
       cell.playerView.resetTimer()
       cell.playerView.play.isSelected = false
-    
+      do {
+        try AVAudioSession.sharedInstance().setActive(false)
+      } catch {}
     } else if let cell = cell as? IncomingVoiceMessageCell {
       guard cell.isSelected, chatLogAudioPlayer != nil else { return }
       chatLogAudioPlayer.stop()
       cell.playerView.resetTimer()
       cell.playerView.play.isSelected = false
+      do {
+        try AVAudioSession.sharedInstance().setActive(false)
+      } catch {}
     }
   }
   
@@ -980,6 +973,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     chatLogAudioPlayer.stop()
     cell.playerView.resetTimer()
     cell.playerView.play.isSelected = false
+    do {
+      try AVAudioSession.sharedInstance().setActive(false)
+    } catch {}
   }
     
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -994,9 +990,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       chatLogAudioPlayer.stop()
       cell.playerView.resetTimer()
       cell.playerView.play.isSelected = false
+      do {
+        try AVAudioSession.sharedInstance().setActive(false)
+      } catch {}
       return
     }
     
+    do {
+      try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers)
+      try AVAudioSession.sharedInstance().setActive(true)
+    } catch {}
     do {
       chatLogAudioPlayer = try AVAudioPlayer(data:  data)
       chatLogAudioPlayer.prepareToPlay()
@@ -1006,7 +1009,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       cell.playerView.play.isSelected = true
     } catch {
       chatLogAudioPlayer = nil
-      print(error.localizedDescription)
     }
   }
   
@@ -1167,10 +1169,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video { // video
 
-          guard let path = selectedMedia.fileURL else {
-            print("no file url returning")
-            return
-          }
+          guard let path = selectedMedia.fileURL else { return }
           
           let valuesForVideo: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject, "localVideoUrl" : path as AnyObject]
           

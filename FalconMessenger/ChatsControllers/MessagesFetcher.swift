@@ -76,7 +76,6 @@ class MessagesFetcher: NSObject {
     loadingMessagesGroup.notify(queue: .main, execute: {
       guard self.messages.count != 0 else {
          self.isInitialChatMessagesLoad = false
-       
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
         return
       }
@@ -85,8 +84,9 @@ class MessagesFetcher: NSObject {
       self.newLoadUserames()
       self.loadingNamesGroup.notify(queue: .main, execute: {
         self.messages = self.sortedMessages(unsortedMessages: self.messages)
+        self.messages = self.configureMessageTails(messages:  self.messages, isGroupChat: isGroupChat)
         self.isInitialChatMessagesLoad = false
-         self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
+        self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
        
       })
@@ -111,7 +111,7 @@ class MessagesFetcher: NSObject {
       for _ in 0 ..< snapshot.childrenCount { loadedMessagesGroup.enter() }
       
       loadedMessagesGroup.notify(queue: .main, execute: {
-        self.messages = self.configureMessageTails(messages: loadedMessages, isGroupChat: isGroupChat)
+        self.messages = loadedMessages
         self.loadingMessagesGroup.leave()
       })
       

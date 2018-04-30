@@ -19,10 +19,10 @@ extension Double {
 
 class StorageTableViewController: UITableViewController {
 
-  
   deinit {
     print("STORAGE DID DEINIT")
   }
+  
     override func viewDidLoad() {
         super.viewDidLoad()
       
@@ -35,17 +35,13 @@ class StorageTableViewController: UITableViewController {
     }
   
     override func numberOfSections(in tableView: UITableView) -> Int {
-      
-        return 1
+      return 1
     }
   
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      
-        return 2
+      return 2
     }
 
-  
- 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       
       let identifier = "cell"
@@ -65,37 +61,34 @@ class StorageTableViewController: UITableViewController {
         
         if cachedSize > 0 {
           
-          cell.textLabel?.text = "Clear cache"
+          cell.textLabel?.text = "Clear Cache"
           cell.isUserInteractionEnabled = true
           cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
           
         } else {
           
-          cell.textLabel?.text = "Cache is empty"
+          cell.textLabel?.text = "Cache is Empty"
           cell.isUserInteractionEnabled = false
           cell.textLabel?.textColor = ThemeManager.currentTheme().generalSubtitleColor
         }
       }
       
       if indexPath.row == 1 {
-       cell.textLabel?.text = "Clear temporary docs and data"
+       cell.textLabel?.text = "Clear Temporary Docs and Data"
        cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
       }
-  
-        return cell
+      return cell
     }
-  
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if indexPath.row == 0 {
-      let oversizeAlert = UIAlertController(title: "", message: "Are you shure?", preferredStyle: UIAlertControllerStyle.actionSheet)
+      let oversizeAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
       
       let cachedSize = SDImageCache.shared().getSize()
       
       let cachedSizeInMegabyes = (Double(cachedSize) * 0.000001).round(to: 1)
       
-      let okAction = UIAlertAction(title: "Clear (\(cachedSizeInMegabyes) MB)", style: .default) { (action) in
-        
+      let okAction = UIAlertAction(title: "Clear \(cachedSizeInMegabyes) MB", style: .default) { (action) in
         
         SDImageCache.shared().clearDisk(onCompletion: {
           SDImageCache.shared().clearMemory()
@@ -111,7 +104,7 @@ class StorageTableViewController: UITableViewController {
     }
     
     if indexPath.row == 1 {
-       let alert = UIAlertController(title: "", message: "Are you shure?", preferredStyle: UIAlertControllerStyle.actionSheet)
+       let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
       let okAction = UIAlertAction(title: "Confirm", style: .default) { (action) in
    
         FileManager.default.clearTemp()
@@ -124,11 +117,8 @@ class StorageTableViewController: UITableViewController {
       alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
       self.present(alert, animated: true, completion: nil)
       tableView.deselectRow(at: indexPath, animated: true)
-      
-
     }
-    
-     }
+  }
   
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 55

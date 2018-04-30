@@ -391,10 +391,8 @@ class ContactsController: UITableViewController {
         }
         destination.contactPhoneNumbers.removeAll()
         destination .hidesBottomBarWhenPushed = true
-        for phoneNumber in filteredContacts[indexPath.row].phoneNumbers {
-          destination.contactPhoneNumbers.append(phoneNumber.value.stringValue)
-        }
-        self.navigationController?.pushViewController(destination, animated: true)
+        destination.contactPhoneNumbers = filteredContacts[indexPath.row].phoneNumbers
+        navigationController?.pushViewController(destination, animated: true)
       }
     }
 }

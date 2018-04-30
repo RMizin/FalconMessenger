@@ -12,6 +12,7 @@
 		4B0FA7CF2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7CE2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift */; };
 		4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */; };
 		4B0FA7DE2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7DD2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift */; };
+		4B18BACA2097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B18BAC92097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift */; };
 		4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */; };
 		4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */; };
 		4B2143041F51C76F00F7A4B8 /* TimestampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143031F51C76F00F7A4B8 /* TimestampView.swift */; };
@@ -196,6 +197,7 @@
 		4B0FA7CE2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsTableViewCell.swift; path = ChatsControllers/GroupAdminControlsTableViewCell.swift; sourceTree = "<group>"; };
 		4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MessagesFetcher.swift; path = ChatsControllers/MessagesFetcher.swift; sourceTree = "<group>"; };
 		4B0FA7DD2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogController+CollectionDelegate.swift"; path = "ChatsControllers/ChatLogController+CollectionDelegate.swift"; sourceTree = "<group>"; };
+		4B18BAC92097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactPhoneNnumberTableViewCell.swift; path = ContactsControllers/ContactPhoneNnumberTableViewCell.swift; sourceTree = "<group>"; };
 		4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectedMediaCollectionCell.swift; path = ChatsControllers/SelectedMediaCollectionCell.swift; sourceTree = "<group>"; };
 		4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatInputContainer+AttachedImagesCollectionConfig.swift"; path = "ChatsControllers/ChatInputContainer+AttachedImagesCollectionConfig.swift"; sourceTree = "<group>"; };
 		4B2143031F51C76F00F7A4B8 /* TimestampView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimestampView.swift; path = ChatsControllers/RevealableCell/TimestampView.swift; sourceTree = "<group>"; };
@@ -1080,6 +1082,7 @@
 				4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */,
 				4BEB13F21F39CE3E0048A984 /* FalconUsersTableViewCell.swift */,
 				4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */,
+				4B18BAC92097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -1314,6 +1317,7 @@
 				4B6BB00420886C5F00A90F3A /* INSPhotosInteractionAnimator.swift in Sources */,
 				4B6BAFF720886C5F00A90F3A /* EnterVerificationContainerView.swift in Sources */,
 				4BEDE42C2068172C00C52EF4 /* InputBlockerContainerView.swift in Sources */,
+				4B18BACA2097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift in Sources */,
 				4BB749FE206E2F7F0014837E /* ChangePhoneNumberController.swift in Sources */,
 				4BE8BB441FCA83D200EB35FA /* PlayerCellView.swift in Sources */,
 				4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */,
