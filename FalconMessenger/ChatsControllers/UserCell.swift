@@ -60,7 +60,7 @@ class UserCell: UITableViewCell {
 
   let messageLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont.systemFont(ofSize: 14)
+    label.font = UIFont.systemFont(ofSize: 15)
     label.textColor = ThemeManager.currentTheme().generalSubtitleColor
     label.numberOfLines = 2
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -72,7 +72,7 @@ class UserCell: UITableViewCell {
   var badgeLabelWidthConstraint: NSLayoutConstraint!
   var messageLabelRightConstraint: NSLayoutConstraint!
   let badgeLabelWidthConstant: CGFloat = 20
-  let badgeLabelRightConstant: CGFloat = -15
+  let badgeLabelRightConstant: CGFloat = -10
   let messageLabelRightConstant: CGFloat = -5
   
   let badgeLabel: UILabel = {
@@ -101,6 +101,8 @@ class UserCell: UITableViewCell {
     return width
   }
   
+  let spacing: CGFloat = 10
+  
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)
   
@@ -112,27 +114,27 @@ class UserCell: UITableViewCell {
     contentView.addSubview(timeLabel)
     contentView.addSubview(badgeLabel)
   
-    profileImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 7).isActive = true
+    profileImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: spacing).isActive = true
     profileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
     profileImageView.widthAnchor.constraint(equalToConstant: 62).isActive = true
     profileImageView.heightAnchor.constraint(equalToConstant: 62).isActive = true
  
-    timeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -15).isActive = true
+    timeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -spacing).isActive = true
     timeLabelWidthAnchor = timeLabel.widthAnchor.constraint(equalToConstant: 60)
     timeLabelWidthAnchor.isActive = true
   
     nameLabel.topAnchor.constraint(equalTo: profileImageView.topAnchor).isActive = true
-    nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true
-    nameLabel.rightAnchor.constraint(lessThanOrEqualTo: timeLabel.leftAnchor, constant: -17).isActive = true
+    nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: spacing).isActive = true
+    nameLabel.rightAnchor.constraint(lessThanOrEqualTo: timeLabel.leftAnchor, constant: -spacing-10).isActive = true
   
     messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
-    messageLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 7).isActive = true
+    messageLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: spacing).isActive = true
     messageLabelRightConstraint = messageLabel.rightAnchor.constraint(equalTo: badgeLabel.leftAnchor, constant: messageLabelRightConstant)
     messageLabelRightConstraint.isActive = true
 
     timeLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor).isActive = true
   
-    muteIndicator.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 3).isActive = true
+    muteIndicator.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 2).isActive = true
     muteIndicator.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor, constant: 0).isActive = true
     muteIndicator.widthAnchor.constraint(equalToConstant: 12).isActive = true
     muteIndicator.heightAnchor.constraint(equalToConstant: 12).isActive = true

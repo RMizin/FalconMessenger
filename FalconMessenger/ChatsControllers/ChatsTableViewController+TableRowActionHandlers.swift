@@ -33,36 +33,36 @@ private let pinErrorTitle = "Error pinning/unpinning"
 private let pinErrorMessage = "Changes won't be saved across app restarts. Check your internet connection, re-launch the app, and try again."
 private let muteErrorTitle = "Error muting/unmuting"
 private let muteErrorMessage = "Check your internet connection and try again."
+
 extension ChatsTableViewController {
   
   func unpinConversation(at indexPath: IndexPath) {
-    let conversation = self.filteredPinnedConversations[indexPath.row]
+    let conversation = filteredPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
     
-    guard let index = self.pinnedConversations.index(where: { (conversation) -> Bool in
-      return conversation.chatID == self.filteredPinnedConversations[indexPath.row].chatID
+    guard let index = pinnedConversations.index(where: { (conversation) -> Bool in
+      return conversation.chatID == filteredPinnedConversations[indexPath.row].chatID
     }) else { return }
     
-    self.tableView.beginUpdates()
-    let pinnedElement = self.filteredPinnedConversations[indexPath.row]
+    let pinnedElement = filteredPinnedConversations[indexPath.row]
     
-    let filteredIndexToInsert = self.filtededConversations.insertionIndex(of: pinnedElement, using: { (conversation1, conversation2) -> Bool in
+    let filteredIndexToInsert = filtededConversations.insertionIndex(of: pinnedElement, using: { (conversation1, conversation2) -> Bool in
       return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
     })
     
-    let unfilteredIndexToInsert = self.conversations.insertionIndex(of: pinnedElement, using: { (conversation1, conversation2) -> Bool in
+    let unfilteredIndexToInsert = conversations.insertionIndex(of: pinnedElement, using: { (conversation1, conversation2) -> Bool in
       return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
     })
     
-    self.filtededConversations.insert(pinnedElement, at: filteredIndexToInsert)
-    self.conversations.insert(pinnedElement, at: unfilteredIndexToInsert)
-    self.filteredPinnedConversations.remove(at: indexPath.row)
-    self.pinnedConversations.remove(at: index)
+    filtededConversations.insert(pinnedElement, at: filteredIndexToInsert)
+    conversations.insert(pinnedElement, at: unfilteredIndexToInsert)
+    filteredPinnedConversations.remove(at: indexPath.row)
+    pinnedConversations.remove(at: index)
     let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 1)
-    
-    self.tableView.deleteRows(at: [indexPath], with: .bottom)
-    self.tableView.insertRows(at: [destinationIndexPath], with: .bottom)
-    self.tableView.endUpdates()
+
+    tableView.beginUpdates()
+    tableView.moveRow(at: indexPath, to: destinationIndexPath)
+    tableView.endUpdates()
     
     let metadataRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataRef.updateChildValues(["pinned": false], withCompletionBlock: { (error, reference) in
@@ -75,34 +75,33 @@ extension ChatsTableViewController {
   
   func pinConversation(at indexPath: IndexPath) {
     
-    let conversation = self.filtededConversations[indexPath.row]
+    let conversation = filtededConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
     
-    guard let index = self.conversations.index(where: { (conversation) -> Bool in
-      return conversation.chatID == self.filtededConversations[indexPath.row].chatID
+    guard let index = conversations.index(where: { (conversation) -> Bool in
+      return conversation.chatID == filtededConversations[indexPath.row].chatID
     }) else { return }
     
-    self.tableView.beginUpdates()
-    let elementToPin = self.filtededConversations[indexPath.row]
+    let elementToPin = filtededConversations[indexPath.row]
     
-    let filteredIndexToInsert = self.filteredPinnedConversations.insertionIndex(of: elementToPin, using: { (conversation1, conversation2) -> Bool in
+    let filteredIndexToInsert = filteredPinnedConversations.insertionIndex(of: elementToPin, using: { (conversation1, conversation2) -> Bool in
       return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
     })
     
-    let unfilteredIndexToInsert = self.pinnedConversations.insertionIndex(of: elementToPin, using: { (conversation1, conversation2) -> Bool in
+    let unfilteredIndexToInsert = pinnedConversations.insertionIndex(of: elementToPin, using: { (conversation1, conversation2) -> Bool in
       return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
     })
     
-    self.filteredPinnedConversations.insert(elementToPin, at: filteredIndexToInsert)
-    self.pinnedConversations.insert(elementToPin, at: unfilteredIndexToInsert)
-    self.filtededConversations.remove(at: indexPath.row)
-    self.conversations.remove(at: index)
+    filteredPinnedConversations.insert(elementToPin, at: filteredIndexToInsert)
+    pinnedConversations.insert(elementToPin, at: unfilteredIndexToInsert)
+    filtededConversations.remove(at: indexPath.row)
+    conversations.remove(at: index)
     let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 0)
-    
-    self.tableView.deleteRows(at: [indexPath], with: .top)
-    self.tableView.insertRows(at: [destinationIndexPath], with: .top)
-    self.tableView.endUpdates()
-    
+
+    tableView.beginUpdates()
+    tableView.moveRow(at: indexPath, to: destinationIndexPath)
+    tableView.endUpdates()
+
     let metadataReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataReference.updateChildValues(["pinned": true], withCompletionBlock: { (error, reference) in
       if error != nil {
@@ -112,24 +111,30 @@ extension ChatsTableViewController {
     })
   }
   
+  func delayWithSeconds(_ seconds: Double, completion: @escaping () -> ()) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+      completion()
+    }
+  }
+  
   func deletePinnedConversation(at indexPath: IndexPath) {
-    let conversation = self.filteredPinnedConversations[indexPath.row]
+    let conversation = filteredPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
     
-    guard let index = self.pinnedConversations.index(where: { (conversation) -> Bool in
-      return conversation.chatID == self.filteredPinnedConversations[indexPath.row].chatID
+    guard let index = pinnedConversations.index(where: { (conversation) -> Bool in
+      return conversation.chatID == filteredPinnedConversations[indexPath.row].chatID
     }) else { return }
     
-    self.tableView.beginUpdates()
-    self.filteredPinnedConversations.remove(at: indexPath.row)
-    self.pinnedConversations.remove(at: index)
-    self.tableView.deleteRows(at: [indexPath], with: .left)
-    self.tableView.endUpdates()
+    tableView.beginUpdates()
+    filteredPinnedConversations.remove(at: indexPath.row)
+    pinnedConversations.remove(at: index)
+    tableView.deleteRows(at: [indexPath], with: .left)
+    tableView.endUpdates()
     
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
     configureTabBarBadge()
-     if self.conversations.count <= 0 && self.pinnedConversations.count <= 0 {
+     if conversations.count <= 0 && pinnedConversations.count <= 0 {
       DispatchQueue.main.async {
         self.checkIfThereAnyActiveChats(isEmpty: true)
       }
@@ -137,24 +142,24 @@ extension ChatsTableViewController {
   }
   
   func deleteUnPinnedConversation(at indexPath: IndexPath) {
-    let conversation = self.filtededConversations[indexPath.row]
+    let conversation = filtededConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
     
-    guard let index = self.conversations.index(where: { (conversation) -> Bool in
-      return conversation.chatID == self.filtededConversations[indexPath.row].chatID
+    guard let index = conversations.index(where: { (conversation) -> Bool in
+      return conversation.chatID == filtededConversations[indexPath.row].chatID
     }) else { return }
     
-    self.tableView.beginUpdates()
-    self.filtededConversations.remove(at: indexPath.row)
-    self.conversations.remove(at: index)
-    self.tableView.deleteRows(at: [indexPath], with: .left)
-    self.tableView.endUpdates()
+    tableView.beginUpdates()
+    filtededConversations.remove(at: indexPath.row)
+    conversations.remove(at: index)
+    tableView.deleteRows(at: [indexPath], with: .left)
+    tableView.endUpdates()
     
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
    
     configureTabBarBadge()
-    if self.conversations.count <= 0 && self.pinnedConversations.count <= 0 {
+    if conversations.count <= 0 && pinnedConversations.count <= 0 {
       DispatchQueue.main.async {
          self.checkIfThereAnyActiveChats(isEmpty: true)
       }
@@ -162,7 +167,6 @@ extension ChatsTableViewController {
   }
   
   fileprivate func updateMutedDatabaseValue(to state: Bool, currentUserID: String, conversationID: String) {
-    
     let metadataReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataReference.updateChildValues(["muted": state], withCompletionBlock: { (error, reference) in
       if error != nil {

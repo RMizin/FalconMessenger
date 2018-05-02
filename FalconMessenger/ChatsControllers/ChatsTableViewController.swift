@@ -319,34 +319,39 @@ class ChatsTableViewController: UITableViewController {
         self.typingIndicatorObsever.observeChangesForDefaultTypingIndicator(with: chatID)
         self.typingIndicatorObsever.observeChangesForGroupTypingIndicator(with: chatID)
       }
+  
+      self.performInitialConversationsLoad(currentUserID: currentUserID, chatID: chatID)
+    })
+  }
+  
+  func performInitialConversationsLoad(currentUserID: String, chatID: String) {
+    
+    conversationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
+    
+    conversationReference.observe( .value, with: { (snapshot) in
       
-      self.conversationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
-      self.conversationReference.observe(.value, with: { (snapshot) in
-        guard var dictionary = snapshot.value as? [String: AnyObject], snapshot.exists() else { return }
-         dictionary.updateValue(chatID as AnyObject, forKey: "chatID")
-    
-        if self.isGroupAlreadyFinished { self.shouldDisableUpdatingIndicator = false }
-        
-        self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updating, activityPriority: .lowMedium, color: ThemeManager.currentTheme().generalTitleColor)
-    
-        let conversation = Conversation(dictionary: dictionary)
-       
-        guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
-          self.updateConversations(with: conversation)
+      guard var dictionary = snapshot.value as? [String: AnyObject], snapshot.exists() else { return }
+      dictionary.updateValue(chatID as AnyObject, forKey: "chatID")
+      
+      if self.isGroupAlreadyFinished { self.shouldDisableUpdatingIndicator = false }
+      
+      self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updating, activityPriority: .lowMedium, color: ThemeManager.currentTheme().generalTitleColor)
+      
+      let conversation = Conversation(dictionary: dictionary)
+      
+      guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
+        self.updateConversations(with: conversation)
         return
-        }
+      }
+      
+      self.lastMessageForConverstaionRef = Database.database().reference().child("messages").child(lastMessageID)
+      self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
+        guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
+        dictionary.updateValue(lastMessageID as AnyObject, forKey: "messageUID")
         
-        self.lastMessageForConverstaionRef = Database.database().reference().child("messages").child(lastMessageID)
-        self.lastMessageForConverstaionRef.observeSingleEvent(of: .value, with: { (snapshot) in
-          guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
-          dictionary.updateValue(lastMessageID as AnyObject, forKey: "messageUID")
-          
-          let message = Message(dictionary: dictionary)
-          conversation.lastMessage = message
-          self.updateConversations(with: conversation)
-        })
-      }, withCancel: { (error) in
-       // print(error.localizedDescription)
+        let message = Message(dictionary: dictionary)
+        conversation.lastMessage = message
+        self.updateConversations(with: conversation)
       })
     })
   }
@@ -387,6 +392,135 @@ class ChatsTableViewController: UITableViewController {
       conversation.chatID = metaInfo.chatID
       self.updateConversationArrays(with: conversation)
     })
+  }
+  
+  fileprivate func updateConversationArrays(with conversation: Conversation) {
+    
+    guard let userID = conversation.chatID else { return }
+    if let unpinnedIndex = conversations.index(where: { (unpinnedConversation) -> Bool in
+      return unpinnedConversation.chatID == userID }) {
+      updateArray(array: conversations, conversation: conversation, index: unpinnedIndex, isPinned: false)
+    } else if let pinnedIndex = pinnedConversations.index(where: { (pinnedConversation) -> Bool in
+      return pinnedConversation.chatID == userID }) {
+      updateArray(array: pinnedConversations, conversation: conversation, index: pinnedIndex, isPinned: true)
+    } else {
+      if conversation.pinned != nil && conversation.pinned! {
+        pinnedConversations.append(conversation)
+      } else { conversations.append(conversation) }
+      if isGroupAlreadyFinished { observersForNotifications() }
+      handleGroupOrReloadTable()
+    }
+  }
+  
+  func updateArray(array: [Conversation], conversation: Conversation, index: Int, isPinned: Bool) {
+    
+    if conversation.isTyping == nil {
+      let isTyping = array[index].isTyping
+      conversation.isTyping = isTyping
+    }
+    
+    if isAppLoaded {
+      
+      if array[index].pinned != conversation.pinned {
+        array[index].pinned = conversation.pinned
+        
+        if isPinned {
+          pinnedConversations[index].pinned = conversation.pinned
+          
+          guard let filteredIndex = filteredPinnedConversations.index(where: { (conv) -> Bool in
+            return conv.chatID == pinnedConversations[index].chatID
+          }) else { return }
+          
+          filteredPinnedConversations[filteredIndex].pinned = conversation.pinned
+          
+        } else {
+          conversations[index].pinned = conversation.pinned
+          
+          guard let filteredIndex = filtededConversations.index(where: { (conv) -> Bool in
+            return conv.chatID == conversations[index].chatID
+          }) else { return }
+          
+          filtededConversations[filteredIndex].pinned = conversation.pinned
+        }
+    
+        print("\npinned changed\n")
+        navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .lowMedium)
+        return
+      }
+      
+      if array[index].muted != conversation.muted {
+        array[index].muted = conversation.muted
+     
+        var section = 0
+        
+        if isPinned {
+       
+          pinnedConversations[index].muted = conversation.muted
+          
+          guard let filteredIndex = filteredPinnedConversations.index(where: { (conv) -> Bool in
+            return conv.chatID == pinnedConversations[index].chatID
+          }) else { return }
+          
+          filteredPinnedConversations[filteredIndex].muted = conversation.muted
+          
+        } else {
+          section = 1
+          conversations[index].muted = conversation.muted
+          
+          guard let filteredIndex = filtededConversations.index(where: { (conv) -> Bool in
+            return conv.chatID == conversations[index].chatID
+          }) else { return }
+          
+          filtededConversations[filteredIndex].muted = conversation.muted
+        }
+        
+        print("\nmuted changed\n")
+        reloadCellAfterUpdate(indexPath: IndexPath(row: index, section: section))
+        navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .lowMedium)
+        return
+      }
+
+      if array[index].badge != conversation.badge {
+        array[index].badge = conversation.badge
+
+        var section = 0
+        
+        if isPinned {
+          pinnedConversations[index].badge = conversation.badge
+          
+          guard let filteredIndex = filteredPinnedConversations.index(where: { (conv) -> Bool in
+            return conv.chatID == pinnedConversations[index].chatID
+          }) else { return }
+          
+          filteredPinnedConversations[filteredIndex].badge = conversation.badge
+          
+        } else {
+          section = 1
+          conversations[index].badge = conversation.badge
+          
+          guard let filteredIndex = filtededConversations.index(where: { (conv) -> Bool in
+            return conv.chatID == conversations[index].chatID
+          }) else { return }
+          
+          filtededConversations[filteredIndex].badge = conversation.badge
+        }
+        
+        print("\n badge changed\n")
+        configureTabBarBadge()
+        reloadCellAfterUpdate(indexPath: IndexPath(row: index, section: section))
+        navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .lowMedium)
+        return
+      }
+    }
+    
+    print("went to reload table")
+    if isPinned {
+      pinnedConversations[index] = conversation
+    } else {
+      conversations[index] = conversation
+    }
+  
+    handleGroupOrReloadTable()
   }
   
   var conversationsChangesHandle = [(handle: DatabaseHandle, chatID: String)]()
@@ -488,45 +622,6 @@ class ChatsTableViewController: UITableViewController {
     tableView.endUpdates()
   }
 
- fileprivate func updateConversationArrays(with conversation: Conversation) {
-  
-  guard let userID = conversation.chatID else { return }
-    if let unpinnedIndex = self.conversations.index(where: { (unpinnedConversation) -> Bool in
-      return unpinnedConversation.chatID == userID }) {
-      
-      if conversation.isTyping == nil {
-        let isTyping = self.conversations[unpinnedIndex].isTyping
-        conversation.isTyping = isTyping
-      }
-      self.conversations[unpinnedIndex] = conversation
-      self.handleGroupOrReloadTable()
-      
-    } else if let pinnedIndex = self.pinnedConversations.index(where: { (pinnedConversation) -> Bool in
-      return pinnedConversation.chatID == userID }) {
-      
-      if conversation.isTyping == nil {
-        let isTyping = self.pinnedConversations[pinnedIndex].isTyping
-        conversation.isTyping = isTyping
-      }
-    
-      
-      self.pinnedConversations[pinnedIndex] = conversation
-      self.handleGroupOrReloadTable()
-      
-    } else {
-      if conversation.pinned != nil && conversation.pinned! {
-        self.pinnedConversations.append(conversation)
-      } else {
-        self.conversations.append(conversation)
-      }
-      if isGroupAlreadyFinished {
-        self.observersForNotifications()
-      }
-     
-      self.handleGroupOrReloadTable()
-    }
-  }
-  
   func configureTabBarBadge() {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -556,12 +651,10 @@ class ChatsTableViewController: UITableViewController {
   }
   
   fileprivate func handleGroupOrReloadTable() {
-   // print("in handle reload")
-    if self.isGroupAlreadyFinished {
+    if isGroupAlreadyFinished {
       handleReloadTable()
     } else {
       group.leave()
-    //  print("leaving group")
     }
   }
   
@@ -602,6 +695,8 @@ class ChatsTableViewController: UITableViewController {
           }
         }
       })
+      
+      configureTabBarBadge()
     } else {
       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
       self.tableView.reloadData()
@@ -613,7 +708,7 @@ class ChatsTableViewController: UITableViewController {
       checkIfThereAnyActiveChats(isEmpty: false)
     }
     
-    configureTabBarBadge()
+   
     
     if !isAppLoaded {
       delegate?.manageAppearance(self, didFinishLoadingWith: true)
@@ -655,11 +750,6 @@ class ChatsTableViewController: UITableViewController {
     }
   }
   
-  fileprivate func delayWithSeconds(_ seconds: Double, completion: @escaping () -> ()) {
-    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
-      completion()
-    }
-  }
   
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
     if section == 0 {
