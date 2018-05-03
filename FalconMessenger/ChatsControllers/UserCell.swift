@@ -26,7 +26,6 @@ class UserCell: UITableViewCell {
     return imageView
   }()
 
-  
   let muteIndicator: UIImageView = {
     let muteIndicator = UIImageView()
     muteIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -94,7 +93,6 @@ class UserCell: UITableViewCell {
   
   var timeLabelWidthAnchor: NSLayoutConstraint!
 
-  
   func timeLabelWidth(text: String) -> CGFloat {
     let font = UIFont.systemFont(ofSize: 14)
     let width = text.capitalized.sizeOfString(usingFont: font).width

@@ -165,9 +165,10 @@ class UserInfoTableViewController: UITableViewController {
     
       return headerCell
       
-    } else  {
+    } else {
       let phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier, for: indexPath) as! UserInfoPhoneNumberTableViewCell
       phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      phoneNumberCell.userInfoTableViewController = self
       
       if localPhones.contains(contactPhoneNumber.digits) {
         phoneNumberCell.add.isHidden = true
@@ -181,18 +182,32 @@ class UserInfoTableViewController: UITableViewController {
         phoneNumberCell.contactStatusHeightConstraint.constant = 40
       }
       
-      phoneNumberCell.phoneLabel.textColor = ThemeManager.currentTheme().generalTitleColor
-      phoneNumberCell.userInfoTableViewController = self
-      phoneNumberCell.phoneLabel.text = user?.phoneNumber ?? ""
-      phoneNumberCell.phoneLabel.font = UIFont.systemFont(ofSize: 17)
-      phoneNumberCell.bio.text = user?.bio ?? ""
-      phoneNumberCell.bio.textColor = ThemeManager.currentTheme().generalTitleColor
+      var phoneTitle = "mobile\n"
+      let phoneBody = user?.phoneNumber ?? ""
+      if phoneBody == "" || phoneBody == " " { phoneTitle = "" }
+      phoneNumberCell.phoneLabel.attributedText = setAttributedText(title: phoneTitle, body: phoneBody)
+      
+      var bioTitle = "bio\n"
+      let bioBody = user?.bio ?? ""
+      if bioBody == "" || bioBody == " " { bioTitle = "" }
+      phoneNumberCell.bio.attributedText = setAttributedText(title: bioTitle, body: bioBody)
       
       return phoneNumberCell
     }
   }
   
+  func setAttributedText(title: String, body: String) -> NSAttributedString {
+    let mutableAttributedString = NSMutableAttributedString()
+    let titleAttributes = [ NSAttributedStringKey.foregroundColor: FalconPalette.defaultBlue, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)]
+    let bodyAttributes = [ NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18)]
+    let titleAttributedString = NSAttributedString(string: title, attributes: titleAttributes)
+    let bodyAttributedString = NSAttributedString(string: body, attributes: bodyAttributes)
+    mutableAttributedString.append(titleAttributedString)
+    mutableAttributedString.append(bodyAttributedString)
+    return mutableAttributedString
+  }
+  
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       self.tableView.deselectRow(at: indexPath, animated: true)
+    tableView.deselectRow(at: indexPath, animated: true)
   }
 }

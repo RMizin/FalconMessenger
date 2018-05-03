@@ -96,34 +96,37 @@ extension UserProfileController {
   }
   
   func checkIfUserDataExists(completionHandler: @escaping CompletionHandler) {
-    
-    let nameReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("name")
-    nameReference.observe(.value, with: { (snapshot) in
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+    let nameReference = Database.database().reference().child("users").child(currentUserID).child("name")
+    nameReference.observeSingleEvent(of: .value, with: { (snapshot) in
       if snapshot.exists() {
         self.userProfileContainerView.name.text = snapshot.value as? String
       }
     })
     
-    let bioReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("bio")
-    bioReference.observe(.value, with: { (snapshot) in
+    let bioReference = Database.database().reference().child("users").child(currentUserID).child("bio")
+    bioReference.observeSingleEvent(of: .value, with: { (snapshot) in
       if snapshot.exists() {
         self.userProfileContainerView.bio.text = snapshot.value as? String
       }
     })
     
     
-    let photoReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("photoURL")
-    photoReference.observe(.value, with: { (snapshot) in
+    let photoReference = Database.database().reference().child("users").child(currentUserID).child("photoURL")
+    photoReference.observeSingleEvent(of: .value, with: { (snapshot) in
       
       if snapshot.exists() {
-        let urlString:String = snapshot.value as! String
+        let urlString: String = snapshot.value as! String
         self.userProfileContainerView.profileImageView.sd_setImage(with:  URL(string: urlString) , placeholderImage: nil, options: [.scaleDownLargeImages , .continueInBackground], completed: { (image, error, cacheType, url) in
     
            completionHandler(true)
         })
       } else {
-         
-         completionHandler(true)
+        let photosReference = Database.database().reference().child("users").child(currentUserID)
+        photosReference.updateChildValues(["photoURL": "", "thumbnailPhotoURL": ""], withCompletionBlock: { (_, _) in
+          completionHandler(true)
+        })
+        
       }
     })
   }

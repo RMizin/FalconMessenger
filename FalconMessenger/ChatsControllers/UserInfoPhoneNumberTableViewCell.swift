@@ -11,7 +11,6 @@ import ContactsUI
 
 extension UIViewController: CNContactViewControllerDelegate {
   
-  
   fileprivate func checkContactsAuthorizationStatus() -> Bool {
     let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
     
@@ -31,17 +30,17 @@ extension UIViewController: CNContactViewControllerDelegate {
     let contactsAccessStatus = checkContactsAuthorizationStatus()
     guard contactsAccessStatus == true else { return }
     
-      let phone = CNLabeledValue(label: CNLabelPhoneNumberiPhone, value: CNPhoneNumber(stringValue :phone ))
-      let contact = CNMutableContact()
+    let phone = CNLabeledValue(label: CNLabelPhoneNumberiPhone, value: CNPhoneNumber(stringValue :phone ))
+    let contact = CNMutableContact()
 
-      contact.givenName = name
-      contact.familyName = surname
-      contact.phoneNumbers = [phone]
-      let destination = CreateContactTableViewController(style: .grouped)
-      let newNavigationController = UINavigationController(rootViewController: destination)
-   
-      destination.contact = contact
-      present(newNavigationController, animated: true, completion: nil)
+    contact.givenName = name
+    contact.familyName = surname
+    contact.phoneNumbers = [phone]
+    let destination = CreateContactTableViewController(style: .grouped)
+    let newNavigationController = UINavigationController(rootViewController: destination)
+ 
+    destination.contact = contact
+    present(newNavigationController, animated: true, completion: nil)
   }
 }
 
@@ -71,7 +70,7 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
   let phoneLabel: UILabel = {
     let phoneLabel = UILabel()
     phoneLabel.sizeToFit()
-    phoneLabel.textColor = ThemeManager.currentTheme().generalTitleColor
+    phoneLabel.numberOfLines = 0
     phoneLabel.translatesAutoresizingMaskIntoConstraints = false
   
     return phoneLabel
@@ -92,17 +91,14 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
     let bio = UILabel()
     bio.sizeToFit()
     bio.numberOfLines = 0
-    bio.textColor = ThemeManager.currentTheme().generalTitleColor
     bio.translatesAutoresizingMaskIntoConstraints = false
-    bio.font = UIFont.systemFont(ofSize: 17)
     
     return bio
   }()
   
   var bioTopAnchor: NSLayoutConstraint!
-  
-  var addHeightConstraint:NSLayoutConstraint!
-   var phoneTopConstraint:NSLayoutConstraint!
+  var addHeightConstraint: NSLayoutConstraint!
+  var phoneTopConstraint: NSLayoutConstraint!
   var contactStatusHeightConstraint: NSLayoutConstraint!
   
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -118,7 +114,7 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
     if #available(iOS 11.0, *) {
       contactStatus.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
     } else {
-        contactStatus.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
+      contactStatus.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
     }
     contactStatus.widthAnchor.constraint(equalToConstant: 180).isActive = true
     contactStatusHeightConstraint = contactStatus.heightAnchor.constraint(equalToConstant: 40)
@@ -135,8 +131,6 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
     phoneLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true
     phoneLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
     
-    
-    
     if #available(iOS 11.0, *) {
       copy.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
       add.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
@@ -152,7 +146,7 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
     
     copy.widthAnchor.constraint(equalToConstant: 20).isActive = true
     copy.heightAnchor.constraint(equalToConstant: 20).isActive = true
-    copy.centerYAnchor.constraint(equalTo: phoneLabel.centerYAnchor, constant: 0).isActive = true
+    copy.bottomAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: 0).isActive = true
     
     add.addTarget(self, action: #selector(handleAddNewContact), for: .touchUpInside)
     copy.addTarget(self, action: #selector(handleCopy), for: .touchUpInside)
@@ -184,12 +178,18 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
     if name == surname {
       surname = ""
     }
-    userInfoTableViewController?.addPhoneNumber(phone: self.phoneLabel.text ?? "", name: name, surname: surname)
+    userInfoTableViewController?.addPhoneNumber(phone: phoneLabelText(), name: name, surname: surname)
   }
   
   @objc func handleCopy() {
-     UIPasteboard.general.string = self.phoneLabel.text
+     UIPasteboard.general.string = phoneLabelText()
      ARSLineProgress.showSuccess()
   }
+  
+  func phoneLabelText() -> String {
+    let mutStr = phoneLabel.attributedText?.mutableCopy() as! NSMutableAttributedString
+    let range = (mutStr.string as NSString).range(of: "mobile\n")
+    mutStr.deleteCharacters(in: range)
+    return mutStr.string
+  }
 }
-
