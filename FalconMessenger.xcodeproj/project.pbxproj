@@ -23,7 +23,6 @@
 		4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */; };
 		4B2A9589205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift */; };
 		4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */; };
-		4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */; };
 		4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */; };
 		4B3DC3BD2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */; };
 		4B3DC3BF2074DA4500106EF7 /* AccountSettingsAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3DC3BE2074DA4500106EF7 /* AccountSettingsAvatarOpenerDelegate.swift */; };
@@ -208,7 +207,6 @@
 		4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsTableViewController.swift; path = ChatsControllers/GroupAdminControlsTableViewController.swift; sourceTree = "<group>"; };
 		4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsPictureAvatarOpenerDelegate.swift; path = ChatsControllers/GroupAdminControlsPictureAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
 		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
-		4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsTableViewCell.swift; path = ContactsControllers/ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoPhoneNumberTableViewCell.swift; path = ChatsControllers/UserInfoPhoneNumberTableViewCell.swift; sourceTree = "<group>"; };
 		4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfileDataDatabaseUpdater.swift; path = AuthenticationControllers/UserProfileDataDatabaseUpdater.swift; sourceTree = "<group>"; };
 		4B3DC3BE2074DA4500106EF7 /* AccountSettingsAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AccountSettingsAvatarOpenerDelegate.swift; path = SettingsControllers/AccountSettingsAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
@@ -1079,7 +1077,6 @@
 		4BF07B322053438C00A68023 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				4B32F8521F38AF4200807FFB /* ContactsTableViewCell.swift */,
 				4BEB13F21F39CE3E0048A984 /* FalconUsersTableViewCell.swift */,
 				4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */,
 				4B18BAC92097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift */,
@@ -1357,7 +1354,6 @@
 				4BEB13F31F39CE3E0048A984 /* FalconUsersTableViewCell.swift in Sources */,
 				4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */,
 				4B6BB01220886C5F00A90F3A /* UIEdgeInsetsExtensions.swift in Sources */,
-				4B32F8531F38AF4200807FFB /* ContactsTableViewCell.swift in Sources */,
 				4B6BAFFB20886C5F00A90F3A /* Country.swift in Sources */,
 				4B6BAFF620886C5F00A90F3A /* EnterVerificationCodeController.swift in Sources */,
 				4B6BB00D20886C5F00A90F3A /* CameraCell.swift in Sources */,

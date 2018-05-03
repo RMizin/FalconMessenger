@@ -457,7 +457,7 @@ extension UINavigationItem {
     
     one.sizeToFit()
     two.sizeToFit()
-    self.titleView = stackView
+    titleView = stackView
   }
 }
 

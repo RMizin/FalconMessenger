@@ -83,6 +83,8 @@ class StorageTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if indexPath.row == 0 {
       let oversizeAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+      oversizeAlert.popoverPresentationController?.sourceView = self.view
+      oversizeAlert.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y:  view.bounds.maxY, width: 0, height: 0)
       
       let cachedSize = SDImageCache.shared().getSize()
       
@@ -104,13 +106,13 @@ class StorageTableViewController: UITableViewController {
     }
     
     if indexPath.row == 1 {
-       let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+      let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+      alert.popoverPresentationController?.sourceView = self.view
+      alert.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y:  view.bounds.maxY, width: 0, height: 0)
       let okAction = UIAlertAction(title: "Confirm", style: .default) { (action) in
-   
         FileManager.default.clearTemp()
         tableView.reloadData()
         ARSLineProgress.showSuccess()
-        
       }
       
       alert.addAction(okAction)

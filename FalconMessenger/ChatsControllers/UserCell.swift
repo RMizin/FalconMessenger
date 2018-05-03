@@ -132,10 +132,10 @@ class UserCell: UITableViewCell {
 
     timeLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor).isActive = true
   
-    muteIndicator.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 2).isActive = true
+    muteIndicator.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 5).isActive = true
     muteIndicator.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor, constant: 0).isActive = true
-    muteIndicator.widthAnchor.constraint(equalToConstant: 12).isActive = true
-    muteIndicator.heightAnchor.constraint(equalToConstant: 12).isActive = true
+    muteIndicator.widthAnchor.constraint(equalToConstant: 13).isActive = true
+    muteIndicator.heightAnchor.constraint(equalToConstant: 13).isActive = true
 
     badgeLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: badgeLabelRightConstant).isActive = true
     badgeLabelWidthConstraint = badgeLabel.widthAnchor.constraint(equalToConstant: badgeLabelWidthConstant)

@@ -447,6 +447,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     setupCollectionView()
     setRightBarButtonItem()
     setupTitleName()
+    configurePlaceholderTitleView()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -665,19 +666,45 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  func configureTitleViewWithOnlineStatus() {
+  func configurePlaceholderTitleView() {
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs?.count {
       let subtitle = "\(membersCount) members"
       self.navigationItem.setTitle(title: title, subtitle: subtitle)
       return
     }
-  
+    
     guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
     
     if currentUserID == toId {
       self.navigationItem.title = NameConstants.personalStorage
       return
+    }
+  
+    guard let index = globalUsers.index(where: { (user) -> Bool in
+      return user.id == conversation?.chatID
+    }) else { return }
+    let status = globalUsers[index].onlineStatus as AnyObject// else { return }
+    onlineStatusInString = manageNavigationItemTitle(onlineStatusObject:  status)
+  }
+  
+  func configureTitleViewWithOnlineStatus() {
+    
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs?.count {
+      let subtitle = "\(membersCount) members"
+      navigationItem.setTitle(title: title, subtitle: subtitle)
+      return
+    }
+  
+    guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
+    
+    if currentUserID == toId {
+      navigationItem.title = NameConstants.personalStorage
+      return
+    }
+  
+    if userStatusReference != nil {
+      userStatusReference.removeObserver(withHandle: userHandler)
     }
   
     userStatusReference = Database.database().reference().child("users").child(toId)

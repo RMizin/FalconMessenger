@@ -35,13 +35,14 @@ class FalconUsersTableViewCell: UITableViewCell {
   var subtitle: UILabel = {
     var subtitle = UILabel()
     subtitle.translatesAutoresizingMaskIntoConstraints = false
-    subtitle.font = UIFont.systemFont(ofSize: 15)
+    subtitle.font = UIFont.systemFont(ofSize: 14.5)
     subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
     
     return subtitle
   }()
 
-  
+  let spacing: CGFloat = 15
+
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
@@ -51,21 +52,21 @@ class FalconUsersTableViewCell: UITableViewCell {
     
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-    icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+    icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: spacing).isActive = true
     icon.widthAnchor.constraint(equalToConstant: 50).isActive = true
     icon.heightAnchor.constraint(equalToConstant: 50).isActive = true
     
     contentView.addSubview(title)
     title.topAnchor.constraint(equalTo: icon.topAnchor, constant: 0).isActive = true
-    title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15).isActive = true
-    title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-    title.heightAnchor.constraint(equalToConstant: 23).isActive = true
+    title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: spacing).isActive = true
+    title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -spacing).isActive = true
+    title.heightAnchor.constraint(equalToConstant: 25).isActive = true
     
     contentView.addSubview(subtitle)
     subtitle.bottomAnchor.constraint(equalTo: icon.bottomAnchor, constant: 0).isActive = true
-    subtitle.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15).isActive = true
-    subtitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-    subtitle.heightAnchor.constraint(equalToConstant: 23).isActive = true
+    subtitle.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: spacing).isActive = true
+    subtitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -spacing).isActive = true
+    subtitle.heightAnchor.constraint(equalToConstant: 25).isActive = true
   }
   
   

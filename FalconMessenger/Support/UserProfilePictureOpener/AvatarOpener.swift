@@ -36,7 +36,7 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
    
     switch avatarView.image == nil {
     case true:
-      openPhotoManager()
+      openPhotoManager(empty: true)
       break
     case false:
       openAvatar(avatarView: avatarView, at: controller)
@@ -66,18 +66,30 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
     overlay.toolbar.setItems([item], animated: true)
     
     guard isEditButonEnabled else { return }
-    overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(openPhotoManager))
+    overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(openPhotoManager(empty:)))
   }
   
   @objc private func toolbarTouchHandler() {
     let activity = UIActivityViewController(activityItems: [avatarImageView?.image as Any], applicationActivities: nil) //possible error
+    activity.popoverPresentationController?.sourceView = overlay.toolbar
+    activity.popoverPresentationController?.permittedArrowDirections = .down
+    activity.popoverPresentationController?.sourceRect = CGRect(x: overlay.toolbar.bounds.minX, y: overlay.toolbar.bounds.minY, width: 0, height: 0)
     galleryPreview?.present(activity, animated: true, completion: nil)
   }
   
-  @objc private func openPhotoManager() {
+  @objc private func openPhotoManager(empty:Bool = false) {
     print("\n presenting alert \n")
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     
+    if empty {
+      alert.popoverPresentationController?.sourceView = avatarImageView///overlay.toolbar
+      alert.popoverPresentationController?.sourceRect = CGRect(x: avatarImageView!.bounds.maxX, y: avatarImageView!.bounds.midY, width: 0, height: 0)
+    } else {
+      alert.popoverPresentationController?.sourceView = overlay.navigationBar
+      alert.popoverPresentationController?.permittedArrowDirections = .up
+      alert.popoverPresentationController?.sourceRect = CGRect(x: overlay.navigationBar.bounds.maxX, y:  overlay.navigationBar.bounds.maxY, width: 0, height: 0)
+    }
+   
     alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
       self.galleryPreview?.dismiss(animated: true, completion: nil)
       self.openCamera()

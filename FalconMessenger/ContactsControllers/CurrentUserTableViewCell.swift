@@ -38,6 +38,7 @@ class CurrentUserTableViewCell: UITableViewCell {
   static let iconDefaultCornerRadius: CGFloat = iconSizeDefaultConstant * 0.5
   static let iconLargreCornerRadius: CGFloat = iconSizeLargeConstant * 0.5
   
+  let spacing: CGFloat = 15
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
@@ -47,7 +48,7 @@ class CurrentUserTableViewCell: UITableViewCell {
     
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-    icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+    icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: spacing).isActive = true
     iconWidthAnchor = icon.widthAnchor.constraint(equalToConstant: CurrentUserTableViewCell.iconSizeDefaultConstant)
     iconWidthAnchor.isActive = true
     iconHeightAnchor = icon.heightAnchor.constraint(equalToConstant: CurrentUserTableViewCell.iconSizeDefaultConstant)
@@ -55,9 +56,9 @@ class CurrentUserTableViewCell: UITableViewCell {
     
     contentView.addSubview(title)
     title.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 0).isActive = true
-    title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15).isActive = true
-    title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-    title.heightAnchor.constraint(equalToConstant: 55).isActive = true
+    title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: spacing).isActive = true
+    title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -spacing).isActive = true
+    title.heightAnchor.constraint(equalToConstant: CurrentUserTableViewCell.iconSizeDefaultConstant).isActive = true
   }
   
   required init?(coder aDecoder: NSCoder) {
