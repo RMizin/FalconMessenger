@@ -83,7 +83,7 @@ class MessagesFetcher: NSObject {
       self.loadingNamesGroup.enter()
       self.newLoadUserames()
       self.loadingNamesGroup.notify(queue: .main, execute: {
-        self.messages = self.sortedMessages(unsortedMessages: self.messages)
+      //  self.messages = self.sortedMessages(unsortedMessages: self.messages)
         self.messages = self.configureMessageTails(messages:  self.messages, isGroupChat: isGroupChat)
         self.isInitialChatMessagesLoad = false
         self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
@@ -192,12 +192,12 @@ class MessagesFetcher: NSObject {
     }
   }
   
-  func sortedMessages(unsortedMessages: [Message]) -> [Message] {
-    let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
-      return message1.timestamp!.int32Value < message2.timestamp!.int32Value
-    })
-    return sortedMessages
-  }
+//  func sortedMessages(unsortedMessages: [Message]) -> [Message] {
+//    let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
+//      return message1.timestamp!.int32Value < message2.timestamp!.int32Value
+//    })
+//    return sortedMessages
+//  }
   
   func configureMessageTails(messages: [Message], isGroupChat: Bool) -> [Message] {
     var messages = messages

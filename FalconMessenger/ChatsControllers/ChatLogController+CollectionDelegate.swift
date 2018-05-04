@@ -81,41 +81,47 @@ extension ChatLogController: CollectionDelegate {
   func collectionView(shouldBeUpdatedWith message: Message,reference: DatabaseReference) {
     
     let insertionIndex = self.messages.insertionIndexOf(elem: message, isOrderedBefore: { (message1, message2) -> Bool in
-      return Int(truncating: message1.timestamp!) < Int(truncating: message2.timestamp!)
+      return message1.messageUID! < message2.messageUID!
     })
     
-     self.messages.insert(message, at: insertionIndex)
-    
-    if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
-      self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: true)
-    } else {
-      self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: false)
-    }
-    
-    self.collectionView?.performBatchUpdates ({
-     
-      let indexPath = IndexPath(item: insertionIndex, section: 0)
-    
-      self.collectionView?.insertItems(at: [indexPath])
+  
+    guard let _ = self.messages.index(where: { (existentMessage) -> Bool in
+      return existentMessage.messageUID == message.messageUID
+    }) else {
       
-      var indexPaths = [IndexPath]()
-      for index in 2..<10 {
-        if self.messages.indices.contains(self.messages.count-index) {
-          let indexPath = IndexPath(item: self.messages.count-index, section: 0)
-          indexPaths.append(indexPath)
-        }
+      self.messages.insert(message, at: insertionIndex)
+      
+      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
+        self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: true)
+      } else {
+        self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: false)
       }
-      self.collectionView?.reloadItems(at: indexPaths)
-    
-      if self.messages.count - 1 >= 0 && self.isScrollViewAtTheBottom {
-        let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+      
+      self.collectionView?.performBatchUpdates ({
+        let indexPath = IndexPath(item: insertionIndex, section: 0)
         
-        DispatchQueue.main.async {
-          self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        self.collectionView?.insertItems(at: [indexPath])
+        
+        var indexPaths = [IndexPath]()
+        for index in 2..<10 {
+          if self.messages.indices.contains(self.messages.count-index) {
+            let indexPath = IndexPath(item: self.messages.count-index, section: 0)
+            indexPaths.append(indexPath)
+          }
         }
-      }
-    }, completion: { (true) in
-      self.updateMessageStatus(messageRef: reference)
-    })
+        self.collectionView?.reloadItems(at: indexPaths)
+        
+        if self.messages.count - 1 >= 0 && self.isScrollViewAtTheBottom {
+          let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+          
+          DispatchQueue.main.async {
+            self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+          }
+        }
+      }, completion: { (true) in
+        self.updateMessageStatus(messageRef: reference)
+      })
+      return
+    }
   }
 }

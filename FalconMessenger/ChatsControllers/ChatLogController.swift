@@ -426,13 +426,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     guard let index = self.messages.index(where: { (message) -> Bool in
       return message.messageUID == sentMessage.messageUID
-    }) else {
-      return
-    }
+    }) else { return }
     
     if index >= 0 {
-      self.messages[index].status = sentMessage.status
-       self.collectionView?.reloadItems(at: [IndexPath(row: index ,section: 0)])
+      messages[index].status = sentMessage.status
+      collectionView?.reloadItems(at: [IndexPath(row: index ,section: 0)])
+     
       if sentMessage.status == messageStatusDelivered {
         if UserDefaults.standard.bool(forKey: "In-AppSounds") {
           SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
@@ -1102,136 +1101,192 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   @objc func handleSend() {
     
-    if currentReachabilityStatus != .notReachable {
-        
-      inputContainerView.inputTextView.isScrollEnabled = false
-      inputContainerView.invalidateIntrinsicContentSize()
-      inputContainerView.sendButton.isEnabled = false
-    
-      if inputContainerView.inputTextView.text != "" {
-        let properties = ["text": inputContainerView.inputTextView.text!]
-        sendMessageWithProperties(properties as [String : AnyObject])
-      }
-    
-      isTyping = false
-      inputContainerView.placeholderLabel.isHidden = false
-      inputContainerView.inputTextView.text = nil
-    
-      handleMediaMessageSending()
-    } else {
+    guard currentReachabilityStatus != .notReachable else {
       basicErrorAlertWith(title: "No internet", message: noInternetError, controller: self)
+      return
     }
-  }
-  
-  func handleMediaMessageSending () {
+    inputContainerView.inputTextView.isScrollEnabled = false
+    inputContainerView.invalidateIntrinsicContentSize()
+    inputContainerView.sendButton.isEnabled = false
+    isTyping = false
+    inputContainerView.placeholderLabel.isHidden = false
     
-    if !inputContainerView.selectedMedia.isEmpty {
-      let selectedMedia = inputContainerView.selectedMedia
+    let text = inputContainerView.inputTextView.text ?? ""
+    
+    inputContainerView.inputTextView.text = nil
+    
+    if text != "" {
+      let properties = ["text": text]
+      handleMediaMessageSending(textMessageProperties: properties as [String : AnyObject])
+    } else {
+      handleMediaMessageSending(textMessageProperties: nil)
+    }
+  }
+  
+  func handleMediaMessageSending(textMessageProperties: [String : AnyObject]?) {
+    
+    let textMessageIDReference = Database.database().reference().child("messages")
+    let childtextMessageIDReference = textMessageIDReference.childByAutoId()
+    
+    guard !inputContainerView.selectedMedia.isEmpty else {
+      if let unwrappedTextMessageProperties = textMessageProperties {
+        sendMessageWithProperties(unwrappedTextMessageProperties, updateLocaly: true, updateRemotely: true, childRef: childtextMessageIDReference)
+      }
+      return
+    }
+    
+    if let unwrappedTextMessageProperties = textMessageProperties {
+      sendMessageWithProperties(unwrappedTextMessageProperties, updateLocaly: true, updateRemotely: false, childRef: childtextMessageIDReference)
+    }
+
+    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
+    
+    let selectedMedia = inputContainerView.selectedMedia
+    
+    if mediaPickerController != nil, let selected = mediaPickerController.collectionView.indexPathsForSelectedItems {
+      for indexPath in selected  { mediaPickerController.collectionView.deselectItem(at: indexPath, animated: false) }
+    }
+
+    inputContainerView.selectedMedia.removeAll()
+    inputContainerView.attachedImages.reloadData()
+    inputContainerView.resetChatInputConntainerViewSettings()
+
+    var mediaToUpload = CGFloat()
+    var progressArray = [(objectID: String, progress: Double)]()
+    var mediaMessageObjectsToSend = [(properties: [String:AnyObject], childRef: DatabaseReference)]()
+    let uploadMediaGroup = DispatchGroup()
+
+    for mediaObject in selectedMedia {
+      uploadMediaGroup.enter()
+      let isVideoMessage = mediaObject.phAsset?.mediaType == PHAssetMediaType.video
+      guard isVideoMessage else { mediaToUpload += 1; continue }
+      mediaToUpload += 2
+    }
+    
+    uploadMediaGroup.notify(queue: DispatchQueue.main, execute: {
+      if let unwrappedTextMessageProperties = textMessageProperties {
+        self.sendMessageWithProperties(unwrappedTextMessageProperties, updateLocaly: false, updateRemotely: true, childRef: childtextMessageIDReference)
+      }
+
+      mediaMessageObjectsToSend.forEach({ (element) in
+        self.sendMediaMessageWithProperties(element.properties, childRef: element.childRef)
+      })
+    })
+    
+    let defaultMessageStatus = messageStatusDelivered
+    
+    for selectedMedia in selectedMedia {
       
-      if mediaPickerController != nil {
-        if let selected = mediaPickerController.collectionView.indexPathsForSelectedItems {
-          for indexPath in selected  {
-            mediaPickerController.collectionView.deselectItem(at: indexPath, animated: false)
+      let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
+      let ref = Database.database().reference().child("messages")
+      let childRef = ref.childByAutoId()
+      
+      let isVoiceMessage = selectedMedia.audioObject != nil
+      let isPhotoMessage = (selectedMedia.phAsset?.mediaType == PHAssetMediaType.image || selectedMedia.phAsset == nil) && selectedMedia.audioObject == nil
+      let isVideoMessage = selectedMedia.phAsset?.mediaType == PHAssetMediaType.video
+ 
+      
+      if isVoiceMessage {
+        let bae64string = selectedMedia.audioObject?.base64EncodedString()
+        let properties: [String: AnyObject] = ["voiceEncodedString": bae64string as AnyObject]
+        let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "voiceEncodedString": bae64string as AnyObject]
+        
+        reloadCollectionViewAfterSending(values: values)
+        mediaMessageObjectsToSend.append((properties: properties, childRef: childRef))
+        uploadMediaGroup.leave()
+
+        let id = childRef.key
+        progressArray = setProgressForElement(progress: 1.0, id: id, array: progressArray)
+        updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
+
+      } else
+      
+      if isPhotoMessage {
+        let id = childRef.key
+        let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject]
+        
+        reloadCollectionViewAfterSending(values: values)
+        uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, progress: { (snapshot) in
+          if let progressCount = snapshot?.progress?.fractionCompleted {
+            progressArray = self.setProgressForElement(progress: progressCount*0.98, id: id, array: progressArray)
+            self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
           }
+        }) { (imageURL) in
+          progressArray = self.setProgressForElement(progress: 1.0, id: id, array: progressArray)
+          self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
+          let image = selectedMedia.object!.asUIImage!
+          let properties: [String: AnyObject] = ["imageUrl": imageURL as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
+          mediaMessageObjectsToSend.append((properties: properties, childRef: childRef))
+          uploadMediaGroup.leave()
         }
-      }
-   
-      if self.inputContainerView.selectedMedia.count - 1 >= 0 {
-        for index in 0...self.inputContainerView.selectedMedia.count - 1 {
-          if index <= -1 { break }
-          self.inputContainerView.selectedMedia.remove(at: 0)
-          self.inputContainerView.attachedImages.deleteItems(at: [IndexPath(item: 0, section: 0)])
-        }
-      } else {
-        self.inputContainerView.selectedMedia.remove(at: 0)
-        self.inputContainerView.attachedImages.deleteItems(at: [IndexPath(item: 0, section: 0)])
-      }
+      } else
       
-      inputContainerView.resetChatInputConntainerViewSettings()
-      
-      let uploadingMediaCount = selectedMedia.count
-      var percentCompleted: CGFloat = 0.0
-      
-       UIView.animate(withDuration: 3, delay: 0, options: [.curveEaseOut], animations: {
-        self.uploadProgressBar.setProgress(0.25, animated: true)
-       }, completion: nil)
-      
-      let defaultMessageStatus = messageStatusDelivered
-      
-      guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else {
-        return
-      }
-      
-      for selectedMedia in selectedMedia {
-        
-       let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-       let ref = Database.database().reference().child("messages")
-       let childRef = ref.childByAutoId()
-        
-        if selectedMedia.audioObject != nil { // audio
-          
-          let bae64string = selectedMedia.audioObject?.base64EncodedString()
-          let properties: [String: AnyObject] = ["voiceEncodedString": bae64string as AnyObject]
-          let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "voiceEncodedString": bae64string as AnyObject]
-          
-          reloadCollectionViewAfterSending(values: values)
-          sendMediaMessageWithProperties(properties, childRef: childRef)
-          
-          percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
-          self.updateProgressBar(percentCompleted: percentCompleted)
-        }
-        
-        if (selectedMedia.phAsset?.mediaType == PHAssetMediaType.image || selectedMedia.phAsset == nil) && selectedMedia.audioObject == nil { //photo
-          
-          let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject]
-          
-          self.reloadCollectionViewAfterSending(values: values)
-          
-          uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageURL) in
-            self.sendMessageWithImageUrl(imageURL, image: selectedMedia.object!.asUIImage!, childRef: childRef)
-            percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
-            self.updateProgressBar(percentCompleted: percentCompleted)
-          })
-        }
-        
-        if selectedMedia.phAsset?.mediaType == PHAssetMediaType.video { // video
+      if isVideoMessage {
 
-          guard let path = selectedMedia.fileURL else { return }
+        guard let path = selectedMedia.fileURL else { return }
+        let videoId = childRef.key
+        let imageId = childRef.key + "image"
+        let valuesForVideo: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject, "localVideoUrl" : path as AnyObject]
+        
+        reloadCollectionViewAfterSending(values: valuesForVideo)
+        uploadToFirebaseStorageUsingVideo(selectedMedia.videoObject!, progress: { (snapshot) in
+          if let progressCount = snapshot?.progress?.fractionCompleted {
+            progressArray = self.setProgressForElement(progress: progressCount*0.98, id: videoId, array: progressArray)
+            self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
+          }
+        }) { (videoURL) in
+          progressArray = self.setProgressForElement(progress: 1.0, id: videoId, array: progressArray)
+          self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
           
-          let valuesForVideo: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject, "localVideoUrl" : path as AnyObject]
-          
-          self.reloadCollectionViewAfterSending(values: valuesForVideo)
-          
-          uploadToFirebaseStorageUsingVideo(selectedMedia.videoObject!, completion: { (videoURL) in
-            self.uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, completion: { (imageUrl) in
-
-              let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": selectedMedia.object!.asUIImage?.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage?.size.height as AnyObject, "videoUrl": videoURL as AnyObject]
-              self.sendMediaMessageWithProperties(properties, childRef: childRef)
-              percentCompleted += CGFloat(1.0)/CGFloat(uploadingMediaCount)
-              self.updateProgressBar(percentCompleted: percentCompleted)
-            })
+          self.uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, progress: { (snapshot) in
+        
+            if let progressCount = snapshot?.progress?.fractionCompleted {
+              progressArray = self.setProgressForElement(progress: progressCount*0.98, id: imageId, array: progressArray)
+              self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
+            }
+            
+          }, completion: { (imageUrl) in
+            progressArray = self.setProgressForElement(progress: 1.0, id: imageId, array: progressArray)
+            self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
+            let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": selectedMedia.object!.asUIImage?.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage?.size.height as AnyObject, "videoUrl": videoURL as AnyObject]
+             mediaMessageObjectsToSend.append((properties: properties, childRef: childRef))
+             uploadMediaGroup.leave()
           })
         }
       }
     }
   }
   
-  fileprivate func updateProgressBar(percentCompleted: CGFloat) {
-    self.uploadProgressBar.setProgress(Float(percentCompleted), animated: true)
-    if percentCompleted >= 0.9999 {
+  func setProgressForElement(progress: Double, id: String, array: [(objectID: String, progress: Double)]) -> [(objectID: String, progress: Double)] {
+    var array = array
+    guard let index = array.index(where: { (element) -> Bool in
+      return element.objectID == id
+    }) else {
+       array.insert((objectID: id, progress: progress), at: 0)
+      return array
+    }
+    array[index].progress = progress
+    return array
+  }
+
+  fileprivate func updateProgressBar(array: [(objectID: String, progress: Double)] , totalUploadsCount: CGFloat) {
+    guard uploadProgressBar.progress < 1.0 else { return }
+    
+    let totalProgressArray = array.map({$0.progress})
+    let completedUploadsCount = totalProgressArray.reduce(0, +)
+
+    print(completedUploadsCount/Double(totalUploadsCount))
+    let progress = completedUploadsCount/Double(totalUploadsCount)
+  
+    
+    uploadProgressBar.setProgress(Float(progress), animated: true)
+    if progress >= 0.99999 {
       DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
         self.uploadProgressBar.setProgress(0.0, animated: false)
       })
     }
   }
-  
-  fileprivate func sendMessageWithImageUrl(_ imageUrl: String, image: UIImage, childRef: DatabaseReference) {
-    let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
-    sendMediaMessageWithProperties(properties, childRef: childRef)
-  }
-  
-  
-  
+
   func sendMediaMessageWithProperties(_ properties: [String: AnyObject], childRef: DatabaseReference) {
     
     let defaultMessageStatus = messageStatusDelivered
@@ -1246,12 +1301,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
   }
 
-  fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
+  fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, progress: ((_ progress: StorageTaskSnapshot?) -> Void)? = nil, completion: @escaping (_ imageUrl: String) -> ()) {
     let imageName = UUID().uuidString
     let ref = Storage.storage().reference().child("messageImages").child(imageName)
     
     guard let uploadData = UIImageJPEGRepresentation(image, 1) else { return }
-    ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+    let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
       guard error == nil else { return }
 
       ref.downloadURL(completion: { (url, error) in
@@ -1259,20 +1314,27 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         completion(imageURL.absoluteString)
       })
     })
+    uploadTask.observe(.progress) { (progressSnap) in
+      progress!(progressSnap)
+    }
   }
   
-  fileprivate func uploadToFirebaseStorageUsingVideo(_ uploadData: Data, completion: @escaping (_ videoUrl: String) -> ()) {
+  fileprivate func uploadToFirebaseStorageUsingVideo(_ uploadData: Data, progress: ((_ progress: StorageTaskSnapshot?) -> Void)? = nil, completion: @escaping (_ videoUrl: String) -> ()) {
     
     let videoName = UUID().uuidString + ".mov"
     let ref = Storage.storage().reference().child("messageMovies").child(videoName)
+   
     
-    ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+    let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
       guard error == nil else { return }
       ref.downloadURL(completion: { (url, error) in
         guard error == nil, let videoURL = url else { completion(""); return }
         completion(videoURL.absoluteString)
       })
     })
+    uploadTask.observe(.progress) { (progressSnap) in
+      progress!(progressSnap)
+    }
   }
   
   fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
@@ -1320,10 +1382,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
   
-  fileprivate func sendMessageWithProperties(_ properties: [String: AnyObject]) {
-    
-    let ref = Database.database().reference().child("messages")
-    let childRef = ref.childByAutoId()
+  fileprivate func sendMessageWithProperties(_ properties: [String: AnyObject], updateLocaly:Bool, updateRemotely:Bool, childRef: DatabaseReference ) {
+
     let defaultMessageStatus = messageStatusDelivered
     
     guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
@@ -1332,12 +1392,18 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     var values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
     
     properties.forEach({values[$0] = $1})
-    reloadCollectionViewAfterSending(values: values)
-    updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
+    
+    if updateLocaly && updateRemotely {
+      reloadCollectionViewAfterSending(values: values)
+      updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
+    } else if updateLocaly && !updateRemotely {
+      reloadCollectionViewAfterSending(values: values)
+    } else if !updateLocaly && updateRemotely {
+      updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
+    }
   }
   
-  fileprivate func updateConversationsData(childRef: DatabaseReference, values: [String: AnyObject],
-                                           toId: String, fromId: String ) {
+  fileprivate func updateConversationsData(childRef: DatabaseReference, values: [String: AnyObject], toId: String, fromId: String ) {
     
     childRef.updateChildValues(values) { (error, ref) in
       guard error == nil else { return }
@@ -1362,11 +1428,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(userMessagesFirebaseFolder)
         recipientUserMessagesRef.updateChildValues([messageId: fromId])
-        
+  
         self.incrementBadgeForDefaultChat()
       }
-    
-      self.updateLastMessageForMembers(messageID: messageId)
+      self.updateLastMessageForMembers()
     }
   }
   
@@ -1386,7 +1451,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     })
   }
   
-  func updateLastMessageForMembers(messageID: String) {
+  func updateLastMessageForMembers() {
     
     guard let fromID = Auth.auth().currentUser?.uid,let conversationID = conversation?.chatID else { return }
     let isGroupChat = conversation?.isGroupChat ?? false
@@ -1395,20 +1460,28 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
       // updates only for current user
       // for other users this update handled by Backend to reduce write operations on device
-      let ref = Database.database().reference().child("user-messages").child(fromID).child(conversationID).child(messageMetaDataFirebaseFolder)
-      let childValues: [String: Any] = ["lastMessageID": messageID]
-      ref.updateChildValues(childValues)
       
+      let lastMessageQRef = Database.database().reference().child("user-messages").child(fromID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
+      lastMessageQRef.observeSingleEvent(of: .childAdded) { (snapshot) in
+        let ref = Database.database().reference().child("user-messages").child(fromID).child(conversationID).child(messageMetaDataFirebaseFolder)
+        let childValues: [String: Any] = ["lastMessageID": snapshot.key]
+        ref.updateChildValues(childValues)
+      }
     } else {
-      
       guard let toID = conversation?.chatID, let uID = Auth.auth().currentUser?.uid else { return }
-      let ref = Database.database().reference().child("user-messages").child(uID).child(toID).child(messageMetaDataFirebaseFolder)
-       let childValues: [String: Any] = ["chatID": toID, "lastMessageID": messageID, "isGroupChat": isGroupChat/*, "chatParticipantsIDs": participantsIDs*/]
-      ref.updateChildValues(childValues)
+      let lastMessageQORef = Database.database().reference().child("user-messages").child(uID).child(toID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
+      lastMessageQORef.observeSingleEvent(of: .childAdded) { (snapshot) in
+        let ref = Database.database().reference().child("user-messages").child(uID).child(toID).child(messageMetaDataFirebaseFolder)
+        let childValues: [String: Any] = ["chatID": toID, "lastMessageID": snapshot.key, "isGroupChat": isGroupChat/*, "chatParticipantsIDs": participantsIDs*/]
+        ref.updateChildValues(childValues)
+      }
       
-      let ref1 = Database.database().reference().child("user-messages").child(toID).child(uID).child(messageMetaDataFirebaseFolder)
-      let childValues1: [String: Any] = ["chatID": uID, "lastMessageID": messageID, "isGroupChat": isGroupChat/*, "chatParticipantsIDs": participantsIDs*/]
-      ref1.updateChildValues(childValues1)
+      let lastMessageQIRef = Database.database().reference().child("user-messages").child(toID).child(uID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
+      lastMessageQIRef.observeSingleEvent(of: .childAdded) { (snapshot) in
+        let ref = Database.database().reference().child("user-messages").child(toID).child(uID).child(messageMetaDataFirebaseFolder)
+        let childValues: [String: Any] = ["chatID": uID, "lastMessageID": snapshot.key, "isGroupChat": isGroupChat/*, "chatParticipantsIDs": participantsIDs*/]
+        ref.updateChildValues(childValues)
+      }
     }
   }
 }
