@@ -11,27 +11,27 @@ import UIKit
 extension AccountSettingsController: AvatarOpenerDelegate {
   func avatarOpener(avatarPickerDidPick image: UIImage) {
     userProfileContainerView.profileImageView.showActivityIndicator()
-    userProfileDataDatabaseUpdater.deleteCurrentPhoto { (isDeleted) in
-      self.userProfileDataDatabaseUpdater.updateUserProfile(with: image, completion: { (isUpdated) in
-        self.userProfileContainerView.profileImageView.hideActivityIndicator()
+    userProfileDataDatabaseUpdater.deleteCurrentPhoto { [weak self] (isDeleted) in
+      self?.userProfileDataDatabaseUpdater.updateUserProfile(with: image, completion: { [weak self] (isUpdated) in
+        self?.userProfileContainerView.profileImageView.hideActivityIndicator()
         guard isUpdated else {
-          basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError, controller: self)
+          basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError, controller: self!)
           return
         }
-        self.userProfileContainerView.profileImageView.image = image
+        self?.userProfileContainerView.profileImageView.image = image
       })
     }
   }
   
   func avatarOpener(didPerformDeletionAction: Bool) {
     userProfileContainerView.profileImageView.showActivityIndicator()
-    userProfileDataDatabaseUpdater.deleteCurrentPhoto { (isDeleted) in
-      self.userProfileContainerView.profileImageView.hideActivityIndicator()
+    userProfileDataDatabaseUpdater.deleteCurrentPhoto { [weak self] (isDeleted) in
+      self?.userProfileContainerView.profileImageView.hideActivityIndicator()
       guard isDeleted else {
-        basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self)
+        basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self!)
         return
       }
-      self.userProfileContainerView.profileImageView.image = nil
+      self?.userProfileContainerView.profileImageView.image = nil
     }
   }
 }

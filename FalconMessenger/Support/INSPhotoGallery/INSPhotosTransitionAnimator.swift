@@ -28,7 +28,7 @@ class INSPhotosTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
     var startingViewForAnimation: UIView?
     var endingViewForAnimation: UIView?
     
-    var animationDurationWithZooming = 0.5
+    var animationDurationWithZooming = 0.3
     var animationDurationWithoutZooming = 0.3
     var animationDurationFadeRatio = 4.0 / 9.0 {
         didSet(value) {
@@ -45,7 +45,7 @@ class INSPhotosTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
             animationDurationStartingViewFadeOutRatio = min(value, 1.0)
         }
     }
-    var zoomingAnimationSpringDamping = 0.9
+    var zoomingAnimationSpringDamping = 1.0
     
     var shouldPerformZoomingAnimation: Bool {
         get {

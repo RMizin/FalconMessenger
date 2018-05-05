@@ -415,7 +415,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
          (self.navigationController?.visibleViewController is UserInfoTableViewController ||
           self.navigationController?.visibleViewController is ChatLogController ||
           self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
-          topViewController(rootViewController: self) is CropViewController) else { senderID = nil; return }
+          topViewController(rootViewController: self) is CropViewController ||
+          topViewController(rootViewController: self) is INSPhotosViewController ) else { senderID = nil; return }
       messageRef.updateChildValues(["seen" : true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
         self.resetBadgeForSelf()
       })
@@ -428,16 +429,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return message.messageUID == sentMessage.messageUID
     }) else { return }
     
-    if index >= 0 {
-      messages[index].status = sentMessage.status
-      collectionView?.reloadItems(at: [IndexPath(row: index ,section: 0)])
-     
-      if sentMessage.status == messageStatusDelivered {
-        if UserDefaults.standard.bool(forKey: "In-AppSounds") {
-          SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
-        }
-      }
-    }
+    guard index >= 0 else { return }
+    messages[index].status = sentMessage.status
+    collectionView?.reloadItems(at: [IndexPath(row: index ,section: 0)])
+    guard sentMessage.status == messageStatusDelivered, messages[index].messageUID == messages.last?.messageUID,
+    UserDefaults.standard.bool(forKey: "In-AppSounds") else { return }
+    SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
   }
   
   override func viewDidLoad() {
@@ -1229,7 +1226,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let valuesForVideo: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": selectedMedia.object!.asUIImage!, "imageWidth":selectedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": selectedMedia.object!.asUIImage!.size.height as AnyObject, "localVideoUrl" : path as AnyObject]
         
         reloadCollectionViewAfterSending(values: valuesForVideo)
-        uploadToFirebaseStorageUsingVideo(selectedMedia.videoObject!, progress: { (snapshot) in
+        uploadToFirebaseStorageUsingVideo(selectedMedia.videoObject!, progress: {[unowned self] (snapshot) in
           if let progressCount = snapshot?.progress?.fractionCompleted {
             progressArray = self.setProgressForElement(progress: progressCount*0.98, id: videoId, array: progressArray)
             self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
@@ -1238,7 +1235,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           progressArray = self.setProgressForElement(progress: 1.0, id: videoId, array: progressArray)
           self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
           
-          self.uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, progress: { (snapshot) in
+          self.uploadToFirebaseStorageUsingImage(selectedMedia.object!.asUIImage!, progress: { [unowned self] (snapshot) in
         
             if let progressCount = snapshot?.progress?.fractionCompleted {
               progressArray = self.setProgressForElement(progress: progressCount*0.98, id: imageId, array: progressArray)
@@ -1323,7 +1320,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let videoName = UUID().uuidString + ".mov"
     let ref = Storage.storage().reference().child("messageMovies").child(videoName)
-   
     
     let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
       guard error == nil else { return }
@@ -1357,28 +1353,21 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     messages[latMessageIndexPath.item].status = messageStatusSending
-    
     UIView.performWithoutAnimation {
-      collectionView?.performBatchUpdates ({
-
-        collectionView?.insertItems(at: [latMessageIndexPath])
-        
-        var indexPaths = [IndexPath]()
-        for index in 2..<10 {
-          if messages.indices.contains(messages.count-index) {
-            let indexPath = IndexPath(item: messages.count-index, section: 0)
-            indexPaths.append(indexPath)
-          }
-        }
-
-        collectionView?.reloadItems(at: indexPaths)
+      collectionView?.insertItems(at: [latMessageIndexPath])
+      let indexPath1 = IndexPath(item: messages.count - 1, section: 0)
+      DispatchQueue.main.async {
+        self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
+      }
     
-        let indexPath1 = IndexPath(item: messages.count - 1, section: 0)
-        
-        DispatchQueue.main.async {
-          self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
+      var indexPaths = [IndexPath]()
+      for index in 2..<10 {
+        if messages.indices.contains(messages.count-index) {
+          let indexPath = IndexPath(item: messages.count-index, section: 0)
+          indexPaths.append(indexPath)
         }
-      }, completion: nil)
+      }
+      collectionView?.reloadItems(at: indexPaths)
     }
   }
   

@@ -58,7 +58,8 @@ extension ChatsTableViewController {
   
   func handleInAppSoundPlaying(message: Message, conversation: Conversation) {
 
-    if self.visibleTab() is ChatLogController { return }
+    if self.visibleTab() is ChatLogController ||
+      topViewController(rootViewController: self) is INSPhotosViewController { return }
 
     var allConversations = conversations
     allConversations.insert(contentsOf: pinnedConversations, at: 0)

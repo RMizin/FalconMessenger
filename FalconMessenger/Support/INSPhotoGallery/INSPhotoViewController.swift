@@ -75,7 +75,7 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         view.addGestureRecognizer(longPressGestureRecognizer)
     //  navigationController?.navigationBar.barStyle = .blackTranslucent
         
-        modalPresentationCapturesStatusBarAppearance = true
+//modalPresentationCapturesStatusBarAppearance = true
         
         if let image = photo.image {
             self.scalingImageView.image = image

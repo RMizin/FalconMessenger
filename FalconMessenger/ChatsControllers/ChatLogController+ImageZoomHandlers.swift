@@ -76,6 +76,7 @@ extension ChatLogController {
     let currentPhoto = photos[initialPhotoIndex]
     let referenceView = cell.messageImageView
     let galleryPreview = INSPhotosViewController(photos: photos, initialPhoto: currentPhoto, referenceView: referenceView)
+    galleryPreview.overlayView.setHidden(true, animated: false)
     
     setupGalleryDismissHandler(galleryPreview: galleryPreview)
     inputContainerView.inputTextView.resignFirstResponder()

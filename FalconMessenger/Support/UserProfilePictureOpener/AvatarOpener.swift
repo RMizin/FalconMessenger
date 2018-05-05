@@ -50,6 +50,7 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
     galleryPreview = INSPhotosViewController(photos: [currentPhoto], initialPhoto: currentPhoto, referenceView: avatarView)
     overlay.photosViewController = galleryPreview
     galleryPreview?.overlayView = overlay
+    galleryPreview?.overlayView.setHidden(true, animated: false)
     galleryPreview?.referenceViewForPhotoWhenDismissingHandler = { photo in return avatarView }
     galleryPreview?.modalPresentationStyle = .overFullScreen
     galleryPreview?.modalPresentationCapturesStatusBarAppearance = true

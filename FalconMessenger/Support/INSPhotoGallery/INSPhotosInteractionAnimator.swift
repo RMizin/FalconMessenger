@@ -36,7 +36,7 @@ class INSPhotosInteractionAnimator: NSObject, UIViewControllerInteractiveTransit
             return
         }
         let translatedPanGesturePoint = gestureRecognizer.translation(in: fromView)
-        let newCenterPoint = CGPoint(x: anchorPoint.x + translatedPanGesturePoint.x, y: anchorPoint.y + translatedPanGesturePoint.y)
+        let newCenterPoint = CGPoint(x: anchorPoint.x /*+ translatedPanGesturePoint.x*/, y: anchorPoint.y + translatedPanGesturePoint.y)
         
         viewToPan.center = newCenterPoint
         
@@ -54,7 +54,7 @@ class INSPhotosInteractionAnimator: NSObject, UIViewControllerInteractiveTransit
             return
         }
         let returnToCenterVelocityAnimationRatio = 0.00007
-        let panDismissDistanceRatio = 50.0 / 667.0 // distance over iPhone 6 height
+        let panDismissDistanceRatio = 50.0 / Double(ScreenSize.maxLength) // distance over iPhone 6 height
         let panDismissMaximumDuration = 0.45
         
         let velocityY = gestureRecognizer.velocity(in: gestureRecognizer.view).y

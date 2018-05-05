@@ -13,15 +13,15 @@ extension GroupAdminControlsTableViewController: AvatarOpenerDelegate {
   func avatarOpener(avatarPickerDidPick image: UIImage) {
     navigationController?.view.isUserInteractionEnabled = false
     groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
-    deleteCurrentPhoto { (isDeleted) in
-      self.updateUserProfile(with: image, completion: { (isUpdated) in
-        self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
-        self.navigationController?.view.isUserInteractionEnabled = true
-        guard isUpdated else {
-          basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError, controller: self)
+    deleteCurrentPhoto { [weak self] (isDeleted) in
+      self?.updateUserProfile(with: image, completion: { [weak self] (isUpdated) in
+        self?.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
+        self?.navigationController?.view.isUserInteractionEnabled = true
+        guard isUpdated, self != nil else {
+          basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError, controller: self!)
           return
         }
-        self.groupProfileTableHeaderContainer.profileImageView.image = image
+        self?.groupProfileTableHeaderContainer.profileImageView.image = image
       })
     }
   }
@@ -29,14 +29,14 @@ extension GroupAdminControlsTableViewController: AvatarOpenerDelegate {
   func avatarOpener(didPerformDeletionAction: Bool) {
     navigationController?.view.isUserInteractionEnabled = false
     groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
-    deleteCurrentPhoto { (isDeleted) in
-      self.navigationController?.view.isUserInteractionEnabled = true
-      self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
-      guard isDeleted else {
-        basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self)
+    deleteCurrentPhoto { [weak self] (isDeleted) in
+      self?.navigationController?.view.isUserInteractionEnabled = true
+      self?.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
+      guard isDeleted, self != nil else {
+        basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self!)
         return
       }
-      self.groupProfileTableHeaderContainer.profileImageView.image = nil
+      self?.groupProfileTableHeaderContainer.profileImageView.image = nil
     }
   }
 }

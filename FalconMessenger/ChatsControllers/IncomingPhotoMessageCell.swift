@@ -33,8 +33,8 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     messageImageViewTopAnchor.isActive = true
     
     messageImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 0).isActive = true
-    messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 5).isActive = true
-    messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 0).isActive = true
+    messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 5.3).isActive = true
+    messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -0.8).isActive = true
     
     bubbleView.addSubview(playButton)
     playButton.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true

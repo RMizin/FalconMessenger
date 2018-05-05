@@ -88,7 +88,6 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   let bubbleView: UIImageView = {
     let bubbleView = UIImageView()
-    bubbleView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     bubbleView.isUserInteractionEnabled = true
     
     return bubbleView

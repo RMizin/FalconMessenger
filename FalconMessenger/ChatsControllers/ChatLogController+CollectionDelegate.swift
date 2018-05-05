@@ -22,36 +22,35 @@ extension ChatLogController: CollectionDelegate {
   
   func performBatchUpdates(for index: Int) {
     
-      messages.remove(at: index)
-    
-      if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-        messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: true)
-      } else {
-        messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
-      }
-    
-    UIView.performWithoutAnimation {
-      collectionView?.performBatchUpdates ({
-        collectionView?.deleteItems(at: [IndexPath(item: index, section: 0)])
-      
-        let startIndex = index - 2
-        let endIndex = index + 2
-        var indexPaths = [IndexPath]()
-        
-        for indexToUpdate in startIndex...endIndex {
-          if messages.indices.contains(indexToUpdate) && indexToUpdate != index {
-            let indexPath = IndexPath(item: indexToUpdate, section: 0)
-            indexPaths.append(indexPath)
-          }
-        }
-        collectionView?.reloadItems(at: indexPaths)
-      }, completion: { (completed) in
-        guard self.messages.count == 0 else {
-          return
-        }
-        self.navigationController?.popViewController(animated: true)
-      })
+    messages.remove(at: index)
+  
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: true)
+    } else {
+      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
     }
+  
+    collectionView?.performBatchUpdates ({
+      collectionView?.deleteItems(at: [IndexPath(item: index, section: 0)])
+    }, completion: { (completed) in
+      
+      let startIndex = index - 2
+      let endIndex = index + 2
+      var indexPaths = [IndexPath]()
+      
+      for indexToUpdate in startIndex...endIndex {
+        if self.messages.indices.contains(indexToUpdate) && indexToUpdate != index {
+          let indexPath = IndexPath(item: indexToUpdate, section: 0)
+          indexPaths.append(indexPath)
+        }
+      }
+      
+      UIView.performWithoutAnimation {
+        self.collectionView?.reloadItems(at: indexPaths)
+        guard self.messages.count == 0 else { return }
+        self.navigationController?.popViewController(animated: true)
+      }
+    })
   }
   
   func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message) {
@@ -78,30 +77,43 @@ extension ChatLogController: CollectionDelegate {
     return sortedMessages
   }
   
-  func collectionView(shouldBeUpdatedWith message: Message,reference: DatabaseReference) {
+  func collectionView(shouldBeUpdatedWith message: Message, reference: DatabaseReference) {
     
     let insertionIndex = self.messages.insertionIndexOf(elem: message, isOrderedBefore: { (message1, message2) -> Bool in
       return message1.messageUID! < message2.messageUID!
     })
     
-  
     guard let _ = self.messages.index(where: { (existentMessage) -> Bool in
       return existentMessage.messageUID == message.messageUID
     }) else {
+      peformBatchUpdate(for: message, at: insertionIndex, reference: reference)
+      return
+    }
+  }
+  
+ fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
+    messages.insert(message, at: insertionIndex)
+    
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: true)
+    } else {
+      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
+    }
+
+    collectionView?.performBatchUpdates ({
+      let indexPath = IndexPath(item: insertionIndex, section: 0)
       
-      self.messages.insert(message, at: insertionIndex)
-      
-      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
-        self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: true)
-      } else {
-        self.messages = self.messagesFetcher.configureMessageTails(messages: self.messages, isGroupChat: false)
+      collectionView?.insertItems(at: [indexPath])
+
+      if messages.count - 1 >= 0 && isScrollViewAtTheBottom {
+        let indexPath = IndexPath(item: messages.count - 1, section: 0)
+        DispatchQueue.main.async {
+          self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        }
       }
+    }, completion: { (true) in
       
-      self.collectionView?.performBatchUpdates ({
-        let indexPath = IndexPath(item: insertionIndex, section: 0)
-        
-        self.collectionView?.insertItems(at: [indexPath])
-        
+      UIView.performWithoutAnimation {
         var indexPaths = [IndexPath]()
         for index in 2..<10 {
           if self.messages.indices.contains(self.messages.count-index) {
@@ -110,18 +122,9 @@ extension ChatLogController: CollectionDelegate {
           }
         }
         self.collectionView?.reloadItems(at: indexPaths)
-        
-        if self.messages.count - 1 >= 0 && self.isScrollViewAtTheBottom {
-          let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-          
-          DispatchQueue.main.async {
-            self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
-          }
-        }
-      }, completion: { (true) in
-        self.updateMessageStatus(messageRef: reference)
-      })
-      return
-    }
+      }
+      
+      self.updateMessageStatus(messageRef: reference)
+    })
   }
 }
