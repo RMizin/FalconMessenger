@@ -85,6 +85,10 @@ class ContactsDetailController: UITableViewController {
       tableView.deselectRow(at: indexPath, animated: true)
       if indexPath.section == 2 {
         if MFMessageComposeViewController.canSendText() {
+          guard contactPhoneNumbers.indices.contains(0) else {
+            basicErrorAlertWith(title: "Error", message: "This user doesn't have any phone number provided.", controller: self)
+            return
+          }
           let destination = MFMessageComposeViewController()
           destination.body = invitationText
           destination.recipients = [contactPhoneNumbers[0].value.stringValue]

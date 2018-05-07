@@ -30,7 +30,7 @@ class ContactsController: UITableViewController {
   
   var filteredUsers = [User]()
   
-  let contactsCellID = "contactsCellID"
+ // let contactsCellID = "contactsCellID"
   
   let falconUsersCellID = "falconUsersCellID"
   
@@ -136,7 +136,7 @@ class ContactsController: UITableViewController {
   
     fileprivate func checkContactsAuthorizationStatus() {
       setupViewControllerPlaceholder()
-      let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+      let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: .contacts)
       
       switch contactsAuthorityCheck {
       case .denied, .notDetermined, .restricted:
@@ -154,9 +154,11 @@ class ContactsController: UITableViewController {
       if status == .denied || status == .restricted { return }
     
       store.requestAccess(for: .contacts) { granted, error in
-        guard granted else { return }
-
-        let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey as NSString, CNContactPhoneNumbersKey as NSString, CNContactFormatter.descriptorForRequiredKeys(for: .fullName), CNContactImageDataAvailableKey as CNKeyDescriptor, CNContactThumbnailImageDataKey as CNKeyDescriptor])
+        
+        guard granted, error == nil else { return }
+        
+          let keys = [CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey, CNContactImageDataKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey]
+        let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
         
         do {
           try store.enumerateContacts(with: request) { contact, stop in self.contacts.append(contact) }
@@ -263,7 +265,7 @@ class ContactsController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as! CurrentUserTableViewCell
         cell.title.text = NameConstants.personalStorage
         return cell
-      }
+      } else
       
       if indexPath.section == 1 {
         
@@ -279,9 +281,11 @@ class ContactsController: UITableViewController {
             cell.subtitle.text = statusString
           } else {
             cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-            let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-            let subtitle = "Last seen " + timeAgoSinceDate(date)
-            cell.subtitle.text = subtitle
+            if let timeInterval = TimeInterval(statusString) {
+              let date = Date(timeIntervalSince1970: timeInterval)
+              let subtitle = "Last seen " + timeAgoSinceDate(date)
+              cell.subtitle.text = subtitle
+            }
           }
         } else if let statusTimeinterval = filteredUsers[indexPath.row].onlineStatus as? TimeInterval {
           cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
@@ -312,16 +316,20 @@ class ContactsController: UITableViewController {
       } else if indexPath.section == 2 {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
-        if filteredContacts[indexPath.row].imageDataAvailable {
-          let image = UIImage(data: filteredContacts[indexPath.row].thumbnailImageData!)
+        if let thumbnail = filteredContacts[indexPath.row].thumbnailImageData {
+          let image = UIImage(data: thumbnail)
           cell.icon.image = image
         } else {
           cell.icon.image = UIImage(named: "UserpicIcon")
         }
       
         cell.title.text = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
-        cell.subtitle.text = filteredContacts[indexPath.row].phoneNumbers[0].value.stringValue
-        
+        if filteredContacts[indexPath.row].phoneNumbers.indices.contains(0) {
+          let phoneNumber = filteredContacts[indexPath.row].phoneNumbers[0].value.stringValue
+          cell.subtitle.text = phoneNumber
+        } else {
+          cell.subtitle.text = "No phone number provided"
+        }
         return cell
       }
       return nil

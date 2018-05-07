@@ -274,28 +274,30 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       if indexPath.row == 0 {
         let destination = NotificationsAndSoundsTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination, animated: true)
+        navigationController?.pushViewController(destination, animated: true)
       }
       
       if indexPath.row == 1 {
         let destination = PrivacyAndSecurityTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination, animated: true)
+        navigationController?.pushViewController(destination, animated: true)
       }
       
       if indexPath.row == 2 {
          AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         let controller = ChangePhoneNumberController()
         let destination = UINavigationController(rootViewController: controller)
+        destination.navigationBar.shadowImage = UIImage()
+        destination.navigationBar.setBackgroundImage(UIImage(), for: .default)
         destination.hidesBottomBarWhenPushed = true
         destination.navigationBar.isTranslucent = false
-        self.present(destination, animated: true, completion: nil)
+        present(destination, animated: true, completion: nil)
       }
       
       if indexPath.row == 3 {
         let destination = StorageTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination, animated: true)
+        navigationController?.pushViewController(destination, animated: true)
       }
     }
       
@@ -303,7 +305,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       if indexPath.row == 0 {
         let destination = LegalTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination, animated: true)
+        navigationController?.pushViewController(destination, animated: true)
       }
         
       if indexPath.row == 1 {
@@ -329,7 +331,6 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
     if section == 1 {
       return secondSection.count
     } else {
-      
       return 0
     }
   }
