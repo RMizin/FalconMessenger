@@ -8,9 +8,18 @@
 
 import UIKit
 
-
-class AuthPhoneNumberController: EnterPhoneNumberController {
+class AuthPhoneNumberController: EnterPhoneNumberController, VerificationDelegate {
   
+  func verificationFinished(with success: Bool, error: String?) {
+    guard success, error == nil else {
+      basicErrorAlertWith(title: "Error", message: error ?? "", controller: self)
+      return
+    }
+    let destination = AuthVerificationController()
+    destination.enterVerificationContainerView.titleNumber.text = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
+    navigationController?.pushViewController(destination, animated: true)
+  }
+
   override func configurePhoneNumberContainerView() {
     super.configurePhoneNumberContainerView()
     
@@ -18,12 +27,6 @@ class AuthPhoneNumberController: EnterPhoneNumberController {
     phoneNumberContainerView.instructions.text = "Please confirm your country code\nand enter your phone number."
     let attributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
     phoneNumberContainerView.phoneNumber.attributedPlaceholder = NSAttributedString(string: "Phone number", attributes: attributes)
-  }
-  
-  override func rightBarButtonDidTap() {
-    let destination = AuthVerificationController()
-    destination.enterVerificationContainerView.titleNumber.text = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
-    destinationController = destination
-    super.rightBarButtonDidTap()
+    verificationDelegate = self
   }
 }

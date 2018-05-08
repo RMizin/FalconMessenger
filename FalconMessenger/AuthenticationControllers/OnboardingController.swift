@@ -32,5 +32,4 @@ class OnboardingController: UIViewController {
     let destination = AuthPhoneNumberController()
     navigationController?.pushViewController(destination, animated: true)
   }
-
 }

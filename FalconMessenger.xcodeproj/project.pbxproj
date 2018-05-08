@@ -563,6 +563,7 @@
 		4B6BAF8B20886B3800A90F3A /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4B89A80720A0A14D00E644A8 /* InitialsImageView */,
 				4B08E370208872B800C64EAA /* Public */,
 				4B08E36F208872AF00C64EAA /* ThemeManager */,
 				4B6BAFB320886C5E00A90F3A /* CenteredCollectionViewFlowLayout */,
@@ -814,6 +815,13 @@
 				4BEDE4252067C73500C52EF4 /* InformationCell */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		4B89A80720A0A14D00E644A8 /* InitialsImageView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = InitialsImageView;
 			sourceTree = "<group>";
 		};
 		4B8D05331F738FBB001735BC /* NotificationsAndSounds */ = {

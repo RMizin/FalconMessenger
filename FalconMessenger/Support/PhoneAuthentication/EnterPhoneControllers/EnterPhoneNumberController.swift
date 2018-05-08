@@ -10,12 +10,15 @@ import UIKit
 import FirebaseAuth
 import SafariServices
 
-
+protocol VerificationDelegate: class {
+  func verificationFinished(with success: Bool, error: String?)
+}
 
 class EnterPhoneNumberController: UIViewController {
   
   let phoneNumberContainerView = EnterPhoneNumberContainerView()
   let countries = Country().countries
+  weak var verificationDelegate: VerificationDelegate?
   
   
   override func viewDidLoad() {
@@ -80,7 +83,7 @@ class EnterPhoneNumberController: UIViewController {
   @objc func rightBarButtonDidTap () {
     
     if currentReachabilityStatus == .notReachable {
-      basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
+      verificationDelegate?.verificationFinished(with: false, error: noInternetError)
       return
     }
     
@@ -90,8 +93,6 @@ class EnterPhoneNumberController: UIViewController {
       print("verification has already been sent once")
     }
   }
-  
-  var destinationController: UIViewController!
 
   func sendSMSConfirmation () {
     
@@ -102,15 +103,14 @@ class EnterPhoneNumberController: UIViewController {
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
       print("\n Recieved Phone number verification ID: \(verificationID ?? "nil")\n")
       if let error = error {
-        basicErrorAlertWith(title: "Error", message: error.localizedDescription, controller: self)
+        self.verificationDelegate?.verificationFinished(with: false, error: error.localizedDescription)
         return
       }
       
       print("verification sent")
       self.isVerificationSent = true
       UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
-      guard let destination = self.destinationController else { return }
-      self.navigationController?.pushViewController(destination, animated: true)
+      self.verificationDelegate?.verificationFinished(with: true, error: nil)
     }
   }
 }
