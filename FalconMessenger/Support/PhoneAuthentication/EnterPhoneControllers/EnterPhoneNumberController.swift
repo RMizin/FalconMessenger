@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
 import SafariServices
 
 protocol VerificationDelegate: class {

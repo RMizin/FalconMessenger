@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import FirebaseAuth
 import PhoneNumberKit
 
 
@@ -136,8 +135,7 @@ class EnterVerificationCodeController: UIViewController {
       withVerificationID: verificationID!,
       verificationCode: verificationCode!)
     
-    Auth.auth().signIn(with: credential) { (user, error) in
-      
+    Auth.auth().signInAndRetrieveData(with: credential) { (_, error) in
       if error != nil {
         ARSLineProgress.hide()
         basicErrorAlertWith(title: "Error", message: error?.localizedDescription ?? "Oops! Something happened, try again later.", controller: self)
@@ -159,5 +157,6 @@ class EnterVerificationCodeController: UIViewController {
         }
       })
     }
+
   }
 }

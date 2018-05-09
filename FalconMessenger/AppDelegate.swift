@@ -106,7 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     mainController.selectedIndex = tabs.chats.rawValue
   }
     
-  func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+  func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
     setUserNotificationToken(token: fcmToken)
   }
 
