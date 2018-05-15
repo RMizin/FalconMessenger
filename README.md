@@ -1,10 +1,8 @@
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Pigeon-project/Assets.xcassets/Other/roundedPigeon.imageset/roundedPigeon%402x.png" width="310"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitleSquare.png" />
 </p> 
 
-
-# Falcon Messenger
 
 Falcon Messenger is a fast and beautiful cloud-based messaging app.
 
