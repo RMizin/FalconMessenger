@@ -1,6 +1,6 @@
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitleSquare.png" />
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitle.png" />
 </p> 
 
 
