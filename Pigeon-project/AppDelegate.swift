@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ThemeManager.applyTheme(theme: theme)
         
     FirebaseApp.configure()
+    Database.database().isPersistenceEnabled = true
     
      _ = contactsController.view
      _ = settingsController.view

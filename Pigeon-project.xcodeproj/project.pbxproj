@@ -12,6 +12,7 @@
 		4B0FA7CF2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7CE2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift */; };
 		4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */; };
 		4B0FA7DE2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7DD2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift */; };
+		4B0FD3FE20AAF8F300A08DB1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B0FD3FD20AAF8F300A08DB1 /* GoogleService-Info.plist */; };
 		4B1A36981F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */; };
 		4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */; };
 		4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */; };
@@ -138,7 +139,6 @@
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
-		4BCF96EF208E19130039C278 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCF96EE208E19120039C278 /* GoogleService-Info.plist */; };
 		4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */; };
 		4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
@@ -193,6 +193,7 @@
 		4B0FA7CE2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsTableViewCell.swift; path = ChatsControllers/GroupAdminControlsTableViewCell.swift; sourceTree = "<group>"; };
 		4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MessagesFetcher.swift; path = ChatsControllers/MessagesFetcher.swift; sourceTree = "<group>"; };
 		4B0FA7DD2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogController+CollectionDelegate.swift"; path = "ChatsControllers/ChatLogController+CollectionDelegate.swift"; sourceTree = "<group>"; };
+		4B0FD3FD20AAF8F300A08DB1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B1A36971F498E0C00B4AA0A /* CenteredCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CenteredCollectionViewFlowLayout.swift; path = Support/CenteredCollectionViewFlowLayout/CenteredCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectedMediaCollectionCell.swift; path = ChatsControllers/SelectedMediaCollectionCell.swift; sourceTree = "<group>"; };
 		4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatInputContainer+AttachedImagesCollectionConfig.swift"; path = "ChatsControllers/ChatInputContainer+AttachedImagesCollectionConfig.swift"; sourceTree = "<group>"; };
@@ -321,7 +322,6 @@
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
-		4BCF96EE208E19120039C278 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaPickerControllerNew.swift; path = ChatsControllers/MediaPickerControllerNew.swift; sourceTree = "<group>"; };
 		4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MediaPicerControllerNew+ImagePicker.swift"; path = "ChatsControllers/MediaPicerControllerNew+ImagePicker.swift"; sourceTree = "<group>"; };
 		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
@@ -526,7 +526,7 @@
 				4B54EAAE2084E77000BDFA25 /* SplashScreenControllers */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
 				4B4F453C1F32230C00A6FF96 /* Info.plist */,
-				4BCF96EE208E19120039C278 /* GoogleService-Info.plist */,
+				4B0FD3FD20AAF8F300A08DB1 /* GoogleService-Info.plist */,
 			);
 			path = "Pigeon-project";
 			sourceTree = "<group>";
@@ -1162,7 +1162,7 @@
 				4B45263C1F5EBCFA003FBA29 /* notification.caf in Resources */,
 				4BF6F94D1FD188110011686B /* typingindicatorDark.gif in Resources */,
 				4B5419551FB392570014C4FB /* INSPhotoGallery.bundle in Resources */,
-				4BCF96EF208E19130039C278 /* GoogleService-Info.plist in Resources */,
+				4B0FD3FE20AAF8F300A08DB1 /* GoogleService-Info.plist in Resources */,
 				4B2143021F51C74000F7A4B8 /* TimestampView.xib in Resources */,
 				4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */,
 			);
@@ -1441,7 +1441,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1460,6 +1460,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1503,7 +1504,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1516,6 +1517,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
