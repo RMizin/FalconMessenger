@@ -58,10 +58,34 @@ Follow these simple steps:
 	6.5. Select “Editor” in the “Role“ field. <br>
 7. Go to Firebase Console, select your project, choose "Authentication" from left menu
 8. Select "SIGN-IN METHOD" and enable "Phone" option.
-  
+9. Add Firebase storage rules: 
+
+		service firebase.storage {
+		  match /b/{bucket}/o {
+		    match /{allPaths=**} {
+		      allow read, write;
+		    }
+		  }
+		}
+		
+10. Add Firebase Realtime Database Rules:
+
+		{ 
+		  "rules": {
+		    ".read": true,
+		    ".write": "auth != null",
+
+		    "users": {
+		      ".read": true,
+		      ".write": "auth != null",
+		      ".indexOn": "phoneNumber"
+		    }
+		  }   
+		}
+
 Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
-9. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
+11. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
 
 ## Compatibility
@@ -69,11 +93,6 @@ Falcon Messenger is written in Swift 4 and requires iOS 10.0 or later.
 
 
 ## License
-
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
 
 Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
-
-A few key points:
-- You cannot copy this project and publish to the app store as your own.
-- Falcon Messenger project's code cannot be used in a proprietary program. Products in which you use "Falcon Messenger” project’s code, must also be open-source and under the same(GPL v3) license.
