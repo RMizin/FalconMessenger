@@ -1,10 +1,8 @@
-# Falcon Messenger
 
-Falcon Messenger is a fast and beautiful cloud-based messaging app.
-
+<p align="center">
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitle.png" />
+</p> 
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="http://www.binpress.com/uploads/store33364/itunes-app-store-logo.png" width="290" height="100" alt="App Store" /></a>
-
-
 
 ## Features
 
@@ -23,23 +21,23 @@ SIMPLE AUTHENTICATION PROCESS: No emails and passwords anymore. Authenticate wit
 BIOMETRICS SUPPORT: Keep your conversations away from unwanted eyes by using your Touch ID, Face ID or Passcode to unlock Falcon Messenger.
 
 ## User Interface
-### Day color theme
+### Day theme
 <p align="center">
 
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightWelcome.jpg" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightContacts.jpg" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightChats.jpg" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightGroupChat.jpg" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightSettings.jpg" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkWelcome.png?token=ASVYwtueoIyYtK32iWcGBeHCgei0dm4bks5bC8FfwA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightContacts.jpg?token=ASVYwuF9HmCxhU91WFATXbrvwgamIiK9ks5bC8HzwA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightChats.jpg?token=ASVYwhrMIqe5MUCbTSV643VeBRHmwF4kks5bC8HwwA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightGroupChat.jpg?token=ASVYwgWHiJ19KL3WjlwToqpfGWkJPyP9ks5bC8H1wA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightSettings.jpg?token=ASVYwjNLqOOCdrI9k7hP2uSqtlRsAvYKks5bC8H3wA%3D%3D" width="171"/>
 </p>
 
-### Night color theme
+### Night theme
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkWelcome.jpg" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkContacts.jpg" width="171"/>
- <img src=" https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkChats.jpg?token=ASVYwqIO4Sl1QYysco-uIx0e_4Itf11vks5bC8BkwA%3D%3D" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkGroupChat.jpg" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkSettings.jpg" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkWelcome.png?token=ASVYwtueoIyYtK32iWcGBeHCgei0dm4bks5bC8FfwA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkContacts.jpg?token=ASVYwkvVBSOiHuzXuU3tytgeA4PIgNqMks5bC8EDwA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkChats.jpg?token=ASVYwqIO4Sl1QYysco-uIx0e_4Itf11vks5bC8BkwA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkGroupChat.jpg?token=ASVYwkOJq8hBZ_UmSNblfRBIYrS9rdT5ks5bC8EjwA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkSettings.jpg?token=ASVYwjnRsOhTiipDxu-RDJoMdDsVDYqyks5bC8EmwA%3D%3D" width="171"/>
 </p> 
 
 ## Compatibility
