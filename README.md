@@ -23,18 +23,18 @@ BIOMETRICS SUPPORT: Keep your conversations away from unwanted eyes by using you
 ## UI
 ### Day theme
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightContacts.jpg?token=ASVYwuF9HmCxhU91WFATXbrvwgamIiK9ks5bC8HzwA%3D%3D" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightChats.jpg?token=ASVYwhrMIqe5MUCbTSV643VeBRHmwF4kks5bC8HwwA%3D%3D" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightGroupChat.jpg?token=ASVYwgWHiJ19KL3WjlwToqpfGWkJPyP9ks5bC8H1wA%3D%3D" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightSettings.jpg?token=ASVYwjNLqOOCdrI9k7hP2uSqtlRsAvYKks5bC8H3wA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightContacts.jpg?token=ASVYwuF9HmCxhU91WFATXbrvwgamIiK9ks5bC8HzwA%3D%3D" width="215"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightChats.jpg?token=ASVYwhrMIqe5MUCbTSV643VeBRHmwF4kks5bC8HwwA%3D%3D" width="215"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightGroupChat.jpg?token=ASVYwgWHiJ19KL3WjlwToqpfGWkJPyP9ks5bC8H1wA%3D%3D" width="215"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8LightSettings.jpg?token=ASVYwjNLqOOCdrI9k7hP2uSqtlRsAvYKks5bC8H3wA%3D%3D" width="215"/>
 </p>
 
 ### Night theme
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkContacts.jpg?token=ASVYwkvVBSOiHuzXuU3tytgeA4PIgNqMks5bC8EDwA%3D%3D" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkChats.jpg?token=ASVYwqIO4Sl1QYysco-uIx0e_4Itf11vks5bC8BkwA%3D%3D" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkGroupChat.jpg?token=ASVYwkOJq8hBZ_UmSNblfRBIYrS9rdT5ks5bC8EjwA%3D%3D" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkSettings.jpg?token=ASVYwjnRsOhTiipDxu-RDJoMdDsVDYqyks5bC8EmwA%3D%3D" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkContacts.jpg?token=ASVYwkvVBSOiHuzXuU3tytgeA4PIgNqMks5bC8EDwA%3D%3D" width="215"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkChats.jpg?token=ASVYwqIO4Sl1QYysco-uIx0e_4Itf11vks5bC8BkwA%3D%3D" width="215"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkGroupChat.jpg?token=ASVYwkOJq8hBZ_UmSNblfRBIYrS9rdT5ks5bC8EjwA%3D%3D" width="215"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/5.8DarkSettings.jpg?token=ASVYwjnRsOhTiipDxu-RDJoMdDsVDYqyks5bC8EmwA%3D%3D" width="215"/>
 </p> 
 
 ## Compatibility
