@@ -13,6 +13,7 @@ import AudioToolbox
 import FLAnimatedImage
 import FTPopOverMenu_Swift
 import CropViewController
+import SafariServices
 
 private let incomingTextMessageCellID = "incomingTextMessageCellID"
 
@@ -416,7 +417,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           self.navigationController?.visibleViewController is ChatLogController ||
           self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
           topViewController(rootViewController: self) is CropViewController ||
-          topViewController(rootViewController: self) is INSPhotosViewController ) else { senderID = nil; return }
+          topViewController(rootViewController: self) is INSPhotosViewController ||
+          topViewController(rootViewController: self) is SFSafariViewController) else { senderID = nil; return }
       messageRef.updateChildValues(["seen" : true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
         self.resetBadgeForSelf()
       })
@@ -451,7 +453,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if self.navigationController?.visibleViewController is UserInfoTableViewController ||
       self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
-      topViewController(rootViewController: self) is CropViewController {
+      topViewController(rootViewController: self) is CropViewController ||
+      topViewController(rootViewController: self) is SFSafariViewController {
       return
     }
 

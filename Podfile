@@ -8,6 +8,8 @@ target 'FalconMessenger' do
   pod 'Firebase/Auth'
   pod 'Firebase/Storage'
   pod 'Firebase/Messaging'
+  
+  #pod 'RealmSwift'
 
   pod 'SDWebImage', :modular_headers => true
   pod 'PhoneNumberKit'

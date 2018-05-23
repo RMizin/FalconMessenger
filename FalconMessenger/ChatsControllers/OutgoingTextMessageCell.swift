@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 
 class OutgoingTextMessageCell: BaseMessageCell {
@@ -45,6 +46,7 @@ class OutgoingTextMessageCell: BaseMessageCell {
   }
   
   override func setupViews() {
+    textView.delegate = self
     bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
@@ -53,5 +55,25 @@ class OutgoingTextMessageCell: BaseMessageCell {
   
   override func prepareViewsForReuse() {
      bubbleView.image = nil
+  }
+}
+
+extension OutgoingTextMessageCell: UITextViewDelegate {
+  
+  func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+    guard interaction != .preview else { return false }
+    var svc = SFSafariViewController(url: URL as URL)
+    
+    if #available(iOS 11.0, *) {
+      let configuration = SFSafariViewController.Configuration()
+      configuration.entersReaderIfAvailable = true
+      svc = SFSafariViewController(url: URL as URL, configuration: configuration)
+    }
+    
+    svc.preferredControlTintColor = FalconPalette.defaultBlue
+    svc.preferredBarTintColor = ThemeManager.currentTheme().generalBackgroundColor
+    chatLogController?.present(svc, animated: true, completion: nil)
+    
+    return false
   }
 }

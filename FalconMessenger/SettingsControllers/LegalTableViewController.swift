@@ -16,10 +16,8 @@ class LegalTableViewController: UITableViewController {
     "https://docs.google.com/document/d/19PQFh9LzXz1HO2Zq6U7ysCESIbGoodY6rBJbOeCyjkc/edit?usp=sharing", /*TERMS AND CONDITIONS*/
     "https://docs.google.com/document/d/12u1ZmTDV79NwcOqLXHnPVPFfmAHZzibEoJNKyWEKHME/edit?usp=sharing" /*OPEN SOURCE LIBRARIES*/]
   
-  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
     configureController()
   }
   
@@ -59,12 +57,19 @@ class LegalTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    guard let url = URL(string: legalData[indexPath.row]) else { return }
     
-    let svc = SFSafariViewController(url: URL(string: legalData[indexPath.row])!)
+    var svc = SFSafariViewController(url: url)
+    
     if #available(iOS 11.0, *) {
-      svc.configuration.entersReaderIfAvailable = true
+      let configuration = SFSafariViewController.Configuration()
+      configuration.entersReaderIfAvailable = true
+      svc = SFSafariViewController(url: url, configuration: configuration)
     }
-    self.present(svc, animated: true, completion: nil)
+    
+    svc.preferredControlTintColor = FalconPalette.defaultBlue
+    svc.preferredBarTintColor = ThemeManager.currentTheme().generalBackgroundColor
+    present(svc, animated: true, completion: nil)
     
     tableView.deselectRow(at: indexPath, animated: true)
   }
