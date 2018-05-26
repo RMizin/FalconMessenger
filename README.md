@@ -3,8 +3,7 @@
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitle.png" />
 </p> 
 
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://www.digitaldomain.com/wp-content/themes/digitaldomain_2017/assets/images/logo-appstore-dark.png"  height="150" alt="App Store" /></a>
-
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://perfectradiousa.files.wordpress.com/2016/09/itunes-app-store-logo.png"  height="150" alt="App Store" /></a>
 
 ## Features
 
