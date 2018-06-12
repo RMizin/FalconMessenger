@@ -1,23 +1,23 @@
 PODS:
   - CropViewController (2.3.6)
-  - Firebase/Auth (5.0.0):
+  - Firebase/Auth (5.1.0):
     - Firebase/CoreOnly
     - FirebaseAuth (= 5.0.0)
-  - Firebase/Core (5.0.0):
+  - Firebase/Core (5.1.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.0.0)
-  - Firebase/CoreOnly (5.0.0):
-    - FirebaseCore (= 5.0.0)
-  - Firebase/Database (5.0.0):
+    - FirebaseAnalytics (= 5.0.1)
+  - Firebase/CoreOnly (5.1.0):
+    - FirebaseCore (= 5.0.2)
+  - Firebase/Database (5.1.0):
     - Firebase/CoreOnly
-    - FirebaseDatabase (= 5.0.0)
-  - Firebase/Messaging (5.0.0):
+    - FirebaseDatabase (= 5.0.1)
+  - Firebase/Messaging (5.1.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (= 3.0.0)
-  - Firebase/Storage (5.0.0):
+    - FirebaseMessaging (= 3.0.1)
+  - Firebase/Storage (5.1.0):
     - Firebase/CoreOnly
     - FirebaseStorage (= 3.0.0)
-  - FirebaseAnalytics (5.0.0):
+  - FirebaseAnalytics (5.0.1):
     - FirebaseCore (~> 5.0)
     - FirebaseInstanceID (~> 3.0)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
@@ -25,14 +25,14 @@ PODS:
   - FirebaseAuth (5.0.0):
     - FirebaseCore (~> 5.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (5.0.0):
+  - FirebaseCore (5.0.2):
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
-  - FirebaseDatabase (5.0.0):
+  - FirebaseDatabase (5.0.1):
     - FirebaseCore (~> 5.0)
     - leveldb-library (~> 1.18)
   - FirebaseInstanceID (3.0.0):
     - FirebaseCore (~> 5.0)
-  - FirebaseMessaging (3.0.0):
+  - FirebaseMessaging (3.0.1):
     - FirebaseCore (~> 5.0)
     - FirebaseInstanceID (~> 3.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
@@ -61,9 +61,9 @@ PODS:
   - PhoneNumberKit/UIKit (2.1.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.5.0)
-  - SDWebImage (4.3.3):
-    - SDWebImage/Core (= 4.3.3)
-  - SDWebImage/Core (4.3.3)
+  - SDWebImage (4.4.0):
+    - SDWebImage/Core (= 4.4.0)
+  - SDWebImage/Core (4.4.0)
 
 DEPENDENCIES:
   - CropViewController
@@ -100,13 +100,13 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   CropViewController: e6d4bd512d15a1709e9ddf71fe7d98ffd05dda0f
-  Firebase: 4bd804448ab2596794698773d41520a0af101e65
-  FirebaseAnalytics: 19812b49fa5f283dd6b23edf8a14b5d477029ab8
+  Firebase: e08fb0795f35707aeb1d8a715c731c45bdf6fd56
+  FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseAuth: acbeef02fe7c3a26624e309849f3fe30c84115af
-  FirebaseCore: e46e4babb9de298fb2f736958edcc6da1dc60d73
-  FirebaseDatabase: 697eb53e5b4fe7cd4fa8756c1f82a9fca011345f
+  FirebaseCore: b81044df1044c0857a0737c6324678b72d4f7f00
+  FirebaseDatabase: 482bad9c2abd422bb2321194fb8c937e67426a89
   FirebaseInstanceID: 83e0040351565df711a5db3d8ebe5ea21aca998a
-  FirebaseMessaging: f2360a966ecfb0d14facf0fbdf306efc2df0ddbe
+  FirebaseMessaging: ec6fde5a77824c6da0218f9ca220feb251aa17d5
   FirebaseStorage: 7ca4bb7b58a25fa647b04f524033fc7cb7eb272b
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   FTPopOverMenu_Swift: 2a81f32d47a3197692f36cd957997c8cac76e646
@@ -116,8 +116,8 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
-  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
+  SDWebImage: b534502786e43dde36dfcaee89356fe6df30e203
 
-PODFILE CHECKSUM: 39a38f0f3250a723b7429f3ff15b7025fc1dbb6e
+PODFILE CHECKSUM: 75073a20c5fd17c2c48a7455b12347c110e7171c
 
 COCOAPODS: 1.5.0

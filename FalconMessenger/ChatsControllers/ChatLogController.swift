@@ -539,9 +539,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     super.viewDidLayoutSubviews()
 
     if #available(iOS 11.0, *) {
-      guard let collectionView = collectionView, !didLayoutFlag else {
-        return
-    }
+      guard let collectionView = collectionView, !didLayoutFlag else { return }
 
     if messages.count - 1 >= 0 {
       UIView.performWithoutAnimation {
@@ -605,7 +603,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       extendedLayoutIncludesOpaqueBars = true
       automaticallyAdjustsScrollViewInsets = false
       navigationItem.largeTitleDisplayMode = .never
-      
+
       collectionView?.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
       collectionView?.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
       collectionView?.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
@@ -615,6 +613,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       automaticallyAdjustsScrollViewInsets = true
       extendedLayoutIncludesOpaqueBars = true
     }
+    
     collectionView?.addSubview(refreshControl)
     collectionView?.register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
     collectionView?.register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)

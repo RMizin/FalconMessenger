@@ -136,19 +136,21 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-    if self.selectedMedia[indexPath.row].audioObject != nil {
-      let oldHeight = UIImage(named:"VoiceMemo")!.size.height
-      let scaleFactor = selectedMediaCollectionCellHeight / oldHeight
-      let newWidth = UIImage(named:"VoiceMemo")!.size.width * scaleFactor
-      let newHeight = oldHeight * scaleFactor
+    guard selectedMedia.indices.contains(indexPath.row) else { return CGSize(width: 0, height: 0) }
+    
+    guard selectedMedia[indexPath.row].audioObject != nil else {
+      let oldHeight = self.selectedMedia[indexPath.row].object?.asUIImage!.size.height
+      let scaleFactor = selectedMediaCollectionCellHeight / oldHeight!
+      let newWidth = self.selectedMedia[indexPath.row].object!.asUIImage!.size.width * scaleFactor
+      let newHeight = oldHeight! * scaleFactor
       
       return CGSize(width: newWidth , height: newHeight)
     }
-    
-    let oldHeight = self.selectedMedia[indexPath.row].object?.asUIImage!.size.height
-    let scaleFactor = selectedMediaCollectionCellHeight / oldHeight!
-    let newWidth = self.selectedMedia[indexPath.row].object!.asUIImage!.size.width * scaleFactor
-    let newHeight = oldHeight! * scaleFactor
+
+    let oldHeight = UIImage(named:"VoiceMemo")!.size.height
+    let scaleFactor = selectedMediaCollectionCellHeight / oldHeight
+    let newWidth = UIImage(named:"VoiceMemo")!.size.width * scaleFactor
+    let newHeight = oldHeight * scaleFactor
     
     return CGSize(width: newWidth , height: newHeight)
   }
