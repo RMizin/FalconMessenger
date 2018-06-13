@@ -52,6 +52,7 @@ class ContactsController: UITableViewController {
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      setUsersFromDefaults()
       falconUsersFetcher.delegate = self
       setupTableView()
       setupSearchController()
@@ -68,9 +69,20 @@ class ContactsController: UITableViewController {
       if shouldReFetchFalconUsers {
         shouldReFetchFalconUsers = false
         DispatchQueue.main.async {
-          self.falconUsersFetcher.fetchFalconUsers()
+          self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
         }
       }
+    }
+  
+   fileprivate func setUsersFromDefaults() {
+       if isUsersAlreadySaved() {
+         users = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "users") as! Data) as! [User]
+         filteredUsers = users
+       }
+    }
+  
+    fileprivate func isUsersAlreadySaved() -> Bool {
+      return UserDefaults.standard.object(forKey: "users") != nil
     }
   
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -169,8 +181,13 @@ class ContactsController: UITableViewController {
 
         let phoneNumbers = self.contacts.flatMap({$0.phoneNumbers.map({$0.value.stringValue.digits}) })
         localPhones.append(contentsOf: phoneNumbers)
-        
-        self.falconUsersFetcher.fetchFalconUsers()
+        if self.isUsersAlreadySaved() {
+          DispatchQueue.main.async { self.tableView.reloadData() }
+          self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
+        } else {
+          self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
+        }
+      
         self.sendUserContactsToDatabase()
       }
     }
@@ -394,7 +411,7 @@ class ContactsController: UITableViewController {
     }
 }
 
-extension ContactsController: FalconUsersUpdatesDelegate {
+extension ContactsController: FalconUsersUpdatesDelegate { 
   func falconUsers(shouldBeUpdatedTo users: [User]) {
     globalUsers = users
     self.reloadTableView(updatedUsers: users)

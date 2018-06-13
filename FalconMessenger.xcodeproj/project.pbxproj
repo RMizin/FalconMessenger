@@ -1191,6 +1191,9 @@
 							com.apple.Push = {
 								enabled = 1;
 							};
+							com.apple.Siri = {
+								enabled = 0;
+							};
 						};
 					};
 				};
@@ -1594,8 +1597,17 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FalconMessenger/Frameworks",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FalconMessenger/Frameworks/Realm",
+					"$(PROJECT_DIR)/FalconMessenger/Frameworks/RealmSwift",
+				);
 				MACH_O_TYPE = mh_execute;
 				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1623,9 +1635,18 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FalconMessenger/Frameworks",
+				);
 				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FalconMessenger/Frameworks/Realm",
+					"$(PROJECT_DIR)/FalconMessenger/Frameworks/RealmSwift",
+				);
 				MACH_O_TYPE = mh_execute;
 				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
 				PRODUCT_NAME = "$(TARGET_NAME)";

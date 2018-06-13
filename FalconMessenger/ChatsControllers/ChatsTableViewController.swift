@@ -141,8 +141,13 @@ class ChatsTableViewController: UITableViewController {
   @objc fileprivate func newChat() {
     let destination = SelectChatTableViewController()
     destination.hidesBottomBarWhenPushed = true
-    destination.users = globalUsers
-    destination.filteredUsers = globalUsers
+    if UserDefaults.standard.object(forKey: "users") != nil {
+      destination.users = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "users") as! Data) as! [User]
+    } else {
+      destination.users = globalUsers
+    }
+    destination.filteredUsers =  destination.users
+  
     navigationController?.pushViewController(destination, animated: true)
   }
   

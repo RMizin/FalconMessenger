@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0940"
+   LastUpgradeVersion = "1000"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -92,7 +92,7 @@
          <EnvironmentVariable
             key = "DYLD_PRINT_STATISTICS"
             value = "1"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
