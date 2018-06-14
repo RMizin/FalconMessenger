@@ -45,6 +45,8 @@ class ContactsController: UITableViewController {
   let viewControllerPlaceholder = ViewControllerPlaceholder()
   
   let falconUsersFetcher = FalconUsersFetcher()
+  
+  let navigationItemActivityIndicator = NavigationItemActivityIndicator()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,12 +54,11 @@ class ContactsController: UITableViewController {
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      setUsersFromDefaults()
+      checkContactsAuthorizationStatus()
       falconUsersFetcher.delegate = self
       setupTableView()
       setupSearchController()
       fetchContacts()
-      checkContactsAuthorizationStatus()
     }
   
     override func viewWillAppear(_ animated: Bool) {
@@ -69,7 +70,7 @@ class ContactsController: UITableViewController {
       if shouldReFetchFalconUsers {
         shouldReFetchFalconUsers = false
         DispatchQueue.main.async {
-          self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
+          self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
         }
       }
     }
@@ -103,6 +104,9 @@ class ContactsController: UITableViewController {
         tableView.backgroundColor = view.backgroundColor
         tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
         tableView.reloadData()
+        
+        navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
+        navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
       }
     }
   
@@ -155,6 +159,7 @@ class ContactsController: UITableViewController {
         viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
         
       case .authorized:
+        setUsersFromDefaults()
         viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
       }
     }
@@ -169,7 +174,7 @@ class ContactsController: UITableViewController {
         
         guard granted, error == nil else { return }
         
-          let keys = [CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey, CNContactImageDataKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey]
+        let keys = [CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey, CNContactImageDataKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey]
         let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
         
         do {
@@ -181,13 +186,13 @@ class ContactsController: UITableViewController {
 
         let phoneNumbers = self.contacts.flatMap({$0.phoneNumbers.map({$0.value.stringValue.digits}) })
         localPhones.append(contentsOf: phoneNumbers)
-        if self.isUsersAlreadySaved() {
-          DispatchQueue.main.async { self.tableView.reloadData() }
-          self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
-        } else {
-          self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
+
+        DispatchQueue.main.async {
+          self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
+          self.tableView.reloadData()
         }
-      
+        
+        self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
         self.sendUserContactsToDatabase()
       }
     }
@@ -415,6 +420,7 @@ extension ContactsController: FalconUsersUpdatesDelegate {
   func falconUsers(shouldBeUpdatedTo users: [User]) {
     globalUsers = users
     self.reloadTableView(updatedUsers: users)
+    navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .medium)
   }
 }
 

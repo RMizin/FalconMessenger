@@ -141,11 +141,11 @@ class ChatsTableViewController: UITableViewController {
   @objc fileprivate func newChat() {
     let destination = SelectChatTableViewController()
     destination.hidesBottomBarWhenPushed = true
-    if UserDefaults.standard.object(forKey: "users") != nil {
+    let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
+    if UserDefaults.standard.object(forKey: "users") != nil && isContactsAccessGranted {
       destination.users = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "users") as! Data) as! [User]
-    } else {
-      destination.users = globalUsers
     }
+    
     destination.filteredUsers =  destination.users
   
     navigationController?.pushViewController(destination, animated: true)
@@ -161,6 +161,8 @@ class ChatsTableViewController: UITableViewController {
       tableView.reloadData()
       shouldReloadChatsControllerAfterChangingTheme = false
       noChatsYetContainer.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
+      navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
     }
   }
   

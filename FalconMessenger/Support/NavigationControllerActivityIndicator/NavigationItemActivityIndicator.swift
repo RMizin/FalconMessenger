@@ -24,6 +24,7 @@ enum UINavigationItemMessage: String {
   case connecting = "Connecting..."
   case loadingFromCache = "Loading from cache..."
   case updatingCache = "Updating cache..."
+  case updatingUsers = "Updating Falcon Users..."
 }
 
 
@@ -32,14 +33,15 @@ class NavigationItemActivityIndicator: NSObject {
   
   var isActive = false
   var currentPriority:ActivityPriority = .low
+  let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
+  let titleLabel = UILabel()
   
   func showActivityIndicator(for navigationItem: UINavigationItem, with title: UINavigationItemMessage, activityPriority: ActivityPriority , color: UIColor) {
     guard currentPriority.rawValue <= activityPriority.rawValue else { return }
     currentPriority = activityPriority
     isActive = true
     
-    let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
-    let titleLabel = UILabel()
+    titleLabel.text = ""
     
     activityIndicatorView.frame = CGRect(x: 0, y: 0, width: 14, height: 14)
     activityIndicatorView.color = color

@@ -43,7 +43,7 @@ class SelectChatTableViewController: UITableViewController {
       setupTableView()
       setupSearchController()
       setupViewControllerPlaceholder()
-      checkContactsAuthorizationStatus()
+    //checkContactsAuthorizationStatus() 
   }
   
   deinit {
@@ -102,14 +102,16 @@ class SelectChatTableViewController: UITableViewController {
     }
   }
   
-  fileprivate func checkContactsAuthorizationStatus() {
+  func checkContactsAuthorizationStatus() -> Bool {
     let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
     
     switch contactsAuthorityCheck {
     case .denied, .notDetermined, .restricted:
       viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .center)
+      return false
     case .authorized:
       viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
+      return true
     }
   }
   
