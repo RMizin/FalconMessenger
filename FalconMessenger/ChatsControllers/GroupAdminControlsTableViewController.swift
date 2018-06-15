@@ -27,6 +27,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
   
   let informationMessageSender = InformationMessageSender()
   
+  fileprivate let falconContactsEncryptor = FalconContactsEncrypting()
+  
   var members = [User]()
   let fullAdminControlls = ["Add members", "Change administrator", "Leave the group"]
   let defaultAdminControlls = ["Leave the group"]
@@ -381,7 +383,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   func addMembers() {
-    let filteredMemebrs = globalUsers.filter { user in
+    let users = falconContactsEncryptor.setUsersDefaultsToDataSource()
+    let filteredMemebrs = users.filter { user in
       return !members.contains { member in
         user.id == member.id
       }

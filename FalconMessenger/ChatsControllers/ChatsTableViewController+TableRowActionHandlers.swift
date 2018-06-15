@@ -35,7 +35,7 @@ private let muteErrorTitle = "Error muting/unmuting"
 private let muteErrorMessage = "Check your internet connection and try again."
 
 extension ChatsTableViewController {
-  
+
   func unpinConversation(at indexPath: IndexPath) {
     let conversation = filteredPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
@@ -59,9 +59,16 @@ extension ChatsTableViewController {
     filteredPinnedConversations.remove(at: indexPath.row)
     pinnedConversations.remove(at: index)
     let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 1)
+    
+    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
 
     tableView.beginUpdates()
+    if #available(iOS 11.0, *) {
+    } else {
+      tableView.setEditing(false, animated: true)
+    }
     tableView.moveRow(at: indexPath, to: destinationIndexPath)
+   
     tableView.endUpdates()
     
     let metadataRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
@@ -97,9 +104,15 @@ extension ChatsTableViewController {
     filtededConversations.remove(at: indexPath.row)
     conversations.remove(at: index)
     let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 0)
+    
+    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
 
     tableView.beginUpdates()
     tableView.moveRow(at: indexPath, to: destinationIndexPath)
+    if #available(iOS 11.0, *) {
+    } else {
+      tableView.setEditing(false, animated: true)
+    }
     tableView.endUpdates()
 
     let metadataReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
@@ -131,6 +144,8 @@ extension ChatsTableViewController {
     tableView.deleteRows(at: [indexPath], with: .left)
     tableView.endUpdates()
     
+    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
+
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
     configureTabBarBadge()
@@ -155,6 +170,8 @@ extension ChatsTableViewController {
     tableView.deleteRows(at: [indexPath], with: .left)
     tableView.endUpdates()
     
+    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
+
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
    

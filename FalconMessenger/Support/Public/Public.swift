@@ -328,7 +328,7 @@ extension UITextField {
       return self.doneAccessory
     }
     set (hasDone) {
-      if hasDone{
+      if hasDone {
         addDoneButtonOnKeyboard()
       }
     }

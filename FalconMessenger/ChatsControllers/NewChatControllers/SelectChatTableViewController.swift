@@ -115,6 +115,12 @@ class SelectChatTableViewController: UITableViewController {
     }
   }
   
+  func checkNumberOfContacts() {
+    if self.users.count == 0 {
+      viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: "You don't have any Falcon Users yet.", subtitle: "", priority: .low, position: .center)
+    }
+  }
+  
   fileprivate func handleFalconContactsAbsence() {
     viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.emptyFalconUsersTitle, subtitle: viewControllerPlaceholder.emptyFalconUsersSubtitle, priority: .low, position: .center)
   }

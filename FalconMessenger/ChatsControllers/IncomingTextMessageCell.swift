@@ -83,6 +83,7 @@ class IncomingTextMessageCell: BaseMessageCell {
 extension IncomingTextMessageCell: UITextViewDelegate {
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
     guard interaction != .preview else { return false }
+    guard ["http", "https"].contains(URL.scheme?.lowercased() ?? "")  else { return true }
     var svc = SFSafariViewController(url: URL as URL)
     
     if #available(iOS 11.0, *) {

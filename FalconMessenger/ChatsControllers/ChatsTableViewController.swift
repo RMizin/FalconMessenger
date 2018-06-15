@@ -46,7 +46,7 @@ class ChatsTableViewController: UITableViewController {
   
   let userCellID = "userCellID"
   
-  fileprivate let group = DispatchGroup()
+  fileprivate var group: DispatchGroup!
   
   weak var delegate: ManageAppearance?
   
@@ -62,9 +62,9 @@ class ChatsTableViewController: UITableViewController {
   
   var filteredPinnedConversations = [Conversation]()
   
-  fileprivate var isAppLoaded = false
+  var isAppLoaded = false
   
-  fileprivate var isGroupAlreadyFinished = false
+  var isGroupAlreadyFinished = false
   
   fileprivate var userReference: DatabaseReference!
   
@@ -80,13 +80,16 @@ class ChatsTableViewController: UITableViewController {
 
   let typingIndicatorObsever = TypingIndicatorObserver()
   
+  let chatsEncryptor = ChatsEncrypting()
+  
+  let falconContactsEncryptor = FalconContactsEncrypting()
+  
 
   override func viewDidLoad() {
     super.viewDidLoad()
    
     configureTableView()
     setupSearchController()
-    managePresense()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -94,6 +97,7 @@ class ChatsTableViewController: UITableViewController {
     
     if !isAppLoaded {
       fetchConversations()
+      managePresense()
     }
     
     setUpColorsAccordingToTheme()
@@ -103,6 +107,55 @@ class ChatsTableViewController: UITableViewController {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     _ = appDelegate.contactsController.view
     _ = appDelegate.settingsController.view
+  }
+  
+  func cleanUpController() {
+    UserDefaults.standard.removeObject(forKey: "pndtmp") //cleaning temp data
+    UserDefaults.standard.removeObject(forKey: "untmp") //cleaning temp data
+    pinnedConversations.removeAll()
+    conversations.removeAll()
+    filtededConversations.removeAll()
+    filteredPinnedConversations.removeAll()
+    tableView.reloadData()
+    isAppLoaded = false
+    isGroupAlreadyFinished = false
+    shouldDisableUpdatingIndicator = true
+
+    if notificationReference != nil {
+      for handle in notificationHandle {
+        notificationReference.removeObserver(withHandle: handle)
+      }
+      notificationHandle.removeAll()
+    }
+    
+    if groupChatReference != nil {
+      for handle in groupConversationsChangesHandle {
+        groupChatReference = Database.database().reference().child("groupChats").child(handle.chatID).child(messageMetaDataFirebaseFolder)
+        groupChatReference.removeObserver(withHandle: handle.handle)
+      }
+      groupConversationsChangesHandle.removeAll()
+    }
+    
+    if userReference != nil {
+      for handle in conversationsChangesHandle {
+        userReference = Database.database().reference().child("users").child(handle.chatID)
+        userReference.removeObserver(withHandle: handle.handle)
+      }
+      conversationsChangesHandle.removeAll()
+    }
+    
+    if conversationReference != nil {
+      for handle in conversationReferenceHandle {
+        conversationReference = Database.database().reference().child("user-messages").child(handle.currentUserID).child(handle.chatID).child(messageMetaDataFirebaseFolder)
+        conversationReference.removeObserver(withHandle: handle.handle)
+      }
+      conversationReferenceHandle.removeAll()
+    }
+    
+    if currentUserConversationsReference != nil {
+      currentUserConversationsReference.removeObserver(withHandle: currentUserConversationsAddingHandle)
+      currentUserConversationsReference.removeObserver(withHandle: currentUserConversationsRemovingHandle)
+    }
   }
   
   override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -136,18 +189,27 @@ class ChatsTableViewController: UITableViewController {
     tableView.separatorStyle = .none
     definesPresentationContext = true
     typingIndicatorObsever.delegate = self
+    setConversationsDefaultsToDataSource()
+  }
+  
+  fileprivate func setConversationsDefaultsToDataSource() {
+    let defaultPinnedCovnersation = chatsEncryptor.setPinnedConversationsDefaultsToDataSource()
+    let defaultUnpinnedCovnersation = chatsEncryptor.setUnpinnedConversationsDefaultsToDataSource()
+    self.pinnedConversations = defaultPinnedCovnersation
+    self.filteredPinnedConversations = defaultPinnedCovnersation
+    self.conversations = defaultUnpinnedCovnersation
+    self.filtededConversations = defaultUnpinnedCovnersation
   }
   
   @objc fileprivate func newChat() {
     let destination = SelectChatTableViewController()
     destination.hidesBottomBarWhenPushed = true
     let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
-    if UserDefaults.standard.object(forKey: "users") != nil && isContactsAccessGranted {
-      destination.users = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "users") as! Data) as! [User]
+    if isContactsAccessGranted {
+      destination.users = falconContactsEncryptor.setUsersDefaultsToDataSource()
+      destination.filteredUsers = destination.users
+      destination.checkNumberOfContacts()
     }
-    
-    destination.filteredUsers =  destination.users
-  
     navigationController?.pushViewController(destination, animated: true)
   }
   
@@ -259,7 +321,9 @@ class ChatsTableViewController: UITableViewController {
     }
   }
   
- fileprivate var shouldDisableUpdatingIndicator = true
+  var shouldDisableUpdatingIndicator = true
+ var currentUserConversationsRemovingHandle = DatabaseHandle()
+ var currentUserConversationsAddingHandle = DatabaseHandle()
 
  fileprivate func fetchConversations() {
   
@@ -267,11 +331,11 @@ class ChatsTableViewController: UITableViewController {
     if !isAppLoaded {
       navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .updating, activityPriority: .mediumHigh, color: ThemeManager.currentTheme().generalTitleColor)
     }
-  
+
     currentUserConversationsReference = Database.database().reference().child("user-messages").child(currentUserID)
     currentUserConversationsReference.observeSingleEvent(of: .value) { (snapshot) in
-      
-      for _ in 0 ..< snapshot.childrenCount { self.group.enter() }
+     self.group = DispatchGroup()
+      for _ in 0 ..< snapshot.childrenCount { print(snapshot.childrenCount); self.group.enter() }
       
       self.group.notify(queue: DispatchQueue.main, execute: {
         self.handleReloadTable()
@@ -294,7 +358,7 @@ class ChatsTableViewController: UITableViewController {
       }
     }
   
-    currentUserConversationsReference.observe(.childRemoved) { (snapshot) in
+    currentUserConversationsRemovingHandle = currentUserConversationsReference.observe(.childRemoved) { (snapshot) in
       let chatID = snapshot.key
       if self.userReference != nil {
         guard let index = self.conversationsChangesHandle.index(where: { (element) -> Bool in
@@ -318,8 +382,8 @@ class ChatsTableViewController: UITableViewController {
       
       self.typingIndicatorObsever.removeTypingIndicator(for: chatID)
     }
-  
-    currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
+
+    currentUserConversationsAddingHandle = currentUserConversationsReference.observe(.childAdded, with: { (snapshot) in
       let chatID = snapshot.key
     
       self.observeChangesForDefaultConversation(with: chatID)
@@ -334,11 +398,16 @@ class ChatsTableViewController: UITableViewController {
     })
   }
   
+  var conversationReferenceHandle = [(handle: DatabaseHandle, currentUserID: String, chatID: String)]()
+  
   func performInitialConversationsLoad(currentUserID: String, chatID: String) {
     
     conversationReference = Database.database().reference().child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
-    
-    conversationReference.observe( .value, with: { (snapshot) in
+    let handle = DatabaseHandle()
+    let element = (handle: handle, currentUserID: currentUserID, chatID: chatID)
+    conversationReferenceHandle.insert(element, at: 0)
+    conversationReference.keepSynced(true)
+    conversationReferenceHandle[0].handle = conversationReference.observe( .value, with: { (snapshot) in
       
       guard var dictionary = snapshot.value as? [String: AnyObject], snapshot.exists() else { return }
       dictionary.updateValue(chatID as AnyObject, forKey: "chatID")
@@ -435,22 +504,20 @@ class ChatsTableViewController: UITableViewController {
         array[index].pinned = conversation.pinned
         
         if isPinned {
-          pinnedConversations[index].pinned = conversation.pinned
+           pinnedConversations[index] = conversation
           
           guard let filteredIndex = filteredPinnedConversations.index(where: { (conv) -> Bool in
             return conv.chatID == pinnedConversations[index].chatID
           }) else { return }
-          
-          filteredPinnedConversations[filteredIndex].pinned = conversation.pinned
-          
+          filteredPinnedConversations[filteredIndex] = conversation
         } else {
-          conversations[index].pinned = conversation.pinned
+          conversations[index] = conversation
           
           guard let filteredIndex = filtededConversations.index(where: { (conv) -> Bool in
             return conv.chatID == conversations[index].chatID
           }) else { return }
           
-          filtededConversations[filteredIndex].pinned = conversation.pinned
+          filtededConversations[filteredIndex] = conversation
         }
     
         print("\npinned changed\n")
@@ -464,24 +531,23 @@ class ChatsTableViewController: UITableViewController {
         var section = 0
         
         if isPinned {
-       
-          pinnedConversations[index].muted = conversation.muted
+          pinnedConversations[index] = conversation
           
           guard let filteredIndex = filteredPinnedConversations.index(where: { (conv) -> Bool in
             return conv.chatID == pinnedConversations[index].chatID
           }) else { return }
           
-          filteredPinnedConversations[filteredIndex].muted = conversation.muted
+          filteredPinnedConversations[filteredIndex] = conversation
           
         } else {
           section = 1
-          conversations[index].muted = conversation.muted
+          conversations[index] = conversation
           
           guard let filteredIndex = filtededConversations.index(where: { (conv) -> Bool in
             return conv.chatID == conversations[index].chatID
           }) else { return }
           
-          filtededConversations[filteredIndex].muted = conversation.muted
+          filtededConversations[filteredIndex] = conversation
         }
         
         print("\nmuted changed\n")
@@ -491,45 +557,23 @@ class ChatsTableViewController: UITableViewController {
       }
 
       if array[index].badge != conversation.badge {
-        array[index].badge = conversation.badge
-
-        var section = 0
-        
-        if isPinned {
-          pinnedConversations[index].badge = conversation.badge
-          
-          guard let filteredIndex = filteredPinnedConversations.index(where: { (conv) -> Bool in
-            return conv.chatID == pinnedConversations[index].chatID
-          }) else { return }
-          
-          filteredPinnedConversations[filteredIndex].badge = conversation.badge
-          
-        } else {
-          section = 1
-          conversations[index].badge = conversation.badge
-          
-          guard let filteredIndex = filtededConversations.index(where: { (conv) -> Bool in
-            return conv.chatID == conversations[index].chatID
-          }) else { return }
-          
-          filtededConversations[filteredIndex].badge = conversation.badge
-        }
-        
         print("\n badge changed\n")
-        configureTabBarBadge()
-        reloadCellAfterUpdate(indexPath: IndexPath(row: index, section: section))
+       
+        fullReloadOfTableView(index: index, isPinned: isPinned, conversation: conversation)
         navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .lowMedium)
         return
       }
     }
-    
-    print("went to reload table")
+
+    fullReloadOfTableView(index: index, isPinned: isPinned, conversation: conversation)
+  }
+  
+  fileprivate func fullReloadOfTableView(index: Int, isPinned: Bool, conversation: Conversation) {
     if isPinned {
       pinnedConversations[index] = conversation
     } else {
       conversations[index] = conversation
     }
-  
     handleGroupOrReloadTable()
   }
   
@@ -629,6 +673,8 @@ class ChatsTableViewController: UITableViewController {
   func reloadCellAfterUpdate(indexPath: IndexPath) {
     tableView.beginUpdates()
     tableView.reloadRows(at: [indexPath], with: .none)
+   // updateDefaultsForConversations() // NSUserDefaults
+    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
     tableView.endUpdates()
   }
 
@@ -664,23 +710,47 @@ class ChatsTableViewController: UITableViewController {
     if isGroupAlreadyFinished {
       handleReloadTable()
     } else {
+      guard group != nil else {
+       errorHndl()
+        return
+      }
       group.leave()
+      print("leaving group")
     }
+  }
+  
+  func errorHndl() {
+    self.handleReloadTable()
+    if !isGroupAlreadyFinished {
+      self.isGroupAlreadyFinished = true
+      self.observersForNotifications()
+      self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
+      self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updating, activityPriority: .lowMedium, color: ThemeManager.currentTheme().generalTitleColor)
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+        if self.shouldDisableUpdatingIndicator {
+          self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
+        }
+      }
+    }
+    
   }
   
   func handleReloadTable() {
     
     conversations.sort { (conversation1, conversation2) -> Bool in
-      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+      return conversation1.lastMessage?.timestamp?.int64Value > conversation2.lastMessage?.timestamp?.int64Value
     }
     
     pinnedConversations.sort { (conversation1, conversation2) -> Bool in
-      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+      return conversation1.lastMessage?.timestamp?.int64Value > conversation2.lastMessage?.timestamp?.int64Value
     }
     
     filteredPinnedConversations = pinnedConversations
     filtededConversations = conversations
     
+    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
+
     if !isAppLoaded {
    
       UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: { (_) in
@@ -709,6 +779,7 @@ class ChatsTableViewController: UITableViewController {
       configureTabBarBadge()
     } else {
       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
+      configureTabBarBadge()
       self.tableView.reloadData()
     }
     
@@ -728,7 +799,7 @@ class ChatsTableViewController: UITableViewController {
   
   func handleReloadTableAfterSearch() {
     filtededConversations.sort { (conversation1, conversation2) -> Bool in
-      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+      return conversation1.lastMessage?.timestamp?.int64Value > conversation2.lastMessage?.timestamp?.int64Value
     }
     tableView.reloadData()
   }
@@ -759,7 +830,6 @@ class ChatsTableViewController: UITableViewController {
       return 8
     }
   }
-  
   
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
     if section == 0 {
@@ -952,7 +1022,7 @@ extension ChatsTableViewController: MessagesDelegate {
     } else {
       self.chatLogController?.startCollectionViewAtBottom()
     }
-   
+    
     self.visibleNavigationController()?.pushViewController(destination, animated: true)
     chatLogController = nil
     destinationLayout = nil

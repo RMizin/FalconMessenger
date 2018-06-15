@@ -30,23 +30,23 @@ class User: NSObject, NSCoding {
   }
   
   func encode(with aCoder: NSCoder) {
-    aCoder.encode(self.id, forKey: "id")
-    aCoder.encode(self.name, forKey: "name")
-    aCoder.encode(self.bio, forKey: "bio")
-    aCoder.encode(self.photoURL, forKey: "photoURL")
-    aCoder.encode(self.thumbnailPhotoURL, forKey: "thumbnailPhotoURL")
-    aCoder.encode(self.phoneNumber, forKey: "phoneNumber")
-    aCoder.encode(self.onlineStatus, forKey: "OnlineStatus")
+    aCoder.encode(id, forKey: "id")
+    aCoder.encode(name, forKey: "name")
+    aCoder.encode(bio, forKey: "bio")
+    aCoder.encode(photoURL, forKey: "photoURL")
+    aCoder.encode(thumbnailPhotoURL, forKey: "thumbnailPhotoURL")
+    aCoder.encode(phoneNumber, forKey: "phoneNumber")
+    aCoder.encode(onlineStatus, forKey: "OnlineStatus")
   }
   
   required init?(coder aDecoder: NSCoder) {
-    self.id = aDecoder.decodeObject(forKey: "id") as? String
-    self.name = aDecoder.decodeObject(forKey: "name") as? String
-    self.bio = aDecoder.decodeObject(forKey: "bio") as? String
-    self.photoURL =  aDecoder.decodeObject(forKey: "photoURL") as? String
-    self.thumbnailPhotoURL = aDecoder.decodeObject(forKey: "thumbnailPhotoURL") as? String
-    self.phoneNumber = aDecoder.decodeObject(forKey: "phoneNumber") as? String
-    self.onlineStatus = aDecoder.decodeObject(forKey: "OnlineStatus") as AnyObject
+    id = aDecoder.decodeObject(forKey: "id") as? String
+    name = aDecoder.decodeObject(forKey: "name") as? String
+    bio = aDecoder.decodeObject(forKey: "bio") as? String
+    photoURL =  aDecoder.decodeObject(forKey: "photoURL") as? String
+    thumbnailPhotoURL = aDecoder.decodeObject(forKey: "thumbnailPhotoURL") as? String
+    phoneNumber = aDecoder.decodeObject(forKey: "phoneNumber") as? String
+    onlineStatus = aDecoder.decodeObject(forKey: "OnlineStatus") as AnyObject
   }
 }
 

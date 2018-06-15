@@ -72,10 +72,13 @@ class MessagesFetcher: NSObject {
     newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
     observeManualRemoving(currentUserID: currentUserID, conversationID: conversationID)
     
-    
     loadingMessagesGroup.notify(queue: .main, execute: {
       guard self.messages.count != 0 else {
-         self.isInitialChatMessagesLoad = false
+      
+        if self.isInitialChatMessagesLoad {
+          self.messages = self.sortedMessages(unsortedMessages: self.messages)
+        }
+        self.isInitialChatMessagesLoad = false
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
         return
       }
@@ -83,8 +86,10 @@ class MessagesFetcher: NSObject {
       self.loadingNamesGroup.enter()
       self.newLoadUserames()
       self.loadingNamesGroup.notify(queue: .main, execute: {
-      //  self.messages = self.sortedMessages(unsortedMessages: self.messages)
-        self.messages = self.configureMessageTails(messages:  self.messages, isGroupChat: isGroupChat)
+        if self.isInitialChatMessagesLoad {
+          self.messages = self.sortedMessages(unsortedMessages: self.messages)
+        }
+        self.messages = self.configureMessageTails(messages: self.messages, isGroupChat: isGroupChat)
         self.isInitialChatMessagesLoad = false
         self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
@@ -192,12 +197,12 @@ class MessagesFetcher: NSObject {
     }
   }
   
-//  func sortedMessages(unsortedMessages: [Message]) -> [Message] {
-//    let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
-//      return message1.timestamp!.int32Value < message2.timestamp!.int32Value
-//    })
-//    return sortedMessages
-//  }
+  func sortedMessages(unsortedMessages: [Message]) -> [Message] {
+    let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
+      return message1.timestamp!.int64Value < message2.timestamp!.int64Value
+    })
+    return sortedMessages
+  }
   
   func configureMessageTails(messages: [Message], isGroupChat: Bool) -> [Message] {
     var messages = messages

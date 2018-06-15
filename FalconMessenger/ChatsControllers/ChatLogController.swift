@@ -85,6 +85,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
   
   var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
+  
+  fileprivate let falconContactsEncryptor = FalconContactsEncrypting()
 
   
   func scrollToBottom(at position: UICollectionViewScrollPosition) {
@@ -679,10 +681,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
   
-    guard let index = globalUsers.index(where: { (user) -> Bool in
+    let users = falconContactsEncryptor.setUsersDefaultsToDataSource()
+    guard let index = users.index(where: { (user) -> Bool in
       return user.id == conversation?.chatID
     }) else { return }
-    let status = globalUsers[index].onlineStatus as AnyObject// else { return }
+    let status = users[index].onlineStatus as AnyObject// else { return }
     onlineStatusInString = manageNavigationItemTitle(onlineStatusObject:  status)
   }
   

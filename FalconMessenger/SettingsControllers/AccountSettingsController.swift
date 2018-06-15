@@ -204,6 +204,12 @@ class AccountSettingsController: UITableViewController {
     let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
     userReference.removeValue { (error, reference) in
       
+      let appDelegate = UIApplication.shared.delegate as! AppDelegate
+      appDelegate.chatsController.cleanUpController()
+      appDelegate.contactsController.cleanUpController()
+
+      Database.database().reference(withPath: ".info/connected").removeAllObservers()
+      
       if error != nil {
         ARSLineProgress.hide()
         basicErrorAlertWith(title: "Error signing out", message: "Try again later", controller: self)

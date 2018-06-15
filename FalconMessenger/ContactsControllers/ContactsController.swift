@@ -16,7 +16,6 @@ public var shouldReloadContactsControllerAfterChangingTheme = false
 
 var localPhones = [String]()
 
-var globalUsers = [User]()
 
 class ContactsController: UITableViewController {
   
@@ -29,8 +28,6 @@ class ContactsController: UITableViewController {
   var users = [User]()
   
   var filteredUsers = [User]()
-  
- // let contactsCellID = "contactsCellID"
   
   let falconUsersCellID = "falconUsersCellID"
   
@@ -69,21 +66,10 @@ class ContactsController: UITableViewController {
       
       if shouldReFetchFalconUsers {
         shouldReFetchFalconUsers = false
-        DispatchQueue.main.async {
+        DispatchQueue.global(qos: .background).async {
           self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
         }
       }
-    }
-  
-   fileprivate func setUsersFromDefaults() {
-       if isUsersAlreadySaved() {
-         users = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "users") as! Data) as! [User]
-         filteredUsers = users
-       }
-    }
-  
-    fileprivate func isUsersAlreadySaved() -> Bool {
-      return UserDefaults.standard.object(forKey: "users") != nil
     }
   
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -94,6 +80,14 @@ class ContactsController: UITableViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
       return ThemeManager.currentTheme().statusBarStyle
     }
+  
+  func cleanUpController() {
+    UserDefaults.standard.removeObject(forKey: "ewtmp") //cleaning temp data
+    filteredUsers.removeAll()
+    users.removeAll()
+    tableView.reloadData()
+    shouldReFetchFalconUsers = true
+  }
   
   
     fileprivate func setUpColorsAccordingToTheme() {
@@ -159,7 +153,9 @@ class ContactsController: UITableViewController {
         viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
         
       case .authorized:
-        setUsersFromDefaults()
+        let defaultDataSouce = falconUsersFetcher.falconContactsEncryptor.setUsersDefaultsToDataSource()
+        users = defaultDataSouce
+        filteredUsers = defaultDataSouce
         viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
       }
     }
@@ -230,11 +226,11 @@ class ContactsController: UITableViewController {
     }
   
     fileprivate func correctSearchBarForCurrentIOSVersion() -> UISearchBar {
-      var searchBar: UISearchBar!
+      var searchBar = UISearchBar()
       if #available(iOS 11.0, *) {
-        searchBar = searchContactsController?.searchBar
+        searchBar = searchContactsController?.searchBar ?? searchBar
       } else {
-        searchBar = self.searchBar
+        searchBar = self.searchBar ?? searchBar
       }
       return searchBar
     }
@@ -418,7 +414,6 @@ class ContactsController: UITableViewController {
 
 extension ContactsController: FalconUsersUpdatesDelegate { 
   func falconUsers(shouldBeUpdatedTo users: [User]) {
-    globalUsers = users
     self.reloadTableView(updatedUsers: users)
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .medium)
   }
