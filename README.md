@@ -75,8 +75,6 @@ Follow these simple steps:
 		    ".write": "auth != null",
 
 		    "users": {
-		      ".read": true,
-		      ".write": "auth != null",
 		      ".indexOn": "phoneNumber"
 		    }
 		  }   
