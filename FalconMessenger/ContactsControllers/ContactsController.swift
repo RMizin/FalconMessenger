@@ -53,7 +53,7 @@ class ContactsController: UITableViewController {
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
      
       setupViewControllerPlaceholder()
-   //   configureDefaultDataSouce()
+      configureDefaultDataSouce()
       falconUsersFetcher.delegate = self
       setupTableView()
       setupSearchController()
