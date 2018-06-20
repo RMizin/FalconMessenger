@@ -31,18 +31,15 @@ class FalconUsersFetcher: NSObject {
   fileprivate var isGroupFinished = false
 
   fileprivate func clearObserversAndUsersIfNeeded() {
-    self.users.removeAll()
-    if userReference != nil {
-      for handle in userHandle {
-        userReference.removeObserver(withHandle: handle)
-      }
+    users.removeAll()
+    guard userReference != nil else { return }
+    for handle in userHandle {
+      userReference.removeObserver(withHandle: handle)
     }
   }
   
   func fetchFalconUsers(asynchronously: Bool) {
-    
     clearObserversAndUsersIfNeeded()
-    
     if asynchronously {
       fetchAsynchronously()
     } else {
@@ -63,7 +60,7 @@ class FalconUsersFetcher: NSObject {
       } catch {}
     }
     
-    group.notify(queue: DispatchQueue.main, execute: {
+    group.notify(queue: .main, execute: {
       self.isGroupFinished = true
       self.sortAndRearrangeUsers()
       self.falconContactsEncryptor.updateDefaultsForUsers(for: self.users)
@@ -90,60 +87,56 @@ class FalconUsersFetcher: NSObject {
   }
   
   fileprivate func fetchAndObserveFalconUser(for preparedNumber: String, asynchronously: Bool) {
-      DispatchQueue.global(qos: .background).async {
-
-        self.userReference = Database.database().reference().child("users")
-        self.userQuery = self.userReference.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber)
-        let databaseHandle = DatabaseHandle()
-        self.userHandle.insert(databaseHandle, at: 0)
-     
-        self.userHandle[0] = self.userQuery.observe(.value, with: { (snapshot) in
+      userReference = Database.database().reference().child("users")
+      userQuery = userReference.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber)
+      let databaseHandle = DatabaseHandle()
+      userHandle.insert(databaseHandle, at: 0)
+   
+      userHandle[0] = userQuery.observe(.value, with: { (snapshot) in
+    
+      guard snapshot.exists(), let userData = (snapshot.value as? [String: AnyObject])?.first,
+        let currentUserID = Auth.auth().currentUser?.uid else { self.leaveGroupIfNeeded(asynchronously); return }
       
-        guard snapshot.exists(), let userData = (snapshot.value as? [String: AnyObject])?.first,
-          let currentUserID = Auth.auth().currentUser?.uid else { self.leaveGroupIfNeeded(asynchronously); return }
-        
-        let userID = userData.key
-        guard var userDictionary = userData.value as? [String: AnyObject], userID != currentUserID else { self.leaveGroupIfNeeded(asynchronously); return }
-        userDictionary.updateValue(userID as AnyObject, forKey: "id")
-        let fetchedUser = User(dictionary: userDictionary)
+      let userID = userData.key
+      guard var userDictionary = userData.value as? [String: AnyObject], userID != currentUserID else { self.leaveGroupIfNeeded(asynchronously); return }
+      userDictionary.updateValue(userID as AnyObject, forKey: "id")
+      let fetchedUser = User(dictionary: userDictionary)
 
-        if let index = self.users.index(where: { (user) -> Bool in
-          return user.id == fetchedUser.id
-        }) {
-          self.users[index] = fetchedUser
-        } else {
-          self.users.append(fetchedUser)
-        }
-        
-        if asynchronously {
-          self.sortAndRearrangeUsers()
-          self.falconContactsEncryptor.updateDefaultsForUsers(for: self.users)
-          self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
-        }
-        
-        if !asynchronously && self.isGroupFinished == false {
-          self.group.leave()
-        } else if !asynchronously && self.isGroupFinished == true {
-          self.sortAndRearrangeUsers()
-          self.falconContactsEncryptor.updateDefaultsForUsers(for: self.users)
-          self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
-        }
-        
-      })  { (error) in
-        print("query error", error.localizedDescription)
+      if let index = self.users.index(where: { (user) -> Bool in
+        return user.id == fetchedUser.id
+      }) {
+        self.users[index] = fetchedUser
+      } else {
+        self.users.append(fetchedUser)
       }
+      
+      if asynchronously {
+        self.sortAndRearrangeUsers()
+        self.falconContactsEncryptor.updateDefaultsForUsers(for: self.users)
+        self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
+      }
+      
+      if !asynchronously && self.isGroupFinished == false {
+        self.group.leave()
+      } else if !asynchronously && self.isGroupFinished == true {
+        self.sortAndRearrangeUsers()
+        self.falconContactsEncryptor.updateDefaultsForUsers(for: self.users)
+        self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
+      }
+    })  { (error) in
+      print("query error", error.localizedDescription)
     }
   }
   
   fileprivate func leaveGroupIfNeeded(_ asynchronously: Bool) {
-    if !asynchronously && self.isGroupFinished == false {
-      self.group.leave()
+    if !asynchronously && isGroupFinished == false {
+      group.leave()
     }
   }
   
   fileprivate func sortAndRearrangeUsers () {
-    self.users = self.sortUsers(users: self.users)
-    self.users = self.rearrangeUsers(users: self.users)
+    users = sortUsers(users: users)
+    users = rearrangeUsers(users: users)
   }
   
   func rearrangeUsers(users: [User]) -> [User] { /* Moves Online users to the top  */

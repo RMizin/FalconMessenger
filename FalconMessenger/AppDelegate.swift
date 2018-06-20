@@ -93,9 +93,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     let chatsImage = UIImage(named:"chat")
     let settingsImage = UIImage(named:"settings")
 
-    let contactsTabItem = UITabBarItem(title: contactsController.title, image: contactsImage, selectedImage: UIImage(named:""))
-    let chatsTabItem = UITabBarItem(title: chatsController.title, image: chatsImage, selectedImage: UIImage(named:""))
-    let settingsTabItem = UITabBarItem(title: settingsController.title, image: settingsImage, selectedImage: UIImage(named:""))
+    let contactsTabItem = UITabBarItem(title: contactsController.title, image: contactsImage, selectedImage: nil)
+    let chatsTabItem = UITabBarItem(title: chatsController.title, image: chatsImage, selectedImage: nil)
+    let settingsTabItem = UITabBarItem(title: settingsController.title, image: settingsImage, selectedImage: nil)
 
     contactsController.tabBarItem = contactsTabItem
     chatsController.tabBarItem = chatsTabItem

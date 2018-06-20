@@ -92,7 +92,10 @@ class ViewControllerPlaceholder: UIView {
     guard priority.rawValue >= placeholderPriority.rawValue else { return }
     for subview in view.subviews {
       if subview is ViewControllerPlaceholder {
-        subview.removeFromSuperview()
+        DispatchQueue.main.async {
+          subview.removeFromSuperview()
+        }
+       
       }
     }
   }

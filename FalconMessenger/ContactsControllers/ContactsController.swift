@@ -51,17 +51,20 @@ class ContactsController: UITableViewController {
       extendedLayoutIncludesOpaqueBars = true
       edgesForExtendedLayout = UIRectEdge.top
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      checkContactsAuthorizationStatus()
+     
+      setupViewControllerPlaceholder()
+   //   configureDefaultDataSouce()
       falconUsersFetcher.delegate = self
       setupTableView()
       setupSearchController()
-      fetchContacts()
+      DispatchQueue.global(qos: .background).async {
+        self.fetchContacts()
+      }
     }
   
     override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
       
-      checkContactsAuthorizationStatus()
       setUpColorsAccordingToTheme()
       
       if shouldReFetchFalconUsers {
@@ -81,13 +84,13 @@ class ContactsController: UITableViewController {
       return ThemeManager.currentTheme().statusBarStyle
     }
   
-  func cleanUpController() {
-    UserDefaults.standard.removeObject(forKey: "ewtmp") //cleaning temp data
-    filteredUsers.removeAll()
-    users.removeAll()
-    tableView.reloadData()
-    shouldReFetchFalconUsers = true
-  }
+    func cleanUpController() {
+      UserDefaults.standard.removeObject(forKey: "ewtmp") //cleaning temp data
+      filteredUsers.removeAll()
+      users.removeAll()
+      tableView.reloadData()
+      shouldReFetchFalconUsers = true
+    }
   
   
     fileprivate func setUpColorsAccordingToTheme() {
@@ -144,31 +147,42 @@ class ContactsController: UITableViewController {
       }
     }
   
-    fileprivate func checkContactsAuthorizationStatus() {
-      setupViewControllerPlaceholder()
+    fileprivate func configureDefaultDataSouce() {
       let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: .contacts)
-      
       switch contactsAuthorityCheck {
-      case .denied, .notDetermined, .restricted:
-        viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
-        
       case .authorized:
         let defaultDataSouce = falconUsersFetcher.falconContactsEncryptor.setUsersDefaultsToDataSource()
         users = defaultDataSouce
         filteredUsers = defaultDataSouce
-        viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
+        break
+      default: break
       }
     }
+//    fileprivate func checkContactsAuthorizationStatus() {
+//
+//    }
+  
+  fileprivate func addControllerPlaceholder() {
+     viewControllerPlaceholder.addViewControllerPlaceholder(for: view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
+  }
 
     fileprivate func fetchContacts () {
       
       let status = CNContactStore.authorizationStatus(for: .contacts)
       let store = CNContactStore()
-      if status == .denied || status == .restricted { return }
+      if status == .denied || status == .restricted {
+        self.addControllerPlaceholder()
+        return
+      }
     
       store.requestAccess(for: .contacts) { granted, error in
         
-        guard granted, error == nil else { return }
+        guard granted, error == nil else {
+          self.addControllerPlaceholder()
+          return
+        }
+        
+        self.viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
         
         let keys = [CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey, CNContactImageDataKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey]
         let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
@@ -187,8 +201,10 @@ class ContactsController: UITableViewController {
           self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
           self.tableView.reloadData()
         }
-        
+       // DispatchQueue.global(qos: .background).async {
         self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
+       // }
+       
         self.sendUserContactsToDatabase()
       }
     }
@@ -201,8 +217,8 @@ class ContactsController: UITableViewController {
 
       for number in localPhones {
         do {
-          let countryCode = try self.phoneNumberKit.parse(number).countryCode
-          let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
+          let countryCode = try phoneNumberKit.parse(number).countryCode
+          let nationalNumber = try phoneNumberKit.parse(number).nationalNumber
           preparedNumbers.append( ("+" + String(countryCode) + String(nationalNumber)) )
         } catch {}
       }
@@ -414,7 +430,7 @@ class ContactsController: UITableViewController {
 
 extension ContactsController: FalconUsersUpdatesDelegate { 
   func falconUsers(shouldBeUpdatedTo users: [User]) {
-    self.reloadTableView(updatedUsers: users)
+    reloadTableView(updatedUsers: users)
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .medium)
   }
 }
@@ -446,7 +462,7 @@ extension ContactsController: MessagesDelegate {
     
     if #available(iOS 11.0, *) {
     } else {
-      self.chatLogController?.startCollectionViewAtBottom()
+      chatLogController?.startCollectionViewAtBottom()
     }
     
     navigationController?.pushViewController(destination, animated: true)

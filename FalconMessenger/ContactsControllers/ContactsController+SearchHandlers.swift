@@ -66,7 +66,6 @@ extension ContactsController { /* hiding keyboard */
     }
   }
   
-  
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     
     if #available(iOS 11.0, *) {
