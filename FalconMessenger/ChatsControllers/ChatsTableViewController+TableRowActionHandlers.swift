@@ -60,8 +60,6 @@ extension ChatsTableViewController {
     pinnedConversations.remove(at: index)
     let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 1)
     
-    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
-
     tableView.beginUpdates()
     if #available(iOS 11.0, *) {
     } else {
@@ -104,8 +102,6 @@ extension ChatsTableViewController {
     filtededConversations.remove(at: indexPath.row)
     conversations.remove(at: index)
     let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 0)
-    
-    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
 
     tableView.beginUpdates()
     tableView.moveRow(at: indexPath, to: destinationIndexPath)
@@ -143,8 +139,6 @@ extension ChatsTableViewController {
     pinnedConversations.remove(at: index)
     tableView.deleteRows(at: [indexPath], with: .left)
     tableView.endUpdates()
-    
-    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
 
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
@@ -170,8 +164,6 @@ extension ChatsTableViewController {
     tableView.deleteRows(at: [indexPath], with: .left)
     tableView.endUpdates()
     
-    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
-
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
    

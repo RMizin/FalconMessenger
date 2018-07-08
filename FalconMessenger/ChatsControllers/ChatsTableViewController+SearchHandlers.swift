@@ -68,7 +68,7 @@ extension ChatsTableViewController { /* hiding keyboard */
   }
   
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    UIApplication.shared.statusBarStyle = ThemeManager.currentTheme().statusBarStyle //fix
+    setNeedsStatusBarAppearanceUpdate()
     if #available(iOS 11.0, *) {
       searchChatsController?.searchBar.endEditing(true)
     } else {

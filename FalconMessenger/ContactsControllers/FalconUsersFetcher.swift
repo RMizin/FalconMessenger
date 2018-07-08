@@ -20,7 +20,6 @@ public var shouldReFetchFalconUsers: Bool = false
 class FalconUsersFetcher: NSObject {
   
   let phoneNumberKit = PhoneNumberKit()
-  let falconContactsEncryptor = FalconContactsEncrypting()
   var users = [User]()
   weak var delegate: FalconUsersUpdatesDelegate?
   var userReference: DatabaseReference!
@@ -63,7 +62,6 @@ class FalconUsersFetcher: NSObject {
     group.notify(queue: .main, execute: {
       self.isGroupFinished = true
       self.sortAndRearrangeUsers()
-      self.falconContactsEncryptor.updateDefaultsForUsers(for: self.users)
       self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
     })
     
@@ -112,7 +110,6 @@ class FalconUsersFetcher: NSObject {
       
       if asynchronously {
         self.sortAndRearrangeUsers()
-        self.falconContactsEncryptor.updateDefaultsForUsers(for: self.users)
         self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
       }
       
@@ -120,7 +117,6 @@ class FalconUsersFetcher: NSObject {
         self.group.leave()
       } else if !asynchronously && self.isGroupFinished == true {
         self.sortAndRearrangeUsers()
-        self.falconContactsEncryptor.updateDefaultsForUsers(for: self.users)
         self.delegate?.falconUsers(shouldBeUpdatedTo: self.users)
       }
     })  { (error) in

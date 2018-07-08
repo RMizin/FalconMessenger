@@ -325,7 +325,7 @@ extension UITextField {
   
   var doneAccessory: Bool {
     get {
-      return self.doneAccessory
+      return true
     }
     set (hasDone) {
       if hasDone {

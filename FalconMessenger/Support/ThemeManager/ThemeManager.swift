@@ -272,23 +272,14 @@ enum Theme: Int {
 
 
 func setGlobalNavigationBarSettingsAccordingToTheme(theme: Theme) {
-  
-//  if #available(iOS 11.0, *) {
-//    UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:  theme.generalTitleColor ]
-//  } else {
-//    UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: theme.generalTitleColor]
-//  }
-
   UITabBar.appearance().barStyle = theme.barStyle
   UINavigationBar.appearance().isTranslucent = false
   UINavigationBar.appearance().barStyle = theme.barStyle
   UINavigationBar.appearance().barTintColor = theme.barBackgroundColor
   UITabBar.appearance().barTintColor = theme.barBackgroundColor
-  UIApplication.shared.statusBarStyle = theme.statusBarStyle
   UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
   UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: theme.generalTitleColor]
 }
-
 
 struct ThemeManager {
   

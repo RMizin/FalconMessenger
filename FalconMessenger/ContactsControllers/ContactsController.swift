@@ -16,6 +16,7 @@ public var shouldReloadContactsControllerAfterChangingTheme = false
 
 var localPhones = [String]()
 
+var globalUsers = [User]()
 
 class ContactsController: UITableViewController {
   
@@ -53,7 +54,6 @@ class ContactsController: UITableViewController {
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
      
       setupViewControllerPlaceholder()
-      configureDefaultDataSouce()
       falconUsersFetcher.delegate = self
       setupTableView()
       setupSearchController()
@@ -85,13 +85,11 @@ class ContactsController: UITableViewController {
     }
   
     func cleanUpController() {
-      UserDefaults.standard.removeObject(forKey: "ewtmp") //cleaning temp data
       filteredUsers.removeAll()
       users.removeAll()
       tableView.reloadData()
       shouldReFetchFalconUsers = true
     }
-  
   
     fileprivate func setUpColorsAccordingToTheme() {
       if shouldReloadContactsControllerAfterChangingTheme {
@@ -147,21 +145,6 @@ class ContactsController: UITableViewController {
       }
     }
   
-    fileprivate func configureDefaultDataSouce() {
-      let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: .contacts)
-      switch contactsAuthorityCheck {
-      case .authorized:
-        let defaultDataSouce = falconUsersFetcher.falconContactsEncryptor.setUsersDefaultsToDataSource()
-        users = defaultDataSouce
-        filteredUsers = defaultDataSouce
-        break
-      default: break
-      }
-    }
-//    fileprivate func checkContactsAuthorizationStatus() {
-//
-//    }
-  
   fileprivate func addControllerPlaceholder() {
      viewControllerPlaceholder.addViewControllerPlaceholder(for: view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
   }
@@ -201,10 +184,7 @@ class ContactsController: UITableViewController {
           self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
           self.tableView.reloadData()
         }
-       // DispatchQueue.global(qos: .background).async {
         self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
-       // }
-       
         self.sendUserContactsToDatabase()
       }
     }
@@ -430,6 +410,7 @@ class ContactsController: UITableViewController {
 
 extension ContactsController: FalconUsersUpdatesDelegate { 
   func falconUsers(shouldBeUpdatedTo users: [User]) {
+    globalUsers = users
     reloadTableView(updatedUsers: users)
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .medium)
   }

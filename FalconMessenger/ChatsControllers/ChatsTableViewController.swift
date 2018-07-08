@@ -80,10 +80,6 @@ class ChatsTableViewController: UITableViewController {
 
   fileprivate let typingIndicatorObsever = TypingIndicatorObserver()
   
-  let chatsEncryptor = ChatsEncrypting()
-  
-  fileprivate let falconContactsEncryptor = FalconContactsEncrypting()
-  
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -189,16 +185,6 @@ class ChatsTableViewController: UITableViewController {
     tableView.separatorStyle = .none
     definesPresentationContext = true
     typingIndicatorObsever.delegate = self
-    setConversationsDefaultsToDataSource()
-  }
-  
-  fileprivate func setConversationsDefaultsToDataSource() {
-    let defaultPinnedCovnersation = chatsEncryptor.setPinnedConversationsDefaultsToDataSource()
-    let defaultUnpinnedCovnersation = chatsEncryptor.setUnpinnedConversationsDefaultsToDataSource()
-    pinnedConversations = defaultPinnedCovnersation
-    filteredPinnedConversations = defaultPinnedCovnersation
-    conversations = defaultUnpinnedCovnersation
-    filtededConversations = defaultUnpinnedCovnersation
   }
   
   @objc fileprivate func newChat() {
@@ -206,8 +192,8 @@ class ChatsTableViewController: UITableViewController {
     destination.hidesBottomBarWhenPushed = true
     let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
     if isContactsAccessGranted {
-      destination.users = falconContactsEncryptor.setUsersDefaultsToDataSource()
-      destination.filteredUsers = destination.users
+      destination.users = globalUsers
+      destination.filteredUsers = globalUsers
       destination.checkNumberOfContacts()
     }
     navigationController?.pushViewController(destination, animated: true)
@@ -664,7 +650,6 @@ class ChatsTableViewController: UITableViewController {
   fileprivate func reloadCellAfterUpdate(indexPath: IndexPath) {
     tableView.beginUpdates()
     tableView.reloadRows(at: [indexPath], with: .none)
-    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
     tableView.endUpdates()
   }
 
@@ -737,9 +722,7 @@ class ChatsTableViewController: UITableViewController {
     
     filteredPinnedConversations = pinnedConversations
     filtededConversations = conversations
-    
-    chatsEncryptor.updateDefaultsForConversations(pinnedConversations: pinnedConversations, conversations: conversations)
-
+  
     if !isAppLoaded {
    
       UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: { (_) in

@@ -11,7 +11,6 @@ import Firebase
 import Photos
 import AudioToolbox
 import FLAnimatedImage
-import FTPopOverMenu_Swift
 import CropViewController
 import SafariServices
 
@@ -86,8 +85,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
   
-  fileprivate let falconContactsEncryptor = FalconContactsEncrypting()
-
   
   func scrollToBottom(at position: UICollectionViewScrollPosition) {
     if self.messages.count - 1 <= 0 {
@@ -635,19 +632,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     inputContainerView.inputTextView.inputView = nil
   }
   
-  fileprivate func configureCellContextMenuView() {
-    let config = FTConfiguration.shared
-    config.textColor = .white
-    config.backgoundTintColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
-    config.borderColor = UIColor(red: 80/255, green: 80/255, blue: 80/255, alpha: 0.0)
-    config.menuWidth = 100
-    config.menuSeparatorColor = ThemeManager.currentTheme().generalSubtitleColor
-    config.textAlignment = .center
-    config.textFont = UIFont.systemFont(ofSize: 14)
-    config.menuRowHeight = 40
-    config.cornerRadius = 25
-  }
-  
   fileprivate func configureRefreshControlInitialTintColor() { /* fixes bug of not setting refresh control tint color on initial refresh */
     collectionView?.contentOffset = CGPoint(x: 0, y: -refreshControl.frame.size.height)
     refreshControl.beginRefreshing()
@@ -681,11 +665,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
   
-    let users = falconContactsEncryptor.setUsersDefaultsToDataSource()
-    guard let index = users.index(where: { (user) -> Bool in
+    guard let index = globalUsers.index(where: { (user) -> Bool in
       return user.id == conversation?.chatID
     }) else { return }
-    let status = users[index].onlineStatus as AnyObject// else { return }
+    let status = globalUsers[index].onlineStatus as AnyObject
     onlineStatusInString = manageNavigationItemTitle(onlineStatusObject:  status)
   }
   
