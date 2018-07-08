@@ -32,7 +32,7 @@ class MessagesFetcher: NSObject {
   var manualRemovingReference: DatabaseReference!
   
   var manualRemovingHandle: DatabaseHandle!
-
+  
   var messagesReference: DatabaseReference!
   
   private  let messagesToLoad = 50
@@ -65,16 +65,16 @@ class MessagesFetcher: NSObject {
     
     var isGroupChat = Bool()
     if let groupChat = conversation.isGroupChat, groupChat { isGroupChat = true } else { isGroupChat = false }
-
-      userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
-   
+    
+    userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
+    
     loadingMessagesGroup.enter()
     newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
     observeManualRemoving(currentUserID: currentUserID, conversationID: conversationID)
     
+    
     loadingMessagesGroup.notify(queue: .main, execute: {
       guard self.messages.count != 0 else {
-      
         if self.isInitialChatMessagesLoad {
           self.messages = self.sortedMessages(unsortedMessages: self.messages)
         }
@@ -89,11 +89,10 @@ class MessagesFetcher: NSObject {
         if self.isInitialChatMessagesLoad {
           self.messages = self.sortedMessages(unsortedMessages: self.messages)
         }
-        self.messages = self.configureMessageTails(messages: self.messages, isGroupChat: isGroupChat)
+        self.messages = self.configureMessageTails(messages:  self.messages, isGroupChat: isGroupChat)
         self.isInitialChatMessagesLoad = false
         self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
-       
       })
     })
   }
@@ -204,7 +203,7 @@ class MessagesFetcher: NSObject {
     return sortedMessages
   }
   
-  func configureMessageTails(messages: [Message], isGroupChat: Bool) -> [Message] {
+  func configureMessageTails(messages: [Message], isGroupChat: Bool?) -> [Message] {
     var messages = messages
     for index in (0..<messages.count) {
       if messages.indices.contains(index + 1) {
@@ -219,7 +218,7 @@ class MessagesFetcher: NSObject {
         if let isInfoMessage = messages[index + 1].isInformationMessage, isInfoMessage {
           messages[index].isCrooked = true
         }
-    
+        
         if let isInfoMessage = messages[index].isInformationMessage, isInfoMessage {
           messages[index + 1].isCrooked = true
         }

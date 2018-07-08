@@ -12,24 +12,24 @@ import Firebase
 extension ChatLogController: CollectionDelegate {
   
   func collectionView(shouldRemoveMessage id: String) {
-
+    
     guard let index = self.messages.index(where: { (message) -> Bool in
       return message.messageUID == id
     }) else { return }
-
+    
     performBatchUpdates(for: index)
   }
   
   func performBatchUpdates(for index: Int) {
     
     messages.remove(at: index)
-  
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: true)
-    } else {
-      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
-    }
-  
+    
+  //  if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: nil)
+ //   } else {
+  //    messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
+ //   }
+    
     collectionView?.performBatchUpdates ({
       collectionView?.deleteItems(at: [IndexPath(item: index, section: 0)])
     }, completion: { (completed) in
@@ -39,7 +39,7 @@ extension ChatLogController: CollectionDelegate {
       var indexPaths = [IndexPath]()
       
       for indexToUpdate in startIndex...endIndex {
-        if self.messages.indices.contains(indexToUpdate) && indexToUpdate != index {
+        if self.messages.indices.contains(indexToUpdate) /*&& indexToUpdate != index */{
           let indexPath = IndexPath(item: indexToUpdate, section: 0)
           indexPaths.append(indexPath)
         }
@@ -54,7 +54,7 @@ extension ChatLogController: CollectionDelegate {
   }
   
   func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message) {
-   
+    
     guard let messageID = message.messageUID else { return }
     let handle = DatabaseHandle()
     
@@ -91,7 +91,7 @@ extension ChatLogController: CollectionDelegate {
     }
   }
   
- fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
+  fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
     messages.insert(message, at: insertionIndex)
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
@@ -99,12 +99,12 @@ extension ChatLogController: CollectionDelegate {
     } else {
       messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
     }
-
+    
     collectionView?.performBatchUpdates ({
       let indexPath = IndexPath(item: insertionIndex, section: 0)
       
       collectionView?.insertItems(at: [indexPath])
-
+      
       if messages.count - 1 >= 0 && isScrollViewAtTheBottom {
         let indexPath = IndexPath(item: messages.count - 1, section: 0)
         DispatchQueue.main.async {

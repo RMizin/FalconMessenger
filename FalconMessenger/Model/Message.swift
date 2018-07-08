@@ -16,7 +16,7 @@ struct MessageSubtitle {
   static let empty = "No messages here yet."
 }
 
-class Message: NSObject, NSCoding {
+class Message: NSObject {
   
     var messageUID: String?
     var isInformationMessage: Bool?
@@ -91,78 +91,5 @@ class Message: NSObject, NSCoding {
         senderName = dictionary["senderName"] as? String
       
         isCrooked = dictionary["isCrooked"] as? Bool
-    }
-  
-  
-    func encode(with aCoder: NSCoder) {
-
-      aCoder.encode(messageUID, forKey: "messageUID")
-      aCoder.encode(isInformationMessage, forKey: "isInformationMessage")
-      aCoder.encode(fromId, forKey: "fromId")
-      aCoder.encode(text, forKey: "text")
-      aCoder.encode(toId, forKey: "toId")
-      aCoder.encode(timestamp, forKey: "timestamp")
-
-      aCoder.encode(convertedTimestamp, forKey: "convertedTimestamp")
-
-      aCoder.encode(status, forKey: "status")
-      aCoder.encode(seen, forKey: "seen")
-
-      aCoder.encode(imageUrl, forKey: "imageUrl")
-      aCoder.encode(imageHeight, forKey: "imageHeight")
-      aCoder.encode(imageWidth, forKey: "imageWidth")
-
-      aCoder.encode(videoUrl, forKey: "videoUrl")
-
-      aCoder.encode(localImage, forKey: "localImage")
-      aCoder.encode(localVideoUrl, forKey: "localVideoUrl")
-
-      aCoder.encode(voiceEncodedString, forKey: "voiceEncodedString")
-      aCoder.encode(voiceData, forKey: "voiceData")
-      aCoder.encode(voiceDuration, forKey: "voiceDuration")
-      aCoder.encode(voiceStartTime, forKey: "voiceStartTime")
-
-      aCoder.encode(estimatedFrameForText, forKey: "estimatedFrameForText")
-      aCoder.encode(imageCellHeight, forKey: "imageCellHeight")
-
-      aCoder.encode(senderName, forKey: "senderName")
-
-      aCoder.encode(isCrooked, forKey: "isCrooked")
-    }
-  
-    required init?(coder aDecoder: NSCoder) {
-
-      messageUID = aDecoder.decodeObject(forKey: "messageUID") as? String
-      isInformationMessage = aDecoder.decodeObject(forKey: "isInformationMessage") as? Bool
-      fromId = aDecoder.decodeObject(forKey: "fromId") as? String
-      text = aDecoder.decodeObject(forKey: "text") as? String
-      toId = aDecoder.decodeObject(forKey: "toId") as? String
-      timestamp = aDecoder.decodeObject(forKey: "timestamp") as? NSNumber
-
-      convertedTimestamp = aDecoder.decodeObject(forKey: "convertedTimestamp") as? String
-
-      status = aDecoder.decodeObject(forKey: "status") as? String
-      seen = aDecoder.decodeObject(forKey: "seen") as? Bool
-
-      imageUrl = aDecoder.decodeObject(forKey: "imageUrl") as? String
-      imageHeight = aDecoder.decodeObject(forKey: "imageHeight") as? NSNumber
-      imageWidth = aDecoder.decodeObject(forKey: "imageWidth") as? NSNumber
-
-      videoUrl = aDecoder.decodeObject(forKey: "videoUrl") as? String
-
-      localImage = aDecoder.decodeObject(forKey: "localImage") as? UIImage
-      localVideoUrl = aDecoder.decodeObject(forKey: "localVideoUrl") as? String
-
-      voiceEncodedString = aDecoder.decodeObject(forKey: "voiceEncodedString") as? String
-      voiceData = aDecoder.decodeObject(forKey: "voiceData") as? Data
-      voiceDuration = aDecoder.decodeObject(forKey: "voiceDuration") as? String
-      voiceStartTime = aDecoder.decodeObject(forKey: "voiceStartTime") as? Int
-
-      estimatedFrameForText = aDecoder.decodeObject(forKey: "estimatedFrameForText") as? CGRect
-      imageCellHeight = aDecoder.decodeObject(forKey: "imageCellHeight") as? NSNumber
-
-      senderName = aDecoder.decodeObject(forKey: "senderName") as? String
-
-      isCrooked = aDecoder.decodeObject(forKey: "isCrooked") as? Bool
     }
 }
