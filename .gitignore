@@ -2,7 +2,4 @@ Pods/
 .DS_Store
 GoogleService-Info.plist
 IDEWorkspaceChecks.plist
-
-FalconMessenger.xcworkspace/xcuserdata/romanmizin.xcuserdatad/UserInterfaceState.xcuserstate
-*.xcuserstate
 *.xcuserstate
