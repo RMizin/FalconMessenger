@@ -104,9 +104,12 @@ class SelectChatTableViewController: UITableViewController {
   
   fileprivate func checkContactsAuthorizationStatus() {
     let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
-    
+    if users.count == 0 {
+      viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.emptyFalconUsersTitle, subtitle: "", priority: .high, position: .center)
+    }
     switch contactsAuthorityCheck {
     case .denied, .notDetermined, .restricted:
+      
       viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .center)
     case .authorized:
       viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)

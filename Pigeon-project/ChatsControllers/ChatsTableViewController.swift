@@ -251,7 +251,7 @@ class ChatsTableViewController: UITableViewController {
   
   fileprivate var shouldDisableUpdatingIndicator = true
   var groupChatReference: DatabaseReference!
-  var groupChatHandle:DatabaseHandle!
+  var groupChatHandle: DatabaseHandle!
   fileprivate typealias GroupChatMetaInfoCompletionHandler = (_ success: Bool, _ dictionary: [String:AnyObject]) -> Void
   
   fileprivate func groupChatMetaInfo( dictionary: [String:AnyObject], completion: @escaping GroupChatMetaInfoCompletionHandler) {
@@ -305,7 +305,7 @@ class ChatsTableViewController: UITableViewController {
       if !snapshot.exists() {
         self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
         self.handleReloadTable()
-        print("\ncurrentUserConversationsReference snap not exists\n")
+        //print("\ncurrentUserConversationsReference snap not exists\n")
         return
       }
     }
