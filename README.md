@@ -1,15 +1,9 @@
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/PigeonMessenger/master/Pigeon-project/Assets.xcassets/Other/roundedPigeon.imageset/roundedPigeon%402x.png" width="310"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitle.png" />
 </p> 
 
-
-# Falcon Messenger
-
-Falcon Messenger is a fast and beautiful cloud-based messaging app.
-
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="http://www.binpress.com/uploads/store33364/itunes-app-store-logo.png" width="290" height="100" alt="App Store" /></a>
-
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://perfectradiousa.files.wordpress.com/2016/09/itunes-app-store-logo.png"  width="350" alt="App Store" /></a>
 
 ## Features
 
@@ -63,10 +57,32 @@ Follow these simple steps:
 	6.5. Select “Editor” in the “Role“ field. <br>
 7. Go to Firebase Console, select your project, choose "Authentication" from left menu
 8. Select "SIGN-IN METHOD" and enable "Phone" option.
-  
+9. Add Firebase storage rules: 
+
+		service firebase.storage {
+		  match /b/{bucket}/o {
+		    match /{allPaths=**} {
+		      allow read, write;
+		    }
+		  }
+		}
+		
+10. Add Firebase Realtime Database Rules:
+
+		{ 
+		  "rules": {
+		    ".read": true,
+		    ".write": "auth != null",
+
+		    "users": {
+		      ".indexOn": "phoneNumber"
+		    }
+		  }   
+		}
+
 Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
-9. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
+11. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
 
 ## Compatibility
@@ -74,11 +90,6 @@ Falcon Messenger is written in Swift 4 and requires iOS 10.0 or later.
 
 
 ## License
-
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
 
 Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
-
-A few key points:
-- You cannot copy this project and publish to the app store as your own.
-- Falcon Messenger project's code cannot be used in a proprietary program. Products in which you use "Falcon Messenger” project’s code, must also be open-source and under the same(GPL v3) license.
