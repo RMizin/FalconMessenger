@@ -20,13 +20,13 @@ class User: NSObject {
   var isSelected: Bool! = false // local only
   
   init(dictionary: [String: AnyObject]) {
-    self.id = dictionary["id"] as? String
-    self.name = dictionary["name"] as? String
-    self.bio = dictionary["bio"] as? String
-    self.photoURL = dictionary["photoURL"] as? String
-    self.thumbnailPhotoURL = dictionary["thumbnailPhotoURL"] as? String
-    self.phoneNumber = dictionary["phoneNumber"] as? String
-    self.onlineStatus = dictionary["OnlineStatus"]// as? AnyObject
+    id = dictionary["id"] as? String
+    name = dictionary["name"] as? String
+    bio = dictionary["bio"] as? String
+    photoURL = dictionary["photoURL"] as? String
+    thumbnailPhotoURL = dictionary["thumbnailPhotoURL"] as? String
+    phoneNumber = dictionary["phoneNumber"] as? String
+    onlineStatus = dictionary["OnlineStatus"]// as? AnyObject
   }
 }
 
