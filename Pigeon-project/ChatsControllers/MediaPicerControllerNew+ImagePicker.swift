@@ -16,15 +16,15 @@ import AVFoundation
 extension MediaPickerControllerNew {
   
  @objc func openPhotoLibrary() {
-    imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+    imagePicker.sourceType = .photoLibrary
     presentImagePicker()
   }
   
   
  @objc func openCamera() {
     
-    if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
-      imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+    if UIImagePickerController.isSourceTypeAvailable(.camera) {
+      imagePicker.sourceType = .camera
       
       presentImagePicker()
       
@@ -33,7 +33,7 @@ extension MediaPickerControllerNew {
       let alert = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
       alert.modalPresentationStyle = .overCurrentContext
-      self.present(alert, animated: true, completion: nil)
+      present(alert, animated: true, completion: nil)
     }
   }
   
@@ -56,7 +56,7 @@ extension MediaPickerControllerNew {
         
         if mediaType  == "public.image" {
           
-          guard let originalImage = info[UIImagePickerControllerEditedImage] as? UIImage else { return }
+          guard let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage else { return }
             
             PHPhotoLibrary.shared().performChanges ({
               

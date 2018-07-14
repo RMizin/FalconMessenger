@@ -348,26 +348,17 @@ func basicErrorAlertWith (title: String, message: String, controller: UIViewCont
 }
 
 func libraryAccessChecking() -> Bool {
-  
+
   let status = PHPhotoLibrary.authorizationStatus()
-  
+
   switch status {
   case .authorized:
     return true
-    
+
   case .denied, .restricted :
     return false
-    
-  case .notDetermined:
-    return false
-  }
-}
 
-func cameraAccessChecking() -> Bool  {
-  
-  if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
-    return true
-  } else {
+  case .notDetermined:
     return false
   }
 }
