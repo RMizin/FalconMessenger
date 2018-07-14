@@ -56,8 +56,8 @@ extension MediaPickerControllerNew {
         
         if mediaType  == "public.image" {
           
-          guard let originalImage = info[UIImagePickerControllerEditedImage] as? UIImage else { return }
-            
+          guard let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage else { return }
+      
             PHPhotoLibrary.shared().performChanges ({
               
               PHAssetChangeRequest.creationRequestForAsset(from: originalImage)

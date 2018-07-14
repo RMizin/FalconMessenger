@@ -50,7 +50,6 @@ extension BaseMessageCell {
       
       cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
       contextMenuItems = [ContextMenuItems.deleteItem]
-     
     }
     if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
