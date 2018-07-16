@@ -16,16 +16,14 @@ import AVFoundation
 extension MediaPickerControllerNew {
   
  @objc func openPhotoLibrary() {
-    imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+    imagePicker.sourceType = .photoLibrary
     presentImagePicker()
   }
   
-  
  @objc func openCamera() {
     
-    if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
-      imagePicker.sourceType = UIImagePickerControllerSourceType.camera
-      
+    if UIImagePickerController.isSourceTypeAvailable(.camera) {
+      imagePicker.sourceType = .camera
       presentImagePicker()
       
     } else {

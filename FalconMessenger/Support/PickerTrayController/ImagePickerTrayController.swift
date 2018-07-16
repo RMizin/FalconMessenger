@@ -283,10 +283,25 @@ public class ImagePickerTrayController: UIViewController {
     
     @objc fileprivate func takePicture() {
       
-      if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
+      let status = PHPhotoLibrary.authorizationStatus()
+      switch status {
+      case .authorized:
         cameraController.takePicture()
-      } else {
+        break
+      case .denied, .restricted:
         basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage, controller: self)
+        return
+      case .notDetermined:
+        PHPhotoLibrary.requestAuthorization() { status in
+          switch status {
+          case .authorized:
+            self.cameraController.takePicture()
+            break
+          case .denied, .restricted, .notDetermined:
+            basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage, controller: self)
+            return
+          }
+        }
       }
     }
 }

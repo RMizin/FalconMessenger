@@ -59,35 +59,64 @@ class ActionCell: UICollectionViewCell {
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-    
-
-    @objc fileprivate func callAction(sender: UIButton) {
-        if let index = stackView.arrangedSubviews.index(of: sender) {
-          
-          if index == 0 { /* camera */
-            
-            let status = cameraAccessChecking()
-            
-            if status {
-               actions[index].call()
-            } else {
-              
-              basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage, controller: imagePickerTrayController!)
-            }
-          } else {
-            let status = libraryAccessChecking()
-            
-            if status {
-              actions[index].call()
-            } else {
-              
-              basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessage, controller: imagePickerTrayController!)
-            }
-          }
-       }
+  
+  fileprivate func checkCameraAuthorizationStatus() -> Bool {
+    guard AVCaptureDevice.authorizationStatus(for: .video) == .authorized else {
+      return false
     }
+    return true
+  }
+  
+  fileprivate func checkPHLibraryAuthorizationStatus() -> Bool {
+    guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+      return false
+    }
+    return true
+  }
+  
+  fileprivate func performCallAction(index: Int, message: String, sourceType: UIImagePickerControllerSourceType) {
+    var authorizationStatus = Bool()
+    
+    if sourceType == .camera {
+      authorizationStatus = checkCameraAuthorizationStatus()
+    } else {
+      authorizationStatus = checkPHLibraryAuthorizationStatus()
+    }
+    
+    guard authorizationStatus else {
+      basicErrorAlertWith(title: basicTitleForAccessError, message: message, controller: self.imagePickerTrayController!)
+      return
+    }
+    actions[index].call()
+  }
+  
+  @objc fileprivate func callAction(sender: UIButton) {
+    
+    guard let index = stackView.arrangedSubviews.index(of: sender) else { return }
+    
+    switch index {
+    case 0: /* camera */
+      guard AVCaptureDevice.authorizationStatus(for: .video) != .notDetermined else {
+        AVCaptureDevice.requestAccess(for: .video) { (isCompleted) in
+          self.performCallAction(index: index, message: cameraAccessDeniedMessage, sourceType: .camera)
+        }
+        return
+      }
+      performCallAction(index: index, message: cameraAccessDeniedMessage, sourceType: .camera)
+      break
+    case 1: /* photo library */
+      guard PHPhotoLibrary.authorizationStatus() != .notDetermined else {
+        PHPhotoLibrary.requestAuthorization { (status) in
+          self.performCallAction(index: index, message: photoLibraryAccessDeniedMessage, sourceType: .photoLibrary)
+        }
+        return
+      }
+      performCallAction(index: index, message: photoLibraryAccessDeniedMessage, sourceType: .photoLibrary)
+      break
+    default: break
+    }
+  }
 }
-
 
 fileprivate class ActionButton: UIButton {
     

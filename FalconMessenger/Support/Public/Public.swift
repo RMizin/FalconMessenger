@@ -402,15 +402,6 @@ func libraryAccessChecking() -> Bool {
   }
 }
 
-func cameraAccessChecking() -> Bool  {
-  
-  if AVCaptureDevice.authorizationStatus(for: .video) == .authorized {
-    return true
-  } else {
-    return false
-  }
-}
-
 public let statusOnline = "Online"
 public let userMessagesFirebaseFolder = "userMessages"
 public let messageMetaDataFirebaseFolder = "metaData"
