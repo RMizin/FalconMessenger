@@ -18,6 +18,7 @@ var localPhones = [String]()
 
 var globalUsers = [User]()
 
+
 class ContactsController: UITableViewController {
   
   let phoneNumberKit = PhoneNumberKit()
@@ -69,8 +70,10 @@ class ContactsController: UITableViewController {
       
       if shouldReFetchFalconUsers {
         shouldReFetchFalconUsers = false
+        self.syncronizeContacts(contacts: self.contacts)
         DispatchQueue.global(qos: .background).async {
-          self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
+         //  self.syncronizeContacts(contacts: self.contacts)
+         self.falconUsersFetcher.loadAndSyncFalconUsers()
         }
       }
     }
@@ -89,6 +92,9 @@ class ContactsController: UITableViewController {
       users.removeAll()
       tableView.reloadData()
       shouldReFetchFalconUsers = true
+      UserDefaults.standard.removeObject(forKey: "ContactsCount")
+    //  UserDefaults.standard.removeObject(forKey: "SyncronizationStatus")
+      UserDefaults.standard.synchronize()
     }
   
     fileprivate func setUpColorsAccordingToTheme() {
@@ -145,9 +151,9 @@ class ContactsController: UITableViewController {
       }
     }
   
-  fileprivate func addControllerPlaceholder() {
-     viewControllerPlaceholder.addViewControllerPlaceholder(for: view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
-  }
+    fileprivate func addControllerPlaceholder() {
+       viewControllerPlaceholder.addViewControllerPlaceholder(for: view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
+    }
 
     fileprivate func fetchContacts () {
       
@@ -176,19 +182,33 @@ class ContactsController: UITableViewController {
         
         localPhones.removeAll()
         self.filteredContacts = self.contacts
-
+        
         let phoneNumbers = self.contacts.flatMap({$0.phoneNumbers.map({$0.value.stringValue.digits}) })
         localPhones.append(contentsOf: phoneNumbers)
-
+        self.syncronizeContacts(contacts: self.contacts)
+      }
+    }
+  
+    fileprivate func syncronizeContacts(contacts: [CNContact]) {
+      falconUsersFetcher.loadFalconUsers()
+      let contactsCount = contacts.count
+      let defaultContactsCount = UserDefaults.standard.integer(forKey: "ContactsCount")
+      let syncronizationStatus = UserDefaults.standard.bool(forKey: "SyncronizationStatus")
+      
+      if UserDefaults.standard.object(forKey: "ContactsCount") == nil || defaultContactsCount != contactsCount || syncronizationStatus != true {
+        UserDefaults.standard.set(contactsCount, forKey: "ContactsCount")
+        UserDefaults.standard.synchronize()
+        
         DispatchQueue.main.async {
           self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
           self.tableView.reloadData()
         }
-        self.falconUsersFetcher.fetchFalconUsers(asynchronously: false)
-        self.sendUserContactsToDatabase()
+        
+        falconUsersFetcher.loadAndSyncFalconUsers()
       }
     }
   
+  /*
    fileprivate func sendUserContactsToDatabase() {
       guard let uid = Auth.auth().currentUser?.uid else { return }
 
@@ -203,11 +223,11 @@ class ContactsController: UITableViewController {
         } catch {}
       }
       userReference.updateChildValues(["contacts": preparedNumbers])
-    }
+    }*/
   
     fileprivate func reloadTableView(updatedUsers: [User]) {
-      
-      users = falconUsersFetcher.rearrangeUsers(users: updatedUsers)
+      users = updatedUsers
+      //users = falconUsersFetcher.rearrangeUsers(users: updatedUsers)
       let searchBar = correctSearchBarForCurrentIOSVersion()
       let isSearchInProgress = searchBar.text != ""
       let isSearchControllerEmpty = filteredUsers.count == 0
@@ -372,7 +392,6 @@ class ContactsController: UITableViewController {
         messagesFetcher = MessagesFetcher()
         messagesFetcher?.delegate = self
         messagesFetcher?.loadMessagesData(for: conversation)
-        
       }
       
       if indexPath.section == 1 {
