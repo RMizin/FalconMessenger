@@ -260,7 +260,7 @@ extension SelectChatTableViewController: UITableViewDataSourcePrefetching {
   
   func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
     let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
+    SDWebImagePrefetcher.shared.prefetchURLs(urls as? [URL])
   }
 }
 

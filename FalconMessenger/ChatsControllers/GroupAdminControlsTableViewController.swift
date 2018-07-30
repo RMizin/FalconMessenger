@@ -518,6 +518,6 @@ class GroupAdminControlsTableViewController: UITableViewController {
 extension GroupAdminControlsTableViewController: UITableViewDataSourcePrefetching {
   func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
     let urls = members.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
+    SDWebImagePrefetcher.shared.prefetchURLs(urls as? [URL])
   }
 }

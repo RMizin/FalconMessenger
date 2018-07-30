@@ -61,9 +61,9 @@ PODS:
   - PhoneNumberKit/UIKit (2.1.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.6.0)
-  - SDWebImage (4.4.1):
-    - SDWebImage/Core (= 4.4.1)
-  - SDWebImage/Core (4.4.1)
+  - SDWebImage (5.0.0-beta):
+    - SDWebImage/Core (= 5.0.0-beta)
+  - SDWebImage/Core (5.0.0-beta)
 
 DEPENDENCIES:
   - CropViewController
@@ -75,7 +75,7 @@ DEPENDENCIES:
   - FLAnimatedImage
   - FTPopOverMenu_Swift
   - PhoneNumberKit
-  - SDWebImage
+  - SDWebImage (from `https://github.com/rs/SDWebImage`, branch `5.x`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -96,7 +96,16 @@ SPEC REPOS:
     - nanopb
     - PhoneNumberKit
     - Protobuf
-    - SDWebImage
+
+EXTERNAL SOURCES:
+  SDWebImage:
+    :branch: 5.x
+    :git: https://github.com/rs/SDWebImage
+
+CHECKOUT OPTIONS:
+  SDWebImage:
+    :commit: fe2fede60f9c6efcadfac8b90e8cae579656fffb
+    :git: https://github.com/rs/SDWebImage
 
 SPEC CHECKSUMS:
   CropViewController: e6d4bd512d15a1709e9ddf71fe7d98ffd05dda0f
@@ -116,8 +125,8 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
-  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
+  SDWebImage: 55c787b164fabe07f2a4d5307f6e1be7960fb9be
 
-PODFILE CHECKSUM: cba9d811358d0018902ecbba861e3f9dda4d62e3
+PODFILE CHECKSUM: f7028ecf97064d3e86a53ece6f93b4e095ea823a
 
 COCOAPODS: 1.5.3

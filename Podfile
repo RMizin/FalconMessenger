@@ -9,7 +9,7 @@ target 'FalconMessenger' do
   pod 'Firebase/Storage'
   pod 'Firebase/Messaging'
   
-  pod 'SDWebImage', :modular_headers => true
+  pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage', :branch => '5.x', :modular_headers => true
   pod 'PhoneNumberKit'
   pod 'FLAnimatedImage', :modular_headers => true
   pod 'FTPopOverMenu_Swift'

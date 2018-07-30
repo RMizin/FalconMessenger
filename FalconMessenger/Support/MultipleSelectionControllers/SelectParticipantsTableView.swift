@@ -84,7 +84,7 @@ extension SelectParticipantsViewController: UITableViewDelegate, UITableViewData
     }
     
     guard let url = user.thumbnailPhotoURL else { return cell }
-    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
+    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.continueInBackground], completed: { (image, error, cacheType, url) in
       guard image != nil else { return }
       guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
         cell.icon.alpha = 1
@@ -102,6 +102,6 @@ extension SelectParticipantsViewController: UITableViewDataSourcePrefetching {
   
   func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
     let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
+    SDWebImagePrefetcher.shared.prefetchURLs(urls as? [URL])
   }
 }
