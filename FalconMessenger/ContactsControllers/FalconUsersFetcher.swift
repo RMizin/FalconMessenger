@@ -14,43 +14,30 @@ protocol FalconUsersUpdatesDelegate: class {
   func falconUsers(shouldBeUpdatedTo users: [User])
 }
 
-public var shouldReFetchFalconUsers: Bool = false
-
-func setContactsSyncronizationStatus(status: Bool) {
-  UserDefaults.standard.set(status, forKey: "SyncronizationStatus")
-  UserDefaults.standard.synchronize()
-}
-
 
 class FalconUsersFetcher: NSObject {
   
   weak var delegate: FalconUsersUpdatesDelegate?
-  
   fileprivate let phoneNumberKit = PhoneNumberKit()
   
   fileprivate var users = [User]()
-  fileprivate var userReference: DatabaseReference!
-  fileprivate var userQuery: DatabaseQuery!
-  fileprivate var userHandle = [DatabaseHandle]()
   fileprivate var loadAndSyncFalconUsersGroup = DispatchGroup()
   fileprivate var isLoadAndSyncGroupFinished = false
 
-  fileprivate func clearObserversAndUsersIfNeeded() {
+  fileprivate func resetSyncronization() {
     users.removeAll()
-    guard userReference != nil else { return }
-    for handle in userHandle {
-      userReference.removeObserver(withHandle: handle)
-    }
+    isLoadAndSyncGroupFinished = false
+    setContactsSyncronizationStatus(status: false)
   }
   
   func loadAndSyncFalconUsers() {
-    clearObserversAndUsersIfNeeded()
+    resetSyncronization()
     clearFalconUsersRefObservers()
     fetchSynchronously()
   }
   
   fileprivate func fetchSynchronously() {
-    
+
     var preparedNumbers = [String]()
     
     for number in localPhones {
@@ -64,7 +51,7 @@ class FalconUsersFetcher: NSObject {
     
     loadAndSyncFalconUsersGroup.notify(queue: .main, execute: {
       self.isLoadAndSyncGroupFinished = true
-      self.updateDataSourceAfterSync(newUsers: self.users)
+      self.updateRemoteDataSourceAfterSync(newUsers: self.users)
     })
     
     for preparedNumber in preparedNumbers {
@@ -73,22 +60,19 @@ class FalconUsersFetcher: NSObject {
   }
   
   fileprivate func fetchAndObserveFalconUser(for preparedNumber: String) {
-    userReference = Database.database().reference().child("users")
-    userQuery = userReference.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber)
-    let databaseHandle = DatabaseHandle()
-    userHandle.insert(databaseHandle, at: 0)
-    
-    userHandle[0] = userQuery.observe( .value, with: { (snapshot) in
+    let userReference = Database.database().reference().child("users")
+    let userQuery = userReference.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber)
+    userQuery.observeSingleEvent(of: .value, with: { (snapshot) in
     
       guard snapshot.exists(), let userData = (snapshot.value as? [String: AnyObject])?.first, let currentUserID = Auth.auth().currentUser?.uid else {
-        self.updateDataSourceAfterSync(newUsers: nil)
+        self.updateRemoteDataSourceAfterSync(newUsers: nil)
         return
       }
       
       let userID = userData.key
       
       guard var userDictionary = userData.value as? [String: AnyObject], userID != currentUserID else {
-        self.updateDataSourceAfterSync(newUsers: nil)
+        self.updateRemoteDataSourceAfterSync(newUsers: nil)
         return
       }
       
@@ -103,44 +87,55 @@ class FalconUsersFetcher: NSObject {
         self.users.append(fetchedUser)
       }
 
-      self.updateDataSourceAfterSync(newUsers: self.users)
+      self.updateRemoteDataSourceAfterSync(newUsers: self.users)
     })
   }
   
-  fileprivate func updateDataSourceAfterSync(newUsers: [User]?) {
+  fileprivate func updateRemoteDataSourceAfterSync(newUsers: [User]?) {
     guard isLoadAndSyncGroupFinished else { loadAndSyncFalconUsersGroup.leave(); return }
-    guard var newUsers = newUsers else { return }
+    guard let newUsers = newUsers else { return }
     syncronizeFalconUsers(with: newUsers)
-    newUsers = sortUsers(users: newUsers)
-    newUsers = rearrangeUsers(users: newUsers)
-    delegate?.falconUsers(shouldBeUpdatedTo: newUsers)
     setContactsSyncronizationStatus(status: true)
+  }
+  
+  fileprivate func setContactsSyncronizationStatus(status: Bool) {
+    UserDefaults.standard.set(status, forKey: "SyncronizationStatus")
+    UserDefaults.standard.synchronize()
   }
   
   fileprivate func syncronizeFalconUsers(with fetchedUsers: [User]) {
     guard let currentUserID = Auth.auth().currentUser?.uid, fetchedUsers.count > 0 else { return }
-    let databaseReference = Database.database().reference().child("users").child(currentUserID)//.child("falconUsers")
+    let databaseReference = Database.database().reference().child("users").child(currentUserID)
     let falconUserIDs = fetchedUsers.map({$0.id ?? ""})
-    databaseReference.updateChildValues(["falconUsers" : falconUserIDs])
+    databaseReference.updateChildValues(["falconUsers" : falconUserIDs]) { (_, _) in
+      self.loadFalconUsers()
+    }
   }
 
   fileprivate var falconUsers = [User]()
   fileprivate var falconUsersReference: DatabaseReference!
-  fileprivate var falconUsersHandle = [DatabaseHandle]()
+  fileprivate var falconUsersHandle = [(userID: String, handle: DatabaseHandle)]()
   fileprivate let falconUsersLoadingGroup = DispatchGroup()
   fileprivate var isFalconUsersLoadingGroupFinished = false
   
   fileprivate func clearFalconUsersRefObservers() {
     falconUsers.removeAll()
+    isFalconUsersLoadingGroupFinished = false
+    
     guard falconUsersReference != nil else { return }
-    for handle in falconUsersHandle {
-      falconUsersReference.removeObserver(withHandle: handle)
+    for element in falconUsersHandle {
+      falconUsersReference = Database.database().reference().child("users").child(element.userID)
+      falconUsersReference.removeObserver(withHandle: element.handle)
+     guard let index = falconUsersHandle.index(where: { (element1) -> Bool in
+        return element.userID == element1.userID
+     }) else { return }
+      guard falconUsersHandle.indices.contains(index) else { return }
+      falconUsersHandle.remove(at: index)
     }
   }
   
   func loadFalconUsers() {
     clearFalconUsersRefObservers()
-    clearObserversAndUsersIfNeeded()
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)//.child("falconUsers")
     databaseReference.observeSingleEvent(of: .value) { (snapshot) in
@@ -163,9 +158,10 @@ class FalconUsersFetcher: NSObject {
     
     userIDs.forEach { (userID) in
       let handle = DatabaseHandle()
-      falconUsersHandle.insert(handle, at: 0)
-      falconUsersReference = Database.database().reference().child("users").child(userID)
-      falconUsersHandle[0] = falconUsersReference.observe( .value, with: { (snapshot) in
+      let element = (userID: userID, handle: handle)
+      falconUsersHandle.insert(element, at: 0)
+      falconUsersReference = Database.database().reference().child("users").child(element.userID)
+      falconUsersHandle[0].handle = falconUsersReference.observe( .value, with: { (snapshot) in
         
         guard var dictionary = snapshot.value as? [String: AnyObject] else {self.updateDataSource(newUsers: nil); return }
         dictionary.updateValue(userID as AnyObject, forKey: "id")

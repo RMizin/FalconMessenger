@@ -65,7 +65,6 @@
 		4B6BAFF120886C5F00A90F3A /* SelectNewAdminTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA120886C5E00A90F3A /* SelectNewAdminTableViewController.swift */; };
 		4B6BAFF220886C5F00A90F3A /* NewAdminTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA220886C5E00A90F3A /* NewAdminTableViewCell.swift */; };
 		4B6BAFF320886C5F00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA320886C5E00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift */; };
-		4B6BAFF420886C5F00A90F3A /* NavigationItemActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA520886C5E00A90F3A /* NavigationItemActivityIndicator.swift */; };
 		4B6BAFF520886C5F00A90F3A /* EnterVerificationContainerView+timerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA820886C5E00A90F3A /* EnterVerificationContainerView+timerHandlers.swift */; };
 		4B6BAFF620886C5F00A90F3A /* EnterVerificationCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA920886C5E00A90F3A /* EnterVerificationCodeController.swift */; };
 		4B6BAFF720886C5F00A90F3A /* EnterVerificationContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFAA20886C5E00A90F3A /* EnterVerificationContainerView.swift */; };
@@ -146,6 +145,7 @@
 		4BBBCBFF205883CC00926800 /* UserCell+ConfigureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBFE205883CC00926800 /* UserCell+ConfigureCell.swift */; };
 		4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */; };
 		4BBBCC0320588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */; };
+		4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E6C521105E0900720B43 /* NavigationItemActivityIndicator.swift */; };
 		4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */; };
 		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
 		4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC26B231F3A22890093A9D2 /* typingIndicator.gif */; };
@@ -254,7 +254,6 @@
 		4B6BAFA120886C5E00A90F3A /* SelectNewAdminTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectNewAdminTableViewController.swift; sourceTree = "<group>"; };
 		4B6BAFA220886C5E00A90F3A /* NewAdminTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewAdminTableViewCell.swift; sourceTree = "<group>"; };
 		4B6BAFA320886C5E00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SelectNewAdminTableViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
-		4B6BAFA520886C5E00A90F3A /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
 		4B6BAFA820886C5E00A90F3A /* EnterVerificationContainerView+timerHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EnterVerificationContainerView+timerHandlers.swift"; sourceTree = "<group>"; };
 		4B6BAFA920886C5E00A90F3A /* EnterVerificationCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterVerificationCodeController.swift; sourceTree = "<group>"; };
 		4B6BAFAA20886C5E00A90F3A /* EnterVerificationContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterVerificationContainerView.swift; sourceTree = "<group>"; };
@@ -337,7 +336,7 @@
 		4BBBCBFE205883CC00926800 /* UserCell+ConfigureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UserCell+ConfigureCell.swift"; path = "ChatsControllers/UserCell+ConfigureCell.swift"; sourceTree = "<group>"; };
 		4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+TableRowActionHandlers.swift"; path = "ChatsControllers/ChatsTableViewController+TableRowActionHandlers.swift"; sourceTree = "<group>"; };
 		4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+NotificationsHandlers.swift"; path = "ChatsControllers/ChatsTableViewController+NotificationsHandlers.swift"; sourceTree = "<group>"; };
-		4BBBCC05205C3F6600926800 /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NavigationItemActivityIndicator.swift; path = Support/NavigationControllerActivityIndicator/NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
+		4BC0E6C521105E0900720B43 /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
 		4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatInputContainerView.swift; path = ChatsControllers/ChatInputContainerView.swift; sourceTree = "<group>"; };
 		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
 		4BC26B231F3A22890093A9D2 /* typingIndicator.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingIndicator.gif; path = ChatsControllers/Media/typingIndicator.gif; sourceTree = "<group>"; };
@@ -680,7 +679,7 @@
 		4B6BAFA420886C5E00A90F3A /* NavigationControllerActivityIndicator */ = {
 			isa = PBXGroup;
 			children = (
-				4B6BAFA520886C5E00A90F3A /* NavigationItemActivityIndicator.swift */,
+				4BC0E6C521105E0900720B43 /* NavigationItemActivityIndicator.swift */,
 			);
 			path = NavigationControllerActivityIndicator;
 			sourceTree = "<group>";
@@ -1000,7 +999,6 @@
 		4BE72A6C204E9DA4009A22EA /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				4BBBCC05205C3F6600926800 /* NavigationItemActivityIndicator.swift */,
 				4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */,
 			);
 			name = Support;
@@ -1326,6 +1324,7 @@
 				4B0FA7CF2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift in Sources */,
 				4B6BAFF520886C5F00A90F3A /* EnterVerificationContainerView+timerHandlers.swift in Sources */,
 				4B5693D920CFFAAB005EAE15 /* CustomizedImageView.swift in Sources */,
+				4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */,
 				4B62E5FE2077EC7900546294 /* BaseVoiceMessageCell.swift in Sources */,
 				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
 				4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */,
@@ -1388,7 +1387,6 @@
 				4B6BB01C20886C5F00A90F3A /* ARSLineProgressCustomization.swift in Sources */,
 				4B0FA7DE2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift in Sources */,
 				4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */,
-				4B6BAFF420886C5F00A90F3A /* NavigationItemActivityIndicator.swift in Sources */,
 				4B6BB01B20886C5F00A90F3A /* ARSLineProgressExtensions.swift in Sources */,
 				4BAD9752206E3532008ADF6B /* SelectGroupMembersController.swift in Sources */,
 				4B5693D720CFFAAB005EAE15 /* InAppNotification.swift in Sources */,

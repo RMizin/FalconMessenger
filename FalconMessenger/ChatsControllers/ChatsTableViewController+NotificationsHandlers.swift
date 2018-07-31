@@ -72,12 +72,12 @@ extension ChatsTableViewController {
         self.playNotificationSound()
        
         if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
-          self.showInAppNotification(title: chatName, subtitle: self.subtitleForMessage(message: message), resource: conversationAvatar(resource: allConversations[index].chatThumbnailPhotoURL, isGroupChat: isGroupChat), placeholder: conversationPlaceholder(isGroupChat: isGroupChat) )
+          self.showInAppNotification(conversation: allConversations[index], title: chatName, subtitle: self.subtitleForMessage(message: message), resource: conversationAvatar(resource: allConversations[index].chatThumbnailPhotoURL, isGroupChat: isGroupChat), placeholder: conversationPlaceholder(isGroupChat: isGroupChat) )
         }
       } else if let chatName = allConversations[index].chatName , allConversations[index].muted == nil   {
         self.playNotificationSound()
         if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
-          self.showInAppNotification(title: chatName, subtitle: self.subtitleForMessage(message: message), resource: conversationAvatar(resource: allConversations[index].chatThumbnailPhotoURL, isGroupChat: isGroupChat), placeholder: conversationPlaceholder(isGroupChat: isGroupChat))
+          self.showInAppNotification(conversation: allConversations[index], title: chatName, subtitle: self.subtitleForMessage(message: message), resource: conversationAvatar(resource: allConversations[index].chatThumbnailPhotoURL, isGroupChat: isGroupChat), placeholder: conversationPlaceholder(isGroupChat: isGroupChat))
         }
       }
     }
@@ -109,10 +109,19 @@ extension ChatsTableViewController {
     return data
   }
   
-  fileprivate func showInAppNotification(title: String, subtitle: String, resource: Any?, placeholder: Data?) {
+  fileprivate func showInAppNotification(conversation: Conversation, title: String, subtitle: String, resource: Any?, placeholder: Data?) {
     let notification: InAppNotification = InAppNotification(resource: resource, title: title, subtitle: subtitle, data: placeholder)
     InAppNotificationDispatcher.shared.show(notification: notification) { (_) in
-      //TODO: Opening chat log on tap
+     // hideinapp
+      
+    //  notification.
+      self.destinationLayout = AutoSizingCollectionViewFlowLayout()
+      self.destinationLayout?.minimumLineSpacing = AutoSizingCollectionViewFlowLayout.lineSpacing
+      self.chatLogController = ChatLogController(collectionViewLayout: self.destinationLayout!)
+      
+      self.messagesFetcher = MessagesFetcher()
+      self.messagesFetcher?.delegate = self
+      self.messagesFetcher?.loadMessagesData(for: conversation)
     }
   }
    

@@ -229,10 +229,11 @@ public class InAppNotificationDispatcher {
         guard let banner = sender.view as? InAppNotificationBanner else { return }
         guard let notification = banner.notification else { return }
         bannerClickCallback?(notification)
-       // hideBanner(animated: false) {
-        //    self.timer?.invalidate()
-       //     self.timer = nil
-      //  }
+       hideBanner(animated: true) {}
+//        hideBanner(animated: true) {
+//            self.timer?.invalidate()
+//            self.timer = nil
+//        }
     }
     
     @objc private func bannerSwipped(_ sender: UISwipeGestureRecognizer) {

@@ -58,24 +58,21 @@ class ContactsController: UITableViewController {
       falconUsersFetcher.delegate = self
       setupTableView()
       setupSearchController()
+      observeContactsChanges()
       DispatchQueue.global(qos: .background).async {
         self.fetchContacts()
       }
     }
   
+    fileprivate var shouldReSyncUsers = false
     override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
       
       setUpColorsAccordingToTheme()
       
-      if shouldReFetchFalconUsers {
-        shouldReFetchFalconUsers = false
-        self.syncronizeContacts(contacts: self.contacts)
-        DispatchQueue.global(qos: .background).async {
-         //  self.syncronizeContacts(contacts: self.contacts)
-         self.falconUsersFetcher.loadAndSyncFalconUsers()
-        }
-      }
+      guard shouldReSyncUsers else { return }
+      shouldReSyncUsers = false
+      syncronizeContacts(contacts: contacts)
     }
   
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -91,9 +88,9 @@ class ContactsController: UITableViewController {
       filteredUsers.removeAll()
       users.removeAll()
       tableView.reloadData()
-      shouldReFetchFalconUsers = true
+      shouldReSyncUsers = true
       UserDefaults.standard.removeObject(forKey: "ContactsCount")
-    //  UserDefaults.standard.removeObject(forKey: "SyncronizationStatus")
+      UserDefaults.standard.removeObject(forKey: "SyncronizationStatus")
       UserDefaults.standard.synchronize()
     }
   
@@ -154,13 +151,26 @@ class ContactsController: UITableViewController {
     fileprivate func addControllerPlaceholder() {
        viewControllerPlaceholder.addViewControllerPlaceholder(for: view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
     }
-
+  
+  
+    fileprivate func observeContactsChanges() {
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(contactStoreDidChange), name: .CNContactStoreDidChange, object: nil)
+    }
+  
+    @objc func contactStoreDidChange(notification: NSNotification) {
+      guard Auth.auth().currentUser != nil else { return }
+      DispatchQueue.global(qos: .background).async {
+        self.fetchContacts()
+      }
+    }
+  
     fileprivate func fetchContacts () {
       
       let status = CNContactStore.authorizationStatus(for: .contacts)
       let store = CNContactStore()
       if status == .denied || status == .restricted {
-        self.addControllerPlaceholder()
+        addControllerPlaceholder()
         return
       }
     
@@ -177,6 +187,7 @@ class ContactsController: UITableViewController {
         let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
         
         do {
+          self.contacts.removeAll()
           try store.enumerateContacts(with: request) { contact, stop in self.contacts.append(contact) }
         } catch {}
         
@@ -204,7 +215,9 @@ class ContactsController: UITableViewController {
           self.tableView.reloadData()
         }
         
-        falconUsersFetcher.loadAndSyncFalconUsers()
+        DispatchQueue.global(qos: .background).async {
+          self.falconUsersFetcher.loadAndSyncFalconUsers()
+        }
       }
     }
   
@@ -431,6 +444,9 @@ extension ContactsController: FalconUsersUpdatesDelegate {
   func falconUsers(shouldBeUpdatedTo users: [User]) {
     globalUsers = users
     reloadTableView(updatedUsers: users)
+    
+    let syncronizationStatus = UserDefaults.standard.bool(forKey: "SyncronizationStatus")
+    guard syncronizationStatus == true else { return }
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .medium)
   }
 }

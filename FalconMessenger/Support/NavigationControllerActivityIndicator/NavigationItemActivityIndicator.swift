@@ -24,7 +24,7 @@ enum UINavigationItemMessage: String {
   case connecting = "Connecting..."
   case loadingFromCache = "Loading from cache..."
   case updatingCache = "Updating cache..."
-  case updatingUsers = "Updating Falcon Users..."
+  case updatingUsers = "Syncing Falcon Users..."
 }
 
 

@@ -916,9 +916,9 @@ class ChatsTableViewController: UITableViewController {
     return cell
   }
   
-  fileprivate var chatLogController: ChatLogController? = nil
-  fileprivate var messagesFetcher: MessagesFetcher? = nil
-  fileprivate var destinationLayout: AutoSizingCollectionViewFlowLayout? = nil
+  var chatLogController: ChatLogController? = nil
+  var messagesFetcher: MessagesFetcher? = nil
+  var destinationLayout: AutoSizingCollectionViewFlowLayout? = nil
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     var conversation:Conversation!
