@@ -241,12 +241,9 @@ func timestampOfLastMessage(_ date: Date) -> String {
     } else { // this week
       return date.dayOfWeek()
     }
-   
   } else { // this day
     return date.getTimeStringFromUTC()
   }
-  
-  
 }
 
 func timestampOfChatLogMessage(_ date: Date) -> String {

@@ -12,18 +12,19 @@ import AVFoundation
 
 
 func getInputTextViewMaxHeight() -> CGFloat {
-  if UIDevice.current.orientation.isLandscape {
-    if DeviceType.iPhone5orSE {
-      return InputContainerViewConstants.maxContainerViewHeightLandscape4Inch
-    } else if DeviceType.iPhone678 {
-      return InputContainerViewConstants.maxContainerViewHeightLandscape47Inch
-    } else if DeviceType.iPhone678p || DeviceType.iPhoneX {
-      return InputContainerViewConstants.maxContainerViewHeightLandscape5558inch
-    } else {
-      return InputContainerViewConstants.maxContainerViewHeightLandscape4Inch
-    }
-  } else {
+  
+  guard UIDevice.current.orientation.isLandscape else {
     return InputContainerViewConstants.maxContainerViewHeight
+  }
+  
+  if DeviceType.iPhone5orSE {
+    return InputContainerViewConstants.maxContainerViewHeightLandscape4Inch
+  } else if DeviceType.iPhone678 {
+    return InputContainerViewConstants.maxContainerViewHeightLandscape47Inch
+  } else if DeviceType.iPhone678p || DeviceType.iPhoneX {
+    return InputContainerViewConstants.maxContainerViewHeightLandscape5558inch
+  } else {
+    return InputContainerViewConstants.maxContainerViewHeightLandscape4Inch
   }
 }
 
@@ -247,7 +248,6 @@ extension ChatInputContainerView: UITextViewDelegate {
   func textViewDidBeginEditing(_ textView: UITextView) {
     chatLogController?.scrollToBottom(at: .top)
   }
-  
   
   func textViewDidChange(_ textView: UITextView) {
     placeholderLabel.isHidden = !textView.text.isEmpty

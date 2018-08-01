@@ -34,6 +34,8 @@ class SelectChatTableViewController: UITableViewController {
   var phoneNumberKit = PhoneNumberKit()
 
   let viewControllerPlaceholder = ViewControllerPlaceholder()
+  
+  private var observer: NSObjectProtocol!
 
   
     override func viewDidLoad() {
@@ -43,11 +45,26 @@ class SelectChatTableViewController: UITableViewController {
       setupTableView()
       setupSearchController()
       setupViewControllerPlaceholder()
-    //checkContactsAuthorizationStatus() 
+      addObservers()
+  }
+  
+  fileprivate func addObservers() {
+    observer = NotificationCenter.default.addObserver(forName: .falconUsersUpdated, object: nil, queue: .main) { [weak self] notification in
+      self?.users = globalDataStorage.falconUsers
+      self?.filteredUsers = globalDataStorage.falconUsers
+      
+      if !globalDataStorage.falconUsers.isEmpty {
+        self?.viewControllerPlaceholder.removeViewControllerPlaceholder(from: self!.view, priority: .high)
+      }
+      DispatchQueue.main.async {
+        self?.tableView.reloadData()
+      }
+    }
   }
   
   deinit {
     print("new chat deinit")
+    NotificationCenter.default.removeObserver(observer)
   }
   
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -116,12 +133,7 @@ class SelectChatTableViewController: UITableViewController {
   }
   
   func checkNumberOfContacts() {
-    if self.users.count == 0 {
-      viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: "You don't have any Falcon Users yet.", subtitle: "", priority: .low, position: .center)
-    }
-  }
-  
-  fileprivate func handleFalconContactsAbsence() {
+    guard users.count == 0 else { return }
     viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.emptyFalconUsersTitle, subtitle: viewControllerPlaceholder.emptyFalconUsersSubtitle, priority: .low, position: .center)
   }
 

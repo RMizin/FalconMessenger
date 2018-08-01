@@ -40,7 +40,7 @@ class FalconUsersFetcher: NSObject {
 
     var preparedNumbers = [String]()
     
-    for number in localPhones {
+    for number in globalDataStorage.localPhones {
       do {
         let countryCode = try phoneNumberKit.parse(number).countryCode
         let nationalNumber = try phoneNumberKit.parse(number).nationalNumber
@@ -52,6 +52,7 @@ class FalconUsersFetcher: NSObject {
     loadAndSyncFalconUsersGroup.notify(queue: .main, execute: {
       self.isLoadAndSyncGroupFinished = true
       self.updateRemoteDataSourceAfterSync(newUsers: self.users)
+     
     })
     
     for preparedNumber in preparedNumbers {
@@ -104,9 +105,9 @@ class FalconUsersFetcher: NSObject {
   }
   
   fileprivate func syncronizeFalconUsers(with fetchedUsers: [User]) {
-    guard let currentUserID = Auth.auth().currentUser?.uid, fetchedUsers.count > 0 else { return }
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
-    let falconUserIDs = fetchedUsers.map({$0.id ?? ""})
+    let falconUserIDs = fetchedUsers.map({$0.id ?? nil})
     databaseReference.updateChildValues(["falconUsers" : falconUserIDs]) { (_, _) in
       self.loadFalconUsers()
     }
@@ -137,22 +138,26 @@ class FalconUsersFetcher: NSObject {
   func loadFalconUsers() {
     clearFalconUsersRefObservers()
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-    let databaseReference = Database.database().reference().child("users").child(currentUserID)//.child("falconUsers")
+    let databaseReference = Database.database().reference().child("users").child(currentUserID)
     databaseReference.observeSingleEvent(of: .value) { (snapshot) in
       guard snapshot.exists() else { return }
-      guard snapshot.childSnapshot(forPath: "falconUsers").exists() else { return }
+      guard snapshot.childSnapshot(forPath: "falconUsers").exists() else {
+        self.isFalconUsersLoadingGroupFinished = true
+        self.updateDataSource(newUsers: [User]())
+        return
+      }
       let falconUsersIDs = snapshot.childSnapshot(forPath: "falconUsers").value as! [String]
       self.loadData(for: falconUsersIDs)
     }
   }
   
   fileprivate func loadData(for userIDs: [String]) {
-    
+  
     userIDs.forEach { (_) in falconUsersLoadingGroup.enter() }
-    
+
     falconUsersLoadingGroup.notify(queue: .main, execute: {
       self.isFalconUsersLoadingGroupFinished = true
-   
+
       self.updateDataSource(newUsers: self.falconUsers)
     })
     
@@ -182,7 +187,7 @@ class FalconUsersFetcher: NSObject {
   fileprivate func updateDataSource(newUsers: [User]?) {
     guard isFalconUsersLoadingGroupFinished == true else { falconUsersLoadingGroup.leave(); return }
     guard var newUsers = newUsers else { return }
- 
+
     newUsers = self.sortUsers(users: newUsers)
     newUsers = self.rearrangeUsers(users: newUsers)
     self.delegate?.falconUsers(shouldBeUpdatedTo: newUsers)

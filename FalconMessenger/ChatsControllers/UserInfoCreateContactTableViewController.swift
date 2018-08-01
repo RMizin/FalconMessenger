@@ -37,7 +37,6 @@ class CreateContactTableViewController: UITableViewController {
       }
     }
 
-  
     @objc func dismissController() {
         dismiss(animated: true, completion: nil)
     }
@@ -58,8 +57,7 @@ class CreateContactTableViewController: UITableViewController {
       do {
         try store.execute(request)
         ARSLineProgress.showSuccess()
-        localPhones.append(phoneCell.textField.text?.digits ?? "") // just for removing add contact button
-        
+
         dismiss(animated: true, completion: nil)
       } catch {
         basicErrorAlertWith(title: "Error", message: error.localizedDescription, controller: self)

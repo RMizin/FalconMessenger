@@ -34,10 +34,8 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 protocol ManageAppearance: class {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool )
 }
-
-public var shouldReloadChatsControllerAfterChangingTheme = false
-
-
+ 
+ 
 class ChatsTableViewController: UITableViewController {
   
   fileprivate let noChatsYetContainer = NoChatsYetContainer()
@@ -192,22 +190,22 @@ class ChatsTableViewController: UITableViewController {
     destination.hidesBottomBarWhenPushed = true
     let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
     if isContactsAccessGranted {
-      destination.users = globalUsers
-      destination.filteredUsers = globalUsers
+      destination.users = globalDataStorage.falconUsers
+      destination.filteredUsers = globalDataStorage.falconUsers
       destination.checkNumberOfContacts()
     }
     navigationController?.pushViewController(destination, animated: true)
   }
   
   fileprivate func setUpColorsAccordingToTheme() {
-    if shouldReloadChatsControllerAfterChangingTheme {
+    if globalDataStorage.shouldReloadChatsControllerAfterChangingTheme {
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
       tableView.isOpaque = true
       tableView.reloadData()
-      shouldReloadChatsControllerAfterChangingTheme = false
+      globalDataStorage.shouldReloadChatsControllerAfterChangingTheme = false
       noChatsYetContainer.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
       navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor

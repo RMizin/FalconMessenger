@@ -236,8 +236,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             self.userMessagesReference.removeObserver(withHandle: self.userMessageHande)
             self.userMessagesQuery.removeObserver(withHandle: self.userMessageHande)
 
-            contentSizeWhenInsertingToTop = self.collectionView?.contentSize
-            isInsertingCellsToTop = true
+            globalDataStorage.contentSizeWhenInsertingToTop = self.collectionView?.contentSize
+            globalDataStorage.isInsertingCellsToTop = true
             self.refreshControl.endRefreshing()
        
             var indexPaths = [IndexPath]()
@@ -665,10 +665,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
   
-    guard let index = globalUsers.index(where: { (user) -> Bool in
+    guard let index = globalDataStorage.falconUsers.index(where: { (user) -> Bool in
       return user.id == conversation?.chatID
     }) else { return }
-    let status = globalUsers[index].onlineStatus as AnyObject
+    let status = globalDataStorage.falconUsers[index].onlineStatus as AnyObject
     onlineStatusInString = manageNavigationItemTitle(onlineStatusObject:  status)
   }
   

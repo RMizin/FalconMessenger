@@ -146,6 +146,7 @@
 		4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */; };
 		4BBBCC0320588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */; };
 		4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E6C521105E0900720B43 /* NavigationItemActivityIndicator.swift */; };
+		4BC0E6CB2111B71700720B43 /* GlobalDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */; };
 		4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */; };
 		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
 		4BC26B241F3A22890093A9D2 /* typingIndicator.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC26B231F3A22890093A9D2 /* typingIndicator.gif */; };
@@ -337,6 +338,7 @@
 		4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+TableRowActionHandlers.swift"; path = "ChatsControllers/ChatsTableViewController+TableRowActionHandlers.swift"; sourceTree = "<group>"; };
 		4BBBCC0220588CC000926800 /* ChatsTableViewController+NotificationsHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+NotificationsHandlers.swift"; path = "ChatsControllers/ChatsTableViewController+NotificationsHandlers.swift"; sourceTree = "<group>"; };
 		4BC0E6C521105E0900720B43 /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
+		4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalDataStorage.swift; sourceTree = "<group>"; };
 		4BC26B0F1F3A21EE0093A9D2 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatInputContainerView.swift; path = ChatsControllers/ChatInputContainerView.swift; sourceTree = "<group>"; };
 		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
 		4BC26B231F3A22890093A9D2 /* typingIndicator.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = typingIndicator.gif; path = ChatsControllers/Media/typingIndicator.gif; sourceTree = "<group>"; };
@@ -608,6 +610,7 @@
 		4B6BAF8B20886B3800A90F3A /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4BC0E6C92111B6F200720B43 /* GlobalDataStorage */,
 				4B5693C620CFFAAB005EAE15 /* InAppBanner */,
 				4B08E370208872B800C64EAA /* Public */,
 				4B08E36F208872AF00C64EAA /* ThemeManager */,
@@ -942,6 +945,14 @@
 				4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift */,
 			);
 			name = GroupInfoControllers;
+			sourceTree = "<group>";
+		};
+		4BC0E6C92111B6F200720B43 /* GlobalDataStorage */ = {
+			isa = PBXGroup;
+			children = (
+				4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */,
+			);
+			path = GlobalDataStorage;
 			sourceTree = "<group>";
 		};
 		4BC26B221F3A227E0093A9D2 /* Media */ = {
@@ -1335,6 +1346,7 @@
 				4B6BB01720886C5F00A90F3A /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BB6D197206EA62F00FEF72E /* Conversation.swift in Sources */,
 				4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */,
+				4BC0E6CB2111B71700720B43 /* GlobalDataStorage.swift in Sources */,
 				4BE8BB371FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift in Sources */,
 				4B6BAFFF20886C5F00A90F3A /* AvatarOpener.swift in Sources */,
 				4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */,

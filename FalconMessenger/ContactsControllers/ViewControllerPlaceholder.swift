@@ -30,7 +30,7 @@ class ViewControllerPlaceholder: UIView {
   let contactsAuthorizationDeniedtitle = "Falcon doesn't have access to your contacts"
   let contactsAuthorizationDeniedSubtitle = "Please go to your iPhone Settings –– Privacy –– Contacts. Then select ON for Falcon."
   
-  let emptyFalconUsersTitle = "No Falcon users in your contacts yet."
+  let emptyFalconUsersTitle = "You don't have any Falcon Users yet."
   let emptyFalconUsersSubtitle = "You can invite your friends to Flacon Messenger at the Contacts tab  "
   
   

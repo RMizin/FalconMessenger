@@ -37,6 +37,8 @@ class UserInfoTableViewController: UITableViewController {
   
   var shouldDisplayContactAdder:Bool?
   
+  private var observer: NSObjectProtocol!
+  
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -44,6 +46,7 @@ class UserInfoTableViewController: UITableViewController {
     setupMainView()
     setupTableView()
     getUserInfo()
+    addObservers()
   }
   
   override func viewDidDisappear(_ animated: Bool) {
@@ -56,8 +59,16 @@ class UserInfoTableViewController: UITableViewController {
   
   deinit {
     print("user info deinit")
+    NotificationCenter.default.removeObserver(observer)
   }
   
+  fileprivate func addObservers() {
+    observer = NotificationCenter.default.addObserver(forName: .localPhonesUpdated, object: nil, queue: .main) { [weak self] notification in
+      DispatchQueue.main.async {
+        self?.tableView.reloadData()
+      }
+    }
+  }
   
   fileprivate func setupMainView() {
     title = "Info"
@@ -109,7 +120,7 @@ class UserInfoTableViewController: UITableViewController {
    
     let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! UserInfoPhoneNumberTableViewCell
     
-    if localPhones.contains(contactPhoneNumber.digits) {
+    if globalDataStorage.localPhones.contains(contactPhoneNumber.digits) {
       phoneNumberCell.add.isHidden = true
       phoneNumberCell.contactStatus.isHidden = true
       phoneNumberCell.addHeightConstraint.constant = 0
@@ -170,7 +181,7 @@ class UserInfoTableViewController: UITableViewController {
       phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       phoneNumberCell.userInfoTableViewController = self
       
-      if localPhones.contains(contactPhoneNumber.digits) {
+      if globalDataStorage.localPhones.contains(contactPhoneNumber.digits) {
         phoneNumberCell.add.isHidden = true
         phoneNumberCell.contactStatus.isHidden = true
         phoneNumberCell.addHeightConstraint.constant = 0

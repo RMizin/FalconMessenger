@@ -381,7 +381,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   func addMembers() {
-    let filteredMemebrs = globalUsers.filter { user in
+    let filteredMemebrs = globalDataStorage.falconUsers.filter { user in
       return !members.contains { member in
         user.id == member.id
       }

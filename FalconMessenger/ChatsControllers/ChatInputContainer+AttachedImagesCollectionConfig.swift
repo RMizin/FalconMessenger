@@ -50,6 +50,8 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     
     let row = indexPath!.row
   
+    let imageSourcePhotoLibrary = globalDataStorage.imageSourcePhotoLibrary
+  
     if selectedMedia[row].imageSource == imageSourcePhotoLibrary {
       
     if mediaPickerController!.assets.contains(selectedMedia[row].phAsset!) {
@@ -85,7 +87,6 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
                                                                               at: indexPath)
   }
 
- 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = attachedImages.dequeueReusableCell(withReuseIdentifier: selectedMediaCollectionCellID, for: indexPath) as! SelectedMediaCollectionCell
     

@@ -12,12 +12,6 @@ import Firebase
 import SDWebImage
 import PhoneNumberKit
 
-public var shouldReloadContactsControllerAfterChangingTheme = false
-
-var localPhones = [String]()
-
-var globalUsers = [User]()
-
 
 class ContactsController: UITableViewController {
   
@@ -95,8 +89,8 @@ class ContactsController: UITableViewController {
     }
   
     fileprivate func setUpColorsAccordingToTheme() {
-      if shouldReloadContactsControllerAfterChangingTheme {
-        shouldReloadContactsControllerAfterChangingTheme = false
+      if globalDataStorage.shouldReloadContactsControllerAfterChangingTheme {
+        globalDataStorage.shouldReloadContactsControllerAfterChangingTheme = false
         view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
         tableView.sectionIndexBackgroundColor = view.backgroundColor
         tableView.backgroundColor = view.backgroundColor
@@ -152,15 +146,19 @@ class ContactsController: UITableViewController {
        viewControllerPlaceholder.addViewControllerPlaceholder(for: view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
     }
   
-  
     fileprivate func observeContactsChanges() {
-      
       NotificationCenter.default.addObserver(self, selector: #selector(contactStoreDidChange), name: .CNContactStoreDidChange, object: nil)
+    }
+  
+    deinit {
+      NotificationCenter.default.removeObserver(self, name: .CNContactStoreDidChange, object: nil)
     }
   
     @objc func contactStoreDidChange(notification: NSNotification) {
       guard Auth.auth().currentUser != nil else { return }
+      NotificationCenter.default.removeObserver(self, name: .CNContactStoreDidChange, object: nil)
       DispatchQueue.global(qos: .background).async {
+        print("start fetch")
         self.fetchContacts()
       }
     }
@@ -185,17 +183,19 @@ class ContactsController: UITableViewController {
         
         let keys = [CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey, CNContactImageDataKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey]
         let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
-        
+        var contactsArray = [CNContact]()
         do {
-          self.contacts.removeAll()
-          try store.enumerateContacts(with: request) { contact, stop in self.contacts.append(contact) }
+          try store.enumerateContacts(with: request) { contact, stop in
+            contactsArray.append(contact)
+          }
         } catch {}
         
-        localPhones.removeAll()
-        self.filteredContacts = self.contacts
+        self.contacts = contactsArray
+        self.filteredContacts = contactsArray
         
         let phoneNumbers = self.contacts.flatMap({$0.phoneNumbers.map({$0.value.stringValue.digits}) })
-        localPhones.append(contentsOf: phoneNumbers)
+        globalDataStorage.localPhones = phoneNumbers
+        self.tableView.reloadData()
         self.syncronizeContacts(contacts: self.contacts)
       }
     }
@@ -238,6 +238,8 @@ class ContactsController: UITableViewController {
       userReference.updateChildValues(["contacts": preparedNumbers])
     }*/
   
+
+    fileprivate var isAppLoaded = false
     fileprivate func reloadTableView(updatedUsers: [User]) {
       users = updatedUsers
       //users = falconUsersFetcher.rearrangeUsers(users: updatedUsers)
@@ -247,9 +249,14 @@ class ContactsController: UITableViewController {
       
       if isSearchInProgress && !isSearchControllerEmpty { return } else {
         filteredUsers = users
-        guard filteredUsers.count != 0 else { return }
-        DispatchQueue.main.async {
-          self.tableView.reloadData()
+      //  guard filteredUsers.count != 0 else { return }
+        if isAppLoaded == false {
+          isAppLoaded = true
+          UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: nil)
+        } else {
+          DispatchQueue.main.async {
+            self.tableView.reloadData()
+          }
         }
       }
     }
@@ -442,11 +449,12 @@ class ContactsController: UITableViewController {
 
 extension ContactsController: FalconUsersUpdatesDelegate { 
   func falconUsers(shouldBeUpdatedTo users: [User]) {
-    globalUsers = users
+    globalDataStorage.falconUsers = users
     reloadTableView(updatedUsers: users)
     
     let syncronizationStatus = UserDefaults.standard.bool(forKey: "SyncronizationStatus")
     guard syncronizationStatus == true else { return }
+    observeContactsChanges()
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .medium)
   }
 }

@@ -10,15 +10,13 @@ import UIKit
 import Photos
 
 
-public let imageSourcePhotoLibrary = "imageSourcePhotoLibrary"
-public let imageSourceCamera = "imageSourceCamera"
-
-
 class MediaPickerControllerNew: ImagePickerTrayController {
   
   var imagePicker: UIImagePickerController! = UIImagePickerController()
   weak var inputContainerView: ChatInputContainerView?
-
+  
+  fileprivate let imageSourceCamera = globalDataStorage.imageSourceCamera
+  fileprivate let imageSourcePhotoLibrary = globalDataStorage.imageSourcePhotoLibrary
 
   override func loadView() {
     super.loadView()
@@ -87,7 +85,7 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
             
             let mediaObject = ["object": data!,
                                "videoObject": video,
-                               "imageSource": imageSourceCamera,
+                               "imageSource": self.imageSourceCamera,
                                "phAsset": asset,
                                "filename": filename,
                                "fileURL" : url] as [String: AnyObject]
@@ -178,11 +176,11 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
           }
           
           guard let unwrappedIndexPath = indexPath else {
-            self.handleOlderAssetSelection(imageData: imageData, videoData: video, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+            self.handleOlderAssetSelection(imageData: imageData, videoData: video, imageSource: self.imageSourcePhotoLibrary, asset: asset, filename: filename)
             return
           }
           
-          self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: unwrappedIndexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+          self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: unwrappedIndexPath, imageSource: self.imageSourcePhotoLibrary, asset: asset, filename: filename)
           
         } else if avasset is AVComposition {
           
@@ -219,11 +217,11 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
                   }
                   
                   guard let unwrappedIndexPath = indexPath else {
-                    self.handleOlderAssetSelection(imageData: imageData, videoData: video, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+                    self.handleOlderAssetSelection(imageData: imageData, videoData: video, imageSource: self.imageSourcePhotoLibrary, asset: asset, filename: filename)
                     return
                   }
                   
-                  self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: unwrappedIndexPath, imageSource: imageSourcePhotoLibrary, asset: asset, filename: filename)
+                  self.handleAssetSelection(imageData: imageData, videoData: video, indexPath: unwrappedIndexPath, imageSource: self.imageSourcePhotoLibrary, asset: asset, filename: filename)
                 })
               }
             }
@@ -307,7 +305,7 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
         print("after  ", fileURL)
         
         let mediaObject = ["object": data!,
-                           "imageSource": imageSourceCamera,
+                           "imageSource": self.imageSourceCamera,
                            "phAsset": asset,
                            "filename": filename,
                            "fileURL" : fileURL] as [String: AnyObject]
