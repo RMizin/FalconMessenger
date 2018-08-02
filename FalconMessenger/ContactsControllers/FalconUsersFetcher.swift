@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import PhoneNumberKit
+import SDWebImage
 
 protocol FalconUsersUpdatesDelegate: class {
   func falconUsers(shouldBeUpdatedTo users: [User])
@@ -107,8 +108,20 @@ class FalconUsersFetcher: NSObject {
   fileprivate func syncronizeFalconUsers(with fetchedUsers: [User]) {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
-    let falconUserIDs = fetchedUsers.map({$0.id ?? nil})
-    databaseReference.updateChildValues(["falconUsers" : falconUserIDs]) { (_, _) in
+    let falconUserIDs = fetchedUsers.map({$0.id ?? "" })
+    
+    
+    var falconUserIDsDictionary = [AnyHashable: Any]()
+    
+     falconUserIDs.forEach { (item) in
+      falconUserIDsDictionary[item] = item
+    }
+    /*
+    databaseReference.updateChildValues(["falconUsers" : falconUserIDsDictionary]) { (_, _) in
+      self.loadFalconUsers()
+    }*/
+
+    databaseReference.child("falconUsers").updateChildValues(falconUserIDsDictionary) { (_, _) in
       self.loadFalconUsers()
     }
   }
@@ -139,14 +152,21 @@ class FalconUsersFetcher: NSObject {
     clearFalconUsersRefObservers()
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
+    databaseReference.keepSynced(true)
     databaseReference.observeSingleEvent(of: .value) { (snapshot) in
-      guard snapshot.exists() else { return }
+      guard snapshot.exists() else {
+        self.isFalconUsersLoadingGroupFinished = true
+        self.updateDataSource(newUsers: [User]())
+        return
+      }
       guard snapshot.childSnapshot(forPath: "falconUsers").exists() else {
         self.isFalconUsersLoadingGroupFinished = true
         self.updateDataSource(newUsers: [User]())
         return
       }
-      let falconUsersIDs = snapshot.childSnapshot(forPath: "falconUsers").value as! [String]
+    
+      guard var dictionary = snapshot.childSnapshot(forPath: "falconUsers").value as? [String: String] else { return }
+      let falconUsersIDs: [String] = Array(dictionary.values)
       self.loadData(for: falconUsersIDs)
     }
   }
@@ -172,6 +192,10 @@ class FalconUsersFetcher: NSObject {
         dictionary.updateValue(userID as AnyObject, forKey: "id")
         let falconUser = User(dictionary: dictionary)
         
+        if let thumbnail = falconUser.thumbnailPhotoURL, let url = URL(string: thumbnail) {
+          SDWebImagePrefetcher.shared.prefetchURLs([url])
+        }
+    
         if let index = self.falconUsers.index(where: { (user) -> Bool in
           return user.id == falconUser.id
         }) {

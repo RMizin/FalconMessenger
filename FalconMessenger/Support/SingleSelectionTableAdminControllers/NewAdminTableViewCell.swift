@@ -18,7 +18,7 @@ class NewAdminTableViewCell: UITableViewCell {
     var icon = UIImageView()
     icon.translatesAutoresizingMaskIntoConstraints = false
     icon.contentMode = .scaleAspectFill
-    icon.layer.cornerRadius = 22
+    icon.layer.cornerRadius = 25
     icon.layer.masksToBounds = true
     icon.image = UIImage(named: "UserpicIcon")
     
@@ -28,7 +28,7 @@ class NewAdminTableViewCell: UITableViewCell {
   var title: UILabel = {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
-    title.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.semibold)
+    title.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     
     return title
@@ -37,7 +37,7 @@ class NewAdminTableViewCell: UITableViewCell {
   var subtitle: UILabel = {
     var subtitle = UILabel()
     subtitle.translatesAutoresizingMaskIntoConstraints = false
-    subtitle.font = UIFont.systemFont(ofSize: 13)
+    subtitle.font = UIFont.systemFont(ofSize: 15)
     subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
     
     return subtitle
@@ -56,8 +56,8 @@ class NewAdminTableViewCell: UITableViewCell {
     contentView.addSubview(icon)
     icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
     icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
-    icon.widthAnchor.constraint(equalToConstant: 46).isActive = true
-    icon.heightAnchor.constraint(equalToConstant: 46).isActive = true
+    icon.widthAnchor.constraint(equalToConstant: 50).isActive = true
+    icon.heightAnchor.constraint(equalToConstant: 50).isActive = true
     
     contentView.addSubview(title)
     title.topAnchor.constraint(equalTo: icon.topAnchor, constant: 0).isActive = true
@@ -78,7 +78,7 @@ class NewAdminTableViewCell: UITableViewCell {
   
   @objc func cellTapped() {
     guard let indexPath = selectNewAdminTableViewController.tableView.indexPathForView(self) else { return }
-    selectNewAdminTableViewController.deselectAll(indexPath: indexPath)
+    selectNewAdminTableViewController.deselectAll()
     selectNewAdminTableViewController.didSelectUser(at: indexPath)
     isSelected = true
   }

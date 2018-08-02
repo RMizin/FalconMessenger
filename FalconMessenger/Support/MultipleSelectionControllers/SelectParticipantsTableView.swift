@@ -12,24 +12,25 @@ import SDWebImage
 
 extension SelectParticipantsViewController: UITableViewDelegate, UITableViewDataSource {
   
-  func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    return sortedFirstLetters[section]
-  }
-  
-  func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-    return sortedFirstLetters
-  }
   
   func numberOfSections(in tableView: UITableView) -> Int {
-    return sections.count
+    return sectionTitles.count
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return sections[section].count
+    return filteredUsersWithSection[section].count
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 65
+  }
+  
+  func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    return sectionTitles[section]
+  }
+  
+  func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+    return sectionTitles
   }
   
   func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -56,7 +57,7 @@ extension SelectParticipantsViewController: UITableViewDelegate, UITableViewData
     backgroundView.backgroundColor = cell.backgroundColor
     cell.selectedBackgroundView = backgroundView
     
-    let user = sections[indexPath.section][indexPath.row]
+     let user = filteredUsersWithSection[indexPath.section][indexPath.row]
     
     DispatchQueue.main.async {
       cell.isSelected = user.isSelected
@@ -95,13 +96,5 @@ extension SelectParticipantsViewController: UITableViewDelegate, UITableViewData
     })
     
     return cell
-  }
-}
-
-extension SelectParticipantsViewController: UITableViewDataSourcePrefetching {
-  
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared.prefetchURLs(urls as? [URL])
   }
 }

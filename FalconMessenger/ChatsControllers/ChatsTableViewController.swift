@@ -192,6 +192,7 @@ class ChatsTableViewController: UITableViewController {
     if isContactsAccessGranted {
       destination.users = globalDataStorage.falconUsers
       destination.filteredUsers = globalDataStorage.falconUsers
+      destination.setUpCollation()
       destination.checkNumberOfContacts()
     }
     navigationController?.pushViewController(destination, animated: true)
@@ -425,6 +426,7 @@ class ChatsTableViewController: UITableViewController {
       conversation.chatPhotoURL = user.photoURL
       conversation.chatThumbnailPhotoURL = user.thumbnailPhotoURL
       conversation.chatParticipantsIDs = [chatID, currentUserID]
+      self.prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
       self.updateConversationArrays(with: conversation)
     })
     
@@ -445,8 +447,15 @@ class ChatsTableViewController: UITableViewController {
       conversation.isGroupChat = metaInfo.isGroupChat
       conversation.admin = metaInfo.admin
       conversation.chatID = metaInfo.chatID
+      self.prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
       self.updateConversationArrays(with: conversation)
     })
+  }
+  
+  fileprivate func prefetchThumbnail(from urlString: String?) {
+    if let thumbnail = urlString, let url = URL(string: thumbnail) {
+      SDWebImagePrefetcher.shared.prefetchURLs([url])
+    }
   }
   
   fileprivate func updateConversationArrays(with conversation: Conversation) {
@@ -565,7 +574,7 @@ class ChatsTableViewController: UITableViewController {
     groupConversationsChangesHandle.insert(element, at: 0)
     groupConversationsChangesHandle[0].handle = groupChatReference.observe(.childChanged, with: { (snapshot) in
       print("group child changed")
-      self.handleConversationChildChanges(from: snapshot, conversationNameKey: "chatName", conversationPhotoKey:  "chatThumbnailPhotoURL",
+      self.handleConversationChildChanges(from: snapshot, conversationNameKey: "chatName", conversationPhotoKey: "chatThumbnailPhotoURL",
                                           chatID: chatID, membersIDsKey: "chatParticipantsIDs", adminKey: "admin")
     })
   }
@@ -579,7 +588,7 @@ class ChatsTableViewController: UITableViewController {
     conversationsChangesHandle.insert(element, at: 0)
     conversationsChangesHandle[0].handle = userReference.observe(.childChanged, with: { (snapshot) in
     print("child changed")
-    self.handleConversationChildChanges(from: snapshot, conversationNameKey: "name", conversationPhotoKey:  "thumbnailPhotoURL",
+    self.handleConversationChildChanges(from: snapshot, conversationNameKey: "name", conversationPhotoKey: "thumbnailPhotoURL",
                                           chatID: chatID, membersIDsKey: nil, adminKey: nil)
     })
   }
@@ -708,7 +717,7 @@ class ChatsTableViewController: UITableViewController {
     }
   }
   
-  func handleReloadTable() {
+  func handleReloadTable(isSearching: Bool = false) {
     
     conversations.sort { (conversation1, conversation2) -> Bool in
       return conversation1.lastMessage?.timestamp?.int64Value > conversation2.lastMessage?.timestamp?.int64Value
@@ -722,7 +731,6 @@ class ChatsTableViewController: UITableViewController {
     filtededConversations = conversations
   
     if !isAppLoaded {
-   
       UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: { (_) in
         self.initAllTabs()
         
@@ -750,7 +758,13 @@ class ChatsTableViewController: UITableViewController {
     } else {
       navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
       configureTabBarBadge()
-      tableView.reloadData()
+      
+      if isSearching {
+         UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
+      } else {
+         tableView.reloadData()
+      }
+     
     }
     
     if filtededConversations.count == 0 && filteredPinnedConversations.count == 0 {
@@ -768,7 +782,8 @@ class ChatsTableViewController: UITableViewController {
     filtededConversations.sort { (conversation1, conversation2) -> Bool in
       return conversation1.lastMessage?.timestamp?.int64Value > conversation2.lastMessage?.timestamp?.int64Value
     }
-    tableView.reloadData()
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
+   // tableView.reloadData()
   }
 
     // MARK: - Table view data source

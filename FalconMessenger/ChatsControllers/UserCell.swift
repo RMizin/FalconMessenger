@@ -165,7 +165,7 @@ class UserCell: UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
-    
+
     profileImageView.image = nil
     profileImageView.sd_cancelCurrentImageLoad()
     nameLabel.text = ""

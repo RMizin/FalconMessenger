@@ -109,7 +109,6 @@ class ContactsController: UITableViewController {
       tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
       tableView.register(CurrentUserTableViewCell.self, forCellReuseIdentifier: currentUserCellID)
       tableView.separatorStyle = .none
-      tableView.prefetchDataSource = self
       definesPresentationContext = true
     }
   
@@ -350,11 +349,12 @@ class ContactsController: UITableViewController {
         }
         
         guard let url = filteredUsers[indexPath.row].thumbnailPhotoURL else { return cell }
+     
         cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage], completed: { (image, error, cacheType, url) in
           
           guard image != nil else { return }
           guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-             cell.icon.image = image
+            cell.icon.image = image
             return
           }
           
@@ -456,14 +456,6 @@ extension ContactsController: FalconUsersUpdatesDelegate {
     guard syncronizationStatus == true else { return }
     observeContactsChanges()
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .medium)
-  }
-}
-
-extension ContactsController: UITableViewDataSourcePrefetching {
-  
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared.prefetchURLs(urls as? [URL])
   }
 }
 

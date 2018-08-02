@@ -17,39 +17,23 @@ class SelectNewAdminTableViewController: UITableViewController {
   
   weak var adminControlsController: GroupAdminControlsTableViewController?
   
-  var filteredUsers = [User]() {
-    didSet {
-      configureSections()
-    }
-  }
+  var filteredUsers = [User]()
+
+  var filteredUsersWithSection = [[User]]()
+  
+  var collation = UILocalizedIndexedCollation.current()
+  
+  var sectionTitles = [String]()
 
   var users = [User]()
-  var sortedFirstLetters = [String]()
-  var sections = [[User]]()
+
   var selectedFalconUsers = [User]()
   var chatID = String()
   var currentUserName = String()
   var searchBar: UISearchBar?
   let informationMessageSender = InformationMessageSender()
   
-  fileprivate var isInitialLoad = true
-  fileprivate func configureSections() {
-    if isInitialLoad {
-      _ = filteredUsers.map { $0.isSelected = false }
-      isInitialLoad = false
-    }
-    
-    let firstLetters = filteredUsers.map { $0.titleFirstLetter }
-    let uniqueFirstLetters = Array(Set(firstLetters))
-    sortedFirstLetters = uniqueFirstLetters.sorted()
-    sections = sortedFirstLetters.map { firstLetter in
-      
-      return self.filteredUsers
-        .filter { $0.titleFirstLetter == firstLetter }
-        .sorted { $0.name ?? "" < $1.name ?? "" }
-    }
-  }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -59,7 +43,12 @@ class SelectNewAdminTableViewController: UITableViewController {
   }
   
   deinit {
-    print("new admion deinit")
+    print("new admin deinit")
+  }
+ 
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    deselectAll()
   }
   
   func setupMainView() {
@@ -80,7 +69,6 @@ class SelectNewAdminTableViewController: UITableViewController {
     tableView.backgroundColor = view.backgroundColor
     tableView.register(NewAdminTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
-    tableView.prefetchDataSource = self
     setupRightBarButton(with: "Leave the group")
   }
   
@@ -100,7 +88,6 @@ class SelectNewAdminTableViewController: UITableViewController {
   @objc func rightBarButtonTapped() {
     ARSLineProgress.ars_showOnView(self.view)
     adminControlsController?.removeObservers()
-    print("rbb")
   }
   
   func leaveTheGroupAndSetAdmin() {
@@ -142,24 +129,30 @@ class SelectNewAdminTableViewController: UITableViewController {
     tableView.tableHeaderView = searchBar
   }
   
-  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    return sortedFirstLetters[section]
-  }
-  
-  override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-    return sortedFirstLetters
+  @objc func setUpCollation() {
+    let (arrayContacts, arrayTitles) = collation.partitionObjects(array: self.filteredUsers, collationStringSelector: #selector(getter: User.name))
+    filteredUsersWithSection = arrayContacts as! [[User]]
+    sectionTitles = arrayTitles
   }
   
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return sections.count
+    return sectionTitles.count
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return sections[section].count
+    return filteredUsersWithSection[section].count
   }
   
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 65
+  }
+  
+  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    return sectionTitles[section]
+  }
+  
+  override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+    return sectionTitles
   }
   
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -182,7 +175,7 @@ class SelectNewAdminTableViewController: UITableViewController {
     
     let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! NewAdminTableViewCell
     cell.selectNewAdminTableViewController = self
-    let user = sections[indexPath.section][indexPath.row]
+    let user = filteredUsersWithSection[indexPath.section][indexPath.row]
     cell.isSelected = user.isSelected
     
     if cell.isSelected {
@@ -191,11 +184,11 @@ class SelectNewAdminTableViewController: UITableViewController {
       cell.accessoryType = .none
     }
   
-    if let name = sections[indexPath.section][indexPath.row].name {
+    if let name = filteredUsersWithSection[indexPath.section][indexPath.row].name {
       cell.title.text = name
     }
     
-    if let statusString = sections[indexPath.section][indexPath.row].onlineStatus as? String {
+    if let statusString = filteredUsersWithSection[indexPath.section][indexPath.row].onlineStatus as? String {
       if statusString == statusOnline {
         cell.subtitle.textColor = FalconPalette.defaultBlue
         cell.subtitle.text = statusString
@@ -206,14 +199,14 @@ class SelectNewAdminTableViewController: UITableViewController {
         cell.subtitle.text = subtitle
       }
       
-    } else if let statusTimeinterval = sections[indexPath.section][indexPath.row].onlineStatus as? TimeInterval {
+    } else if let statusTimeinterval = filteredUsersWithSection[indexPath.section][indexPath.row].onlineStatus as? TimeInterval {
       cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
       let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
       let subtitle = "Last seen " + timeAgoSinceDate(date)
       cell.subtitle.text = subtitle
     }
     
-    guard let url = sections[indexPath.section][indexPath.row].thumbnailPhotoURL else { return cell }
+    guard let url = filteredUsersWithSection[indexPath.section][indexPath.row].thumbnailPhotoURL else { return cell }
     cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.continueInBackground], completed: { (image, error, cacheType, url) in
       guard image != nil else { return }
       guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
@@ -226,22 +219,21 @@ class SelectNewAdminTableViewController: UITableViewController {
     return cell
   }
   
-  func deselectAll(indexPath:IndexPath) {
-    for user in selectedFalconUsers {
-      if let filteredUsersIndex = filteredUsers.index(of: user) {
-        filteredUsers[filteredUsersIndex].isSelected = false
-      }
-      if let usersIndex = users.index(of: user) {
-        users[usersIndex].isSelected = false
-      }
-    }
-    sections[indexPath.section][indexPath.row].isSelected = false
+  func deselectAll() {
+    guard users.count > 0 else { return }
+    _ = users.map { $0.isSelected = false }
+    filteredUsers = users
+    
     selectedFalconUsers.removeAll()
+    setUpCollation()
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
+    }
   }
   
   func didSelectUser(at indexPath: IndexPath) {
     
-    let user = sections[indexPath.section][indexPath.row]
+    let user = filteredUsersWithSection[indexPath.section][indexPath.row]
     
     if let filteredUsersIndex = filteredUsers.index(of: user) {
       filteredUsers[filteredUsersIndex].isSelected = true
@@ -251,8 +243,8 @@ class SelectNewAdminTableViewController: UITableViewController {
       users[usersIndex].isSelected = true
     }
     
-    sections[indexPath.section][indexPath.row].isSelected = true
-    selectedFalconUsers.append(sections[indexPath.section][indexPath.row])
+    filteredUsersWithSection[indexPath.section][indexPath.row].isSelected = true
+    selectedFalconUsers.append(filteredUsersWithSection[indexPath.section][indexPath.row])
     
     DispatchQueue.main.async {
       self.tableView.reloadData()
@@ -263,12 +255,5 @@ class SelectNewAdminTableViewController: UITableViewController {
       return
     }
     self.navigationItem.rightBarButtonItem?.isEnabled = false
-  }
-}
-
-extension SelectNewAdminTableViewController: UITableViewDataSourcePrefetching {
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared.prefetchURLs(urls as? [URL])
   }
 }

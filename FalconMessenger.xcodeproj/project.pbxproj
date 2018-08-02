@@ -617,6 +617,7 @@
 				4B6BAFB320886C5E00A90F3A /* CenteredCollectionViewFlowLayout */,
 				4B6BAFD120886C5E00A90F3A /* FlaconTextView */,
 				4B6BAFB820886C5E00A90F3A /* INSPhotoGallery */,
+				4B6BAFA020886C5E00A90F3A /* SingleSelectionTableAdminControllers */,
 				4B6BAF8E20886C5D00A90F3A /* MultipleSelectionControllers */,
 				4B6BAFA420886C5E00A90F3A /* NavigationControllerActivityIndicator */,
 				4B6BAFA620886C5E00A90F3A /* PhoneAuthentication */,
@@ -624,7 +625,6 @@
 				4B6BAFD320886C5E00A90F3A /* ProgressIndicator */,
 				4B6BAFDE20886C5F00A90F3A /* RevealableCell */,
 				4B6BAFE220886C5F00A90F3A /* RoundProgressView */,
-				4B6BAFA020886C5E00A90F3A /* SingleSelectionTableAdminControllers */,
 				4B6BAFB520886C5E00A90F3A /* UserProfilePictureOpener */,
 				4B6BAF9E20886C5E00A90F3A /* WaveFormView */,
 			);

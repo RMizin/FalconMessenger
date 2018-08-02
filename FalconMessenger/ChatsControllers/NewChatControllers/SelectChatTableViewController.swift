@@ -27,6 +27,12 @@ class SelectChatTableViewController: UITableViewController {
   
   var filteredUsers = [User]()
   
+  var filteredUsersWithSection = [[User]]()
+  
+  var collation = UILocalizedIndexedCollation.current()
+  
+  var sectionTitles = [String]()
+  
   var searchBar: UISearchBar?
   
   private let reloadAnimation = UITableViewRowAnimation.none
@@ -56,6 +62,10 @@ class SelectChatTableViewController: UITableViewController {
       if !globalDataStorage.falconUsers.isEmpty {
         self?.viewControllerPlaceholder.removeViewControllerPlaceholder(from: self!.view, priority: .high)
       }
+      if self!.searchBar != nil && !self!.searchBar!.isFirstResponder {
+        self?.setUpCollation()
+      }
+     
       DispatchQueue.main.async {
         self?.tableView.reloadData()
       }
@@ -99,7 +109,6 @@ class SelectChatTableViewController: UITableViewController {
     tableView.backgroundColor = view.backgroundColor
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
-    tableView.prefetchDataSource = self
   }
   
   fileprivate func setupSearchController() {
@@ -144,44 +153,64 @@ class SelectChatTableViewController: UITableViewController {
     return searchBar
   }
   
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-      return 2
+  @objc func setUpCollation() {
+    let (arrayContacts, arrayTitles) = collation.partitionObjects(array: self.filteredUsers, collationStringSelector: #selector(getter: User.name))
+    filteredUsersWithSection = arrayContacts as! [[User]]
+    sectionTitles = arrayTitles
+    setupHeaderSectionWithControls()
+  }
+  
+  fileprivate func setupHeaderSectionWithControls() {
+    sectionTitles.insert("", at: 0)
+    filteredUsersWithSection.insert([User](), at: 0)
+  }
+  
+  override func numberOfSections(in tableView: UITableView) -> Int {
+    return sectionTitles.count
+  }
+  
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if section == 0 {
+      return actions.count
+    } else {
+      return filteredUsersWithSection[section].count
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      if section == 0 {
-        return actions.count
-      } else {
-        return filteredUsers.count
-      }
-    }
+  }
   
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 65
   }
-  
+
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    return ""
+    return sectionTitles[section]
+  }
+  
+  override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+    return sectionTitles
   }
   
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-    view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
-    
+    view.tintColor = ThemeManager.currentTheme().inputTextViewColor
     if let headerTitle = view as? UITableViewHeaderFooterView {
-      headerTitle.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+      headerTitle.textLabel?.textColor = ThemeManager.currentTheme().generalSubtitleColor
+      headerTitle.textLabel?.font = UIFont.systemFont(ofSize: 10)
     }
   }
+  
+  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return 20
+  }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      return selectCell(for: indexPath)!
-    }
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    return selectCell(for: indexPath)!
+  }
   
   func selectCell(for indexPath: IndexPath) -> UITableViewCell? {
   
-    if indexPath.section == 0 {
+    let headerSection = 0
+    if indexPath.section == headerSection {
       let cell = tableView.dequeueReusableCell(withIdentifier: newGroupCellID) ?? UITableViewCell(style: .default, reuseIdentifier: newGroupCellID)
+
       cell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       cell.imageView?.image = UIImage(named: "groupChat")
       cell.imageView?.contentMode = .scaleAspectFit
@@ -191,45 +220,42 @@ class SelectChatTableViewController: UITableViewController {
       return cell
     }
     
-    if indexPath.section == 1 {
-      
-       let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
-      
-      if let name = filteredUsers[indexPath.row].name {
-        cell.title.text = name
-      }
-      
-      if let statusString = filteredUsers[indexPath.row].onlineStatus as? String {
-        if statusString == statusOnline {
-          cell.subtitle.textColor = FalconPalette.defaultBlue
-          cell.subtitle.text = statusString
-        } else {
-          cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-          let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-          let subtitle = "Last seen " + timeAgoSinceDate(date)
-          cell.subtitle.text = subtitle
-        }
-        
-      } else if let statusTimeinterval = filteredUsers[indexPath.row].onlineStatus as? TimeInterval {
+    let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
+    let falconUser = filteredUsersWithSection[indexPath.section][indexPath.row]
+    
+    if let name = falconUser.name {
+      cell.title.text = name
+    }
+    
+    if let statusString = falconUser.onlineStatus as? String {
+      if statusString == statusOnline {
+        cell.subtitle.textColor = FalconPalette.defaultBlue
+        cell.subtitle.text = statusString
+      } else {
         cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
+        let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
         let subtitle = "Last seen " + timeAgoSinceDate(date)
         cell.subtitle.text = subtitle
       }
       
-      guard let url = filteredUsers[indexPath.row].thumbnailPhotoURL else { return cell }
-      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground], completed: { (image, error, cacheType, url) in
-        guard image != nil else { return }
-        guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-          cell.icon.alpha = 1
-          return
-        }
-        cell.icon.alpha = 0
-        UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
-      })
-      return cell
+    } else if let statusTimeinterval = falconUser.onlineStatus as? TimeInterval {
+      cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+      let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
+      let subtitle = "Last seen " + timeAgoSinceDate(date)
+      cell.subtitle.text = subtitle
     }
-    return nil
+    
+    guard let url = falconUser.thumbnailPhotoURL else { return cell }
+    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground], completed: { (image, error, cacheType, url) in
+      guard image != nil else { return }
+      guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
+        cell.icon.alpha = 1
+        return
+      }
+      cell.icon.alpha = 0
+      UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
+    })
+    return cell
   }
 
   
@@ -241,19 +267,19 @@ class SelectChatTableViewController: UITableViewController {
     
     if indexPath.section == 0 {
       let destination = SelectGroupMembersController()
-      destination.users = self.users
-      destination.filteredUsers = self.filteredUsers
+      destination.users = users
+      destination.filteredUsers = filteredUsers
+      destination.setUpCollation()
       self.navigationController?.pushViewController(destination, animated: true)
-    }
-    
-    if indexPath.section == 1 {
+    } else {
+      let falconUser = filteredUsersWithSection[indexPath.section][indexPath.row]
       
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-      let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject, "chatName": filteredUsers[indexPath.row].name as AnyObject,
+      let conversationDictionary: [String: AnyObject] = ["chatID": falconUser.id as AnyObject, "chatName": falconUser.name as AnyObject,
                                                          "isGroupChat": false  as AnyObject,
-                                                         "chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
-                                                         "chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
-                                                         "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
+                                                         "chatOriginalPhotoURL": falconUser.photoURL as AnyObject,
+                                                         "chatThumbnailPhotoURL": falconUser.thumbnailPhotoURL as AnyObject,
+                                                         "chatParticipantsIDs": [falconUser.id, currentUserID] as AnyObject]
       
       let conversation = Conversation(dictionary: conversationDictionary)
       
@@ -265,14 +291,6 @@ class SelectChatTableViewController: UITableViewController {
       messagesFetcher?.delegate = self
       messagesFetcher?.loadMessagesData(for: conversation)
     }
-  }
-}
-
-extension SelectChatTableViewController: UITableViewDataSourcePrefetching {
-  
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared.prefetchURLs(urls as? [URL])
   }
 }
 
@@ -296,7 +314,7 @@ extension SelectChatTableViewController: MessagesDelegate {
     
     if #available(iOS 11.0, *) {
     } else {
-      self.chatLogController?.startCollectionViewAtBottom()
+      chatLogController?.startCollectionViewAtBottom()
     }
     
     navigationController?.pushViewController(destination, animated: true)

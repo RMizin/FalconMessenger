@@ -15,17 +15,20 @@ class SelectParticipantsViewController: UIViewController {
   let falconUsersCellID = "falconUsersCellID"
   let selectedParticipantsCollectionViewCellID = "SelectedParticipantsCollectionViewCellID"
   
-  var filteredUsers = [User]() {
-    didSet {
-      configureSections()
-    }
-  }
-  
+  var filteredUsers = [User]()
+
   var users = [User]()
-  var sortedFirstLetters = [String]()
-  var sections = [[User]]()
+
   var selectedFalconUsers = [User]()
+  
+  var filteredUsersWithSection = [[User]]()
+  
+  var collation = UILocalizedIndexedCollation.current()
+  
+  var sectionTitles = [String]()
+  
   var searchBar: UISearchBar?
+  
   let tableView = UITableView()
   
   var selectedParticipantsCollectionView: UICollectionView = {
@@ -55,7 +58,6 @@ class SelectParticipantsViewController: UIViewController {
     super.viewWillTransition(to: size, with: coordinator)
     
     DispatchQueue.main.async {
-      self.tableView.reloadData()
       self.reloadCollectionView()
     }
   }
@@ -68,28 +70,16 @@ class SelectParticipantsViewController: UIViewController {
     guard users.count > 0 else { return }
    _ = users.map { $0.isSelected = false }
     filteredUsers = users
-    sections = [users]
+    setUpCollation()
     DispatchQueue.main.async {
       self.tableView.reloadData()
     }
   }
   
-  fileprivate var isInitialLoad = true
-  fileprivate func configureSections() {
-    if isInitialLoad {
-      _ = filteredUsers.map { $0.isSelected = false }
-      isInitialLoad = false
-    }
-    
-    let firstLetters = filteredUsers.map { $0.titleFirstLetter }
-    let uniqueFirstLetters = Array(Set(firstLetters))
-    sortedFirstLetters = uniqueFirstLetters.sorted()
-    sections = sortedFirstLetters.map { firstLetter in
-      
-      return self.filteredUsers
-        .filter { $0.titleFirstLetter == firstLetter }
-        .sorted { $0.name ?? "" < $1.name ?? "" }
-    }
+  @objc func setUpCollation() {
+    let (arrayContacts, arrayTitles) = collation.partitionObjects(array: self.filteredUsers, collationStringSelector: #selector(getter: User.name))
+    filteredUsersWithSection = arrayContacts as! [[User]]
+    sectionTitles = arrayTitles
   }
 
   fileprivate func setupMainView() {
@@ -193,7 +183,6 @@ class SelectParticipantsViewController: UIViewController {
     tableView.setEditing(true, animated: false)
     tableView.register(ParticipantTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
-    tableView.prefetchDataSource = self
   }
   
   fileprivate func setupCollectionView() {
@@ -276,7 +265,7 @@ class SelectParticipantsViewController: UIViewController {
   
   func didSelectUser(at indexPath: IndexPath) {
     
-    let user = sections[indexPath.section][indexPath.row]
+    let user = filteredUsersWithSection[indexPath.section][indexPath.row]
     
     if let filteredUsersIndex = filteredUsers.index(of: user) {
       filteredUsers[filteredUsersIndex].isSelected = true
@@ -286,9 +275,9 @@ class SelectParticipantsViewController: UIViewController {
       users[usersIndex].isSelected = true
     }
     
-    sections[indexPath.section][indexPath.row].isSelected = true
+    filteredUsersWithSection[indexPath.section][indexPath.row].isSelected = true
     
-    selectedFalconUsers.append(sections[indexPath.section][indexPath.row])
+    selectedFalconUsers.append(filteredUsersWithSection[indexPath.section][indexPath.row])
     
     DispatchQueue.main.async {
       self.reloadCollectionView()
@@ -297,7 +286,7 @@ class SelectParticipantsViewController: UIViewController {
   
   func didDeselectUser(at indexPath: IndexPath) {
     
-    let user = sections[indexPath.section][indexPath.row]
+    let user = filteredUsersWithSection[indexPath.section][indexPath.row]
     
     if let findex = filteredUsers.index(of: user) {
       filteredUsers[findex].isSelected = false
@@ -314,6 +303,6 @@ class SelectParticipantsViewController: UIViewController {
          self.reloadCollectionView()
       }
     }
-    sections[indexPath.section][indexPath.row].isSelected = false
+    filteredUsersWithSection[indexPath.section][indexPath.row].isSelected = false
   }
 }

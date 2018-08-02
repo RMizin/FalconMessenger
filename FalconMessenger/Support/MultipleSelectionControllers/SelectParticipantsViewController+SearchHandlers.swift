@@ -18,7 +18,8 @@ extension SelectParticipantsViewController: UISearchBarDelegate, UISearchControl
     guard users.count > 0 else { return }
     searchBar.setShowsCancelButton(false, animated: true)
     searchBar.resignFirstResponder()
-    tableView.reloadData()
+    setUpCollation()
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
   }
   
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -32,8 +33,8 @@ extension SelectParticipantsViewController: UISearchBarDelegate, UISearchControl
     filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
       return User.name!.lowercased().contains(searchText.lowercased())
     })
-
-    tableView.reloadData()
+    setUpCollation()
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
   }
 }
 

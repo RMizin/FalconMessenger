@@ -17,7 +17,7 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
     searchBar.text = nil
     filteredUsers = users
     filteredContacts = contacts
-    tableView.reloadData()
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
     guard #available(iOS 11.0, *) else {
       searchBar.setShowsCancelButton(false, animated: true)
       searchBar.resignFirstResponder()
@@ -50,7 +50,7 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
       return contactFullName.lowercased().contains(searchText.lowercased())
     })
     
-    tableView.reloadData()
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
   }
 }
 

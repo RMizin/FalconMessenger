@@ -17,7 +17,7 @@ extension ChatsTableViewController: UISearchBarDelegate, UISearchControllerDeleg
     searchBar.text = nil
     filtededConversations = conversations
     filteredPinnedConversations = pinnedConversations
-    handleReloadTable()
+    handleReloadTable(isSearching: true)
     guard #available(iOS 11.0, *) else {
       searchBar.setShowsCancelButton(false, animated: true)
       searchBar.resignFirstResponder()

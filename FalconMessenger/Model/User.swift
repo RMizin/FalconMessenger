@@ -11,7 +11,7 @@ import UIKit
 class User: NSObject {
   
   var id: String?
-  var name: String?
+  @objc var name: String?
   var bio: String?
   var photoURL: String?
   var thumbnailPhotoURL: String?
