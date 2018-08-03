@@ -47,7 +47,7 @@ extension ChatLogController:CropViewControllerDelegate {
     //needed to update input container layout if device was rotated during the image editing
     inputContainerView.inputTextView.invalidateIntrinsicContentSize()
     inputContainerView.invalidateIntrinsicContentSize()
-    DispatchQueue.main.async {
+    DispatchQueue.main.async { [unowned self] in
       self.inputContainerView.attachedImages.frame.size.width = self.inputContainerView.inputTextView.frame.width
     }
   }

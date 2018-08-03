@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import PhoneNumberKit
 import SDWebImage
+import Contacts
 
 protocol FalconUsersUpdatesDelegate: class {
   func falconUsers(shouldBeUpdatedTo users: [User])
@@ -19,85 +20,63 @@ protocol FalconUsersUpdatesDelegate: class {
 class FalconUsersFetcher: NSObject {
   
   weak var delegate: FalconUsersUpdatesDelegate?
+  
   fileprivate let phoneNumberKit = PhoneNumberKit()
   
-  fileprivate var users = [User]()
-  fileprivate var loadAndSyncFalconUsersGroup = DispatchGroup()
-  fileprivate var isLoadAndSyncGroupFinished = false
-
-  fileprivate func resetSyncronization() {
-    users.removeAll()
-    isLoadAndSyncGroupFinished = false
-    setContactsSyncronizationStatus(status: false)
-  }
+  lazy var functions = Functions.functions()
+  
   
   func loadAndSyncFalconUsers() {
-    resetSyncronization()
-    clearFalconUsersRefObservers()
-    fetchSynchronously()
+    setContactsSyncronizationStatus(status: false)
+    removeAllUsersObservers()
+    requestFalconUsers()
   }
   
-  fileprivate func fetchSynchronously() {
-
+  fileprivate func prepareNumbers(from numbers: [String]) -> [String] {
+    
     var preparedNumbers = [String]()
     
-    for number in globalDataStorage.localPhones {
+    for number in numbers {
       do {
         let countryCode = try phoneNumberKit.parse(number).countryCode
         let nationalNumber = try phoneNumberKit.parse(number).nationalNumber
         preparedNumbers.append("+" + String(countryCode) + String(nationalNumber))
-        loadAndSyncFalconUsersGroup.enter()
       } catch {}
     }
+
+    return preparedNumbers
+  }
+  
+  fileprivate func requestFalconUsers() {
+   
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+    let numbers = prepareNumbers(from: globalDataStorage.localPhones)
+    print("https reqest called")
+    functions.httpsCallable("fetchContacts").call(["preparedNumbers": numbers]) { (result, error) in
+      if let error = error as NSError? {
+        if error.domain == FunctionsErrorDomain {
+          let code = FunctionsErrorCode(rawValue: error.code)
+          let message = error.localizedDescription
+          let details = error.userInfo[FunctionsErrorDetailsKey]
+          print("https error\(code, message, details)")
+        }
+        print("https error")
+      }
+      
+      guard let response = result?.data as? [[String:AnyObject]] else { print("faliure"); return }
+      var fetchedUsers = [User]()
+      
+      for object in response {
+        let user = User(dictionary: object)
+        if let uid = user.id, uid != currentUserID {
+          fetchedUsers.append(user)
+        }
+      }
     
-    loadAndSyncFalconUsersGroup.notify(queue: .main, execute: {
-      self.isLoadAndSyncGroupFinished = true
-      self.updateRemoteDataSourceAfterSync(newUsers: self.users)
-     
-    })
-    
-    for preparedNumber in preparedNumbers {
-      fetchAndObserveFalconUser(for: preparedNumber)
+      self.syncronizeFalconUsers(with: fetchedUsers)
+      self.setContactsSyncronizationStatus(status: true)
+      print("Contacts fetching completed")
     }
-  }
-  
-  fileprivate func fetchAndObserveFalconUser(for preparedNumber: String) {
-    let userReference = Database.database().reference().child("users")
-    let userQuery = userReference.queryOrdered(byChild: "phoneNumber").queryEqual(toValue: preparedNumber)
-    userQuery.observeSingleEvent(of: .value, with: { (snapshot) in
-    
-      guard snapshot.exists(), let userData = (snapshot.value as? [String: AnyObject])?.first, let currentUserID = Auth.auth().currentUser?.uid else {
-        self.updateRemoteDataSourceAfterSync(newUsers: nil)
-        return
-      }
-      
-      let userID = userData.key
-      
-      guard var userDictionary = userData.value as? [String: AnyObject], userID != currentUserID else {
-        self.updateRemoteDataSourceAfterSync(newUsers: nil)
-        return
-      }
-      
-      userDictionary.updateValue(userID as AnyObject, forKey: "id")
-      let fetchedUser = User(dictionary: userDictionary)
-
-      if let index = self.users.index(where: { (user) -> Bool in
-        return user.id == fetchedUser.id
-      }) {
-        self.users[index] = fetchedUser
-      } else {
-        self.users.append(fetchedUser)
-      }
-
-      self.updateRemoteDataSourceAfterSync(newUsers: self.users)
-    })
-  }
-  
-  fileprivate func updateRemoteDataSourceAfterSync(newUsers: [User]?) {
-    guard isLoadAndSyncGroupFinished else { loadAndSyncFalconUsersGroup.leave(); return }
-    guard let newUsers = newUsers else { return }
-    syncronizeFalconUsers(with: newUsers)
-    setContactsSyncronizationStatus(status: true)
   }
   
   fileprivate func setContactsSyncronizationStatus(status: Bool) {
@@ -110,14 +89,13 @@ class FalconUsersFetcher: NSObject {
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
     let falconUserIDs = fetchedUsers.map({$0.id ?? "" })
     
-    
     var falconUserIDsDictionary = [AnyHashable: Any]()
     
-     falconUserIDs.forEach { (item) in
+    falconUserIDs.forEach { (item) in
       falconUserIDsDictionary[item] = item
     }
-    /*
-    databaseReference.updateChildValues(["falconUsers" : falconUserIDsDictionary]) { (_, _) in
+    
+    /*databaseReference.updateChildValues(["falconUsers" : falconUserIDsDictionary]) { (_, _) in
       self.loadFalconUsers()
     }*/
 
@@ -132,24 +110,10 @@ class FalconUsersFetcher: NSObject {
   fileprivate let falconUsersLoadingGroup = DispatchGroup()
   fileprivate var isFalconUsersLoadingGroupFinished = false
   
-  fileprivate func clearFalconUsersRefObservers() {
-    falconUsers.removeAll()
-    isFalconUsersLoadingGroupFinished = false
-    
-    guard falconUsersReference != nil else { return }
-    for element in falconUsersHandle {
-      falconUsersReference = Database.database().reference().child("users").child(element.userID)
-      falconUsersReference.removeObserver(withHandle: element.handle)
-     guard let index = falconUsersHandle.index(where: { (element1) -> Bool in
-        return element.userID == element1.userID
-     }) else { return }
-      guard falconUsersHandle.indices.contains(index) else { return }
-      falconUsersHandle.remove(at: index)
-    }
-  }
-  
   func loadFalconUsers() {
-    clearFalconUsersRefObservers()
+    let status = CNContactStore.authorizationStatus(for: .contacts)
+    if status == .denied || status == .restricted { return }
+    removeAllUsersObservers()
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
     databaseReference.keepSynced(true)
@@ -166,7 +130,12 @@ class FalconUsersFetcher: NSObject {
       }
     
       guard var dictionary = snapshot.childSnapshot(forPath: "falconUsers").value as? [String: String] else { return }
-      let falconUsersIDs: [String] = Array(dictionary.values)
+      var falconUsersIDs: [String] = Array(dictionary.values)
+
+      if let index = falconUsersIDs.index(of: currentUserID) {
+        falconUsersIDs.remove(at: index)
+      }
+      
       self.loadData(for: falconUsersIDs)
     }
   }
@@ -217,6 +186,22 @@ class FalconUsersFetcher: NSObject {
     self.delegate?.falconUsers(shouldBeUpdatedTo: newUsers)
   }
 
+  fileprivate func removeAllUsersObservers() {
+    falconUsers.removeAll()
+    isFalconUsersLoadingGroupFinished = false
+    
+    guard falconUsersReference != nil else { return }
+    for element in falconUsersHandle {
+      falconUsersReference = Database.database().reference().child("users").child(element.userID)
+      falconUsersReference.removeObserver(withHandle: element.handle)
+      guard let index = falconUsersHandle.index(where: { (element1) -> Bool in
+        return element.userID == element1.userID
+      }) else { return }
+      guard falconUsersHandle.indices.contains(index) else { return }
+      falconUsersHandle.remove(at: index)
+    }
+  }
+  
   fileprivate func rearrangeUsers(users: [User]) -> [User] { /* Moves Online users to the top  */
     var users = users
     guard users.count - 1 > 0 else { return users }

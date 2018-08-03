@@ -144,7 +144,7 @@ extension ChatsTableViewController {
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
     configureTabBarBadge()
      if conversations.count <= 0 && pinnedConversations.count <= 0 {
-      DispatchQueue.main.async {
+      DispatchQueue.main.async { [unowned self] in
         self.checkIfThereAnyActiveChats(isEmpty: true)
       }
     }
@@ -169,7 +169,7 @@ extension ChatsTableViewController {
    
     configureTabBarBadge()
     if conversations.count <= 0 && pinnedConversations.count <= 0 {
-      DispatchQueue.main.async {
+      DispatchQueue.main.async { [unowned self] in
          self.checkIfThereAnyActiveChats(isEmpty: true)
       }
     }

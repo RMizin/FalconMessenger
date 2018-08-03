@@ -8,6 +8,7 @@ target 'FalconMessenger' do
   pod 'Firebase/Auth'
   pod 'Firebase/Storage'
   pod 'Firebase/Messaging'
+  pod 'Firebase/Functions'
   
   pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage', :branch => '5.x', :modular_headers => true
   pod 'PhoneNumberKit'

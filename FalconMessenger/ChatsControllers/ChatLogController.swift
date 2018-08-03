@@ -91,7 +91,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
     let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-    DispatchQueue.main.async {
+    DispatchQueue.main.async { [unowned self] in
       self.collectionView?.scrollToItem(at: indexPath, at: position, animated: true)
     }
   }
@@ -101,7 +101,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       return
     }
     let indexPath = IndexPath(item: 0, section: 1)
-    DispatchQueue.main.async {
+    DispatchQueue.main.async { [unowned self] in
       self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
     }
   }
@@ -557,7 +557,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
     super.willTransition(to: newCollection, with: coordinator)
     collectionView?.collectionViewLayout.invalidateLayout()
-    DispatchQueue.main.async {
+    DispatchQueue.main.async { [unowned self] in
       self.inputContainerView.inputTextView.invalidateIntrinsicContentSize()
     }
   }
@@ -565,7 +565,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
     collectionView?.collectionViewLayout.invalidateLayout()
-    DispatchQueue.main.async {
+    DispatchQueue.main.async { [unowned self] in
       self.inputContainerView.attachedImages.frame.size.width = self.inputContainerView.inputTextView.frame.width
       self.collectionView?.reloadData()
       self.inputContainerView.invalidateIntrinsicContentSize()
@@ -888,7 +888,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
         cell.chatLogController = self
         cell.setupData(message: message)
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .default).async { [unowned self] in
           cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
         }
       
@@ -909,14 +909,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         cell.setupData(message: message)
         if let image = message.localImage {
           cell.setupImageFromLocalData(message: message, image: image)
-          DispatchQueue.global(qos: .background).async {
+          DispatchQueue.global(qos: .default).async { [unowned self] in
             cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
           }
           return cell
         }
         if let messageImageUrl = message.imageUrl {
           cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
-          DispatchQueue.global(qos: .background).async {
+          DispatchQueue.global(qos: .default).async { [unowned self] in
             cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
           }
           return cell
@@ -944,7 +944,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
         cell.chatLogController = self
         cell.setupData(message: message)
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .default).async { [unowned self] in
           cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
         }
         return cell
@@ -1266,7 +1266,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     uploadProgressBar.setProgress(Float(progress), animated: true)
     if progress >= 0.99999 {
-      DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [unowned self] in
         self.uploadProgressBar.setProgress(0.0, animated: false)
       })
     }
@@ -1344,7 +1344,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     UIView.performWithoutAnimation {
       collectionView?.insertItems(at: [latMessageIndexPath])
       let indexPath1 = IndexPath(item: messages.count - 1, section: 0)
-      DispatchQueue.main.async {
+      DispatchQueue.main.async { [unowned self] in
         self.collectionView?.scrollToItem(at: indexPath1, at: .bottom, animated: true)
       }
     

@@ -23,6 +23,8 @@ class GlobalDataStorage: NSObject {
     }
   }
   
+ // var preparedNumbers = [String]()
+  
   var falconUsers: [User] = [] {
     didSet {
       NotificationCenter.default.post(name: .falconUsersUpdated, object: nil)

@@ -53,7 +53,8 @@ class ContactsController: UITableViewController {
       setupTableView()
       setupSearchController()
       observeContactsChanges()
-      DispatchQueue.global(qos: .background).async {
+      DispatchQueue.global(qos: .default).async { [unowned self] in
+        self.falconUsersFetcher.loadFalconUsers()
         self.fetchContacts()
       }
     }
@@ -66,6 +67,12 @@ class ContactsController: UITableViewController {
       
       guard shouldReSyncUsers else { return }
       shouldReSyncUsers = false
+      let status = CNContactStore.authorizationStatus(for: .contacts)
+      if status == .denied || status == .restricted {
+        addControllerPlaceholder()
+        return
+      }
+      falconUsersFetcher.loadFalconUsers()
       syncronizeContacts(contacts: contacts)
     }
   
@@ -132,7 +139,7 @@ class ContactsController: UITableViewController {
   
     fileprivate func setupViewControllerPlaceholder() {
       viewControllerPlaceholder.backgroundColor = .clear
-      DispatchQueue.main.async {
+      DispatchQueue.main.async { [unowned self] in
         if #available(iOS 11.0, *) {
          self.viewControllerPlaceholder.frame = CGRect(x: 0, y: 135, width: self.view.frame.width, height: self.view.frame.height-135)
         } else {
@@ -156,14 +163,15 @@ class ContactsController: UITableViewController {
     @objc func contactStoreDidChange(notification: NSNotification) {
       guard Auth.auth().currentUser != nil else { return }
       NotificationCenter.default.removeObserver(self, name: .CNContactStoreDidChange, object: nil)
-      DispatchQueue.global(qos: .background).async {
+       DispatchQueue.global(qos: .default).async { [unowned self] in
         print("start fetch")
+        self.falconUsersFetcher.loadFalconUsers()
         self.fetchContacts()
       }
     }
   
     fileprivate func fetchContacts () {
-      
+
       let status = CNContactStore.authorizationStatus(for: .contacts)
       let store = CNContactStore()
       if status == .denied || status == .restricted {
@@ -194,13 +202,17 @@ class ContactsController: UITableViewController {
         
         let phoneNumbers = self.contacts.flatMap({$0.phoneNumbers.map({$0.value.stringValue.digits}) })
         globalDataStorage.localPhones = phoneNumbers
-        self.tableView.reloadData()
+    
+        DispatchQueue.main.async { [unowned self] in
+          self.tableView.reloadData()
+        }
+        
         self.syncronizeContacts(contacts: self.contacts)
       }
     }
   
     fileprivate func syncronizeContacts(contacts: [CNContact]) {
-      falconUsersFetcher.loadFalconUsers()
+      //falconUsersFetcher.loadFalconUsers()
       let contactsCount = contacts.count
       let defaultContactsCount = UserDefaults.standard.integer(forKey: "ContactsCount")
       let syncronizationStatus = UserDefaults.standard.bool(forKey: "SyncronizationStatus")
@@ -209,12 +221,12 @@ class ContactsController: UITableViewController {
         UserDefaults.standard.set(contactsCount, forKey: "ContactsCount")
         UserDefaults.standard.synchronize()
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned self] in
           self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
           self.tableView.reloadData()
         }
         
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .default).async { [unowned self] in
           self.falconUsersFetcher.loadAndSyncFalconUsers()
         }
       }
@@ -253,7 +265,7 @@ class ContactsController: UITableViewController {
           isAppLoaded = true
           UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: nil)
         } else {
-          DispatchQueue.main.async {
+          DispatchQueue.main.async { [unowned self] in
             self.tableView.reloadData()
           }
         }

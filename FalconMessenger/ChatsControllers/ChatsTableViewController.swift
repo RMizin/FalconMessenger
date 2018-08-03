@@ -158,7 +158,7 @@ class ChatsTableViewController: UITableViewController {
   
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
-    DispatchQueue.main.async {
+    DispatchQueue.main.async { [unowned self] in
       self.noChatsYetContainer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
     }
   
@@ -711,7 +711,7 @@ class ChatsTableViewController: UITableViewController {
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .mediumHigh)
     navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .updating, activityPriority: .lowMedium, color: ThemeManager.currentTheme().generalTitleColor)
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [unowned self] in
       guard self.shouldDisableUpdatingIndicator else { return }
       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
     }

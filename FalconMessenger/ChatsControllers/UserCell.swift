@@ -151,14 +151,14 @@ class UserCell: UITableViewCell {
   @objc func updateTypingIndicatorTimer() {
     guard let messageText = messageLabel.text else { return }
     let dotCount: Int = messageLabel.text!.count - messageText.replacingOccurrences(of: ".", with: "").count + 1
-    DispatchQueue.main.async {
+    DispatchQueue.main.async { [unowned self] in
       self.messageLabel.text = "typing"
     }
     var addOn: String = "."
     if dotCount <= 4 {
       addOn = "".padding(toLength: dotCount, withPad: ".", startingAt: 0)
     }
-    DispatchQueue.main.async {
+    DispatchQueue.main.async { [unowned self] in
       self.messageLabel.text = self.messageLabel.text!.appending(addOn)
     }
   }

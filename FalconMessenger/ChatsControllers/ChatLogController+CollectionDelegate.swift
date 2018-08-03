@@ -107,7 +107,7 @@ extension ChatLogController: CollectionDelegate {
       
       if messages.count - 1 >= 0 && isScrollViewAtTheBottom {
         let indexPath = IndexPath(item: messages.count - 1, section: 0)
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned self] in
           self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
         }
       }
