@@ -80,7 +80,6 @@ class SelectNewAdminTableViewController: UITableViewController {
     tableView.backgroundColor = view.backgroundColor
     tableView.register(NewAdminTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
-    tableView.prefetchDataSource = self
     setupRightBarButton(with: "Leave the group")
   }
   
@@ -263,12 +262,5 @@ class SelectNewAdminTableViewController: UITableViewController {
       return
     }
     self.navigationItem.rightBarButtonItem?.isEnabled = false
-  }
-}
-
-extension SelectNewAdminTableViewController: UITableViewDataSourcePrefetching {
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
   }
 }

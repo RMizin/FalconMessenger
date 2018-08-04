@@ -9,7 +9,6 @@
 import UIKit
 import SDWebImage
 
-
 extension SelectParticipantsViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -95,13 +94,5 @@ extension SelectParticipantsViewController: UITableViewDelegate, UITableViewData
     })
     
     return cell
-  }
-}
-
-extension SelectParticipantsViewController: UITableViewDataSourcePrefetching {
-  
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
   }
 }

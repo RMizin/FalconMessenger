@@ -9,8 +9,8 @@
 import UIKit
 import Contacts
 import Firebase
-import SDWebImage
 import PhoneNumberKit
+import SDWebImage
 
 
 public var shouldReloadContactsControllerAfterChangingTheme = false
@@ -105,7 +105,6 @@ class ContactsController: UITableViewController {
       tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
       tableView.register(CurrentUserTableViewCell.self, forCellReuseIdentifier: currentUserCellID)
       tableView.separatorStyle = .none
-      tableView.prefetchDataSource = self
       definesPresentationContext = true
     }
     
@@ -461,15 +460,6 @@ extension ContactsController: FalconUsersUpdatesDelegate {
     self.reloadTableView(updatedUsers: users)
   }
 }
-
-extension ContactsController: UITableViewDataSourcePrefetching {
-  
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
-  }
-}
-
 
 extension ContactsController: MessagesDelegate {
   

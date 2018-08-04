@@ -9,8 +9,8 @@
 import UIKit
 import Firebase
 import PhoneNumberKit
-import SDWebImage
 import Contacts
+import SDWebImage
 
 
 class SelectChatTableViewController: UITableViewController {
@@ -82,7 +82,6 @@ class SelectChatTableViewController: UITableViewController {
     tableView.backgroundColor = view.backgroundColor
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
-    tableView.prefetchDataSource = self
   }
   
   fileprivate func setupSearchController() {
@@ -257,14 +256,6 @@ class SelectChatTableViewController: UITableViewController {
       messagesFetcher?.delegate = self
       messagesFetcher?.loadMessagesData(for: conversation)
     }
-  }
-}
-
-extension SelectChatTableViewController: UITableViewDataSourcePrefetching {
-  
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = users.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
   }
 }
 

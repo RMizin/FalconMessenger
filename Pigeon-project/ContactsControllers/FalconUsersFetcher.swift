@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import PhoneNumberKit
+import SDWebImage
 
 protocol FalconUsersUpdatesDelegate: class {
   func falconUsers(shouldBeUpdatedTo users: [User])
@@ -103,7 +104,9 @@ class FalconUsersFetcher: NSObject {
         for child in snapshot.children.allObjects as! [DataSnapshot]  {
           guard var dictionary = child.value as? [String: AnyObject] else { return }
           dictionary.updateValue(child.key as AnyObject, forKey: "id")
-          
+          if let thumbnailURLString = User(dictionary: dictionary).thumbnailPhotoURL, let thumbnailURL = URL(string: thumbnailURLString) {
+            SDWebImagePrefetcher.shared().prefetchURLs([thumbnailURL])
+          }
           if let index = self.users.index(where: { (user) -> Bool in
             return user.id == User(dictionary: dictionary).id
           }) {

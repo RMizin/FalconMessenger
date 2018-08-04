@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SDWebImage
 import Firebase
 
 
@@ -194,7 +193,6 @@ class SelectParticipantsViewController: UIViewController {
     tableView.setEditing(true, animated: false)
     tableView.register(ParticipantTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
-    tableView.prefetchDataSource = self
   }
   
   fileprivate func setupCollectionView() {

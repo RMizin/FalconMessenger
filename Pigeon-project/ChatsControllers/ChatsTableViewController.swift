@@ -326,6 +326,7 @@ class ChatsTableViewController: UITableViewController {
           self.groupChatMetaInfo(dictionary: conversationDictionary, completion: { (_, dictionary) in
 
             let conversation = Conversation(dictionary: dictionary)
+            self.prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
             
             guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
               guard conversation.isGroupChat != nil, conversation.isGroupChat! else {
@@ -383,12 +384,11 @@ class ChatsTableViewController: UITableViewController {
       dictionary.updateValue(userID as AnyObject, forKey: "id")
       
       let user = User(dictionary: dictionary)
-      
       conversation.chatName = user.name
       conversation.chatPhotoURL = user.photoURL
       conversation.chatThumbnailPhotoURL = user.thumbnailPhotoURL
       conversation.chatParticipantsIDs = [userID, currentUserID]
-      print("up conv arrays from default chat")
+      self.prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
       self.updateConversationArrays(with: conversation)
     })
     
@@ -417,6 +417,12 @@ class ChatsTableViewController: UITableViewController {
           self.handleGroupOrReloadTable()
         } else { return }
       } else { return }
+    }
+  }
+  
+  fileprivate func prefetchThumbnail(from urlString: String?) {
+    if let thumbnail = urlString, let url = URL(string: thumbnail) {
+      SDWebImagePrefetcher.shared().prefetchURLs([url])
     }
   }
 
