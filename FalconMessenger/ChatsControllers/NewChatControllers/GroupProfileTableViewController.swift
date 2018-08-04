@@ -52,7 +52,6 @@ class GroupProfileTableViewController: UITableViewController {
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: selectedFlaconUsersCellID)
     tableView.separatorStyle = .none
     tableView.allowsSelection = false
-    tableView.prefetchDataSource = self
   }
   
   fileprivate func configureContainerView() {
@@ -137,13 +136,6 @@ class GroupProfileTableViewController: UITableViewController {
       UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
     })
     return cell
-  }
-}
-
-extension GroupProfileTableViewController: UITableViewDataSourcePrefetching {
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = selectedFlaconUsers.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared.prefetchURLs(urls as? [URL])
   }
 }
 
