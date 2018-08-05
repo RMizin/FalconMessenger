@@ -206,30 +206,8 @@ class ContactsController: UITableViewController {
         }
       }
       self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
-      self.sendUserContactsToDatabase()
     }
   }
-  
-  
- fileprivate func sendUserContactsToDatabase() {
-    guard let uid = Auth.auth().currentUser?.uid else { return }
-    
-    let userReference = Database.database().reference().child("users").child(uid)
-    var preparedNumbers = [String]()
-  
-    for number in localPhones {
-      do {
-        let countryCode = try self.phoneNumberKit.parse(number).countryCode
-        let nationalNumber = try self.phoneNumberKit.parse(number).nationalNumber
-        preparedNumbers.append( ("+" + String(countryCode) + String(nationalNumber)) )
-       
-      } catch {
-        // print("Generic parser error")
-      }
-    }
-    userReference.updateChildValues(["contacts": preparedNumbers])
-  }
-  
   
   fileprivate func reloadTableView(updatedUsers: [User]) {
     
