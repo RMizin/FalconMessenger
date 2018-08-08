@@ -72,10 +72,10 @@ class FalconUsersFetcher: NSObject {
           fetchedUsers.append(user)
         }
       }
-    
-      self.syncronizeFalconUsers(with: fetchedUsers)
       self.setContactsSyncronizationStatus(status: true)
-      print("Contacts fetching completed")
+      self.syncronizeFalconUsers(with: fetchedUsers)
+     
+      print("Contacts fetching completed", fetchedUsers.count)
     }
   }
   
@@ -112,9 +112,9 @@ class FalconUsersFetcher: NSObject {
   
   func loadFalconUsers() {
     let status = CNContactStore.authorizationStatus(for: .contacts)
-    if status == .denied || status == .restricted { return }
+    if status == .denied || status == .restricted { print("returning from contacts status"); return }
     removeAllUsersObservers()
-    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+    guard let currentUserID = Auth.auth().currentUser?.uid else { print("returning frou current uid"); return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
     databaseReference.keepSynced(true)
     databaseReference.observeSingleEvent(of: .value) { (snapshot) in
