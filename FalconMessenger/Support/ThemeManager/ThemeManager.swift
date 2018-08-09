@@ -106,15 +106,6 @@ enum Theme: Int {
     }
   }
   
-  var typingIndicatorURL: URL? {
-    switch self {
-    case .Default:
-      return Bundle.main.url(forResource: "typingIndicator", withExtension: "gif")
-    case .Dark:
-      return Bundle.main.url(forResource: "typingindicatorDark", withExtension: "gif")
-    }
-  }
-  
   var enterPhoneNumberBackground: UIImage {
     switch self {
     case .Default:

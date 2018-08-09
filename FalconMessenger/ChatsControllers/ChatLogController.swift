@@ -10,7 +10,6 @@ import UIKit
 import Firebase
 import Photos
 import AudioToolbox
-import FLAnimatedImage
 import CropViewController
 import SafariServices
 
@@ -97,9 +96,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   }
   
   func scrollToBottomOfTypingIndicator() {
-    if collectionView?.numberOfSections != 2 {
-      return
-    }
+    if collectionView?.numberOfSections != 2 { return }
     let indexPath = IndexPath(item: 0, section: 1)
     DispatchQueue.main.async { [unowned self] in
       self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
@@ -369,7 +366,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           
           if #available(iOS 11.0, *) {
             let currentContentOffset = self.collectionView?.contentOffset
-            let newContentOffset = CGPoint(x: 0, y: currentContentOffset!.y + 40)
+            let newContentOffset = CGPoint(x: 0, y: currentContentOffset!.y + 30)
             self.collectionView?.setContentOffset(newContentOffset, animated: true)
           } else {
             self.scrollToBottomOfTypingIndicator()
@@ -390,8 +387,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
           guard let cell = self.collectionView?.cellForItem(at: IndexPath(item: 0, section: 1 ) ) as? TypingIndicatorCell else {
             return
           }
-          
-          cell.typingIndicator.animatedImage = nil
+          cell.typingIndicator.stopAnimating()
           if self.collectionView!.contentOffset.y >= (self.collectionView!.contentSize.height - self.collectionView!.frame.size.height + 200) {
             self.scrollToBottom(at: .bottom)
           }
@@ -521,6 +517,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       UIView.performWithoutAnimation {
         self.inputContainerView.inputTextView.resignFirstResponder()
       }
+    }
+    
+    if sections.count == 2 {
+      guard let cell = self.collectionView?.cellForItem(at: IndexPath(item: 0, section: 1 ) ) as? TypingIndicatorCell else { return }
+      cell.restart()
     }
   }
 
@@ -861,9 +862,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
   fileprivate func showTypingIndicator(indexPath: IndexPath) -> UICollectionViewCell? {
     let cell = collectionView?.dequeueReusableCell(withReuseIdentifier: typingIndicatorCellID, for: indexPath) as! TypingIndicatorCell
-    guard let gifURL = ThemeManager.currentTheme().typingIndicatorURL else { return nil }
-    guard let gifData = NSData(contentsOf: gifURL) else { return nil }
-    cell.typingIndicator.animatedImage = FLAnimatedImage(animatedGIFData: gifData as Data)
+    cell.restart()
+    
     return cell
   }
 
@@ -1029,7 +1029,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
   func selectSize(indexPath: IndexPath) -> CGSize  {
    
-    guard indexPath.section == 0 else {  return CGSize(width: self.collectionView!.frame.width, height: 40) }
+    guard indexPath.section == 0 else { return CGSize(width: self.collectionView!.frame.width, height: 30) }
     var cellHeight: CGFloat = 80
     let message = messages[indexPath.row]
     let isTextMessage = message.text != nil

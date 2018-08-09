@@ -12,7 +12,6 @@ target 'FalconMessenger' do
   
   pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage', :branch => '5.x', :modular_headers => true
   pod 'PhoneNumberKit'
-  pod 'FLAnimatedImage', :modular_headers => true
   pod 'FTPopOverMenu_Swift'
   pod 'CropViewController'
 
