@@ -430,7 +430,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     messages[index].status = sentMessage.status
     collectionView?.reloadItems(at: [IndexPath(row: index ,section: 0)])
     guard sentMessage.status == messageStatusDelivered, messages[index].messageUID == messages.last?.messageUID,
-    UserDefaults.standard.bool(forKey: "In-AppSounds") else { return }
+    userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
     SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
   }
   

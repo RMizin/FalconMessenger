@@ -36,7 +36,7 @@ class SplashScreenContainer: UIView {
   
   func doesDeviceHaveBiometrics() {
     let type = SplashScreenContainer.biometricType()
-    UserDefaults.standard.set(type.rawValue, forKey: "biometricType")
+    userDefaults.updateObject(for: userDefaults.biometricType, with: type.rawValue)
   }
   
   static func biometricType() -> BiometricType {

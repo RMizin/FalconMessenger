@@ -41,7 +41,7 @@ class GeneralTabBarController: UITabBarController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
+    let isBiometricalAuthEnabled = userDefaults.currentBoolObjectState(for: userDefaults.biometricalAuth)
     guard onceToken == 0, isBiometricalAuthEnabled else { onceToken = 1; return }
     view.addSubview(splashContainer)
     splashContainer.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -54,7 +54,7 @@ class GeneralTabBarController: UITabBarController {
 
 extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool) {
-    let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
+    let isBiometricalAuthEnabled = userDefaults.currentBoolObjectState(for: userDefaults.biometricalAuth)
     guard state, isBiometricalAuthEnabled else { splashContainer.showSecuredData(); return }
     splashContainer.authenticationWithTouchID()
   }

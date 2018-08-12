@@ -104,8 +104,6 @@ class ChatsTableViewController: UITableViewController {
   }
   
   public func cleanUpController() {
-    UserDefaults.standard.removeObject(forKey: "pndtmp") //cleaning temp data
-    UserDefaults.standard.removeObject(forKey: "untmp") //cleaning temp data
     pinnedConversations.removeAll()
     conversations.removeAll()
     filtededConversations.removeAll()

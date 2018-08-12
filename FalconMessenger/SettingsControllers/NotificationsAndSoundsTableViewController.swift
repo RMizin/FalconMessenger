@@ -21,7 +21,7 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
       configureUISwith()
     }
   
-  
+
     fileprivate func configureController() {
      
       tableView = UITableView(frame: self.tableView.frame, style: .grouped)
@@ -36,40 +36,38 @@ class NotificationsAndSoundsTableViewController: UITableViewController {
     fileprivate func configureUISwith () {
       
       soundsSwich.addTarget(self, action: #selector(switchStateChanged(sender:)), for: .valueChanged)
-      soundsSwich.setOn(UserDefaults.standard.bool(forKey: "In-AppSounds"), animated: false)
+      soundsSwich.setOn(userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds), animated: false)
       
       vibrationSwich.addTarget(self, action: #selector(switchStateChanged(sender:)), for: .valueChanged)
-      vibrationSwich.setOn(UserDefaults.standard.bool(forKey: "In-AppVibration"), animated: false)
+      vibrationSwich.setOn(userDefaults.currentBoolObjectState(for: userDefaults.inAppVibration), animated: false)
       
       notificationsSwich.addTarget(self, action: #selector(switchStateChanged(sender:)), for: .valueChanged)
-      notificationsSwich.setOn(UserDefaults.standard.bool(forKey: "In-AppNotifications"), animated: false)
+      notificationsSwich.setOn(userDefaults.currentBoolObjectState(for: userDefaults.inAppNotifications), animated: false)
     }
   
   
   @objc func switchStateChanged(sender:UISwitch) {
     if sender == soundsSwich {
       if sender.isOn {
-        UserDefaults.standard.set(true, forKey: "In-AppSounds")
+        userDefaults.updateObject(for: userDefaults.inAppSounds, with: true)
       } else {
-        UserDefaults.standard.set(false, forKey: "In-AppSounds")
+        userDefaults.updateObject(for: userDefaults.inAppSounds, with: false)
       }
 
     } else if sender == vibrationSwich {
       if sender.isOn {
-        UserDefaults.standard.set(true, forKey: "In-AppVibration")
+        userDefaults.updateObject(for: userDefaults.inAppVibration, with: true)
       } else {
-        UserDefaults.standard.set(false, forKey: "In-AppVibration")
+        userDefaults.updateObject(for: userDefaults.inAppVibration, with: false)
       }
     } else if sender == notificationsSwich {
       if sender.isOn {
-        UserDefaults.standard.set(true, forKey: "In-AppNotifications")
+        userDefaults.updateObject(for: userDefaults.inAppNotifications, with: true)
       } else {
-        UserDefaults.standard.set(false, forKey: "In-AppNotifications")
+        userDefaults.updateObject(for: userDefaults.inAppNotifications, with: false)
       }
-
     }
-      UserDefaults.standard.synchronize()
-    }
+  }
   
   
     deinit {

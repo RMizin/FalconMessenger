@@ -90,9 +90,8 @@ class ContactsController: UITableViewController {
       users.removeAll()
       tableView.reloadData()
       shouldReSyncUsers = true
-      UserDefaults.standard.removeObject(forKey: "ContactsCount")
-      UserDefaults.standard.removeObject(forKey: "SyncronizationStatus")
-      UserDefaults.standard.synchronize()
+      userDefaults.removeObject(for: userDefaults.contactsCount)
+      userDefaults.removeObject(for: userDefaults.contactsSyncronizationStatus)
     }
   
     fileprivate func setUpColorsAccordingToTheme() {
@@ -171,7 +170,7 @@ class ContactsController: UITableViewController {
     }
   
     fileprivate func fetchContacts () {
-
+      
       let status = CNContactStore.authorizationStatus(for: .contacts)
       let store = CNContactStore()
       if status == .denied || status == .restricted {
@@ -212,15 +211,13 @@ class ContactsController: UITableViewController {
     }
   
     fileprivate func syncronizeContacts(contacts: [CNContact]) {
-      //falconUsersFetcher.loadFalconUsers()
       let contactsCount = contacts.count
-      let defaultContactsCount = UserDefaults.standard.integer(forKey: "ContactsCount")
-      let syncronizationStatus = UserDefaults.standard.bool(forKey: "SyncronizationStatus")
-      
-      if UserDefaults.standard.object(forKey: "ContactsCount") == nil || defaultContactsCount != contactsCount || syncronizationStatus != true {
-        UserDefaults.standard.set(contactsCount, forKey: "ContactsCount")
-        UserDefaults.standard.synchronize()
-        
+      let defaultContactsCount = userDefaults.currentIntObjectState(for: userDefaults.contactsCount)
+      let syncronizationStatus = userDefaults.currentBoolObjectState(for: userDefaults.contactsSyncronizationStatus)
+      guard userDefaults.currentBoolObjectState(for: userDefaults.contactsContiniousSync) == true else { return }
+      if !userDefaults.isContactsCountExists() || defaultContactsCount != contactsCount || syncronizationStatus != true {
+        userDefaults.updateObject(for: userDefaults.contactsCount, with: contactsCount)
+
         DispatchQueue.main.async { [unowned self] in
           self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
           self.tableView.reloadData()
@@ -231,24 +228,6 @@ class ContactsController: UITableViewController {
         }
       }
     }
-  
-  /*
-   fileprivate func sendUserContactsToDatabase() {
-      guard let uid = Auth.auth().currentUser?.uid else { return }
-
-      let userReference = Database.database().reference().child("users").child(uid)
-      var preparedNumbers = [String]()
-
-      for number in localPhones {
-        do {
-          let countryCode = try phoneNumberKit.parse(number).countryCode
-          let nationalNumber = try phoneNumberKit.parse(number).nationalNumber
-          preparedNumbers.append( ("+" + String(countryCode) + String(nationalNumber)) )
-        } catch {}
-      }
-      userReference.updateChildValues(["contacts": preparedNumbers])
-    }*/
-  
 
     fileprivate var isAppLoaded = false
     fileprivate func reloadTableView(updatedUsers: [User]) {
@@ -464,10 +443,12 @@ extension ContactsController: FalconUsersUpdatesDelegate {
     globalDataStorage.falconUsers = users
     reloadTableView(updatedUsers: users)
     
-    let syncronizationStatus = UserDefaults.standard.bool(forKey: "SyncronizationStatus")
+    let syncronizationStatus = userDefaults.currentBoolObjectState(for: userDefaults.contactsSyncronizationStatus)
     guard syncronizationStatus == true else { return }
     observeContactsChanges()
-    navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .medium)
+    DispatchQueue.main.async {
+      self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .medium)
+    }
   }
 }
 

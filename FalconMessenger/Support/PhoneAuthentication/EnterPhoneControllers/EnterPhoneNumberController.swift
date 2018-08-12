@@ -105,13 +105,13 @@ class EnterPhoneNumberController: UIViewController {
       if let error = error {
         self.verificationDelegate?.verificationFinished(with: false, error: error.localizedDescription)
         return
-      }
+      } 
       
       print("verification sent")
       self.isVerificationSent = true
-      UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+      userDefaults.updateObject(for: userDefaults.authVerificationID, with: verificationID)
       self.verificationDelegate?.verificationFinished(with: true, error: nil)
-    }
+    } 
   }
 }
 

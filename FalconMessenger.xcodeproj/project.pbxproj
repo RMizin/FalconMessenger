@@ -12,6 +12,11 @@
 		4B0FA7CF2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7CE2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift */; };
 		4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */; };
 		4B0FA7DE2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7DD2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift */; };
+		4B1058F221208FED00CD6600 /* PrivacyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058F121208FED00CD6600 /* PrivacyTableViewCell.swift */; };
+		4B1058F4212091EF00CD6600 /* PrivacyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058F3212091EF00CD6600 /* PrivacyTableViewController.swift */; };
+		4B1058F72120979200CD6600 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058F62120979200CD6600 /* UserDefaultsManager.swift */; };
+		4B1058FE2120BB3600CD6600 /* Biometrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058FD2120BB3600CD6600 /* Biometrics.swift */; };
+		4B1059002120BB6900CD6600 /* PrivacyObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058FF2120BB6900CD6600 /* PrivacyObject.swift */; };
 		4B18BACA2097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B18BAC92097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift */; };
 		4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */; };
 		4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */; };
@@ -38,7 +43,6 @@
 		4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */; };
 		4B54EAB02084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54EAAF2084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift */; };
 		4B54EAB22084EDD000BDFA25 /* SplashScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54EAB12084EDD000BDFA25 /* SplashScreenContainer.swift */; };
-		4B54EAB52084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54EAB42084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift */; };
 		4B5693D320CFFAAB005EAE15 /* InAppNotificationDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5693C720CFFAAB005EAE15 /* InAppNotificationDispatcher.swift */; };
 		4B5693D420CFFAAB005EAE15 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B5693C920CFFAAB005EAE15 /* Images.xcassets */; };
 		4B5693D620CFFAAB005EAE15 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5693CD20CFFAAB005EAE15 /* Utils.swift */; };
@@ -202,6 +206,11 @@
 		4B0FA7CE2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsTableViewCell.swift; path = ChatsControllers/GroupAdminControlsTableViewCell.swift; sourceTree = "<group>"; };
 		4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MessagesFetcher.swift; path = ChatsControllers/MessagesFetcher.swift; sourceTree = "<group>"; };
 		4B0FA7DD2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogController+CollectionDelegate.swift"; path = "ChatsControllers/ChatLogController+CollectionDelegate.swift"; sourceTree = "<group>"; };
+		4B1058F121208FED00CD6600 /* PrivacyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrivacyTableViewCell.swift; path = SettingsControllers/PrivacyTableViewCell.swift; sourceTree = "<group>"; };
+		4B1058F3212091EF00CD6600 /* PrivacyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrivacyTableViewController.swift; path = SettingsControllers/PrivacyTableViewController.swift; sourceTree = "<group>"; };
+		4B1058F62120979200CD6600 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		4B1058FD2120BB3600CD6600 /* Biometrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biometrics.swift; sourceTree = "<group>"; };
+		4B1058FF2120BB6900CD6600 /* PrivacyObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyObject.swift; sourceTree = "<group>"; };
 		4B18BAC92097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactPhoneNnumberTableViewCell.swift; path = ContactsControllers/ContactPhoneNnumberTableViewCell.swift; sourceTree = "<group>"; };
 		4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectedMediaCollectionCell.swift; path = ChatsControllers/SelectedMediaCollectionCell.swift; sourceTree = "<group>"; };
 		4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatInputContainer+AttachedImagesCollectionConfig.swift"; path = "ChatsControllers/ChatInputContainer+AttachedImagesCollectionConfig.swift"; sourceTree = "<group>"; };
@@ -229,7 +238,6 @@
 		4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfileAvatarOpenerDelegate.swift; path = AuthenticationControllers/UserProfileAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
 		4B54EAAF2084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SplashScreenContainer+BiometricalControl.swift"; path = "SplashScreenControllers/SplashScreenContainer+BiometricalControl.swift"; sourceTree = "<group>"; };
 		4B54EAB12084EDD000BDFA25 /* SplashScreenContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SplashScreenContainer.swift; path = SplashScreenControllers/SplashScreenContainer.swift; sourceTree = "<group>"; };
-		4B54EAB42084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrivacyAndSecurityTableViewController.swift; path = SettingsControllers/PrivacyAndSecurityTableViewController.swift; sourceTree = "<group>"; };
 		4B5693C720CFFAAB005EAE15 /* InAppNotificationDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InAppNotificationDispatcher.swift; sourceTree = "<group>"; };
 		4B5693C920CFFAAB005EAE15 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4B5693CD20CFFAAB005EAE15 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -413,6 +421,24 @@
 			path = Public;
 			sourceTree = "<group>";
 		};
+		4B1058F52120977600CD6600 /* UserDefaultsManager */ = {
+			isa = PBXGroup;
+			children = (
+				4B1058F62120979200CD6600 /* UserDefaultsManager.swift */,
+			);
+			path = UserDefaultsManager;
+			sourceTree = "<group>";
+		};
+		4B1058FC2120BB2800CD6600 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4B1058FD2120BB3600CD6600 /* Biometrics.swift */,
+				4B1058FF2120BB6900CD6600 /* PrivacyObject.swift */,
+			);
+			name = Model;
+			path = SettingsControllers/Model;
+			sourceTree = "<group>";
+		};
 		4B1A36991F49990D00B4AA0A /* ChatInputContainer */ = {
 			isa = PBXGroup;
 			children = (
@@ -444,6 +470,7 @@
 		4B48D30B1F35CA0D0050C797 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				4B1058FC2120BB2800CD6600 /* Model */,
 				4B54EAB32084F13400BDFA25 /* PrivacyAndSecurity */,
 				4B8D05331F738FBB001735BC /* NotificationsAndSounds */,
 				4BB749FA206E2F210014837E /* ChangeNumber */,
@@ -536,7 +563,8 @@
 		4B54EAB32084F13400BDFA25 /* PrivacyAndSecurity */ = {
 			isa = PBXGroup;
 			children = (
-				4B54EAB42084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift */,
+				4B1058F121208FED00CD6600 /* PrivacyTableViewCell.swift */,
+				4B1058F3212091EF00CD6600 /* PrivacyTableViewController.swift */,
 			);
 			name = PrivacyAndSecurity;
 			sourceTree = "<group>";
@@ -612,6 +640,7 @@
 		4B6BAF8B20886B3800A90F3A /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4B1058F52120977600CD6600 /* UserDefaultsManager */,
 				4B8CA9E6211C49B200E6A66C /* TypingIndicator */,
 				4BC0E6C92111B6F200720B43 /* GlobalDataStorage */,
 				4B5693C620CFFAAB005EAE15 /* InAppBanner */,
@@ -1305,8 +1334,8 @@
 				4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */,
 				4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */,
 				4B5693D820CFFAAB005EAE15 /* CustomizedView.swift in Sources */,
-				4B54EAB52084F16400BDFA25 /* PrivacyAndSecurityTableViewController.swift in Sources */,
 				4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */,
+				4B1058F4212091EF00CD6600 /* PrivacyTableViewController.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
 				4BE8BB491FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift in Sources */,
 				4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */,
@@ -1324,6 +1353,7 @@
 				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */,
 				4B6BB01A20886C5F00A90F3A /* ARSLineProgress.swift in Sources */,
+				4B1058F221208FED00CD6600 /* PrivacyTableViewCell.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
 				4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */,
 				4B6BB02020886C5F00A90F3A /* RevealableCollectionViewCell.swift in Sources */,
@@ -1334,6 +1364,7 @@
 				4B6BB00720886C5F00A90F3A /* INSPhotosOverlayView.swift in Sources */,
 				4B6BB00120886C5F00A90F3A /* INSPhotosDataSource.swift in Sources */,
 				4B0FA7CF2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift in Sources */,
+				4B1058F72120979200CD6600 /* UserDefaultsManager.swift in Sources */,
 				4B6BAFF520886C5F00A90F3A /* EnterVerificationContainerView+timerHandlers.swift in Sources */,
 				4B5693D920CFFAAB005EAE15 /* CustomizedImageView.swift in Sources */,
 				4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */,
@@ -1376,6 +1407,7 @@
 				4BB749FE206E2F7F0014837E /* ChangePhoneNumberController.swift in Sources */,
 				4BE8BB441FCA83D200EB35FA /* PlayerCellView.swift in Sources */,
 				4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */,
+				4B1058FE2120BB3600CD6600 /* Biometrics.swift in Sources */,
 				4B6BAFEA20886C5F00A90F3A /* SelectedParticipantsCollectionViewCell.swift in Sources */,
 				4B6BB00B20886C5F00A90F3A /* CameraOverlayView.swift in Sources */,
 				4B6BAFF020886C5F00A90F3A /* SwiftSiriWaveformView.swift in Sources */,
@@ -1406,6 +1438,7 @@
 				4B6BB01B20886C5F00A90F3A /* ARSLineProgressExtensions.swift in Sources */,
 				4BAD9752206E3532008ADF6B /* SelectGroupMembersController.swift in Sources */,
 				4B5693D720CFFAAB005EAE15 /* InAppNotification.swift in Sources */,
+				4B1059002120BB6900CD6600 /* PrivacyObject.swift in Sources */,
 				4B6BB02120886C5F00A90F3A /* RevealableView.swift in Sources */,
 				4B2A9589205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift in Sources */,
 				4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */,

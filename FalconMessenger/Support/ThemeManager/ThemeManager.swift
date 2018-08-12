@@ -10,7 +10,6 @@
 
 import UIKit
 
-let SelectedThemeKey = "SelectedTheme"
 
 enum Theme: Int {
   case Default, Dark
@@ -275,20 +274,18 @@ func setGlobalNavigationBarSettingsAccordingToTheme(theme: Theme) {
 struct ThemeManager {
   
   static func applyTheme(theme: Theme) {
-    UserDefaults.standard.set(theme.rawValue, forKey: SelectedThemeKey)
-    UserDefaults.standard.synchronize()
+    userDefaults.updateObject(for: userDefaults.selectedTheme, with: theme.rawValue)
     setGlobalNavigationBarSettingsAccordingToTheme(theme: theme)
   }
   
   static func currentTheme() -> Theme {
-    if let storedTheme = UserDefaults.standard.value(forKey: SelectedThemeKey) as? Theme.RawValue {
+    if let storedTheme = userDefaults.currentIntObjectState(for: userDefaults.selectedTheme) {
       return Theme(rawValue: storedTheme)!
     } else {
       return .Default
     }
   }
 }
-
 
 struct FalconPalette {
   static let defaultBlue = UIColor(red:0.00, green:0.50, blue:1.00, alpha: 1.0)

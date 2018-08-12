@@ -27,7 +27,7 @@ class FalconUsersFetcher: NSObject {
   
   
   func loadAndSyncFalconUsers() {
-    setContactsSyncronizationStatus(status: false)
+    userDefaults.updateObject(for: userDefaults.contactsSyncronizationStatus, with: false)
     removeAllUsersObservers()
     requestFalconUsers()
   }
@@ -72,16 +72,12 @@ class FalconUsersFetcher: NSObject {
           fetchedUsers.append(user)
         }
       }
-      self.setContactsSyncronizationStatus(status: true)
+  
+      userDefaults.updateObject(for: userDefaults.contactsSyncronizationStatus, with: true)
       self.syncronizeFalconUsers(with: fetchedUsers)
      
       print("Contacts fetching completed", fetchedUsers.count)
     }
-  }
-  
-  fileprivate func setContactsSyncronizationStatus(status: Bool) {
-    UserDefaults.standard.set(status, forKey: "SyncronizationStatus")
-    UserDefaults.standard.synchronize()
   }
   
   fileprivate func syncronizeFalconUsers(with fetchedUsers: [User]) {

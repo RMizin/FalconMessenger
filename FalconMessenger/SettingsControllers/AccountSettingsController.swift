@@ -284,7 +284,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       }
       
       if indexPath.row == 1 {
-        let destination = PrivacyAndSecurityTableViewController()
+        let destination = PrivacyTableViewController()
         destination.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(destination, animated: true)
       }

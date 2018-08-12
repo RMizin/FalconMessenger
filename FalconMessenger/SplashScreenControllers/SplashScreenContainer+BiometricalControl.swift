@@ -14,7 +14,7 @@ extension SplashScreenContainer {
   func showSecuredData() {
     restoreNotificationsState()
     
-    let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
+    let isBiometricalAuthEnabled = userDefaults.currentBoolObjectState(for: userDefaults.biometricalAuth)
     guard isBiometricalAuthEnabled else { return }
     DispatchQueue.main.async {
       self.removeFromSuperview()
@@ -23,19 +23,19 @@ extension SplashScreenContainer {
   
   func temporaryDisableNotifications() {
     guard bannersState == nil, soundsState == nil, vibrationState == nil else { return }
-    bannersState = UserDefaults.standard.bool(forKey: "In-AppNotifications")
-    soundsState = UserDefaults.standard.bool(forKey: "In-AppSounds")
-    vibrationState = UserDefaults.standard.bool(forKey: "In-AppVibration")
-    UserDefaults.standard.set(false, forKey: "In-AppNotifications")
-    UserDefaults.standard.set(false, forKey: "In-AppSounds")
-    UserDefaults.standard.set(false, forKey: "In-AppVibration")
+    bannersState = userDefaults.currentBoolObjectState(for: userDefaults.inAppNotifications)
+    soundsState = userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds)
+    vibrationState = userDefaults.currentBoolObjectState(for: userDefaults.inAppVibration)
+    userDefaults.updateObject(for: userDefaults.inAppNotifications, with: false)
+    userDefaults.updateObject(for: userDefaults.inAppSounds, with: false)
+    userDefaults.updateObject(for: userDefaults.inAppVibration, with: false)
   }
   
   func restoreNotificationsState() {
     guard bannersState != nil, soundsState != nil, vibrationState != nil else { return }
-    UserDefaults.standard.set(bannersState, forKey: "In-AppNotifications")
-    UserDefaults.standard.set(soundsState, forKey: "In-AppSounds")
-    UserDefaults.standard.set(vibrationState, forKey: "In-AppVibration")
+    userDefaults.updateObject(for: userDefaults.inAppNotifications, with: bannersState)
+    userDefaults.updateObject(for: userDefaults.inAppSounds, with: soundsState)
+    userDefaults.updateObject(for: userDefaults.inAppVibration, with: vibrationState)
   }
   
   @objc func authenticationWithTouchID() {
@@ -46,7 +46,7 @@ extension SplashScreenContainer {
     guard localAuthenticationContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) else {
       guard let error = authError else { return }
       self.showPasscodeController(error: error, reason: reason)
-      let biometricType = UserDefaults.standard.integer(forKey: "biometricType")
+      let biometricType = userDefaults.currentIntObjectState(for: userDefaults.biometricType)
       if biometricType == 0 {
         DispatchQueue.main.async {
           self.configureSplashForBiometrics()

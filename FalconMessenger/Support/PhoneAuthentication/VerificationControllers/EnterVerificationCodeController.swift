@@ -56,11 +56,10 @@ class EnterVerificationCodeController: UIViewController {
       
       print("verification sent")
       self.enterVerificationContainerView.resend.isEnabled = false
-      
-      UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+      userDefaults.updateObject(for: userDefaults.authVerificationID, with: verificationID)
       self.enterVerificationContainerView.runTimer()
     }
-  }
+  } 
   
   @objc func rightBarButtonDidTap () {
 
@@ -68,7 +67,7 @@ class EnterVerificationCodeController: UIViewController {
   
   func changeNumber () {
     enterVerificationContainerView.verificationCode.resignFirstResponder()
-    let verificationID = UserDefaults.standard.string(forKey: "ChangeNumberAuthVerificationID")
+    let verificationID = userDefaults.currentStringObjectState(for: userDefaults.changeNumberAuthVerificationID)
     let verificationCode = enterVerificationContainerView.verificationCode.text
     
     if verificationID == nil {
@@ -116,7 +115,7 @@ class EnterVerificationCodeController: UIViewController {
       return
     }
     
-    let verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
+    let verificationID = userDefaults.currentStringObjectState(for: userDefaults.authVerificationID)
     let verificationCode = enterVerificationContainerView.verificationCode.text
     
     if verificationID == nil {

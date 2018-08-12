@@ -70,13 +70,13 @@ extension ChatsTableViewController {
       let isGroupChat = allConversations[index].isGroupChat ?? false
       if let muted = allConversations[index].muted, !muted, let chatName = allConversations[index].chatName {
         self.playNotificationSound()
-       
-        if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
+      
+        if userDefaults.currentBoolObjectState(for: userDefaults.inAppNotifications) {
           self.showInAppNotification(conversation: allConversations[index], title: chatName, subtitle: self.subtitleForMessage(message: message), resource: conversationAvatar(resource: allConversations[index].chatThumbnailPhotoURL, isGroupChat: isGroupChat), placeholder: conversationPlaceholder(isGroupChat: isGroupChat) )
         }
       } else if let chatName = allConversations[index].chatName , allConversations[index].muted == nil   {
         self.playNotificationSound()
-        if UserDefaults.standard.bool(forKey: "In-AppNotifications") {
+        if userDefaults.currentBoolObjectState(for: userDefaults.inAppNotifications) {
           self.showInAppNotification(conversation: allConversations[index], title: chatName, subtitle: self.subtitleForMessage(message: message), resource: conversationAvatar(resource: allConversations[index].chatThumbnailPhotoURL, isGroupChat: isGroupChat), placeholder: conversationPlaceholder(isGroupChat: isGroupChat))
         }
       }
@@ -126,10 +126,10 @@ extension ChatsTableViewController {
   }
    
   fileprivate func playNotificationSound() {
-    if UserDefaults.standard.bool(forKey: "In-AppSounds")  {
+    if userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) {
       SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")
     }
-    if UserDefaults.standard.bool(forKey: "In-AppVibration")  {
+    if userDefaults.currentBoolObjectState(for: userDefaults.inAppVibration) {
       AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
     }
   }

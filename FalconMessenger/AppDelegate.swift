@@ -21,28 +21,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
   var window: UIWindow?
   
+  
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
   
     let theme = ThemeManager.currentTheme()
     ThemeManager.applyTheme(theme: theme)
     
-     FirebaseApp.configure()
-     Database.database().isPersistenceEnabled = true
-    
-     let mainController = GeneralTabBarController()
-     setTabs(mainController: mainController)
-     window = UIWindow(frame: UIScreen.main.bounds)
-     window?.rootViewController = mainController
-     window?.makeKeyAndVisible()
+    FirebaseApp.configure()
+    Database.database().isPersistenceEnabled = true
   
-    if UserDefaults.standard.bool(forKey: "hasRunBefore") == false {
-      do { try Auth.auth().signOut() } catch {}
-      UserDefaults.standard.set(true, forKey: "hasRunBefore")
-      UserDefaults.standard.synchronize()
-    }
-    
-    presentOnboardingController(above: mainController)    
-    setDeaultsForSettings()
+    let mainController = GeneralTabBarController()
+    setTabs(mainController: mainController)
+    window = UIWindow(frame: UIScreen.main.bounds)
+    window?.rootViewController = mainController
+    window?.makeKeyAndVisible()
+  
+    userDefaults.configureInitialLaunch()
+    presentOnboardingController(above: mainController)
+
     
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self
@@ -89,9 +85,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       contactsNavigationController.navigationBar.prefersLargeTitles = true
     }
     
-    let contactsImage =  UIImage(named:"user")
-    let chatsImage = UIImage(named:"chat")
-    let settingsImage = UIImage(named:"settings")
+    let contactsImage =  UIImage(named: "user")
+    let chatsImage = UIImage(named: "chat")
+    let settingsImage = UIImage(named: "settings")
 
     let contactsTabItem = UITabBarItem(title: contactsController.title, image: contactsImage, selectedImage: nil)
     let chatsTabItem = UITabBarItem(title: chatsController.title, image: chatsImage, selectedImage: nil)
@@ -114,25 +110,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
     Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.unknown)
     Messaging.messaging().apnsToken = deviceToken
-  }
-  
-  func setDeaultsForSettings() {
-    
-    if UserDefaults.standard.object(forKey: "In-AppNotifications") == nil {
-      UserDefaults.standard.set(true, forKey: "In-AppNotifications")
-    }
-    
-    if UserDefaults.standard.object(forKey: "In-AppSounds") == nil {
-      UserDefaults.standard.set(true, forKey: "In-AppSounds")
-    }
-    
-    if UserDefaults.standard.object(forKey: "In-AppVibration") == nil {
-      UserDefaults.standard.set(true, forKey: "In-AppVibration")
-    }
-    
-    if UserDefaults.standard.object(forKey: "BiometricalAuth") == nil {
-      UserDefaults.standard.set(false, forKey: "BiometricalAuth")
-    }
   }
   
   var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
