@@ -60,7 +60,7 @@ class GeneralTabBarController: UITabBarController {
 
 extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool) {
-    let isBiometricalAuthEnabled = UserDefaults.standard.bool(forKey: "BiometricalAuth")
+    let isBiometricalAuthEnabled = userDefaults.currentBoolObjectState(for: userDefaults.biometricalAuth)
     if state {
       if isBiometricalAuthEnabled {
         splashContainer.authenticationWithTouchID()

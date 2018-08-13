@@ -33,18 +33,17 @@ class PrivacyAndSecurityTableViewController: UITableViewController {
   fileprivate func configureUISwith () {
     
     biometricalAuthSwich.addTarget(self, action: #selector(switchStateChanged(sender:)), for: .valueChanged)
-    biometricalAuthSwich.setOn(UserDefaults.standard.bool(forKey: "BiometricalAuth"), animated: false)
+    biometricalAuthSwich.setOn(userDefaults.currentBoolObjectState(for: userDefaults.biometricalAuth), animated: false)
   }
   
   @objc func switchStateChanged(sender: UISwitch) {
     if sender == biometricalAuthSwich {
       if sender.isOn {
-        UserDefaults.standard.set(true, forKey: "BiometricalAuth")
+        userDefaults.updateObject(for: userDefaults.biometricalAuth, with: true)
       } else {
-        UserDefaults.standard.set(false, forKey: "BiometricalAuth")
+        userDefaults.updateObject(for: userDefaults.biometricalAuth, with: false)
       }
     }
-    UserDefaults.standard.synchronize()
   }
   
   deinit {
@@ -71,7 +70,7 @@ class PrivacyAndSecurityTableViewController: UITableViewController {
     
     if indexPath.row == 0 {
       
-      let biometricType = UserDefaults.standard.integer(forKey: "biometricType")
+      let biometricType = userDefaults.currentIntObjectState(for: userDefaults.biometricType)
       
       var title = String()
       switch biometricType {

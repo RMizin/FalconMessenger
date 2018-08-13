@@ -139,6 +139,7 @@
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
+		4BDFCD7D2121AE5300FE5728 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDFCD7C2121AE5300FE5728 /* UserDefaultsManager.swift */; };
 		4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */; };
 		4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
@@ -270,11 +271,11 @@
 		4B8D07701FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BaseMessageCell+CellDeletionHandlers.swift"; path = "ChatsControllers/BaseMessageCell+CellDeletionHandlers.swift"; sourceTree = "<group>"; };
 		4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileContainerView.swift; path = AuthenticationControllers/UserProfileContainerView.swift; sourceTree = "<group>"; };
 		4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+keyboardHandlers.swift"; path = "AuthenticationControllers/UserProfileController+keyboardHandlers.swift"; sourceTree = "<group>"; };
-		4B91B8BB1F34E9D60025C67F /* Public.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Public.swift; path = Support/Public.swift; sourceTree = "<group>"; };
+		4B91B8BB1F34E9D60025C67F /* Public.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Public.swift; sourceTree = "<group>"; };
 		4B9498731F3244CA008DA07F /* UserProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileController.swift; path = AuthenticationControllers/UserProfileController.swift; sourceTree = "<group>"; };
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
-		4B9498801F324C84008DA07F /* ThemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ThemeManager.swift; path = Support/ThemeManager.swift; sourceTree = "<group>"; };
+		4B9498801F324C84008DA07F /* ThemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrentUserTableViewCell.swift; path = ContactsControllers/CurrentUserTableViewCell.swift; sourceTree = "<group>"; };
 		4BAD9741206E349E008ADF6B /* ParticipantTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantTableViewCell.swift; sourceTree = "<group>"; };
 		4BAD9742206E349E008ADF6B /* SelectedParticipantsCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedParticipantsCollectionView.swift; sourceTree = "<group>"; };
@@ -322,6 +323,7 @@
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
+		4BDFCD7C2121AE5300FE5728 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaPickerControllerNew.swift; path = ChatsControllers/MediaPickerControllerNew.swift; sourceTree = "<group>"; };
 		4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MediaPicerControllerNew+ImagePicker.swift"; path = "ChatsControllers/MediaPicerControllerNew+ImagePicker.swift"; sourceTree = "<group>"; };
 		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
@@ -673,8 +675,9 @@
 		4B94987F1F324B00008DA07F /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				4B91B8BB1F34E9D60025C67F /* Public.swift */,
-				4B9498801F324C84008DA07F /* ThemeManager.swift */,
+				4BDFCD7B2121AE2700FE5728 /* UserDefaultsManager */,
+				4BDFCD792121AE0300FE5728 /* Public */,
+				4BDFCD7A2121AE1600FE5728 /* ThemeManager */,
 				4BAD975D206E376E008ADF6B /* SingleSelectionTableAdminControllers */,
 				4BAD973F206E349D008ADF6B /* MultipleSelectionControllers */,
 				4BB74A04206E30640014837E /* PhoneAuth */,
@@ -874,6 +877,30 @@
 				4BB6D195206EA62F00FEF72E /* MediaObject.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		4BDFCD792121AE0300FE5728 /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				4B91B8BB1F34E9D60025C67F /* Public.swift */,
+			);
+			path = Public;
+			sourceTree = "<group>";
+		};
+		4BDFCD7A2121AE1600FE5728 /* ThemeManager */ = {
+			isa = PBXGroup;
+			children = (
+				4B9498801F324C84008DA07F /* ThemeManager.swift */,
+			);
+			path = ThemeManager;
+			sourceTree = "<group>";
+		};
+		4BDFCD7B2121AE2700FE5728 /* UserDefaultsManager */ = {
+			isa = PBXGroup;
+			children = (
+				4BDFCD7C2121AE5300FE5728 /* UserDefaultsManager.swift */,
+			);
+			path = UserDefaultsManager;
 			sourceTree = "<group>";
 		};
 		4BE72A6B204E9D65009A22EA /* MediaPickerControllers */ = {
@@ -1118,7 +1145,7 @@
 				TargetAttributes = {
 					4B4F452A1F32230C00A6FF96 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = X9LK79XJU6;
+						DevelopmentTeam = A3WPJ33XN8;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -1296,6 +1323,7 @@
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4BBBCBF52057D01000926800 /* GroupProfileTableHeaderContainer.swift in Sources */,
 				4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */,
+				4BDFCD7D2121AE5300FE5728 /* UserDefaultsManager.swift in Sources */,
 				4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */,
 				4BAD974D206E349E008ADF6B /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
 				4BF07B312053437000A68023 /* ContactsController+SearchHandlers.swift in Sources */,
@@ -1532,7 +1560,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X9LK79XJU6;
+				DEVELOPMENT_TEAM = A3WPJ33XN8;
 				INFOPLIST_FILE = "Pigeon-project/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-git";
@@ -1556,7 +1584,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X9LK79XJU6;
+				DEVELOPMENT_TEAM = A3WPJ33XN8;
 				INFOPLIST_FILE = "Pigeon-project/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-git";

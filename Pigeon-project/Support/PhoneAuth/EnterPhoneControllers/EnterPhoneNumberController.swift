@@ -104,7 +104,7 @@ class EnterPhoneNumberController: UIViewController {
       
       print("verification sent")
       self.isVerificationSent = true
-      UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+      userDefaults.updateObject(for: userDefaults.authVerificationID, with: verificationID)
     }
   }
 }
