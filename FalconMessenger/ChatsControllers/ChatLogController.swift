@@ -1029,7 +1029,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
 
   func selectSize(indexPath: IndexPath) -> CGSize  {
    
-    guard indexPath.section == 0 else { return CGSize(width: self.collectionView!.frame.width, height: 30) }
+    guard indexPath.section == 0 else { return CGSize(width: collectionView!.frame.width, height: 30) }
     var cellHeight: CGFloat = 80
     let message = messages[indexPath.row]
     let isTextMessage = message.text != nil
@@ -1049,11 +1049,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       if let isInfoMessage = message.isInformationMessage, isInfoMessage {
         return CGSize(width: self.collectionView!.frame.width, height: 25)
       }
+      let portraitHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.estimatedFrameForText)
+      let landscapeHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.landscapeEstimatedFrameForText)
       
-      if isGroupChat, !isOutgoingMessage {
-        cellHeight = message.estimatedFrameForText!.height + BaseMessageCell.groupTextMessageInsets
-      } else {
-        cellHeight = message.estimatedFrameForText!.height + BaseMessageCell.defaultTextMessageInsets
+      switch UIDevice.current.orientation {
+      case .landscapeRight, .landscapeLeft:
+        cellHeight = landscapeHeight
+        break
+      default:
+        cellHeight = portraitHeight
+        break
       }
     } else
     
@@ -1082,6 +1087,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     return CGSize(width: self.collectionView!.frame.width, height: cellHeight)
+  }
+  
+  fileprivate func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: CGRect?) -> CGFloat {
+    guard let frame = frame else { return 0 }
+    
+    if isGroupChat, !isOutgoingMessage {
+      return frame.height + BaseMessageCell.groupTextMessageInsets
+    } else {
+      return frame.height + BaseMessageCell.defaultTextMessageInsets
+    }
   }
   
   @objc func handleSend() {

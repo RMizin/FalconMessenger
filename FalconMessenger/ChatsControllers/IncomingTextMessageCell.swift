@@ -35,25 +35,13 @@ class IncomingTextMessageCell: BaseMessageCell {
     if isGroupChat {
       nameLabel.text = message.senderName ?? ""
       nameLabel.sizeToFit()
-      
-      if message.estimatedFrameForText!.width < nameLabel.frame.size.width {
-        
-        if nameLabel.frame.size.width >= BaseMessageCell.incomingGroupMessageAuthorNameLabelMaxWidth {
-          nameLabel.frame.size.width = BaseMessageCell.incomingGroupMessageAuthorNameLabelMaxWidth
-          bubbleView.frame.size = CGSize(width: BaseMessageCell.bubbleViewMaxWidth, height: frame.size.height.rounded())
-        } else {
-          bubbleView.frame.size = CGSize(width: (nameLabel.frame.size.width + BaseMessageCell.incomingMessageHorisontalInsets).rounded(), height: frame.size.height.rounded())
-        }
-      } else {
-        bubbleView.frame.size = CGSize(width: (message.estimatedFrameForText!.width + BaseMessageCell.incomingMessageHorisontalInsets).rounded(), height: frame.size.height.rounded())
-      }
+      bubbleView.frame.size = setupGroupBubbleViewSize(message: message)
       
       textView.textContainerInset.top = BaseMessageCell.groupIncomingTextViewTopInset
       textView.frame.size = CGSize(width: bubbleView.frame.width.rounded(), height: bubbleView.frame.height.rounded())
       
     } else {
-      let width = (message.estimatedFrameForText!.width + BaseMessageCell.incomingMessageHorisontalInsets).rounded()
-      bubbleView.frame.size = CGSize(width: width, height: frame.size.height.rounded())
+      bubbleView.frame.size = setupDefaultBubbleViewSize(message: message)
       textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
     }
     setupTimestampView(message: message, isOutgoing: false)
@@ -63,6 +51,54 @@ class IncomingTextMessageCell: BaseMessageCell {
     } else {
       bubbleView.image = ThemeManager.currentTheme().incomingPartialBubble
     }
+  }
+  
+  fileprivate func setupDefaultBubbleViewSize(message: Message) -> CGSize {
+    guard let portaritEstimate = message.estimatedFrameForText?.width, let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGSize() }
+    let portraitwidth = (portaritEstimate + BaseMessageCell.incomingMessageHorisontalInsets).rounded()
+    let portraitSize = CGSize(width: portraitwidth, height: frame.size.height.rounded())
+    
+    let landscapeWidth = (landscapeEstimate + BaseMessageCell.incomingMessageHorisontalInsets).rounded()
+    let landscapeSize = CGSize(width: landscapeWidth, height: frame.size.height.rounded())
+    
+    switch UIDevice.current.orientation {
+    case .landscapeRight, .landscapeLeft:
+      return landscapeSize
+    default:
+     return portraitSize
+    }
+  }
+  
+  fileprivate func setupGroupBubbleViewSize(message: Message) -> CGSize {
+    
+    guard let portaritWidth = message.estimatedFrameForText?.width else { return CGSize() }
+    guard let landscapeWidth = message.landscapeEstimatedFrameForText?.width  else { return CGSize() }
+    let portraitBubbleMaxW = BaseMessageCell.bubbleViewMaxWidth
+    let portraitAuthorMaxW = BaseMessageCell.incomingGroupMessageAuthorNameLabelMaxWidth
+    let landscapeBubbleMaxW = BaseMessageCell.landscapeBubbleViewMaxWidth
+    let landscapeAuthoMaxW = BaseMessageCell.landscapeIncomingGroupMessageAuthorNameLabelMaxWidth
+    
+    switch UIDevice.current.orientation {
+    case .landscapeRight, .landscapeLeft:
+      return getGroupBubbleSize(messageWidth: landscapeWidth, bubbleMaxWidth: landscapeBubbleMaxW, authorMaxWidth: landscapeAuthoMaxW)
+    default:
+      return getGroupBubbleSize(messageWidth: portaritWidth, bubbleMaxWidth: portraitBubbleMaxW, authorMaxWidth: portraitAuthorMaxW)
+    }
+  }
+  
+  fileprivate func getGroupBubbleSize(messageWidth: CGFloat, bubbleMaxWidth: CGFloat, authorMaxWidth: CGFloat) -> CGSize {
+    let horisontalInsets = BaseMessageCell.incomingMessageHorisontalInsets
+    
+    guard messageWidth < nameLabel.frame.size.width else {
+      return CGSize(width: (messageWidth + horisontalInsets).rounded(), height: frame.size.height.rounded())
+    }
+    
+    guard nameLabel.frame.size.width >= authorMaxWidth else {
+      return CGSize(width: (nameLabel.frame.size.width + horisontalInsets).rounded(), height: frame.size.height.rounded())
+    }
+    
+    nameLabel.frame.size.width = authorMaxWidth
+    return CGSize(width:bubbleMaxWidth, height: frame.size.height.rounded())
   }
   
   override func setupViews() {

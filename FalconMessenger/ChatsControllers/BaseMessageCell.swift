@@ -58,14 +58,18 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   static let incomingMessageAuthorNameLeftInset = incomingTextViewLeftInset + 5
   
-  static let bubbleViewMaxWidth: CGFloat = 238
+  static let bubbleViewMaxWidth: CGFloat = UIScreen.main.bounds.width * 0.75
+  
+  static let landscapeBubbleViewMaxWidth: CGFloat = UIScreen.main.bounds.height * 0.75
   
   static let bubbleViewMaxHeight: CGFloat = 10000
   
-  static let mediaMaxWidth: CGFloat = 200
+  static let mediaMaxWidth: CGFloat = UIScreen.main.bounds.width * 0.75
   
   static let incomingGroupMessageAuthorNameLabelMaxWidth = bubbleViewMaxWidth - incomingMessageHorisontalInsets
   
+  static let landscapeIncomingGroupMessageAuthorNameLabelMaxWidth = landscapeBubbleViewMaxWidth - incomingMessageHorisontalInsets
+
   static let incomingGroupMessageAuthorNameLabelHeight: CGFloat = 25
   
   static let groupIncomingTextViewTopInset: CGFloat = incomingGroupMessageAuthorNameLabelHeight

@@ -45,7 +45,10 @@ class Message: NSObject {
 
     var videoUrl: String?
   
-    var estimatedFrameForText:CGRect?
+    var estimatedFrameForText: CGRect?
+  
+    var landscapeEstimatedFrameForText: CGRect?
+  
     var imageCellHeight: NSNumber?
   
     var isCrooked:Bool? // local only
@@ -86,6 +89,7 @@ class Message: NSObject {
         voiceStartTime = dictionary["voiceStartTime"] as? Int
       
         estimatedFrameForText = dictionary["estimatedFrameForText"] as? CGRect
+        landscapeEstimatedFrameForText = dictionary["landscapeEstimatedFrameForText"] as? CGRect
         imageCellHeight = dictionary["imageCellHeight"] as? NSNumber
       
         senderName = dictionary["senderName"] as? String

@@ -31,17 +31,31 @@ class OutgoingTextMessageCell: BaseMessageCell {
     self.message = message
     guard let messageText = message.text else { return }
     textView.text = messageText
-    
-    let x = frame.width - message.estimatedFrameForText!.width - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
-    bubbleView.frame = CGRect(x: x, y: 0, width: message.estimatedFrameForText!.width + BaseMessageCell.outgoingMessageHorisontalInsets, height: frame.size.height).integral
+    bubbleView.frame = setupBubbleViewFrame(message: message)
     textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
-    
     setupTimestampView(message: message, isOutgoing: true)
     
     if let isCrooked = self.message?.isCrooked, isCrooked {
-       bubbleView.image = ThemeManager.currentTheme().outgoingBubble//blueBubbleImage
+      bubbleView.image = ThemeManager.currentTheme().outgoingBubble
     } else {
-       bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble
+      bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble
+    }
+  }
+  
+  fileprivate func setupBubbleViewFrame(message: Message) -> CGRect {
+    guard let portaritEstimate = message.estimatedFrameForText?.width, let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGRect() }
+
+    let portraitX = frame.width - portaritEstimate - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
+    let portraitRect = CGRect(x: portraitX, y: 0, width: portaritEstimate + BaseMessageCell.outgoingMessageHorisontalInsets, height: frame.size.height).integral
+    
+    let landscapeX = frame.width - landscapeEstimate - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
+    let landscapeRect = CGRect(x: landscapeX, y: 0, width: landscapeEstimate + BaseMessageCell.outgoingMessageHorisontalInsets, height: frame.size.height).integral
+    
+    switch UIDevice.current.orientation {
+    case .landscapeLeft, .landscapeRight:
+      return landscapeRect
+   default:
+      return portraitRect
     }
   }
   

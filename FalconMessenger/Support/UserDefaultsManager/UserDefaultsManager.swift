@@ -79,19 +79,19 @@ class UserDefaultsManager: NSObject {
     }
     
     if defaults.object(forKey: inAppSounds) == nil {
-         updateObject(for: inAppSounds, with: true)
+      updateObject(for: inAppSounds, with: true)
     }
     
     if defaults.object(forKey: inAppVibration) == nil {
-        updateObject(for: inAppVibration, with: true)
+      updateObject(for: inAppVibration, with: true)
     }
     
     if defaults.object(forKey: biometricalAuth) == nil {
-        updateObject(for: biometricalAuth, with: true)
+      updateObject(for: biometricalAuth, with: false)
     }
     
     if defaults.object(forKey: contactsContiniousSync) == nil {
-       updateObject(for: contactsContiniousSync, with: true)
+      updateObject(for: contactsContiniousSync, with: true)
     }
   }
 }

@@ -233,13 +233,14 @@ class MessagesFetcher: NSObject {
     var dictionary = dictionary
     
     if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
-      dictionary.updateValue(estimateFrameForText(messageText) as AnyObject , forKey: "estimatedFrameForText" )
+      dictionary.updateValue(estimateFrameForText(messageText, orientation: .portrait) as AnyObject , forKey: "estimatedFrameForText")
+      dictionary.updateValue(estimateFrameForText(messageText, orientation: .landscapeLeft) as AnyObject , forKey: "landscapeEstimatedFrameForText")
     } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight = Message(dictionary: dictionary).imageHeight?.floatValue {
       
       let aspect = CGFloat(imageHeight / imageWidth)
       let maxWidth = BaseMessageCell.mediaMaxWidth
       let cellHeight = aspect * maxWidth
-      dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight" )
+      dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight")
     }
     
     if let voiceEncodedString = Message(dictionary: dictionary).voiceEncodedString { /* pre-encoding voice messages */
@@ -260,13 +261,24 @@ class MessagesFetcher: NSObject {
     return dictionary
   }
   
-  func estimateFrameForText(_ text: String) -> CGRect {
-    let size = CGSize(width: BaseMessageCell.bubbleViewMaxWidth, height: BaseMessageCell.bubbleViewMaxHeight)
+  func estimateFrameForText(_ text: String, orientation: UIDeviceOrientation) -> CGRect {
+    var size = CGSize()
+    let portraitSize = CGSize(width: BaseMessageCell.bubbleViewMaxWidth, height: BaseMessageCell.bubbleViewMaxHeight)
+    let landscapeSize = CGSize(width: BaseMessageCell.landscapeBubbleViewMaxWidth, height: BaseMessageCell.bubbleViewMaxHeight)
+    
+    switch orientation {
+      case .landscapeRight, .landscapeLeft:
+        size = landscapeSize
+        break
+      default:
+        size = portraitSize
+        break
+    }
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
     return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: MessageFontsAppearance.defaultMessageTextFont], context: nil).integral
   }
   
-  func estimateFrameForText(width: CGFloat, text: String, font: UIFont) -> CGRect {
+  func estimateFrameForText(width: CGFloat, text: String, font: UIFont) -> CGRect { /* information messages only */
     let size = CGSize(width: width, height: BaseMessageCell.bubbleViewMaxHeight)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
     return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: font], context: nil).integral
