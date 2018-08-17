@@ -134,7 +134,6 @@ class GroupAdminControlsTableViewController: UITableViewController {
     tableView.register(GroupAdminControlsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
     tableView.separatorStyle = .none
     tableView.allowsSelection = true
-    tableView.prefetchDataSource = self
   }
   
   fileprivate func setupContainerView() {
@@ -506,12 +505,5 @@ class GroupAdminControlsTableViewController: UITableViewController {
       
       return cell
     }
-  }
-}
-
-extension GroupAdminControlsTableViewController: UITableViewDataSourcePrefetching {
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let urls = members.map { URL(string: $0.photoURL ?? "")  }
-    SDWebImagePrefetcher.shared().prefetchURLs(urls as? [URL])
   }
 }

@@ -23,9 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     FirebaseApp.configure()
     Database.database().isPersistenceEnabled = true
     
-    _ = contactsController.view
-    _ = settingsController.view
-    
     let mainController = GeneralTabBarController()
     setTabs(mainController: mainController)
     window = UIWindow(frame: UIScreen.main.bounds)
@@ -90,12 +87,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
   
   func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-    
-    if Auth.auth().currentUser == nil {
-      return UIInterfaceOrientationMask.portrait
-    } else {
-      return self.orientationLock
-    }
+    guard Auth.auth().currentUser != nil else { return .portrait }
+    return self.orientationLock
   }
   
   func applicationWillResignActive(_ application: UIApplication) {

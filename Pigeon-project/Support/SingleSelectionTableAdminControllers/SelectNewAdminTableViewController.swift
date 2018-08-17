@@ -213,7 +213,7 @@ class SelectNewAdminTableViewController: UITableViewController {
     }
     
     guard let url = sections[indexPath.section][indexPath.row].thumbnailPhotoURL else { return cell }
-    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveDownload, .continueInBackground], completed: { (image, error, cacheType, url) in
+    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.progressiveLoad, .continueInBackground], completed: { (image, error, cacheType, url) in
       guard image != nil else { return }
       guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
         cell.icon.alpha = 1

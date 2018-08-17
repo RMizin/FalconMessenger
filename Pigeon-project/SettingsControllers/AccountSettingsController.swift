@@ -17,12 +17,12 @@ class AccountSettingsController: UITableViewController {
   
   let accountSettingsCellId = "userProfileCell"
 
-  var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and sounds" ),
-                      ( icon: UIImage(named: "Privacy") , title: "Privacy and security" ),
-                      ( icon: UIImage(named: "ChangeNumber") , title: "Change number"),
-                      ( icon: UIImage(named: "Storage") , title: "Data and storage")]
+  var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and Sounds" ),
+                      ( icon: UIImage(named: "Privacy") , title: "Privacy and Security" ),
+                      ( icon: UIImage(named: "ChangeNumber") , title: "Change Number"),
+                      ( icon: UIImage(named: "Storage") , title: "Data and Storage")]
   
-  var secondSection = [( icon: UIImage(named: "Logout") , title: "Log out")]
+  var secondSection = [( icon: UIImage(named: "Logout") , title: "Log Out")]
   
   let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
   let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
@@ -104,8 +104,9 @@ class AccountSettingsController: UITableViewController {
       let theme = Theme.Default
       ThemeManager.applyTheme(theme: theme)
     }
-    shouldReloadChatsControllerAfterChangingTheme = true
+    
     shouldReloadContactsControllerAfterChangingTheme = true
+    shouldReloadChatsControllerAfterChangingTheme = true
     setColorAccordingToTheme()
     tableView.reloadData()
   }
@@ -141,11 +142,7 @@ class AccountSettingsController: UITableViewController {
       let photoURLReference = Database.database().reference().child("users").child(currentUser).child("photoURL")
       photoURLReference.observe(.value, with: { (snapshot) in
         if let url = snapshot.value as? String {
-          self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url) , placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground], completed: {(image, error, cacheType, url) in
-            if error != nil {
-              //basicErrorAlertWith(title: "Error loading profile picture", message: "It seems like you are not connected to the internet.", controller: self)
-            }
-          })
+          self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url) , placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground], completed: nil)
         }
       })
       
@@ -203,37 +200,49 @@ class AccountSettingsController: UITableViewController {
       
     }
     ARSLineProgress.ars_showOnView(self.tableView)
-    
-    let onlineStatusReference = Database.database().reference().child("users").child(uid).child("OnlineStatus")
-    onlineStatusReference.setValue(ServerValue.timestamp())
-    
-    do {
-      try firebaseAuth.signOut()
+  
+    let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
+    userReference.removeValue { (error, reference) in
+
+      Database.database().reference(withPath: ".info/connected").removeAllObservers()
       
-    } catch let signOutError as NSError {
+      if error != nil {
+        ARSLineProgress.hide()
+        basicErrorAlertWith(title: "Error signing out", message: "Try again later", controller: self)
+        return
+      }
+      
+      let onlineStatusReference = Database.database().reference().child("users").child(uid).child("OnlineStatus")
+      onlineStatusReference.setValue(ServerValue.timestamp())
+      
+      do {
+        try firebaseAuth.signOut()
+        
+      } catch let signOutError as NSError {
+        ARSLineProgress.hide()
+        basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
+        return
+      }
+      AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+      UIApplication.shared.applicationIconBadgeNumber = 0
+      
+      let destination = OnboardingController()
+      
+      let newNavigationController = UINavigationController(rootViewController: destination)
+      newNavigationController.navigationBar.shadowImage = UIImage()
+      newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+      
+      newNavigationController.navigationBar.isTranslucent = false
+      newNavigationController.modalTransitionStyle = .crossDissolve
       ARSLineProgress.hide()
-      basicErrorAlertWith(title: "Error signing out", message: signOutError.localizedDescription, controller: self)
-      return
+      self.present(newNavigationController, animated: true, completion: {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
+        
+        self.tabBarController?.selectedIndex = tabs.chats.rawValue
+        
+      })
     }
-    AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-    UIApplication.shared.applicationIconBadgeNumber = 0
-    
-    let destination = OnboardingController()
-    
-    let newNavigationController = UINavigationController(rootViewController: destination)
-    newNavigationController.navigationBar.shadowImage = UIImage()
-    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-    
-    newNavigationController.navigationBar.isTranslucent = false
-    newNavigationController.modalTransitionStyle = .crossDissolve
-    ARSLineProgress.hide()
-    self.present(newNavigationController, animated: true, completion: {
-      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
-      NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
-      
-      self.tabBarController?.selectedIndex = tabs.chats.rawValue
-      
-    })
   }
 }
 
@@ -244,19 +253,14 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
     cell.accessoryType = .disclosureIndicator
   
     if indexPath.section == 0 {
-      
       cell.icon.image = firstSection[indexPath.row].icon
       cell.title.text = firstSection[indexPath.row].title
     }
     
     if indexPath.section == 1 {
-      
       cell.icon.image = secondSection[indexPath.row].icon
       cell.title.text = secondSection[indexPath.row].title
-      
-      if indexPath.row == 1 {
-        cell.accessoryType = .none
-      }
+      cell.accessoryType = .none
     }
     return cell
   }
@@ -265,37 +269,37 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
     
     if indexPath.section == 0 {
       if indexPath.row == 0 {
-        let destination = NotificationsAndSoundsTableViewController()
+        let destination = NotificationsTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination, animated: true)
+        navigationController?.pushViewController(destination, animated: true)
       }
       
       if indexPath.row == 1 {
-        let destination = PrivacyAndSecurityTableViewController()
+        let destination = PrivacyTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination, animated: true)
+        navigationController?.pushViewController(destination, animated: true)
       }
       
       if indexPath.row == 2 {
          AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         let controller = ChangePhoneNumberController()
         let destination = UINavigationController(rootViewController: controller)
+        destination.navigationBar.shadowImage = UIImage()
+        destination.navigationBar.setBackgroundImage(UIImage(), for: .default)
         destination.hidesBottomBarWhenPushed = true
         destination.navigationBar.isTranslucent = false
-        self.present(destination, animated: true, completion: nil)
+        present(destination, animated: true, completion: nil)
       }
       
       if indexPath.row == 3 {
         let destination = StorageTableViewController()
         destination.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(destination, animated: true)
+        navigationController?.pushViewController(destination, animated: true)
       }
     }
       
     if indexPath.section == 1 {
-      if indexPath.row == 0 {
-        logoutButtonTapped()
-      }
+      logoutButtonTapped()
     }
     tableView.deselectRow(at: indexPath, animated: true)
   }
@@ -305,7 +309,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
   }
   
   override  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 55
+    return 50
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -316,7 +320,6 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
     if section == 1 {
       return secondSection.count
     } else {
-      
       return 0
     }
   }

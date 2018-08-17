@@ -422,7 +422,7 @@ class ChatsTableViewController: UITableViewController {
   
   fileprivate func prefetchThumbnail(from urlString: String?) {
     if let thumbnail = urlString, let url = URL(string: thumbnail) {
-      SDWebImagePrefetcher.shared().prefetchURLs([url])
+      SDWebImagePrefetcher.shared.prefetchURLs([url])
     }
   }
 
@@ -508,6 +508,7 @@ class ChatsTableViewController: UITableViewController {
     
     if !isAppLoaded {
       UIView.transition(with: tableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+      initAllTabs()
     } else {
       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
       self.tableView.reloadData()
@@ -525,6 +526,12 @@ class ChatsTableViewController: UITableViewController {
       delegate?.manageAppearance(self, didFinishLoadingWith: true)
       isAppLoaded = true
     }
+  }
+  
+  fileprivate func initAllTabs() {
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+    _ = appDelegate.contactsController.view
+    _ = appDelegate.settingsController.view
   }
   
   func handleReloadTableAfterSearch() {
