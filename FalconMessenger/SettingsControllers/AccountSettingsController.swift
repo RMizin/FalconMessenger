@@ -278,7 +278,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
     
     if indexPath.section == 0 {
       if indexPath.row == 0 {
-        let destination = NotificationsAndSoundsTableViewController()
+        let destination = NotificationsTableViewController()
         destination.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(destination, animated: true)
       }
