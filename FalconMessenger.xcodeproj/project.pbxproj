@@ -8,15 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		0E021BAC99C749D2A57CDA08 /* libPods-FalconMessenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28F15AD41DA41AD704250781 /* libPods-FalconMessenger.a */; };
-		4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9E571FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift */; };
 		4B0FA7CF2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7CE2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift */; };
 		4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */; };
 		4B0FA7DE2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FA7DD2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift */; };
-		4B1058F221208FED00CD6600 /* PrivacyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058F121208FED00CD6600 /* PrivacyTableViewCell.swift */; };
-		4B1058F4212091EF00CD6600 /* PrivacyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058F3212091EF00CD6600 /* PrivacyTableViewController.swift */; };
 		4B1058F72120979200CD6600 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058F62120979200CD6600 /* UserDefaultsManager.swift */; };
-		4B1058FE2120BB3600CD6600 /* Biometrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058FD2120BB3600CD6600 /* Biometrics.swift */; };
-		4B1059002120BB6900CD6600 /* PrivacyObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1058FF2120BB6900CD6600 /* PrivacyObject.swift */; };
 		4B18BACA2097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B18BAC92097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift */; };
 		4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */; };
 		4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */; };
@@ -30,11 +25,7 @@
 		4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */; };
 		4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */; };
 		4B3DC3BD2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */; };
-		4B3DC3BF2074DA4500106EF7 /* AccountSettingsAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3DC3BE2074DA4500106EF7 /* AccountSettingsAvatarOpenerDelegate.swift */; };
 		4B3E634C1FB9F06F00E200CD /* NoChatsYetContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */; };
-		4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */; };
-		4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */; };
-		4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */; };
 		4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F453B1F32230C00A6FF96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45391F32230C00A6FF96 /* LaunchScreen.storyboard */; };
@@ -125,7 +116,6 @@
 		4B8CA9EB211C49B300E6A66C /* TypingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA9E7211C49B200E6A66C /* TypingIndicator.swift */; };
 		4B8CA9EC211C49B300E6A66C /* TypingBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA9E8211C49B200E6A66C /* TypingBubble.swift */; };
 		4B8CA9EE211C49B300E6A66C /* BubbleCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA9EA211C49B200E6A66C /* BubbleCircle.swift */; };
-		4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D05341F739B00001735BC /* NotificationsAndSoundsTableViewController.swift */; };
 		4B8D07711FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D07701FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift */; };
 		4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */; };
 		4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */; };
@@ -140,8 +130,6 @@
 		4BB6D196206EA62F00FEF72E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D193206EA62F00FEF72E /* Message.swift */; };
 		4BB6D197206EA62F00FEF72E /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D194206EA62F00FEF72E /* Conversation.swift */; };
 		4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D195206EA62F00FEF72E /* MediaObject.swift */; };
-		4BB749FC206E2F460014837E /* ChangeNumberVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB749FB206E2F460014837E /* ChangeNumberVerificationController.swift */; };
-		4BB749FE206E2F7F0014837E /* ChangePhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB749FD206E2F7F0014837E /* ChangePhoneNumberController.swift */; };
 		4BB74A01206E2FFB0014837E /* AuthPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */; };
 		4BB74A03206E300C0014837E /* AuthVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A02206E300C0014837E /* AuthVerificationController.swift */; };
 		4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */; };
@@ -160,8 +148,21 @@
 		4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC2C58C1F40545200B5C825 /* UserCell.swift */; };
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
-		4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA3BF41FB4966E006AE321 /* LegalTableViewController.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
+		4BDB294A2126C79000D77600 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */; };
+		4BDB294B2126C79000D77600 /* AccountSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29352126C79000D77600 /* AccountSettingsController.swift */; };
+		4BDB294C2126C79000D77600 /* PrivacyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29382126C79000D77600 /* PrivacyTableViewController.swift */; };
+		4BDB294D2126C79000D77600 /* ChangePhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB293A2126C79000D77600 /* ChangePhoneNumberController.swift */; };
+		4BDB294E2126C79000D77600 /* ChangeNumberVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB293B2126C79000D77600 /* ChangeNumberVerificationController.swift */; };
+		4BDB294F2126C79000D77600 /* StorageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB293D2126C79000D77600 /* StorageTableViewController.swift */; };
+		4BDB29502126C79000D77600 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB293F2126C79000D77600 /* SwitchTableViewCell.swift */; };
+		4BDB29512126C79000D77600 /* SwitchObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29412126C79000D77600 /* SwitchObject.swift */; };
+		4BDB29522126C79000D77600 /* Biometrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29422126C79000D77600 /* Biometrics.swift */; };
+		4BDB29532126C79000D77600 /* NotificationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29442126C79000D77600 /* NotificationsTableViewController.swift */; };
+		4BDB29552126C79000D77600 /* AboutTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29472126C79000D77600 /* AboutTableViewController.swift */; };
+		4BDB29562126C79000D77600 /* AccountSettingsController+nameEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29482126C79000D77600 /* AccountSettingsController+nameEditing.swift */; };
+		4BDB29572126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29492126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift */; };
+		4BDB29592126CA8B00D77600 /* SwitchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29582126CA8B00D77600 /* SwitchTableViewController.swift */; };
 		4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */; };
 		4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */; };
@@ -202,15 +203,10 @@
 /* Begin PBXFileReference section */
 		28F15AD41DA41AD704250781 /* libPods-FalconMessenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FalconMessenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B08E36E2088725C00C64EAA /* FalconMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FalconMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B0D9E571FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "AccountSettingsController+nameEditing.swift"; path = "SettingsControllers/AccountSettingsController+nameEditing.swift"; sourceTree = "<group>"; };
 		4B0FA7CE2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsTableViewCell.swift; path = ChatsControllers/GroupAdminControlsTableViewCell.swift; sourceTree = "<group>"; };
 		4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MessagesFetcher.swift; path = ChatsControllers/MessagesFetcher.swift; sourceTree = "<group>"; };
 		4B0FA7DD2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogController+CollectionDelegate.swift"; path = "ChatsControllers/ChatLogController+CollectionDelegate.swift"; sourceTree = "<group>"; };
-		4B1058F121208FED00CD6600 /* PrivacyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrivacyTableViewCell.swift; path = SettingsControllers/PrivacyTableViewCell.swift; sourceTree = "<group>"; };
-		4B1058F3212091EF00CD6600 /* PrivacyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrivacyTableViewController.swift; path = SettingsControllers/PrivacyTableViewController.swift; sourceTree = "<group>"; };
 		4B1058F62120979200CD6600 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
-		4B1058FD2120BB3600CD6600 /* Biometrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biometrics.swift; sourceTree = "<group>"; };
-		4B1058FF2120BB6900CD6600 /* PrivacyObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyObject.swift; sourceTree = "<group>"; };
 		4B18BAC92097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactPhoneNnumberTableViewCell.swift; path = ContactsControllers/ContactPhoneNnumberTableViewCell.swift; sourceTree = "<group>"; };
 		4B1A369C1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectedMediaCollectionCell.swift; path = ChatsControllers/SelectedMediaCollectionCell.swift; sourceTree = "<group>"; };
 		4B1A369E1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatInputContainer+AttachedImagesCollectionConfig.swift"; path = "ChatsControllers/ChatInputContainer+AttachedImagesCollectionConfig.swift"; sourceTree = "<group>"; };
@@ -224,11 +220,7 @@
 		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
 		4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoPhoneNumberTableViewCell.swift; path = ChatsControllers/UserInfoPhoneNumberTableViewCell.swift; sourceTree = "<group>"; };
 		4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfileDataDatabaseUpdater.swift; path = AuthenticationControllers/UserProfileDataDatabaseUpdater.swift; sourceTree = "<group>"; };
-		4B3DC3BE2074DA4500106EF7 /* AccountSettingsAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AccountSettingsAvatarOpenerDelegate.swift; path = SettingsControllers/AccountSettingsAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
 		4B3E634B1FB9F06F00E200CD /* NoChatsYetContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NoChatsYetContainer.swift; path = ChatsControllers/NoChatsYetContainer.swift; sourceTree = "<group>"; };
-		4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StorageTableViewController.swift; path = SettingsControllers/StorageTableViewController.swift; sourceTree = "<group>"; };
-		4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountSettingsTableViewCell.swift; path = SettingsControllers/AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
-		4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountSettingsController.swift; path = SettingsControllers/AccountSettingsController.swift; sourceTree = "<group>"; };
 		4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B4F453A1F32230C00A6FF96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -321,7 +313,6 @@
 		4B8CA9E7211C49B200E6A66C /* TypingIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingIndicator.swift; sourceTree = "<group>"; };
 		4B8CA9E8211C49B200E6A66C /* TypingBubble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingBubble.swift; sourceTree = "<group>"; };
 		4B8CA9EA211C49B200E6A66C /* BubbleCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleCircle.swift; sourceTree = "<group>"; };
-		4B8D05341F739B00001735BC /* NotificationsAndSoundsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationsAndSoundsTableViewController.swift; path = SettingsControllers/NotificationsAndSoundsTableViewController.swift; sourceTree = "<group>"; };
 		4B8D07701FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BaseMessageCell+CellDeletionHandlers.swift"; path = "ChatsControllers/BaseMessageCell+CellDeletionHandlers.swift"; sourceTree = "<group>"; };
 		4B91B8AF1F34B2D10025C67F /* UserProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileContainerView.swift; path = AuthenticationControllers/UserProfileContainerView.swift; sourceTree = "<group>"; };
 		4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserProfileController+keyboardHandlers.swift"; path = "AuthenticationControllers/UserProfileController+keyboardHandlers.swift"; sourceTree = "<group>"; };
@@ -337,8 +328,6 @@
 		4BB6D193206EA62F00FEF72E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Model/Message.swift; sourceTree = "<group>"; };
 		4BB6D194206EA62F00FEF72E /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = Model/Conversation.swift; sourceTree = "<group>"; };
 		4BB6D195206EA62F00FEF72E /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = Model/MediaObject.swift; sourceTree = "<group>"; };
-		4BB749FB206E2F460014837E /* ChangeNumberVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangeNumberVerificationController.swift; path = SettingsControllers/ChangeNumberVerificationController.swift; sourceTree = "<group>"; };
-		4BB749FD206E2F7F0014837E /* ChangePhoneNumberController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangePhoneNumberController.swift; path = SettingsControllers/ChangePhoneNumberController.swift; sourceTree = "<group>"; };
 		4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthPhoneNumberController.swift; path = AuthenticationControllers/AuthPhoneNumberController.swift; sourceTree = "<group>"; };
 		4BB74A02206E300C0014837E /* AuthVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthVerificationController.swift; path = AuthenticationControllers/AuthVerificationController.swift; sourceTree = "<group>"; };
 		4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableViewController.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableViewController.swift; sourceTree = "<group>"; };
@@ -357,8 +346,21 @@
 		4BC2C58C1F40545200B5C825 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = ChatsControllers/UserCell.swift; sourceTree = "<group>"; };
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
-		4BCA3BF41FB4966E006AE321 /* LegalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LegalTableViewController.swift; path = SettingsControllers/LegalTableViewController.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
+		4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		4BDB29352126C79000D77600 /* AccountSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsController.swift; sourceTree = "<group>"; };
+		4BDB29382126C79000D77600 /* PrivacyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyTableViewController.swift; sourceTree = "<group>"; };
+		4BDB293A2126C79000D77600 /* ChangePhoneNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePhoneNumberController.swift; sourceTree = "<group>"; };
+		4BDB293B2126C79000D77600 /* ChangeNumberVerificationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerificationController.swift; sourceTree = "<group>"; };
+		4BDB293D2126C79000D77600 /* StorageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageTableViewController.swift; sourceTree = "<group>"; };
+		4BDB293F2126C79000D77600 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
+		4BDB29412126C79000D77600 /* SwitchObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchObject.swift; sourceTree = "<group>"; };
+		4BDB29422126C79000D77600 /* Biometrics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Biometrics.swift; sourceTree = "<group>"; };
+		4BDB29442126C79000D77600 /* NotificationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsTableViewController.swift; sourceTree = "<group>"; };
+		4BDB29472126C79000D77600 /* AboutTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutTableViewController.swift; sourceTree = "<group>"; };
+		4BDB29482126C79000D77600 /* AccountSettingsController+nameEditing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AccountSettingsController+nameEditing.swift"; sourceTree = "<group>"; };
+		4BDB29492126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
+		4BDB29582126CA8B00D77600 /* SwitchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewController.swift; sourceTree = "<group>"; };
 		4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaPickerControllerNew.swift; path = ChatsControllers/MediaPickerControllerNew.swift; sourceTree = "<group>"; };
 		4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MediaPicerControllerNew+ImagePicker.swift"; path = "ChatsControllers/MediaPicerControllerNew+ImagePicker.swift"; sourceTree = "<group>"; };
 		4BE5712C1F4D652D009D9AB4 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogController+PhotoEditor.swift"; path = "ChatsControllers/ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
@@ -429,16 +431,6 @@
 			path = UserDefaultsManager;
 			sourceTree = "<group>";
 		};
-		4B1058FC2120BB2800CD6600 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				4B1058FD2120BB3600CD6600 /* Biometrics.swift */,
-				4B1058FF2120BB6900CD6600 /* PrivacyObject.swift */,
-			);
-			name = Model;
-			path = SettingsControllers/Model;
-			sourceTree = "<group>";
-		};
 		4B1A36991F49990D00B4AA0A /* ChatInputContainer */ = {
 			isa = PBXGroup;
 			children = (
@@ -459,27 +451,6 @@
 			name = RevealableCell;
 			sourceTree = "<group>";
 		};
-		4B48D3091F35C9E20050C797 /* Storage */ = {
-			isa = PBXGroup;
-			children = (
-				4B48D3011F35C9DB0050C797 /* StorageTableViewController.swift */,
-			);
-			name = Storage;
-			sourceTree = "<group>";
-		};
-		4B48D30B1F35CA0D0050C797 /* Menu */ = {
-			isa = PBXGroup;
-			children = (
-				4B1058FC2120BB2800CD6600 /* Model */,
-				4B54EAB32084F13400BDFA25 /* PrivacyAndSecurity */,
-				4B8D05331F738FBB001735BC /* NotificationsAndSounds */,
-				4BB749FA206E2F210014837E /* ChangeNumber */,
-				4B48D3091F35C9E20050C797 /* Storage */,
-				4BCA3BF31FB47705006AE321 /* Legal */,
-			);
-			name = Menu;
-			sourceTree = "<group>";
-		};
 		4B4F45221F32230C00A6FF96 = {
 			isa = PBXGroup;
 			children = (
@@ -496,7 +467,7 @@
 				4B94986D1F323AFF008DA07F /* Authentication */,
 				4B4F45521F32260100A6FF96 /* Contacts */,
 				4B4F45511F3225F700A6FF96 /* Chats */,
-				4B4F45501F3225F100A6FF96 /* Settings */,
+				4BDB29332126C79000D77600 /* SettingsControllers */,
 				4B54EAAE2084E77000BDFA25 /* SplashScreenControllers */,
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
 				4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */,
@@ -508,18 +479,6 @@
 				4B6BAF8820886B3800A90F3A /* Resources */,
 			);
 			path = FalconMessenger;
-			sourceTree = "<group>";
-		};
-		4B4F45501F3225F100A6FF96 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				4B48D30E1F35EB010050C797 /* AccountSettingsController.swift */,
-				4B0D9E571FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift */,
-				4B48D3031F35C9DB0050C797 /* AccountSettingsTableViewCell.swift */,
-				4B3DC3BE2074DA4500106EF7 /* AccountSettingsAvatarOpenerDelegate.swift */,
-				4B48D30B1F35CA0D0050C797 /* Menu */,
-			);
-			name = Settings;
 			sourceTree = "<group>";
 		};
 		4B4F45511F3225F700A6FF96 /* Chats */ = {
@@ -558,15 +517,6 @@
 				4B54EAAF2084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift */,
 			);
 			name = SplashScreenControllers;
-			sourceTree = "<group>";
-		};
-		4B54EAB32084F13400BDFA25 /* PrivacyAndSecurity */ = {
-			isa = PBXGroup;
-			children = (
-				4B1058F121208FED00CD6600 /* PrivacyTableViewCell.swift */,
-				4B1058F3212091EF00CD6600 /* PrivacyTableViewController.swift */,
-			);
-			name = PrivacyAndSecurity;
 			sourceTree = "<group>";
 		};
 		4B5693C620CFFAAB005EAE15 /* InAppBanner */ = {
@@ -895,14 +845,6 @@
 			path = TypingIndicator;
 			sourceTree = "<group>";
 		};
-		4B8D05331F738FBB001735BC /* NotificationsAndSounds */ = {
-			isa = PBXGroup;
-			children = (
-				4B8D05341F739B00001735BC /* NotificationsAndSoundsTableViewController.swift */,
-			);
-			name = NotificationsAndSounds;
-			sourceTree = "<group>";
-		};
 		4B94986D1F323AFF008DA07F /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
@@ -945,15 +887,6 @@
 				4BAD975A206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift */,
 			);
 			name = AdministrationControllers;
-			sourceTree = "<group>";
-		};
-		4BB749FA206E2F210014837E /* ChangeNumber */ = {
-			isa = PBXGroup;
-			children = (
-				4BB749FB206E2F460014837E /* ChangeNumberVerificationController.swift */,
-				4BB749FD206E2F7F0014837E /* ChangePhoneNumberController.swift */,
-			);
-			name = ChangeNumber;
 			sourceTree = "<group>";
 		};
 		4BB749FF206E2FD50014837E /* PhoneAuthentication */ = {
@@ -1020,12 +953,89 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		4BCA3BF31FB47705006AE321 /* Legal */ = {
+		4BDB29332126C79000D77600 /* SettingsControllers */ = {
 			isa = PBXGroup;
 			children = (
-				4BCA3BF41FB4966E006AE321 /* LegalTableViewController.swift */,
+				4BDB29352126C79000D77600 /* AccountSettingsController.swift */,
+				4BDB29482126C79000D77600 /* AccountSettingsController+nameEditing.swift */,
+				4BDB29492126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift */,
+				4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */,
+				4BDB29362126C79000D77600 /* Menu */,
 			);
-			name = Legal;
+			path = SettingsControllers;
+			sourceTree = "<group>";
+		};
+		4BDB29362126C79000D77600 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB29402126C79000D77600 /* Model */,
+				4BDB293E2126C79000D77600 /* Support */,
+				4BDB29432126C79000D77600 /* NotificationsAndSounds */,
+				4BDB29372126C79000D77600 /* PrivacyAndSecurity */,
+				4BDB29392126C79000D77600 /* ChangeNumber */,
+				4BDB293C2126C79000D77600 /* Storage */,
+				4BDB29462126C79000D77600 /* About */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		4BDB29372126C79000D77600 /* PrivacyAndSecurity */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB29382126C79000D77600 /* PrivacyTableViewController.swift */,
+			);
+			path = PrivacyAndSecurity;
+			sourceTree = "<group>";
+		};
+		4BDB29392126C79000D77600 /* ChangeNumber */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB293A2126C79000D77600 /* ChangePhoneNumberController.swift */,
+				4BDB293B2126C79000D77600 /* ChangeNumberVerificationController.swift */,
+			);
+			path = ChangeNumber;
+			sourceTree = "<group>";
+		};
+		4BDB293C2126C79000D77600 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB293D2126C79000D77600 /* StorageTableViewController.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		4BDB293E2126C79000D77600 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB29582126CA8B00D77600 /* SwitchTableViewController.swift */,
+				4BDB293F2126C79000D77600 /* SwitchTableViewCell.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		4BDB29402126C79000D77600 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB29412126C79000D77600 /* SwitchObject.swift */,
+				4BDB29422126C79000D77600 /* Biometrics.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4BDB29432126C79000D77600 /* NotificationsAndSounds */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB29442126C79000D77600 /* NotificationsTableViewController.swift */,
+			);
+			path = NotificationsAndSounds;
+			sourceTree = "<group>";
+		};
+		4BDB29462126C79000D77600 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB29472126C79000D77600 /* AboutTableViewController.swift */,
+			);
+			path = About;
 			sourceTree = "<group>";
 		};
 		4BE72A6B204E9D65009A22EA /* MediaPickerControllers */ = {
@@ -1327,7 +1337,6 @@
 				4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */,
 				4B8D07711FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift in Sources */,
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
-				4B48D3071F35C9DB0050C797 /* AccountSettingsTableViewCell.swift in Sources */,
 				4B5693DA20CFFAAB005EAE15 /* InAppNotificationBanner.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
 				4B6BB01320886C5F00A90F3A /* UIImageExtensions.swift in Sources */,
@@ -1335,7 +1344,6 @@
 				4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */,
 				4B5693D820CFFAAB005EAE15 /* CustomizedView.swift in Sources */,
 				4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */,
-				4B1058F4212091EF00CD6600 /* PrivacyTableViewController.swift in Sources */,
 				4B56B3671F44B946008F4F27 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
 				4BE8BB491FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift in Sources */,
 				4B1A369F1F49A0BB00B4AA0A /* ChatInputContainer+AttachedImagesCollectionConfig.swift in Sources */,
@@ -1345,6 +1353,7 @@
 				4BFBB108208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift in Sources */,
 				4B6BB01420886C5F00A90F3A /* ImagePickerTrayController.swift in Sources */,
 				4BB74A03206E300C0014837E /* AuthVerificationController.swift in Sources */,
+				4BDB294F2126C79000D77600 /* StorageTableViewController.swift in Sources */,
 				4B6BAFFE20886C5F00A90F3A /* CenteredCollectionViewFlowLayout.swift in Sources */,
 				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
@@ -1353,13 +1362,11 @@
 				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */,
 				4B6BB01A20886C5F00A90F3A /* ARSLineProgress.swift in Sources */,
-				4B1058F221208FED00CD6600 /* PrivacyTableViewCell.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
 				4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */,
 				4B6BB02020886C5F00A90F3A /* RevealableCollectionViewCell.swift in Sources */,
 				4B6BB01F20886C5F00A90F3A /* ARSLineProgressProtocols.swift in Sources */,
 				4BE8BB421FCA836A00EB35FA /* SelectedMediaCollectionCell+timerHandlers.swift in Sources */,
-				4B3DC3BF2074DA4500106EF7 /* AccountSettingsAvatarOpenerDelegate.swift in Sources */,
 				4B3E634C1FB9F06F00E200CD /* NoChatsYetContainer.swift in Sources */,
 				4B6BB00720886C5F00A90F3A /* INSPhotosOverlayView.swift in Sources */,
 				4B6BB00120886C5F00A90F3A /* INSPhotosDataSource.swift in Sources */,
@@ -1370,44 +1377,45 @@
 				4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */,
 				4B8CA9EE211C49B300E6A66C /* BubbleCircle.swift in Sources */,
 				4B62E5FE2077EC7900546294 /* BaseVoiceMessageCell.swift in Sources */,
-				4B48D3051F35C9DB0050C797 /* StorageTableViewController.swift in Sources */,
 				4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */,
 				4B1A369D1F49997A00B4AA0A /* SelectedMediaCollectionCell.swift in Sources */,
 				4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */,
 				4B6BB01620886C5F00A90F3A /* ARSLineProgressHelpers.swift in Sources */,
-				4BCA3BF51FB4966E006AE321 /* LegalTableViewController.swift in Sources */,
 				4B6BB01720886C5F00A90F3A /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BB6D197206EA62F00FEF72E /* Conversation.swift in Sources */,
 				4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */,
 				4BC0E6CB2111B71700720B43 /* GlobalDataStorage.swift in Sources */,
 				4BE8BB371FC9F30B00EB35FA /* ChatLogController+VoiceRecordingHandlers.swift in Sources */,
 				4B6BAFFF20886C5F00A90F3A /* AvatarOpener.swift in Sources */,
-				4B8D05351F739B00001735BC /* NotificationsAndSoundsTableViewController.swift in Sources */,
 				4B6BB01020886C5F00A90F3A /* ImagePickerAction.swift in Sources */,
+				4BDB29572126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift in Sources */,
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4B6BB00820886C5F00A90F3A /* INSPhotoViewController.swift in Sources */,
 				4B6BB01920886C5F00A90F3A /* ARSLineProgressConstants.swift in Sources */,
 				4B5693D620CFFAAB005EAE15 /* Utils.swift in Sources */,
+				4BDB294E2126C79000D77600 /* ChangeNumberVerificationController.swift in Sources */,
+				4BDB29502126C79000D77600 /* SwitchTableViewCell.swift in Sources */,
+				4BDB29522126C79000D77600 /* Biometrics.swift in Sources */,
 				4BBBCBF52057D01000926800 /* GroupProfileTableHeaderContainer.swift in Sources */,
 				4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */,
 				4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */,
 				4BF07B312053437000A68023 /* ContactsController+SearchHandlers.swift in Sources */,
 				4B6BB00220886C5F00A90F3A /* INSPhotosViewController.swift in Sources */,
-				4BB749FC206E2F460014837E /* ChangeNumberVerificationController.swift in Sources */,
 				4B6BAFF320886C5F00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift in Sources */,
 				4B6BB01E20886C5F00A90F3A /* ARSProgressLoader.swift in Sources */,
+				4BDB29552126C79000D77600 /* AboutTableViewController.swift in Sources */,
 				4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */,
 				4BAD9758206E36AD008ADF6B /* ChangeGroupAdminController.swift in Sources */,
 				4B6BAFF220886C5F00A90F3A /* NewAdminTableViewCell.swift in Sources */,
+				4BDB29562126C79000D77600 /* AccountSettingsController+nameEditing.swift in Sources */,
 				4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */,
 				4B6BB00420886C5F00A90F3A /* INSPhotosInteractionAnimator.swift in Sources */,
 				4B6BAFF720886C5F00A90F3A /* EnterVerificationContainerView.swift in Sources */,
 				4BEDE42C2068172C00C52EF4 /* InputBlockerContainerView.swift in Sources */,
+				4BDB29592126CA8B00D77600 /* SwitchTableViewController.swift in Sources */,
 				4B18BACA2097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift in Sources */,
-				4BB749FE206E2F7F0014837E /* ChangePhoneNumberController.swift in Sources */,
 				4BE8BB441FCA83D200EB35FA /* PlayerCellView.swift in Sources */,
-				4B0D9E581FC074B900FEDE24 /* AccountSettingsController+nameEditing.swift in Sources */,
-				4B1058FE2120BB3600CD6600 /* Biometrics.swift in Sources */,
+				4BDB29532126C79000D77600 /* NotificationsTableViewController.swift in Sources */,
 				4B6BAFEA20886C5F00A90F3A /* SelectedParticipantsCollectionViewCell.swift in Sources */,
 				4B6BB00B20886C5F00A90F3A /* CameraOverlayView.swift in Sources */,
 				4B6BAFF020886C5F00A90F3A /* SwiftSiriWaveformView.swift in Sources */,
@@ -1425,6 +1433,7 @@
 				4BAD9755206E35FE008ADF6B /* AddGroupMembersController.swift in Sources */,
 				4B6BAFE920886C5F00A90F3A /* SelectedParticipantsCollectionView.swift in Sources */,
 				4B6BB00E20886C5F00A90F3A /* ImageCell.swift in Sources */,
+				4BDB294A2126C79000D77600 /* AccountSettingsTableViewCell.swift in Sources */,
 				4B54EAB02084EDAE00BDFA25 /* SplashScreenContainer+BiometricalControl.swift in Sources */,
 				4BFD07761FB08005003791D7 /* ViewControllerPlaceholder.swift in Sources */,
 				4BEDE4272067C77400C52EF4 /* InformationMessageCell.swift in Sources */,
@@ -1434,11 +1443,10 @@
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
 				4B6BB01C20886C5F00A90F3A /* ARSLineProgressCustomization.swift in Sources */,
 				4B0FA7DE2065A1D600BEA090 /* ChatLogController+CollectionDelegate.swift in Sources */,
-				4B48D30F1F35EB010050C797 /* AccountSettingsController.swift in Sources */,
 				4B6BB01B20886C5F00A90F3A /* ARSLineProgressExtensions.swift in Sources */,
+				4BDB29512126C79000D77600 /* SwitchObject.swift in Sources */,
 				4BAD9752206E3532008ADF6B /* SelectGroupMembersController.swift in Sources */,
 				4B5693D720CFFAAB005EAE15 /* InAppNotification.swift in Sources */,
-				4B1059002120BB6900CD6600 /* PrivacyObject.swift in Sources */,
 				4B6BB02120886C5F00A90F3A /* RevealableView.swift in Sources */,
 				4B2A9589205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift in Sources */,
 				4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */,
@@ -1467,6 +1475,7 @@
 				4B6BB00320886C5F00A90F3A /* INSPhotosTransitionAnimator.swift in Sources */,
 				4B27F6782089C92E0068077E /* TypingIndicatorObserver.swift in Sources */,
 				4B6BAFE820886C5F00A90F3A /* SelectParticipantsViewController.swift in Sources */,
+				4BDB294D2126C79000D77600 /* ChangePhoneNumberController.swift in Sources */,
 				4B6BAFFA20886C5F00A90F3A /* EnterPhoneNumberContainerView.swift in Sources */,
 				4BF07B2F2053429F00A68023 /* FalconUsersFetcher.swift in Sources */,
 				4B2143081F5200F700F7A4B8 /* ChatLogController+ImageZoomHandlers.swift in Sources */,
@@ -1474,6 +1483,7 @@
 				4B6BB00F20886C5F00A90F3A /* AnimationController.swift in Sources */,
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,
 				4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */,
+				4BDB294C2126C79000D77600 /* PrivacyTableViewController.swift in Sources */,
 				4B6BAFE620886C5F00A90F3A /* SelectParticipantsViewController+SearchHandlers.swift in Sources */,
 				4B5693D320CFFAAB005EAE15 /* InAppNotificationDispatcher.swift in Sources */,
 				4B6BAFE520886C5F00A90F3A /* SelectParticipantsTableView.swift in Sources */,
@@ -1487,6 +1497,7 @@
 				4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */,
 				4B6BB00920886C5F00A90F3A /* INSPhoto.swift in Sources */,
 				4B6BAFE720886C5F00A90F3A /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
+				4BDB294B2126C79000D77600 /* AccountSettingsController.swift in Sources */,
 				4B54EAB22084EDD000BDFA25 /* SplashScreenContainer.swift in Sources */,
 				4BEDE4292067F54100C52EF4 /* InformationMessageSender.swift in Sources */,
 				4BC26B191F3A21EE0093A9D2 /* ChatInputContainerView.swift in Sources */,

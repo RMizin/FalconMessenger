@@ -1,5 +1,5 @@
 //
-//  LegalTableViewController.swift
+//  AboutTableViewController.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 11/9/17.
@@ -9,7 +9,7 @@
 import UIKit
 import SafariServices
 
-class LegalTableViewController: UITableViewController {
+class AboutTableViewController: UITableViewController {
 
   let cellData = ["Privacy Policy", "Terms And Conditions", "Open Source Libraries"]
   let legalData = ["https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing", /*PRIVACY POLICY*/

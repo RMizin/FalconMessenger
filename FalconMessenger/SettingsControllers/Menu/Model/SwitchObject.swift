@@ -1,5 +1,5 @@
 //
-//  PrivacyObject.swift
+//  SwitchObject.swift
 //  FalconMessenger
 //
 //  Created by Roman Mizin on 8/12/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PrivacyObject: NSObject {
+class SwitchObject: NSObject {
   var title: String?
   var subtitle: String?
   

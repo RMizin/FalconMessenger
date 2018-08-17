@@ -309,7 +309,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       
     if indexPath.section == 1 {
       if indexPath.row == 0 {
-        let destination = LegalTableViewController()
+        let destination = AboutTableViewController()
         destination.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(destination, animated: true)
       }
