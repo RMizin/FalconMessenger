@@ -20,7 +20,7 @@ class AccountSettingsController: UITableViewController {
   var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and Sounds" ),
                       ( icon: UIImage(named: "Privacy") , title: "Privacy and Security" ),
                       ( icon: UIImage(named: "ChangeNumber") , title: "Change Number"),
-                      ( icon: UIImage(named: "Storage") , title: "Data and Storage")]
+                      ( icon: UIImage(named: "DataStorage") , title: "Data and Storage")]
   
   var secondSection = [( icon: UIImage(named: "Logout") , title: "Log Out")]
   
