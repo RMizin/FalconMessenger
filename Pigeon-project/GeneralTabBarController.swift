@@ -29,9 +29,9 @@ class GeneralTabBarController: UITabBarController {
   
   override func viewDidLoad() {
       super.viewDidLoad()
-   
+    chatsController.delegate = self
     setOnlineStatus()
-    configureTabBar()   
+    configureTabBar()
   }
   
   fileprivate func configureTabBar() {
@@ -41,6 +41,7 @@ class GeneralTabBarController: UITabBarController {
     tabBar.layer.borderWidth = 0.50
     tabBar.layer.borderColor = UIColor.clear.cgColor
     tabBar.clipsToBounds = true
+    setTabs()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -56,17 +57,66 @@ class GeneralTabBarController: UITabBarController {
     
     onceToken = 1
   }
+  
+  let chatsController = ChatsTableViewController()
+  let contactsController = ContactsController()
+  let settingsController = AccountSettingsController()
+  
+  fileprivate func setTabs() {
+    
+    contactsController.title = "Contacts"
+    chatsController.title = "Chats"
+    settingsController.title = "Settings"
+    
+    let contactsNavigationController = UINavigationController(rootViewController: contactsController)
+    let chatsNavigationController = UINavigationController(rootViewController: chatsController)
+    let settingsNavigationController = UINavigationController(rootViewController: settingsController)
+    
+    if #available(iOS 11.0, *) {
+      settingsNavigationController.navigationBar.prefersLargeTitles = true
+      chatsNavigationController.navigationBar.prefersLargeTitles = true
+      contactsNavigationController.navigationBar.prefersLargeTitles = true
+    }
+    
+    let contactsImage =  UIImage(named: "user")
+    let chatsImage = UIImage(named: "chat")
+    let settingsImage = UIImage(named: "settings")
+    
+    let contactsTabItem = UITabBarItem(title: contactsController.title, image: contactsImage, selectedImage: nil)
+    let chatsTabItem = UITabBarItem(title: chatsController.title, image: chatsImage, selectedImage: nil)
+    let settingsTabItem = UITabBarItem(title: settingsController.title, image: settingsImage, selectedImage: nil)
+    
+    contactsController.tabBarItem = contactsTabItem
+    chatsController.tabBarItem = chatsTabItem
+    settingsController.tabBarItem = settingsTabItem
+    
+    let tabBarControllers = [contactsNavigationController, chatsNavigationController as UIViewController, settingsNavigationController]
+    viewControllers = tabBarControllers
+    selectedIndex = Tabs.chats.rawValue
+    presentOnboardingController()
+  }
+  
+  func presentOnboardingController() {
+    guard Auth.auth().currentUser == nil else { return }
+    let destination = OnboardingController()
+    let newNavigationController = UINavigationController(rootViewController: destination)
+    newNavigationController.navigationBar.shadowImage = UIImage()
+    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+    newNavigationController.modalTransitionStyle = .crossDissolve
+    present(newNavigationController, animated: false, completion: nil)
+  }
 }
 
 extension GeneralTabBarController: ManageAppearance {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool) {
     let isBiometricalAuthEnabled = userDefaults.currentBoolObjectState(for: userDefaults.biometricalAuth)
-    if state {
-      if isBiometricalAuthEnabled {
-        splashContainer.authenticationWithTouchID()
-      } else {
-        self.splashContainer.showSecuredData()
-      }
+    _ = contactsController.view
+    _ = settingsController.view
+    guard state else { return }
+    if isBiometricalAuthEnabled {
+      splashContainer.authenticationWithTouchID()
+    } else {
+      self.splashContainer.showSecuredData()
     }
   }
 }

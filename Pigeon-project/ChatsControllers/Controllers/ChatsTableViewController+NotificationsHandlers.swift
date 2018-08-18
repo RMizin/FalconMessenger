@@ -11,54 +11,10 @@ import AudioToolbox
 import Firebase
 
 extension ChatsTableViewController {
-  
-  fileprivate func visibleTab() -> UIViewController? {
-    
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
-    
-    switch self.tabBarController!.selectedIndex {
-    case 0:
-      let controller = appDelegate.contactsController.navigationController?.visibleViewController
-   
-      return controller
-    case 1:
-      let controller = self.navigationController?.visibleViewController
-  
-      return controller
-    case 2:
-      let controller = appDelegate.settingsController.navigationController?.visibleViewController
-  
-      return controller
-    default: break
-    }
-    return nil
-  }
-  
-  func visibleNavigationController() -> UINavigationController? {
-    
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
-    
-    switch self.tabBarController!.selectedIndex {
-    case 0:
-      let controller = appDelegate.contactsController.navigationController
-     
-      return controller
-    case 1:
-      let controller = navigationController
-     
-      return controller
-    case 2:
-      let controller = appDelegate.settingsController.navigationController
-     
-      return controller
-    default: break
-    }
-    return nil
-  }
-  
+
   func handleInAppSoundPlaying(message: Message, conversation: Conversation) {
 
-    if self.visibleTab() is ChatLogController { return }
+    if UIApplication.topViewController() is ChatLogController { return }
 
     var allConversations = conversations
     allConversations.insert(contentsOf: pinnedConversations, at: 0)

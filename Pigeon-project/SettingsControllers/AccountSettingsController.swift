@@ -87,7 +87,7 @@ class AccountSettingsController: UITableViewController {
     nightMode.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
     nightMode.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
     nightMode.addTarget(self, action: #selector(rightBarButtonDidTap(sender:)), for: .touchUpInside)
-    nightMode.isSelected = Bool(ThemeManager.currentTheme().rawValue)
+    nightMode.isSelected = Bool(currentTheme.rawValue)
     
     let rightBarButton = UIBarButtonItem(customView: nightMode)
     self.navigationItem.setRightBarButton(rightBarButton, animated: false)

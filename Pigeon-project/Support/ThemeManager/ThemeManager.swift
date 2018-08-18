@@ -12,6 +12,23 @@ import UIKit
 
 let SelectedThemeKey = "SelectedTheme"
 
+let currentTheme = ThemeManager.currentTheme()
+
+struct ThemeManager {
+  
+  static func applyTheme(theme: Theme) {
+    userDefaults.updateObject(for: userDefaults.selectedTheme, with: theme.rawValue)
+    setGlobalNavigationBarSettingsAccordingToTheme(theme: theme)
+  }
+  
+  static func currentTheme() -> Theme {
+    if let storedTheme = userDefaults.currentIntObjectState(for: userDefaults.selectedTheme) {
+      return Theme(rawValue: storedTheme)!
+    } else {
+      return .Default
+    }
+  }
+}
 enum Theme: Int {
   case Default, Dark
   
@@ -217,6 +234,7 @@ enum Theme: Int {
 }
 
 func setGlobalNavigationBarSettingsAccordingToTheme(theme: Theme) {
+  
   UITabBar.appearance().barStyle = theme.barStyle
   UINavigationBar.appearance().isTranslucent = false
   UINavigationBar.appearance().barStyle = theme.barStyle
@@ -224,22 +242,6 @@ func setGlobalNavigationBarSettingsAccordingToTheme(theme: Theme) {
   UITabBar.appearance().barTintColor = theme.barBackgroundColor
   UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
   UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: theme.generalTitleColor]
-}
-
-struct ThemeManager {
-  
-  static func applyTheme(theme: Theme) {
-    userDefaults.updateObject(for: userDefaults.selectedTheme, with: theme.rawValue)
-    setGlobalNavigationBarSettingsAccordingToTheme(theme: theme)
-  }
-  
-  static func currentTheme() -> Theme {
-    if let storedTheme = userDefaults.currentIntObjectState(for: userDefaults.selectedTheme) {
-      return Theme(rawValue: storedTheme)!
-    } else {
-      return .Default
-    }
-  }
 }
 
 struct FalconPalette {

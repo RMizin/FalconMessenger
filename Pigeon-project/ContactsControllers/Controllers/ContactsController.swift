@@ -58,7 +58,10 @@ class ContactsController: UITableViewController {
 
       setupTableView()
       setupSearchController()
-      fetchContacts()
+      DispatchQueue.global(qos: .default).async {
+        self.fetchContacts()
+      }
+     
       checkContactsAuthorizationStatus()
     }
   
@@ -70,7 +73,7 @@ class ContactsController: UITableViewController {
       
       if shouldReFetchFalconUsers {
         shouldReFetchFalconUsers = false
-        DispatchQueue.main.async {
+        DispatchQueue.global(qos: .default).async {
           self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
         }
       }
@@ -171,7 +174,9 @@ class ContactsController: UITableViewController {
     
     let status = CNContactStore.authorizationStatus(for: .contacts)
     if status == .denied || status == .restricted {
-      presentSettingsActionSheet()
+      DispatchQueue.main.async {
+        self.presentSettingsActionSheet()
+      }
       return
     }
     
@@ -199,13 +204,13 @@ class ContactsController: UITableViewController {
       self.filteredContacts = self.contacts
 
       for contact in self.contacts {
-       
         for phone in contact.phoneNumbers {
-        
           localPhones.append(phone.value.stringValue.digits)
         }
       }
-      self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
+      DispatchQueue.global(qos: .default).async {
+        self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
+      }
     }
   }
   

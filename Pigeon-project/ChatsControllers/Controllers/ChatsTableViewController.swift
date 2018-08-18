@@ -508,7 +508,6 @@ class ChatsTableViewController: UITableViewController {
     
     if !isAppLoaded {
       UIView.transition(with: tableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
-      initAllTabs()
     } else {
       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .lowMedium)
       self.tableView.reloadData()
@@ -526,12 +525,6 @@ class ChatsTableViewController: UITableViewController {
       delegate?.manageAppearance(self, didFinishLoadingWith: true)
       isAppLoaded = true
     }
-  }
-  
-  fileprivate func initAllTabs() {
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-    _ = appDelegate.contactsController.view
-    _ = appDelegate.settingsController.view
   }
   
   func handleReloadTableAfterSearch() {
@@ -766,7 +759,7 @@ extension ChatsTableViewController: MessagesDelegate {
       self.chatLogController?.startCollectionViewAtBottom()
     }
    
-    self.visibleNavigationController()?.pushViewController(destination, animated: true)
+    navigationController?.pushViewController(destination, animated: true)
     chatLogController = nil
     destinationLayout = nil
   }
