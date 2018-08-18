@@ -18,10 +18,10 @@ class BaseMessageCell: RevealableCollectionViewCell {
   static let selectedOutgoingBubble = UIImage(named: "OutgoingSelected")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
   static let selectedIncomingBubble = UIImage(named: "IncomingSelected")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
   
-  static let incomingTextViewTopInset:CGFloat = 10
-  static let incomingTextViewBottomInset:CGFloat = 10
-  static let incomingTextViewLeftInset:CGFloat = 12
-  static let incomingTextViewRightInset:CGFloat = 7
+  static let incomingTextViewTopInset: CGFloat = 10
+  static let incomingTextViewBottomInset: CGFloat = 10
+  static let incomingTextViewLeftInset: CGFloat = 12
+  static let incomingTextViewRightInset: CGFloat = 7
   
   let bubbleView: UIImageView = {
     let bubbleView = UIImageView()
@@ -85,23 +85,20 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   func setupTimestampView(message: Message, isOutgoing:Bool) {
     DispatchQueue.main.async {
-      if let view = self.chatLogController?.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-        view.titleLabel.text = message.convertedTimestamp
-        let style:RevealStyle = isOutgoing ? .slide : .over
-        self.setRevealableView(view, style: style, direction: .left)
-      }
+      let view = self.chatLogController?.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView ?? TimestampView()
+      view.titleLabel.text = message.convertedTimestamp
+      let style: RevealStyle = isOutgoing ? .slide : .over
+      self.setRevealableView(view, style: style, direction: .left)
     }
   }
 
-  
-  
   func setupViews() {
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     contentView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
   }
-  
+
   func prepareViewsForReuse() {}
-  
+
   override func prepareForReuse() {
     super.prepareForReuse()
     prepareViewsForReuse()

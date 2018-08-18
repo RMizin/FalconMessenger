@@ -434,19 +434,20 @@ class GroupAdminControlsTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
  
     if indexPath.section == 0 {
-      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! GroupAdminControlsTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID,
+                                               for: indexPath) as? GroupAdminControlsTableViewCell ?? GroupAdminControlsTableViewCell()
       cell.selectionStyle = .none
       cell.title.text = adminControls[indexPath.row]
-    
+
       if cell.title.text == adminControls.last {
         cell.title.textColor = FalconPalette.dismissRed
       } else {
         cell.title.textColor = FalconPalette.defaultBlue
       }
       return cell
-    
+
     } else {
-      let cell = tableView.dequeueReusableCell(withIdentifier: membersCellID, for: indexPath) as! FalconUsersTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: membersCellID, for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
       cell.selectionStyle = .default
       if members[indexPath.row].id == conversationAdminID {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
@@ -487,8 +488,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       
       guard let url = members[indexPath.row].thumbnailPhotoURL else { return cell }
       
-      
-      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage], completed: { (image, error, cacheType, url) in
+      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage], completed: { (image, _, cacheType, _) in
         
         guard image != nil else { return }
         guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
@@ -496,7 +496,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
           return
         }
         
-        UIView.transition(with:  cell.icon,
+        UIView.transition(with: cell.icon,
                           duration: 0.2,
                           options: .transitionCrossDissolve,
                           animations: { cell.icon.image = image },

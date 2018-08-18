@@ -262,11 +262,11 @@ func ars_animateCircles(_ outerCircle: CAShapeLayer, middleCircle: CAShapeLayer,
 		outerAnimation.repeatCount = ARS_CIRCLE_ROTATION_REPEAT_COUNT
 		outerCircle.add(outerAnimation, forKey: "outerCircleRotation")
 		
-		let middleAnimation = outerAnimation.copy() as! CABasicAnimation
+    guard let middleAnimation = outerAnimation.copy() as? CABasicAnimation else { return }
 		middleAnimation.duration = ars_config.circleRotationDurationMiddle
 		middleCircle.add(middleAnimation, forKey: "middleCircleRotation")
 		
-		let innerAnimation = middleAnimation.copy() as! CABasicAnimation
+    guard let innerAnimation = middleAnimation.copy() as? CABasicAnimation else { return}
 		innerAnimation.duration = ars_config.circleRotationDurationInner
 		innerCircle.add(innerAnimation, forKey: "middleCircleRotation")
 	}

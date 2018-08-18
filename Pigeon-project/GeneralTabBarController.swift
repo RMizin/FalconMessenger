@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import LocalAuthentication
 
-enum tabs: Int {
+enum Tabs: Int {
   case contacts = 0
   case chats = 1
   case settings = 2

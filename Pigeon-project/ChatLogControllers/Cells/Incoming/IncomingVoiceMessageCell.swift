@@ -29,7 +29,7 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.timerLabel.textColor = .black
   }
   
-  func setupData(message: Message, isGroupChat:Bool) {
+  func setupData(message: Message, isGroupChat: Bool) {
     self.message = message
     
     if isGroupChat {
@@ -39,14 +39,14 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
       nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingTextViewLeftInset+5, y: BaseMessageCell.incomingTextViewTopInset)
       playerView.frame.origin.y = 20
       bubbleView.frame.size.height = frame.size.height.rounded()
-      playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height:(bubbleView.frame.height - 20).rounded())
+      playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height: (bubbleView.frame.height - 20).rounded())
       
       if nameLabel.frame.size.width >= 170 {
         nameLabel.frame.size.width = playerView.frame.size.width - 24
       }
     } else {
       bubbleView.frame.size.height = frame.size.height.rounded()
-      playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height:(bubbleView.frame.height).rounded())
+      playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height: (bubbleView.frame.height).rounded())
     }
   
     setupTimestampView(message: message, isOutgoing: false)
@@ -56,7 +56,7 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.startingTime = message.voiceStartTime ?? 0
     playerView.seconds = message.voiceStartTime ?? 0
   }
-  
+
   override func prepareViewsForReuse() {
     playerView.seconds = 0
     playerView.startingTime = 0

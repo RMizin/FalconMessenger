@@ -11,37 +11,37 @@ import Firebase
 
 class InformationMessageSender: NSObject {
   
+  let userMessagesReference = Database.database().reference().child("user-messages")
+  
   func sendInformatoinMessage(chatID: String?, membersIDs: [String], text: String) {
     
     let ref = Database.database().reference().child("messages")
     let childRef = ref.childByAutoId()
     let defaultMessageStatus = messageStatusDelivered
-    
     guard let toId = chatID, let fromId = Auth.auth().currentUser?.uid else { return }
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "text": text as AnyObject, "isInformationMessage": true as AnyObject]
-    childRef.updateChildValues(values) { (error, ref) in
-      
+    let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject, "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "text": text as AnyObject, "isInformationMessage": true as AnyObject]
+    
+    childRef.updateChildValues(values) { (error, _) in
       guard error == nil else { return }
-      
       let messageId = childRef.key
       
       for memberID in membersIDs {
-        let userMessagesRef = Database.database().reference().child("user-messages").child(memberID).child(toId).child(userMessagesFirebaseFolder)
-        userMessagesRef.updateChildValues([messageId: 1])
+        let currentUserMessages = self.userMessagesReference.child(memberID).child(toId).child(userMessagesFirebaseFolder)
+        currentUserMessages.updateChildValues([messageId: 1])
       }
       
       self.incrementBadgeForReciever(conversationID: chatID, participantsIDs: membersIDs)
       self.setupMetadataForSender(chatID: chatID)
-      self.updateLastMessageForParticipants(chatID: chatID, participantsIDs: membersIDs, messageID: messageId)
+      self.updateLastMessageForMembers(chatID: chatID, participantsIDs: membersIDs, messageID: messageId)
     }
   }
 
-  func updateLastMessageForParticipants(chatID: String?, participantsIDs: [String], messageID: String) {
+  func updateLastMessageForMembers(chatID: String?, participantsIDs: [String], messageID: String) {
     guard let conversationID = chatID else { return }
     for memberID in participantsIDs {
-      let ref = Database.database().reference().child("user-messages").child(memberID).child(conversationID).child(messageMetaDataFirebaseFolder)
+      let ref = self.userMessagesReference.child(memberID).child(conversationID).child(messageMetaDataFirebaseFolder)
       let childValues: [String: Any] = ["lastMessageID": messageID]
       ref.updateChildValues(childValues)
     }
@@ -49,7 +49,7 @@ class InformationMessageSender: NSObject {
 
   func setupMetadataForSender(chatID: String?) {
     guard let toId = chatID, let fromId = Auth.auth().currentUser?.uid else { return }
-    var ref = Database.database().reference().child("user-messages").child(fromId).child(toId)
+    var ref = self.userMessagesReference.child(fromId).child(toId)
     ref.observeSingleEvent(of: .value, with: { (snapshot) in
       guard !snapshot.hasChild(messageMetaDataFirebaseFolder) else { return }
       ref = ref.child(messageMetaDataFirebaseFolder)
@@ -59,16 +59,13 @@ class InformationMessageSender: NSObject {
 
   func incrementBadgeForReciever(conversationID: String?, participantsIDs: [String]) {
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversationID else { return }
-    for participantID in participantsIDs {
-      if participantID != currentUserID {
-        runTransaction(firstChild: participantID, secondChild: conversationID)
-      }
+    for participantID in participantsIDs where participantID != currentUserID {
+      runTransaction(firstChild: participantID, secondChild: conversationID)
     }
   }
 }
 
 public func runTransaction(firstChild: String, secondChild: String) {
-  
   var ref = Database.database().reference().child("user-messages").child(firstChild).child(secondChild)
   ref.observeSingleEvent(of: .value, with: { (snapshot) in
     

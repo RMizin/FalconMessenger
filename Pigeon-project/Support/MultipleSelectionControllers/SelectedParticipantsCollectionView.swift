@@ -20,10 +20,10 @@ extension SelectParticipantsViewController: UICollectionViewDelegate, UICollecti
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = selectedParticipantsCollectionView.dequeueReusableCell(withReuseIdentifier: selectedParticipantsCollectionViewCellID , for: indexPath) as! SelectedParticipantsCollectionViewCell
+    let cell = selectedParticipantsCollectionView.dequeueReusableCell(withReuseIdentifier: selectedParticipantsCollectionViewCellID, for: indexPath) as? SelectedParticipantsCollectionViewCell ?? SelectedParticipantsCollectionViewCell()
     
     cell.title.text = selectedFalconUsers[indexPath.item].name
-    
+
     return cell
   }
   
@@ -43,4 +43,3 @@ extension SelectParticipantsViewController: UICollectionViewDelegate, UICollecti
     return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13)], context: nil).integral
   }
 }
-

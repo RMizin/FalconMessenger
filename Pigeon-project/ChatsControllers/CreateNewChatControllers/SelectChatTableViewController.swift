@@ -184,7 +184,7 @@ class SelectChatTableViewController: UITableViewController {
     
     if indexPath.section == 1 {
       
-       let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
+       let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
       
       if let name = filteredUsers[indexPath.row].name {
         cell.title.text = name
@@ -224,9 +224,9 @@ class SelectChatTableViewController: UITableViewController {
   }
 
   
-  var chatLogController:ChatLogController? = nil
-  var messagesFetcher:MessagesFetcher? = nil
-  var destinationLayout:AutoSizingCollectionViewFlowLayout? = nil
+  var chatLogController: ChatLogController? = nil
+  var messagesFetcher: MessagesFetcher? = nil
+  var destinationLayout: AutoSizingCollectionViewFlowLayout? = nil
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     

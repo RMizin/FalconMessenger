@@ -54,16 +54,13 @@ class PlayerCellView: UIView {
     playWidthAnchor.isActive = true
     playHeightAnchor = play.heightAnchor.constraint(equalTo: heightAnchor, constant: 0)
     playHeightAnchor.isActive = true
-    
     timelabelLeadingAnchor = timerLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
     timelabelLeadingAnchor.isActive = true
+
     NSLayoutConstraint.activate([
-    
       play.centerYAnchor.constraint(equalTo: centerYAnchor),
-      
       timerLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
       timerLabel.heightAnchor.constraint(equalTo: heightAnchor),
-     
       timerLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
     ])
   }
@@ -71,13 +68,12 @@ class PlayerCellView: UIView {
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  
+
   func runTimer() {
     timer?.invalidate()
-    timer = Timer.scheduledTimer(timeInterval: 1, target: self,  selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
+    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
   }
-  
+
   @objc func updateTimer() {
     if seconds < 1 {
       resetTimer()
@@ -86,20 +82,18 @@ class PlayerCellView: UIView {
       timerLabel.text = timeString(time: TimeInterval(seconds))
     }
   }
-  
+
   func resetTimer() {
     play.isSelected = false
     timer?.invalidate()
     seconds = startingTime
-    
     timerLabel.text = timeString(time: TimeInterval(seconds))
   }
   
-  func timeString(time:TimeInterval) -> String {
+  func timeString(time: TimeInterval) -> String {
     let hours = Int(time) / 3600
     let minutes = Int(time) / 60 % 60
     let seconds = Int(time) % 60
-    return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
+    return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
   }
 }
-

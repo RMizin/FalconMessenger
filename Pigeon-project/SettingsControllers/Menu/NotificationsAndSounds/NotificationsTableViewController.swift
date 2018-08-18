@@ -44,7 +44,7 @@ var notificationElements = [SwitchObject]()
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    let cell = tableView.dequeueReusableCell(withIdentifier: notificationsTableViewCellID, for: indexPath) as! SwitchTableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: notificationsTableViewCellID, for: indexPath) as? SwitchTableViewCell ?? SwitchTableViewCell()
     cell.currentViewController = self
     cell.setupCell(object: notificationElements[indexPath.row], index: indexPath.row)
     

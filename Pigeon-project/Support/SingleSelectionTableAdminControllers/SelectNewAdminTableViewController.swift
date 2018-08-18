@@ -179,7 +179,7 @@ class SelectNewAdminTableViewController: UITableViewController {
   
   func selectCell(for indexPath: IndexPath) -> UITableViewCell? {
     
-    let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! NewAdminTableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as? NewAdminTableViewCell ?? NewAdminTableViewCell()
     cell.selectNewAdminTableViewController = self
     let user = sections[indexPath.section][indexPath.row]
     cell.isSelected = user.isSelected

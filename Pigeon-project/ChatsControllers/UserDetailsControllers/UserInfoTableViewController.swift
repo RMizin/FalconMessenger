@@ -13,7 +13,6 @@ private let headerCellIdentifier = "headerCellIdentifier"
 private let phoneNumberCellIdentifier = "phoneNumberCellIdentifier"
 private let bioCellIdentifier = "bioCellIdentifier"
 
-
 class UserInfoTableViewController: UITableViewController {
 
   var user: User? {
@@ -35,7 +34,7 @@ class UserInfoTableViewController: UITableViewController {
   
   var handle: DatabaseHandle!
   
-  var shouldDisplayContactAdder:Bool?
+  var shouldDisplayContactAdder: Bool?
   
 
   override func viewDidLoad() {
@@ -57,7 +56,6 @@ class UserInfoTableViewController: UITableViewController {
   deinit {
     print("user info deinit")
   }
-  
   
   fileprivate func setupMainView() {
     title = "Info"
@@ -107,7 +105,7 @@ class UserInfoTableViewController: UITableViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
    
-    let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! UserInfoPhoneNumberTableViewCell
+    let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? UserInfoPhoneNumberTableViewCell ?? UserInfoPhoneNumberTableViewCell()
     
     if localPhones.contains(contactPhoneNumber.digits) {
       phoneNumberCell.add.isHidden = true
@@ -144,7 +142,8 @@ class UserInfoTableViewController: UITableViewController {
 
     if indexPath.section == 0 {
       
-      let headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath) as! UserinfoHeaderTableViewCell
+      let headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier,
+                                                     for: indexPath) as? UserinfoHeaderTableViewCell ?? UserinfoHeaderTableViewCell()
       
       headerCell.title.text = user?.name ?? ""
       headerCell.title.font = UIFont.boldSystemFont(ofSize: 20)
@@ -165,8 +164,9 @@ class UserInfoTableViewController: UITableViewController {
     
       return headerCell
       
-    } else  {
-      let phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier, for: indexPath) as! UserInfoPhoneNumberTableViewCell
+    } else {
+      let phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier,
+                                                          for: indexPath) as? UserInfoPhoneNumberTableViewCell ?? UserInfoPhoneNumberTableViewCell()
       phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       
       if localPhones.contains(contactPhoneNumber.digits) {

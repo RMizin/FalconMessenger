@@ -6,3 +6,4 @@ IDEWorkspaceChecks.plist
 *.xcuserdata
 Pigeon-project.xcworkspace/xcuserdata/romanmizin.xcuserdatad/UserInterfaceState.xcuserstate
 Pigeon-project.xcodeproj/project.xcworkspace/xcuserdata/romanmizin.xcuserdatad/UserInterfaceState.xcuserstate
+.swiftlint.yml

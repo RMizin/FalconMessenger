@@ -12,7 +12,7 @@ import UIKit
 class IncomingPhotoMessageCell: BaseMediaMessageCell {
   
 
-  var messageImageViewTopAnchor:NSLayoutConstraint!
+  var messageImageViewTopAnchor: NSLayoutConstraint!
   override func setupViews() {
     
     bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
@@ -33,7 +33,7 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
 
     messageImageViewTopAnchor = messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 4)
     messageImageViewTopAnchor.isActive = true
-    
+
     messageImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -4).isActive = true
     messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 9).isActive = true
     messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -4).isActive = true
@@ -43,7 +43,7 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     playButton.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
     playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
     playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    
+
     bubbleView.addSubview(progressView)
     progressView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
     progressView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
@@ -51,8 +51,7 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     progressView.heightAnchor.constraint(equalToConstant: 60).isActive = true
   }
   
-  func setupData(message: Message, isGroupChat:Bool) {
-    
+  func setupData(message: Message, isGroupChat: Bool) {
     self.message = message
     bubbleView.frame.size.height = frame.size.height.rounded()
     
@@ -69,7 +68,7 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     messageImageView.isUserInteractionEnabled = false
     setupTimestampView(message: message, isOutgoing: false)
   }
-  
+
   override func prepareViewsForReuse() {
      super.prepareViewsForReuse()
     bubbleView.image = grayBubbleImage

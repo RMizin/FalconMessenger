@@ -45,13 +45,13 @@ class CreateContactTableViewController: UITableViewController {
     @objc func createContact() {
       let request = CNSaveRequest()
     
-      let nameCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! ContactDataTableViewCell
-      let surnameCell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as! ContactDataTableViewCell
-      let phoneCell = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as! ContactDataTableViewCell
+      let nameCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ContactDataTableViewCell ?? ContactDataTableViewCell()
+      let surnameCell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ContactDataTableViewCell ?? ContactDataTableViewCell()
+      let phoneCell = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? ContactDataTableViewCell ?? ContactDataTableViewCell()
       contact?.givenName = nameCell.textField.text ?? ""
       contact?.familyName = surnameCell.textField.text ?? ""
     
-      let phone = CNLabeledValue(label: CNLabelPhoneNumberiPhone, value: CNPhoneNumber(stringValue : phoneCell.textField.text ?? "" ))
+      let phone = CNLabeledValue(label: CNLabelPhoneNumberiPhone, value: CNPhoneNumber(stringValue: phoneCell.textField.text ?? "" ))
       contact?.phoneNumbers = [phone]
     
       request.add(contact!, toContainerWithIdentifier: nil)
@@ -81,8 +81,8 @@ class CreateContactTableViewController: UITableViewController {
     }
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      let cell = tableView.dequeueReusableCell(withIdentifier: createContactTableViewCellIdentifier, for: indexPath) as! ContactDataTableViewCell
-      
+      let cell = tableView.dequeueReusableCell(withIdentifier: createContactTableViewCellIdentifier,
+                                                     for: indexPath) as? ContactDataTableViewCell ?? ContactDataTableViewCell()
       cell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       cell.textField.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       cell.textField.textColor = ThemeManager.currentTheme().generalTitleColor

@@ -11,7 +11,7 @@ import AVFoundation
 
 class SelectedMediaCollectionCell: UICollectionViewCell {
   
-  weak var chatInputContainerView:ChatInputContainerView!
+  weak var chatInputContainerView: ChatInputContainerView!
   var isHeightCalculated: Bool = false
   var playerViewHeightAnchor: NSLayoutConstraint!
   
@@ -135,9 +135,7 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     guard let data = chatInputContainerView.selectedMedia[indexPath.item].audioObject else {
       return
     }
-    guard let cell = chatInputContainerView.attachedImages.cellForItem(at: indexPath) as? SelectedMediaCollectionCell else {
-      return
-    }
+    let cell = chatInputContainerView.attachedImages.cellForItem(at: indexPath) as? SelectedMediaCollectionCell ?? SelectedMediaCollectionCell()
     
     if gestureReconizer.state == .began {
       print("press began")
@@ -160,13 +158,9 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     }
 
     if gestureReconizer.state == .cancelled || gestureReconizer.state == .failed || gestureReconizer.state == .ended {
-      
-      print("press cancelled failed or ended")
       do {
         chatInputContainerView.audioPlayer = try AVAudioPlayer(data: data)
-      } catch {
-        print("error playing")
-      }
+      } catch {}
       
       chatInputContainerView.audioPlayer.stop()
       cell.resetTimer()

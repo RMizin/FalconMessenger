@@ -46,9 +46,9 @@ class MediaPickerControllerNew: ImagePickerTrayController {
 
 extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
   
-  fileprivate typealias getUrlCompletionHandler = (_ url: String, _ success: Bool) -> Void
+  fileprivate typealias GetUrlCompletionHandler = (_ url: String, _ success: Bool) -> Void
   
-  fileprivate func getUrlFor(asset: PHAsset, completion: @escaping getUrlCompletionHandler) {
+  fileprivate func getUrlFor(asset: PHAsset, completion: @escaping GetUrlCompletionHandler) {
     
     asset.requestContentEditingInput(with: PHContentEditingInputRequestOptions(), completionHandler: { (contentEditingInput, dictInfo) in
       

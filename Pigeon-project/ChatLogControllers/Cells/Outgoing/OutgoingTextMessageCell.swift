@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class OutgoingTextMessageCell: BaseMessageCell {
   
   let textView: FalconTextView = {
@@ -24,17 +23,15 @@ class OutgoingTextMessageCell: BaseMessageCell {
 
     return textView
   }()
-  
+
   func setupData(message: Message) {
-    
     self.message = message
     guard let messageText = message.text else { return }
     textView.text = messageText
-    
+
     bubbleView.frame = CGRect(x: frame.width - message.estimatedFrameForText!.width - 40, y: 0,
                                    width: message.estimatedFrameForText!.width + 30, height: frame.size.height).integral
     textView.frame.size = CGSize(width: bubbleView.frame.width.rounded(), height: bubbleView.frame.height.rounded())
-    
     setupTimestampView(message: message, isOutgoing: true)
   }
   
@@ -45,9 +42,8 @@ class OutgoingTextMessageCell: BaseMessageCell {
     contentView.addSubview(deliveryStatus)
     bubbleView.image = blueBubbleImage
   }
-  
+
   override func prepareViewsForReuse() {
      bubbleView.image = blueBubbleImage
   }
 }
-

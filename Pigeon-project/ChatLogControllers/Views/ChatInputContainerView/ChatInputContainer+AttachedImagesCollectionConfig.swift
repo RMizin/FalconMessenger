@@ -44,7 +44,7 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
  @objc func removeButtonDidTap(sender: UIButton) {
     
-    guard let cell = sender.superview as? SelectedMediaCollectionCell else { return }
+    let cell = sender.superview as? SelectedMediaCollectionCell ?? SelectedMediaCollectionCell()
     
     let indexPath = attachedImages.indexPath(for: cell)
     
@@ -88,7 +88,8 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
 
  
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = attachedImages.dequeueReusableCell(withReuseIdentifier: selectedMediaCollectionCellID, for: indexPath) as! SelectedMediaCollectionCell
+    let cell = attachedImages.dequeueReusableCell(withReuseIdentifier: selectedMediaCollectionCellID,
+                                                  for: indexPath) as? SelectedMediaCollectionCell ?? SelectedMediaCollectionCell()
     
     cell.chatInputContainerView = self
   

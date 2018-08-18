@@ -35,7 +35,7 @@ class PrivacyTableViewController: SwitchTableViewController {
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    let cell = tableView.dequeueReusableCell(withIdentifier: privacyTableViewCellID, for: indexPath) as! SwitchTableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: privacyTableViewCellID, for: indexPath) as? SwitchTableViewCell ?? SwitchTableViewCell()
     cell.currentViewController = self
     cell.setupCell(object: privacyElements[indexPath.row], index: indexPath.row)
    

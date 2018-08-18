@@ -48,7 +48,7 @@ extension SelectParticipantsViewController: UITableViewDelegate, UITableViewData
   }
   
   fileprivate func selectCell(for indexPath: IndexPath) -> UITableViewCell? {
-    let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! ParticipantTableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as? ParticipantTableViewCell ?? ParticipantTableViewCell()
     cell.selectParticipantsViewController = self
     
     let backgroundView = UIView()

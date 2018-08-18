@@ -13,7 +13,7 @@ extension GroupAdminControlsTableViewController: AvatarOpenerDelegate {
   func avatarOpener(avatarPickerDidPick image: UIImage) {
     navigationController?.view.isUserInteractionEnabled = false
     groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
-    deleteCurrentPhoto { (isDeleted) in
+    deleteCurrentPhoto { (_) in
       self.updateUserProfile(with: image, completion: { (isUpdated) in
         self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
         self.navigationController?.view.isUserInteractionEnabled = true
@@ -50,7 +50,7 @@ extension GroupAdminControlsTableViewController { // delete
     let storageReference = storage.reference(forURL: groupAvatarURL)
     let groupChatsMetaReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
     
-    storageReference.delete { error in
+    storageReference.delete { _ in
       let chatOriginalPhotoURLReference = groupChatsMetaReference.child("chatOriginalPhotoURL")
       let chatThumbnailPhotoURLReference = groupChatsMetaReference.child("chatThumbnailPhotoURL")
       chatOriginalPhotoURLReference.removeValue()
@@ -69,7 +69,7 @@ extension GroupAdminControlsTableViewController { // update
     var images = [(image: UIImage, quality: CGFloat, key: String)]()
     images.append((image: image, quality: 0.5, key: "chatOriginalPhotoURL"))
     images.append((image: thumbnailImage, quality: 1, key: "chatThumbnailPhotoURL"))
-    
+
     let photoUpdatingGroup = DispatchGroup()
     for _ in images { photoUpdatingGroup.enter() }
     

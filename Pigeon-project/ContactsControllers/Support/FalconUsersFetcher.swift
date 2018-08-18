@@ -101,7 +101,8 @@ class FalconUsersFetcher: NSObject {
     userHandle[0] = userQuery.queryEqual(toValue: preparedNumber).observe(.value, with: { (snapshot) in
       
       if snapshot.exists() {
-        for child in snapshot.children.allObjects as! [DataSnapshot]  {
+        guard let children = snapshot.children.allObjects as? [DataSnapshot] else { return }
+        for child in children {
           guard var dictionary = child.value as? [String: AnyObject] else { return }
           dictionary.updateValue(child.key as AnyObject, forKey: "id")
           if let thumbnailURLString = User(dictionary: dictionary).thumbnailPhotoURL, let thumbnailURL = URL(string: thumbnailURLString) {

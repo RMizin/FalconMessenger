@@ -64,18 +64,17 @@ class VoiceRecordingViewController: UIViewController {
         let hours = Int(recorder.currentTime) / 3600
         let minutes = Int(recorder.currentTime) / 60 % 60
         let seconds = Int(recorder.currentTime) % 60
-        let s = String(format:"%02i:%02i:%02i", hours, minutes, seconds)
+        let stamp = String(format: "%02i:%02i:%02i", hours, minutes, seconds)
         
-        voiceRecordingContainerView.statusLabel.text = s
+        voiceRecordingContainerView.statusLabel.text = stamp
         recorder.updateMeters()
        
-        let percentage = pow (10, (0.05 * recorder.averagePower(forChannel: 0)));
+        let percentage = pow(10, (0.05 * recorder.averagePower(forChannel: 0)))
        // print(percentage)
         voiceRecordingContainerView.waveForm.amplitude = CGFloat(percentage*5)
       }
     }
   }
-  
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()

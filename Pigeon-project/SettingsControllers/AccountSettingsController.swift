@@ -239,7 +239,7 @@ class AccountSettingsController: UITableViewController {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
         
-        self.tabBarController?.selectedIndex = tabs.chats.rawValue
+        self.tabBarController?.selectedIndex = Tabs.chats.rawValue
         
       })
     }
@@ -249,7 +249,8 @@ class AccountSettingsController: UITableViewController {
 extension AccountSettingsController {
   
 override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: accountSettingsCellId, for: indexPath) as! AccountSettingsTableViewCell
+  let cell = tableView.dequeueReusableCell(withIdentifier: accountSettingsCellId,
+                                           for: indexPath) as? AccountSettingsTableViewCell ?? AccountSettingsTableViewCell()
     cell.accessoryType = .disclosureIndicator
   
     if indexPath.section == 0 {

@@ -26,8 +26,8 @@ extension UserCell {
     muteIndicator.isHidden = !isConversationMuted
     messageLabel.text = conversations[indexPath.row].messageText()
     
-    if let lastMessage = conversations[indexPath.row].lastMessage {
-      let date = Date(timeIntervalSince1970: lastMessage.timestamp as! TimeInterval)
+    if let lastMessage = conversations[indexPath.row].lastMessage, let lastStamp = lastMessage.timestamp as? TimeInterval {
+      let date = Date(timeIntervalSince1970: lastStamp)
       timeLabel.text = timestampOfLastMessage(date)
     }
   

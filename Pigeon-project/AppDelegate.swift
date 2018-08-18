@@ -81,7 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let tabBarControllers = [contactsNavigationController, chatsNavigationController as UIViewController, settingsNavigationController]
     mainController.setViewControllers((tabBarControllers), animated: false)
-    mainController.selectedIndex = tabs.chats.rawValue
+    mainController.selectedIndex = Tabs.chats.rawValue
   }
   
   var orientationLock = UIInterfaceOrientationMask.allButUpsideDown

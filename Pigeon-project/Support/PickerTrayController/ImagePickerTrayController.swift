@@ -329,33 +329,35 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
 //    }
  // }
   
-  
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ActionCell.self), for: indexPath) as! ActionCell
-            cell.imagePickerTrayController = self
-            cell.actions = actions
+          let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ActionCell.self),
+                                                              for: indexPath) as? ActionCell ?? ActionCell()
+          cell.imagePickerTrayController = self
+          cell.actions = actions
             
-            return cell
+          return cell
           
         case 1:
-           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(CameraCell.self), for: indexPath) as! CameraCell
+          let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(CameraCell.self),
+                                                              for: indexPath) as? CameraCell ?? CameraCell()
 
-            return cell
+          return cell
           
         case 2:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ImageCell.self), for: indexPath) as! ImageCell
+          let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ImageCell.self),
+                                                              for: indexPath) as? ImageCell ?? ImageCell()
             
-              let asset = assets[indexPath.item]
-              if assets.count > indexPath.item {
-                cell.isVideo = (asset.mediaType == .video)
-                cell.isRemote = (asset.sourceType != .typeUserLibrary)
-                self.requestImage(for: asset) { cell.imageView.image = $0 }
-              }
-          
-            return cell
-          
+          let asset = assets[indexPath.item]
+          if assets.count > indexPath.item {
+            cell.isVideo = (asset.mediaType == .video)
+            cell.isRemote = (asset.sourceType != .typeUserLibrary)
+            self.requestImage(for: asset) { cell.imageView.image = $0 }
+          }
+
+          return cell
+
         default:
             fatalError("More than 3 sections is invalid.")
         }

@@ -307,17 +307,16 @@ class ContactsController: UITableViewController {
   func selectCell(for indexPath: IndexPath) -> UITableViewCell? {
     
     if indexPath.section == 0 {
-      let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as! CurrentUserTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as? CurrentUserTableViewCell ?? CurrentUserTableViewCell()
       cell.title.text = NameConstants.personalStorage
       return cell
     }
     
     if indexPath.section == 1 {
       
-      let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
     
         if let name = filteredUsers[indexPath.row].name {
-        
           cell.title.text = name
         }
     
@@ -350,7 +349,7 @@ class ContactsController: UITableViewController {
           return
         }
         
-        UIView.transition(with:  cell.icon,
+        UIView.transition(with: cell.icon,
                           duration: 0.20,
                           options: .transitionCrossDissolve,
                           animations: { cell.icon.image = image },
@@ -361,7 +360,7 @@ class ContactsController: UITableViewController {
       
     } else if indexPath.section == 2 {
       
-      let cell = tableView.dequeueReusableCell(withIdentifier: contactsCellID, for: indexPath) as! ContactsTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: contactsCellID, for: indexPath) as? ContactsTableViewCell ?? ContactsTableViewCell()
       cell.icon.image = UIImage(named: "UserpicIcon")
       cell.title.text = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
       
@@ -370,9 +369,9 @@ class ContactsController: UITableViewController {
     return nil
   }
   
-  var chatLogController:ChatLogController? = nil
-  var messagesFetcher:MessagesFetcher? = nil
-  var destinationLayout:AutoSizingCollectionViewFlowLayout? = nil
+  var chatLogController: ChatLogController? = nil
+  var messagesFetcher: MessagesFetcher? = nil
+  var destinationLayout: AutoSizingCollectionViewFlowLayout? = nil
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       

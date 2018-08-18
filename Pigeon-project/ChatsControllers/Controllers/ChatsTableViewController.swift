@@ -460,7 +460,7 @@ class ChatsTableViewController: UITableViewController {
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
     guard let tabItems = tabBarController?.tabBar.items as NSArray? else { return }
-    guard let tabItem = tabItems[tabs.chats.rawValue] as? UITabBarItem else { return }
+    guard let tabItem = tabItems[Tabs.chats.rawValue] as? UITabBarItem else { return }
     var badge = 0
     
     for conversation in filtededConversations {
@@ -679,7 +679,7 @@ class ChatsTableViewController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as! UserCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as? UserCell ?? UserCell()
     
     if indexPath.section == 0 {
       cell.configureCell(for: indexPath, conversations: filteredPinnedConversations)
@@ -690,12 +690,12 @@ class ChatsTableViewController: UITableViewController {
     return cell
   }
   
-  var chatLogController:ChatLogController? = nil
-  var messagesFetcher:MessagesFetcher? = nil
-  var destinationLayout:AutoSizingCollectionViewFlowLayout? = nil
+  var chatLogController: ChatLogController? = nil
+  var messagesFetcher: MessagesFetcher? = nil
+  var destinationLayout: AutoSizingCollectionViewFlowLayout? = nil
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    var conversation:Conversation!
+    var conversation: Conversation!
 
     if indexPath.section == 0 {
       let pinnedConversation = filteredPinnedConversations[indexPath.row]

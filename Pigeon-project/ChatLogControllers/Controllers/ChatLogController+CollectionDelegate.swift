@@ -11,7 +11,7 @@ import Firebase
 
 extension ChatLogController: CollectionDelegate {
   
-  func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message) {
+  func collectionView(updateStatus reference: DatabaseReference, message: Message) {
 
     reference.observe(.childChanged, with: { (snapshot) in
       guard snapshot.exists(), snapshot.key == "status", let newMessageStatus = snapshot.value  else { return }
@@ -30,9 +30,9 @@ extension ChatLogController: CollectionDelegate {
     return sortedMessages
   }
   
-  func collectionView(shouldBeUpdatedWith message: Message,reference: DatabaseReference) {
+  func collectionView(update message: Message, reference: DatabaseReference) {
     
-    let insertionIndex = self.messages.insertionIndexOf(elem: message, isOrderedBefore: { (message1, message2) -> Bool in
+    let insertionIndex = messages.insertionIndexOf(elem: message, isOrderedBefore: { (message1, message2) -> Bool in
       return Int(truncating: message1.timestamp!) < Int(truncating: message2.timestamp!)
     })
     self.collectionView?.performBatchUpdates ({
@@ -51,9 +51,8 @@ extension ChatLogController: CollectionDelegate {
           self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
         }
       }
-    }, completion: { (true) in
+    }, completion: { (_) in
       self.updateMessageStatus(messageRef: reference)
     })
   }
 }
-
