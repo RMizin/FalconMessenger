@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-import LocalAuthentication
+
 
 enum Tabs: Int {
   case contacts = 0
@@ -93,7 +93,6 @@ class GeneralTabBarController: UITabBarController {
     let tabBarControllers = [contactsNavigationController, chatsNavigationController as UIViewController, settingsNavigationController]
     viewControllers = tabBarControllers
     selectedIndex = Tabs.chats.rawValue
-    presentOnboardingController()
   }
   
   func presentOnboardingController() {

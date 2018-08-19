@@ -576,8 +576,8 @@
 		4BAEE49021272C5E0045AB10 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				4BAEE49121272C5E0045AB10 /* ContactsController+SearchHandlers.swift */,
 				4BAEE49221272C5E0045AB10 /* ContactsController.swift */,
+				4BAEE49121272C5E0045AB10 /* ContactsController+SearchHandlers.swift */,
 				4BAEE49321272C5E0045AB10 /* ContactsDetailController.swift */,
 			);
 			path = Controllers;

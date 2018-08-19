@@ -12,13 +12,24 @@ import UIKit
 
 let SelectedThemeKey = "SelectedTheme"
 
-let currentTheme = ThemeManager.currentTheme()
+extension NSNotification.Name {
+  static let themeUpdated = NSNotification.Name(Bundle.main.bundleIdentifier! + ".themeUpdated")
+}
 
 struct ThemeManager {
   
   static func applyTheme(theme: Theme) {
     userDefaults.updateObject(for: userDefaults.selectedTheme, with: theme.rawValue)
-    setGlobalNavigationBarSettingsAccordingToTheme(theme: theme)
+   
+    UITabBar.appearance().barStyle = theme.barStyle
+    UINavigationBar.appearance().isTranslucent = false
+    UINavigationBar.appearance().barStyle = theme.barStyle
+    UINavigationBar.appearance().barTintColor = theme.barBackgroundColor
+    UITabBar.appearance().barTintColor = theme.barBackgroundColor
+    UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
+    UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: theme.generalTitleColor]
+    
+    NotificationCenter.default.post(name: .themeUpdated, object: nil)
   }
   
   static func currentTheme() -> Theme {
@@ -231,17 +242,6 @@ enum Theme: Int {
   
     }
   }
-}
-
-func setGlobalNavigationBarSettingsAccordingToTheme(theme: Theme) {
-  
-  UITabBar.appearance().barStyle = theme.barStyle
-  UINavigationBar.appearance().isTranslucent = false
-  UINavigationBar.appearance().barStyle = theme.barStyle
-  UINavigationBar.appearance().barTintColor = theme.barBackgroundColor
-  UITabBar.appearance().barTintColor = theme.barBackgroundColor
-  UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
-  UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: theme.generalTitleColor]
 }
 
 struct FalconPalette {

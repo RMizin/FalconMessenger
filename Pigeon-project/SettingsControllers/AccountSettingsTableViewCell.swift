@@ -70,12 +70,11 @@ class AccountSettingsTableViewCell: UITableViewCell {
     title.backgroundColor = backgroundColor
     icon.backgroundColor = backgroundColor
     title.textColor = ThemeManager.currentTheme().generalTitleColor
-     selectionColor = ThemeManager.currentTheme().cellSelectionColor
+    selectionColor = ThemeManager.currentTheme().cellSelectionColor
   }
   
   override func prepareForReuse() {
     super.prepareForReuse()
     setColor()
   }
-
 }

@@ -12,9 +12,6 @@ import Firebase
 import PhoneNumberKit
 import SDWebImage
 
-
-public var shouldReloadContactsControllerAfterChangingTheme = false
-
 var localPhones = [String]()
 var globalUsers = [User]()
 
@@ -55,10 +52,11 @@ class ContactsController: UITableViewController {
       edgesForExtendedLayout = UIRectEdge.top
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       falconUsersFetcher.delegate = self
-
+      
       setupTableView()
       setupSearchController()
-      DispatchQueue.global(qos: .default).async {
+      addObservers()
+      DispatchQueue.global(qos: .default).async { [unowned self] in
         self.fetchContacts()
       }
      
@@ -69,36 +67,39 @@ class ContactsController: UITableViewController {
       super.viewWillAppear(animated)
         checkContactsAuthorizationStatus()
         fetchCurrentUser()
-        setUpColorsAccordingToTheme()
       
       if shouldReFetchFalconUsers {
         shouldReFetchFalconUsers = false
-        DispatchQueue.global(qos: .default).async {
+        DispatchQueue.global(qos: .default).async { [unowned self] in
           self.falconUsersFetcher.fetchFalconUsers(asynchronously: true)
         }
       }
     }
   
-  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-    super.viewWillTransition(to: size, with: coordinator)
-    setupViewControllerPlaceholder()
-  }
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+      super.viewWillTransition(to: size, with: coordinator)
+      setupViewControllerPlaceholder()
+    }
   
     override var preferredStatusBarStyle: UIStatusBarStyle {
       return ThemeManager.currentTheme().statusBarStyle
     }
   
+    deinit {
+      NotificationCenter.default.removeObserver(self)
+    }
   
-  fileprivate func setUpColorsAccordingToTheme() {
-    if shouldReloadContactsControllerAfterChangingTheme {
-      shouldReloadContactsControllerAfterChangingTheme = false
+    fileprivate func addObservers() {
+      NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+    }
+  
+    @objc fileprivate func changeTheme() {
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.reloadData()
     }
-  }
   
     fileprivate func setupTableView() {
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
@@ -122,7 +123,7 @@ class ContactsController: UITableViewController {
       } else {
         searchBar = UISearchBar()
         searchBar?.delegate = self
-          searchBar?.placeholder = "Search"
+        searchBar?.placeholder = "Search"
         searchBar?.searchBarStyle = .minimal
         searchBar?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         tableView.tableHeaderView = searchBar
@@ -471,38 +472,3 @@ extension ContactsController: MessagesDelegate {
     destinationLayout = nil
   }
 }
-
-//extension ContactsController: MessagesLoaderDelegate {
-//  
-//  func messagesLoader( didFinishLoadingWith messages: [Message]) {
-//    
-//    self.chatLogController?.messages = messages
-//    
-//    var indexPaths = [IndexPath]()
-//    
-//    if messages.count - 1 >= 0 {
-//      for index in 0...messages.count - 1 {
-//        
-//        indexPaths.append(IndexPath(item: index, section: 1))
-//      }
-//      
-//      UIView.performWithoutAnimation {
-//        DispatchQueue.main.async {
-//          self.chatLogController?.collectionView?.reloadItems(at:indexPaths)
-//        }
-//      }
-//    }
-//    
-//    if #available(iOS 11.0, *) {
-//    } else {
-//     // self.chatLogController?.startCollectionViewAtBottom()
-//    }
-//    if let destination = self.chatLogController {
-//      navigationController?.pushViewController( destination, animated: true)
-//      self.chatLogController = nil
-//      self.autoSizingCollectionViewFlowLayout = nil
-//    }
-//  }
-//}
-
-

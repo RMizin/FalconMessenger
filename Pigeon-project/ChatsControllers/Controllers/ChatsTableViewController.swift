@@ -35,9 +35,6 @@ protocol ManageAppearance: class {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool )
 }
 
-public var shouldReloadChatsControllerAfterChangingTheme = false
-
-
 class ChatsTableViewController: UITableViewController {
   
   let noChatsYetContainer:NoChatsYetContainer! = NoChatsYetContainer()
@@ -83,6 +80,7 @@ class ChatsTableViewController: UITableViewController {
     configureTableView()
     setupSearchController()
     managePresense()
+    addObservers()
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -98,8 +96,6 @@ class ChatsTableViewController: UITableViewController {
     if !isAppLoaded {
       fetchConversations()
     }
-    
-    setUpColorsAccordingToTheme()
   }
   
   override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -118,8 +114,15 @@ class ChatsTableViewController: UITableViewController {
     }
   }
   
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+  
+  fileprivate func addObservers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+  }
+  
   fileprivate func configureTableView() {
-    
     tableView.register(UserCell.self, forCellReuseIdentifier: userCellID)
     tableView.allowsMultipleSelectionDuringEditing = false
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
@@ -142,19 +145,15 @@ class ChatsTableViewController: UITableViewController {
     navigationController?.pushViewController(destination, animated: true)
   }
   
-  fileprivate func setUpColorsAccordingToTheme() {
-    if shouldReloadChatsControllerAfterChangingTheme {
-      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-      tableView.sectionIndexBackgroundColor = view.backgroundColor
-      tableView.backgroundColor = view.backgroundColor
-      tableView.reloadData()
-      shouldReloadChatsControllerAfterChangingTheme = false
-      noChatsYetContainer.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      
-    }
+  @objc fileprivate func changeTheme() {
+    noChatsYetContainer.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+    tableView.sectionIndexBackgroundColor = view.backgroundColor
+    tableView.backgroundColor = view.backgroundColor
+    tableView.reloadData()
   }
-  
+
   fileprivate func setupSearchController() {
     
     if #available(iOS 11.0, *) {
@@ -210,6 +209,7 @@ class ChatsTableViewController: UITableViewController {
   
   var notificationReference: DatabaseReference!
   var notificationHandle = [DatabaseHandle]()
+  
   fileprivate var inAppNotificationsObserverHandler: DatabaseHandle!
   
   func observersForNotifications() {
@@ -221,7 +221,6 @@ class ChatsTableViewController: UITableViewController {
     }
     
     var allConversations = [Conversation]()
-    
     allConversations.insert(contentsOf: conversations, at: 0)
     allConversations.insert(contentsOf: pinnedConversations, at: 0)
     
@@ -758,7 +757,7 @@ extension ChatsTableViewController: MessagesDelegate {
     } else {
       self.chatLogController?.startCollectionViewAtBottom()
     }
-   
+    
     navigationController?.pushViewController(destination, animated: true)
     chatLogController = nil
     destinationLayout = nil

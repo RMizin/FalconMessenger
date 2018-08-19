@@ -17,8 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
   
-    ThemeManager.applyTheme(theme: currentTheme)
-        
+    ThemeManager.applyTheme(theme: ThemeManager.currentTheme())
+    
     FirebaseApp.configure()
     Database.database().isPersistenceEnabled = true
     
@@ -28,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
     window?.rootViewController = tabBarController
     window?.makeKeyAndVisible()
+    window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    
     tabBarController.presentOnboardingController()
   
     return true

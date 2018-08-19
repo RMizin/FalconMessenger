@@ -26,7 +26,6 @@ class AccountSettingsController: UITableViewController {
   
   let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
   let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
-  
   var currentName = String()
   var currentBio = String()
   
@@ -37,12 +36,12 @@ class AccountSettingsController: UITableViewController {
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
     tableView = UITableView(frame: tableView.frame, style: .grouped)
-    NotificationCenter.default.addObserver(self, selector:#selector(clearUserData),name:NSNotification.Name(rawValue: "clearUserData"), object: nil)
+   
     configureTableView()
     configureContainerView()
     listenChanges()
     configureNavigationBarDefaultRightBarButton()
-    setColorAccordingToTheme()
+    addObservers()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -51,7 +50,7 @@ class AccountSettingsController: UITableViewController {
       listenChanges()
     }
   }
-  
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     if let headerView = tableView.tableHeaderView {
@@ -67,19 +66,33 @@ class AccountSettingsController: UITableViewController {
     }
   }
   
-  @objc fileprivate func openUserProfilePicture() {
-    guard currentReachabilityStatus != .notReachable else {
-      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
-      return
-    }
-    avatarOpener.delegate = self
-    avatarOpener.handleAvatarOpening(avatarView: userProfileContainerView.profileImageView, at: self,
-                                     isEditButtonEnabled: true, title: .user)
-    cancelBarButtonPressed()
+  deinit {
+    NotificationCenter.default.removeObserver(self)
   }
   
-  func configureNavigationBarDefaultRightBarButton () {
-    
+  fileprivate func addObservers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(clearUserData), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+  }
+  
+  fileprivate func configureTableView() {
+    tableView.separatorStyle = .none
+    tableView.sectionHeaderHeight = 0
+    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+    tableView.tableHeaderView = userProfileContainerView
+    tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
+    tableView.backgroundColor = .clear
+  }
+  
+  fileprivate func configureContainerView() {
+    userProfileContainerView.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
+    userProfileContainerView.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
+    userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
+    userProfileContainerView.bio.delegate = self
+    userProfileContainerView.name.delegate = self
+  }
+  
+  func configureNavigationBarDefaultRightBarButton() {
     let nightMode = UIButton()
     nightMode.setImage(UIImage(named: "defaultTheme"), for: .normal)
     nightMode.setImage(UIImage(named: "darkTheme"), for: .selected)
@@ -87,14 +100,44 @@ class AccountSettingsController: UITableViewController {
     nightMode.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
     nightMode.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
     nightMode.addTarget(self, action: #selector(rightBarButtonDidTap(sender:)), for: .touchUpInside)
-    nightMode.isSelected = Bool(currentTheme.rawValue)
+    nightMode.isSelected = Bool(ThemeManager.currentTheme().rawValue)
     
     let rightBarButton = UIBarButtonItem(customView: nightMode)
-    self.navigationItem.setRightBarButton(rightBarButton, animated: false)
+    navigationItem.setRightBarButton(rightBarButton, animated: false)
+  }
+    
+  @objc fileprivate func changeTheme() {
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.backgroundColor = view.backgroundColor
+  
+    navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
+    navigationController?.navigationBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
+    tabBarController?.tabBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
+    tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
+    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+    
+    userProfileContainerView.backgroundColor = view.backgroundColor
+    userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    userProfileContainerView.userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    userProfileContainerView.name.textColor = ThemeManager.currentTheme().generalTitleColor
+    userProfileContainerView.bio.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    userProfileContainerView.bio.textColor = ThemeManager.currentTheme().generalTitleColor
+    userProfileContainerView.bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    tableView.reloadData()
+  }
+  
+  @objc fileprivate func openUserProfilePicture() {
+    guard currentReachabilityStatus != .notReachable else {
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
+      return
+    }
+    avatarOpener.delegate = self
+    avatarOpener.handleAvatarOpening(avatarView: userProfileContainerView.profileImageView, at: self, isEditButtonEnabled: true, title: .user)
+    cancelBarButtonPressed()
   }
   
   @objc fileprivate func rightBarButtonDidTap(sender: UIButton) {
-  
     sender.isSelected = !sender.isSelected
     
     if sender.isSelected {
@@ -104,29 +147,6 @@ class AccountSettingsController: UITableViewController {
       let theme = Theme.Default
       ThemeManager.applyTheme(theme: theme)
     }
-    
-    shouldReloadContactsControllerAfterChangingTheme = true
-    shouldReloadChatsControllerAfterChangingTheme = true
-    setColorAccordingToTheme()
-    tableView.reloadData()
-  }
-  
-  fileprivate func setColorAccordingToTheme() {
-      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      tableView.backgroundColor = view.backgroundColor
-      userProfileContainerView.backgroundColor = view.backgroundColor
-      navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
-      navigationController?.navigationBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
-      tabBarController?.tabBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
-      tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
-      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-      userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
-      userProfileContainerView.userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
-      userProfileContainerView.name.textColor = ThemeManager.currentTheme().generalTitleColor
-      userProfileContainerView.bio.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
-      userProfileContainerView.bio.textColor = ThemeManager.currentTheme().generalTitleColor
-      userProfileContainerView.bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
-      userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
   }
   
   @objc func clearUserData() {
@@ -170,24 +190,6 @@ class AccountSettingsController: UITableViewController {
         }
       })
     }
-  }
-
-  fileprivate func configureTableView() {
-    
-    tableView.separatorStyle = .none
-    tableView.sectionHeaderHeight = 0
-    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-    tableView.tableHeaderView = userProfileContainerView
-    tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
-  }
-  
-  fileprivate func configureContainerView() {
-    
-    userProfileContainerView.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
-    userProfileContainerView.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
-    userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
-    userProfileContainerView.bio.delegate = self
-    userProfileContainerView.name.delegate = self
   }
   
   func logoutButtonTapped () {
@@ -238,9 +240,7 @@ class AccountSettingsController: UITableViewController {
       self.present(newNavigationController, animated: true, completion: {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
-        
         self.tabBarController?.selectedIndex = Tabs.chats.rawValue
-        
       })
     }
   }

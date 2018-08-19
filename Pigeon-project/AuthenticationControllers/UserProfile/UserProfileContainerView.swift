@@ -142,6 +142,8 @@ class UserProfileContainerView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
+    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    
     addSubview(addPhotoLabel)
     addSubview(profileImageView)
     addSubview(userData)
@@ -150,8 +152,6 @@ class UserProfileContainerView: UIView {
     userData.addSubview(name)
     userData.addSubview(phone)
     bio.addSubview(bioPlaceholderLabel)
-    
-    backgroundColor = .clear
   
       NSLayoutConstraint.activate([
         profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 30),

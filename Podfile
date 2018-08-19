@@ -14,7 +14,7 @@ target 'Pigeon-project' do
   pod 'Firebase/Auth'
   pod 'Firebase/Storage'
 
-  pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage', :branch => '5.x', :modular_headers => true
+  pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage', :branch => '5.x'
   pod 'PhoneNumberKit'
   pod 'FLAnimatedImage'
   pod 'FTPopOverMenu_Swift'
