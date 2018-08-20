@@ -411,9 +411,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
          (self.navigationController?.visibleViewController is UserInfoTableViewController ||
           self.navigationController?.visibleViewController is ChatLogController ||
           self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
-          topViewController(rootViewController: self) is CropViewController ||
-          topViewController(rootViewController: self) is INSPhotosViewController ||
-          topViewController(rootViewController: self) is SFSafariViewController) else { senderID = nil; return }
+          UIApplication.topViewController() is CropViewController ||
+          UIApplication.topViewController() is INSPhotosViewController ||
+          UIApplication.topViewController() is SFSafariViewController) else { senderID = nil; return }
       messageRef.updateChildValues(["seen" : true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
         self.resetBadgeForSelf()
       })
@@ -448,10 +448,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     if self.navigationController?.visibleViewController is UserInfoTableViewController ||
       self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
-      topViewController(rootViewController: self) is CropViewController ||
-      topViewController(rootViewController: self) is SFSafariViewController {
+      UIApplication.topViewController() is CropViewController ||
+      UIApplication.topViewController() is SFSafariViewController {
       return
     }
+    print("NOOOOOOO")
 
     if typingIndicatorReference != nil {
       typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle)

@@ -13,17 +13,11 @@ let globalDataStorage = GlobalDataStorage()
 
 class GlobalDataStorage: NSObject {
   
-  var shouldReloadContactsControllerAfterChangingTheme = false
-  
-  var shouldReloadChatsControllerAfterChangingTheme = false
-  
   var localPhones: [String] = [] {
     didSet {
       NotificationCenter.default.post(name: .localPhonesUpdated, object: nil)
     }
   }
-  
- // var preparedNumbers = [String]()
   
   var falconUsers: [User] = [] {
     didSet {

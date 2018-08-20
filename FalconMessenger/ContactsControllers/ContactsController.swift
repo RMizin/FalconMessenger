@@ -53,6 +53,7 @@ class ContactsController: UITableViewController {
       setupTableView()
       setupSearchController()
       observeContactsChanges()
+      addObservers()
       DispatchQueue.global(qos: .default).async { [unowned self] in
         self.falconUsersFetcher.loadFalconUsers()
         self.fetchContacts()
@@ -60,10 +61,9 @@ class ContactsController: UITableViewController {
     }
   
     fileprivate var shouldReSyncUsers = false
+  
     override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
-      
-      setUpColorsAccordingToTheme()
       
       guard shouldReSyncUsers else { return }
       shouldReSyncUsers = false
@@ -85,27 +85,13 @@ class ContactsController: UITableViewController {
       return ThemeManager.currentTheme().statusBarStyle
     }
   
-    func cleanUpController() {
+    @objc func cleanUpController() {
       filteredUsers.removeAll()
       users.removeAll()
       tableView.reloadData()
       shouldReSyncUsers = true
       userDefaults.removeObject(for: userDefaults.contactsCount)
       userDefaults.removeObject(for: userDefaults.contactsSyncronizationStatus)
-    }
-  
-    fileprivate func setUpColorsAccordingToTheme() {
-      if globalDataStorage.shouldReloadContactsControllerAfterChangingTheme {
-        globalDataStorage.shouldReloadContactsControllerAfterChangingTheme = false
-        view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-        tableView.sectionIndexBackgroundColor = view.backgroundColor
-        tableView.backgroundColor = view.backgroundColor
-        tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-        tableView.reloadData()
-        
-        navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
-        navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
-      }
     }
   
     fileprivate func setupTableView() {
@@ -155,8 +141,24 @@ class ContactsController: UITableViewController {
       NotificationCenter.default.addObserver(self, selector: #selector(contactStoreDidChange), name: .CNContactStoreDidChange, object: nil)
     }
   
+    fileprivate func addObservers() {
+      NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(cleanUpController), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+    }
+  
     deinit {
-      NotificationCenter.default.removeObserver(self, name: .CNContactStoreDidChange, object: nil)
+      NotificationCenter.default.removeObserver(self)
+    }
+  
+    @objc fileprivate func changeTheme() {
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      tableView.sectionIndexBackgroundColor = view.backgroundColor
+      tableView.backgroundColor = view.backgroundColor
+      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+      tableView.reloadData()
+      
+      navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
+      navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
     }
   
     @objc func contactStoreDidChange(notification: NSNotification) {

@@ -45,27 +45,6 @@ struct AppUtility {
   }
 }
 
-func topViewController(rootViewController: UIViewController?) -> UIViewController? {
-  guard let rootViewController = rootViewController else {
-    return nil
-  }
-  
-  guard let presented = rootViewController.presentedViewController else {
-    return rootViewController
-  }
-  
-  switch presented {
-  case let navigationController as UINavigationController:
-    return topViewController(rootViewController: navigationController.viewControllers.last)
-    
-  case let tabBarController as UITabBarController:
-    return topViewController(rootViewController: tabBarController.selectedViewController)
-    
-  default:
-    return topViewController(rootViewController: presented)
-  }
-}
-
 struct NameConstants {
   static let personalStorage = "Personal Storage"
 }
@@ -93,6 +72,24 @@ let deletionErrorMessage = "There was a problem when deleting. Try again later."
 let cameraNotExistsMessage = "You don't have camera"
 let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
 let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
+
+
+extension UIApplication {
+  class func topViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+    if let navigationController = controller as? UINavigationController {
+      return topViewController(controller: navigationController.visibleViewController)
+    }
+    if let tabController = controller as? UITabBarController {
+      if let selected = tabController.selectedViewController {
+        return topViewController(controller: selected)
+      }
+    }
+    if let presented = controller?.presentedViewController {
+      return topViewController(controller: presented)
+    }
+    return controller
+  }
+}
 
 extension String {
   
@@ -405,17 +402,17 @@ public let messageMetaDataFirebaseFolder = "metaData"
 
 func setOnlineStatus()  {
   
-  if Auth.auth().currentUser != nil {
-    let onlineStatusReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid).child("OnlineStatus")
-    let connectedRef = Database.database().reference(withPath: ".info/connected")
-    
-    connectedRef.observe(.value, with: { (snapshot) in
-      guard let connected = snapshot.value as? Bool, connected else { return }
-      onlineStatusReference.setValue(statusOnline)
-     
-      onlineStatusReference.onDisconnectSetValue(ServerValue.timestamp())
-    })
-  }
+  guard Auth.auth().currentUser != nil, let currentUID = Auth.auth().currentUser?.uid else { return }
+
+  let onlineStatusReference = Database.database().reference().child("users").child(currentUID).child("OnlineStatus")
+  let connectedRef = Database.database().reference(withPath: ".info/connected")
+  
+  connectedRef.observe(.value, with: { (snapshot) in
+    guard let connected = snapshot.value as? Bool, connected else { return }
+    onlineStatusReference.setValue(statusOnline)
+   
+    onlineStatusReference.onDisconnectSetValue(ServerValue.timestamp())
+  })
 }
 
 extension UINavigationItem {

@@ -14,7 +14,6 @@ import PhoneNumberKit
 class EnterVerificationCodeController: UIViewController {
 
   let enterVerificationContainerView = EnterVerificationContainerView()
- // var phoneNumberControllerType: PhoneNumberControllerType = .authentication
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -118,7 +117,7 @@ class EnterVerificationCodeController: UIViewController {
     let verificationID = userDefaults.currentStringObjectState(for: userDefaults.authVerificationID)
     let verificationCode = enterVerificationContainerView.verificationCode.text
     
-    if verificationID == nil {
+    guard let unwrappedVerificationID = verificationID, let unwrappedVerificationCode = verificationCode else {
       ARSLineProgress.showFail()
       self.enterVerificationContainerView.verificationCode.shake()
       return
@@ -131,8 +130,8 @@ class EnterVerificationCodeController: UIViewController {
     ARSLineProgress.ars_showOnView(self.view)
     
     let credential = PhoneAuthProvider.provider().credential (
-      withVerificationID: verificationID!,
-      verificationCode: verificationCode!)
+      withVerificationID: unwrappedVerificationID,
+      verificationCode: unwrappedVerificationCode)
     
     Auth.auth().signInAndRetrieveData(with: credential) { (_, error) in
       if error != nil {
@@ -140,22 +139,17 @@ class EnterVerificationCodeController: UIViewController {
         basicErrorAlertWith(title: "Error", message: error?.localizedDescription ?? "Oops! Something happened, try again later.", controller: self)
         return
       }
-      
       let destination = UserProfileController()
       AppUtility.lockOrientation(.portrait)
       destination.userProfileContainerView.phone.text = self.enterVerificationContainerView.titleNumber.text
       destination.checkIfUserDataExists(completionHandler: { (isCompleted) in
-        if isCompleted {
-          ARSLineProgress.hide()
-          if self.navigationController != nil {
-            if !(self.navigationController!.topViewController!.isKind(of: UserProfileController.self)) {
-              self.navigationController?.pushViewController(destination, animated: true)
-            }
-          }
-          print("code is correct")
+        guard isCompleted else {ARSLineProgress.showFail(); return }
+        ARSLineProgress.hide()
+        guard self.navigationController != nil else { return }
+        if !(self.navigationController!.topViewController!.isKind(of: UserProfileController.self)) {
+          self.navigationController?.pushViewController(destination, animated: true)
         }
       })
     }
-
   }
 }

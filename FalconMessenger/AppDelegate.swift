@@ -21,25 +21,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
   var window: UIWindow?
   
-  
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
   
-    let theme = ThemeManager.currentTheme()
-    ThemeManager.applyTheme(theme: theme)
+    ThemeManager.applyTheme(theme: ThemeManager.currentTheme())
     
     FirebaseApp.configure()
     Database.database().isPersistenceEnabled = true
   
-    let mainController = GeneralTabBarController()
-    setTabs(mainController: mainController)
-    window = UIWindow(frame: UIScreen.main.bounds)
-    window?.rootViewController = mainController
-    window?.makeKeyAndVisible()
-  
     userDefaults.configureInitialLaunch()
-    presentOnboardingController(above: mainController)
-
     
+    let tabBarController = GeneralTabBarController()
+    window = UIWindow(frame: UIScreen.main.bounds)
+    window?.rootViewController = tabBarController
+    window?.makeKeyAndVisible()
+    window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+  
+    tabBarController.presentOnboardingController()
+
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self
       let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -54,54 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     return true
   }
   
-  func presentOnboardingController(above controller: UITabBarController) {
-    guard Auth.auth().currentUser == nil else { return }
-    let destination = OnboardingController()
-    let newNavigationController = UINavigationController(rootViewController: destination)
-    newNavigationController.navigationBar.shadowImage = UIImage()
-    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-    newNavigationController.modalTransitionStyle = .crossDissolve
-    controller.present(newNavigationController, animated: false, completion: nil)
-  }
-  
-  let chatsController = ChatsTableViewController()
-  let contactsController = ContactsController()
-  let settingsController = AccountSettingsController()
-  
-  func setTabs(mainController: UITabBarController) {
-
-    contactsController.title = "Contacts"
-    chatsController.title = "Chats"
-    settingsController.title = "Settings"
-    chatsController.delegate = mainController as? ManageAppearance
-    
-    let contactsNavigationController = UINavigationController(rootViewController: contactsController)
-    let chatsNavigationController = UINavigationController(rootViewController: chatsController)
-    let settingsNavigationController = UINavigationController(rootViewController: settingsController)
-
-    if #available(iOS 11.0, *) {
-      settingsNavigationController.navigationBar.prefersLargeTitles = true
-      chatsNavigationController.navigationBar.prefersLargeTitles = true
-      contactsNavigationController.navigationBar.prefersLargeTitles = true
-    }
-    
-    let contactsImage =  UIImage(named: "user")
-    let chatsImage = UIImage(named: "chat")
-    let settingsImage = UIImage(named: "settings")
-
-    let contactsTabItem = UITabBarItem(title: contactsController.title, image: contactsImage, selectedImage: nil)
-    let chatsTabItem = UITabBarItem(title: chatsController.title, image: chatsImage, selectedImage: nil)
-    let settingsTabItem = UITabBarItem(title: settingsController.title, image: settingsImage, selectedImage: nil)
-
-    contactsController.tabBarItem = contactsTabItem
-    chatsController.tabBarItem = chatsTabItem
-    settingsController.tabBarItem = settingsTabItem
-    
-    let tabBarControllers = [contactsNavigationController, chatsNavigationController as UIViewController, settingsNavigationController]
-    mainController.setViewControllers((tabBarControllers), animated: false)
-    mainController.selectedIndex = tabs.chats.rawValue
-  }
-    
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
     setUserNotificationToken(token: fcmToken)
   }
@@ -115,12 +65,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
   
   func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-    
-    if Auth.auth().currentUser == nil {
-      return UIInterfaceOrientationMask.portrait
-    } else {
-      return self.orientationLock
-    }
+    guard Auth.auth().currentUser != nil else { return .portrait }
+    return self.orientationLock
   }
   
   func applicationWillResignActive(_ application: UIApplication) {

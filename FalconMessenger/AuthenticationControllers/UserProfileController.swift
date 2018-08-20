@@ -21,12 +21,18 @@ class UserProfileController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-        view.addSubview(userProfileContainerView)
-      
-        configureNavigationBar()
-        configureContainerView()
-        configureColorsAccordingToTheme()
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+      view.addSubview(userProfileContainerView)
+    
+      configureNavigationBar()
+      configureContainerView()
+      configureColorsAccordingToTheme()
+    }
+  
+    override func viewWillLayoutSubviews() {
+      super.viewWillLayoutSubviews()
+      userProfileContainerView.frame = view.bounds
+      userProfileContainerView.layoutIfNeeded()
     }
   
     fileprivate func configureNavigationBar () {
@@ -53,12 +59,6 @@ class UserProfileController: UIViewController {
       userProfileContainerView.bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
       userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     }
-  
-  override func viewWillLayoutSubviews() {
-    super.viewWillLayoutSubviews()
-    userProfileContainerView.frame = view.bounds
-    userProfileContainerView.layoutIfNeeded()
-  }
   
     @objc fileprivate func openUserProfilePicture() {
       guard currentReachabilityStatus != .notReachable else {
@@ -88,7 +88,7 @@ extension UserProfileController {
       updateUserData()
       
       if Messaging.messaging().fcmToken != nil {
-         setUserNotificationToken(token: Messaging.messaging().fcmToken!)
+        setUserNotificationToken(token: Messaging.messaging().fcmToken!)
       }
      
       setOnlineStatus()
@@ -150,14 +150,14 @@ extension UserProfileController {
   }
   
   func updateUserData() {
-    
+    guard let currentUID = Auth.auth().currentUser?.uid else { return }
     ARSLineProgress.ars_showOnView(self.view)
 
     let phoneNumber = preparedPhoneNumber()
-    let userReference = Database.database().reference().child("users").child(Auth.auth().currentUser!.uid)
-    userReference.updateChildValues(["name" : userProfileContainerView.name.text!,
+    let userReference = Database.database().reference().child("users").child(currentUID)
+    userReference.updateChildValues(["name" : userProfileContainerView.name.text ?? "",
                                      "phoneNumber" : phoneNumber,
-                                     "bio" : userProfileContainerView.bio.text!]) { (error, reference) in
+                                     "bio" : userProfileContainerView.bio.text ?? ""]) { (error, reference) in
       ARSLineProgress.hide()
       self.dismiss(animated: true) {
         AppUtility.lockOrientation(.allButUpsideDown)

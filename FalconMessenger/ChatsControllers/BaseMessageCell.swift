@@ -12,23 +12,23 @@ import UIKit
 struct MessageFontsAppearance {
   
   static var defaultMessageTextFont: UIFont {
-    return UIFont.systemFont(ofSize: 16)
+    return .systemFont(ofSize: 16)
   }
   
   static var defaultVoiceMessageTextFont: UIFont {
-    return UIFont.systemFont(ofSize: 14)
+    return .systemFont(ofSize: 14)
   }
   
   static var defaultInformationMessageTextFont: UIFont {
-    return UIFont.systemFont(ofSize: 14)
+    return .systemFont(ofSize: 14)
   }
   
   static var defaultDeliveryStatusTextFont: UIFont {
-    return UIFont.boldSystemFont(ofSize: 10)
+    return .boldSystemFont(ofSize: 10)
   }
   
  static var defaultMessageAuthorNameFont: UIFont {
-    return UIFont.systemFont(ofSize: 15)
+    return .systemFont(ofSize: 15)
   }
 }
 

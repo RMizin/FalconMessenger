@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import LocalAuthentication
 
-enum tabs: Int {
+enum Tabs: Int {
   case contacts = 0
   case chats = 1
   case settings = 2
@@ -28,6 +28,8 @@ class GeneralTabBarController: UITabBarController {
   
   override func viewDidLoad() {
       super.viewDidLoad()
+    
+    chatsController.delegate = self
     configureTabBar()
     setOnlineStatus()
   }
@@ -37,6 +39,7 @@ class GeneralTabBarController: UITabBarController {
     tabBar.unselectedItemTintColor = ThemeManager.currentTheme().generalSubtitleColor
     tabBar.isTranslucent = false
     tabBar.clipsToBounds = true
+    setTabs()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -49,6 +52,53 @@ class GeneralTabBarController: UITabBarController {
     splashContainer.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
     splashContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     onceToken = 1
+  }
+  
+  func presentOnboardingController() {
+    guard Auth.auth().currentUser == nil else { return }
+    let destination = OnboardingController()
+    let newNavigationController = UINavigationController(rootViewController: destination)
+    newNavigationController.navigationBar.shadowImage = UIImage()
+    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+    newNavigationController.modalTransitionStyle = .crossDissolve
+    present(newNavigationController, animated: false, completion: nil)
+  }
+  
+  let chatsController = ChatsTableViewController()
+  let contactsController = ContactsController()
+  let settingsController = AccountSettingsController()
+  
+  fileprivate func setTabs() {
+    
+    contactsController.title = "Contacts"
+    chatsController.title = "Chats"
+    settingsController.title = "Settings"
+    
+    let contactsNavigationController = UINavigationController(rootViewController: contactsController)
+    let chatsNavigationController = UINavigationController(rootViewController: chatsController)
+    let settingsNavigationController = UINavigationController(rootViewController: settingsController)
+    
+    if #available(iOS 11.0, *) {
+      settingsNavigationController.navigationBar.prefersLargeTitles = true
+      chatsNavigationController.navigationBar.prefersLargeTitles = true
+      contactsNavigationController.navigationBar.prefersLargeTitles = true
+    }
+    
+    let contactsImage =  UIImage(named: "user")
+    let chatsImage = UIImage(named: "chat")
+    let settingsImage = UIImage(named: "settings")
+    
+    let contactsTabItem = UITabBarItem(title: contactsController.title, image: contactsImage, selectedImage: nil)
+    let chatsTabItem = UITabBarItem(title: chatsController.title, image: chatsImage, selectedImage: nil)
+    let settingsTabItem = UITabBarItem(title: settingsController.title, image: settingsImage, selectedImage: nil)
+    
+    contactsController.tabBarItem = contactsTabItem
+    chatsController.tabBarItem = chatsTabItem
+    settingsController.tabBarItem = settingsTabItem
+    
+    let tabBarControllers = [contactsNavigationController, chatsNavigationController as UIViewController, settingsNavigationController]
+    viewControllers = tabBarControllers
+    selectedIndex = Tabs.chats.rawValue
   }
 }
 

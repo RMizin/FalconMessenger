@@ -9,47 +9,22 @@
 import UIKit
 import AudioToolbox
 import Firebase
+import CropViewController
+import SafariServices
 
 extension ChatsTableViewController {
   
-  fileprivate func visibleTab() -> UIViewController? {
-    
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
-    
-    switch self.tabBarController!.selectedIndex {
-    case 0:
-      let controller = appDelegate.contactsController.navigationController?.visibleViewController
-   
-      return controller
-    case 1:
-      let controller = self.navigationController?.visibleViewController
-  
-      return controller
-    case 2:
-      let controller = appDelegate.settingsController.navigationController?.visibleViewController
-  
-      return controller
-    default: break
-    }
-    return nil
-  }
-  
-  func visibleNavigationController() -> UINavigationController? {
-    
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
-    
+  func currentTab() -> UINavigationController? {
+    guard let appDelegate = tabBarController as? GeneralTabBarController else { return nil }
     switch self.tabBarController!.selectedIndex {
     case 0:
       let controller = appDelegate.contactsController.navigationController
-     
       return controller
     case 1:
       let controller = navigationController
-     
       return controller
     case 2:
       let controller = appDelegate.settingsController.navigationController
-     
       return controller
     default: break
     }
@@ -58,8 +33,10 @@ extension ChatsTableViewController {
   
   func handleInAppSoundPlaying(message: Message, conversation: Conversation) {
 
-    if self.visibleTab() is ChatLogController ||
-      topViewController(rootViewController: self) is INSPhotosViewController { return }
+    if UIApplication.topViewController() is SFSafariViewController ||
+      UIApplication.topViewController() is CropViewController ||
+      UIApplication.topViewController() is ChatLogController ||
+      UIApplication.topViewController() is INSPhotosViewController { return }
 
     var allConversations = conversations
     allConversations.insert(contentsOf: pinnedConversations, at: 0)
@@ -112,13 +89,9 @@ extension ChatsTableViewController {
   fileprivate func showInAppNotification(conversation: Conversation, title: String, subtitle: String, resource: Any?, placeholder: Data?) {
     let notification: InAppNotification = InAppNotification(resource: resource, title: title, subtitle: subtitle, data: placeholder)
     InAppNotificationDispatcher.shared.show(notification: notification) { (_) in
-     // hideinapp
-      
-    //  notification.
       self.destinationLayout = AutoSizingCollectionViewFlowLayout()
       self.destinationLayout?.minimumLineSpacing = AutoSizingCollectionViewFlowLayout.lineSpacing
       self.chatLogController = ChatLogController(collectionViewLayout: self.destinationLayout!)
-      
       self.messagesFetcher = MessagesFetcher()
       self.messagesFetcher?.delegate = self
       self.messagesFetcher?.loadMessagesData(for: conversation)

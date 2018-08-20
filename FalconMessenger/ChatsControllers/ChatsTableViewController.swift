@@ -84,6 +84,7 @@ class ChatsTableViewController: UITableViewController {
    
     configureTableView()
     setupSearchController()
+    addObservers()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -93,17 +94,36 @@ class ChatsTableViewController: UITableViewController {
       managePresense()
       fetchConversations()
     }
-    
-    setUpColorsAccordingToTheme()
+  }
+  
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+  
+  fileprivate func addObservers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(cleanUpController), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+  }
+  
+  @objc fileprivate func changeTheme() {
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+    tableView.sectionIndexBackgroundColor = view.backgroundColor
+    tableView.backgroundColor = view.backgroundColor
+    tableView.isOpaque = true
+    tableView.reloadData()
+    noChatsYetContainer.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
+    navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
   }
 
   fileprivate func initAllTabs() {
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    guard let appDelegate = tabBarController as? GeneralTabBarController else { return }
     _ = appDelegate.contactsController.view
     _ = appDelegate.settingsController.view
   }
   
-  public func cleanUpController() {
+  @objc public func cleanUpController() {
     pinnedConversations.removeAll()
     conversations.removeAll()
     filtededConversations.removeAll()
@@ -195,22 +215,7 @@ class ChatsTableViewController: UITableViewController {
     }
     navigationController?.pushViewController(destination, animated: true)
   }
-  
-  fileprivate func setUpColorsAccordingToTheme() {
-    if globalDataStorage.shouldReloadChatsControllerAfterChangingTheme {
-      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-      tableView.sectionIndexBackgroundColor = view.backgroundColor
-      tableView.backgroundColor = view.backgroundColor
-      tableView.isOpaque = true
-      tableView.reloadData()
-      globalDataStorage.shouldReloadChatsControllerAfterChangingTheme = false
-      noChatsYetContainer.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
-      navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
-    }
-  }
-  
+
   fileprivate func setupSearchController() {
     
     if #available(iOS 11.0, *) {
@@ -663,7 +668,7 @@ class ChatsTableViewController: UITableViewController {
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
     guard let tabItems = tabBarController?.tabBar.items as NSArray? else { return }
-    guard let tabItem = tabItems[tabs.chats.rawValue] as? UITabBarItem else { return }
+    guard let tabItem = tabItems[Tabs.chats.rawValue] as? UITabBarItem else { return }
     var badge = 0
     
     for conversation in filtededConversations {
@@ -981,7 +986,7 @@ extension ChatsTableViewController: MessagesDelegate {
   }
   
   func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-   
+   print("should be updated")
     chatLogController?.hidesBottomBarWhenPushed = true
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
@@ -1002,8 +1007,8 @@ extension ChatsTableViewController: MessagesDelegate {
     } else {
       self.chatLogController?.startCollectionViewAtBottom()
     }
-    
-    self.visibleNavigationController()?.pushViewController(destination, animated: true)
+    currentTab()?.pushViewController(destination, animated: true)
+  
     chatLogController = nil
     destinationLayout = nil
   }

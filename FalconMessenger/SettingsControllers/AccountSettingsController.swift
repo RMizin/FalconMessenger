@@ -38,12 +38,11 @@ class AccountSettingsController: UITableViewController {
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
     tableView = UITableView(frame: tableView.frame, style: .grouped)
-    NotificationCenter.default.addObserver(self, selector:#selector(clearUserData),name:NSNotification.Name(rawValue: "clearUserData"), object: nil)
     configureTableView()
     configureContainerView()
     listenChanges()
     configureNavigationBarDefaultRightBarButton()
-    setColorAccordingToTheme()
+    addObservers()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -66,6 +65,36 @@ class AccountSettingsController: UITableViewController {
         tableView.tableHeaderView = headerView
       }
     }
+  }
+  
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+  
+  fileprivate func addObservers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(clearUserData), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+  }
+  
+  @objc fileprivate func changeTheme() {
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.backgroundColor = view.backgroundColor
+
+    navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
+    navigationController?.navigationBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
+    tabBarController?.tabBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
+    tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
+    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+    
+    userProfileContainerView.backgroundColor = view.backgroundColor
+    userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    userProfileContainerView.userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    userProfileContainerView.name.textColor = ThemeManager.currentTheme().generalTitleColor
+    userProfileContainerView.bio.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    userProfileContainerView.bio.textColor = ThemeManager.currentTheme().generalTitleColor
+    userProfileContainerView.bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    tableView.reloadData()
   }
   
   @objc fileprivate func openUserProfilePicture() {
@@ -105,28 +134,6 @@ class AccountSettingsController: UITableViewController {
       let theme = Theme.Default
       ThemeManager.applyTheme(theme: theme)
     }
-    globalDataStorage.shouldReloadChatsControllerAfterChangingTheme = true
-    globalDataStorage.shouldReloadContactsControllerAfterChangingTheme = true
-    setColorAccordingToTheme()
-    tableView.reloadData()
-  }
-  
-  fileprivate func setColorAccordingToTheme() {
-      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      tableView.backgroundColor = view.backgroundColor
-      userProfileContainerView.backgroundColor = view.backgroundColor
-      navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
-      navigationController?.navigationBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
-      tabBarController?.tabBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
-      tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
-      tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-      userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
-      userProfileContainerView.userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
-      userProfileContainerView.name.textColor = ThemeManager.currentTheme().generalTitleColor
-      userProfileContainerView.bio.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
-      userProfileContainerView.bio.textColor = ThemeManager.currentTheme().generalTitleColor
-      userProfileContainerView.bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
-      userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
   }
   
   @objc func clearUserData() {
@@ -173,7 +180,8 @@ class AccountSettingsController: UITableViewController {
   }
 
   fileprivate func configureTableView() {
-    
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tableView.backgroundColor = view.backgroundColor
     tableView.separatorStyle = .none
     tableView.sectionHeaderHeight = 0
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
@@ -197,18 +205,15 @@ class AccountSettingsController: UITableViewController {
     guard currentReachabilityStatus != .notReachable else {
       basicErrorAlertWith(title: "Error signing out", message: noInternetError, controller: self)
       return
-      
     }
     ARSLineProgress.ars_showOnView(self.tableView)
   
     let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
     userReference.removeValue { (error, reference) in
-      
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
-      appDelegate.chatsController.cleanUpController()
-      appDelegate.contactsController.cleanUpController()
 
-      Database.database().reference(withPath: ".info/connected").removeAllObservers()
+    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+
+    Database.database().reference(withPath: ".info/connected").removeAllObservers()
       
       if error != nil {
         ARSLineProgress.hide()
@@ -240,11 +245,7 @@ class AccountSettingsController: UITableViewController {
       newNavigationController.modalTransitionStyle = .crossDissolve
       ARSLineProgress.hide()
       self.present(newNavigationController, animated: true, completion: {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContacts"), object: nil)
-        
-        self.tabBarController?.selectedIndex = tabs.chats.rawValue
-        
+        self.tabBarController?.selectedIndex = Tabs.chats.rawValue
       })
     }
   }
