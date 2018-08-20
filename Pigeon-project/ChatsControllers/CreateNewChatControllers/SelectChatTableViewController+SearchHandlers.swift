@@ -17,7 +17,8 @@ extension SelectChatTableViewController: UISearchBarDelegate, UISearchController
     filteredUsers = users
     guard users.count > 0 else { return }
     actions.append(newGroupAction)
-    tableView.reloadData()
+    setUpCollation()
+    self.tableView.reloadData()
     searchBar.setShowsCancelButton(false, animated: true)
     searchBar.resignFirstResponder()
   }
@@ -30,17 +31,17 @@ extension SelectChatTableViewController: UISearchBarDelegate, UISearchController
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     searchBar.setShowsCancelButton(true, animated: true)
-
+    
     return true
   }
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-  
+    
     filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
       return User.name!.lowercased().contains(searchText.lowercased())
     })
-    
-    tableView.reloadData()
+    setUpCollation()
+    self.tableView.reloadData()
   }
 }
 
@@ -54,4 +55,3 @@ extension SelectChatTableViewController { /* hiding keyboard */
     self.searchBar?.endEditing(true)
   }
 }
-

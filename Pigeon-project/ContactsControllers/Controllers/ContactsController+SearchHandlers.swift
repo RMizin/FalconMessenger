@@ -13,7 +13,6 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
   func updateSearchResults(for searchController: UISearchController) {}
   
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-    
     searchBar.text = nil
     filteredUsers = users
     filteredContacts = contacts
@@ -34,22 +33,15 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
     return true
   }
   
-  
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    
     filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
-      
       return User.name!.lowercased().contains(searchText.lowercased())
     })
     
-    
     filteredContacts = searchText.isEmpty ? contacts : contacts.filter({ (CNContact) -> Bool in
-      
       let contactFullName = CNContact.givenName.lowercased() + " " + CNContact.familyName.lowercased()
-      
       return contactFullName.lowercased().contains(searchText.lowercased())
     })
-    
     tableView.reloadData()
   }
 }
@@ -57,7 +49,6 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
 extension ContactsController { /* hiding keyboard */
   
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-    
     if #available(iOS 11.0, *) {
       searchContactsController?.resignFirstResponder()
       searchContactsController?.searchBar.resignFirstResponder()
@@ -66,9 +57,7 @@ extension ContactsController { /* hiding keyboard */
     }
   }
   
-  
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    
     if #available(iOS 11.0, *) {
       searchContactsController?.searchBar.endEditing(true)
     } else {

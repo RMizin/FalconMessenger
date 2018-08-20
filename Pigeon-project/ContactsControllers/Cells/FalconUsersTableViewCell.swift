@@ -15,7 +15,6 @@ class FalconUsersTableViewCell: UITableViewCell {
     var icon = UIImageView()
     icon.translatesAutoresizingMaskIntoConstraints = false
     icon.contentMode = .scaleAspectFill
-    
     icon.layer.cornerRadius = 22
     icon.layer.masksToBounds = true
     icon.image = UIImage(named: "UserpicIcon")
@@ -40,7 +39,6 @@ class FalconUsersTableViewCell: UITableViewCell {
     
     return subtitle
   }()
-
   
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
@@ -68,14 +66,13 @@ class FalconUsersTableViewCell: UITableViewCell {
     subtitle.heightAnchor.constraint(equalToConstant: 23).isActive = true
   }
   
-  
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
   override func prepareForReuse() {
     super.prepareForReuse()
-   
+    
     icon.image = UIImage(named: "UserpicIcon")
     icon.sd_cancelCurrentImageLoad()
     title.text = ""
@@ -83,5 +80,34 @@ class FalconUsersTableViewCell: UITableViewCell {
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
   }
-
+  
+  func configureCell(for user: User) {
+    title.text = user.name ?? ""
+    
+    if let statusString = user.onlineStatus as? String {
+      if statusString == statusOnline {
+        subtitle.textColor = FalconPalette.defaultBlue
+        subtitle.text = statusString
+      }
+    }
+    
+    if let lastSeen = user.onlineStatus as? TimeInterval {
+      let date = Date(timeIntervalSince1970: lastSeen/1000)
+      let lastSeenTime = "Last seen " + timeAgoSinceDate(date)
+      subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+      subtitle.text = lastSeenTime
+    }
+    
+    guard let urlString = user.thumbnailPhotoURL else { return }
+    let options: SDWebImageOptions = [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage]
+    let placeholder = UIImage(named: "UserpicIcon")
+    icon.sd_setImage(with: URL(string: urlString), placeholderImage: placeholder, options: options) { (image, _, cacheType, _) in
+      guard image != nil else { return }
+      guard cacheType != .memory, cacheType != .disk else {
+        self.icon.image = image
+        return
+      }
+      UIView.transition(with: self.icon, duration: 0.2, options: .transitionCrossDissolve, animations: { self.icon.image = image }, completion: nil)
+    }
+  }
 }

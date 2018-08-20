@@ -140,8 +140,13 @@ class ChatsTableViewController: UITableViewController {
   @objc fileprivate func newChat() {
     let destination = SelectChatTableViewController()
     destination.hidesBottomBarWhenPushed = true
-    destination.users = globalUsers
-    destination.filteredUsers = globalUsers
+    let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
+    if isContactsAccessGranted {
+      destination.users = globalUsers
+      destination.filteredUsers = globalUsers
+      destination.setUpCollation()
+      destination.checkNumberOfContacts()
+    }
     navigationController?.pushViewController(destination, animated: true)
   }
   
@@ -684,7 +689,6 @@ class ChatsTableViewController: UITableViewController {
   
   var chatLogController: ChatLogController? = nil
   var messagesFetcher: MessagesFetcher? = nil
-  var destinationLayout: AutoSizingCollectionViewFlowLayout? = nil
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     var conversation: Conversation!
@@ -696,11 +700,8 @@ class ChatsTableViewController: UITableViewController {
       let unpinnedConversation = filtededConversations[indexPath.row]
       conversation = unpinnedConversation
     }
-    
-    destinationLayout = AutoSizingCollectionViewFlowLayout()
-    destinationLayout?.minimumLineSpacing = 3
-    chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
-    
+  
+    chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
     messagesFetcher = MessagesFetcher()
     messagesFetcher?.delegate = self
     messagesFetcher?.loadMessagesData(for: conversation)
@@ -760,6 +761,7 @@ extension ChatsTableViewController: MessagesDelegate {
     
     navigationController?.pushViewController(destination, animated: true)
     chatLogController = nil
-    destinationLayout = nil
+    messagesFetcher?.delegate = nil
+    messagesFetcher = nil
   }
 }

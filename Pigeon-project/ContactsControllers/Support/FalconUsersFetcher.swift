@@ -15,12 +15,11 @@ protocol FalconUsersUpdatesDelegate: class {
   func falconUsers(shouldBeUpdatedTo users: [User])
 }
 
-public var shouldReFetchFalconUsers:Bool = false
+public var shouldReFetchFalconUsers: Bool = false
 
 class FalconUsersFetcher: NSObject {
   
   let phoneNumberKit = PhoneNumberKit()
-  
   var users = [User]()
   
   weak var delegate: FalconUsersUpdatesDelegate?
@@ -41,7 +40,6 @@ class FalconUsersFetcher: NSObject {
   }
   
   func fetchFalconUsers(asynchronously: Bool) {
-    
     clearObserversAndUsersIfNeeded()
     
     if asynchronously {

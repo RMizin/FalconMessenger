@@ -61,7 +61,6 @@ extension ChatsTableViewController {
        
        //  let user = user
        //  self.autoSizingCollectionViewFlowLayout = AutoSizingCollectionViewFlowLayout()
-        // self.autoSizingCollectionViewFlowLayout?.minimumLineSpacing = 4
         // self.chatLogController = ChatLogController(collectionViewLayout: self.autoSizingCollectionViewFlowLayout!)
         // self.chatLogController?.delegate = self
         // self.chatLogController?.allMessagesRemovedDelegate = self

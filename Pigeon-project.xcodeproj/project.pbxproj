@@ -37,7 +37,7 @@
 		4BAEE49521272C5E0045AB10 /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE48B21272C5E0045AB10 /* ContactsTableViewCell.swift */; };
 		4BAEE49621272C5E0045AB10 /* CurrentUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE48C21272C5E0045AB10 /* CurrentUserTableViewCell.swift */; };
 		4BAEE49721272C5E0045AB10 /* FalconUsersFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE48E21272C5E0045AB10 /* FalconUsersFetcher.swift */; };
-		4BAEE49821272C5E0045AB10 /* ViewControllerPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE48F21272C5E0045AB10 /* ViewControllerPlaceholder.swift */; };
+		4BAEE49821272C5E0045AB10 /* ViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE48F21272C5E0045AB10 /* ViewPlaceholder.swift */; };
 		4BAEE49921272C5E0045AB10 /* ContactsController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE49121272C5E0045AB10 /* ContactsController+SearchHandlers.swift */; };
 		4BAEE49A21272C5E0045AB10 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE49221272C5E0045AB10 /* ContactsController.swift */; };
 		4BAEE49B21272C5E0045AB10 /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE49321272C5E0045AB10 /* ContactsDetailController.swift */; };
@@ -176,6 +176,7 @@
 		4BAEE5F5212735E50045AB10 /* NavigationItemActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B1212735E50045AB10 /* NavigationItemActivityIndicator.swift */; };
 		4BAEE5F6212735E50045AB10 /* AvatarOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B3212735E50045AB10 /* AvatarOpener.swift */; };
 		4BAEE5F7212735E50045AB10 /* AvatarOpenerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B4212735E50045AB10 /* AvatarOpenerOverlay.swift */; };
+		4BE44DAA212B5CC600E722B8 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
 
@@ -225,7 +226,7 @@
 		4BAEE48B21272C5E0045AB10 /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		4BAEE48C21272C5E0045AB10 /* CurrentUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUserTableViewCell.swift; sourceTree = "<group>"; };
 		4BAEE48E21272C5E0045AB10 /* FalconUsersFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FalconUsersFetcher.swift; sourceTree = "<group>"; };
-		4BAEE48F21272C5E0045AB10 /* ViewControllerPlaceholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerPlaceholder.swift; sourceTree = "<group>"; };
+		4BAEE48F21272C5E0045AB10 /* ViewPlaceholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPlaceholder.swift; sourceTree = "<group>"; };
 		4BAEE49121272C5E0045AB10 /* ContactsController+SearchHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContactsController+SearchHandlers.swift"; sourceTree = "<group>"; };
 		4BAEE49221272C5E0045AB10 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsController.swift; sourceTree = "<group>"; };
 		4BAEE49321272C5E0045AB10 /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsDetailController.swift; sourceTree = "<group>"; };
@@ -365,6 +366,7 @@
 		4BAEE5B1212735E50045AB10 /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
 		4BAEE5B3212735E50045AB10 /* AvatarOpener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarOpener.swift; sourceTree = "<group>"; };
 		4BAEE5B4212735E50045AB10 /* AvatarOpenerOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarOpenerOverlay.swift; sourceTree = "<group>"; };
+		4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsFetcher.swift; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
 		A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pigeon_project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -567,8 +569,9 @@
 		4BAEE48D21272C5E0045AB10 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */,
 				4BAEE48E21272C5E0045AB10 /* FalconUsersFetcher.swift */,
-				4BAEE48F21272C5E0045AB10 /* ViewControllerPlaceholder.swift */,
+				4BAEE48F21272C5E0045AB10 /* ViewPlaceholder.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1352,7 +1355,7 @@
 				4BAEE550212735880045AB10 /* MediaObject.swift in Sources */,
 				4BAEE5B7212735E50045AB10 /* INSPhotosTransitionAnimator.swift in Sources */,
 				4BAEE46D21272B380045AB10 /* SwitchObject.swift in Sources */,
-				4BAEE49821272C5E0045AB10 /* ViewControllerPlaceholder.swift in Sources */,
+				4BAEE49821272C5E0045AB10 /* ViewPlaceholder.swift in Sources */,
 				4BAEE5D2212735E50045AB10 /* SelectedParticipantsCollectionViewCell.swift in Sources */,
 				4BAEE46821272B380045AB10 /* ChangeNumberVerificationController.swift in Sources */,
 				4BAEE46721272B380045AB10 /* ChangePhoneNumberController.swift in Sources */,
@@ -1382,6 +1385,7 @@
 				4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */,
 				4BAEE48221272C4F0045AB10 /* UserProfileController.swift in Sources */,
 				4BAEE50A21272D890045AB10 /* GroupAdminControlsTableViewController+NameEditing.swift in Sources */,
+				4BE44DAA212B5CC600E722B8 /* ContactsFetcher.swift in Sources */,
 				4BAEE5F1212735E50045AB10 /* UICollectionView+Extension.swift in Sources */,
 				4BAEE5BE212735E50045AB10 /* UIVIew+INSPhotoViewer.swift in Sources */,
 				4BAEE48021272C4F0045AB10 /* UserProfileDataDatabaseUpdater.swift in Sources */,
