@@ -10,17 +10,16 @@ import UIKit
 import SDWebImage
 import Firebase
 
+private let selectedFlaconUsersCellID = "selectedFlaconUsersCellID"
 
 class GroupProfileTableViewController: UITableViewController {
   
-  fileprivate var selectedFlaconUsersCellID = "selectedFlaconUsersCellID"
   var selectedFlaconUsers = [User]()
   let groupProfileTableHeaderContainer = GroupProfileTableHeaderContainer()
   let avatarOpener = AvatarOpener()
   let chatCreatingGroup = DispatchGroup()
   let informationMessageSender = InformationMessageSender()
 
-  
   override func viewDidLoad() {
     super.viewDidLoad()
       
@@ -60,7 +59,6 @@ class GroupProfileTableViewController: UITableViewController {
     groupProfileTableHeaderContainer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 170)
     tableView.tableHeaderView = groupProfileTableHeaderContainer
     groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-    
   }
   
   fileprivate func configureColorsAccordingToTheme() {
@@ -102,39 +100,8 @@ class GroupProfileTableViewController: UITableViewController {
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: selectedFlaconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
-
-    if let name = selectedFlaconUsers[indexPath.row].name {
-      cell.title.text = name
-    }
-    
-    if let statusString = selectedFlaconUsers[indexPath.row].onlineStatus as? String {
-      if statusString == statusOnline {
-        cell.subtitle.textColor = FalconPalette.defaultBlue
-        cell.subtitle.text = statusString
-      } else {
-        cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-        let subtitle = "Last seen " + timeAgoSinceDate(date)
-        cell.subtitle.text = subtitle
-      }
-      
-    } else if let statusTimeinterval = selectedFlaconUsers[indexPath.row].onlineStatus as? TimeInterval {
-      cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
-      let subtitle = "Last seen " + timeAgoSinceDate(date)
-      cell.subtitle.text = subtitle
-    }
-    
-    guard let url = selectedFlaconUsers[indexPath.row].thumbnailPhotoURL else { return cell }
-    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground], completed: { (image, error, cacheType, url) in
-      guard image != nil else { return }
-      guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-        cell.icon.alpha = 1
-        return
-      }
-      cell.icon.alpha = 0
-      UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
-    })
+    let user = selectedFlaconUsers[indexPath.row]
+    cell.configureCell(for: user)
     return cell
   }
 }
@@ -206,7 +173,7 @@ extension GroupProfileTableViewController {
   func uploadAvatar(chatImage: UIImage?, reference: DatabaseReference) {
     
     guard let image = chatImage else {
-      reference.updateChildValues(["chatOriginalPhotoURL" : "", "chatThumbnailPhotoURL":""]) { (_, _) in
+      reference.updateChildValues(["chatOriginalPhotoURL": "", "chatThumbnailPhotoURL": ""]) { (_, _) in
         self.chatCreatingGroup.leave();
       }
       return

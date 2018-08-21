@@ -1,5 +1,5 @@
 //
-//  TypingIndicatorObserver.swift
+//  TypingIndicatorManager.swift
 //  FalconMessenger
 //
 //  Created by Roman Mizin on 4/20/18.
@@ -14,18 +14,16 @@ protocol TypingIndicatorDelegate: class {
   func typingIndicator(isActive: Bool, for chatID: String)
 }
 
-class TypingIndicatorObserver: NSObject {
-  
-  var typingIndicatorReference:DatabaseReference!
- 
-  var groupTypingIndicatorReference:DatabaseReference!
+private let typingIndicatorDatabaseID = "typingIndicator"
 
-  let typingIndicatorDatabaseID = "typingIndicator"
+class TypingIndicatorManager: NSObject {
   
   weak var delegate: TypingIndicatorDelegate?
   
+  var typingIndicatorReference: DatabaseReference!
+  var groupTypingIndicatorReference: DatabaseReference!
+
   var typingChangesHandle = [(handle: DatabaseHandle, chatID: String)]()
-  
   var groupTypingChangesHandle = [(handle: DatabaseHandle, chatID: String)]()
   
   func observeChangesForGroupTypingIndicator(with chatID: String) {

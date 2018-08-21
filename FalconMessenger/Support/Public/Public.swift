@@ -73,6 +73,28 @@ let cameraNotExistsMessage = "You don't have camera"
 let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
 let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
 
+extension Array {
+  public func stablePartition(by condition: (Element) throws -> Bool) rethrows -> ([Element], [Element]) {
+    var indexes = Set<Int>()
+    for (index, element) in self.enumerated() {
+      if try condition(element) {
+        indexes.insert(index)
+      }
+    }
+    var matching = [Element]()
+    matching.reserveCapacity(indexes.count)
+    var nonMatching = [Element]()
+    nonMatching.reserveCapacity(self.count - indexes.count)
+    for (index, element) in self.enumerated() {
+      if indexes.contains(index) {
+        matching.append(element)
+      } else {
+        nonMatching.append(element)
+      }
+    }
+    return (matching, nonMatching)
+  }
+}
 
 extension UIApplication {
   class func topViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
@@ -496,12 +518,28 @@ extension FileManager {
   }
 }
 
-public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array<T>{
-  var arr = array
-  let element = arr.remove(at: fromIndex)
-  arr.insert(element, at: toIndex)
-  
-  return arr
+//public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array<T>{
+//  var arr = array
+//  let element = arr.remove(at: fromIndex)
+//  arr.insert(element, at: toIndex)
+//
+//  return arr
+//}
+
+extension Array where Element: Equatable {
+  mutating func move(_ element: Element, to newIndex: Index) {
+    if let oldIndex: Int = self.index(of: element) { self.move(from: oldIndex, to: newIndex) }
+  }
+}
+
+extension Array {
+  mutating func move(from oldIndex: Index, to newIndex: Index) {
+    // Don't work for free and use swap when indices are next to each other - this
+    // won't rebuild array and will be super efficient.
+    if oldIndex == newIndex { return }
+    if abs(newIndex - oldIndex) == 1 { return self.swapAt(oldIndex, newIndex) }
+    self.insert(self.remove(at: oldIndex), at: newIndex)
+  }
 }
 
 extension UISearchBar {

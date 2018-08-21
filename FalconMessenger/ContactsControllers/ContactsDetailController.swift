@@ -10,16 +10,16 @@ import UIKit
 import MessageUI
 import Contacts
 
+private let currentUserCellID = "currentUserCellID"
+private let contactPhoneNnumberTableViewCellID = "contactPhoneNnumberTableViewCellID"
+private let invitationText = "Hey! Download Falcon Messenger on the App Store. https://itunes.apple.com/ua/app/falcon-messenger/id1313765714?mt=8 "
+
 class ContactsDetailController: UITableViewController {
   
   var contactName = String()
   var contactPhoto: UIImage!
-  
   var contactPhoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
-  let invitationText = "Hey! Download Falcon Messenger on the App Store. https://itunes.apple.com/ua/app/falcon-messenger/id1313765714?mt=8 "
-  let currentUserCellID = "currentUserCellID"
-  let contactPhoneNnumberTableViewCellID = "contactPhoneNnumberTableViewCellID"
-  
+
     override func viewDidLoad() {
         super.viewDidLoad()
       title = "Info"
@@ -46,7 +46,7 @@ class ContactsDetailController: UITableViewController {
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       if indexPath.section == 0 {
-        let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as! CurrentUserTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as? CurrentUserTableViewCell ?? CurrentUserTableViewCell()
         cell.selectionStyle = .none
         cell.iconWidthAnchor.constant = CurrentUserTableViewCell.iconSizeLargeConstant
         cell.iconHeightAnchor.constant = CurrentUserTableViewCell.iconSizeLargeConstant
@@ -62,12 +62,11 @@ class ContactsDetailController: UITableViewController {
         
         return cell
       } else {
-        let cell = tableView.dequeueReusableCell(withIdentifier: contactPhoneNnumberTableViewCellID, for: indexPath) as! ContactPhoneNnumberTableViewCell
-        cell.selectionStyle = .none
-  
+        let cell = tableView.dequeueReusableCell(withIdentifier: contactPhoneNnumberTableViewCellID,
+                                                 for: indexPath) as? ContactPhoneNnumberTableViewCell ?? ContactPhoneNnumberTableViewCell()
         if indexPath.section == 1 {
-          cell.title.text = CNLabeledValue<NSString>.localizedString(forLabel: contactPhoneNumbers[indexPath.row].label ?? "")
-          cell.subtitle.text = contactPhoneNumbers[indexPath.row].value.stringValue
+          let contact = contactPhoneNumbers[indexPath.row]
+          cell.configureCell(contact: contact)
         } else {
           cell.textLabel?.textColor = FalconPalette.defaultBlue
           cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
@@ -75,10 +74,6 @@ class ContactsDetailController: UITableViewController {
         }
         return cell
       }
-    }
-  
-    deinit {
-      print("DETAIL DEINIT")
     }
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

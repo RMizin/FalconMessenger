@@ -19,7 +19,7 @@ extension SelectParticipantsViewController: UICollectionViewDelegate, UICollecti
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = selectedParticipantsCollectionView.dequeueReusableCell(withReuseIdentifier: selectedParticipantsCollectionViewCellID , for: indexPath) as! SelectedParticipantsCollectionViewCell
+    let cell = selectedParticipantsCollectionView.dequeueReusableCell(withReuseIdentifier: selectedParticipantsCollectionViewCellID, for: indexPath) as! SelectedParticipantsCollectionViewCell
     
     cell.title.text = selectedFalconUsers[indexPath.item].name
     

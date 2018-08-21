@@ -13,80 +13,59 @@ import SDWebImage
 import Contacts
 
 
+private let falconUsersCellID = "falconUsersCellID"
+private let newGroupCellID = "newGroupCellID"
+
 class SelectChatTableViewController: UITableViewController {
   
-  let falconUsersCellID = "falconUsersCellID"
-  
-  let newGroupCellID = "newGroupCellID"
-  
   let newGroupAction = "New Group"
-
   var actions = ["New Group"]
-  
   var users = [User]()
-  
   var filteredUsers = [User]()
-  
   var filteredUsersWithSection = [[User]]()
-  
   var collation = UILocalizedIndexedCollation.current()
-  
   var sectionTitles = [String]()
-  
   var searchBar: UISearchBar?
-  
-  private let reloadAnimation = UITableViewRowAnimation.none
-  
   var phoneNumberKit = PhoneNumberKit()
-
-  let viewControllerPlaceholder = ViewControllerPlaceholder()
+  let viewPlaceholder = ViewPlaceholder()
   
-  private var observer: NSObjectProtocol!
-
-  
-    override func viewDidLoad() {
-      super.viewDidLoad()
-     
-      setupMainView()
-      setupTableView()
-      setupSearchController()
-      setupViewControllerPlaceholder()
-      addObservers()
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    configureController()
+    setupSearchController()
+    addObservers()
   }
   
   fileprivate func addObservers() {
-    observer = NotificationCenter.default.addObserver(forName: .falconUsersUpdated, object: nil, queue: .main) { [weak self] notification in
-      self?.users = globalDataStorage.falconUsers
-      self?.filteredUsers = globalDataStorage.falconUsers
-      
-      if !globalDataStorage.falconUsers.isEmpty {
-        self?.viewControllerPlaceholder.removeViewControllerPlaceholder(from: self!.view, priority: .high)
-      }
-      if self!.searchBar != nil && !self!.searchBar!.isFirstResponder {
-        self?.setUpCollation()
-      }
-     
-      DispatchQueue.main.async {
-        self?.tableView.reloadData()
-      }
+    NotificationCenter.default.addObserver(self, selector: #selector(updateUsers), name: .falconUsersUpdated, object: nil)
+  }
+  
+  @objc fileprivate func updateUsers() {
+    self.users = globalDataStorage.falconUsers
+    self.filteredUsers = globalDataStorage.falconUsers
+    
+    if !globalDataStorage.falconUsers.isEmpty {
+      self.viewPlaceholder.remove(from: self.view, priority: .high)
+    }
+    if self.searchBar != nil && !self.searchBar!.isFirstResponder {
+      self.setUpCollation()
+    }
+    
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
     }
   }
   
   deinit {
     print("new chat deinit")
-    NotificationCenter.default.removeObserver(observer)
-  }
-  
-  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-    super.viewWillTransition(to: size, with: coordinator)
-    setupViewControllerPlaceholder()
+    NotificationCenter.default.removeObserver(self)
   }
   
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return ThemeManager.currentTheme().statusBarStyle
   }
   
-  fileprivate func setupMainView() {
+  fileprivate func configureController() {
     navigationItem.title = "New Message"
     
     if #available(iOS 11.0, *) {
@@ -97,18 +76,15 @@ class SelectChatTableViewController: UITableViewController {
     definesPresentationContext = true
     edgesForExtendedLayout = [UIRectEdge.top, UIRectEdge.bottom]
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-  }
-  
-  @objc fileprivate func dismissNavigationController() {
-    dismiss(animated: true, completion: nil)
-  }
-  
-  fileprivate func setupTableView() {
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     tableView.sectionIndexBackgroundColor = view.backgroundColor
     tableView.backgroundColor = view.backgroundColor
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
+  }
+  
+  @objc fileprivate func dismissNavigationController() {
+    dismiss(animated: true, completion: nil)
   }
   
   fileprivate func setupSearchController() {
@@ -121,29 +97,22 @@ class SelectChatTableViewController: UITableViewController {
     tableView.tableHeaderView = searchBar
   }
   
-  fileprivate func setupViewControllerPlaceholder() {
-    viewControllerPlaceholder.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    DispatchQueue.main.async {
-      self.viewControllerPlaceholder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 300)
-    }
-  }
-  
   func checkContactsAuthorizationStatus() -> Bool {
     let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
     
     switch contactsAuthorityCheck {
     case .denied, .notDetermined, .restricted:
-      viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .center)
+      viewPlaceholder.add(for: self.view, title: .denied, subtitle: .denied, priority: .high, position: .center)
       return false
     case .authorized:
-      viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
+      viewPlaceholder.remove(from: self.view, priority: .high)
       return true
     }
   }
   
   func checkNumberOfContacts() {
     guard users.count == 0 else { return }
-    viewControllerPlaceholder.addViewControllerPlaceholder(for: self.view, title: viewControllerPlaceholder.emptyFalconUsersTitle, subtitle: viewControllerPlaceholder.emptyFalconUsersSubtitle, priority: .low, position: .center)
+    viewPlaceholder.add(for: self.view, title: .empty, subtitle: .empty, priority: .low, position: .center)
   }
 
   fileprivate func correctSearchBarForCurrentIOSVersion() -> UISearchBar {
@@ -202,15 +171,13 @@ class SelectChatTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    return selectCell(for: indexPath)!
+    return selectCell(for: indexPath)
   }
   
-  func selectCell(for indexPath: IndexPath) -> UITableViewCell? {
-  
+  func selectCell(for indexPath: IndexPath) -> UITableViewCell {
     let headerSection = 0
     if indexPath.section == headerSection {
       let cell = tableView.dequeueReusableCell(withIdentifier: newGroupCellID) ?? UITableViewCell(style: .default, reuseIdentifier: newGroupCellID)
-
       cell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       cell.imageView?.image = UIImage(named: "groupChat")
       cell.imageView?.contentMode = .scaleAspectFit
@@ -219,49 +186,14 @@ class SelectChatTableViewController: UITableViewController {
       cell.textLabel?.textColor = FalconPalette.defaultBlue
       return cell
     }
-    
     let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
     let falconUser = filteredUsersWithSection[indexPath.section][indexPath.row]
-    
-    if let name = falconUser.name {
-      cell.title.text = name
-    }
-    
-    if let statusString = falconUser.onlineStatus as? String {
-      if statusString == statusOnline {
-        cell.subtitle.textColor = FalconPalette.defaultBlue
-        cell.subtitle.text = statusString
-      } else {
-        cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-        let subtitle = "Last seen " + timeAgoSinceDate(date)
-        cell.subtitle.text = subtitle
-      }
-      
-    } else if let statusTimeinterval = falconUser.onlineStatus as? TimeInterval {
-      cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
-      let subtitle = "Last seen " + timeAgoSinceDate(date)
-      cell.subtitle.text = subtitle
-    }
-    
-    guard let url = falconUser.thumbnailPhotoURL else { return cell }
-    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground], completed: { (image, error, cacheType, url) in
-      guard image != nil else { return }
-      guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-        cell.icon.alpha = 1
-        return
-      }
-      cell.icon.alpha = 0
-      UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
-    })
+    cell.configureCell(for: falconUser)
     return cell
   }
 
-  
-  var chatLogController:ChatLogController? = nil
-  var messagesFetcher:MessagesFetcher? = nil
-  var destinationLayout:AutoSizingCollectionViewFlowLayout? = nil
+  var chatLogController: ChatLogController? = nil
+  var messagesFetcher: MessagesFetcher? = nil
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
@@ -282,11 +214,7 @@ class SelectChatTableViewController: UITableViewController {
                                                          "chatParticipantsIDs": [falconUser.id, currentUserID] as AnyObject]
       
       let conversation = Conversation(dictionary: conversationDictionary)
-      
-      destinationLayout = AutoSizingCollectionViewFlowLayout()
-      destinationLayout?.minimumLineSpacing = AutoSizingCollectionViewFlowLayout.lineSpacing
-      chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
-      
+      chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
       messagesFetcher = MessagesFetcher()
       messagesFetcher?.delegate = self
       messagesFetcher?.loadMessagesData(for: conversation)
@@ -308,7 +236,6 @@ extension SelectChatTableViewController: MessagesDelegate {
     chatLogController?.conversation = conversation
     chatLogController?.observeTypingIndicator()
     chatLogController?.configureTitleViewWithOnlineStatus()
-    //chatLogController?.observeMembersChanges()
     chatLogController?.messagesFetcher.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
     
@@ -319,6 +246,7 @@ extension SelectChatTableViewController: MessagesDelegate {
     
     navigationController?.pushViewController(destination, animated: true)
     chatLogController = nil
-    destinationLayout = nil
+    messagesFetcher?.delegate = nil
+    messagesFetcher = nil
   }
 }

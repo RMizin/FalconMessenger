@@ -13,7 +13,6 @@ private let headerCellIdentifier = "headerCellIdentifier"
 private let phoneNumberCellIdentifier = "phoneNumberCellIdentifier"
 private let bioCellIdentifier = "bioCellIdentifier"
 
-
 class UserInfoTableViewController: UITableViewController {
 
   var user: User? {
@@ -26,19 +25,13 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   var conversationID = String()
-  
   var onlineStatus = String()
- 
   var contactPhoneNumber = String()
 
   var userReference: DatabaseReference!
-  
   var handle: DatabaseHandle!
-  
   var shouldDisplayContactAdder:Bool?
-  
   private var observer: NSObjectProtocol!
-  
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -86,10 +79,8 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   fileprivate func getUserInfo() {
-    
-  userReference = Database.database().reference().child("users").child(conversationID)
-    
-   handle = userReference.observe(.value) { (snapshot) in
+    userReference = Database.database().reference().child("users").child(conversationID)
+    handle = userReference.observe(.value) { (snapshot) in
       if snapshot.exists() {
         guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
         dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
@@ -134,15 +125,8 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   fileprivate func stringTimestamp(onlineStatusObject: AnyObject) -> String {
-  
-    if let onlineStatusStringStamp = onlineStatusObject as? String {
-      if onlineStatusStringStamp == statusOnline { // user online
-        return statusOnline
-      } else { // user got a timstamp converted to string (was in earlier versions of app)
-        let date = Date(timeIntervalSince1970: TimeInterval(onlineStatusStringStamp)!)
-        let subtitle = "Last seen " + timeAgoSinceDate(date)
-        return subtitle
-      }
+    if let onlineStatusStringStamp = onlineStatusObject as? String, onlineStatusStringStamp == statusOnline {
+      return statusOnline
     } else if let onlineStatusTimeIntervalStamp = onlineStatusObject as? TimeInterval { //user got server timestamp in miliseconds
       let date = Date(timeIntervalSince1970: onlineStatusTimeIntervalStamp/1000)
       let subtitle = "Last seen " + timeAgoSinceDate(date)
@@ -155,7 +139,8 @@ class UserInfoTableViewController: UITableViewController {
 
     if indexPath.section == 0 {
       
-      let headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath) as! UserinfoHeaderTableViewCell
+      let headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier,
+                                                     for: indexPath) as? UserinfoHeaderTableViewCell ?? UserinfoHeaderTableViewCell()
       
       headerCell.title.text = user?.name ?? ""
       headerCell.title.font = UIFont.boldSystemFont(ofSize: 20)
@@ -177,7 +162,8 @@ class UserInfoTableViewController: UITableViewController {
       return headerCell
       
     } else {
-      let phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier, for: indexPath) as! UserInfoPhoneNumberTableViewCell
+      let phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier,
+                                                          for: indexPath) as? UserInfoPhoneNumberTableViewCell ?? UserInfoPhoneNumberTableViewCell()
       phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       phoneNumberCell.userInfoTableViewController = self
       

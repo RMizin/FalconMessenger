@@ -31,7 +31,6 @@ class GroupProfileTableHeaderContainer: UIView {
   let addPhotoLabel: UILabel = {
     let addPhotoLabel = UILabel()
     addPhotoLabel.translatesAutoresizingMaskIntoConstraints = false
-  
     addPhotoLabel.numberOfLines = 2
     addPhotoLabel.textColor = FalconPalette.defaultBlue
     addPhotoLabel.textAlignment = .center

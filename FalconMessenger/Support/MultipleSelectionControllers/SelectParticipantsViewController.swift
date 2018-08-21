@@ -10,25 +10,20 @@ import UIKit
 import Firebase
 
 
+
 class SelectParticipantsViewController: UIViewController {
   
   let falconUsersCellID = "falconUsersCellID"
   let selectedParticipantsCollectionViewCellID = "SelectedParticipantsCollectionViewCellID"
   
-  var filteredUsers = [User]()
-
   var users = [User]()
-
+  var filteredUsers = [User]()
   var selectedFalconUsers = [User]()
-  
   var filteredUsersWithSection = [[User]]()
   
   var collation = UILocalizedIndexedCollation.current()
-  
   var sectionTitles = [String]()
-  
   var searchBar: UISearchBar?
-  
   let tableView = UITableView()
   
   var selectedParticipantsCollectionView: UICollectionView = {
@@ -61,11 +56,7 @@ class SelectParticipantsViewController: UIViewController {
       self.reloadCollectionView()
     }
   }
-  
-  deinit {
-    print("select participants deinit")
-  }
-  
+
   fileprivate func deselectAll() {
     guard users.count > 0 else { return }
    _ = users.map { $0.isSelected = false }
@@ -104,9 +95,7 @@ class SelectParticipantsViewController: UIViewController {
     navigationItem.rightBarButtonItem?.isEnabled = false
   }
   
-  @objc func rightBarButtonTapped() {
-
-  }
+  @objc func rightBarButtonTapped() {}
 
   func createGroup() {
     let destination = GroupProfileTableViewController()

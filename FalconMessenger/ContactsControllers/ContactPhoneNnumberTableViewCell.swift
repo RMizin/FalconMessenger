@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Contacts
 
 class ContactPhoneNnumberTableViewCell: UITableViewCell {
   
@@ -32,7 +33,9 @@ class ContactPhoneNnumberTableViewCell: UITableViewCell {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
     backgroundColor = .clear
+    selectionStyle = .none
     title.backgroundColor = backgroundColor
+    
  
     contentView.addSubview(title)
     title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
@@ -57,5 +60,10 @@ class ContactPhoneNnumberTableViewCell: UITableViewCell {
     subtitle.text = ""
     title.textColor = FalconPalette.defaultBlue
     subtitle.textColor = ThemeManager.currentTheme().generalTitleColor
+  }
+  
+  func configureCell(contact: CNLabeledValue<CNPhoneNumber>) {
+    title.text = CNLabeledValue<NSString>.localizedString(forLabel: contact.label ?? "")
+    subtitle.text = contact.value.stringValue
   }
 }

@@ -12,52 +12,40 @@ import Firebase
 import SDWebImage
 import PhoneNumberKit
 
+private let falconUsersCellID = "falconUsersCellID"
+private let currentUserCellID = "currentUserCellID"
 
 class ContactsController: UITableViewController {
   
-  let phoneNumberKit = PhoneNumberKit()
-  
   var contacts = [CNContact]()
-  
   var filteredContacts = [CNContact]()
-  
   var users = [User]()
-  
   var filteredUsers = [User]()
   
-  let falconUsersCellID = "falconUsersCellID"
-  
-  let currentUserCellID = "currentUserCellID"
-  
-  private let reloadAnimation = UITableViewRowAnimation.none
-  
   var searchBar: UISearchBar?
-    
   var searchContactsController: UISearchController?
   
-  let viewControllerPlaceholder = ViewControllerPlaceholder()
-  
+  let phoneNumberKit = PhoneNumberKit()
+  let viewPlaceholder = ViewPlaceholder()
   let falconUsersFetcher = FalconUsersFetcher()
-  
+  let contactsFetcher = ContactsFetcher()
   let navigationItemActivityIndicator = NavigationItemActivityIndicator()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-      
-      extendedLayoutIncludesOpaqueBars = true
-      edgesForExtendedLayout = UIRectEdge.top
-      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-     
-      setupViewControllerPlaceholder()
-      falconUsersFetcher.delegate = self
-      setupTableView()
+
+      configureViewController()
       setupSearchController()
-      observeContactsChanges()
+      addContactsObserver()
       addObservers()
       DispatchQueue.global(qos: .default).async { [unowned self] in
         self.falconUsersFetcher.loadFalconUsers()
-        self.fetchContacts()
+        self.contactsFetcher.fetchContacts()
       }
+    }
+  
+    deinit {
+      NotificationCenter.default.removeObserver(self)
     }
   
     fileprivate var shouldReSyncUsers = false
@@ -67,45 +55,30 @@ class ContactsController: UITableViewController {
       
       guard shouldReSyncUsers else { return }
       shouldReSyncUsers = false
-      let status = CNContactStore.authorizationStatus(for: .contacts)
-      if status == .denied || status == .restricted {
-        addControllerPlaceholder()
-        return
-      }
       falconUsersFetcher.loadFalconUsers()
-      syncronizeContacts(contacts: contacts)
-    }
-  
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-      super.viewWillTransition(to: size, with: coordinator)
-      setupViewControllerPlaceholder()
+      contactsFetcher.syncronizeContacts(contacts: contacts)
     }
   
     override var preferredStatusBarStyle: UIStatusBarStyle {
       return ThemeManager.currentTheme().statusBarStyle
     }
   
-    @objc func cleanUpController() {
-      filteredUsers.removeAll()
-      users.removeAll()
-      tableView.reloadData()
-      shouldReSyncUsers = true
-      userDefaults.removeObject(for: userDefaults.contactsCount)
-      userDefaults.removeObject(for: userDefaults.contactsSyncronizationStatus)
-    }
-  
-    fileprivate func setupTableView() {
+    fileprivate func configureViewController() {
+      falconUsersFetcher.delegate = self
+      contactsFetcher.delegate = self
+      extendedLayoutIncludesOpaqueBars = true
+      definesPresentationContext = true
+      edgesForExtendedLayout = UIRectEdge.top
+      view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
       tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
       tableView.register(CurrentUserTableViewCell.self, forCellReuseIdentifier: currentUserCellID)
       tableView.separatorStyle = .none
-      definesPresentationContext = true
     }
   
     fileprivate func setupSearchController() {
-      
       if #available(iOS 11.0, *) {
         searchContactsController = UISearchController(searchResultsController: nil)
         searchContactsController?.searchResultsUpdater = self
@@ -122,23 +95,11 @@ class ContactsController: UITableViewController {
       }
     }
   
-    fileprivate func setupViewControllerPlaceholder() {
-      viewControllerPlaceholder.backgroundColor = .clear
-      DispatchQueue.main.async { [unowned self] in
-        if #available(iOS 11.0, *) {
-         self.viewControllerPlaceholder.frame = CGRect(x: 0, y: 135, width: self.view.frame.width, height: self.view.frame.height-135)
-        } else {
-          self.viewControllerPlaceholder.frame = CGRect(x: 0, y: 175, width: self.view.frame.width, height: self.view.frame.height-175)
-        }
-      }
-    }
-  
-    fileprivate func addControllerPlaceholder() {
-       viewControllerPlaceholder.addViewControllerPlaceholder(for: view, title: viewControllerPlaceholder.contactsAuthorizationDeniedtitle, subtitle: viewControllerPlaceholder.contactsAuthorizationDeniedSubtitle, priority: .high, position: .top)
-    }
-  
-    fileprivate func observeContactsChanges() {
+    fileprivate func addContactsObserver() {
       NotificationCenter.default.addObserver(self, selector: #selector(contactStoreDidChange), name: .CNContactStoreDidChange, object: nil)
+    }
+    fileprivate func removeContactsObserver() {
+      NotificationCenter.default.removeObserver(self, name: .CNContactStoreDidChange, object: nil)
     }
   
     fileprivate func addObservers() {
@@ -146,8 +107,14 @@ class ContactsController: UITableViewController {
       NotificationCenter.default.addObserver(self, selector: #selector(cleanUpController), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
     }
   
-    deinit {
-      NotificationCenter.default.removeObserver(self)
+    @objc func contactStoreDidChange(notification: NSNotification) {
+      guard Auth.auth().currentUser != nil else { return }
+      removeContactsObserver()
+      DispatchQueue.global(qos: .default).async { [unowned self] in
+        print("start fetch")
+        self.falconUsersFetcher.loadFalconUsers()
+        self.contactsFetcher.fetchContacts()
+      }
     }
   
     @objc fileprivate func changeTheme() {
@@ -161,96 +128,34 @@ class ContactsController: UITableViewController {
       navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
     }
   
-    @objc func contactStoreDidChange(notification: NSNotification) {
-      guard Auth.auth().currentUser != nil else { return }
-      NotificationCenter.default.removeObserver(self, name: .CNContactStoreDidChange, object: nil)
-       DispatchQueue.global(qos: .default).async { [unowned self] in
-        print("start fetch")
-        self.falconUsersFetcher.loadFalconUsers()
-        self.fetchContacts()
-      }
+    @objc func cleanUpController() {
+      filteredUsers.removeAll()
+      users.removeAll()
+      tableView.reloadData()
+      shouldReSyncUsers = true
+      userDefaults.removeObject(for: userDefaults.contactsCount)
+      userDefaults.removeObject(for: userDefaults.contactsSyncronizationStatus)
     }
   
-    fileprivate func fetchContacts () {
-      
-      let status = CNContactStore.authorizationStatus(for: .contacts)
-      let store = CNContactStore()
-      if status == .denied || status == .restricted {
-        addControllerPlaceholder()
-        return
-      }
-    
-      store.requestAccess(for: .contacts) { granted, error in
-        
-        guard granted, error == nil else {
-          self.addControllerPlaceholder()
-          return
-        }
-        
-        self.viewControllerPlaceholder.removeViewControllerPlaceholder(from: self.view, priority: .high)
-        
-        let keys = [CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey, CNContactImageDataKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey]
-        let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
-        var contactsArray = [CNContact]()
-        do {
-          try store.enumerateContacts(with: request) { contact, stop in
-            contactsArray.append(contact)
-          }
-        } catch {}
-        
-        self.contacts = contactsArray
-        self.filteredContacts = contactsArray
-        
-        let phoneNumbers = self.contacts.flatMap({$0.phoneNumbers.map({$0.value.stringValue.digits}) })
-        globalDataStorage.localPhones = phoneNumbers
-    
-        DispatchQueue.main.async { [unowned self] in
-          self.tableView.reloadData()
-        }
-        
-        self.syncronizeContacts(contacts: self.contacts)
-      }
-    }
-  
-    fileprivate func syncronizeContacts(contacts: [CNContact]) {
-      let contactsCount = contacts.count
-      let defaultContactsCount = userDefaults.currentIntObjectState(for: userDefaults.contactsCount)
-      let syncronizationStatus = userDefaults.currentBoolObjectState(for: userDefaults.contactsSyncronizationStatus)
-      guard userDefaults.currentBoolObjectState(for: userDefaults.contactsContiniousSync) == true else { return }
-      if !userDefaults.isContactsCountExists() || defaultContactsCount != contactsCount || syncronizationStatus != true {
-        userDefaults.updateObject(for: userDefaults.contactsCount, with: contactsCount)
-
-        DispatchQueue.main.async { [unowned self] in
-          self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
-          self.tableView.reloadData()
-        }
-        
-        DispatchQueue.global(qos: .default).async { [unowned self] in
-          self.falconUsersFetcher.loadAndSyncFalconUsers()
-        }
-      }
-    }
-
     fileprivate var isAppLoaded = false
     fileprivate func reloadTableView(updatedUsers: [User]) {
-      users = updatedUsers
-      //users = falconUsersFetcher.rearrangeUsers(users: updatedUsers)
+     
       let searchBar = correctSearchBarForCurrentIOSVersion()
-      let isSearchInProgress = searchBar.text != ""
-      let isSearchControllerEmpty = filteredUsers.count == 0
-      
-      if isSearchInProgress && !isSearchControllerEmpty { return } else {
+      let isSearchInactive = searchBar.text?.isEmpty ?? true
+    //  let isSearchControllerEmpty = filteredUsers.count == 0
+      guard isSearchInactive else { return }
+   //   if isSearchInProgress && !isSearchControllerEmpty { return } else {
+        users = updatedUsers
         filteredUsers = users
-      //  guard filteredUsers.count != 0 else { return }
-        if isAppLoaded == false {
-          isAppLoaded = true
-          UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: nil)
-        } else {
+      
+        guard isAppLoaded == false else {
           DispatchQueue.main.async { [unowned self] in
             self.tableView.reloadData()
-          }
+          }; return
         }
-      }
+        isAppLoaded = true
+        UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: nil)
+     // }
     }
   
     fileprivate func correctSearchBarForCurrentIOSVersion() -> UISearchBar {
@@ -302,89 +207,20 @@ class ContactsController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      return selectCell(for: indexPath)!
-    }
-  
-    func selectCell(for indexPath: IndexPath) -> UITableViewCell? {
-      
       if indexPath.section == 0 {
-        let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as! CurrentUserTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as? CurrentUserTableViewCell ?? CurrentUserTableViewCell()
         cell.title.text = NameConstants.personalStorage
         return cell
-      } else
-      
-      if indexPath.section == 1 {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
-      
-        if let name = filteredUsers[indexPath.row].name {
-          cell.title.text = name
-        }
-      
-        if let statusString = filteredUsers[indexPath.row].onlineStatus as? String {
-          if statusString == statusOnline {
-            cell.subtitle.textColor = FalconPalette.defaultBlue
-            cell.subtitle.text = statusString
-          } else {
-            cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-            if let timeInterval = TimeInterval(statusString) {
-              let date = Date(timeIntervalSince1970: timeInterval)
-              let subtitle = "Last seen " + timeAgoSinceDate(date)
-              cell.subtitle.text = subtitle
-            }
-          }
-        } else if let statusTimeinterval = filteredUsers[indexPath.row].onlineStatus as? TimeInterval {
-          cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-          let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
-         
-          let subtitle = "Last seen " + timeAgoSinceDate(date)
-          cell.subtitle.text = subtitle
-        }
-        
-        guard let url = filteredUsers[indexPath.row].thumbnailPhotoURL else { return cell }
-     
-        cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage], completed: { (image, error, cacheType, url) in
-          
-          guard image != nil else { return }
-          guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-            cell.icon.image = image
-            return
-          }
-          
-          UIView.transition(with:  cell.icon,
-                            duration: 0.20,
-                            options: .transitionCrossDissolve,
-                            animations: { cell.icon.image = image },
-                            completion: nil)
-        })
-        
-        return cell
-        
-      } else if indexPath.section == 2 {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
-        if let thumbnail = filteredContacts[indexPath.row].thumbnailImageData {
-          let image = UIImage(data: thumbnail)
-          cell.icon.image = image
-        } else {
-          cell.icon.image = UIImage(named: "UserpicIcon")
-        }
-      
-        cell.title.text = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
-        if filteredContacts[indexPath.row].phoneNumbers.indices.contains(0) {
-          let phoneNumber = filteredContacts[indexPath.row].phoneNumbers[0].value.stringValue
-          cell.subtitle.text = phoneNumber
-        } else {
-          cell.subtitle.text = "No phone number provided"
-        }
+      } else {
+        let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
+        let parameter = indexPath.section == 1 ? filteredUsers[indexPath.row] : filteredContacts[indexPath.row]
+        cell.configureCell(for: parameter)
         return cell
       }
-      return nil
     }
-  
-  var chatLogController:ChatLogController? = nil
-  var messagesFetcher:MessagesFetcher? = nil
-  var destinationLayout:AutoSizingCollectionViewFlowLayout? = nil
+
+    var chatLogController: ChatLogController? = nil
+    var messagesFetcher: MessagesFetcher? = nil
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       
@@ -397,10 +233,7 @@ class ContactsController: UITableViewController {
                                                           "chatParticipantsIDs": [currentUserID] as AnyObject]
         
         let conversation = Conversation(dictionary: conversationDictionary)
-
-        destinationLayout = AutoSizingCollectionViewFlowLayout()
-        destinationLayout?.minimumLineSpacing = 3
-        chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
+        chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
         
         messagesFetcher = MessagesFetcher()
         messagesFetcher?.delegate = self
@@ -409,17 +242,15 @@ class ContactsController: UITableViewController {
       
       if indexPath.section == 1 {
      
-        let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject, "chatName": filteredUsers[indexPath.row].name as AnyObject,
+        let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject,
+                                                           "chatName": filteredUsers[indexPath.row].name as AnyObject,
                                                            "isGroupChat": false  as AnyObject,
                                                            "chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
                                                            "chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
                                                            "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
         
         let conversation = Conversation(dictionary: conversationDictionary)
-        
-        destinationLayout = AutoSizingCollectionViewFlowLayout()
-        destinationLayout?.minimumLineSpacing = AutoSizingCollectionViewFlowLayout.lineSpacing
-        chatLogController = ChatLogController(collectionViewLayout: destinationLayout!)
+        chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
         
         messagesFetcher = MessagesFetcher()
         messagesFetcher?.delegate = self
@@ -433,7 +264,7 @@ class ContactsController: UITableViewController {
           destination.contactPhoto = UIImage(data: photo)
         }
         destination.contactPhoneNumbers.removeAll()
-        destination .hidesBottomBarWhenPushed = true
+        destination.hidesBottomBarWhenPushed = true
         destination.contactPhoneNumbers = filteredContacts[indexPath.row].phoneNumbers
         navigationController?.pushViewController(destination, animated: true)
       }
@@ -447,10 +278,40 @@ extension ContactsController: FalconUsersUpdatesDelegate {
     
     let syncronizationStatus = userDefaults.currentBoolObjectState(for: userDefaults.contactsSyncronizationStatus)
     guard syncronizationStatus == true else { return }
-    observeContactsChanges()
+    addContactsObserver()
     DispatchQueue.main.async {
       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .medium)
     }
+  }
+}
+
+extension ContactsController: ContactsUpdatesDelegate {
+  func contacts(shouldPerformSyncronization: Bool) {
+    guard shouldPerformSyncronization else { return }
+    
+    DispatchQueue.main.async { [unowned self] in
+      self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
+    }
+    
+    DispatchQueue.global(qos: .default).async { [unowned self] in
+      self.falconUsersFetcher.loadAndSyncFalconUsers()
+    }
+  }
+  
+  func contacts(updateDatasource contacts: [CNContact]) {
+    self.contacts = contacts
+    self.filteredContacts = contacts
+    DispatchQueue.main.async { [unowned self] in
+      self.tableView.reloadData()
+    }
+  }
+  
+  func contacts(handleAccessStatus: Bool) {
+    guard handleAccessStatus else {
+      viewPlaceholder.add(for: view, title: .denied, subtitle: .denied, priority: .high, position: .top)
+      return
+    }
+    viewPlaceholder.remove(from: view, priority: .high)
   }
 }
 
@@ -478,6 +339,7 @@ extension ContactsController: MessagesDelegate {
     
     navigationController?.pushViewController(destination, animated: true)
     chatLogController = nil
-    destinationLayout = nil
+    messagesFetcher?.delegate = nil
+    messagesFetcher = nil
   }
 }

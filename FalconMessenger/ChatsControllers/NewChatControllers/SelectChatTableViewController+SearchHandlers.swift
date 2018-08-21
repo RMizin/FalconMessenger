@@ -36,7 +36,6 @@ extension SelectChatTableViewController: UISearchBarDelegate, UISearchController
   }
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    
     filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
       return User.name!.lowercased().contains(searchText.lowercased())
     })
@@ -46,7 +45,6 @@ extension SelectChatTableViewController: UISearchBarDelegate, UISearchController
 }
 
 extension SelectChatTableViewController { /* hiding keyboard */
-  
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     searchBar?.resignFirstResponder()
   }

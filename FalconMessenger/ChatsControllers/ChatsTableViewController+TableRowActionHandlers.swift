@@ -35,6 +35,62 @@ private let muteErrorTitle = "Error muting/unmuting"
 private let muteErrorMessage = "Check your internet connection and try again."
 
 extension ChatsTableViewController {
+  
+  func setupMuteAction(at indexPath: IndexPath) -> UITableViewRowAction {
+    let mute = UITableViewRowAction(style: .default, title: "Mute") { _, _ in
+      if indexPath.section == 0 {
+        if #available(iOS 11.0, *) {} else {
+          self.tableView.setEditing(false, animated: true)
+        }
+        self.delayWithSeconds(1, completion: {
+          self.handleMuteConversation(section: indexPath.section, for: self.filteredPinnedConversations[indexPath.row])
+        })
+      } else if indexPath.section == 1 {
+        if #available(iOS 11.0, *) {} else {
+          self.tableView.setEditing(false, animated: true)
+        }
+        self.delayWithSeconds(1, completion: {
+          self.handleMuteConversation(section: indexPath.section, for: self.filtededConversations[indexPath.row])
+        })
+      }
+    }
+    
+    if indexPath.section == 0 {
+      let isPinnedConversationMuted = filteredPinnedConversations[indexPath.row].muted == true
+      let muteTitle = isPinnedConversationMuted ? "Unmute" : "Mute"
+      mute.title = muteTitle
+    } else if indexPath.section == 1 {
+      let isConversationMuted = filtededConversations[indexPath.row].muted == true
+      let muteTitle = isConversationMuted ? "Unmute" : "Mute"
+      mute.title = muteTitle
+    }
+    mute.backgroundColor =  UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
+    return mute
+  }
+  
+  func setupPinAction(at indexPath: IndexPath) -> UITableViewRowAction {
+    let pin = UITableViewRowAction(style: .default, title: "Pin") { _, _ in
+      if indexPath.section == 0 {
+        self.unpinConversation(at: indexPath)
+      } else if indexPath.section == 1 {
+        self.pinConversation(at: indexPath)
+      }
+    }
+    
+    let pinTitle = indexPath.section == 0 ? "Unpin" : "Pin"
+    pin.title = pinTitle
+    pin.backgroundColor = UIColor(red:0.18, green:0.26, blue:0.31, alpha:1.0)
+    return pin
+  }
+  
+  func setupDeleteAction(at indexPath: IndexPath) -> UITableViewRowAction {
+    let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+      self.deleteConversation(at: indexPath)
+    }
+    
+    delete.backgroundColor = UIColor(red: 0.93, green: 0.11, blue: 0.15, alpha: 1.0)
+    return delete
+  }
 
   func unpinConversation(at indexPath: IndexPath) {
     let conversation = filteredPinnedConversations[indexPath.row]
@@ -126,52 +182,39 @@ extension ChatsTableViewController {
     }
   }
   
-  func deletePinnedConversation(at indexPath: IndexPath) {
-    let conversation = filteredPinnedConversations[indexPath.row]
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
-    
-    guard let index = pinnedConversations.index(where: { (conversation) -> Bool in
-      return conversation.chatID == filteredPinnedConversations[indexPath.row].chatID
-    }) else { return }
-    
-    tableView.beginUpdates()
-    filteredPinnedConversations.remove(at: indexPath.row)
-    pinnedConversations.remove(at: index)
-    tableView.deleteRows(at: [indexPath], with: .left)
-    tableView.endUpdates()
-
-    Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
-    Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
-    configureTabBarBadge()
-     if conversations.count <= 0 && pinnedConversations.count <= 0 {
-      DispatchQueue.main.async { [unowned self] in
-        self.checkIfThereAnyActiveChats(isEmpty: true)
-      }
+  func deleteConversation(at indexPath: IndexPath) {
+    guard currentReachabilityStatus != .notReachable else {
+      basicErrorAlertWith(title: "Error", message: noInternetError, controller: self)
+      return
     }
-  }
-  
-  func deleteUnPinnedConversation(at indexPath: IndexPath) {
-    let conversation = filtededConversations[indexPath.row]
+    
+    let conversation = indexPath.section == 0 ? filteredPinnedConversations[indexPath.row] : filtededConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
     
-    guard let index = conversations.index(where: { (conversation) -> Bool in
-      return conversation.chatID == filtededConversations[indexPath.row].chatID
-    }) else { return }
-    
     tableView.beginUpdates()
-    filtededConversations.remove(at: indexPath.row)
-    conversations.remove(at: index)
+    
+    if indexPath.section == 0  {
+      guard let index = pinnedConversations.index(where: { (conversation) -> Bool in
+        return conversation.chatID == filteredPinnedConversations[indexPath.row].chatID
+      }) else { return }
+      filteredPinnedConversations.remove(at: indexPath.row)
+      pinnedConversations.remove(at: index)
+    } else {
+      guard let index = conversations.index(where: { (conversation) -> Bool in
+        return conversation.chatID == filtededConversations[indexPath.row].chatID
+      }) else { return }
+      filtededConversations.remove(at: indexPath.row)
+      conversations.remove(at: index)
+    }
+    
     tableView.deleteRows(at: [indexPath], with: .left)
     tableView.endUpdates()
     
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
-   
     configureTabBarBadge()
     if conversations.count <= 0 && pinnedConversations.count <= 0 {
-      DispatchQueue.main.async { [unowned self] in
-         self.checkIfThereAnyActiveChats(isEmpty: true)
-      }
+      checkIfThereAnyActiveChats(isEmpty: true)
     }
   }
   

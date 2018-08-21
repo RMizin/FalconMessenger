@@ -16,15 +16,11 @@ protocol FalconUsersUpdatesDelegate: class {
   func falconUsers(shouldBeUpdatedTo users: [User])
 }
 
-
 class FalconUsersFetcher: NSObject {
   
   weak var delegate: FalconUsersUpdatesDelegate?
-  
   fileprivate let phoneNumberKit = PhoneNumberKit()
-  
   lazy var functions = Functions.functions()
-  
   
   func loadAndSyncFalconUsers() {
     userDefaults.updateObject(for: userDefaults.contactsSyncronizationStatus, with: false)
@@ -33,7 +29,6 @@ class FalconUsersFetcher: NSObject {
   }
   
   fileprivate func prepareNumbers(from numbers: [String]) -> [String] {
-    
     var preparedNumbers = [String]()
     
     for number in numbers {
@@ -52,18 +47,8 @@ class FalconUsersFetcher: NSObject {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let numbers = prepareNumbers(from: globalDataStorage.localPhones)
     print("https reqest called")
-    functions.httpsCallable("fetchContacts").call(["preparedNumbers": numbers]) { (result, error) in
-      if let error = error as NSError? {
-        if error.domain == FunctionsErrorDomain {
-          let code = FunctionsErrorCode(rawValue: error.code)
-          let message = error.localizedDescription
-          let details = error.userInfo[FunctionsErrorDetailsKey]
-          print("https error\(code, message, details)")
-        }
-        print("https error")
-      }
-      
-      guard let response = result?.data as? [[String:AnyObject]] else { print("faliure"); return }
+    functions.httpsCallable("fetchContacts").call(["preparedNumbers": numbers]) { (result, _) in
+      guard let response = result?.data as? [[String: AnyObject]] else { return }
       var fetchedUsers = [User]()
       
       for object in response {
@@ -74,13 +59,12 @@ class FalconUsersFetcher: NSObject {
       }
   
       userDefaults.updateObject(for: userDefaults.contactsSyncronizationStatus, with: true)
-      self.syncronizeFalconUsers(with: fetchedUsers)
-     
+      self.updateFalconUsers(with: fetchedUsers)
       print("Contacts fetching completed", fetchedUsers.count)
     }
   }
   
-  fileprivate func syncronizeFalconUsers(with fetchedUsers: [User]) {
+  fileprivate func updateFalconUsers(with fetchedUsers: [User]) {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
     let falconUserIDs = fetchedUsers.map({$0.id ?? "" })
@@ -108,25 +92,21 @@ class FalconUsersFetcher: NSObject {
   
   func loadFalconUsers() {
     let status = CNContactStore.authorizationStatus(for: .contacts)
-    if status == .denied || status == .restricted { print("returning from contacts status"); return }
+    if status == .denied || status == .restricted { print("contacts access"); return }
     removeAllUsersObservers()
-    guard let currentUserID = Auth.auth().currentUser?.uid else { print("returning frou current uid"); return }
+    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
     databaseReference.keepSynced(true)
     databaseReference.observeSingleEvent(of: .value) { (snapshot) in
-      guard snapshot.exists() else {
-        self.isFalconUsersLoadingGroupFinished = true
-        self.updateDataSource(newUsers: [User]())
-        return
-      }
       guard snapshot.childSnapshot(forPath: "falconUsers").exists() else {
+        print("FU not exists")
         self.isFalconUsersLoadingGroupFinished = true
         self.updateDataSource(newUsers: [User]())
         return
       }
     
-      guard var dictionary = snapshot.childSnapshot(forPath: "falconUsers").value as? [String: String] else { return }
-      var falconUsersIDs: [String] = Array(dictionary.values)
+      guard let dictionary = snapshot.childSnapshot(forPath: "falconUsers").value as? [String: String] else { return }
+      var falconUsersIDs = Array(dictionary.values)
 
       if let index = falconUsersIDs.index(of: currentUserID) {
         falconUsersIDs.remove(at: index)
@@ -142,7 +122,7 @@ class FalconUsersFetcher: NSObject {
 
     falconUsersLoadingGroup.notify(queue: .main, execute: {
       self.isFalconUsersLoadingGroupFinished = true
-
+      print("group finished")
       self.updateDataSource(newUsers: self.falconUsers)
     })
     
@@ -200,12 +180,8 @@ class FalconUsersFetcher: NSObject {
   
   fileprivate func rearrangeUsers(users: [User]) -> [User] { /* Moves Online users to the top  */
     var users = users
-    guard users.count - 1 > 0 else { return users }
-    
-    for index in 0...users.count - 1 {
-      if users[index].onlineStatus as? String == statusOnline {
-        users = rearrange(array: users, fromIndex: index, toIndex: 0)
-      }
+    for user in users where user.onlineStatus as? String == statusOnline {
+      users.move(user, to: 0)
     }
     return users
   }

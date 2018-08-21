@@ -8,6 +8,7 @@
 
 import UIKit
 import SDWebImage
+import Contacts
 
 class FalconUsersTableViewCell: UITableViewCell {
 
@@ -15,7 +16,6 @@ class FalconUsersTableViewCell: UITableViewCell {
     var icon = UIImageView()
     icon.translatesAutoresizingMaskIntoConstraints = false
     icon.contentMode = .scaleAspectFill
-    
     icon.layer.cornerRadius = 25
     icon.layer.masksToBounds = true
     icon.image = UIImage(named: "UserpicIcon")
@@ -69,7 +69,6 @@ class FalconUsersTableViewCell: UITableViewCell {
     subtitle.heightAnchor.constraint(equalToConstant: 25).isActive = true
   }
   
-  
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -84,5 +83,59 @@ class FalconUsersTableViewCell: UITableViewCell {
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
   }
-
+  
+  func configureCell(for parameter: NSObject) {
+    if let contact = parameter as? CNContact {
+      configureContact(contact)
+    } else if let user = parameter as? User {
+      configureUser(user)
+    }
+  }
+  
+  fileprivate func configureUser(_ user: User) {
+    title.text = user.name ?? ""
+    
+    if let statusString = user.onlineStatus as? String {
+      if statusString == statusOnline {
+        subtitle.textColor = FalconPalette.defaultBlue
+        subtitle.text = statusString
+      }
+    }
+    
+    if let lastSeen = user.onlineStatus as? TimeInterval {
+      let date = Date(timeIntervalSince1970: lastSeen/1000)
+      let lastSeenTime = "Last seen " + timeAgoSinceDate(date)
+      subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+      subtitle.text = lastSeenTime
+    }
+    
+    guard let urlString = user.thumbnailPhotoURL else { return }
+    let options: SDWebImageOptions = [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage]
+    let placeholder = UIImage(named: "UserpicIcon")
+    icon.sd_setImage(with: URL(string: urlString), placeholderImage: placeholder, options: options) { (image, _, cacheType, _) in
+      guard image != nil else { return }
+      guard cacheType != .memory, cacheType != .disk else {
+        self.icon.image = image
+        return
+      }
+      UIView.transition(with: self.icon, duration: 0.2, options: .transitionCrossDissolve, animations: { self.icon.image = image }, completion: nil)
+    }
+  }
+  
+  fileprivate func configureContact(_ contact: CNContact) {
+    title.text = contact.givenName + " " + contact.familyName
+    
+    if let thumbnail = contact.thumbnailImageData {
+      icon.image = UIImage(data: thumbnail)
+    } else {
+      icon.image = UIImage(named: "UserpicIcon")
+    }
+    
+    if contact.phoneNumbers.indices.contains(0) {
+      let phoneNumber = contact.phoneNumbers[0].value.stringValue
+      subtitle.text = phoneNumber
+    } else {
+      subtitle.text = "No phone number provided"
+    }
+  }
 }
