@@ -35,6 +35,76 @@ private let muteErrorTitle = "Error muting/unmuting"
 private let muteErrorMessage = "Check your internet connection and try again."
 extension ChatsTableViewController {
   
+  fileprivate func delayWithSeconds(_ seconds: Double, completion: @escaping () -> ()) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+      completion()
+    }
+  }
+  
+  func setupMuteAction(at indexPath: IndexPath) -> UITableViewRowAction {
+    let mute = UITableViewRowAction(style: .default, title: "Mute") { _, _ in
+      if indexPath.section == 0 {
+        if #available(iOS 11.0, *) {} else {
+          self.tableView.setEditing(false, animated: true)
+        }
+        self.delayWithSeconds(1, completion: {
+          self.handleMuteConversation(section: indexPath.section, for: self.filteredPinnedConversations[indexPath.row])
+        })
+      } else if indexPath.section == 1 {
+        if #available(iOS 11.0, *) {} else {
+          self.tableView.setEditing(false, animated: true)
+        }
+        self.delayWithSeconds(1, completion: {
+          self.handleMuteConversation(section: indexPath.section, for: self.filtededConversations[indexPath.row])
+        })
+      }
+    }
+    
+    if indexPath.section == 0 {
+      let isPinnedConversationMuted = filteredPinnedConversations[indexPath.row].muted == true
+      let muteTitle = isPinnedConversationMuted ? "Unmute" : "Mute"
+      mute.title = muteTitle
+    } else if indexPath.section == 1 {
+      let isConversationMuted = filtededConversations[indexPath.row].muted == true
+      let muteTitle = isConversationMuted ? "Unmute" : "Mute"
+      mute.title = muteTitle
+    }
+    mute.backgroundColor = UIColor(red:0.56, green:0.64, blue:0.68, alpha:1.0)
+    return mute
+  }
+  
+  func setupPinAction(at indexPath: IndexPath) -> UITableViewRowAction {
+    let pin = UITableViewRowAction(style: .default, title: "Pin") { _, _ in
+      if indexPath.section == 0 {
+        self.unpinConversation(at: indexPath)
+      } else if indexPath.section == 1 {
+        self.pinConversation(at: indexPath)
+      }
+    }
+    
+    let pinTitle = indexPath.section == 0 ? "Unpin" : "Pin"
+    pin.title = pinTitle
+    pin.backgroundColor = UIColor(red:0.96, green:0.49, blue:0.00, alpha:1.0)
+    return pin
+  }
+  
+  func setupDeleteAction(at indexPath: IndexPath) -> UITableViewRowAction {
+    
+    let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+      if self.currentReachabilityStatus == .notReachable {
+        basicErrorAlertWith(title: "Error deleting message", message: noInternetError, controller: self)
+        return
+      }
+      if indexPath.section == 0 {
+        self.deletePinnedConversation(at: indexPath)
+      } else if indexPath.section == 1 {
+        self.deleteUnPinnedConversation(at: indexPath)
+      }
+    }
+    
+    delete.backgroundColor = UIColor(red:0.90, green:0.22, blue:0.21, alpha:1.0)
+    return delete
+  }
   func unpinConversation(at indexPath: IndexPath) {
     let conversation = self.filteredPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }

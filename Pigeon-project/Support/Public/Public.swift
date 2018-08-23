@@ -59,6 +59,29 @@ extension UILocalizedIndexedCollation {
   }
 }
 
+extension Array {
+  public func stablePartition(by condition: (Element) throws -> Bool) rethrows -> ([Element], [Element]) {
+    var indexes = Set<Int>()
+    for (index, element) in self.enumerated() {
+      if try condition(element) {
+        indexes.insert(index)
+      }
+    }
+    var matching = [Element]()
+    matching.reserveCapacity(indexes.count)
+    var nonMatching = [Element]()
+    nonMatching.reserveCapacity(self.count - indexes.count)
+    for (index, element) in self.enumerated() {
+      if indexes.contains(index) {
+        matching.append(element)
+      } else {
+        nonMatching.append(element)
+      }
+    }
+    return (matching, nonMatching)
+  }
+}
+
 extension UIApplication {
   class func topViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
     if let navigationController = controller as? UINavigationController {

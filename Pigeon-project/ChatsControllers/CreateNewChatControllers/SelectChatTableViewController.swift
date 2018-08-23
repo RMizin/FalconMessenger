@@ -19,29 +19,18 @@ extension NSNotification.Name {
 class SelectChatTableViewController: UITableViewController {
   
   let falconUsersCellID = "falconUsersCellID"
-  
   let newGroupCellID = "newGroupCellID"
-  
   let newGroupAction = "New Group"
-  
   var actions = ["New Group"]
   
   var users = [User]()
-  
   var filteredUsers = [User]()
-  
   var filteredUsersWithSection = [[User]]()
   
   var collation = UILocalizedIndexedCollation.current()
-  
   var sectionTitles = [String]()
-  
   var searchBar: UISearchBar?
-  
-  private let reloadAnimation = UITableViewRowAnimation.none
-  
   var phoneNumberKit = PhoneNumberKit()
-  
   let viewPlaceholder = ViewPlaceholder()
   
   override func viewDidLoad() {
@@ -209,44 +198,12 @@ class SelectChatTableViewController: UITableViewController {
       return cell
     }
     
-    let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID,
+                                             for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
     let falconUser = filteredUsersWithSection[indexPath.section][indexPath.row]
-    
-    if let name = falconUser.name {
-      cell.title.text = name
-    }
-    
-    if let statusString = falconUser.onlineStatus as? String {
-      if statusString == statusOnline {
-        cell.subtitle.textColor = FalconPalette.defaultBlue
-        cell.subtitle.text = statusString
-      } else {
-        cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-        let subtitle = "Last seen " + timeAgoSinceDate(date)
-        cell.subtitle.text = subtitle
-      }
-      
-    } else if let statusTimeinterval = falconUser.onlineStatus as? TimeInterval {
-      cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
-      let subtitle = "Last seen " + timeAgoSinceDate(date)
-      cell.subtitle.text = subtitle
-    }
-    
-    guard let url = falconUser.thumbnailPhotoURL else { return cell }
-    cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground], completed: { (image, error, cacheType, url) in
-      guard image != nil else { return }
-      guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-        cell.icon.alpha = 1
-        return
-      }
-      cell.icon.alpha = 0
-      UIView.animate(withDuration: 0.25, animations: { cell.icon.alpha = 1 })
-    })
+    cell.configureCell(for: falconUser)
     return cell
   }
-  
   
   var chatLogController: ChatLogController? = nil
   var messagesFetcher: MessagesFetcher? = nil

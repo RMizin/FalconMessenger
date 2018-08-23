@@ -11,6 +11,8 @@
 		4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */; };
+		4B5E99DE212CC0C0001F067F /* InAppNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5E99DD212CC0C0001F067F /* InAppNotificationManager.swift */; };
+		4B5E99E0212CC0D5001F067F /* ConversationsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5E99DF212CC0D5001F067F /* ConversationsFetcher.swift */; };
 		4BAEE46421272B380045AB10 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE44E21272B380045AB10 /* AccountSettingsTableViewCell.swift */; };
 		4BAEE46521272B380045AB10 /* AccountSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE44F21272B380045AB10 /* AccountSettingsController.swift */; };
 		4BAEE46621272B380045AB10 /* PrivacyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE45221272B380045AB10 /* PrivacyTableViewController.swift */; };
@@ -90,8 +92,6 @@
 		4BAEE51721272D890045AB10 /* TimestampView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D821272D880045AB10 /* TimestampView.xib */; };
 		4BAEE51821272D890045AB10 /* TimestampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D921272D880045AB10 /* TimestampView.swift */; };
 		4BAEE51921272D890045AB10 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4DA21272D880045AB10 /* IncomingTextMessageCell.swift */; };
-		4BAEE51A21272D890045AB10 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4DB21272D880045AB10 /* ChatsTableViewController+NotificationsHandlers.swift */; };
-		4BAEE51B21272D890045AB10 /* NoChatsYetContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4DD21272D880045AB10 /* NoChatsYetContainer.swift */; };
 		4BAEE51C21272D890045AB10 /* BaseMessageCell+CellDeletionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4DE21272D880045AB10 /* BaseMessageCell+CellDeletionHandlers.swift */; };
 		4BAEE51D21272D890045AB10 /* BaseMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4DF21272D880045AB10 /* BaseMessageCell.swift */; };
 		4BAEE51E21272D890045AB10 /* ChatLogController+VoiceRecordingHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4E021272D880045AB10 /* ChatLogController+VoiceRecordingHandlers.swift */; };
@@ -200,6 +200,8 @@
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B4F453C1F32230C00A6FF96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralTabBarController.swift; sourceTree = "<group>"; };
+		4B5E99DD212CC0C0001F067F /* InAppNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationManager.swift; sourceTree = "<group>"; };
+		4B5E99DF212CC0D5001F067F /* ConversationsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsFetcher.swift; sourceTree = "<group>"; };
 		4BAEE44E21272B380045AB10 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		4BAEE44F21272B380045AB10 /* AccountSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsController.swift; sourceTree = "<group>"; };
 		4BAEE45221272B380045AB10 /* PrivacyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyTableViewController.swift; sourceTree = "<group>"; };
@@ -279,8 +281,6 @@
 		4BAEE4D821272D880045AB10 /* TimestampView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimestampView.xib; sourceTree = "<group>"; };
 		4BAEE4D921272D880045AB10 /* TimestampView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimestampView.swift; sourceTree = "<group>"; };
 		4BAEE4DA21272D880045AB10 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomingTextMessageCell.swift; sourceTree = "<group>"; };
-		4BAEE4DB21272D880045AB10 /* ChatsTableViewController+NotificationsHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ChatsTableViewController+NotificationsHandlers.swift"; sourceTree = "<group>"; };
-		4BAEE4DD21272D880045AB10 /* NoChatsYetContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoChatsYetContainer.swift; sourceTree = "<group>"; };
 		4BAEE4DE21272D880045AB10 /* BaseMessageCell+CellDeletionHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseMessageCell+CellDeletionHandlers.swift"; sourceTree = "<group>"; };
 		4BAEE4DF21272D880045AB10 /* BaseMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCell.swift; sourceTree = "<group>"; };
 		4BAEE4E021272D880045AB10 /* ChatLogController+VoiceRecordingHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ChatLogController+VoiceRecordingHandlers.swift"; sourceTree = "<group>"; };
@@ -589,7 +589,6 @@
 		4BAEE4A421272D880045AB10 /* ChatsControllers */ = {
 			isa = PBXGroup;
 			children = (
-				4BAEE52C21272EE90045AB10 /* Support */,
 				4BAEE53A2127312D0045AB10 /* Cells */,
 				4BAEE53B212731510045AB10 /* Controllers */,
 				4BAEE4B121272D880045AB10 /* CreateNewChatControllers */,
@@ -690,14 +689,6 @@
 			path = ChatInputContainerView;
 			sourceTree = "<group>";
 		};
-		4BAEE52C21272EE90045AB10 /* Support */ = {
-			isa = PBXGroup;
-			children = (
-				4BAEE4DD21272D880045AB10 /* NoChatsYetContainer.swift */,
-			);
-			path = Support;
-			sourceTree = "<group>";
-		};
 		4BAEE52F21272FB60045AB10 /* InputBlockerContainerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -778,7 +769,8 @@
 				4BAEE4C221272D880045AB10 /* ChatsTableViewController.swift */,
 				4BAEE4E121272D880045AB10 /* ChatsTableViewController+SearchHandlers.swift */,
 				4BAEE4CD21272D880045AB10 /* ChatsTableViewController+TableRowActionHandlers.swift */,
-				4BAEE4DB21272D880045AB10 /* ChatsTableViewController+NotificationsHandlers.swift */,
+				4B5E99DF212CC0D5001F067F /* ConversationsFetcher.swift */,
+				4B5E99DD212CC0C0001F067F /* InAppNotificationManager.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1330,6 +1322,7 @@
 				4BAEE5C6212735E50045AB10 /* ARSLineProgress.swift in Sources */,
 				4BAEE50121272D890045AB10 /* OutgoingPhotoMessageCell.swift in Sources */,
 				4BAEE50F21272D890045AB10 /* PlayerCellView.swift in Sources */,
+				4B5E99DE212CC0C0001F067F /* InAppNotificationManager.swift in Sources */,
 				4BAEE5D1212735E50045AB10 /* SelectedParticipantsCollectionView.swift in Sources */,
 				4BAEE5D7212735E50045AB10 /* AnnouncementFactory.swift in Sources */,
 				4BAEE5EF212735E50045AB10 /* RevealableCollectionViewCell.swift in Sources */,
@@ -1369,7 +1362,6 @@
 				4BAEE49421272C5E0045AB10 /* FalconUsersTableViewCell.swift in Sources */,
 				4BAEE4F521272D890045AB10 /* GroupProfileTableViewController.swift in Sources */,
 				4BAEE5CB212735E50045AB10 /* ARSLineProgressProtocols.swift in Sources */,
-				4BAEE51A21272D890045AB10 /* ChatsTableViewController+NotificationsHandlers.swift in Sources */,
 				4BAEE5E6212735E50045AB10 /* EnterVerificationContainerView.swift in Sources */,
 				4BAEE52021272D890045AB10 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift in Sources */,
 				4BAEE5F2212735E50045AB10 /* UserDefaultsManager.swift in Sources */,
@@ -1450,10 +1442,10 @@
 				4BAEE5DB212735E50045AB10 /* ImageCell.swift in Sources */,
 				4BAEE5D3212735E50045AB10 /* RoundProgressView.swift in Sources */,
 				4BAEE5F4212735E50045AB10 /* CenteredCollectionViewFlowLayout.swift in Sources */,
+				4B5E99E0212CC0D5001F067F /* ConversationsFetcher.swift in Sources */,
 				4BAEE547212735200045AB10 /* SplashScreenContainer.swift in Sources */,
 				4BAEE50321272D890045AB10 /* ChatInputContainerView.swift in Sources */,
 				4BAEE5E9212735E50045AB10 /* EnterPhoneNumberContainerView.swift in Sources */,
-				4BAEE51B21272D890045AB10 /* NoChatsYetContainer.swift in Sources */,
 				4BAEE5C3212735E50045AB10 /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BAEE4F821272D890045AB10 /* MessagesFetcher.swift in Sources */,
 				4BAEE48321272C4F0045AB10 /* UserProfileAvatarOpenerDelegate.swift in Sources */,

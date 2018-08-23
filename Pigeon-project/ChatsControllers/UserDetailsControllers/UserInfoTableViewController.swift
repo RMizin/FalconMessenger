@@ -25,18 +25,13 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   var conversationID = String()
-  
   var onlineStatus = String()
- 
   var contactPhoneNumber = String()
 
   var userReference: DatabaseReference!
-  
   var handle: DatabaseHandle!
-  
   var shouldDisplayContactAdder: Bool?
   
-
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -51,10 +46,6 @@ class UserInfoTableViewController: UITableViewController {
     if userReference != nil {
       userReference.removeObserver(withHandle: handle)
     }
-  }
-  
-  deinit {
-    print("user info deinit")
   }
   
   fileprivate func setupMainView() {
@@ -74,9 +65,8 @@ class UserInfoTableViewController: UITableViewController {
   
   fileprivate func getUserInfo() {
     
-  userReference = Database.database().reference().child("users").child(conversationID)
-    
-   handle = userReference.observe(.value) { (snapshot) in
+    userReference = Database.database().reference().child("users").child(conversationID)
+    handle = userReference.observe(.value) { (snapshot) in
       if snapshot.exists() {
         guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
         dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
@@ -121,15 +111,8 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   fileprivate func stringTimestamp(onlineStatusObject: AnyObject) -> String {
-  
-    if let onlineStatusStringStamp = onlineStatusObject as? String {
-      if onlineStatusStringStamp == statusOnline { // user online
-        return statusOnline
-      } else { // user got a timstamp converted to string (was in earlier versions of app)
-        let date = Date(timeIntervalSince1970: TimeInterval(onlineStatusStringStamp)!)
-        let subtitle = "Last seen " + timeAgoSinceDate(date)
-        return subtitle
-      }
+    if let onlineStatusStringStamp = onlineStatusObject as? String, onlineStatusStringStamp == statusOnline {
+      return statusOnline
     } else if let onlineStatusTimeIntervalStamp = onlineStatusObject as? TimeInterval { //user got server timestamp in miliseconds
       let date = Date(timeIntervalSince1970: onlineStatusTimeIntervalStamp/1000)
       let subtitle = "Last seen " + timeAgoSinceDate(date)
