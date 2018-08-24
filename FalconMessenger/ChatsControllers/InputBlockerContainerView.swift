@@ -19,46 +19,32 @@ class InputBlockerContainerView: UIView {
     
     return backButton
   }()
-    
-  let dummyView: UIView = {
-     let dummyView = UIView()
-    dummyView.translatesAutoresizingMaskIntoConstraints = false
-
-    return dummyView
-  }()
   
-  let subviewsHeight:CGFloat = 50
+  private var heightConstraint: NSLayoutConstraint!
   
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    backgroundColor = ThemeManager.currentTheme().inputTextViewColor
-    dummyView.backgroundColor = backgroundColor
-
-    addSubview(dummyView)
-    dummyView.addSubview(backButton)
-    dummyView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-    dummyView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-    dummyView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-    dummyView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
     
-    backButton.topAnchor.constraint(equalTo: dummyView.topAnchor).isActive = true
-    backButton.leftAnchor.constraint(equalTo: dummyView.leftAnchor).isActive = true
-    backButton.rightAnchor.constraint(equalTo: dummyView.rightAnchor).isActive = true
-    backButton.heightAnchor.constraint(equalToConstant: subviewsHeight).isActive = true
+    heightConstraint = heightAnchor.constraint(equalToConstant: InputTextViewLayout.minHeight)
+    heightConstraint.isActive = true
+    
+    backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+
+    addSubview(backButton)
+    backButton.topAnchor.constraint(equalTo: topAnchor).isActive = true
+    backButton.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+    backButton.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+    backButton.heightAnchor.constraint(equalToConstant: InputTextViewLayout.minHeight).isActive = true
   }
   
-  func configureHeight(superview: UIView) {
-    frame = CGRect(x: 0, y: 0, width: superview.bounds.width, height: accessoryHeight(taking: subviewsHeight, superview: superview))
+  deinit {
+    NotificationCenter.default.removeObserver(self)
   }
   
-  private func accessoryHeight(taking subviewsHeight: CGFloat, superview: UIView) -> CGFloat {
-    var height = subviewsHeight
-    if #available(iOS 11.0, *), superview.safeAreaInsets.bottom != 0 {
-      let bottomInset: CGFloat = 20
-      height = subviewsHeight + bottomInset
-    }
-    return height
+  @objc func changeTheme() {
+    backgroundColor = ThemeManager.currentTheme().barBackgroundColor
   }
   
   required init?(coder aDecoder: NSCoder) {

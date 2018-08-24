@@ -1,5 +1,5 @@
 //
-//  PlayerCellView.swift
+//  PlayerView.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 11/26/17.
@@ -9,7 +9,7 @@
 import UIKit
 
 
-class PlayerCellView: UIView {
+class PlayerView: UIView {
   
   var startingTime = Int()
   var seconds = Int()
@@ -96,7 +96,7 @@ class PlayerCellView: UIView {
     timerLabel.text = timeString(time: TimeInterval(seconds))
   }
   
-  func timeString(time:TimeInterval) -> String {
+  func timeString(time: TimeInterval) -> String {
     let hours = Int(time) / 3600
     let minutes = Int(time) / 60 % 60
     let seconds = Int(time) % 60

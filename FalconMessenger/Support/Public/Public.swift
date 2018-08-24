@@ -28,6 +28,7 @@ struct DeviceType {
   
   static let IS_IPAD = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.maxLength == 1024.0
   static let IS_IPAD_PRO = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.maxLength == 1366.0
+  static let isIPad = UIDevice.current.userInterfaceIdiom == .pad
 }
 
 struct AppUtility {
@@ -97,19 +98,35 @@ extension Array {
 }
 
 extension UIApplication {
-  class func topViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
-    if let navigationController = controller as? UINavigationController {
-      return topViewController(controller: navigationController.visibleViewController)
+  
+  class func topViewController(_ baseViewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+    
+    if let navigationController = baseViewController as? UINavigationController {
+      return topViewController(navigationController.visibleViewController)
     }
-    if let tabController = controller as? UITabBarController {
-      if let selected = tabController.selectedViewController {
-        return topViewController(controller: selected)
+    
+    if let tabBarViewController = baseViewController as? UITabBarController {
+      
+      let moreNavigationController = tabBarViewController.moreNavigationController
+      
+      if let topViewController1 = moreNavigationController.topViewController, topViewController1.view.window != nil {
+        return topViewController(topViewController1)
+      } else if let selectedViewController = tabBarViewController.selectedViewController {
+        return topViewController(selectedViewController)
       }
     }
-    if let presented = controller?.presentedViewController {
-      return topViewController(controller: presented)
+    
+    if let splitViewController = baseViewController as? UISplitViewController, splitViewController.viewControllers.count == 1 {
+      return topViewController(splitViewController.viewControllers[0])
+    } else if let splitViewController = baseViewController as? UISplitViewController, splitViewController.viewControllers.count == 2 {
+      return topViewController(splitViewController.viewControllers[1])
     }
-    return controller
+    
+    if let presentedViewController = baseViewController?.presentedViewController {
+      return topViewController(presentedViewController)
+    }
+    
+    return baseViewController
   }
 }
 
@@ -437,35 +454,6 @@ func setOnlineStatus()  {
   })
 }
 
-extension UINavigationItem {
-  
-  func setTitle(title:String, subtitle:String) {
-    
-    let one = UILabel()
-    one.text = title
-    one.textColor = ThemeManager.currentTheme().generalTitleColor
-    one.font = UIFont.systemFont(ofSize: 17)
-    one.sizeToFit()
-    
-    let two = UILabel()
-    two.text = subtitle
-    two.font = UIFont.systemFont(ofSize: 12)
-    two.textAlignment = .center
-    two.textColor = ThemeManager.currentTheme().generalSubtitleColor
-    two.sizeToFit()
-    
-    let stackView = UIStackView(arrangedSubviews: [one, two])
-    stackView.distribution = .equalCentering
-    stackView.axis = .vertical
-    
-    let width = max(one.frame.size.width, two.frame.size.width)
-    stackView.frame = CGRect(x: 0, y: 0, width: width, height: 35)
-    
-    one.sizeToFit()
-    two.sizeToFit()
-    titleView = stackView
-  }
-}
 
 extension UIImage {
   var asJPEGData: Data? {

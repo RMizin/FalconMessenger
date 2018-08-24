@@ -32,6 +32,10 @@ class TypingIndicatorCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
+  deinit {
+    typingIndicator.stopAnimating()
+  }
+  
   func restart() {
  
     if typingIndicator.isAnimating {

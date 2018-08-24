@@ -343,9 +343,7 @@ class ChatsTableViewController: UITableViewController {
  
     return [delete, pin, mute]
   }
-  
 
-  
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 76
   }
@@ -375,7 +373,7 @@ class ChatsTableViewController: UITableViewController {
     return cell
   }
   
-  var chatLogController: ChatLogController? = nil
+  var chatLogController: ChatLogViewController? = nil
   var messagesFetcher: MessagesFetcher? = nil
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -389,7 +387,7 @@ class ChatsTableViewController: UITableViewController {
       conversation = unpinnedConversation
     }
     
-    chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+    chatLogController = ChatLogViewController()
     messagesFetcher = MessagesFetcher()
     messagesFetcher?.delegate = self
     messagesFetcher?.loadMessagesData(for: conversation)
@@ -438,10 +436,11 @@ extension ChatsTableViewController: MessagesDelegate {
   }
   
   func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
-    chatLogController?.updateMessageStatus(messageRef: reference)
+   chatLogController?.updateMessageStatus(messageRef: reference) //  chatLogController?.updateMessageStatus(messageRef: reference)
   }
   
   func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
+    print("UPDATED")
     chatLogController?.hidesBottomBarWhenPushed = true
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
@@ -457,13 +456,14 @@ extension ChatsTableViewController: MessagesDelegate {
     
     chatLogController?.messagesFetcher.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
-    
-    if #available(iOS 11.0, *) {
+
+    if DeviceType.isIPad {
+      let navigationController = UINavigationController(rootViewController: destination)
+       splitViewController?.showDetailViewController(navigationController, sender: self)
     } else {
-      self.chatLogController?.startCollectionViewAtBottom()
+      currentTab()?.pushViewController(destination, animated: true)
     }
-    currentTab()?.pushViewController(destination, animated: true)
-  
+
     chatLogController = nil
     messagesFetcher?.delegate = nil
     messagesFetcher = nil
@@ -498,7 +498,7 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
     navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
   }
   
-  func conversations(update conversation: Conversation) {
+  func conversations(update conversation: Conversation, reloadNeeded: Bool) {
     let chatID = conversation.chatID ?? ""
     
     if let index = conversations.index(where: {$0.chatID == chatID}) {
@@ -510,12 +510,13 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
     if let index = filtededConversations.index(where: {$0.chatID == chatID}) {
       filtededConversations[index] = conversation
       let indexPath = IndexPath(row: index, section: 1)
-      updateCell(at: indexPath)
+      if reloadNeeded { updateCell(at: indexPath) }
+     
     }
     if let index = filteredPinnedConversations.index(where: {$0.chatID == chatID}) {
       filteredPinnedConversations[index] = conversation
       let indexPath = IndexPath(row: index, section: 0)
-      updateCell(at: indexPath)
+      if reloadNeeded { updateCell(at: indexPath) }
     }
     
     let allConversations = conversations + pinnedConversations

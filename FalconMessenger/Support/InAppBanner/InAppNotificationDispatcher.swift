@@ -54,6 +54,7 @@ public class InAppNotificationDispatcher {
     private func showBanner(_ completion: @escaping () -> ()) {
         bannerWindow = initializeNewWindow()
         setup(window: bannerWindow, for: UIApplication.shared.statusBarOrientation, in: UIDevice.current.userInterfaceIdiom)
+      
         bannerWindow.makeKeyAndVisible()
         
     //    banner.alpha = 0.0

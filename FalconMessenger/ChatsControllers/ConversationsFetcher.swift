@@ -14,7 +14,7 @@ protocol ConversationUpdatesDelegate: class {
   func conversations(didStartFetching: Bool)
   func conversations(didStartUpdatingData: Bool)
   func conversations(didFinishFetching: Bool, conversations: [Conversation])
-  func conversations(update conversation: Conversation)
+  func conversations(update conversation: Conversation, reloadNeeded: Bool)
   func conversations(didRemove: Bool, chatID: String)
   func conversations(addedNewConversation: Bool, chatID: String)
 }
@@ -231,13 +231,19 @@ class ConversationsFetcher: NSObject {
       conversation.isTyping = isTyping
     }
  
-    guard isGroupAlreadyFinished, (conversations[index].muted != conversation.muted || conversations[index].pinned != conversation.pinned) else {
+    guard isGroupAlreadyFinished, (conversations[index].muted != conversation.muted) else {
+      if isGroupAlreadyFinished && conversations[index].pinned != conversation.pinned {
+        conversations[index] = conversation
+        delegate?.conversations(update: conversations[index], reloadNeeded: false)
+        return
+      }
+      
       conversations[index] = conversation
       handleGroupOrReloadTable()
       return
     }
     conversations[index] = conversation
-    delegate?.conversations(update: conversation)
+    delegate?.conversations(update: conversations[index], reloadNeeded: true)
   }
   
   fileprivate func handleGroupOrReloadTable() {
@@ -291,23 +297,23 @@ class ConversationsFetcher: NSObject {
     
     if let adminKey = adminKey, snapshot.key == adminKey {
       conversations[index].admin = snapshot.value as? String
-      delegate?.conversations(update: conversations[index])
+      delegate?.conversations(update: conversations[index], reloadNeeded: true)
     }
     
     if let membersIDsKey = membersIDsKey, snapshot.key == membersIDsKey {
       guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
       conversations[index].chatParticipantsIDs = Array(dictionary.keys)
-        delegate?.conversations(update: conversations[index])
+      delegate?.conversations(update: conversations[index], reloadNeeded: true)
     }
     
     if snapshot.key == conversationNameKey {
       conversations[index].chatName = snapshot.value as? String
-      delegate?.conversations(update: conversations[index])
+      delegate?.conversations(update: conversations[index], reloadNeeded: true)
     }
       
     if snapshot.key == conversationPhotoKey {
       conversations[index].chatThumbnailPhotoURL = snapshot.value as? String
-      delegate?.conversations(update: conversations[index])
+      delegate?.conversations(update: conversations[index], reloadNeeded: true)
     }
   }
 }

@@ -32,7 +32,11 @@ class EnterPhoneNumberController: UIViewController {
   
   func configurePhoneNumberContainerView() {
     view.addSubview(phoneNumberContainerView)
-    phoneNumberContainerView.frame = view.bounds
+    phoneNumberContainerView.translatesAutoresizingMaskIntoConstraints = false
+    phoneNumberContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    phoneNumberContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    phoneNumberContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+    phoneNumberContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     phoneNumberContainerView.termsAndPrivacy.delegate = self
   }
   

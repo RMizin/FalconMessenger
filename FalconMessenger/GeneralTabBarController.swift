@@ -61,7 +61,12 @@ class GeneralTabBarController: UITabBarController {
     newNavigationController.navigationBar.shadowImage = UIImage()
     newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
     newNavigationController.modalTransitionStyle = .crossDissolve
-    present(newNavigationController, animated: false, completion: nil)
+  
+    if DeviceType.isIPad {
+      splitViewController?.show(newNavigationController, sender: self)
+    } else {
+      present(newNavigationController, animated: false, completion: nil)
+    }
   }
   
   let chatsController = ChatsTableViewController()

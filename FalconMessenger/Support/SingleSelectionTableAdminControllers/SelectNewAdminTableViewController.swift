@@ -108,7 +108,11 @@ class SelectNewAdminTableViewController: UITableViewController {
       let newAdminText = "\(newAdminName) is new group administrator"
       self.informationMessageSender.sendInformatoinMessage(chatID: self.chatID, membersIDs: membersIDs, text: newAdminText)
       ARSLineProgress.hide()
-      self.navigationController?.backToViewController(viewController: ChatLogController.self)
+      if DeviceType.isIPad {
+        self.dismiss(animated: true, completion: nil)
+      } else {
+        self.navigationController?.backToViewController(viewController: ChatLogViewController.self)
+      }
     }
   }
   

@@ -37,10 +37,8 @@ extension UIViewController: CNContactViewControllerDelegate {
     contact.familyName = surname
     contact.phoneNumbers = [phone]
     let destination = CreateContactTableViewController(style: .grouped)
-    let newNavigationController = UINavigationController(rootViewController: destination)
- 
     destination.contact = contact
-    present(newNavigationController, animated: true, completion: nil)
+    navigationController?.pushViewController(destination, animated: true)
   }
 }
 

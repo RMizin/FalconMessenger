@@ -30,15 +30,11 @@ class CreateContactTableViewController: UITableViewController {
       tableView.register(ContactDataTableViewCell.self, forCellReuseIdentifier: createContactTableViewCellIdentifier)
      
       navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .done, target: self, action: #selector(createContact))
-      navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(dismissController))
+
       if #available(iOS 11.0, *) {
         navigationItem.largeTitleDisplayMode = .always
         navigationController?.navigationBar.prefersLargeTitles = true
       }
-    }
-
-    @objc func dismissController() {
-        dismiss(animated: true, completion: nil)
     }
   
     @objc func createContact() {
@@ -58,7 +54,12 @@ class CreateContactTableViewController: UITableViewController {
         try store.execute(request)
         ARSLineProgress.showSuccess()
 
-        dismiss(animated: true, completion: nil)
+        if DeviceType.isIPad {
+          self.dismiss(animated: true, completion: nil)
+        } else {
+          self.navigationController?.backToViewController(viewController: ChatLogViewController.self)
+        }
+
       } catch {
         basicErrorAlertWith(title: "Error", message: error.localizedDescription, controller: self)
       }

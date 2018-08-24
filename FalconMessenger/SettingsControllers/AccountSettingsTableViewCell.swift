@@ -27,7 +27,6 @@ class AccountSettingsTableViewCell: UITableViewCell {
     return title
   }()
   
-  
   let separator: UIView = {
     let separator = UIView()
     separator.translatesAutoresizingMaskIntoConstraints = false
@@ -59,16 +58,15 @@ class AccountSettingsTableViewCell: UITableViewCell {
     separator.heightAnchor.constraint(equalToConstant: 0.4).isActive = true
   }
   
-
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
   fileprivate func setColor() {
-    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    accessoryView?.backgroundColor = backgroundColor
-    title.backgroundColor = backgroundColor
-    icon.backgroundColor = backgroundColor
+    backgroundColor = .clear
+    accessoryView?.backgroundColor = .clear
+    title.backgroundColor = .clear
+    icon.backgroundColor = .clear
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     selectionColor = ThemeManager.currentTheme().cellSelectionColor
   }
@@ -77,5 +75,4 @@ class AccountSettingsTableViewCell: UITableViewCell {
     super.prepareForReuse()
     setColor()
   }
-
 }

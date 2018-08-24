@@ -14,15 +14,14 @@ class TimestampView: RevealableView {
     var titleLabel = UILabel()
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
     titleLabel.numberOfLines = 0
-    titleLabel.font = UIFont.systemFont(ofSize: 8)
+    titleLabel.font = MessageFontsAppearance.defaultTimestampTextFont
   
     return titleLabel
   }()
   
   override init(frame: CGRect) {
-    super.init(frame: frame)
-    
-    width = 47
+    super.init(frame: frame)   
+    width = CellSizes.timestampWidth()
     
     addSubview(titleLabel)
     titleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true

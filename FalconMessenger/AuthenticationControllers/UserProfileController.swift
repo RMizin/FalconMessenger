@@ -22,17 +22,10 @@ class UserProfileController: UIViewController {
         super.viewDidLoad()
 
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-      view.addSubview(userProfileContainerView)
     
       configureNavigationBar()
       configureContainerView()
       configureColorsAccordingToTheme()
-    }
-  
-    override func viewWillLayoutSubviews() {
-      super.viewWillLayoutSubviews()
-      userProfileContainerView.frame = view.bounds
-      userProfileContainerView.layoutIfNeeded()
     }
   
     fileprivate func configureNavigationBar () {
@@ -43,7 +36,13 @@ class UserProfileController: UIViewController {
     }
   
     fileprivate func configureContainerView() {
-      userProfileContainerView.frame = view.bounds
+      view.addSubview(userProfileContainerView)
+      userProfileContainerView.translatesAutoresizingMaskIntoConstraints = false
+      userProfileContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+      userProfileContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+      userProfileContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+      userProfileContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+
       userProfileContainerView.bioPlaceholderLabel.isHidden = !userProfileContainerView.bio.text.isEmpty
       userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
       userProfileContainerView.bio.delegate = self
@@ -111,7 +110,6 @@ extension UserProfileController {
       }
     })
     
-    
     let photoReference = Database.database().reference().child("users").child(currentUserID).child("photoURL")
     photoReference.observeSingleEvent(of: .value, with: { (snapshot) in
       
@@ -159,8 +157,14 @@ extension UserProfileController {
                                      "phoneNumber" : phoneNumber,
                                      "bio" : userProfileContainerView.bio.text ?? ""]) { (error, reference) in
       ARSLineProgress.hide()
-      self.dismiss(animated: true) {
-        AppUtility.lockOrientation(.allButUpsideDown)
+          
+      if DeviceType.isIPad {
+        let tabBarController = GeneralTabBarController()
+        self.splitViewController?.show(tabBarController, sender: self)
+      } else {
+        self.dismiss(animated: true) {
+          AppUtility.lockOrientation(.allButUpsideDown)
+        }
       }
     }
   }

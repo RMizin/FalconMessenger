@@ -1,5 +1,5 @@
 //
-//  SelectedMediaCollectionCell+timerHandlers.swift
+//  AttachCollectionViewCell+TimerHandlers.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 11/26/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension SelectedMediaCollectionCell {
+extension AttachCollectionViewCell {
   
   typealias CompletionHandler = (_ success: Bool) -> Void
   

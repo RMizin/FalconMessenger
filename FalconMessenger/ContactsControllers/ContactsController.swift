@@ -219,7 +219,7 @@ class ContactsController: UITableViewController {
       }
     }
 
-    var chatLogController: ChatLogController? = nil
+    var chatLogController: ChatLogViewController? = nil
     var messagesFetcher: MessagesFetcher? = nil
   
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -233,7 +233,7 @@ class ContactsController: UITableViewController {
                                                           "chatParticipantsIDs": [currentUserID] as AnyObject]
         
         let conversation = Conversation(dictionary: conversationDictionary)
-        chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+        chatLogController = ChatLogViewController()
         
         messagesFetcher = MessagesFetcher()
         messagesFetcher?.delegate = self
@@ -250,7 +250,7 @@ class ContactsController: UITableViewController {
                                                            "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
         
         let conversation = Conversation(dictionary: conversationDictionary)
-        chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
+        chatLogController = ChatLogViewController()
         
         messagesFetcher = MessagesFetcher()
         messagesFetcher?.delegate = self
@@ -331,13 +331,14 @@ extension ContactsController: MessagesDelegate {
     chatLogController?.configureTitleViewWithOnlineStatus()
     chatLogController?.messagesFetcher.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
-    
-    if #available(iOS 11.0, *) {
+        
+    if DeviceType.isIPad {
+      let navigationController = UINavigationController(rootViewController: destination)
+      splitViewController?.showDetailViewController(navigationController, sender: self)
     } else {
-      chatLogController?.startCollectionViewAtBottom()
+      navigationController?.pushViewController(destination, animated: true)
     }
-    
-    navigationController?.pushViewController(destination, animated: true)
+  
     chatLogController = nil
     messagesFetcher?.delegate = nil
     messagesFetcher = nil

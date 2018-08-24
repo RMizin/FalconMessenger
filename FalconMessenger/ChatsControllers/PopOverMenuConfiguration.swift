@@ -9,7 +9,7 @@
 import UIKit
 import FTPopOverMenu_Swift
 
-extension ChatLogController {
+extension ChatLogViewController {
   func configureCellContextMenuView() {
     let config = FTConfiguration.shared
     config.backgoundTintColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)

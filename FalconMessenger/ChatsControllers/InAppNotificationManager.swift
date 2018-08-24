@@ -12,7 +12,6 @@ import AudioToolbox
 import SafariServices
 import CropViewController
 
-
 class InAppNotificationManager: NSObject {
 
   fileprivate var notificationReference: DatabaseReference!
@@ -46,7 +45,7 @@ class InAppNotificationManager: NSObject {
       notificationHandle[0].handle = notificationReference.observe(.childChanged, with: { (snapshot) in
         guard snapshot.key == "lastMessageID" else { return }
         guard let messageID = snapshot.value as? String else { return }
-        
+        guard let oldMessageID = conversation.lastMessageID, messageID > oldMessageID else { return }
         
         let lastMessageReference = Database.database().reference().child("messages").child(messageID)
         lastMessageReference.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -63,12 +62,20 @@ class InAppNotificationManager: NSObject {
   }
   
   func handleInAppSoundPlaying(message: Message, conversation: Conversation, conversations: [Conversation]) {
-    
     if UIApplication.topViewController() is SFSafariViewController ||
       UIApplication.topViewController() is CropViewController ||
-      UIApplication.topViewController() is ChatLogController ||
       UIApplication.topViewController() is INSPhotosViewController { return }
     
+    if DeviceType.isIPad {
+      if let chatLogController = UIApplication.topViewController() as? ChatLogViewController,
+        let currentOpenedChat = chatLogController.conversation?.chatID,
+        let conversationID = conversation.chatID {
+        if currentOpenedChat == conversationID { return }
+      }
+    } else {
+      if UIApplication.topViewController() is ChatLogViewController { return }
+    }
+   
     if let index = conversations.index(where: { (conv) -> Bool in
       return conv.chatID == conversation.chatID
     }) {

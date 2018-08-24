@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-extension ChatLogController: CollectionDelegate {
+extension ChatLogViewController: CollectionDelegate {
   
   func collectionView(shouldRemoveMessage id: String) {
     
@@ -30,8 +30,8 @@ extension ChatLogController: CollectionDelegate {
   //    messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
  //   }
     
-    collectionView?.performBatchUpdates ({
-      collectionView?.deleteItems(at: [IndexPath(item: index, section: 0)])
+    collectionView.performBatchUpdates ({
+      collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
     }, completion: { (completed) in
       
       let startIndex = index - 2
@@ -46,7 +46,7 @@ extension ChatLogController: CollectionDelegate {
       }
       
       UIView.performWithoutAnimation {
-        self.collectionView?.reloadItems(at: indexPaths)
+        self.collectionView.reloadItems(at: indexPaths)
         guard self.messages.count == 0 else { return }
         self.navigationController?.popViewController(animated: true)
       }
@@ -100,15 +100,15 @@ extension ChatLogController: CollectionDelegate {
       messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
     }
     
-    collectionView?.performBatchUpdates ({
+    collectionView.performBatchUpdates ({
       let indexPath = IndexPath(item: insertionIndex, section: 0)
       
-      collectionView?.insertItems(at: [indexPath])
+      collectionView.insertItems(at: [indexPath])
       
-      if messages.count - 1 >= 0 && isScrollViewAtTheBottom {
+      if messages.count - 1 >= 0 && isScrollViewAtTheBottom() {
         let indexPath = IndexPath(item: messages.count - 1, section: 0)
         DispatchQueue.main.async { [unowned self] in
-          self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+          self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
         }
       }
     }, completion: { (true) in
@@ -121,9 +121,8 @@ extension ChatLogController: CollectionDelegate {
             indexPaths.append(indexPath)
           }
         }
-        self.collectionView?.reloadItems(at: indexPaths)
+        self.collectionView.reloadItems(at: indexPaths)
       }
-      
       self.updateMessageStatus(messageRef: reference)
     })
   }

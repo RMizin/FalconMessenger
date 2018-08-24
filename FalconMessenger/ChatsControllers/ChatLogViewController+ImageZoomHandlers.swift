@@ -14,7 +14,7 @@ import Firebase
 
 private var inputContainerViewWasFirstResponder = false
 
-extension ChatLogController {
+extension ChatLogViewController {
 
   func performZoomInForVideo( url: URL) {
   
@@ -72,7 +72,7 @@ extension ChatLogController {
       initialPhotoIndex = initial
     }
     
-    guard let cell = collectionView?.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return }
+    guard let cell = collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return }
     let currentPhoto = photos[initialPhotoIndex]
     let referenceView = cell.messageImageView
     let galleryPreview = INSPhotosViewController(photos: photos, initialPhoto: currentPhoto, referenceView: referenceView)
@@ -124,12 +124,12 @@ extension ChatLogController {
       if photo.messageUID == nil {
         guard let indexOfCellWithLocalImage = self.messages.index(where: {$0.localImage == photo.image}) else { return nil }
         let indexPathOfCell = IndexPath(item: indexOfCellWithLocalImage, section: 0)
-        guard let cellForDismiss = self.collectionView?.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else { return nil }
+        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else { return nil }
         return cellForDismiss.messageImageView
       } else {
         guard let indexOfCell = self.messages.index(where: {$0.messageUID == photo.messageUID}) else { return nil }
         let indexPathOfCell = IndexPath(item: indexOfCell, section: 0)
-        guard let cellForDismiss = self.collectionView?.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else { return nil }
+        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else { return nil }
         return cellForDismiss.messageImageView
       }
     }

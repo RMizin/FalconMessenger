@@ -15,7 +15,7 @@ class VoiceRecordingViewController: UIViewController {
   
   var player: AVAudioPlayer!
   
-  weak var inputContainerView: ChatInputContainerView?
+  weak var inputContainerView: InputContainerView?
 
   let voiceRecordingContainerView = VoiceRecordingContainerView()
   
@@ -425,28 +425,14 @@ extension String {
 // MARK: AVAudioRecorderDelegate
 extension VoiceRecordingViewController: AVAudioRecorderDelegate {
   
-  func expandCollection() {
-    inputContainerView?.sendButton.isEnabled = true
-    inputContainerView?.placeholderLabel.text = ChatInputContainerView.commentOrSendPlaceholder
-    inputContainerView?.attachedImages.frame = CGRect(x: 0, y: 3,
-                                                      width: Int(inputContainerView!.inputTextView.frame.width),
-                                                      height: ChatInputContainerView.attachedImagesHeight)
-    inputContainerView?.inputTextView.textContainerInset = InputContainerViewConstants.containerInsetsWithAttachedImages
-    
-    let maxTextViewHeightRelativeToOrientation: CGFloat! = getInputTextViewMaxHeight()
-    if inputContainerView!.inputTextView.contentSize.height <= maxTextViewHeightRelativeToOrientation {
-      inputContainerView?.invalidateIntrinsicContentSize()
-    }
-  }
-  
   func insertItemsToCollectionViewAnimated(at indexPath: [IndexPath], mediaObject: [String: AnyObject]) {
     
-    self.expandCollection()
-    self.inputContainerView?.attachedImages.performBatchUpdates ({
-      self.inputContainerView?.attachedImages.insertItems(at: indexPath)
+    inputContainerView?.expandCollection()
+    self.inputContainerView?.attachCollectionView.performBatchUpdates ({
+      self.inputContainerView?.attachCollectionView.insertItems(at: indexPath)
     }, completion: nil)
     
-    self.inputContainerView?.attachedImages.scrollToItem(at: IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0), at: .right, animated: true)
+    self.inputContainerView?.attachCollectionView.scrollToItem(at: IndexPath(item: self.inputContainerView!.attachedMedia.count - 1 , section: 0), at: .right, animated: true)
   }
   
   func stackOverflowAnswer(data: Data) {
@@ -479,10 +465,10 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
         stackOverflowAnswer(data: soundData)
       let mediaObject = ["audioObject": soundData ,
                          "fileURL" : soundFileURL] as [String: AnyObject]
-      self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
+      self.inputContainerView?.attachedMedia.append(MediaObject(dictionary: mediaObject))
       soundData = nil
-      if self.inputContainerView!.selectedMedia.count - 1 >= 0 {
-        self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.selectedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
+      if self.inputContainerView!.attachedMedia.count - 1 >= 0 {
+        self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.attachedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
       } else {
         self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: 0 , section: 0) ], mediaObject: mediaObject)
       }
@@ -523,4 +509,3 @@ extension VoiceRecordingViewController: AVAudioPlayerDelegate {
     }
   }
 }
-

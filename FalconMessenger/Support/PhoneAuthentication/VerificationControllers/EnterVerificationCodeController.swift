@@ -20,7 +20,11 @@ class EnterVerificationCodeController: UIViewController {
       
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     view.addSubview(enterVerificationContainerView)
-    enterVerificationContainerView.frame = view.bounds
+    enterVerificationContainerView.translatesAutoresizingMaskIntoConstraints = false
+    enterVerificationContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    enterVerificationContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    enterVerificationContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+    enterVerificationContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     enterVerificationContainerView.resend.addTarget(self, action: #selector(sendSMSConfirmation), for: .touchUpInside)
     enterVerificationContainerView.enterVerificationCodeController = self
     configureNavigationBar()
@@ -99,8 +103,13 @@ class EnterVerificationCodeController: UIViewController {
         }
         
         ARSLineProgress.showSuccess()
-        self.dismiss(animated: true) {
-          AppUtility.lockOrientation(.allButUpsideDown)
+        
+        if DeviceType.isIPad {
+           self.navigationController?.backToViewController(viewController: AccountSettingsController.self)
+        } else {
+          self.dismiss(animated: true) {
+            AppUtility.lockOrientation(.allButUpsideDown)
+          }
         }
       }
     })

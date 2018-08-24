@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 
-extension ChatLogController {
+extension ChatLogViewController {
   
   @objc func toggleTextView () {
     
@@ -86,5 +86,4 @@ extension ChatLogController {
       }
     }
   }
-
 }

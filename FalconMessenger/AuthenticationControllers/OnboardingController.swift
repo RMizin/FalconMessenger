@@ -17,7 +17,11 @@ class OnboardingController: UIViewController {
     
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     view.addSubview(onboardingContainerView)
-    onboardingContainerView.frame = view.bounds
+    onboardingContainerView.translatesAutoresizingMaskIntoConstraints = false
+    onboardingContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    onboardingContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    onboardingContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+    onboardingContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     setColorsAccordingToTheme()
   }
   

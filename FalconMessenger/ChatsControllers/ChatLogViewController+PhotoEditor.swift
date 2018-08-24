@@ -14,10 +14,10 @@ import CropViewController
 private let nibName = "PhotoEditorViewController"
 private var selectedPhotoIndexPath: IndexPath!
 
-extension ChatLogController:CropViewControllerDelegate {
+extension ChatLogViewController:CropViewControllerDelegate {
   
   func presentPhotoEditor(forImageAt indexPath: IndexPath) {
-    guard let image = inputContainerView.selectedMedia[indexPath.row].object?.asUIImage else { return }
+    guard let image = inputContainerView.attachedMedia[indexPath.row].object?.asUIImage else { return }
     inputContainerView.inputTextView.resignFirstResponder()
     let cropController = CropViewController(croppingStyle: .default, image: image)
     cropController.delegate = self
@@ -27,8 +27,8 @@ extension ChatLogController:CropViewControllerDelegate {
 
   func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
     guard selectedPhotoIndexPath != nil else { return }
-    self.inputContainerView.selectedMedia[selectedPhotoIndexPath.row].object = UIImageJPEGRepresentation(image, 1)
-    self.inputContainerView.attachedImages.reloadItems(at: [selectedPhotoIndexPath])
+    self.inputContainerView.attachedMedia[selectedPhotoIndexPath.row].object = UIImageJPEGRepresentation(image, 1)
+    self.inputContainerView.attachCollectionView.reloadItems(at: [selectedPhotoIndexPath])
     dismissCropController(cropViewController: cropViewController)
   }
   
@@ -44,16 +44,12 @@ extension ChatLogController:CropViewControllerDelegate {
   }
   
   func updateContainerViewLayout() {
+    inputContainerView.handleRotation()
     //needed to update input container layout if device was rotated during the image editing
-    inputContainerView.inputTextView.invalidateIntrinsicContentSize()
-    inputContainerView.invalidateIntrinsicContentSize()
-    DispatchQueue.main.async { [unowned self] in
-      self.inputContainerView.attachedImages.frame.size.width = self.inputContainerView.inputTextView.frame.width
-    }
   }
   
   func presentVideoPlayer(forUrlAt indexPath: IndexPath) {
-    guard let pathURL = inputContainerView.selectedMedia[indexPath.item].fileURL else { return }
+    guard let pathURL = inputContainerView.attachedMedia[indexPath.item].fileURL else { return }
     let videoURL = URL(string: pathURL)
     let player = AVPlayer(url: videoURL!)
     let playerViewController = AVPlayerViewController()

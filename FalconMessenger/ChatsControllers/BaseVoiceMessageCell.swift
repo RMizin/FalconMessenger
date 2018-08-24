@@ -10,8 +10,8 @@ import UIKit
 
 class BaseVoiceMessageCell: BaseMessageCell {
   
-  var playerView: PlayerCellView = {
-    var playerView = PlayerCellView()
+  var playerView: PlayerView = {
+    var playerView = PlayerView()
     playerView.alpha = 1
     playerView.backgroundColor = .clear
     playerView.play.setImage(UIImage(named: "pause"), for: .selected)

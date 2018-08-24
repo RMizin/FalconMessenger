@@ -31,11 +31,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     userDefaults.configureInitialLaunch()
     
     let tabBarController = GeneralTabBarController()
+    let detailViewController = SplitPlaceholderViewController()
+    let splitViewController = SplitViewController()
+    splitViewController.viewControllers = [tabBarController, detailViewController]
     window = UIWindow(frame: UIScreen.main.bounds)
-    window?.rootViewController = tabBarController
+    window?.rootViewController = splitViewController
     window?.makeKeyAndVisible()
     window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-  
     tabBarController.presentOnboardingController()
 
     if #available(iOS 10.0, *) {

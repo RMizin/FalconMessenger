@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-extension ChatLogController {
+extension ChatLogViewController {
   
   @objc func toggleVoiceRecording () {
     

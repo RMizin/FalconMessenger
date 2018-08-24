@@ -95,7 +95,7 @@ class BaseMediaMessageCell: BaseMessageCell {
       handlePlay()
       return
     }
-    guard let indexPath = chatLogController?.collectionView?.indexPath(for: self) else { return }
+    guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
     self.chatLogController?.openSelectedPhoto(at: indexPath)
   }    
 }

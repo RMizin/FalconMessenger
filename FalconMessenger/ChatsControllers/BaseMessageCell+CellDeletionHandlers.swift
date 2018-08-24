@@ -43,37 +43,37 @@ extension BaseMessageCell {
     let defaultMenuWidth: CGFloat = 100
     config.menuWidth = expandedMenuWidth
 
-   guard let indexPath = self.chatLogController?.collectionView?.indexPath(for: self) else { return }
+    guard let indexPath = self.chatLogController?.collectionView.indexPath(for: self) else { return }
     
-    if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
+    if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
       
       cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
       contextMenuItems = [ContextMenuItems.deleteItem]
     }
-    if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
+    if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
       contextMenuItems = [ContextMenuItems.deleteItem]
        cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
     }
-    if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? PhotoMessageCell {
+    if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? PhotoMessageCell {
       cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
       if !cell.playButton.isHidden {
         contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
         config.menuWidth = expandedMenuWidth
       }
     }
-    if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
+    if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
       cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
       if !cell.playButton.isHidden {
         contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
         config.menuWidth = expandedMenuWidth
       }
     }
-    if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
+    if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
       cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
     }
-    if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingTextMessageCell {
+    if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingTextMessageCell {
       cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
     }
     
@@ -86,31 +86,31 @@ extension BaseMessageCell {
       
       if contextMenuItems[selectedIndex] == ContextMenuItems.copyItem ||
         contextMenuItems[selectedIndex] == ContextMenuItems.copyPreviewItem {
-        self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
-        if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? PhotoMessageCell {
+        self.chatLogController?.collectionView.reloadItems(at: [indexPath])
+        if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? PhotoMessageCell {
           if cell.messageImageView.image == nil {
             guard let controllerToDisplayOn = self.chatLogController else { return }
             basicErrorAlertWith(title: basicErrorTitleForAlert, message: copyingImageError, controller: controllerToDisplayOn)
             return
           }
           UIPasteboard.general.image = cell.messageImageView.image
-        } else if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
+        } else if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
           if cell.messageImageView.image == nil {
             guard let controllerToDisplayOn = self.chatLogController else { return }
             basicErrorAlertWith(title: basicErrorTitleForAlert, message: copyingImageError, controller: controllerToDisplayOn)
             return
           }
           UIPasteboard.general.image = cell.messageImageView.image
-        } else if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
+        } else if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
           UIPasteboard.general.string = cell.textView.text
-        } else if let cell = self.chatLogController?.collectionView?.cellForItem(at: indexPath) as? IncomingTextMessageCell {
+        } else if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingTextMessageCell {
           UIPasteboard.general.string = cell.textView.text
         } else {
           return
         }
       } else {
         guard let uid = Auth.auth().currentUser?.uid, let partnerID = self.message?.chatPartnerId(), let messageID = self.message?.messageUID, self.currentReachabilityStatus != .notReachable else {
-            self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
+            self.chatLogController?.collectionView.reloadItems(at: [indexPath])
             guard let controllerToDisplayOn = self.chatLogController else { return }
             basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerToDisplayOn)
             return
@@ -152,7 +152,7 @@ extension BaseMessageCell {
         })
       }
     }) { //completeion
-     self.chatLogController?.collectionView?.reloadItems(at: [indexPath])
+     self.chatLogController?.collectionView.reloadItems(at: [indexPath])
     }
   }
 }

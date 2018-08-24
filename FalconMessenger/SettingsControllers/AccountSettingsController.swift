@@ -95,6 +95,11 @@ class AccountSettingsController: UITableViewController {
     userProfileContainerView.bio.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     userProfileContainerView.name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     tableView.reloadData()
+  
+    guard let splitViewController = splitViewController, splitViewController.viewControllers.indices.contains(1) else { return }
+    if let placeholder = splitViewController.viewControllers[1] as? SplitPlaceholderViewController {
+      placeholder.updateBackgrounColor()
+    }
   }
   
   @objc fileprivate func openUserProfilePicture() {
@@ -199,7 +204,11 @@ class AccountSettingsController: UITableViewController {
   }
   
   func logoutButtonTapped () {
-  
+    
+    if DeviceType.isIPad {
+      self.splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
+    }
+    
     let firebaseAuth = Auth.auth()
     guard let uid = Auth.auth().currentUser?.uid else { return }
     guard currentReachabilityStatus != .notReachable else {
@@ -237,16 +246,20 @@ class AccountSettingsController: UITableViewController {
       
       let destination = OnboardingController()
       
-      let newNavigationController = UINavigationController(rootViewController: destination)
-      newNavigationController.navigationBar.shadowImage = UIImage()
-      newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+      let navigationController = UINavigationController(rootViewController: destination)
+      navigationController.navigationBar.shadowImage = UIImage()
+      navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
       
-      newNavigationController.navigationBar.isTranslucent = false
-      newNavigationController.modalTransitionStyle = .crossDissolve
+      navigationController.navigationBar.isTranslucent = false
+      navigationController.modalTransitionStyle = .crossDissolve
       ARSLineProgress.hide()
-      self.present(newNavigationController, animated: true, completion: {
-        self.tabBarController?.selectedIndex = Tabs.chats.rawValue
-      })
+      if DeviceType.isIPad {
+        self.splitViewController?.show(navigationController, sender: self)
+      } else {
+        self.present(navigationController, animated: true, completion: {
+          self.tabBarController?.selectedIndex = Tabs.chats.rawValue
+        })
+      }
     }
   }
 }
@@ -293,12 +306,18 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
       if indexPath.row == 2 {
          AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         let controller = ChangePhoneNumberController()
-        let destination = UINavigationController(rootViewController: controller)
-        destination.navigationBar.shadowImage = UIImage()
-        destination.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        destination.hidesBottomBarWhenPushed = true
-        destination.navigationBar.isTranslucent = false
-        present(destination, animated: true, completion: nil)
+        
+        if DeviceType.isIPad {
+         self.navigationController?.pushViewController(controller, animated: true)
+        } else {
+          let destination = UINavigationController(rootViewController: controller)
+          destination.navigationBar.shadowImage = UIImage()
+          destination.navigationBar.setBackgroundImage(UIImage(), for: .default)
+          destination.hidesBottomBarWhenPushed = true
+          destination.navigationBar.isTranslucent = false
+          self.present(destination, animated: true, completion: nil)
+        }
+
       }
       
       if indexPath.row == 3 {

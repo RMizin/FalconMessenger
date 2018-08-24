@@ -8,35 +8,117 @@
 
 import UIKit
 
+struct CellSizes {
+
+  static func timestampWidth() -> CGFloat {
+    if DeviceType.IS_IPAD_PRO {
+      return 80
+    } else if DeviceType.IS_IPAD {
+      return 57
+    } else {
+      return 47
+    }
+  }
+  
+  static func bubbleViewMaxWidth() -> CGFloat {
+    if DeviceType.IS_IPAD_PRO {
+      return ScreenSize.minLength * 0.50
+    } else if DeviceType.IS_IPAD {
+      return ScreenSize.minLength * 0.45
+    } else {
+      return ScreenSize.minLength * 0.75
+    }
+  }
+  
+  static func landscapeBubbleViewMaxWidth() -> CGFloat {
+    if DeviceType.IS_IPAD_PRO {
+      return ScreenSize.maxLength * 0.50
+    } else if DeviceType.IS_IPAD {
+      return ScreenSize.maxLength * 0.50
+    } else {
+      return ScreenSize.maxLength * 0.75
+    }
+  }
+  
+  static func mediaMaxWidth() -> CGFloat {
+    if DeviceType.IS_IPAD_PRO {
+      return ScreenSize.minLength * 0.50
+    } else if DeviceType.IS_IPAD {
+      return ScreenSize.minLength * 0.45
+    } else {
+      return ScreenSize.minLength * 0.75
+    }
+  }
+}
 
 struct MessageFontsAppearance {
   
   static var defaultMessageTextFont: UIFont {
-    return .systemFont(ofSize: 16)
+    if DeviceType.IS_IPAD_PRO {
+      return .systemFont(ofSize: 22)
+    } else if DeviceType.IS_IPAD {
+      return .systemFont(ofSize: 19)
+    } else {
+      return .systemFont(ofSize: 16)
+    }
   }
   
   static var defaultVoiceMessageTextFont: UIFont {
-    return .systemFont(ofSize: 14)
+    if DeviceType.IS_IPAD_PRO {
+      return .systemFont(ofSize: 20)
+    } else if DeviceType.IS_IPAD {
+      return .systemFont(ofSize: 17)
+    } else {
+      return .systemFont(ofSize: 14)
+    }
   }
   
   static var defaultInformationMessageTextFont: UIFont {
-    return .systemFont(ofSize: 14)
+    if DeviceType.IS_IPAD_PRO {
+      return .systemFont(ofSize: 20)
+    } else if DeviceType.IS_IPAD {
+      return .systemFont(ofSize: 17)
+    } else {
+      return .systemFont(ofSize: 14)
+    }
   }
   
   static var defaultDeliveryStatusTextFont: UIFont {
-    return .boldSystemFont(ofSize: 10)
+    if DeviceType.IS_IPAD_PRO {
+      return .systemFont(ofSize: 15)
+    } else if DeviceType.IS_IPAD {
+      return .systemFont(ofSize: 13)
+    } else {
+      return .systemFont(ofSize: 10)
+    }
+  }
+  
+  static var defaultTimestampTextFont: UIFont {
+    if DeviceType.IS_IPAD_PRO {
+      return .systemFont(ofSize: 14)
+    } else if DeviceType.IS_IPAD {
+      return .systemFont(ofSize: 11)
+    } else {
+      return .systemFont(ofSize: 8)
+    }
   }
   
  static var defaultMessageAuthorNameFont: UIFont {
-    return .systemFont(ofSize: 15)
+    if DeviceType.IS_IPAD_PRO {
+      return .systemFont(ofSize: 21)
+    } else if DeviceType.IS_IPAD {
+      return .systemFont(ofSize: 18)
+    } else {
+      return .systemFont(ofSize: 15)
+    }
   }
 }
-
 
 class BaseMessageCell: RevealableCollectionViewCell {
   
   weak var message: Message?
-  weak var chatLogController: ChatLogController?
+  
+  weak var chatLogController: ChatLogViewController?
 
   static let textViewTopInset: CGFloat = 6
   
@@ -58,14 +140,14 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   static let incomingMessageAuthorNameLeftInset = incomingTextViewLeftInset + 5
   
-  static let bubbleViewMaxWidth: CGFloat = UIScreen.main.bounds.width * 0.75
+  static let bubbleViewMaxWidth: CGFloat = CellSizes.bubbleViewMaxWidth()
   
-  static let landscapeBubbleViewMaxWidth: CGFloat = UIScreen.main.bounds.height * 0.75
+  static let landscapeBubbleViewMaxWidth: CGFloat = CellSizes.landscapeBubbleViewMaxWidth()
   
   static let bubbleViewMaxHeight: CGFloat = 10000
   
-  static let mediaMaxWidth: CGFloat = UIScreen.main.bounds.width * 0.75
-  
+  static let mediaMaxWidth: CGFloat = CellSizes.mediaMaxWidth()
+
   static let incomingGroupMessageAuthorNameLabelMaxWidth = bubbleViewMaxWidth - incomingMessageHorisontalInsets
   
   static let landscapeIncomingGroupMessageAuthorNameLabelMaxWidth = landscapeBubbleViewMaxWidth - incomingMessageHorisontalInsets
@@ -98,7 +180,6 @@ class BaseMessageCell: RevealableCollectionViewCell {
   }()
   
   var deliveryStatus: UILabel = {
-    
     var deliveryStatus = UILabel()
     deliveryStatus.text = "status"
     deliveryStatus.font = MessageFontsAppearance.defaultDeliveryStatusTextFont
@@ -153,7 +234,7 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   func setupTimestampView(message: Message, isOutgoing:Bool) {
     DispatchQueue.main.async {
-      if let view = self.chatLogController?.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
+      if let view = self.chatLogController?.collectionView.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
         view.titleLabel.text = message.convertedTimestamp
         let style:RevealStyle = isOutgoing ? .slide : .over
         self.setRevealableView(view, style: style, direction: .left)

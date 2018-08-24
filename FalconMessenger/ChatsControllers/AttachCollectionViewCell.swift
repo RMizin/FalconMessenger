@@ -1,5 +1,5 @@
 //
-//  SelectedMediaCollectionCell.swift
+//  AttachCollectionViewCell.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/20/17.
@@ -9,9 +9,9 @@
 import UIKit
 import AVFoundation
 
-class SelectedMediaCollectionCell: UICollectionViewCell {
+class AttachCollectionViewCell: UICollectionViewCell {
   
-  weak var chatInputContainerView:ChatInputContainerView!
+  weak var chatInputContainerView: InputContainerView!
   var isHeightCalculated: Bool = false
   var playerViewHeightAnchor: NSLayoutConstraint!
   
@@ -38,7 +38,7 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     remove.translatesAutoresizingMaskIntoConstraints = false
     remove.setImage(UIImage(named: "remove"), for: .normal)
     remove.imageView?.contentMode = .scaleAspectFit
-    remove.addTarget(self, action: #selector(ChatInputContainerView.removeButtonDidTap), for: .touchUpInside)
+    remove.addTarget(self, action: #selector(InputContainerView.removeButtonDidTap), for: .touchUpInside)
    
     return remove
   }()
@@ -50,8 +50,8 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
     return videoIndicatorView
   }()
   
-  var playerView: PlayerCellView = {
-    var playerView = PlayerCellView()
+  var playerView: PlayerView = {
+    var playerView = PlayerView()
     playerView.translatesAutoresizingMaskIntoConstraints = false
     return playerView
   }()
@@ -127,15 +127,15 @@ class SelectedMediaCollectionCell: UICollectionViewCell {
 
   @objc func longTap(_ gestureReconizer: UILongPressGestureRecognizer) {
     
-    let locationInView = gestureReconizer.location(in: chatInputContainerView.attachedImages)
+    let locationInView = gestureReconizer.location(in: chatInputContainerView.attachCollectionView)
     
-    guard let indexPath = chatInputContainerView.attachedImages.indexPathForItem(at: locationInView) else {
+    guard let indexPath = chatInputContainerView.attachCollectionView.indexPathForItem(at: locationInView) else {
       return
     }
-    guard let data = chatInputContainerView.selectedMedia[indexPath.item].audioObject else {
+    guard let data = chatInputContainerView.attachedMedia[indexPath.item].audioObject else {
       return
     }
-    guard let cell = chatInputContainerView.attachedImages.cellForItem(at: indexPath) as? SelectedMediaCollectionCell else {
+    guard let cell = chatInputContainerView.attachCollectionView.cellForItem(at: indexPath) as? AttachCollectionViewCell else {
       return
     }
     

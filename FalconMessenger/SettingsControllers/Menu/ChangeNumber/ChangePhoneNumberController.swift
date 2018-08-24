@@ -22,9 +22,11 @@ class ChangePhoneNumberController: EnterPhoneNumberController, VerificationDeleg
   
   override func configurePhoneNumberContainerView() {
     super.configurePhoneNumberContainerView()
+    if !DeviceType.isIPad {
+      let leftBarButton = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(leftBarButtonDidTap))
+      navigationItem.leftBarButtonItem = leftBarButton
+    }
     
-    let leftBarButton = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(leftBarButtonDidTap))
-    navigationItem.leftBarButtonItem = leftBarButton
     phoneNumberContainerView.termsAndPrivacy.isHidden = true
     phoneNumberContainerView.instructions.text = "Please confirm your country code\nand enter your NEW phone number."
     let attributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
