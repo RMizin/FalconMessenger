@@ -73,7 +73,9 @@ class EnterPhoneNumberContainerView: UIView {
     phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     phoneNumber.textColor = ThemeManager.currentTheme().generalTitleColor
     phoneNumber.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
-    phoneNumber.addDoneButtonOnKeyboard()
+    if !DeviceType.isIPad {
+      phoneNumber.addDoneButtonOnKeyboard()
+    }
     
     return phoneNumber
   }()

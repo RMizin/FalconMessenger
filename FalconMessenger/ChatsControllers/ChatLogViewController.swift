@@ -384,7 +384,12 @@ class ChatLogViewController: UIViewController {
 
   @objc func inputBlockerAction() {
     guard let chatID = conversation?.chatID else { return }
-    navigationController?.popViewController(animated: true)
+    if DeviceType.isIPad {
+      splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
+    } else {
+      navigationController?.popViewController(animated: true)
+    }
+    
     deleteAndExitDelegate?.deleteAndExit(from: chatID)
   }
   

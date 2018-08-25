@@ -308,6 +308,7 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
         let controller = ChangePhoneNumberController()
         
         if DeviceType.isIPad {
+         controller.hidesBottomBarWhenPushed = true
          self.navigationController?.pushViewController(controller, animated: true)
         } else {
           let destination = UINavigationController(rootViewController: controller)

@@ -11,8 +11,11 @@ import UIKit
 extension UINavigationItem {
   
   func setTitle(title: String, subtitle: String) {
-    let chatLogTitleView = ChatLogViewControllerTitleView(title: title, subtitle: subtitle).stackView
-    titleView = chatLogTitleView
+    let chatLogTitleView = ChatLogViewControllerTitleView(title: title, subtitle: subtitle)///.stackView
+    let stackView = chatLogTitleView.stackView
+    let stackViewFrame = chatLogTitleView.stackViewFrame()
+    stackView.frame = stackViewFrame
+    titleView = stackView
   }
 }
 
@@ -22,7 +25,6 @@ class ChatLogViewControllerTitleView: UIView {
     let title = UILabel()
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     title.font = UIFont.systemFont(ofSize: 17)
-    title.sizeToFit()
     
     return title
   }()
@@ -31,7 +33,6 @@ class ChatLogViewControllerTitleView: UIView {
     let subtitle = UILabel()
     subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
     subtitle.font = UIFont.systemFont(ofSize: 12)
-    subtitle.sizeToFit()
     subtitle.textAlignment = .center
     
     return subtitle
@@ -50,11 +51,13 @@ class ChatLogViewControllerTitleView: UIView {
     self.subtitle.text = subtitle
     stackView.addArrangedSubview(self.title)
     stackView.addArrangedSubview(self.subtitle)
-   
-    let width = max(self.title.frame.size.width, self.subtitle.frame.size.width)
-    stackView.frame = CGRect(x: 0, y: 0, width: width, height: 35)
     self.title.sizeToFit()
     self.subtitle.sizeToFit()
+  }
+  
+  func stackViewFrame() -> CGRect {
+    let width = max(title.frame.size.width, subtitle.frame.size.width)
+    return CGRect(x: 0, y: 0, width: width, height: 35)
   }
   
   func updateColors() {

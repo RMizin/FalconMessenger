@@ -30,7 +30,7 @@ class InputBlockerContainerView: UIView {
     heightConstraint = heightAnchor.constraint(equalToConstant: InputTextViewLayout.minHeight)
     heightConstraint.isActive = true
     
-    backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+    changeTheme()
 
     addSubview(backButton)
     backButton.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -44,7 +44,7 @@ class InputBlockerContainerView: UIView {
   }
   
   @objc func changeTheme() {
-    backgroundColor = ThemeManager.currentTheme().barBackgroundColor
+    backgroundColor = ThemeManager.currentTheme().inputTextViewColor
   }
   
   required init?(coder aDecoder: NSCoder) {

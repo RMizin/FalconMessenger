@@ -53,7 +53,12 @@ extension ChatLogViewController:CropViewControllerDelegate {
     let videoURL = URL(string: pathURL)
     let player = AVPlayer(url: videoURL!)
     let playerViewController = AVPlayerViewController()
-    playerViewController.modalPresentationStyle = .overCurrentContext
+    if DeviceType.isIPad {
+      playerViewController.modalPresentationStyle = .overFullScreen
+    } else {
+      playerViewController.modalPresentationStyle = .overCurrentContext
+    }
+ 
     playerViewController.player = player
     inputContainerView.inputTextView.resignFirstResponder()
     present(playerViewController, animated: true, completion: nil)

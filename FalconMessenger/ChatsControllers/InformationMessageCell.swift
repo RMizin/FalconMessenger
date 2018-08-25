@@ -28,7 +28,7 @@ class InformationMessageCell: RevealableCollectionViewCell {
   
   override init(frame: CGRect) {
     super.init(frame: frame.integral)
-    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    backgroundColor = .clear
     contentView.backgroundColor = backgroundColor
     information.backgroundColor = backgroundColor
     

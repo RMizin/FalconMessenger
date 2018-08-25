@@ -114,6 +114,8 @@ class EnterPhoneNumberController: UIViewController {
       print("verification sent")
       self.isVerificationSent = true
       userDefaults.updateObject(for: userDefaults.authVerificationID, with: verificationID)
+      self.isVerificationSent = true
+      userDefaults.updateObject(for: userDefaults.changeNumberAuthVerificationID, with: verificationID)
       self.verificationDelegate?.verificationFinished(with: true, error: nil)
     } 
   }

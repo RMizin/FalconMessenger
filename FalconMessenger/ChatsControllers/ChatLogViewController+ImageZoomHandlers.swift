@@ -23,7 +23,12 @@ extension ChatLogViewController {
   
     inBubblePlayerViewController.player = player
     inBubblePlayerViewController.modalTransitionStyle = .crossDissolve
-    inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
+    if DeviceType.isIPad {
+       inBubblePlayerViewController.modalPresentationStyle = .overFullScreen
+    } else {
+       inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
+    }
+   
     
     if self.inputContainerView.inputTextView.isFirstResponder {
       self.inputContainerView.inputTextView.resignFirstResponder()
