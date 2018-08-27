@@ -12,6 +12,8 @@ import UIKit
 public class KeyboardLayoutGuide : UILayoutGuide {
     
     private var observer: KeyboardFrameObserver?
+
+    public var topConstant: CGFloat?
     
     public override var owningView: UIView? {
         didSet {
@@ -42,6 +44,7 @@ public class KeyboardLayoutGuide : UILayoutGuide {
                 guard let view = view else { return }
             
                 topConstraint.constant = view.bounds.height - keyboardFrame.origin.y
+                self.topConstant = topConstraint.constant
                 heightConstraint.constant = keyboardFrame.height
                 
                 if animated {

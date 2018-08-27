@@ -312,8 +312,8 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
          self.navigationController?.pushViewController(controller, animated: true)
         } else {
           let destination = UINavigationController(rootViewController: controller)
-          destination.navigationBar.shadowImage = UIImage()
-          destination.navigationBar.setBackgroundImage(UIImage(), for: .default)
+       //   destination.navigationBar.shadowImage = UIImage()
+         // destination.navigationBar.setBackgroundImage(UIImage(), for: .default)
           destination.hidesBottomBarWhenPushed = true
           destination.navigationBar.isTranslucent = false
           self.present(destination, animated: true, completion: nil)

@@ -1,5 +1,5 @@
 //
-//  EnterPhoneNumberContainerView.swift
+//  PhoneNumberContainerView.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/2/17.
@@ -9,7 +9,7 @@
 import UIKit
 
 
-class EnterPhoneNumberContainerView: UIView {
+class PhoneNumberContainerView: UIView {
   
   let title: UILabel = {
     let title = UILabel()
@@ -18,7 +18,9 @@ class EnterPhoneNumberContainerView: UIView {
     title.text = "Phone number"
     title.textColor = ThemeManager.currentTheme().generalTitleColor
     title.font = UIFont.systemFont(ofSize: 32)
-    title.sizeToFit()
+    if #available(iOS 11.0, *) {
+      title.isHidden = true
+    }
     
     return title
   }()
@@ -29,7 +31,7 @@ class EnterPhoneNumberContainerView: UIView {
     instructions.textAlignment = .center
     instructions.numberOfLines = 2
     instructions.textColor = ThemeManager.currentTheme().generalTitleColor
-    instructions.font = UIFont.systemFont(ofSize: 18)
+    instructions.font = UIFont.boldSystemFont(ofSize: 18)//systemFont(ofSize: 18)
     instructions.sizeToFit()
 
     return instructions
@@ -38,7 +40,7 @@ class EnterPhoneNumberContainerView: UIView {
   let selectCountry: UIButton = {
     let selectCountry = UIButton()
     selectCountry.translatesAutoresizingMaskIntoConstraints = false
-    selectCountry.setTitle("Ukraine", for: .normal)
+    selectCountry.setTitle("Canada", for: .normal)
     selectCountry.setTitleColor(ThemeManager.currentTheme().generalTitleColor, for: .normal)
     selectCountry.contentHorizontalAlignment = .center
     selectCountry.contentVerticalAlignment = .center
@@ -46,8 +48,8 @@ class EnterPhoneNumberContainerView: UIView {
     selectCountry.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
     selectCountry.layer.cornerRadius = 25
     selectCountry.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0.0, 10.0)
-    selectCountry.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-    selectCountry.addTarget(self, action: #selector(EnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
+    selectCountry.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+    selectCountry.addTarget(self, action: #selector(PhoneNumberController.openCountryCodesList), for: .touchUpInside)
     
     return selectCountry
   }()
@@ -55,10 +57,10 @@ class EnterPhoneNumberContainerView: UIView {
   var countryCode: UILabel = {
     var countryCode = UILabel()
     countryCode.translatesAutoresizingMaskIntoConstraints = false
-    countryCode.text = "+380"
+    countryCode.text = "+1"
     countryCode.textAlignment = .center
     countryCode.textColor = ThemeManager.currentTheme().generalTitleColor
-    countryCode.font = UIFont.systemFont(ofSize: 18)
+    countryCode.font = UIFont.boldSystemFont(ofSize: 18)
     countryCode.sizeToFit()
    
     return countryCode
@@ -66,13 +68,13 @@ class EnterPhoneNumberContainerView: UIView {
   
   let phoneNumber: UITextField = {
     let phoneNumber = UITextField()
-    phoneNumber.font = UIFont.systemFont(ofSize: 18)
+    phoneNumber.font = UIFont.boldSystemFont(ofSize: 18)
     phoneNumber.translatesAutoresizingMaskIntoConstraints = false
     phoneNumber.textAlignment = .center
     phoneNumber.keyboardType = .numberPad
     phoneNumber.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     phoneNumber.textColor = ThemeManager.currentTheme().generalTitleColor
-    phoneNumber.addTarget(self, action: #selector(EnterPhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
+    phoneNumber.addTarget(self, action: #selector(PhoneNumberController.textFieldDidChange(_:)), for: .editingChanged)
     if !DeviceType.isIPad {
       phoneNumber.addDoneButtonOnKeyboard()
     }
@@ -104,7 +106,6 @@ class EnterPhoneNumberContainerView: UIView {
     return phoneContainer
   }()
   
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
     
@@ -115,8 +116,13 @@ class EnterPhoneNumberContainerView: UIView {
     addSubview(phoneContainer)
     phoneContainer.addSubview(countryCode)
     phoneContainer.addSubview(phoneNumber)
-   
+    
+    let countriesFetcher = CountriesFetcher()
+    countriesFetcher.delegate = self
+    countriesFetcher.fetchCountries()
+    
     phoneNumber.delegate = self
+    
     configureTextViewText()
  
     let leftConstant: CGFloat = 10
@@ -124,8 +130,13 @@ class EnterPhoneNumberContainerView: UIView {
     let heightConstant: CGFloat = 50
     let spacingConstant: CGFloat = 20
     
+    if #available(iOS 11.0, *) {
+      title.heightAnchor.constraint(equalToConstant: 0).isActive = true
+    } else {
+      title.sizeToFit()
+    }
+    
     NSLayoutConstraint.activate([
-      
       title.topAnchor.constraint(equalTo: topAnchor, constant: spacingConstant),
       title.rightAnchor.constraint(equalTo: rightAnchor, constant: rightConstant),
       title.leftAnchor.constraint(equalTo: leftAnchor, constant: leftConstant),
@@ -180,11 +191,17 @@ class EnterPhoneNumberContainerView: UIView {
   }
 }
 
-extension EnterPhoneNumberContainerView: UITextFieldDelegate {
+extension PhoneNumberContainerView: UITextFieldDelegate {
   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
     guard let text = textField.text else { return true }
-    
     let newLength = text.utf16.count + string.utf16.count - range.length
     return newLength <= 25
+  }
+}
+
+extension PhoneNumberContainerView: CountriesFetcherDelegate {
+  func countriesFetcher(_ fetcher: CountriesFetcher, currentCountry country: Country) {
+    selectCountry.setTitle(country.name, for: .normal)
+    countryCode.text = country.dialCode
   }
 }

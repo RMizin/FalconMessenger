@@ -15,11 +15,19 @@ class OnboardingController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    if #available(iOS 11.0, *) {
+      navigationItem.largeTitleDisplayMode = .automatic
+      navigationController?.navigationBar.prefersLargeTitles = true
+    }
+
+    navigationController?.navigationBar.shadowImage = UIImage()
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     view.addSubview(onboardingContainerView)
+    extendedLayoutIncludesOpaqueBars = true
+      definesPresentationContext = true
     onboardingContainerView.translatesAutoresizingMaskIntoConstraints = false
     onboardingContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    onboardingContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    onboardingContainerView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
     onboardingContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
     onboardingContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     setColorsAccordingToTheme()

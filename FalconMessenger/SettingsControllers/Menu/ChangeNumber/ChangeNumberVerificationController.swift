@@ -9,7 +9,7 @@
 import UIKit
 
 
-class ChangeNumberVerificationController: EnterVerificationCodeController {
+class ChangeNumberVerificationController: VerificationCodeController {
   
   override func viewDidLoad() {
     super.viewDidLoad()

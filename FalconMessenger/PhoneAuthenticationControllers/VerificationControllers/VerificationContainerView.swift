@@ -1,5 +1,5 @@
 //
-//  EnterVerificationContainerView.swift
+//  VerificationContainerView.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/3/17.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-class EnterVerificationContainerView: UIView {
+class VerificationContainerView: UIView {
 
   let titleNumber: UILabel = {
     let titleNumber = UILabel()
     titleNumber.translatesAutoresizingMaskIntoConstraints = false
     titleNumber.textAlignment = .center
     titleNumber.textColor = ThemeManager.currentTheme().generalTitleColor
-    titleNumber.font = UIFont.systemFont(ofSize: 32)
+    titleNumber.font = UIFont.boldSystemFont(ofSize: 32)
     
     return titleNumber
   }()
@@ -23,7 +23,7 @@ class EnterVerificationContainerView: UIView {
   let subtitleText: UILabel = {
     let subtitleText = UILabel()
     subtitleText.translatesAutoresizingMaskIntoConstraints = false
-    subtitleText.font = UIFont.systemFont(ofSize: 15)
+    subtitleText.font = UIFont.boldSystemFont(ofSize: 15)//(ofSize: 15)
     subtitleText.textAlignment = .center
     subtitleText.textColor = ThemeManager.currentTheme().generalTitleColor
     subtitleText.text = "We have sent you an SMS with the code"
@@ -33,7 +33,7 @@ class EnterVerificationContainerView: UIView {
   
   let verificationCode: UITextField = {
     let verificationCode = UITextField()
-    verificationCode.font = UIFont.systemFont(ofSize: 20)
+    verificationCode.font = UIFont.boldSystemFont(ofSize: 20)
     verificationCode.translatesAutoresizingMaskIntoConstraints = false
     verificationCode.textAlignment = .center
     verificationCode.keyboardType = .numberPad
@@ -45,6 +45,9 @@ class EnterVerificationContainerView: UIView {
     verificationCode.attributedPlaceholder = NSAttributedString(string: "Code", attributes: [NSAttributedStringKey.foregroundColor:
       ThemeManager.currentTheme().generalSubtitleColor])
     verificationCode.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
+    if !DeviceType.isIPad {
+      verificationCode.addDoneButtonOnKeyboard()
+    }
     
     return verificationCode
   }()
@@ -62,8 +65,7 @@ class EnterVerificationContainerView: UIView {
     return resend
   }()
   
-  
-  weak var enterVerificationCodeController: EnterVerificationCodeController?
+  weak var enterVerificationCodeController: VerificationCodeController?
   
   var seconds = 120
   

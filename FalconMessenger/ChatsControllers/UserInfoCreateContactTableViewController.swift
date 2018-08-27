@@ -26,6 +26,7 @@ class CreateContactTableViewController: UITableViewController {
      
       navigationItem.title = "New Contact"
       tableView.separatorStyle = .none
+      extendedLayoutIncludesOpaqueBars = true
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       tableView.register(ContactDataTableViewCell.self, forCellReuseIdentifier: createContactTableViewCellIdentifier)
      

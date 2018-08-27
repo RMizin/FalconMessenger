@@ -64,7 +64,7 @@ class VoiceRecordingContainerView: UIView {
     stopButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
     statusLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-    statusLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+   // statusLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
     statusLabel.widthAnchor.constraint(equalToConstant: 75).isActive = true
     statusLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
  

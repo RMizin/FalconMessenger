@@ -20,7 +20,7 @@ extension SelectNewAdminTableViewController: UISearchBarDelegate, UISearchContro
     searchBar.resignFirstResponder()
     setUpCollation()
     UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
-  }
+  } 
   
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance

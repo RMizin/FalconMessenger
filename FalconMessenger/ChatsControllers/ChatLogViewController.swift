@@ -32,6 +32,8 @@ class ChatLogViewController: UIViewController {
   
   weak var deleteAndExitDelegate: DeleteAndExitDelegate?
   
+  weak var typingIndicatorManager: TypingIndicatorManager?
+  
   var messagesFetcher: MessagesFetcher!
 
   var membersReference: DatabaseReference!
@@ -122,7 +124,7 @@ class ChatLogViewController: UIViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     configureProgressBar()
-    
+    unblockInputViewConstraints()
     if savedContentOffset != nil {
       UIView.performWithoutAnimation {
         self.view.layoutIfNeeded()
@@ -140,7 +142,8 @@ class ChatLogViewController: UIViewController {
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-     savedContentOffset = collectionView.contentOffset
+    savedContentOffset = collectionView.contentOffset
+    blockInputViewConstraints()
   }
   
   override func viewDidDisappear(_ animated: Bool) {
@@ -254,6 +257,22 @@ class ChatLogViewController: UIViewController {
         currentView.add(view)
       }
     }
+  }
+  
+  fileprivate func blockInputViewConstraints() {
+    guard let view = view as? ChatLogContainerView else { return }
+    if let constant = keyboardLayoutGuide.topConstant {
+      print(constant)
+      if inputContainerView.inputTextView.isFirstResponder {
+        view.blockBottomConstraint(constant: -constant)
+        view.layoutIfNeeded()
+      }
+    }
+  }
+  
+  fileprivate func unblockInputViewConstraints() {
+    guard let view = view as? ChatLogContainerView else { return }
+    view.unblockBottomConstraint()
   }
   
   private func setupInputView() {
@@ -465,6 +484,7 @@ class ChatLogViewController: UIViewController {
         reloadInputViews()
         reloadInputView(view: inputContainerView)
         observeTypingIndicator()
+        addChatsControllerTypingObserver()
         navigationItem.rightBarButtonItem?.isEnabled = true
       }
     }
@@ -479,9 +499,21 @@ class ChatLogViewController: UIViewController {
       removeSubtitleInGroupChat()
       reloadInputViews()
       reloadInputView(view: inputBlockerContainerView)
+      removeChatsControllerTypingObserver()
       navigationItem.rightBarButtonItem?.isEnabled = false
       if typingIndicatorReference != nil { typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle); typingIndicatorReference = nil }
     }
+  }
+  
+  fileprivate func removeChatsControllerTypingObserver() {
+    guard let chatID = conversation?.chatID else { return }
+    typingIndicatorManager?.removeTypingIndicator(for: chatID)
+  }
+  
+  fileprivate func addChatsControllerTypingObserver() {
+     guard let chatID = conversation?.chatID else { return }
+     typingIndicatorManager?.observeChangesForDefaultTypingIndicator(with: chatID)
+     typingIndicatorManager?.observeChangesForGroupTypingIndicator(with: chatID)
   }
   
   func removeSubtitleInGroupChat() {

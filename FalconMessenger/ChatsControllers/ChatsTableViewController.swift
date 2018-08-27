@@ -249,18 +249,23 @@ class ChatsTableViewController: UITableViewController {
         
         for conversation in self.filtededConversations {
           guard let chatID = conversation.chatID else { return }
-     
+        
           if let isGroupChat = conversation.isGroupChat, isGroupChat {
-            self.typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+            if let members = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, members.contains(uid) {
+              self.typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+            }
           } else {
             self.typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
           }
         }
         
-        for conversation in self.filteredPinnedConversations {
+        for conversation in self.filteredPinnedConversations  {
           guard let chatID = conversation.chatID else { return }
+        
           if let isGroupChat = conversation.isGroupChat, isGroupChat {
-            self.typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+            if let members = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, members.contains(uid) {
+              self.typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+            }
           } else {
             self.typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
           }
@@ -436,16 +441,16 @@ extension ChatsTableViewController: MessagesDelegate {
   }
   
   func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
-   chatLogController?.updateMessageStatus(messageRef: reference) //  chatLogController?.updateMessageStatus(messageRef: reference)
+   chatLogController?.updateMessageStatus(messageRef: reference)
   }
   
   func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-    print("UPDATED")
     chatLogController?.hidesBottomBarWhenPushed = true
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
     chatLogController?.conversation = conversation
     chatLogController?.deleteAndExitDelegate = self
+    chatLogController?.typingIndicatorManager = typingIndicatorManager
  
     if let membersIDs = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
       chatLogController?.observeTypingIndicator()

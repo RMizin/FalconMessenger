@@ -1,5 +1,5 @@
 //
-//  EnterVerificationCodeController.swift
+//  VerificationCodeController.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/2/17.
@@ -10,19 +10,24 @@ import UIKit
 import Firebase
 import PhoneNumberKit
 
+class VerificationCodeController: UIViewController {
 
-class EnterVerificationCodeController: UIViewController {
-
-  let enterVerificationContainerView = EnterVerificationContainerView()
+  let enterVerificationContainerView = VerificationContainerView()
 
   override func viewDidLoad() {
     super.viewDidLoad()
-      
+    if #available(iOS 11.0, *) {
+      navigationItem.title = "Verification"
+      navigationItem.largeTitleDisplayMode = .automatic
+      navigationController?.navigationBar.prefersLargeTitles = true
+    }
+  
+    extendedLayoutIncludesOpaqueBars = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     view.addSubview(enterVerificationContainerView)
     enterVerificationContainerView.translatesAutoresizingMaskIntoConstraints = false
     enterVerificationContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    enterVerificationContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    enterVerificationContainerView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
     enterVerificationContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
     enterVerificationContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     enterVerificationContainerView.resend.addTarget(self, action: #selector(sendSMSConfirmation), for: .touchUpInside)
@@ -37,11 +42,10 @@ class EnterVerificationCodeController: UIViewController {
   func setRightBarButton(with title: String) {
     let rightBarButton = UIBarButtonItem(title: title, style: .done, target: self, action: #selector(rightBarButtonDidTap))
     self.navigationItem.rightBarButtonItem = rightBarButton
-   
   }
   
   @objc fileprivate func sendSMSConfirmation () {
-    
+    enterVerificationContainerView.verificationCode.resignFirstResponder()
     if currentReachabilityStatus == .notReachable {
       basicErrorAlertWith(title: "No internet connection", message: noInternetError, controller: self)
       return
@@ -56,7 +60,6 @@ class EnterVerificationCodeController: UIViewController {
         basicErrorAlertWith(title: "Error", message: error.localizedDescription + "\nPlease try again later.", controller: self)
         return
       }
-      
       print("verification sent")
       self.enterVerificationContainerView.resend.isEnabled = false
       userDefaults.updateObject(for: userDefaults.authVerificationID, with: verificationID)
@@ -64,9 +67,7 @@ class EnterVerificationCodeController: UIViewController {
     }
   } 
   
-  @objc func rightBarButtonDidTap () {
-
-  }
+  @objc func rightBarButtonDidTap () {}
   
   func changeNumber () {
     enterVerificationContainerView.verificationCode.resignFirstResponder()

@@ -1,5 +1,5 @@
 //
-//  EnterVerificationContainerView+timerHandlers.swift
+//  VerificationContainerView+Timer.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/24/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension EnterVerificationContainerView {
+extension VerificationContainerView {
   
   typealias CompletionHandler = (_ success: Bool) -> Void
   

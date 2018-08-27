@@ -1,5 +1,5 @@
 //
-//  EnterPhoneNumberController.swift
+//  PhoneNumberController.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/2/17.
@@ -14,30 +14,33 @@ protocol VerificationDelegate: class {
   func verificationFinished(with success: Bool, error: String?)
 }
 
-class EnterPhoneNumberController: UIViewController {
+class PhoneNumberController: UIViewController {
   
-  let phoneNumberContainerView = EnterPhoneNumberContainerView()
-  let countries = Country().countries
+  let phoneNumberContainerView = PhoneNumberContainerView()
   weak var verificationDelegate: VerificationDelegate?
-  
   
   override func viewDidLoad() {
     super.viewDidLoad()
-      
+    if #available(iOS 11.0, *) {
+      navigationItem.title = "Phone number"
+      navigationItem.largeTitleDisplayMode = .automatic
+      navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    phoneNumberContainerView.termsAndPrivacy.delegate = self
+    
+    definesPresentationContext = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    configurePhoneNumberContainerView()
     configureNavigationBar()
-    setCountry()
+    configurePhoneNumberContainerView()
   }
-  
+    
   func configurePhoneNumberContainerView() {
     view.addSubview(phoneNumberContainerView)
     phoneNumberContainerView.translatesAutoresizingMaskIntoConstraints = false
     phoneNumberContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    phoneNumberContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    phoneNumberContainerView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
     phoneNumberContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
     phoneNumberContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-    phoneNumberContainerView.termsAndPrivacy.delegate = self
   }
   
   @objc func leftBarButtonDidTap() {
@@ -47,25 +50,17 @@ class EnterPhoneNumberController: UIViewController {
     }
   }
   
-  fileprivate func setCountry() {
-    for country in countries {
-      if  country["code"] == countryCode {
-        phoneNumberContainerView.countryCode.text = country["dial_code"]
-        phoneNumberContainerView.selectCountry.setTitle(country["name"], for: .normal)
-      }
-    }
-  }
-  
   fileprivate func configureNavigationBar () {
     let rightBarButton = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(rightBarButtonDidTap))
-    self.navigationItem.rightBarButtonItem = rightBarButton
-    self.navigationItem.rightBarButtonItem?.isEnabled = false
+    navigationItem.rightBarButtonItem = rightBarButton
+    navigationItem.rightBarButtonItem?.isEnabled = false
+    extendedLayoutIncludesOpaqueBars = true
   }
   
-  
   @objc func openCountryCodesList() {
-    let picker = SelectCountryCodeController()
+    let picker = CountriesTableViewController()
     picker.delegate = self
+    picker.currentCountry = phoneNumberContainerView.selectCountry.titleLabel?.text ?? nil
     phoneNumberContainerView.phoneNumber.resignFirstResponder()
     navigationController?.pushViewController(picker, animated: true)
   }
@@ -85,12 +80,10 @@ class EnterPhoneNumberController: UIViewController {
   var isVerificationSent = false
   
   @objc func rightBarButtonDidTap () {
-    
     if currentReachabilityStatus == .notReachable {
       verificationDelegate?.verificationFinished(with: false, error: noInternetError)
       return
     }
-    
     if !isVerificationSent {
       sendSMSConfirmation()
     } else {
@@ -99,9 +92,7 @@ class EnterPhoneNumberController: UIViewController {
   }
 
   func sendSMSConfirmation () {
-    
     print("tappped sms confirmation")
-    
     let phoneNumberForVerification = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
     
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
@@ -121,9 +112,8 @@ class EnterPhoneNumberController: UIViewController {
   }
 }
 
-extension EnterPhoneNumberController: CountryPickerDelegate {
-  
-  func countryPicker(_ picker: SelectCountryCodeController, didSelectCountryWithName name: String, code: String, dialCode: String) {
+extension PhoneNumberController: CountryPickerDelegate {
+  func countryPicker(_ picker: CountriesTableViewController, didSelectCountryWithName name: String, code: String, dialCode: String) {
     phoneNumberContainerView.selectCountry.setTitle(name, for: .normal)
     phoneNumberContainerView.countryCode.text = dialCode
     setRightBarButtonStatus()
@@ -131,11 +121,10 @@ extension EnterPhoneNumberController: CountryPickerDelegate {
   }
 }
 
-extension EnterPhoneNumberController : UITextViewDelegate {
+extension PhoneNumberController: UITextViewDelegate {
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
     let safariVC = SFSafariViewController(url: URL)
     present(safariVC, animated: true, completion: nil)
-    
     return false
   }
 }

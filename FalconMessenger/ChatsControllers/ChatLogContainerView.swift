@@ -31,6 +31,8 @@ class ChatLogContainerView: UIView {
     return inputViewContainer
   }()
   
+  fileprivate var bottomConstraint: NSLayoutConstraint!
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     addSubview(backgroundView)
@@ -59,10 +61,21 @@ class ChatLogContainerView: UIView {
       inputViewContainer.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     inputViewContainer.topAnchor.constraint(equalTo: collectionViewContainer.bottomAnchor).isActive = true
+    
+    bottomConstraint = inputViewContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
   }
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  func blockBottomConstraint(constant: CGFloat) {
+    bottomConstraint.constant = constant
+    bottomConstraint.isActive = true
+  }
+  
+  func unblockBottomConstraint() {
+    bottomConstraint.isActive = false
   }
   
   func add(_ collectionView: UICollectionView) {
@@ -78,7 +91,6 @@ class ChatLogContainerView: UIView {
     
     for subview in inputViewContainer.subviews where subview is InputContainerView || subview is InputBlockerContainerView {
       subview.removeFromSuperview()
-      print("INPUT SUBVIEW REMOVED", subview)
     }
     inputView.translatesAutoresizingMaskIntoConstraints = false
     inputViewContainer.addSubview(inputView)

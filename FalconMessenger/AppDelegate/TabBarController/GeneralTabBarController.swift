@@ -58,8 +58,8 @@ class GeneralTabBarController: UITabBarController {
     guard Auth.auth().currentUser == nil else { return }
     let destination = OnboardingController()
     let newNavigationController = UINavigationController(rootViewController: destination)
-    newNavigationController.navigationBar.shadowImage = UIImage()
-    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+  //  newNavigationController.navigationBar.shadowImage = UIImage()
+  //  newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
     newNavigationController.modalTransitionStyle = .crossDissolve
   
     if DeviceType.isIPad {

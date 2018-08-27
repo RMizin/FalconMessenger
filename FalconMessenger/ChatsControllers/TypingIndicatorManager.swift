@@ -87,6 +87,7 @@ class TypingIndicatorManager: NSObject {
       groupTypingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(chatID).child(typingIndicatorDatabaseID)
       groupTypingIndicatorReference.removeObserver(withHandle: groupTypingChangesHandle[index].handle)
       groupTypingChangesHandle.remove(at: index)
+      self.delegate?.typingIndicator(isActive: false, for: removedChatID)
     }
   }
 }

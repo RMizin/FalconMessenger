@@ -28,18 +28,19 @@ class UserProfileController: UIViewController {
       configureColorsAccordingToTheme()
     }
   
-    fileprivate func configureNavigationBar () {
+    fileprivate func configureNavigationBar() {
+      extendedLayoutIncludesOpaqueBars = true
       let rightBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(rightBarButtonDidTap))
-      self.navigationItem.rightBarButtonItem = rightBarButton
-      self.title = "Profile"
-      self.navigationItem.setHidesBackButton(true, animated: true)
+      navigationItem.rightBarButtonItem = rightBarButton
+      navigationItem.title = "Profile"
+      navigationItem.setHidesBackButton(true, animated: true)
     }
   
     fileprivate func configureContainerView() {
       view.addSubview(userProfileContainerView)
       userProfileContainerView.translatesAutoresizingMaskIntoConstraints = false
       userProfileContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-      userProfileContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+      userProfileContainerView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
       userProfileContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
       userProfileContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
 

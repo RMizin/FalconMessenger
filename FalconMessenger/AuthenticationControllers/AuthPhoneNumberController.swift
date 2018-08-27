@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AuthPhoneNumberController: EnterPhoneNumberController, VerificationDelegate {
+class AuthPhoneNumberController: PhoneNumberController, VerificationDelegate {
   
   func verificationFinished(with success: Bool, error: String?) {
     guard success, error == nil else {
