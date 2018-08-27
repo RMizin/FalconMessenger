@@ -59,6 +59,13 @@ class ContactsController: UITableViewController {
       contactsFetcher.syncronizeContacts(contacts: contacts)
     }
   
+    fileprivate func deselectItem() {
+      guard DeviceType.isIPad else { return }
+      if let indexPath = tableView.indexPathForSelectedRow {
+        tableView.deselectRow(at: indexPath, animated: true)
+      }
+    }
+  
     override var preferredStatusBarStyle: UIStatusBarStyle {
       return ThemeManager.currentTheme().statusBarStyle
     }
@@ -322,7 +329,6 @@ extension ContactsController: MessagesDelegate {
   }
   
   func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-    
     chatLogController?.hidesBottomBarWhenPushed = true
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
@@ -342,5 +348,6 @@ extension ContactsController: MessagesDelegate {
     chatLogController = nil
     messagesFetcher?.delegate = nil
     messagesFetcher = nil
+    deselectItem()
   }
 }

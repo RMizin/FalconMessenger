@@ -82,6 +82,17 @@ class ChatLogViewController: UIViewController {
     return inputBlockerContainerView
   }()
   
+  private lazy var bottomScrollConainer: BottomScrollConainer = {
+    var bottomScrollConainer = BottomScrollConainer()
+    bottomScrollConainer.scrollButton.addTarget(self, action: #selector(instantMoveToBottom), for: .touchUpInside)
+    bottomScrollConainer.isHidden = true
+    return bottomScrollConainer
+  }()
+  
+  @objc private func instantMoveToBottom() {
+    collectionView.scrollToBottom(animated: true)
+  }
+  
   private lazy var refreshControl: UIRefreshControl = {
     var refreshControl = UIRefreshControl()
     refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
@@ -113,6 +124,7 @@ class ChatLogViewController: UIViewController {
     setRightBarButtonItem()
     setupTitleName()
     configurePlaceholderTitleView()
+    setupBottomScrollButton()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -133,7 +145,7 @@ class ChatLogViewController: UIViewController {
     }
    
     if sections.count == 2 {
-      guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1 )) as? TypingIndicatorCell else { return }
+      guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) as? TypingIndicatorCell else { return }
       cell.restart()
     }
   }
@@ -292,6 +304,16 @@ class ChatLogViewController: UIViewController {
     splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
   }
   
+  
+  private func setupBottomScrollButton() {
+    view.addSubview(bottomScrollConainer)
+    bottomScrollConainer.translatesAutoresizingMaskIntoConstraints = false
+    bottomScrollConainer.widthAnchor.constraint(equalToConstant: 45).isActive = true
+    bottomScrollConainer.heightAnchor.constraint(equalToConstant: 45).isActive = true
+    bottomScrollConainer.rightAnchor.constraint(equalTo: inputContainerView.rightAnchor, constant: -10).isActive = true
+    bottomScrollConainer.bottomAnchor.constraint(equalTo: inputContainerView.topAnchor, constant: -10).isActive = true
+  }
+  
   private func setupCollectionView() {
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
  
@@ -347,7 +369,15 @@ class ChatLogViewController: UIViewController {
         title.textColor = ThemeManager.currentTheme().generalTitleColor
       }
     }
+    
+    func updateTypingIndicatorIfNeeded() {
+      if sections.count == 2 {
+        guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) as? TypingIndicatorCell else { return }
+        cell.restart()
+      }
+    }
     updateTitleColor()
+    updateTypingIndicatorIfNeeded()
     inputContainerView.inputTextView.reloadInputViews()
   }
   
@@ -418,8 +448,6 @@ class ChatLogViewController: UIViewController {
   @objc open dynamic func keyboardWillShow(_ notification: Notification) {
     if isScrollViewAtTheBottom() {
       collectionView.scrollToBottom(animated: false)
-    } else {
-      collectionView.instantMoveToBottom()
     }
   }
   
@@ -586,7 +614,11 @@ class ChatLogViewController: UIViewController {
             UIView.performWithoutAnimation {
               self.collectionView.performBatchUpdates ({
                 self.collectionView.insertItems(at: indexPaths)
-              }, completion: nil)
+              }, completion: { (_) in
+                DispatchQueue.main.async {
+                  self.bottomScrollConainer.isHidden = false
+                }
+              })
             }
           })
           
@@ -891,7 +923,18 @@ class ChatLogViewController: UIViewController {
     return false
   }
   
+  
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    
+    if isScrollViewAtTheBottom() {
+      DispatchQueue.main.async {
+        self.bottomScrollConainer.isHidden = true
+      }
+    } else {
+      DispatchQueue.main.async {
+        self.bottomScrollConainer.isHidden = false
+      }
+    }
     
     if scrollView.contentOffset.y < 0 { //change 100 to whatever you want
       if collectionView.contentSize.height < UIScreen.main.bounds.height - 50 {

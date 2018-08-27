@@ -12,7 +12,6 @@ import PhoneNumberKit
 import SDWebImage
 import Contacts
 
-
 private let falconUsersCellID = "falconUsersCellID"
 private let newGroupCellID = "newGroupCellID"
 
@@ -81,6 +80,13 @@ class SelectChatTableViewController: UITableViewController {
     tableView.backgroundColor = view.backgroundColor
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
     tableView.separatorStyle = .none
+  }
+  
+  fileprivate func deselectItem() {
+    guard DeviceType.isIPad else { return }
+    if let indexPath = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: indexPath, animated: true)
+    }
   }
   
   @objc fileprivate func dismissNavigationController() {
@@ -229,7 +235,6 @@ extension SelectChatTableViewController: MessagesDelegate {
   }
   
   func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-    
     chatLogController?.hidesBottomBarWhenPushed = true
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
@@ -249,5 +254,6 @@ extension SelectChatTableViewController: MessagesDelegate {
     chatLogController = nil
     messagesFetcher?.delegate = nil
     messagesFetcher = nil
+    deselectItem()
   }
 }

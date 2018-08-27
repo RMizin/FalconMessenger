@@ -28,6 +28,7 @@
 		4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */; };
 		4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */; };
 		4B3DC3BD2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */; };
+		4B424D34213450120071913F /* BottomScrollConainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B424D33213450120071913F /* BottomScrollConainer.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */; };
 		4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */; };
@@ -238,6 +239,7 @@
 		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
 		4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoPhoneNumberTableViewCell.swift; path = ChatsControllers/UserInfoPhoneNumberTableViewCell.swift; sourceTree = "<group>"; };
 		4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfileDataDatabaseUpdater.swift; path = AuthenticationControllers/UserProfileDataDatabaseUpdater.swift; sourceTree = "<group>"; };
+		4B424D33213450120071913F /* BottomScrollConainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BottomScrollConainer.swift; path = ChatsControllers/BottomScrollConainer.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B4F453C1F32230C00A6FF96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsController.swift; path = ContactsControllers/ContactsController.swift; sourceTree = "<group>"; };
@@ -1094,6 +1096,7 @@
 			children = (
 				4BC3B263212DA93E0012C7BD /* ChatCollectionView.swift */,
 				4BC3B25F212DA2EA0012C7BD /* ChatLogContainerView.swift */,
+				4B424D33213450120071913F /* BottomScrollConainer.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1664,6 +1667,7 @@
 				4B6BAFE720886C5F00A90F3A /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
 				4BDB294B2126C79000D77600 /* AccountSettingsController.swift in Sources */,
 				4BEDE4292067F54100C52EF4 /* InformationMessageSender.swift in Sources */,
+				4B424D34213450120071913F /* BottomScrollConainer.swift in Sources */,
 				4BC26B191F3A21EE0093A9D2 /* InputContainerView.swift in Sources */,
 				4B6BAFF120886C5F00A90F3A /* SelectNewAdminTableViewController.swift in Sources */,
 				4BB74A01206E2FFB0014837E /* AuthPhoneNumberController.swift in Sources */,

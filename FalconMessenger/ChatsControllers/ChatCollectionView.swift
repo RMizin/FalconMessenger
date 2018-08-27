@@ -16,7 +16,7 @@ class ChatCollectionView: UICollectionView {
     super.init(frame: .zero, collectionViewLayout: AutoSizingCollectionViewFlowLayout())
     
     alwaysBounceVertical = true
-    contentInset = UIEdgeInsetsMake(12, 0, 12, 0)
+    contentInset = UIEdgeInsetsMake(20, 0, 20, 0)
     delaysContentTouches = false
     isPrefetchingEnabled = true
     keyboardDismissMode = .interactive

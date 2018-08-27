@@ -13,7 +13,7 @@ struct CellSizes {
   static func timestampWidth() -> CGFloat {
     if DeviceType.IS_IPAD_PRO {
       return 80
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return 57
     } else {
       return 47
@@ -23,7 +23,7 @@ struct CellSizes {
   static func bubbleViewMaxWidth() -> CGFloat {
     if DeviceType.IS_IPAD_PRO {
       return ScreenSize.minLength * 0.50
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return ScreenSize.minLength * 0.45
     } else {
       return ScreenSize.minLength * 0.75
@@ -33,7 +33,7 @@ struct CellSizes {
   static func landscapeBubbleViewMaxWidth() -> CGFloat {
     if DeviceType.IS_IPAD_PRO {
       return ScreenSize.maxLength * 0.50
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return ScreenSize.maxLength * 0.50
     } else {
       return ScreenSize.maxLength * 0.75
@@ -43,7 +43,7 @@ struct CellSizes {
   static func mediaMaxWidth() -> CGFloat {
     if DeviceType.IS_IPAD_PRO {
       return ScreenSize.minLength * 0.50
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return ScreenSize.minLength * 0.45
     } else {
       return ScreenSize.minLength * 0.75
@@ -56,7 +56,7 @@ struct MessageFontsAppearance {
   static var defaultMessageTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
       return .systemFont(ofSize: 22)
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 19)
     } else {
       return .systemFont(ofSize: 16)
@@ -66,7 +66,7 @@ struct MessageFontsAppearance {
   static var defaultVoiceMessageTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
       return .systemFont(ofSize: 20)
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 17)
     } else {
       return .systemFont(ofSize: 14)
@@ -76,7 +76,7 @@ struct MessageFontsAppearance {
   static var defaultInformationMessageTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
       return .systemFont(ofSize: 20)
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 17)
     } else {
       return .systemFont(ofSize: 14)
@@ -86,7 +86,7 @@ struct MessageFontsAppearance {
   static var defaultDeliveryStatusTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
       return .systemFont(ofSize: 15)
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 13)
     } else {
       return .systemFont(ofSize: 10)
@@ -96,7 +96,7 @@ struct MessageFontsAppearance {
   static var defaultTimestampTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
       return .systemFont(ofSize: 14)
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 11)
     } else {
       return .systemFont(ofSize: 8)
@@ -106,7 +106,7 @@ struct MessageFontsAppearance {
  static var defaultMessageAuthorNameFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
       return .systemFont(ofSize: 21)
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 18)
     } else {
       return .systemFont(ofSize: 15)

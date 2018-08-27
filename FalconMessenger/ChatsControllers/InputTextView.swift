@@ -31,7 +31,7 @@ struct InputTextViewLayout {
 
       if DeviceType.IS_IPAD_PRO {
         return InputTextViewLayout.maxContainerViewHeightPortraitIpadPro
-      } else if DeviceType.IS_IPAD {
+      } else if DeviceType.isIPad {
         return InputTextViewLayout.maxContainerViewHeightPortraitIpad
       } else if DeviceType.iPhone5orSE {
         return InputTextViewLayout.maxContainerViewHeight
@@ -46,7 +46,7 @@ struct InputTextViewLayout {
     
     if DeviceType.IS_IPAD_PRO {
       return InputTextViewLayout.maxContainerViewHeightLandscapeIpadPro
-    } else if DeviceType.IS_IPAD {
+    } else if DeviceType.isIPad {
       return InputTextViewLayout.maxContainerViewHeightLandscapeIpad
     } else if DeviceType.iPhone5orSE {
       return InputTextViewLayout.maxContainerViewHeightLandscape4Inch

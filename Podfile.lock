@@ -136,7 +136,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   SDWebImage:
-    :commit: 6246c0ea0b306d30f1ef9535f348d263bb35940e
+    :commit: 3ff846aa85f5ebb470df48b2583b11cb67be781e
     :git: https://github.com/rs/SDWebImage
 
 SPEC CHECKSUMS:

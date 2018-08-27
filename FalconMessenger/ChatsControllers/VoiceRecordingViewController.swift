@@ -210,12 +210,13 @@ class VoiceRecordingViewController: UIViewController {
             self.setupRecorder()
           }
           self.recorder.record(forDuration: 1800)
-          
+
           self.meterTimer = Timer.scheduledTimer(timeInterval: 0.01,
                                                  target: self,
                                                  selector: #selector(self.updateAudioMeter(_:)),
                                                  userInfo: nil,
                                                  repeats: true)
+          RunLoop.main.add(self.meterTimer, forMode: .commonModes)
         }
       } else {
         completionHandler(false)

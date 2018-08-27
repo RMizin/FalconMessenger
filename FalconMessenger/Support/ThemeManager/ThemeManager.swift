@@ -133,6 +133,15 @@ enum Theme: Int {
     }
   }
   
+  var scrollDownImage: UIImage {
+    switch self {
+    case .Default:
+      return UIImage(named: "arrowDownBlack")!
+    case .Dark:
+      return UIImage(named: "arrowDownWhite")!
+    }
+  }
+  
   var enterPhoneNumberBackground: UIImage {
     switch self {
     case .Default:

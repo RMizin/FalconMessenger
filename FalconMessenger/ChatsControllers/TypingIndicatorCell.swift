@@ -37,12 +37,11 @@ class TypingIndicatorCell: UICollectionViewCell {
   }
   
   func restart() {
- 
+    typingIndicator.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
     if typingIndicator.isAnimating {
       typingIndicator.stopAnimating()
       typingIndicator.startAnimating()
     } else {
-      typingIndicator.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
       typingIndicator.startAnimating()
     }
   }

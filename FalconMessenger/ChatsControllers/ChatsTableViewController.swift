@@ -78,6 +78,13 @@ class ChatsTableViewController: UITableViewController {
     NotificationCenter.default.removeObserver(self)
   }
   
+  fileprivate func deselectItem() {
+    guard DeviceType.isIPad else { return }
+    if let indexPath = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: indexPath, animated: true)
+    }
+  }
+  
   fileprivate func addObservers() {
     NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(cleanUpController), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
@@ -170,7 +177,7 @@ class ChatsTableViewController: UITableViewController {
     }
   }
   
- fileprivate func managePresense() {
+  fileprivate func managePresense() {
     if currentReachabilityStatus == .notReachable {
       navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .connecting,
                                                             activityPriority: .high,
@@ -197,9 +204,7 @@ class ChatsTableViewController: UITableViewController {
   }
 
   func configureTabBarBadge() {
-    
     guard let uid = Auth.auth().currentUser?.uid else { return }
-    
     guard let tabItems = tabBarController?.tabBar.items as NSArray? else { return }
     guard let tabItem = tabItems[Tabs.chats.rawValue] as? UITabBarItem else { return }
     var badge = 0
@@ -341,7 +346,6 @@ class ChatsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-    
     let delete = setupDeleteAction(at: indexPath)
     let pin = setupPinAction(at: indexPath)
     let mute = setupMuteAction(at: indexPath)
@@ -472,6 +476,7 @@ extension ChatsTableViewController: MessagesDelegate {
     chatLogController = nil
     messagesFetcher?.delegate = nil
     messagesFetcher = nil
+    deselectItem()
   }
 }
 
