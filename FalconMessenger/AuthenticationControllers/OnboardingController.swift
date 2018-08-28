@@ -24,7 +24,7 @@ class OnboardingController: UIViewController {
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     view.addSubview(onboardingContainerView)
     extendedLayoutIncludesOpaqueBars = true
-      definesPresentationContext = true
+    definesPresentationContext = true
     onboardingContainerView.translatesAutoresizingMaskIntoConstraints = false
     onboardingContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     onboardingContainerView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true

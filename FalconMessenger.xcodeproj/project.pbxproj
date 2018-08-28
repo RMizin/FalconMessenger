@@ -126,6 +126,8 @@
 		4BAD9755206E35FE008ADF6B /* AddGroupMembersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9754206E35FE008ADF6B /* AddGroupMembersController.swift */; };
 		4BAD9758206E36AD008ADF6B /* ChangeGroupAdminController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9757206E36AD008ADF6B /* ChangeGroupAdminController.swift */; };
 		4BAD975B206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD975A206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift */; };
+		4BB554A42135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */; };
+		4BB554A62135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */; };
 		4BB6D196206EA62F00FEF72E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D193206EA62F00FEF72E /* Message.swift */; };
 		4BB6D197206EA62F00FEF72E /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D194206EA62F00FEF72E /* Conversation.swift */; };
 		4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D195206EA62F00FEF72E /* MediaObject.swift */; };
@@ -340,6 +342,8 @@
 		4BAD9754206E35FE008ADF6B /* AddGroupMembersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddGroupMembersController.swift; path = ChatsControllers/AddGroupMembersController.swift; sourceTree = "<group>"; };
 		4BAD9757206E36AD008ADF6B /* ChangeGroupAdminController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangeGroupAdminController.swift; path = ChatsControllers/ChangeGroupAdminController.swift; sourceTree = "<group>"; };
 		4BAD975A206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LeaveGroupAndChangeAdminController.swift; path = ChatsControllers/LeaveGroupAndChangeAdminController.swift; sourceTree = "<group>"; };
+		4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogHistoryFetcher.swift; path = ChatsControllers/ChatLogHistoryFetcher.swift; sourceTree = "<group>"; };
+		4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+ChatHistoryFetcherDelegate.swift"; path = "ChatsControllers/ChatLogViewController+ChatHistoryFetcherDelegate.swift"; sourceTree = "<group>"; };
 		4BB6D193206EA62F00FEF72E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Model/Message.swift; sourceTree = "<group>"; };
 		4BB6D194206EA62F00FEF72E /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = Model/Conversation.swift; sourceTree = "<group>"; };
 		4BB6D195206EA62F00FEF72E /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = Model/MediaObject.swift; sourceTree = "<group>"; };
@@ -1020,18 +1024,18 @@
 			children = (
 				4BBF79512134370C00903F56 /* AppDelegate.swift */,
 				4BBF79522134370C00903F56 /* TabBarController */,
-				4BBF794E2134370C00903F56 /* SplitCiewController */,
+				4BBF794E2134370C00903F56 /* SplitViewController */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
 		};
-		4BBF794E2134370C00903F56 /* SplitCiewController */ = {
+		4BBF794E2134370C00903F56 /* SplitViewController */ = {
 			isa = PBXGroup;
 			children = (
 				4BBF794F2134370C00903F56 /* SplitViewController.swift */,
 				4BBF79502134370C00903F56 /* SplitPlaceholderViewController.swift */,
 			);
-			path = SplitCiewController;
+			path = SplitViewController;
 			sourceTree = "<group>";
 		};
 		4BBF79522134370C00903F56 /* TabBarController */ = {
@@ -1211,6 +1215,8 @@
 				4B7ACCB71F3A3C74000606E1 /* Cells */,
 				4BC3B268212DF6850012C7BD /* Support */,
 				4BC3B261212DA6D50012C7BD /* ChatLogViewController.swift */,
+				4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */,
+				4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */,
 				4BC3B265212DAE960012C7BD /* ChatLogViewController+DataSource.swift */,
 				4B0FA7DD2065A1D600BEA090 /* ChatLogViewController+CollectionDelegate.swift */,
 				4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */,
@@ -1503,6 +1509,7 @@
 				4BBF79562134370C00903F56 /* AppDelegate.swift in Sources */,
 				4BE8BB491FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift in Sources */,
 				4B1A369F1F49A0BB00B4AA0A /* InputContainerView+AttachDataSource.swift in Sources */,
+				4BB554A42135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift in Sources */,
 				4BBBCBF72057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift in Sources */,
 				4B80BE26212EF02200A32E01 /* AttachCollectionViewLayout.swift in Sources */,
 				4BFA878920F2270F0083C673 /* PopOverMenuConfiguration.swift in Sources */,
@@ -1648,6 +1655,7 @@
 				4B6BB00F20886C5F00A90F3A /* AnimationController.swift in Sources */,
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,
 				4BC3B25D212DA10A0012C7BD /* KeyboardFrameObserver.swift in Sources */,
+				4BB554A62135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */,
 				4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */,
 				4BDB294C2126C79000D77600 /* PrivacyTableViewController.swift in Sources */,
 				4B6BAFE620886C5F00A90F3A /* SelectParticipantsViewController+SearchHandlers.swift in Sources */,

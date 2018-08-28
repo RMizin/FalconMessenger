@@ -35,6 +35,7 @@ class ChatLogViewController: UIViewController {
   weak var typingIndicatorManager: TypingIndicatorManager?
   
   var messagesFetcher: MessagesFetcher!
+  let chatLogHistoryFetcher = ChatLogHistoryFetcher()
 
   var membersReference: DatabaseReference!
   var membersAddingHandle: DatabaseHandle!
@@ -82,7 +83,7 @@ class ChatLogViewController: UIViewController {
     return inputBlockerContainerView
   }()
   
-  private lazy var bottomScrollConainer: BottomScrollConainer = {
+  lazy var bottomScrollConainer: BottomScrollConainer = {
     var bottomScrollConainer = BottomScrollConainer()
     bottomScrollConainer.scrollButton.addTarget(self, action: #selector(instantMoveToBottom), for: .touchUpInside)
     bottomScrollConainer.isHidden = true
@@ -93,7 +94,7 @@ class ChatLogViewController: UIViewController {
     collectionView.scrollToBottom(animated: true)
   }
   
-  private lazy var refreshControl: UIRefreshControl = {
+  lazy var refreshControl: UIRefreshControl = {
     var refreshControl = UIRefreshControl()
     refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
     refreshControl.tintColor = ThemeManager.currentTheme().generalTitleColor
@@ -101,7 +102,23 @@ class ChatLogViewController: UIViewController {
     
     return refreshControl
   }()
-
+  
+  fileprivate func configureRefreshControlInitialTintColor() { /* fixes bug of not setting refresh control tint color on initial refresh */
+    collectionView.contentOffset = CGPoint(x: 0, y: -refreshControl.frame.size.height)
+    refreshControl.beginRefreshing()
+    refreshControl.endRefreshing()
+  }
+  
+  @objc func performRefresh() {
+    guard let conversation = self.conversation else { return }
+    
+    if let isGroupChat = conversation.isGroupChat, isGroupChat {
+      chatLogHistoryFetcher.loadPreviousMessages(messages, conversation, messagesToLoad, true)
+    } else {
+      chatLogHistoryFetcher.loadPreviousMessages(messages, conversation, messagesToLoad, false)
+    }
+  }
+  
   private var collectionViewLoaded = false {
     didSet {
       if collectionViewLoaded && shouldScrollToBottom && !oldValue {
@@ -111,6 +128,7 @@ class ChatLogViewController: UIViewController {
   }
   
   //MARK: LIFECYCLE
+  
   override func loadView() {
     super.loadView()
     loadViews()
@@ -304,7 +322,6 @@ class ChatLogViewController: UIViewController {
     splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
   }
   
-  
   private func setupBottomScrollButton() {
     view.addSubview(bottomScrollConainer)
     bottomScrollConainer.translatesAutoresizingMaskIntoConstraints = false
@@ -315,20 +332,16 @@ class ChatLogViewController: UIViewController {
   }
   
   private func setupCollectionView() {
-    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
- 
     extendedLayoutIncludesOpaqueBars = true
+    edgesForExtendedLayout = UIRectEdge.bottom
     
     if #available(iOS 11.0, *) {
-      automaticallyAdjustsScrollViewInsets = false
       navigationItem.largeTitleDisplayMode = .never
-    } else {
-      edgesForExtendedLayout = UIRectEdge.bottom
-      automaticallyAdjustsScrollViewInsets = true
     }
     
     collectionView.delegate = self
     collectionView.dataSource = self
+    chatLogHistoryFetcher.delegate = self
     
     if DeviceType.isIPad {
       addIPadCloseButton()
@@ -552,108 +565,6 @@ class ChatLogViewController: UIViewController {
     }
   }
   
-  var startingIDReference: DatabaseReference!
-  var endingIDReference: DatabaseReference!
-  var startingIDQuery: DatabaseQuery!
-  var endingIDQuery: DatabaseQuery!
-  var userMessagesReference: DatabaseReference!
-  var userMessagesQuery: DatabaseQuery!
-  var userMessageHande: DatabaseHandle!
-  
-  func loadPreviousMessages(isGroupChat: Bool) {
-    
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID else { return }
-    let numberOfMessagesToLoad = messages.count + messagesToLoad
-    let nextMessageIndex = messages.count + 1
-    let oldestMessagesLoadingGroup = DispatchGroup()
-    if messages.count <= 0 { self.refreshControl.endRefreshing() }
-    
-    startingIDReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
-    startingIDQuery = startingIDReference.queryLimited(toLast: UInt(numberOfMessagesToLoad))
-    
-    startingIDQuery.keepSynced(true)
-    startingIDQuery.observeSingleEvent(of: .childAdded, with: { (snapshot) in
-      let queryStartingID = snapshot.key
-      self.endingIDReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
-      self.endingIDQuery = self.endingIDReference.queryLimited(toLast: UInt(nextMessageIndex))
-      
-      self.endingIDQuery.keepSynced(true)
-      self.endingIDQuery.observeSingleEvent(of: .childAdded, with: { (snapshot) in
-        let queryEndingID = snapshot.key
-        if (queryStartingID == queryEndingID) && self.messages.contains(where: { (message) -> Bool in
-          return message.messageUID == queryEndingID
-        }) {
-          self.refreshControl.endRefreshing()
-          return
-        }
-        
-        self.userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
-        self.userMessagesQuery = self.userMessagesReference.queryOrderedByKey().queryStarting(atValue: queryStartingID).queryEnding(atValue: queryEndingID)
-        
-        self.userMessagesQuery.keepSynced(true)
-        self.userMessagesQuery.observeSingleEvent(of: .value, with: { (snapshot) in
-          for _ in 0 ..< snapshot.childrenCount { oldestMessagesLoadingGroup.enter() }
-          
-          oldestMessagesLoadingGroup.notify(queue: DispatchQueue.main, execute: {
-            var arrayWithShiftedMessages = self.messages
-            let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messages.count )
-            arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
-            guard self.messagesFetcher != nil else { return }
-            self.messages = self.messagesFetcher.configureMessageTails(messages: arrayWithShiftedMessages, isGroupChat: isGroupChat)
-            self.userMessagesReference.removeObserver(withHandle: self.userMessageHande)
-            self.userMessagesQuery.removeObserver(withHandle: self.userMessageHande)
-            
-            globalDataStorage.contentSizeWhenInsertingToTop = self.collectionView.contentSize
-            globalDataStorage.isInsertingCellsToTop = true
-            self.refreshControl.endRefreshing()
-            
-            var indexPaths = [IndexPath]()
-            Array(0..<shiftingIndex).forEach({ (index) in
-              indexPaths.append(IndexPath(item: index, section: 0))
-            })
-            UIView.performWithoutAnimation {
-              self.collectionView.performBatchUpdates ({
-                self.collectionView.insertItems(at: indexPaths)
-              }, completion: { (_) in
-                DispatchQueue.main.async {
-                  self.bottomScrollConainer.isHidden = false
-                }
-              })
-            }
-          })
-          
-          self.userMessageHande = self.userMessagesQuery.observe(.childAdded, with: { (snapshot) in
-            let messagesRef = Database.database().reference().child("messages").child(snapshot.key)
-            let messageUID = snapshot.key
-            messagesRef.keepSynced(true)
-            
-            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-              guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
-              dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
-              
-              guard self.messagesFetcher != nil else { return }
-              
-              dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: isGroupChat)
-              let message = Message(dictionary: dictionary)
-              self.messagesFetcher.loadUserNameForOneMessage(message: message, completion: { [unowned self] (isCompleted, newMessage)  in
-                self.messages.append(newMessage)
-                oldestMessagesLoadingGroup.leave()
-              })
-            }, withCancel: nil)
-          })
-        })
-      }) // endingIDRef
-    }) // startingIDRef
-  }
-  
-  @objc func performRefresh () {
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      loadPreviousMessages(isGroupChat: true)
-    } else {
-      loadPreviousMessages(isGroupChat: false)
-    }
-  }
-  
   private var localTyping = false
   
   var isTyping: Bool {
@@ -822,12 +733,6 @@ class ChatLogViewController: UIViewController {
     uploadProgressBar.rightAnchor.constraint(equalTo: navigationController!.navigationBar.rightAnchor).isActive = true
   }
   
-  fileprivate func configureRefreshControlInitialTintColor() { /* fixes bug of not setting refresh control tint color on initial refresh */
-    collectionView.contentOffset = CGPoint(x: 0, y: -refreshControl.frame.size.height)
-    refreshControl.beginRefreshing()
-    refreshControl.endRefreshing()
-  }
-  
   fileprivate var userHandler: UInt = 01
   fileprivate var onlineStatusInString: String?
   
@@ -914,8 +819,7 @@ class ChatLogViewController: UIViewController {
     return ""
   }
   
-  private var canRefresh = true
-
+  //MARK: Scroll view
   func isScrollViewAtTheBottom() -> Bool {
     if collectionView.contentOffset.y >= (collectionView.contentSize.height - collectionView.frame.size.height - 450) {
       return true
@@ -923,6 +827,7 @@ class ChatLogViewController: UIViewController {
     return false
   }
   
+  private var canRefresh = true
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     
@@ -950,6 +855,9 @@ class ChatLogViewController: UIViewController {
       canRefresh = true
     }
   }
+  
+  
+  //MARK: Messages sending
   
   @objc func handleSend() {
     

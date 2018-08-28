@@ -232,11 +232,11 @@ class BaseMessageCell: RevealableCollectionViewCell {
     }
   }
   
-  func setupTimestampView(message: Message, isOutgoing:Bool) {
+  func setupTimestampView(message: Message, isOutgoing: Bool) {
     DispatchQueue.main.async {
       if let view = self.chatLogController?.collectionView.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
         view.titleLabel.text = message.convertedTimestamp
-        let style:RevealStyle = isOutgoing ? .slide : .over
+        let style: RevealStyle = isOutgoing ? .slide : .over
         self.setRevealableView(view, style: style, direction: .left)
       }
     }
