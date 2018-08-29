@@ -44,6 +44,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
   
   var messagesFetcher: MessagesFetcher!
   
+  let chatLogHistoryFetcher = ChatLogHistoryFetcher()
+  
   let reference = Database.database().reference()
   
   var membersReference: DatabaseReference!
@@ -184,89 +186,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
       navigationItem.setTitle(title: title, subtitle: subtitle)
       return
     }
-  }
-
-  var startingIDReference: DatabaseReference!
-  var endingIDReference: DatabaseReference!
-  var startingIDQuery: DatabaseQuery!
-  var endingIDQuery: DatabaseQuery!
-  var userMessagesReference: DatabaseReference!
-  var userMessagesQuery: DatabaseQuery!
-  var userMessageHande: DatabaseHandle!
-
-  func loadPreviousMessages(isGroupChat: Bool) {
-
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID else { return }
-    let numberOfMessagesToLoad = messages.count + messagesToLoad
-    let nextMessageIndex = messages.count + 1
-    let oldestMessagesLoadingGroup = DispatchGroup()
-    if messages.count <= 0 { self.refreshControl.endRefreshing() }
-    let userMessagesReference = reference.child("user-messages").child(currentUserID)
-
-    startingIDReference = userMessagesReference.child(conversationID).child(userMessagesFirebaseFolder)
-    startingIDQuery = startingIDReference.queryLimited(toLast: UInt(numberOfMessagesToLoad))
-
-    startingIDQuery.keepSynced(true)
-    startingIDQuery.observeSingleEvent(of: .childAdded, with: { (snapshot) in
-      let queryStartingID = snapshot.key
-      self.endingIDReference = userMessagesReference.child(conversationID).child(userMessagesFirebaseFolder)
-      self.endingIDQuery = self.endingIDReference.queryLimited(toLast: UInt(nextMessageIndex))
-      
-      self.endingIDQuery.keepSynced(true)
-      self.endingIDQuery.observeSingleEvent(of: .childAdded, with: { (snapshot) in
-        let queryEndingID = snapshot.key
-        if (queryStartingID == queryEndingID) && self.messages.contains(where: { (message) -> Bool in
-          return message.messageUID == queryEndingID
-        }) {
-          print("self.queryStartingID == self.queryEndingID")
-          self.refreshControl.endRefreshing()
-          return
-        }
-
-        self.userMessagesReference = userMessagesReference.child(conversationID).child(userMessagesFirebaseFolder)
-        self.userMessagesQuery = self.userMessagesReference.queryOrderedByKey()
-          .queryStarting(atValue: queryStartingID).queryEnding(atValue: queryEndingID)
-
-        self.userMessagesQuery.keepSynced(true)
-        self.userMessagesQuery.observeSingleEvent(of: .value, with: { (snapshot) in
-          for _ in 0 ..< snapshot.childrenCount { oldestMessagesLoadingGroup.enter() }
-
-          oldestMessagesLoadingGroup.notify(queue: DispatchQueue.main, execute: {
-            var arrayWithShiftedMessages = self.messages
-            let shiftingIndex = self.messagesToLoad - (numberOfMessagesToLoad - self.messages.count )
-            arrayWithShiftedMessages.shiftInPlace(withDistance: -shiftingIndex)
-
-            self.messages = arrayWithShiftedMessages
-            self.userMessagesReference.removeObserver(withHandle: self.userMessageHande)
-            self.userMessagesQuery.removeObserver(withHandle: self.userMessageHande)
-
-            contentSizeWhenInsertingToTop = self.collectionView?.contentSize
-            isInsertingCellsToTop = true
-            self.refreshControl.endRefreshing()
-
-            DispatchQueue.main.async {
-              self.collectionView?.reloadData()
-            }
-          })
-
-          self.userMessageHande = self.userMessagesQuery.observe(.childAdded, with: { (snapshot) in
-            let messagesRef = self.reference.child("messages").child(snapshot.key)
-            let messageUID = snapshot.key
-            messagesRef.keepSynced(true)
-            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-              guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
-              dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
-              dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: isGroupChat)
-              let message = Message(dictionary: dictionary)
-              self.messagesFetcher.loadUserNameForOneMessage(message: message, completion: { [unowned self] (_, newMessage)  in
-                self.messages.append(newMessage)
-                oldestMessagesLoadingGroup.leave()
-              })
-            }, withCancel: nil)
-          })
-        })
-      }) // endingIDRef
-    }) // startingIDRef
   }
 
   private var localTyping = false
@@ -606,6 +525,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                                                                action: #selector(ChatLogController.toggleTextView))
     inputTextViewTapGestureRecognizer.delegate = inputContainerView
 
+    chatLogHistoryFetcher.delegate = self
+    
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     collectionView?.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     collectionView?.backgroundColor = view.backgroundColor
@@ -817,11 +738,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
   }
 
-  @objc func performRefresh () {
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      loadPreviousMessages(isGroupChat: true)
+  @objc func performRefresh() {
+    guard let conversation = self.conversation else { return }
+    
+    if let isGroupChat = conversation.isGroupChat, isGroupChat {
+      chatLogHistoryFetcher.loadPreviousMessages(messages, conversation, messagesToLoad, true)
     } else {
-      loadPreviousMessages(isGroupChat: false)
+      chatLogHistoryFetcher.loadPreviousMessages(messages, conversation, messagesToLoad, false)
     }
   }
 

@@ -176,6 +176,8 @@
 		4BAEE5F5212735E50045AB10 /* NavigationItemActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B1212735E50045AB10 /* NavigationItemActivityIndicator.swift */; };
 		4BAEE5F6212735E50045AB10 /* AvatarOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B3212735E50045AB10 /* AvatarOpener.swift */; };
 		4BAEE5F7212735E50045AB10 /* AvatarOpenerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B4212735E50045AB10 /* AvatarOpenerOverlay.swift */; };
+		4BB46C6A2136E6F8005405BB /* ChatLogHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */; };
+		4BB46C6C2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C6B2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */; };
 		4BE44DAA212B5CC600E722B8 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
@@ -366,6 +368,8 @@
 		4BAEE5B1212735E50045AB10 /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
 		4BAEE5B3212735E50045AB10 /* AvatarOpener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarOpener.swift; sourceTree = "<group>"; };
 		4BAEE5B4212735E50045AB10 /* AvatarOpenerOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarOpenerOverlay.swift; sourceTree = "<group>"; };
+		4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogHistoryFetcher.swift; sourceTree = "<group>"; };
+		4BB46C6B2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatLogViewController+ChatHistoryFetcherDelegate.swift"; sourceTree = "<group>"; };
 		4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsFetcher.swift; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
@@ -628,6 +632,7 @@
 			isa = PBXGroup;
 			children = (
 				4BAEE4D521272D880045AB10 /* ChatLogController.swift */,
+				4BB46C6B2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */,
 				4BAEE4D321272D880045AB10 /* ChatLogController+PhotoEditor.swift */,
 				4BAEE4BC21272D880045AB10 /* ChatLogController+ImageZoomHandlers.swift */,
 				4BAEE4BA21272D880045AB10 /* ChatLogController+MediaPickerHandlers.swift */,
@@ -1137,6 +1142,7 @@
 			children = (
 				4BAEE4A621272D880045AB10 /* InformationMessageSender.swift */,
 				4BAEE4B821272D880045AB10 /* MessagesFetcher.swift */,
+				4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1322,6 +1328,7 @@
 				4BAEE5C6212735E50045AB10 /* ARSLineProgress.swift in Sources */,
 				4BAEE50121272D890045AB10 /* OutgoingPhotoMessageCell.swift in Sources */,
 				4BAEE50F21272D890045AB10 /* PlayerCellView.swift in Sources */,
+				4BB46C6C2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */,
 				4B5E99DE212CC0C0001F067F /* InAppNotificationManager.swift in Sources */,
 				4BAEE5D1212735E50045AB10 /* SelectedParticipantsCollectionView.swift in Sources */,
 				4BAEE5D7212735E50045AB10 /* AnnouncementFactory.swift in Sources */,
@@ -1457,6 +1464,7 @@
 				4BAEE5BD212735E50045AB10 /* INSPhoto.swift in Sources */,
 				4BAEE49921272C5E0045AB10 /* ContactsController+SearchHandlers.swift in Sources */,
 				4BAEE5CF212735E50045AB10 /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
+				4BB46C6A2136E6F8005405BB /* ChatLogHistoryFetcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
