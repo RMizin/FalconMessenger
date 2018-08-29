@@ -26,28 +26,25 @@ class MessagesFetcher: NSObject {
   private var messages = [Message]()
   
   var userMessagesReference: DatabaseQuery!
-  
   var userMessagesHandle: DatabaseHandle!
   
   var manualRemovingReference: DatabaseReference!
-  
   var manualRemovingHandle: DatabaseHandle!
   
   var messagesReference: DatabaseReference!
   
-  private  let messagesToLoad = 50
+  private let messagesToLoad = 50
   
-  private var chatLogAudioPlayer: AVAudioPlayer!
+ 
   
   weak var delegate: MessagesDelegate?
-  
   weak var collectionDelegate: CollectionDelegate?
   
   var isInitialChatMessagesLoad = true
   
   private var loadingMessagesGroup = DispatchGroup()
-  
   private var loadingNamesGroup = DispatchGroup()
+   private var chatLogAudioPlayer: AVAudioPlayer!
   
   
   func cleanAllObservers() {
@@ -89,7 +86,7 @@ class MessagesFetcher: NSObject {
         if self.isInitialChatMessagesLoad {
           self.messages = self.sortedMessages(unsortedMessages: self.messages)
         }
-        self.messages = self.configureMessageTails(messages:  self.messages, isGroupChat: isGroupChat)
+        self.messages = self.configureTails(for: self.messages, isGroupChat: isGroupChat)
         self.isInitialChatMessagesLoad = false
         self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
@@ -203,27 +200,29 @@ class MessagesFetcher: NSObject {
     return sortedMessages
   }
   
-  func configureMessageTails(messages: [Message], isGroupChat: Bool?) -> [Message] {
+  func configureTails(for messages: [Message], isGroupChat: Bool?) -> [Message] {
     var messages = messages
     for index in (0..<messages.count) {
-      if messages.indices.contains(index + 1) {
-        if messages[index].fromId == messages[index + 1].fromId {
-          messages[index].isCrooked = false
-          messages[index + 1].isCrooked = true
-        } else {
-          messages[index].isCrooked = true
-          messages[index + 1].isCrooked = true
-        }
-        
-        if let isInfoMessage = messages[index + 1].isInformationMessage, isInfoMessage {
-          messages[index].isCrooked = true
-        }
-        
-        if let isInfoMessage = messages[index].isInformationMessage, isInfoMessage {
-          messages[index + 1].isCrooked = true
-        }
+      
+      guard messages.indices.contains(index + 1) else {
+        messages[index].isCrooked = true
+        continue
+      }
+    
+      if messages[index].fromId == messages[index + 1].fromId {
+        messages[index].isCrooked = false
+        messages[index + 1].isCrooked = true
       } else {
         messages[index].isCrooked = true
+        messages[index + 1].isCrooked = true
+      }
+      
+      if let isInfoMessage = messages[index + 1].isInformationMessage, isInfoMessage {
+        messages[index].isCrooked = true
+      }
+      
+      if let isInfoMessage = messages[index].isInformationMessage, isInfoMessage {
+        messages[index + 1].isCrooked = true
       }
     }
     return messages

@@ -8,10 +8,6 @@
 
 import UIKit
 import Firebase
-import Photos
-import AudioToolbox
-import CropViewController
-import SafariServices
 
 protocol ChatLogHistoryDelegate: class {
   func chatLogHistory(isEmpty: Bool)
@@ -117,7 +113,7 @@ class ChatLogHistoryFetcher: NSObject {
   fileprivate func notifyWhenGroupFinished(query: DatabaseQuery) {
     loadingGroup.notify(queue: DispatchQueue.main, execute: {
       var updatedMessages = self.previousMessages + self.messages
-      updatedMessages = self.messagesFetcher.configureMessageTails(messages: updatedMessages, isGroupChat: self.isGroupChat)
+      updatedMessages = self.messagesFetcher.configureTails(for: updatedMessages, isGroupChat: self.isGroupChat)
       query.removeObserver(withHandle: self.userMessageHande)
       print(self.previousMessages.count)
       var indexPaths = [IndexPath]()

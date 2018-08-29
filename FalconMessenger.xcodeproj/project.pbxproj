@@ -1109,6 +1109,7 @@
 			isa = PBXGroup;
 			children = (
 				4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */,
+				4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */,
 			);
 			name = Support;
 			sourceTree = "<group>";
@@ -1215,7 +1216,6 @@
 				4B7ACCB71F3A3C74000606E1 /* Cells */,
 				4BC3B268212DF6850012C7BD /* Support */,
 				4BC3B261212DA6D50012C7BD /* ChatLogViewController.swift */,
-				4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */,
 				4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */,
 				4BC3B265212DAE960012C7BD /* ChatLogViewController+DataSource.swift */,
 				4B0FA7DD2065A1D600BEA090 /* ChatLogViewController+CollectionDelegate.swift */,

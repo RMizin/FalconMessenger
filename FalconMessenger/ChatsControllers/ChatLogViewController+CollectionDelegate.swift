@@ -25,7 +25,7 @@ extension ChatLogViewController: CollectionDelegate {
     messages.remove(at: index)
     
   //  if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: nil)
+      messages = messagesFetcher.configureTails(for: messages, isGroupChat: nil)
  //   } else {
   //    messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
  //   }
@@ -95,9 +95,9 @@ extension ChatLogViewController: CollectionDelegate {
     messages.insert(message, at: insertionIndex)
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: true)
+      messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
     } else {
-      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
+      messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)
     }
     
     collectionView.performBatchUpdates ({

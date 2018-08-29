@@ -96,4 +96,45 @@ class Message: NSObject {
       
         isCrooked = dictionary["isCrooked"] as? Bool
     }
+  
+  
+ static func messages(_ groupedMessages: [String: [Message]]) -> [Message] {
+    
+   let messages = groupedMessages.flatMap { (arg0) -> [Message] in
+      return arg0.value
+    }
+    
+    return messages
+  }
+  
+  func groupedByDate(messages: [Message]) -> [String: [Message]] {
+    
+    let datesArray = messages.compactMap { (message) -> String in
+      if let timestamp = message.timestamp {
+        let date = Date(timeIntervalSince1970: TimeInterval(truncating: timestamp)).getShortDateStringFromUTC()
+        
+        return date
+      }
+      return ""
+    } // return array of date
+    
+    var timeGroupedMessages = [String: [Message]]() // Your required result
+    
+    datesArray.forEach {
+      let dateKey = $0
+      
+      let filterArray = messages.filter({ (message) -> Bool in
+        if let timestamp = message.timestamp {
+          let date = Date(timeIntervalSince1970: TimeInterval(truncating: timestamp)).getShortDateStringFromUTC()
+          return date == dateKey
+        }
+        return false
+      })
+      
+      timeGroupedMessages[$0] = filterArray
+    }
+    
+     print( timeGroupedMessages.keys,   timeGroupedMessages.keys.count, timeGroupedMessages)
+    return timeGroupedMessages
+  }
 }

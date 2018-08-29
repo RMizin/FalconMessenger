@@ -1110,9 +1110,9 @@ class ChatLogViewController: UIViewController {
     messages.append(message)
     let latMessageIndexPath = IndexPath(item: messages.count - 1, section: 0)
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: true)
+      messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
     } else {
-      messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
+      messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)
     }
     
     messages[latMessageIndexPath.item].status = messageStatusSending
