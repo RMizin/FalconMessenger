@@ -13,8 +13,9 @@ class InformationMessageCell: RevealableCollectionViewCell {
   let information: UILabel = {
     let information = UILabel()
     information.font = MessageFontsAppearance.defaultInformationMessageTextFont
-    information.numberOfLines = 0
+    information.numberOfLines = 2
     information.textAlignment = .center
+    information.lineBreakMode = .byWordWrapping
     information.textColor = ThemeManager.currentTheme().generalSubtitleColor
     information.translatesAutoresizingMaskIntoConstraints = false
    

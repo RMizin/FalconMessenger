@@ -210,7 +210,12 @@ class MessagesFetcher: NSObject {
       }
     
       if messages[index].fromId == messages[index + 1].fromId {
-        messages[index].isCrooked = false
+        if messages[index].shortConvertedTimestamp != messages[index + 1].shortConvertedTimestamp {
+          messages[index].isCrooked = true
+        } else {
+          messages[index].isCrooked = false
+        }
+      
         messages[index + 1].isCrooked = true
       } else {
         messages[index].isCrooked = true

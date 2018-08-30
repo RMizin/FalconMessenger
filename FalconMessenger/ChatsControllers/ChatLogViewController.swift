@@ -51,7 +51,8 @@ class ChatLogViewController: UIViewController {
   
   var conversation: Conversation?
   var messages = [Message]()
-  var sections = ["Messages"]
+  var groupedMessages = [[Message]]()
+  var typingIndicatorSection: [String] = []
   
   var mediaPickerController: MediaPickerControllerNew! = nil
   var voiceRecordingViewController: VoiceRecordingViewController! = nil
@@ -162,7 +163,7 @@ class ChatLogViewController: UIViewController {
       }
     }
    
-    if sections.count == 2 {
+    if collectionView.numberOfSections == groupedMessages.count + 1 {
       guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) as? TypingIndicatorCell else { return }
       cell.restart()
     }
@@ -364,6 +365,8 @@ class ChatLogViewController: UIViewController {
     collectionView.register(OutgoingVoiceMessageCell.self, forCellWithReuseIdentifier: outgoingVoiceMessageCellID)
     collectionView.register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
     collectionView.register(InformationMessageCell.self, forCellWithReuseIdentifier: informationMessageCellID)
+    collectionView.register(ChatLogViewControllerSupplementaryView.self,
+                            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "lol")
     collectionView.registerClass(revealableViewClass: TimestampView.self, forRevealableViewReuseIdentifier: "timestamp")
     
     configureRefreshControlInitialTintColor()
@@ -384,7 +387,7 @@ class ChatLogViewController: UIViewController {
     }
     
     func updateTypingIndicatorIfNeeded() {
-      if sections.count == 2 {
+      if collectionView.numberOfSections == groupedMessages.count + 1 {
         guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) as? TypingIndicatorCell else { return }
         cell.restart()
       }
@@ -641,18 +644,15 @@ class ChatLogViewController: UIViewController {
   }
   
   fileprivate func handleTypingIndicatorAppearance(isEnabled: Bool) {
-    
-    let sectionsIndexSet: IndexSet = [1]
-    
     if isEnabled {
-      guard sections.count < 2 else { return }
+      guard collectionView.numberOfSections < groupedMessages.count + 1 else { return }
       self.collectionView.performBatchUpdates ({
+        self.typingIndicatorSection = ["TypingIndicator"]
+        print("inserting")
+        self.collectionView.insertSections([groupedMessages.count])
         
-        self.sections = ["Messages", "TypingIndicator"]
-        
-        self.collectionView.insertSections(sectionsIndexSet)
-        
-      }, completion: { (true) in
+      }, completion: { (isCompleted) in
+        print(isCompleted)
         if self.isScrollViewAtTheBottom() {
           if self.collectionView.contentSize.height < self.collectionView.bounds.height {
             return
@@ -663,15 +663,14 @@ class ChatLogViewController: UIViewController {
       
     } else {
       
-      guard sections.count == 2 else { return }
+      guard collectionView.numberOfSections == groupedMessages.count + 1 else { return }
       self.collectionView.performBatchUpdates ({
+          self.typingIndicatorSection.removeAll()
         
-        self.sections = ["Messages"]
-        
-        if self.collectionView.numberOfSections > 1 {
-          self.collectionView.deleteSections(sectionsIndexSet)
+        if self.collectionView.numberOfSections > groupedMessages.count {
+          self.collectionView.deleteSections([groupedMessages.count])
           
-          guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1 ) ) as? TypingIndicatorCell else {
+          guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: groupedMessages.count ) ) as? TypingIndicatorCell else {
             return
           }
           cell.typingIndicator.stopAnimating()
@@ -708,14 +707,15 @@ class ChatLogViewController: UIViewController {
   }
   
   func updateMessageStatusUI(sentMessage: Message) {
-    
     guard let index = self.messages.index(where: { (message) -> Bool in
       return message.messageUID == sentMessage.messageUID
     }) else { return }
     
     guard index >= 0 else { return }
     messages[index].status = sentMessage.status
-    collectionView.reloadItems(at: [IndexPath(row: index ,section: 0)])
+    groupedMessages = Message.groupedMessages(messages)
+    guard let indexPath = Message.get(indexPathOf: messages[index], in: groupedMessages) else { return }
+    collectionView.reloadItems(at: [indexPath])
     guard sentMessage.status == messageStatusDelivered, messages[index].messageUID == messages.last?.messageUID,
       userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
     SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
@@ -1108,29 +1108,39 @@ class ChatLogViewController: UIViewController {
     
     let message = Message(dictionary: values)
     messages.append(message)
-    let latMessageIndexPath = IndexPath(item: messages.count - 1, section: 0)
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
     } else {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)
     }
     
-    messages[latMessageIndexPath.item].status = messageStatusSending
-    UIView.performWithoutAnimation {
-      collectionView.insertItems(at: [latMessageIndexPath])
-      let indexPath1 = IndexPath(item: messages.count - 1, section: 0)
-      DispatchQueue.main.async { [unowned self] in
-        self.collectionView.scrollToItem(at: indexPath1, at: .bottom, animated: true)
-      }
-      
-      var indexPaths = [IndexPath]()
-      for index in 2..<10 {
-        if messages.indices.contains(messages.count-index) {
-          let indexPath = IndexPath(item: messages.count-index, section: 0)
-          indexPaths.append(indexPath)
+    messages.last?.status = messageStatusSending
+    
+    let oldNumberOfSections = groupedMessages.count
+    groupedMessages = Message.groupedMessages(messages)
+    guard let indexPath = Message.get(indexPathOf: message, in: groupedMessages) else { return }
+    
+    collectionView.performBatchUpdates({
+      if oldNumberOfSections < groupedMessages.count {
+        
+        collectionView.insertSections([indexPath.section])
+        
+        guard indexPath.section-1 >= 0, groupedMessages[indexPath.section-1].count-1 >= 0 else { return }
+        let previousItem = groupedMessages[indexPath.section-1].count-1
+        
+        UIView.performWithoutAnimation { //removes previous message status and bubble tail
+          collectionView.reloadItems(at: [IndexPath(row: previousItem, section: indexPath.section-1)])
+        }
+      } else {
+        collectionView.insertItems(at: [indexPath])
+        
+        UIView.performWithoutAnimation { //removes previous message status and bubble tail
+          let previousRow = groupedMessages[indexPath.section].count-2
+          self.collectionView.reloadItems(at: [IndexPath(row: previousRow, section: indexPath.section)])
         }
       }
-      collectionView.reloadItems(at: indexPaths)
+    }) { (_) in
+      self.collectionView.scrollToBottom(animated: true)
     }
   }
   

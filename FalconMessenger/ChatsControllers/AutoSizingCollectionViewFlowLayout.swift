@@ -13,6 +13,7 @@ class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
   override func prepare() {
     super.prepare()
     minimumLineSpacing = 2
+    sectionHeadersPinToVisibleBounds = true
     if globalDataStorage.isInsertingCellsToTop == true {
       if let collectionView = collectionView, let oldContentSize = globalDataStorage.contentSizeWhenInsertingToTop {
         let newContentSize = collectionViewContentSize

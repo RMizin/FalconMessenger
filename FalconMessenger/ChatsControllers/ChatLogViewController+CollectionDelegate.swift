@@ -12,45 +12,41 @@ import Firebase
 extension ChatLogViewController: CollectionDelegate {
   
   func collectionView(shouldRemoveMessage id: String) {
-    
     guard let index = self.messages.index(where: { (message) -> Bool in
       return message.messageUID == id
     }) else { return }
     
-    performBatchUpdates(for: index)
+    performBatchUpdates(for: index, id:id)
   }
   
-  func performBatchUpdates(for index: Int) {
-    
+  func performBatchUpdates(for index: Int, id: String) {
+    let removedMessage = messages[index]
     messages.remove(at: index)
+    messages = messagesFetcher.configureTails(for: messages, isGroupChat: nil)
+ 
+    guard let indexPath = Message.get(indexPathOf: removedMessage, in: groupedMessages) else { return }
     
-  //  if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      messages = messagesFetcher.configureTails(for: messages, isGroupChat: nil)
- //   } else {
-  //    messages = messagesFetcher.configureMessageTails(messages: messages, isGroupChat: false)
- //   }
+    let currentSectionsCount = groupedMessages.count
+    groupedMessages = Message.groupedMessages(messages)
     
-    collectionView.performBatchUpdates ({
-      collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
-    }, completion: { (completed) in
-      
-      let startIndex = index - 2
-      let endIndex = index + 2
-      var indexPaths = [IndexPath]()
-      
-      for indexToUpdate in startIndex...endIndex {
-        if self.messages.indices.contains(indexToUpdate) /*&& indexToUpdate != index */{
-          let indexPath = IndexPath(item: indexToUpdate, section: 0)
-          indexPaths.append(indexPath)
+    collectionView.performBatchUpdates({
+      if currentSectionsCount > self.groupedMessages.count {
+         collectionView.deleteSections([indexPath.section])
+      } else {
+        collectionView.deleteItems(at: [indexPath])
+      }
+    }) { (_) in
+      UIView.performWithoutAnimation {
+        if currentSectionsCount > self.groupedMessages.count {
+          guard indexPath.section-1 >= 0 else { return }
+          self.collectionView.reloadSections([indexPath.section-1])
+        } else {
+          self.collectionView.reloadSections([indexPath.section])
         }
       }
-      
-      UIView.performWithoutAnimation {
-        self.collectionView.reloadItems(at: indexPaths)
-        guard self.messages.count == 0 else { return }
-        self.navigationController?.popViewController(animated: true)
-      }
-    })
+      guard self.messages.count == 0 else { return }
+      self.navigationController?.popViewController(animated: true)
+    }
   }
   
   func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message) {
@@ -93,37 +89,34 @@ extension ChatLogViewController: CollectionDelegate {
   
   fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
     messages.insert(message, at: insertionIndex)
-    
+
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
     } else {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)
     }
     
-    collectionView.performBatchUpdates ({
-      let indexPath = IndexPath(item: insertionIndex, section: 0)
-      
-      collectionView.insertItems(at: [indexPath])
-      
-      if messages.count - 1 >= 0 && isScrollViewAtTheBottom() {
-        let indexPath = IndexPath(item: messages.count - 1, section: 0)
-        DispatchQueue.main.async { [unowned self] in
-          self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
-        }
+    let oldSections = groupedMessages.count
+    groupedMessages = Message.groupedMessages(messages)
+    guard let indexPath = Message.get(indexPathOf: message, in: groupedMessages) else { return }
+    
+    collectionView.performBatchUpdates({
+      if oldSections < groupedMessages.count {
+        collectionView.insertSections([indexPath.section])
+        //TODO: scroll to bottom
+      } else {
+        collectionView.insertItems(at: [indexPath])
+        //TODO: scroll to bottom
       }
-    }, completion: { (true) in
       
-      UIView.performWithoutAnimation {
-        var indexPaths = [IndexPath]()
-        for index in 2..<10 {
-          if self.messages.indices.contains(self.messages.count-index) {
-            let indexPath = IndexPath(item: self.messages.count-index, section: 0)
-            indexPaths.append(indexPath)
-          }
-        }
-        self.collectionView.reloadItems(at: indexPaths)
-      }
+    }) { (_) in
       self.updateMessageStatus(messageRef: reference)
-    })
+      guard oldSections == self.groupedMessages.count else { return }
+      UIView.performWithoutAnimation {
+        self.collectionView.reloadSections([indexPath.section])
+      }
+      
+      self.collectionView.scrollToBottom(animated: true)
+    }
   }
 }

@@ -453,13 +453,7 @@ extension ChatsTableViewController: MessagesDelegate {
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
     chatLogController?.conversation = conversation
-    
-    
-//    let grouped = Dictionary.init(grouping: messages) { (message) -> String in
-//      return message.shortConvertedTimestamp ?? ""
-//    }
-//    
-//    
+    chatLogController?.groupedMessages = Message.groupedMessages(messages)
     chatLogController?.deleteAndExitDelegate = self
     chatLogController?.typingIndicatorManager = typingIndicatorManager
  
@@ -486,6 +480,8 @@ extension ChatsTableViewController: MessagesDelegate {
     deselectItem()
   }
 }
+
+
 
 extension ChatsTableViewController: ConversationUpdatesDelegate {
   

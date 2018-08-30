@@ -333,6 +333,7 @@ extension ContactsController: MessagesDelegate {
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
     chatLogController?.conversation = conversation
+    chatLogController?.groupedMessages = Message.groupedMessages(messages)
     chatLogController?.observeTypingIndicator()
     chatLogController?.configureTitleViewWithOnlineStatus()
     chatLogController?.messagesFetcher.collectionDelegate = chatLogController

@@ -9,6 +9,27 @@
 import UIKit
 import Firebase
 
+
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 struct MessageSubtitle {
   static let video = "Attachment: Video"
   static let image = "Attachment: Image"
@@ -100,58 +121,42 @@ class Message: NSObject {
     }
   
   
- static func messages(_ groupedMessages: [String: [Message]]) -> [Message] {
-    
-   let messages = groupedMessages.flatMap { (arg0) -> [Message] in
-      return arg0.value
+  static func groupedMessages(_ messages: [Message]) -> [[Message]] {
+    let grouped = Dictionary.init(grouping: messages) { (message) -> String in
+      return message.shortConvertedTimestamp ?? ""
     }
     
-    return messages
+    let keys = grouped.keys.sorted { (time1, time2) -> Bool in
+      return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
+    }
+    
+    var groupedMessages = [[Message]]()
+    keys.forEach({
+      groupedMessages.append(grouped[$0]!)
+    })
+    
+    return groupedMessages
   }
   
- static func groupedByDate(messages: [Message]) -> [(date: String, messages: [Message])] {
+  static func get(indexPathOf message: Message, in groupedArray: [[Message]]) -> IndexPath? {
+    guard let section = groupedArray.index(where: { (messages) -> Bool in
+      for message1 in messages where message1 == message {
+        return true
+      }; return false
+    }) else { return nil }
     
-    let datesArray = messages.compactMap { (message) -> String in
-      if let timestamp = message.timestamp {
-        let date = Date(timeIntervalSince1970: TimeInterval(truncating: timestamp)).getShortDateStringFromUTC()
-        
-        return date
-      }
-      return ""
-    } // return array of date
-  //  datesArray.removed
-  let unique = Array(Set(datesArray))
-//    .sorted { (string1, string2) -> Bool in
-//    return string1 < string2
- // }//.sorted()
- // images.sorted(by: { $0.fileID > $1.fileID })
- // print(unique, "\n")
-    var timeGroupedMessages = [(date: String, messages: [Message])]() // Your required result
+    guard let row = groupedArray[section].index(where: { (message1) -> Bool in
+      return message1.messageUID == message.messageUID
+    }) else { return IndexPath(row: -1, section: section) }
     
-    
-//    Array(0..<datesArray.count).forEach({ (index) in
-//      indexPaths.append(IndexPath(item: index, section: 0))
-//    })
-    unique.forEach {
-      let dateKey = $0
-      
-      let filterArray = messages.filter({ (message) -> Bool in
-        if let timestamp = message.timestamp {
-          let date = Date(timeIntervalSince1970: TimeInterval(truncating: timestamp)).getShortDateStringFromUTC()
-          return date == dateKey
-        }
-        return false
-      })
-      
-     
-      let element = (date: dateKey, messages: filterArray)
-      timeGroupedMessages.append(element)
-    //  timeGroupedMessages[$0] = filterArray
-    }
- //  print(datesArray)
-//  print(timeGroupedMessages)
-    
-  //   print( timeGroupedMessages.keys,   timeGroupedMessages.keys.count, timeGroupedMessages)
-    return timeGroupedMessages
+    return IndexPath(row: row, section: section)
+  }
+}
+
+extension Date {
+  static func dateFromCustomString(customString: String) -> Date {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "dd/MM/yyyy"
+    return dateFormatter.date(from: customString) ?? Date()
   }
 }

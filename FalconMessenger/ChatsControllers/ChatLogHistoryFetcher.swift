@@ -11,7 +11,7 @@ import Firebase
 
 protocol ChatLogHistoryDelegate: class {
   func chatLogHistory(isEmpty: Bool)
-  func chatLogHistory(updated messages: [Message], at indexPaths: [IndexPath])
+  func chatLogHistory(updated messages: [Message])
 }
 
 class ChatLogHistoryFetcher: NSObject {
@@ -120,7 +120,7 @@ class ChatLogHistoryFetcher: NSObject {
       Array(0..<self.previousMessages.count).forEach({ (index) in
         indexPaths.append(IndexPath(item: index, section: 0))
       })
-      self.delegate?.chatLogHistory(updated: updatedMessages, at: indexPaths)
+      self.delegate?.chatLogHistory(updated: updatedMessages)
     })
   }
 }

@@ -9,25 +9,40 @@
 import UIKit
 import Firebase
 import Photos
-//import AudioToolbox
-
 
 extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
   
    func numberOfSections(in collectionView: UICollectionView) -> Int {
-    return sections.count
+    return groupedMessages.count + typingIndicatorSection.count
   }
   
    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    if section == 0 {
-      return messages.count
-    } else {
-      return 1
+      if section == groupedMessages.count {
+        return 1
+      } else {
+        return groupedMessages[section].count
+      }
     }
+  
+  func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+  
+   if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "lol",
+                                                                   for: indexPath) as? ChatLogViewControllerSupplementaryView {
+      guard groupedMessages.indices.contains(indexPath.section),
+      groupedMessages[indexPath.section].indices.contains(indexPath.row) else { header.label.text = ""; return header }
+    
+      header.label.text = groupedMessages[indexPath.section][indexPath.row].shortConvertedTimestamp
+      return header
+    }
+    return UICollectionReusableView()
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
+    return section == groupedMessages.count ? CGSize(width: collectionView.bounds.width , height: 2) : CGSize(width: collectionView.bounds.width , height: 40)
   }
   
    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    guard indexPath.section == 0 else { return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell }
+    guard indexPath.section != groupedMessages.count else {print("getting data for indicator"); return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell }
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       return selectCell(for: indexPath, isGroupChat: true)!
     } else {
@@ -43,8 +58,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   }
   
   fileprivate func selectCell(for indexPath: IndexPath, isGroupChat: Bool) -> RevealableCollectionViewCell? {
-    
-    let message = messages[indexPath.item]
+
+    let message = groupedMessages[indexPath.section][indexPath.row] //sometimes crash
+
     let isTextMessage = message.text != nil
     let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
     let isVoiceMessage = message.voiceEncodedString != nil
@@ -64,7 +80,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
           cell.chatLogController = self
           cell.setupData(message: message)
           DispatchQueue.global(qos: .default).async { [unowned self] in
-            cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
+            cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
           }
           
           return cell
@@ -85,15 +101,17 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
             if let image = message.localImage {
               cell.setupImageFromLocalData(message: message, image: image)
               DispatchQueue.global(qos: .default).async { [unowned self] in
-                cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
+                cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
               }
+  
               return cell
             }
             if let messageImageUrl = message.imageUrl {
               cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
               DispatchQueue.global(qos: .default).async { [unowned self] in
-                cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
+                cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
               }
+              
               return cell
             }
             break
@@ -119,9 +137,11 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
               cell.chatLogController = self
               cell.setupData(message: message)
+              
               DispatchQueue.global(qos: .default).async { [unowned self] in
-                cell.configureDeliveryStatus(at: indexPath, lastMessageIndex: self.messages.count-1, message: message)
+                cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
               }
+              
               return cell
             case false:
               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
@@ -165,8 +185,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   }
   
    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    
-    let message = messages[indexPath.item]
+    let message = groupedMessages[indexPath.section][indexPath.item]
     guard let voiceEncodedString = message.voiceEncodedString else { return }
     guard let data = Data(base64Encoded: voiceEncodedString) else { return }
     guard let cell = collectionView.cellForItem(at: indexPath) as? BaseVoiceMessageCell else { return }
@@ -203,10 +222,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   }
   
   func selectSize(indexPath: IndexPath) -> CGSize {
-    
-    guard indexPath.section == 0 else { return CGSize(width: collectionView.frame.width, height: 30) }
+    guard indexPath.section != groupedMessages.count else {return CGSize(width: collectionView.frame.width, height: 30) }
     var cellHeight: CGFloat = 80
-    let message = messages[indexPath.row]
+    let message = groupedMessages[indexPath.section][indexPath.item]
     let isTextMessage = message.text != nil
     let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
     let isVoiceMessage = message.voiceEncodedString != nil
@@ -217,15 +235,12 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     guard !isInformationMessage else {
       let infoMessageWidth = collectionView.frame.width
         guard let messageText = message.text else { return CGSize(width: 0, height: 0 ) }
-      let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth, text: messageText, font: MessageFontsAppearance.defaultInformationMessageTextFont).height + 10
+      let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth, text: messageText, font: MessageFontsAppearance.defaultInformationMessageTextFont).height + 25
       return CGSize(width: infoMessageWidth, height: infoMessageHeight)
     }
     
     guard !isTextMessage else {
-      if let isInfoMessage = message.isInformationMessage, isInfoMessage {
-        return CGSize(width: collectionView.frame.width, height: 25)
-      }
-      
+
       let portraitHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.estimatedFrameForText)
       let landscapeHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.landscapeEstimatedFrameForText)
       

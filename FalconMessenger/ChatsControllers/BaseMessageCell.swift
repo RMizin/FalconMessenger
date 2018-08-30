@@ -212,8 +212,15 @@ class BaseMessageCell: RevealableCollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func configureDeliveryStatus(at indexPath: IndexPath, lastMessageIndex: Int, message:Message ) {
-    switch indexPath.row == lastMessageIndex {
+  func configureDeliveryStatus(at indexPath: IndexPath, groupMessages: [[Message]], message: Message) {
+
+    guard let lastItem = groupMessages.last else { return }
+    let lastRow = lastItem.count - 1
+    let lastSection = groupMessages.count - 1
+    
+    let lastIndexPath = IndexPath(row: lastRow, section: lastSection)
+    
+    switch indexPath == lastIndexPath {
     case true:
       DispatchQueue.main.async {
         self.deliveryStatus.frame = CGRect(x: self.frame.width - 80, y: self.bubbleView.frame.height + 2, width: 70, height: 10).integral
