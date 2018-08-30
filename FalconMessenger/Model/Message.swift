@@ -25,7 +25,8 @@ class Message: NSObject {
     var text: String?
     var toId: String?
     var timestamp: NSNumber?
-    var convertedTimestamp: String?
+    var convertedTimestamp: String? // local only
+    var shortConvertedTimestamp: String? //local only
   
     var status: String?
     var seen: Bool?
@@ -70,6 +71,7 @@ class Message: NSObject {
         timestamp = dictionary["timestamp"] as? NSNumber
       
         convertedTimestamp = dictionary["convertedTimestamp"] as? String
+        shortConvertedTimestamp = dictionary["shortConvertedTimestamp"] as? String
       
         status = dictionary["status"] as? String
         seen = dictionary["seen"] as? Bool
@@ -107,7 +109,7 @@ class Message: NSObject {
     return messages
   }
   
-  func groupedByDate(messages: [Message]) -> [String: [Message]] {
+ static func groupedByDate(messages: [Message]) -> [(date: String, messages: [Message])] {
     
     let datesArray = messages.compactMap { (message) -> String in
       if let timestamp = message.timestamp {
@@ -117,10 +119,20 @@ class Message: NSObject {
       }
       return ""
     } // return array of date
+  //  datesArray.removed
+  let unique = Array(Set(datesArray))
+//    .sorted { (string1, string2) -> Bool in
+//    return string1 < string2
+ // }//.sorted()
+ // images.sorted(by: { $0.fileID > $1.fileID })
+ // print(unique, "\n")
+    var timeGroupedMessages = [(date: String, messages: [Message])]() // Your required result
     
-    var timeGroupedMessages = [String: [Message]]() // Your required result
     
-    datesArray.forEach {
+//    Array(0..<datesArray.count).forEach({ (index) in
+//      indexPaths.append(IndexPath(item: index, section: 0))
+//    })
+    unique.forEach {
       let dateKey = $0
       
       let filterArray = messages.filter({ (message) -> Bool in
@@ -131,10 +143,15 @@ class Message: NSObject {
         return false
       })
       
-      timeGroupedMessages[$0] = filterArray
+     
+      let element = (date: dateKey, messages: filterArray)
+      timeGroupedMessages.append(element)
+    //  timeGroupedMessages[$0] = filterArray
     }
+ //  print(datesArray)
+//  print(timeGroupedMessages)
     
-     print( timeGroupedMessages.keys,   timeGroupedMessages.keys.count, timeGroupedMessages)
+  //   print( timeGroupedMessages.keys,   timeGroupedMessages.keys.count, timeGroupedMessages)
     return timeGroupedMessages
   }
 }

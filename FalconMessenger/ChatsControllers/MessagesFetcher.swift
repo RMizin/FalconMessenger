@@ -254,7 +254,10 @@ class MessagesFetcher: NSObject {
     if let messageTimestamp = Message(dictionary: dictionary).timestamp {  /* pre-converting timeintervals into dates */
       let date = Date(timeIntervalSince1970: TimeInterval(truncating: messageTimestamp))
       let convertedTimestamp = timestampOfChatLogMessage(date) as AnyObject
+      let shortConvertedTimestamp = date.getShortDateStringFromUTC() as AnyObject
+      
       dictionary.updateValue(convertedTimestamp, forKey: "convertedTimestamp")
+      dictionary.updateValue(shortConvertedTimestamp, forKey: "shortConvertedTimestamp")
     }
     
     return dictionary

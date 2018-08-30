@@ -453,6 +453,13 @@ extension ChatsTableViewController: MessagesDelegate {
     chatLogController?.messagesFetcher = messagesFetcher
     chatLogController?.messages = messages
     chatLogController?.conversation = conversation
+    
+    
+//    let grouped = Dictionary.init(grouping: messages) { (message) -> String in
+//      return message.shortConvertedTimestamp ?? ""
+//    }
+//    
+//    
     chatLogController?.deleteAndExitDelegate = self
     chatLogController?.typingIndicatorManager = typingIndicatorManager
  
