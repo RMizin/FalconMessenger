@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InformationMessageCell: RevealableCollectionViewCell {
+class InformationMessageCell: UICollectionViewCell {
   
   let information: UILabel = {
     let information = UILabel()

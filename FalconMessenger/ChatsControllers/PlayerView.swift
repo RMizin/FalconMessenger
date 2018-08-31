@@ -18,7 +18,6 @@ class PlayerView: UIView {
   var play: UIButton = {
     var play = UIButton()
     play.translatesAutoresizingMaskIntoConstraints = false
-    play.setImage(UIImage(named: "playWhite"), for: .normal)
     play.imageView?.contentMode = .scaleAspectFit
 
     return play
@@ -57,13 +56,12 @@ class PlayerView: UIView {
     
     timelabelLeadingAnchor = timerLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
     timelabelLeadingAnchor.isActive = true
-    NSLayoutConstraint.activate([
     
-      play.centerYAnchor.constraint(equalTo: centerYAnchor),
-      
-      timerLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-      timerLabel.heightAnchor.constraint(equalTo: heightAnchor),
-     
+    play.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+    
+    NSLayoutConstraint.activate([
+      timerLabel.centerYAnchor.constraint(equalTo: play.centerYAnchor),
+      timerLabel.heightAnchor.constraint(equalTo: play.heightAnchor),
       timerLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
     ])
   }
@@ -71,8 +69,7 @@ class PlayerView: UIView {
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  
+
   func runTimer() {
     timer?.invalidate()
     timer = Timer.scheduledTimer(timeInterval: 1, target: self,  selector: (#selector(updateTimer)), userInfo: nil, repeats: true)

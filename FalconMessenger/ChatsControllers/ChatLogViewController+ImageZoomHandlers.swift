@@ -11,24 +11,21 @@ import AVFoundation
 import AVKit
 import Firebase
 
-
 private var inputContainerViewWasFirstResponder = false
 
 extension ChatLogViewController {
 
   func performZoomInForVideo( url: URL) {
-  
     let player = AVPlayer(url: url)
     let inBubblePlayerViewController = AVPlayerViewController()
   
     inBubblePlayerViewController.player = player
     inBubblePlayerViewController.modalTransitionStyle = .crossDissolve
     if DeviceType.isIPad {
-       inBubblePlayerViewController.modalPresentationStyle = .overFullScreen
+      inBubblePlayerViewController.modalPresentationStyle = .overFullScreen
     } else {
-       inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
+      inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
     }
-   
     
     if self.inputContainerView.inputTextView.isFirstResponder {
       self.inputContainerView.inputTextView.resignFirstResponder()
@@ -37,9 +34,7 @@ extension ChatLogViewController {
   }
   
   func configurePhotoToolbarInfo(for messagesWithPhotos: [Message], at photoIndex: Int) -> NSMutableAttributedString? {
-    
     guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = conversation?.chatName  else { return nil }
-  
     var titleString = String()
   
     if let isGroupChat = conversation?.isGroupChat, isGroupChat, let senderName = messagesWithPhotos[photoIndex].senderName {
@@ -65,15 +60,14 @@ extension ChatLogViewController {
   }
   
   func openSelectedPhoto(at indexPath : IndexPath) {
-    
     var photos: [INSPhotoViewable] = setupPhotosData()
     var initialPhotoIndex: Int!
     
-    if messages[indexPath.item].localImage != nil {
-      guard let initial = photos.index(where: {$0.image == messages[indexPath.item].localImage }) else { return }
+    if groupedMessages[indexPath.section][indexPath.row].localImage != nil {
+      guard let initial = photos.index(where: {$0.image == groupedMessages[indexPath.section][indexPath.row].localImage }) else { return }
       initialPhotoIndex = initial
     } else {
-      guard let initial = photos.index(where: {$0.messageUID == messages[indexPath.item].messageUID }) else { return }
+      guard let initial = photos.index(where: {$0.messageUID == groupedMessages[indexPath.section][indexPath.row].messageUID }) else { return }
       initialPhotoIndex = initial
     }
     
@@ -105,6 +99,7 @@ extension ChatLogViewController {
       if let downloadURL = messagesWithPhotos[photoIndex].imageUrl,
          let messageID = messagesWithPhotos[photoIndex].messageUID {
         var imageView: UIImageView? = UIImageView()
+        
         imageView?.sd_setImage(with: URL(string: downloadURL), completed: { (image, _, _, _) in
           let newPhoto = INSPhoto(image: image, thumbnailImage: nil, messageUID: messageID)
           newPhoto.attributedTitle = combination
@@ -121,20 +116,17 @@ extension ChatLogViewController {
   }
   
   func setupGalleryDismissHandler(galleryPreview:INSPhotosViewController) {
-    
     galleryPreview.didDismissHandler = { viewController in
       self.inputAccessoryView?.isHidden = false
     }
     galleryPreview.referenceViewForPhotoWhenDismissingHandler = { photo in
       if photo.messageUID == nil {
-        guard let indexOfCellWithLocalImage = self.messages.index(where: {$0.localImage == photo.image}) else { return nil }
-        let indexPathOfCell = IndexPath(item: indexOfCellWithLocalImage, section: 0)
-        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else { return nil }
+        guard let indexPath = Message.get(indexPathOf: nil, localPhoto: photo.image, in: self.groupedMessages) else { return nil }
+        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
         return cellForDismiss.messageImageView
       } else {
-        guard let indexOfCell = self.messages.index(where: {$0.messageUID == photo.messageUID}) else { return nil }
-        let indexPathOfCell = IndexPath(item: indexOfCell, section: 0)
-        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else { return nil }
+        guard let indexPath = Message.get(indexPathOf: photo.messageUID, localPhoto: nil, in: self.groupedMessages) else { return nil}
+        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
         return cellForDismiss.messageImageView
       }
     }

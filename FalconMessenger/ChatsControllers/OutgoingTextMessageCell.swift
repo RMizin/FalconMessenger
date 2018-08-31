@@ -27,13 +27,13 @@ class OutgoingTextMessageCell: BaseMessageCell {
   }()
   
   func setupData(message: Message) {
-    
     self.message = message
     guard let messageText = message.text else { return }
     textView.text = messageText
+    timeLabel.text = self.message?.convertedTimestamp
     bubbleView.frame = setupBubbleViewFrame(message: message)
     textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
-    setupTimestampView(message: message, isOutgoing: true)
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5, y: bubbleView.frame.height-timeLabel.frame.height-5)
     
     if let isCrooked = self.message?.isCrooked, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().outgoingBubble
@@ -46,16 +46,16 @@ class OutgoingTextMessageCell: BaseMessageCell {
     guard let portaritEstimate = message.estimatedFrameForText?.width, let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGRect() }
 
     let portraitX = frame.width - portaritEstimate - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
-    let portraitRect = CGRect(x: portraitX, y: 0, width: portaritEstimate + BaseMessageCell.outgoingMessageHorisontalInsets, height: frame.size.height).integral
-    
+    let portraitFrame = setupFrameWithLabel(portraitX, BaseMessageCell.bubbleViewMaxWidth,
+                                            portaritEstimate, BaseMessageCell.outgoingMessageHorisontalInsets, frame.size.height)
     let landscapeX = frame.width - landscapeEstimate - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
-    let landscapeRect = CGRect(x: landscapeX, y: 0, width: landscapeEstimate + BaseMessageCell.outgoingMessageHorisontalInsets, height: frame.size.height).integral
-    
+    let landscapeFrame = setupFrameWithLabel(landscapeX, BaseMessageCell.landscapeBubbleViewMaxWidth,
+                                             landscapeEstimate, BaseMessageCell.outgoingMessageHorisontalInsets, frame.size.height)
     switch UIDevice.current.orientation {
     case .landscapeLeft, .landscapeRight:
-      return landscapeRect
+      return landscapeFrame
    default:
-      return portraitRect
+      return portraitFrame
     }
   }
   
@@ -65,6 +65,9 @@ class OutgoingTextMessageCell: BaseMessageCell {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
     contentView.addSubview(deliveryStatus)
+    bubbleView.addSubview(timeLabel)
+    timeLabel.backgroundColor = .clear
+    timeLabel.textColor = .white
   }
   
   override func prepareViewsForReuse() {

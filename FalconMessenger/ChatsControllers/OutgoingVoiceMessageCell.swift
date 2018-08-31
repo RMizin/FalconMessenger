@@ -16,16 +16,11 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(playerView)
     contentView.addSubview(deliveryStatus)
-  //  bubbleView.image = blueBubbleImage
+    bubbleView.addSubview(timeLabel)
     bubbleView.frame.size.width = 150
-    playerView.playLeadingAnchor.constant = 12
-    playerView.playWidthAnchor.constant = 20
-    playerView.playHeightAnchor.constant = -5
-    playerView.timelabelLeadingAnchor.constant = playerView.playWidthAnchor.constant + playerView.playLeadingAnchor.constant
-    playerView.timerLabel.font = MessageFontsAppearance.defaultVoiceMessageTextFont
-    playerView.play.setImage(UIImage(named: "pause"), for: .selected)
-    playerView.play.setImage(UIImage(named: "playWhite"), for: .normal)
     playerView.timerLabel.textColor = .white
+    timeLabel.backgroundColor = .clear
+    timeLabel.textColor = .white
   }
   
   func setupData(message: Message) {
@@ -33,14 +28,14 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
     bubbleView.frame.origin = CGPoint(x: x, y: 0)
     bubbleView.frame.size.height = frame.size.height.rounded()
-    playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height: (bubbleView.frame.height).rounded())
-
-    setupTimestampView(message: message, isOutgoing: true)
-    guard message.voiceEncodedString != nil else { return }
+    playerView.frame = CGRect(x: 1, y: 10, width: bubbleView.frame.width-15, height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-15)
     playerView.timerLabel.text = message.voiceDuration
     playerView.startingTime = message.voiceStartTime ?? 0
     playerView.seconds = message.voiceStartTime ?? 0
-    
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5, y: bubbleView.frame.height-timeLabel.frame.height)
+    timeLabel.text = self.message?.convertedTimestamp
+    guard message.voiceEncodedString != nil else { return }
+  
     if let isCrooked = self.message?.isCrooked, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().outgoingBubble
     } else {

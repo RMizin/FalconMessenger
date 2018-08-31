@@ -203,6 +203,13 @@ class SelectChatTableViewController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
+    if chatLogController != nil && DeviceType.isIPad { //bugfix
+      chatLogController?.closeChatLog()
+      chatLogController = nil
+      messagesFetcher?.delegate = nil
+      messagesFetcher = nil
+    }
+    
     if indexPath.section == 0 {
       let destination = SelectGroupMembersController()
       destination.users = users
@@ -250,11 +257,10 @@ extension SelectChatTableViewController: MessagesDelegate {
       splitViewController?.showDetailViewController(navigationController, sender: self)
     } else {
       navigationController?.pushViewController(destination, animated: true)
+      chatLogController = nil
+      messagesFetcher?.delegate = nil
+      messagesFetcher = nil
     }
-    
-    chatLogController = nil
-    messagesFetcher?.delegate = nil
-    messagesFetcher = nil
     deselectItem()
   }
 }

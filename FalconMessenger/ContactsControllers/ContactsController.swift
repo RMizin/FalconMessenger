@@ -233,6 +233,13 @@ class ContactsController: UITableViewController {
       
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
       
+      if chatLogController != nil && DeviceType.isIPad { //bugfix
+        chatLogController?.closeChatLog()
+        chatLogController = nil
+        messagesFetcher?.delegate = nil
+        messagesFetcher = nil
+      }
+      
       if indexPath.section == 0 {
      
         let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
@@ -248,7 +255,6 @@ class ContactsController: UITableViewController {
       }
       
       if indexPath.section == 1 {
-     
         let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject,
                                                            "chatName": filteredUsers[indexPath.row].name as AnyObject,
                                                            "isGroupChat": false  as AnyObject,
@@ -258,7 +264,6 @@ class ContactsController: UITableViewController {
         
         let conversation = Conversation(dictionary: conversationDictionary)
         chatLogController = ChatLogViewController()
-        
         messagesFetcher = MessagesFetcher()
         messagesFetcher?.delegate = self
         messagesFetcher?.loadMessagesData(for: conversation)
@@ -344,11 +349,10 @@ extension ContactsController: MessagesDelegate {
       splitViewController?.showDetailViewController(navigationController, sender: self)
     } else {
       navigationController?.pushViewController(destination, animated: true)
+      chatLogController = nil
+      messagesFetcher?.delegate = nil
+      messagesFetcher = nil
     }
-  
-    chatLogController = nil
-    messagesFetcher?.delegate = nil
-    messagesFetcher = nil
     deselectItem()
   }
 }

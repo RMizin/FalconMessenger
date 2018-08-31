@@ -16,16 +16,12 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(playerView)
     bubbleView.addSubview(nameLabel)
+    bubbleView.addSubview(timeLabel)
     bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
     bubbleView.frame.size.width = 150
-    playerView.playLeadingAnchor.constant = 15
-    playerView.playWidthAnchor.constant = 20
-    playerView.playHeightAnchor.constant = -5
-    playerView.timelabelLeadingAnchor.constant = playerView.playWidthAnchor.constant + playerView.playLeadingAnchor.constant
-    playerView.timerLabel.font = MessageFontsAppearance.defaultVoiceMessageTextFont
-    playerView.play.setImage(UIImage(named: "pauseBlack"), for: .selected)
-    playerView.play.setImage(UIImage(named: "playBlack"), for: .normal)
     playerView.timerLabel.textColor = .black
+    timeLabel.backgroundColor = .clear
+    timeLabel.textColor = .black
   }
   
   func setupData(message: Message, isGroupChat:Bool) {
@@ -34,19 +30,19 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     if isGroupChat {
       nameLabel.text = message.senderName ?? ""
       nameLabel.sizeToFit()
-      playerView.frame.origin.y = 20
       bubbleView.frame.size.height = frame.size.height.rounded()
-      playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height: (bubbleView.frame.height - 20).rounded())
+      playerView.frame = CGRect(x: 10, y: 20, width: bubbleView.frame.width-20, height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-15)
       
       if nameLabel.frame.size.width >= BaseMessageCell.incomingGroupMessageAuthorNameLabelMaxWidth {
         nameLabel.frame.size.width = playerView.frame.size.width - 24
       }
     } else {
       bubbleView.frame.size.height = frame.size.height.rounded()
-      playerView.frame.size = CGSize(width: (bubbleView.frame.width).rounded(), height:(bubbleView.frame.height).rounded())
+      playerView.frame = CGRect(x: 5, y: 10, width: bubbleView.frame.width-15, height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-15)
     }
-  
-    setupTimestampView(message: message, isOutgoing: false)
+    
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-1, y: bubbleView.frame.height-timeLabel.frame.height-5)
+    timeLabel.text = self.message?.convertedTimestamp
     guard message.voiceEncodedString != nil else { return }
 
     playerView.timerLabel.text = message.voiceDuration
@@ -63,8 +59,6 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
   override func prepareViewsForReuse() {
     playerView.seconds = 0
     playerView.startingTime = 0
-    playerView.play.setImage(UIImage(named: "pauseBlack"), for: .selected)
-    playerView.play.setImage(UIImage(named: "playBlack"), for: .normal)
     playerView.play.isSelected = false
     bubbleView.image = nil
     nameLabel.text = ""

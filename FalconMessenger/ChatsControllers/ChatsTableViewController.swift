@@ -396,6 +396,13 @@ class ChatsTableViewController: UITableViewController {
       conversation = unpinnedConversation
     }
     
+    if chatLogController != nil && DeviceType.isIPad { //bugfix
+      chatLogController?.closeChatLog()
+      chatLogController = nil
+      messagesFetcher?.delegate = nil
+      messagesFetcher = nil
+    }
+    
     chatLogController = ChatLogViewController()
     messagesFetcher = MessagesFetcher()
     messagesFetcher?.delegate = self
@@ -469,14 +476,13 @@ extension ChatsTableViewController: MessagesDelegate {
 
     if DeviceType.isIPad {
       let navigationController = UINavigationController(rootViewController: destination)
-       splitViewController?.showDetailViewController(navigationController, sender: self)
+      splitViewController?.showDetailViewController(navigationController, sender: self)
     } else {
       currentTab()?.pushViewController(destination, animated: true)
+      chatLogController = nil
+      messagesFetcher?.delegate = nil
+      messagesFetcher = nil
     }
-
-    chatLogController = nil
-    messagesFetcher?.delegate = nil
-    messagesFetcher = nil
     deselectItem()
   }
 }

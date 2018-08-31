@@ -319,7 +319,7 @@ class ChatLogViewController: UIViewController {
     navigationItem.leftBarButtonItem = leftBarButton
   }
   
-  @objc private func closeChatLog() {
+  @objc func closeChatLog() {
     splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
   }
   
@@ -367,7 +367,6 @@ class ChatLogViewController: UIViewController {
     collectionView.register(InformationMessageCell.self, forCellWithReuseIdentifier: informationMessageCellID)
     collectionView.register(ChatLogViewControllerSupplementaryView.self,
                             forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "lol")
-    collectionView.registerClass(revealableViewClass: TimestampView.self, forRevealableViewReuseIdentifier: "timestamp")
     
     configureRefreshControlInitialTintColor()
     configureCellContextMenuView()

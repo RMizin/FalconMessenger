@@ -34,7 +34,7 @@ class ChatLogViewControllerSupplementaryView: UICollectionReusableView {
     label.font = MessageFontsAppearance.defaultInformationMessageTextFont
     label.numberOfLines = 1
     label.textAlignment = .center
-    label.textColor = ThemeManager.currentTheme().generalSubtitleColor
+    label.textColor = ThemeManager.currentTheme().generalTitleColor
     label.translatesAutoresizingMaskIntoConstraints = false
     label.font = MessageFontsAppearance.defaultInformationMessageTextFont
     label.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
@@ -51,6 +51,16 @@ class ChatLogViewControllerSupplementaryView: UICollectionReusableView {
     addSubview(label)
     label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
     label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+  }
+  
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+  
+  @objc func changeTheme() {
+    label.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+    label.textColor = ThemeManager.currentTheme().generalTitleColor
   }
   
   required init?(coder aDecoder: NSCoder) {

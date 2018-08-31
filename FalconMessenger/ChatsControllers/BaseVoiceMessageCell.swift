@@ -10,12 +10,10 @@ import UIKit
 
 class BaseVoiceMessageCell: BaseMessageCell {
   
-  var playerView: PlayerView = {
-    var playerView = PlayerView()
+  var playerView: CellPlayerView = {
+    var playerView = CellPlayerView()
     playerView.alpha = 1
     playerView.backgroundColor = .clear
-    playerView.play.setImage(UIImage(named: "pause"), for: .selected)
-    playerView.play.setImage(UIImage(named: "playWhite"), for: .normal)
     playerView.play.isSelected = false
     playerView.timerLabel.text = "00:00:00"
     playerView.startingTime = 0

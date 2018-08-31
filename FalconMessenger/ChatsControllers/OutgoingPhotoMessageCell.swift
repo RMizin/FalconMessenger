@@ -13,17 +13,9 @@ class PhotoMessageCell: BaseMediaMessageCell {
   override func setupViews() {
     
     bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
-  
     contentView.addSubview(bubbleView)
-    
     bubbleView.addSubview(messageImageView)
-    
     bubbleView.frame.size.width = BaseMessageCell.mediaMaxWidth
-    
- 
-    
-   // bubbleView.image = blueBubbleImage
-    
     progressView.strokeColor = .white
     
     contentView.addSubview(deliveryStatus)
@@ -43,6 +35,8 @@ class PhotoMessageCell: BaseMediaMessageCell {
     progressView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
     progressView.widthAnchor.constraint(equalToConstant: 60).isActive = true
     progressView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    
+    bubbleView.addSubview(timeLabel)
   }
   
   func setupData(message: Message) {
@@ -50,7 +44,8 @@ class PhotoMessageCell: BaseMediaMessageCell {
     let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
     bubbleView.frame.origin = CGPoint(x: x, y: 0)
     bubbleView.frame.size.height = frame.size.height.rounded()
-    setupTimestampView(message: message, isOutgoing: true)
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-10, y: bubbleView.frame.height-timeLabel.frame.height-5)
+    timeLabel.text = self.message?.convertedTimestamp
     messageImageView.isUserInteractionEnabled = false
     bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble
   }
@@ -61,5 +56,7 @@ class PhotoMessageCell: BaseMediaMessageCell {
     playButton.isHidden = true
     messageImageView.sd_cancelCurrentImageLoad()
     messageImageView.image = nil
+    timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
+    timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
   }
 }

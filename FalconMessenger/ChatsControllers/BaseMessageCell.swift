@@ -83,6 +83,16 @@ struct MessageFontsAppearance {
     }
   }
   
+  static var defaultTimeLabelTextFont: UIFont {
+    if DeviceType.IS_IPAD_PRO {
+      return .systemFont(ofSize: 17)
+    } else if DeviceType.isIPad {
+      return .systemFont(ofSize: 14)
+    } else {
+      return .systemFont(ofSize: 11)
+    }
+  }
+  
   static var defaultDeliveryStatusTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
       return .systemFont(ofSize: 15)
@@ -114,7 +124,7 @@ struct MessageFontsAppearance {
   }
 }
 
-class BaseMessageCell: RevealableCollectionViewCell {
+class BaseMessageCell: UICollectionViewCell {
   
   weak var message: Message?
   
@@ -154,6 +164,18 @@ class BaseMessageCell: RevealableCollectionViewCell {
 
   static let incomingGroupMessageAuthorNameLabelHeight: CGFloat = 25
   
+  static let messageTimeHeight: CGFloat = 20
+  
+  static var messageTimeWidth: CGFloat {
+    if DeviceType.IS_IPAD_PRO {
+      return 95
+    } else if DeviceType.isIPad {
+      return 78
+    } else {
+      return 68
+    }
+  }
+
   static let groupIncomingTextViewTopInset: CGFloat = incomingGroupMessageAuthorNameLabelHeight
   
   static let incomingGroupMessageAuthorNameLabelHeightWithInsets: CGFloat = incomingGroupMessageAuthorNameLabelHeight
@@ -202,9 +224,27 @@ class BaseMessageCell: RevealableCollectionViewCell {
     return nameLabel
   }()
   
+  let timeLabel: SupplementaryLabel = {
+    let timeLabel = SupplementaryLabel()
+    timeLabel.font = MessageFontsAppearance.defaultTimeLabelTextFont
+    timeLabel.numberOfLines = 1
+    timeLabel.leftInset = 5
+    timeLabel.rightInset = 5
+    timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
+    timeLabel.frame.size.height = BaseMessageCell.messageTimeHeight
+    timeLabel.frame.size.width = BaseMessageCell.messageTimeWidth
+    timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+    timeLabel.layer.masksToBounds = true
+    timeLabel.layer.cornerRadius = 10
+    timeLabel.textAlignment = .center
+    timeLabel.alpha = 0.85
+    timeLabel.text = "10:46 AM"
+    
+    return timeLabel
+  }()
+  
   override init(frame: CGRect) {
     super.init(frame: frame.integral)
-    
     setupViews()
   }
   
@@ -239,14 +279,23 @@ class BaseMessageCell: RevealableCollectionViewCell {
     }
   }
   
-  func setupTimestampView(message: Message, isOutgoing: Bool) {
-    DispatchQueue.main.async {
-      if let view = self.chatLogController?.collectionView.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView {
-        view.titleLabel.text = message.convertedTimestamp
-        let style: RevealStyle = isOutgoing ? .slide : .over
-        self.setRevealableView(view, style: style, direction: .left)
-      }
+  func setupFrameWithLabel(_ x: CGFloat, _ bubbleMaxWidth: CGFloat, _ estimate: CGFloat,
+                           _ insets: CGFloat, _ cellHeight: CGFloat, _ spacer: CGFloat = 10) -> CGRect {
+    //let spacer: CGFloat = 15
+    var x = x
+    if (estimate + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
+      estimate <= BaseMessageCell.messageTimeWidth {
+      x = x - BaseMessageCell.messageTimeWidth + spacer
     }
+    
+    var width: CGFloat = estimate + insets//BaseMessageCell.outgoingMessageHorisontalInsets
+    if (estimate + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
+      estimate <= BaseMessageCell.messageTimeWidth {
+      width = width + BaseMessageCell.messageTimeWidth - spacer//timeLabel.frame.width
+    }
+    
+    let rect = CGRect(x: x, y: 0, width: width, height: cellHeight).integral
+    return rect
   }
 
   func setupViews() {

@@ -26,6 +26,12 @@ class ChatCollectionView: UICollectionView {
   func updateColors() {
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
+    if DeviceType.isIPad {
+      let visibleSections = indexPathsForVisibleSupplementaryElements(ofKind: UICollectionElementKindSectionHeader).map({$0.section})
+      UIView.performWithoutAnimation {
+        reloadSections(IndexSet(visibleSections))
+      }
+    }
   }
   
   required public init?(coder aDecoder: NSCoder) {

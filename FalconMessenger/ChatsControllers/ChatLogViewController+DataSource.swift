@@ -57,7 +57,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     return cell
   }
   
-  fileprivate func selectCell(for indexPath: IndexPath, isGroupChat: Bool) -> RevealableCollectionViewCell? {
+  fileprivate func selectCell(for indexPath: IndexPath, isGroupChat: Bool) -> UICollectionViewCell? {
 
     let message = groupedMessages[indexPath.section][indexPath.row] //sometimes crash
 
@@ -241,8 +241,8 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     
     guard !isTextMessage else {
 
-      let portraitHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.estimatedFrameForText)
-      let landscapeHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.landscapeEstimatedFrameForText)
+      let portraitHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.estimatedFrameForText, indexPath: indexPath)
+      let landscapeHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.landscapeEstimatedFrameForText, indexPath: indexPath)
       
       switch UIDevice.current.orientation {
       case .landscapeRight, .landscapeLeft:
@@ -277,22 +277,32 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   
     guard !isVoiceMessage else {
       if isGroupChat, !isOutgoingMessage {
-        cellHeight = BaseMessageCell.groupIncomingVoiceMessageHeight
+        cellHeight = BaseMessageCell.groupIncomingVoiceMessageHeight + BaseMessageCell.messageTimeHeight
       } else {
-        cellHeight = BaseMessageCell.defaultVoiceMessageHeight
+        cellHeight = BaseMessageCell.defaultVoiceMessageHeight + BaseMessageCell.messageTimeHeight
       }
       return CGSize(width: collectionView.frame.width, height: cellHeight)
     }
     return CGSize(width: collectionView.frame.width, height: cellHeight)
   }
   
-  fileprivate func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: CGRect?) -> CGFloat {
+  fileprivate func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: CGRect?, indexPath: IndexPath) -> CGFloat {
     guard let frame = frame else { return 0 }
-    
-    if isGroupChat, !isOutgoingMessage {
-      return frame.height + BaseMessageCell.groupTextMessageInsets
+ 
+    var timeHeight: CGFloat!
+    let bubbleMaxWidth = UIDevice.current.orientation.isLandscape ? BaseMessageCell.landscapeBubbleViewMaxWidth : BaseMessageCell.bubbleViewMaxWidth
+    if (frame.width + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
+      frame.width < BaseMessageCell.messageTimeWidth {
+      timeHeight = 0
     } else {
-      return frame.height + BaseMessageCell.defaultTextMessageInsets
+      timeHeight = BaseMessageCell.messageTimeHeight
+    }
+  
+    if isGroupChat, !isOutgoingMessage {
+    
+      return frame.height + BaseMessageCell.groupTextMessageInsets + timeHeight
+    } else {
+      return frame.height + BaseMessageCell.defaultTextMessageInsets + timeHeight
     }
   }
 }

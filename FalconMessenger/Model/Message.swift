@@ -151,6 +151,39 @@ class Message: NSObject {
     
     return IndexPath(row: row, section: section)
   }
+  
+  static func get(indexPathOf messageUID: String? = nil , localPhoto: UIImage? = nil, in groupedArray: [[Message]]) -> IndexPath? {
+    
+    if messageUID != nil {
+      
+      guard let section = groupedArray.index(where: { (messages) -> Bool in
+        for message1 in messages where message1.messageUID == messageUID {
+          return true
+        }; return false
+      }) else { return nil }
+      
+      guard let row = groupedArray[section].index(where: { (message1) -> Bool in
+        return message1.messageUID == messageUID
+      }) else { return IndexPath(row: -1, section: section) }
+      
+       return IndexPath(row: row, section: section)
+      
+    } else if localPhoto != nil {
+      
+      guard let section = groupedArray.index(where: { (messages) -> Bool in
+        for message1 in messages where message1.localImage == localPhoto {
+          return true
+        }; return false
+      }) else { return nil }
+      
+      guard let row = groupedArray[section].index(where: { (message1) -> Bool in
+        return message1.localImage == localPhoto
+      }) else { return IndexPath(row: -1, section: section) }
+      
+       return IndexPath(row: row, section: section)
+    }
+     return nil
+  }
 }
 
 extension Date {

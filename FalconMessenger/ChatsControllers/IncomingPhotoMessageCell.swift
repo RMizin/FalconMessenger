@@ -16,17 +16,11 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
   override func setupViews() {
     
     bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
-    
     contentView.addSubview(bubbleView)
-    
     bubbleView.addSubview(messageImageView)
-    
     bubbleView.addSubview(nameLabel)
-    
     bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
-    
     bubbleView.frame.size.width = BaseMessageCell.mediaMaxWidth
-    
     progressView.strokeColor = .black
 
     messageImageViewTopAnchor = messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 0)
@@ -47,12 +41,15 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     progressView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
     progressView.widthAnchor.constraint(equalToConstant: 60).isActive = true
     progressView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    
+    bubbleView.addSubview(timeLabel)
   }
   
   func setupData(message: Message, isGroupChat:Bool) {
     
     self.message = message
     bubbleView.frame.size.height = frame.size.height.rounded()
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5, y: bubbleView.frame.height-timeLabel.frame.height-5)
     
     if isGroupChat {
       nameLabel.text = message.senderName ?? ""
@@ -63,7 +60,7 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
       }
     }
     messageImageView.isUserInteractionEnabled = false
-    setupTimestampView(message: message, isOutgoing: false)
+    timeLabel.text = self.message?.convertedTimestamp
     bubbleView.image = ThemeManager.currentTheme().incomingPartialBubble
   }
   
@@ -74,5 +71,7 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     messageImageView.sd_cancelCurrentImageLoad()
     messageImageView.image = nil
     messageImageViewTopAnchor.constant = 0
+    timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
+    timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
   }
 }

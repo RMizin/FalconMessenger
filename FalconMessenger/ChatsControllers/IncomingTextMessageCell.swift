@@ -27,7 +27,6 @@ class IncomingTextMessageCell: BaseMessageCell {
   }()
   
   func setupData(message: Message, isGroupChat: Bool) {
-    
     self.message = message
     guard let messageText = message.text else { return }
     textView.text = messageText
@@ -44,8 +43,9 @@ class IncomingTextMessageCell: BaseMessageCell {
       bubbleView.frame.size = setupDefaultBubbleViewSize(message: message)
       textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
     }
-    setupTimestampView(message: message, isOutgoing: false)
     
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width, y: bubbleView.frame.height-timeLabel.frame.height-5)
+ 
     if let isCrooked = self.message?.isCrooked, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().incomingBubble
     } else {
@@ -55,22 +55,21 @@ class IncomingTextMessageCell: BaseMessageCell {
   
   fileprivate func setupDefaultBubbleViewSize(message: Message) -> CGSize {
     guard let portaritEstimate = message.estimatedFrameForText?.width, let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGSize() }
-    let portraitwidth = (portaritEstimate + BaseMessageCell.incomingMessageHorisontalInsets).rounded()
-    let portraitSize = CGSize(width: portraitwidth, height: frame.size.height.rounded())
     
-    let landscapeWidth = (landscapeEstimate + BaseMessageCell.incomingMessageHorisontalInsets).rounded()
-    let landscapeSize = CGSize(width: landscapeWidth, height: frame.size.height.rounded())
+    let portraitRect = setupFrameWithLabel(bubbleView.frame.origin.x, BaseMessageCell.bubbleViewMaxWidth,
+                                           portaritEstimate, BaseMessageCell.incomingMessageHorisontalInsets, frame.size.height, 10)
     
+    let landscapeRect = setupFrameWithLabel(bubbleView.frame.origin.x, BaseMessageCell.landscapeBubbleViewMaxWidth,
+                                           landscapeEstimate, BaseMessageCell.incomingMessageHorisontalInsets, frame.size.height, 10)
     switch UIDevice.current.orientation {
     case .landscapeRight, .landscapeLeft:
-      return landscapeSize
+      return landscapeRect.size
     default:
-     return portraitSize
+     return portraitRect.size
     }
   }
   
   fileprivate func setupGroupBubbleViewSize(message: Message) -> CGSize {
-    
     guard let portaritWidth = message.estimatedFrameForText?.width else { return CGSize() }
     guard let landscapeWidth = message.landscapeEstimatedFrameForText?.width  else { return CGSize() }
     let portraitBubbleMaxW = BaseMessageCell.bubbleViewMaxWidth
@@ -89,16 +88,17 @@ class IncomingTextMessageCell: BaseMessageCell {
   fileprivate func getGroupBubbleSize(messageWidth: CGFloat, bubbleMaxWidth: CGFloat, authorMaxWidth: CGFloat) -> CGSize {
     let horisontalInsets = BaseMessageCell.incomingMessageHorisontalInsets
     
-    guard messageWidth < nameLabel.frame.size.width else {
-      return CGSize(width: (messageWidth + horisontalInsets).rounded(), height: frame.size.height.rounded())
-    }
-    
-    guard nameLabel.frame.size.width >= authorMaxWidth else {
+    let rect = setupFrameWithLabel(bubbleView.frame.origin.x, bubbleMaxWidth, messageWidth, horisontalInsets, frame.size.height, 10)
+
+    if nameLabel.frame.size.width >= rect.width - horisontalInsets {
+      if nameLabel.frame.size.width >= authorMaxWidth {
+        nameLabel.frame.size.width = authorMaxWidth
+        return CGSize(width: bubbleMaxWidth, height: frame.size.height.rounded())
+      }
       return CGSize(width: (nameLabel.frame.size.width + horisontalInsets).rounded(), height: frame.size.height.rounded())
+    } else {
+      return rect.size
     }
-    
-    nameLabel.frame.size.width = authorMaxWidth
-    return CGSize(width:bubbleMaxWidth, height: frame.size.height.rounded())
   }
   
   override func setupViews() {
@@ -107,7 +107,10 @@ class IncomingTextMessageCell: BaseMessageCell {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
     textView.addSubview(nameLabel)
+    bubbleView.addSubview(timeLabel)
     bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
+    timeLabel.backgroundColor = .clear
+    timeLabel.textColor = .black
   }
   
   override func prepareViewsForReuse() {
