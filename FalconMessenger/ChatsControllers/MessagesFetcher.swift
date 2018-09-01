@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import Photos
+import SDWebImage
 
 protocol MessagesDelegate: class {
   func messages(shouldBeUpdatedTo messages: [Message], conversation:Conversation)
@@ -139,6 +140,7 @@ class MessagesFetcher: NSObject {
   func handleMessageInsertionInRuntime(newDictionary : [String:AnyObject]) {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let message = Message(dictionary: newDictionary)
+    preloadURL(message: message)
     let isOutBoxMessage = message.fromId == currentUserID || message.fromId == message.toId
     
     self.loadUserNameForOneMessage(message: message) {  [unowned self] (isCompleted, messageWithName) in
@@ -152,6 +154,11 @@ class MessagesFetcher: NSObject {
         }
       }
     }
+  }
+  
+  fileprivate func preloadURL(message: Message) {
+    guard let urlString = message.imageUrl, let url = URL(string: urlString) else { return }
+    SDWebImagePrefetcher.shared.prefetchURLs([url])
   }
   
   typealias loadNameCompletionHandler = (_ success: Bool, _ message: Message) -> Void

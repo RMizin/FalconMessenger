@@ -14,14 +14,8 @@ class OutgoingTextMessageCell: BaseMessageCell {
   
   let textView: FalconTextView = {
     let textView = FalconTextView()
-    textView.font = MessageFontsAppearance.defaultMessageTextFont
-    textView.backgroundColor = .clear
-    textView.isEditable = false
-    textView.isScrollEnabled = false
     textView.textContainerInset = UIEdgeInsetsMake(textViewTopInset, outgoingTextViewLeftInset, textViewBottomInset, outgoingTextViewRightInset)
-    textView.dataDetectorTypes = .all
-    textView.textColor = .white
-    textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
+    textView.textColor = ThemeManager.currentTheme().outgoingBubbleTextColor
 
     return textView
   }()
@@ -53,9 +47,9 @@ class OutgoingTextMessageCell: BaseMessageCell {
                                              landscapeEstimate, BaseMessageCell.outgoingMessageHorisontalInsets, frame.size.height)
     switch UIDevice.current.orientation {
     case .landscapeLeft, .landscapeRight:
-      return landscapeFrame
+      return landscapeFrame.integral
    default:
-      return portraitFrame
+      return portraitFrame.integral
     }
   }
   
@@ -67,11 +61,13 @@ class OutgoingTextMessageCell: BaseMessageCell {
     contentView.addSubview(deliveryStatus)
     bubbleView.addSubview(timeLabel)
     timeLabel.backgroundColor = .clear
-    timeLabel.textColor = .white
+    timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
+    bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
   }
   
-  override func prepareViewsForReuse() {
-     bubbleView.image = nil
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
   }
 }
 

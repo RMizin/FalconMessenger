@@ -16,7 +16,8 @@ class PhotoMessageCell: BaseMediaMessageCell {
     contentView.addSubview(bubbleView)
     bubbleView.addSubview(messageImageView)
     bubbleView.frame.size.width = BaseMessageCell.mediaMaxWidth
-    progressView.strokeColor = .white
+    bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
+    progressView.strokeColor = ThemeManager.currentTheme().outgoingProgressStrokeColor
     
     contentView.addSubview(deliveryStatus)
     messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 0).isActive = true
@@ -50,13 +51,9 @@ class PhotoMessageCell: BaseMediaMessageCell {
     bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble
   }
 
-  override func prepareViewsForReuse() {
-     super.prepareViewsForReuse()
-    bubbleView.image = nil
-    playButton.isHidden = true
-    messageImageView.sd_cancelCurrentImageLoad()
-    messageImageView.image = nil
-    timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
-    timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+  override func prepareForReuse() {
+    super.prepareForReuse()
+      bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
+      progressView.strokeColor = ThemeManager.currentTheme().outgoingProgressStrokeColor
   }
 }

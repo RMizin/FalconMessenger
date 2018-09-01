@@ -21,7 +21,8 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     bubbleView.addSubview(nameLabel)
     bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
     bubbleView.frame.size.width = BaseMessageCell.mediaMaxWidth
-    progressView.strokeColor = .black
+    bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
+    progressView.strokeColor = ThemeManager.currentTheme().incomingProgressStrokeColor
 
     messageImageViewTopAnchor = messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 0)
     messageImageViewTopAnchor.isActive = true
@@ -45,6 +46,14 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     bubbleView.addSubview(timeLabel)
   }
   
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    messageImageViewTopAnchor.constant = 0
+    
+    bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
+    progressView.strokeColor = ThemeManager.currentTheme().incomingProgressStrokeColor
+  }
+  
   func setupData(message: Message, isGroupChat:Bool) {
     
     self.message = message
@@ -62,16 +71,5 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
     messageImageView.isUserInteractionEnabled = false
     timeLabel.text = self.message?.convertedTimestamp
     bubbleView.image = ThemeManager.currentTheme().incomingPartialBubble
-  }
-  
-  override func prepareViewsForReuse() {
-     super.prepareViewsForReuse()
-    bubbleView.image = nil
-    playButton.isHidden = true
-    messageImageView.sd_cancelCurrentImageLoad()
-    messageImageView.image = nil
-    messageImageViewTopAnchor.constant = 0
-    timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
-    timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
   }
 }

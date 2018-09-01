@@ -97,5 +97,14 @@ class BaseMediaMessageCell: BaseMessageCell {
     }
     guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
     self.chatLogController?.openSelectedPhoto(at: indexPath)
-  }    
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    playButton.isHidden = true
+    messageImageView.sd_cancelCurrentImageLoad()
+    messageImageView.image = nil
+    timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+    timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
+  }
 }

@@ -18,22 +18,17 @@ struct ContextMenuItems {
 
 extension BaseMessageCell {
   
-  func bubbleImage(currentImage: UIImage) -> UIImage {
+  func bubbleImage(currentColor: UIColor) -> UIColor {
     
-    switch currentImage {
-    case ThemeManager.currentTheme().outgoingBubble:
-      return ThemeManager.currentTheme().selectedOutgoingBubble
-    case ThemeManager.currentTheme().outgoingPartialBubble:
-      return ThemeManager.currentTheme().selectedOutgoingPartialBubble
-    case ThemeManager.currentTheme().incomingBubble:
-      return ThemeManager.currentTheme().selectedIncomingBubble
-    case ThemeManager.currentTheme().incomingPartialBubble:
-      return ThemeManager.currentTheme().selectedIncomingPartialBubble
-      
+    switch currentColor {
+    case ThemeManager.currentTheme().outgoingBubbleTintColor:
+      return ThemeManager.currentTheme().selectedOutgoingBubbleTintColor
+    case ThemeManager.currentTheme().incomingBubbleTintColor:
+      return ThemeManager.currentTheme().selectedIncomingBubbleTintColor
     default:
-      return currentImage
-    }
+     return currentColor
   }
+}
   
   @objc func handleLongTap(_ longPressGesture: UILongPressGestureRecognizer) {
     
@@ -47,34 +42,33 @@ extension BaseMessageCell {
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
-      
-      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
+      cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       contextMenuItems = [ContextMenuItems.deleteItem]
     }
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
       contextMenuItems = [ContextMenuItems.deleteItem]
-       cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
+      cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? PhotoMessageCell {
-      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
+       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       if !cell.playButton.isHidden {
         contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
         config.menuWidth = expandedMenuWidth
       }
     }
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
-      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
+       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       if !cell.playButton.isHidden {
         contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
         config.menuWidth = expandedMenuWidth
       }
     }
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingTextMessageCell {
-      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
+     cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingTextMessageCell {
-      cell.bubbleView.image = bubbleImage(currentImage: cell.bubbleView.image!)
+      cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
     
     if self.message?.messageUID == nil || self.message?.status == messageStatusSending {

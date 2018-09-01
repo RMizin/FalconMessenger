@@ -55,9 +55,9 @@ struct MessageFontsAppearance {
   
   static var defaultMessageTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
-      return .systemFont(ofSize: 22)
-    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 19)
+    } else if DeviceType.isIPad {
+      return .systemFont(ofSize: 17)
     } else {
       return .systemFont(ofSize: 16)
     }
@@ -65,7 +65,7 @@ struct MessageFontsAppearance {
   
   static var defaultVoiceMessageTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
-      return .systemFont(ofSize: 20)
+      return .systemFont(ofSize: 19)
     } else if DeviceType.isIPad {
       return .systemFont(ofSize: 17)
     } else {
@@ -75,7 +75,7 @@ struct MessageFontsAppearance {
   
   static var defaultInformationMessageTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
-      return .systemFont(ofSize: 20)
+      return .systemFont(ofSize: 19)
     } else if DeviceType.isIPad {
       return .systemFont(ofSize: 17)
     } else {
@@ -85,17 +85,17 @@ struct MessageFontsAppearance {
   
   static var defaultTimeLabelTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
-      return .systemFont(ofSize: 17)
-    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 14)
+    } else if DeviceType.isIPad {
+      return .systemFont(ofSize: 12)
     } else {
-      return .systemFont(ofSize: 11)
+      return .italicSystemFont(ofSize: 11)
     }
   }
   
   static var defaultDeliveryStatusTextFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
-      return .systemFont(ofSize: 15)
+      return .systemFont(ofSize: 14)
     } else if DeviceType.isIPad {
       return .systemFont(ofSize: 13)
     } else {
@@ -103,21 +103,11 @@ struct MessageFontsAppearance {
     }
   }
   
-  static var defaultTimestampTextFont: UIFont {
-    if DeviceType.IS_IPAD_PRO {
-      return .systemFont(ofSize: 14)
-    } else if DeviceType.isIPad {
-      return .systemFont(ofSize: 11)
-    } else {
-      return .systemFont(ofSize: 8)
-    }
-  }
-  
  static var defaultMessageAuthorNameFont: UIFont {
     if DeviceType.IS_IPAD_PRO {
-      return .systemFont(ofSize: 21)
-    } else if DeviceType.isIPad {
       return .systemFont(ofSize: 18)
+    } else if DeviceType.isIPad {
+      return .systemFont(ofSize: 16)
     } else {
       return .systemFont(ofSize: 15)
     }
@@ -217,19 +207,17 @@ class BaseMessageCell: UICollectionViewCell {
     nameLabel.font = MessageFontsAppearance.defaultMessageAuthorNameFont
     nameLabel.numberOfLines = 1
     nameLabel.backgroundColor = .clear
-    nameLabel.textColor = FalconPalette.defaultBlue
+    nameLabel.textColor = ThemeManager.currentTheme().authorNameTextColor//FalconPalette.defaultBlue
     nameLabel.frame.size.height = BaseMessageCell.incomingGroupMessageAuthorNameLabelHeight
     nameLabel.frame.origin = CGPoint(x: incomingMessageAuthorNameLeftInset, y: BaseMessageCell.textViewTopInset)
     
     return nameLabel
   }()
   
-  let timeLabel: SupplementaryLabel = {
-    let timeLabel = SupplementaryLabel()
+  let timeLabel: UILabel = {
+    let timeLabel = UILabel()
     timeLabel.font = MessageFontsAppearance.defaultTimeLabelTextFont
     timeLabel.numberOfLines = 1
-    timeLabel.leftInset = 5
-    timeLabel.rightInset = 5
     timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
     timeLabel.frame.size.height = BaseMessageCell.messageTimeHeight
     timeLabel.frame.size.width = BaseMessageCell.messageTimeWidth
@@ -244,7 +232,7 @@ class BaseMessageCell: UICollectionViewCell {
   }()
   
   override init(frame: CGRect) {
-    super.init(frame: frame.integral)
+    super.init(frame: frame)
     setupViews()
   }
   
@@ -263,7 +251,7 @@ class BaseMessageCell: UICollectionViewCell {
     switch indexPath == lastIndexPath {
     case true:
       DispatchQueue.main.async {
-        self.deliveryStatus.frame = CGRect(x: self.frame.width - 80, y: self.bubbleView.frame.height + 2, width: 70, height: 10).integral
+        self.deliveryStatus.frame = CGRect(x: self.frame.width - 80, y: self.bubbleView.frame.height + 2, width: 70, height: 10)//.integral
         self.deliveryStatus.text = message.status
         self.deliveryStatus.isHidden = false
         self.deliveryStatus.layoutIfNeeded()
@@ -281,17 +269,16 @@ class BaseMessageCell: UICollectionViewCell {
   
   func setupFrameWithLabel(_ x: CGFloat, _ bubbleMaxWidth: CGFloat, _ estimate: CGFloat,
                            _ insets: CGFloat, _ cellHeight: CGFloat, _ spacer: CGFloat = 10) -> CGRect {
-    //let spacer: CGFloat = 15
     var x = x
     if (estimate + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
       estimate <= BaseMessageCell.messageTimeWidth {
       x = x - BaseMessageCell.messageTimeWidth + spacer
     }
     
-    var width: CGFloat = estimate + insets//BaseMessageCell.outgoingMessageHorisontalInsets
+    var width: CGFloat = estimate + insets
     if (estimate + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
       estimate <= BaseMessageCell.messageTimeWidth {
-      width = width + BaseMessageCell.messageTimeWidth - spacer//timeLabel.frame.width
+      width = width + BaseMessageCell.messageTimeWidth - spacer
     }
     
     let rect = CGRect(x: x, y: 0, width: width, height: cellHeight).integral
@@ -303,11 +290,16 @@ class BaseMessageCell: UICollectionViewCell {
     contentView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
   }
   
-  func prepareViewsForReuse() {}
+ private func prepareViewsForReuse() {
+    deliveryStatus.text = ""
+    nameLabel.text = ""
+    nameLabel.textColor = ThemeManager.currentTheme().authorNameTextColor
+    bubbleView.image = nil
+    timeLabel.backgroundColor = .clear
+  }
   
   override func prepareForReuse() {
     super.prepareForReuse()
     prepareViewsForReuse()
-    deliveryStatus.text = ""
   }
 }

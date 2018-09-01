@@ -1126,17 +1126,11 @@ class ChatLogViewController: UIViewController {
         
         guard indexPath.section-1 >= 0, groupedMessages[indexPath.section-1].count-1 >= 0 else { return }
         let previousItem = groupedMessages[indexPath.section-1].count-1
-        
-        UIView.performWithoutAnimation { //removes previous message status and bubble tail
-          collectionView.reloadItems(at: [IndexPath(row: previousItem, section: indexPath.section-1)])
-        }
+        collectionView.reloadItems(at: [IndexPath(row: previousItem, section: indexPath.section-1)])
       } else {
         collectionView.insertItems(at: [indexPath])
-        
-        UIView.performWithoutAnimation { //removes previous message status and bubble tail
           let previousRow = groupedMessages[indexPath.section].count-2
           self.collectionView.reloadItems(at: [IndexPath(row: previousRow, section: indexPath.section)])
-        }
       }
     }) { (_) in
       self.collectionView.scrollToBottom(animated: true)

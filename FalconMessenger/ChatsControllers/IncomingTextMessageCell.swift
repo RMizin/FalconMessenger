@@ -14,18 +14,32 @@ class IncomingTextMessageCell: BaseMessageCell {
   
   let textView: FalconTextView = {
     let textView = FalconTextView()
-    textView.font = MessageFontsAppearance.defaultMessageTextFont
-    textView.backgroundColor = .clear
-    textView.isEditable = false
-    textView.isScrollEnabled = false
+    textView.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
     textView.textContainerInset = UIEdgeInsetsMake(textViewTopInset, incomingTextViewLeftInset, textViewBottomInset, incomingTextViewRightInset)
-    textView.dataDetectorTypes = .all
-    textView.textColor = .darkText
-    textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
     
     return textView
   }()
   
+  override func setupViews() {
+    textView.delegate = self
+    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
+    contentView.addSubview(bubbleView)
+    bubbleView.addSubview(textView)
+    textView.addSubview(nameLabel)
+    bubbleView.addSubview(timeLabel)
+    
+    bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
+    timeLabel.backgroundColor = .clear
+    timeLabel.textColor = UIColor.darkGray.withAlphaComponent(0.7)
+    bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
+    textView.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
+  }
+
   func setupData(message: Message, isGroupChat: Bool) {
     self.message = message
     guard let messageText = message.text else { return }
@@ -38,7 +52,6 @@ class IncomingTextMessageCell: BaseMessageCell {
       
       textView.textContainerInset.top = BaseMessageCell.groupIncomingTextViewTopInset
       textView.frame.size = CGSize(width: bubbleView.frame.width.rounded(), height: bubbleView.frame.height.rounded())
-      
     } else {
       bubbleView.frame.size = setupDefaultBubbleViewSize(message: message)
       textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
@@ -57,10 +70,10 @@ class IncomingTextMessageCell: BaseMessageCell {
     guard let portaritEstimate = message.estimatedFrameForText?.width, let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGSize() }
     
     let portraitRect = setupFrameWithLabel(bubbleView.frame.origin.x, BaseMessageCell.bubbleViewMaxWidth,
-                                           portaritEstimate, BaseMessageCell.incomingMessageHorisontalInsets, frame.size.height, 10)
+                                           portaritEstimate, BaseMessageCell.incomingMessageHorisontalInsets, frame.size.height, 10).integral
     
     let landscapeRect = setupFrameWithLabel(bubbleView.frame.origin.x, BaseMessageCell.landscapeBubbleViewMaxWidth,
-                                           landscapeEstimate, BaseMessageCell.incomingMessageHorisontalInsets, frame.size.height, 10)
+                                           landscapeEstimate, BaseMessageCell.incomingMessageHorisontalInsets, frame.size.height, 10).integral
     switch UIDevice.current.orientation {
     case .landscapeRight, .landscapeLeft:
       return landscapeRect.size
@@ -88,7 +101,7 @@ class IncomingTextMessageCell: BaseMessageCell {
   fileprivate func getGroupBubbleSize(messageWidth: CGFloat, bubbleMaxWidth: CGFloat, authorMaxWidth: CGFloat) -> CGSize {
     let horisontalInsets = BaseMessageCell.incomingMessageHorisontalInsets
     
-    let rect = setupFrameWithLabel(bubbleView.frame.origin.x, bubbleMaxWidth, messageWidth, horisontalInsets, frame.size.height, 10)
+    let rect = setupFrameWithLabel(bubbleView.frame.origin.x, bubbleMaxWidth, messageWidth, horisontalInsets, frame.size.height, 10).integral
 
     if nameLabel.frame.size.width >= rect.width - horisontalInsets {
       if nameLabel.frame.size.width >= authorMaxWidth {
@@ -99,23 +112,6 @@ class IncomingTextMessageCell: BaseMessageCell {
     } else {
       return rect.size
     }
-  }
-  
-  override func setupViews() {
-    textView.delegate = self
-    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
-    contentView.addSubview(bubbleView)
-    bubbleView.addSubview(textView)
-    textView.addSubview(nameLabel)
-    bubbleView.addSubview(timeLabel)
-    bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
-    timeLabel.backgroundColor = .clear
-    timeLabel.textColor = .black
-  }
-  
-  override func prepareViewsForReuse() {
-    bubbleView.image = nil
-    nameLabel.text = ""
   }
 }
 

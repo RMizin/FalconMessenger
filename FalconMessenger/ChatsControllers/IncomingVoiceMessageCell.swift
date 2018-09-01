@@ -19,9 +19,10 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     bubbleView.addSubview(timeLabel)
     bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
     bubbleView.frame.size.width = 150
-    playerView.timerLabel.textColor = .black
     timeLabel.backgroundColor = .clear
-    timeLabel.textColor = .black
+    timeLabel.textColor = UIColor.darkGray.withAlphaComponent(0.7)
+    playerView.timerLabel.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
+    bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
   }
   
   func setupData(message: Message, isGroupChat:Bool) {
@@ -31,14 +32,16 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
       nameLabel.text = message.senderName ?? ""
       nameLabel.sizeToFit()
       bubbleView.frame.size.height = frame.size.height.rounded()
-      playerView.frame = CGRect(x: 10, y: 20, width: bubbleView.frame.width-20, height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-15)
+      playerView.frame = CGRect(x: 10, y: 20, width: bubbleView.frame.width-20,
+                                height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-15).integral
       
       if nameLabel.frame.size.width >= BaseMessageCell.incomingGroupMessageAuthorNameLabelMaxWidth {
         nameLabel.frame.size.width = playerView.frame.size.width - 24
       }
     } else {
       bubbleView.frame.size.height = frame.size.height.rounded()
-      playerView.frame = CGRect(x: 5, y: 10, width: bubbleView.frame.width-15, height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-15)
+      playerView.frame = CGRect(x: 7, y: 14, width: bubbleView.frame.width-17,
+                                height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-19).integral
     }
     
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-1, y: bubbleView.frame.height-timeLabel.frame.height-5)
@@ -56,11 +59,9 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     }
   }
   
-  override func prepareViewsForReuse() {
-    playerView.seconds = 0
-    playerView.startingTime = 0
-    playerView.play.isSelected = false
-    bubbleView.image = nil
-    nameLabel.text = ""
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
+    playerView.timerLabel.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
   }
 }

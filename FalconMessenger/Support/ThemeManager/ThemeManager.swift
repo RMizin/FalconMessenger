@@ -97,6 +97,15 @@ enum Theme: Int {
     }
   }
   
+  var supplementaryViewTextColor: UIColor {
+    switch self {
+    case .Default:
+      return .gray
+    case .Dark:
+      return .lightGray
+    }
+  }
+  
   var controlButtonsColor: UIColor {
     switch self {
     case .Default:
@@ -172,72 +181,119 @@ enum Theme: Int {
   var incomingBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
+      return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     case .Dark:
-      return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
-    }
-  }
-  
-  var selectedIncomingBubble: UIImage {
-    switch self {
-    case .Default:
-      return UIImage(named: "FMIncomingFullHighlighted")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
-    case .Dark:
-      return UIImage(named: "FMIncomingFullHighlighted")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
+      return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     }
   }
   
   var incomingPartialBubble: UIImage {
+    
     switch self {
     case .Default:
-      return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
+      return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     case .Dark:
-      return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
-    }
-  }
-  
-  var selectedIncomingPartialBubble: UIImage {
-    switch self {
-    case .Default:
-      return UIImage(named: "partialSelectedDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
-    case .Dark:
-      return UIImage(named: "partialSelectedDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16)
+      return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     }
   }
   
   var outgoingBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+      return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     case .Dark:
-      return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
-    }
-  }
-  
-  var selectedOutgoingBubble: UIImage {
-    switch self {
-    case .Default:
-      return UIImage(named: "FMOutgoingFullHighlighted")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
-    case .Dark:
-      return UIImage(named: "FMOutgoingFullHighlighted")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+      return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     }
   }
   
   var outgoingPartialBubble: UIImage {
     switch self {
     case .Default:
-      return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+      return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     case .Dark:
-      return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+      return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     }
   }
   
-  var selectedOutgoingPartialBubble: UIImage {
+  var outgoingBubbleTintColor: UIColor {
     switch self {
     case .Default:
-      return UIImage(named: "partialSelectedOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+      return FalconPalette.defaultBlue
     case .Dark:
-      return UIImage(named: "partialSelectedOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16)
+      return UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0)
+    }
+  }
+  
+  var incomingBubbleTintColor: UIColor {
+    switch self {
+    case .Default:
+      return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
+    case .Dark:
+      return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
+    }
+  }
+  
+  
+  var selectedOutgoingBubbleTintColor: UIColor {
+    switch self {
+    case .Default:
+      return  UIColor(red:0.00, green:0.50, blue:0.80, alpha: 1.0)
+    case .Dark:
+      return UIColor(red: 0.30, green: 0.30, blue: 0.30, alpha: 1.0)
+    }
+  }
+  
+  var selectedIncomingBubbleTintColor: UIColor {
+    switch self {
+    case .Default:
+      return UIColor(red: 0.70, green: 0.70, blue: 0.70, alpha: 1.0)
+    case .Dark:
+      return UIColor(red: 0.20, green: 0.20, blue: 0.20, alpha: 1.0)
+    }
+  }
+  
+  var incomingBubbleTextColor: UIColor {
+    switch self {
+    case .Default:
+      return .black
+    case .Dark:
+      return .white
+    }
+  }
+  
+  var outgoingBubbleTextColor: UIColor {
+    switch self {
+    case .Default:
+      return .white
+    case .Dark:
+      return .white
+    }
+  }
+  
+  var authorNameTextColor: UIColor {
+    switch self {
+    case .Default:
+      return FalconPalette.defaultBlue
+    case .Dark:
+      return UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)
+    }
+  }
+  
+  var outgoingProgressStrokeColor: UIColor {
+    switch self {
+    case .Default:
+      return .white
+    case .Dark:
+      return .white
+    }
+  }
+  
+  var incomingProgressStrokeColor: UIColor {
+    switch self {
+    case .Default:
+      return .black
+    case .Dark:
+      return .white
     }
   }
   
@@ -292,7 +348,6 @@ enum Theme: Int {
       return UIColor(red: 242.0/255.0, green: 101.0/255.0, blue: 34.0/255.0, alpha: 1.0)
     case .Dark:
       return UIColor(red: 34.0/255.0, green: 128.0/255.0, blue: 66.0/255.0, alpha: 1.0)
-  
     }
   }
 }

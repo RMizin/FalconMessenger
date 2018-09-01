@@ -31,17 +31,16 @@ class ChatLogViewControllerSupplementaryView: UICollectionReusableView {
 
   let label: SupplementaryLabel = {
     let label = SupplementaryLabel()
-    label.font = MessageFontsAppearance.defaultInformationMessageTextFont
+    label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 1
     label.textAlignment = .center
-    label.textColor = ThemeManager.currentTheme().generalTitleColor
-    label.translatesAutoresizingMaskIntoConstraints = false
-    label.font = MessageFontsAppearance.defaultInformationMessageTextFont
-    label.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
     label.layer.masksToBounds = true
-    label.layer.cornerRadius = 14
+    label.layer.cornerRadius = 13
     label.sizeToFit()
-    
+    label.textColor = ThemeManager.currentTheme().supplementaryViewTextColor
+    label.backgroundColor = ThemeManager.currentTheme().inputTextViewColor.withAlphaComponent(0.85)
+    label.font = UIFont.boldSystemFont(ofSize: 13)
+ 
     return label
   }()
   
@@ -59,8 +58,8 @@ class ChatLogViewControllerSupplementaryView: UICollectionReusableView {
   }
   
   @objc func changeTheme() {
-    label.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
-    label.textColor = ThemeManager.currentTheme().generalTitleColor
+    label.backgroundColor = ThemeManager.currentTheme().inputTextViewColor.withAlphaComponent(0.85)
+    label.textColor = ThemeManager.currentTheme().supplementaryViewTextColor
   }
   
   required init?(coder aDecoder: NSCoder) {
