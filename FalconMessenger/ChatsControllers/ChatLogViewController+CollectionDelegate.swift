@@ -15,11 +15,11 @@ extension ChatLogViewController: CollectionDelegate {
     guard let index = self.messages.index(where: { (message) -> Bool in
       return message.messageUID == id
     }) else { return }
-    
-    performBatchUpdates(for: index, id:id)
+    performBatchUpdates(for: index, id: id)
   }
   
   func performBatchUpdates(for index: Int, id: String) {
+    guard let messagesFetcher = messagesFetcher else { return }
     let removedMessage = messages[index]
     messages.remove(at: index)
     messages = messagesFetcher.configureTails(for: messages, isGroupChat: nil)
@@ -89,7 +89,7 @@ extension ChatLogViewController: CollectionDelegate {
   
   fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
     messages.insert(message, at: insertionIndex)
-
+    guard let messagesFetcher = messagesFetcher else { return }
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
     } else {
@@ -115,7 +115,7 @@ extension ChatLogViewController: CollectionDelegate {
       UIView.performWithoutAnimation {
         self.collectionView.reloadSections([indexPath.section])
       }
-      
+      guard self.isScrollViewAtTheBottom() else { return }
       self.collectionView.scrollToBottom(animated: true)
     }
   }

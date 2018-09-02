@@ -38,7 +38,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
-    return section == groupedMessages.count ? CGSize(width: collectionView.bounds.width , height: 2) : CGSize(width: collectionView.bounds.width , height: 40)
+    return section == groupedMessages.count ? CGSize(width: collectionView.bounds.width , height: 0) : CGSize(width: collectionView.bounds.width, height: 40)
   }
   
    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -185,6 +185,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   }
   
    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard groupedMessages.indices.contains(indexPath.section) else { return }
     let message = groupedMessages[indexPath.section][indexPath.item]
     guard let voiceEncodedString = message.voiceEncodedString else { return }
     guard let data = Data(base64Encoded: voiceEncodedString) else { return }
@@ -233,6 +234,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     let isGroupChat = conversation!.isGroupChat ?? false
     
     guard !isInformationMessage else {
+        guard let messagesFetcher = messagesFetcher else { return CGSize(width: 0, height: 0) }
       let infoMessageWidth = collectionView.frame.width
         guard let messageText = message.text else { return CGSize(width: 0, height: 0 ) }
       let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth, text: messageText, font: MessageFontsAppearance.defaultInformationMessageTextFont).height + 25

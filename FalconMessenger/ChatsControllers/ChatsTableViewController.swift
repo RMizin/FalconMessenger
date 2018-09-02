@@ -471,7 +471,7 @@ extension ChatsTableViewController: MessagesDelegate {
     
     chatLogController?.observeMembersChanges()
     
-    chatLogController?.messagesFetcher.collectionDelegate = chatLogController
+    chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
 
     if DeviceType.isIPad {

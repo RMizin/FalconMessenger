@@ -35,7 +35,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     let splitViewController = SplitViewController()
     splitViewController.viewControllers = [tabBarController, detailViewController]
     window = UIWindow(frame: UIScreen.main.bounds)
-    window?.rootViewController = splitViewController
+    if DeviceType.isIPad {
+      window?.rootViewController = splitViewController
+    } else { //nesessary to disable split screen on iPhones+
+      let navigationController = UINavigationController(rootViewController: tabBarController)
+      navigationController.navigationBar.isHidden = true
+      window?.rootViewController = navigationController
+    }
+  
     window?.makeKeyAndVisible()
     window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     tabBarController.presentOnboardingController()

@@ -31,6 +31,10 @@ struct ThemeManager {
   }
   
   static func currentTheme() -> Theme {
+    if UserDefaults.standard.object(forKey: userDefaults.selectedTheme) == nil {
+      guard DeviceType.iPhoneX else { return .Default }
+       return .Dark
+    }
     if let storedTheme = userDefaults.currentIntObjectState(for: userDefaults.selectedTheme) {
       return Theme(rawValue: storedTheme)!
     } else {

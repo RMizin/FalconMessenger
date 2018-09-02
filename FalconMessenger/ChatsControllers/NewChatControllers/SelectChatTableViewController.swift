@@ -249,7 +249,7 @@ extension SelectChatTableViewController: MessagesDelegate {
     chatLogController?.groupedMessages = Message.groupedMessages(messages)
     chatLogController?.observeTypingIndicator()
     chatLogController?.configureTitleViewWithOnlineStatus()
-    chatLogController?.messagesFetcher.collectionDelegate = chatLogController
+    chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
     
     if DeviceType.isIPad {

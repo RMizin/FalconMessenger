@@ -17,13 +17,13 @@ final class SplitViewController: UISplitViewController, UISplitViewControllerDel
   }
 
   override var traitCollection: UITraitCollection {
-    if DeviceType.iPhone678p {
-        return UITraitCollection(horizontalSizeClass: .compact)
-    } else {
+    if DeviceType.isIPad {
       return super.traitCollection
+    } else {
+      return UITraitCollection(horizontalSizeClass: .compact)
     }
   }
-  
+
   func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
    return true
   }
@@ -42,5 +42,11 @@ extension SplitViewController {
   var detailViewController: UIViewController? {
     guard viewControllers.count == 2 else { return nil }
     return viewControllers.last
+  }
+}
+
+extension UINavigationController {
+  open override var preferredStatusBarStyle: UIStatusBarStyle {
+    return ThemeManager.currentTheme().statusBarStyle
   }
 }

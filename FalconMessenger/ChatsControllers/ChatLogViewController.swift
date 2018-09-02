@@ -34,7 +34,7 @@ class ChatLogViewController: UIViewController {
   
   weak var typingIndicatorManager: TypingIndicatorManager?
   
-  var messagesFetcher: MessagesFetcher!
+  var messagesFetcher: MessagesFetcher?
   let chatLogHistoryFetcher = ChatLogHistoryFetcher()
 
   var membersReference: DatabaseReference!
@@ -219,7 +219,7 @@ class ChatLogViewController: UIViewController {
       messagesReference.removeObserver(withHandle: element.handle)
     }
     
-    if messagesFetcher != nil {
+    if let messagesFetcher = messagesFetcher {
       if messagesFetcher.userMessagesReference != nil {
         messagesFetcher.userMessagesReference.removeAllObservers()
       }
@@ -230,7 +230,6 @@ class ChatLogViewController: UIViewController {
       messagesFetcher.cleanAllObservers()
       messagesFetcher.collectionDelegate = nil
       messagesFetcher.delegate = nil
-      messagesFetcher = nil
     }
 
     guard voiceRecordingViewController != nil, voiceRecordingViewController.recorder != nil else { return }
@@ -335,6 +334,7 @@ class ChatLogViewController: UIViewController {
   private func setupCollectionView() {
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.bottom
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     
     if #available(iOS 11.0, *) {
       navigationItem.largeTitleDisplayMode = .never
@@ -376,6 +376,7 @@ class ChatLogViewController: UIViewController {
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
     navigationController?.navigationBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
+    refreshControl.tintColor = ThemeManager.currentTheme().generalTitleColor
     collectionView.updateColors()
     
     func updateTitleColor() {
@@ -706,18 +707,24 @@ class ChatLogViewController: UIViewController {
   }
   
   func updateMessageStatusUI(sentMessage: Message) {
-    guard let index = self.messages.index(where: { (message) -> Bool in
-      return message.messageUID == sentMessage.messageUID
-    }) else { return }
-    
-    guard index >= 0 else { return }
-    messages[index].status = sentMessage.status
-    groupedMessages = Message.groupedMessages(messages)
-    guard let indexPath = Message.get(indexPathOf: messages[index], in: groupedMessages) else { return }
-    collectionView.reloadItems(at: [indexPath])
-    guard sentMessage.status == messageStatusDelivered, messages[index].messageUID == messages.last?.messageUID,
-      userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
-    SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
+    DispatchQueue.global(qos: .default).async {
+      guard let index = self.messages.index(where: { (message) -> Bool in
+        return message.messageUID == sentMessage.messageUID
+      }) else { return }
+      
+      guard index >= 0 else { return }
+      
+      self.messages[index].status = sentMessage.status
+      self.groupedMessages = Message.groupedMessages(self.messages)
+      guard let indexPath = Message.get(indexPathOf: self.messages[index], in: self.groupedMessages) else { return }
+      DispatchQueue.main.async {
+        self.collectionView.reloadItems(at: [indexPath])
+      }
+   
+      guard sentMessage.status == messageStatusDelivered, self.messages[index].messageUID == self.messages.last?.messageUID,
+        userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
+      SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
+    }
   }
   
   fileprivate func configureProgressBar() {
@@ -1098,7 +1105,7 @@ class ChatLogViewController: UIViewController {
   fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
     
     var values = values
-    
+    guard let messagesFetcher = messagesFetcher else { return }
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       values = messagesFetcher.preloadCellData(to: values, isGroupChat: true)
     } else {
@@ -1129,8 +1136,8 @@ class ChatLogViewController: UIViewController {
         collectionView.reloadItems(at: [IndexPath(row: previousItem, section: indexPath.section-1)])
       } else {
         collectionView.insertItems(at: [indexPath])
-          let previousRow = groupedMessages[indexPath.section].count-2
-          self.collectionView.reloadItems(at: [IndexPath(row: previousRow, section: indexPath.section)])
+        let previousRow = groupedMessages[indexPath.section].count-2
+        self.collectionView.reloadItems(at: [IndexPath(row: previousRow, section: indexPath.section)])
       }
     }) { (_) in
       self.collectionView.scrollToBottom(animated: true)
