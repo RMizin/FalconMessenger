@@ -25,11 +25,16 @@ class TypingIndicatorCell: UICollectionViewCell {
     super.init(frame: frame.integral)
    
     addSubview(typingIndicator)
-    typingIndicator.frame = CGRect(x: 10, y: 0, width: 72, height: TypingIndicatorCell.typingIndicatorHeight).integral
+    typingIndicator.frame = CGRect(x: 10, y: 2, width: 72, height: TypingIndicatorCell.typingIndicatorHeight).integral
   }
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    restart()
   }
   
   deinit {
@@ -44,10 +49,5 @@ class TypingIndicatorCell: UICollectionViewCell {
     } else {
       typingIndicator.startAnimating()
     }
-  }
-  
-  override func prepareForReuse() {
-    super.prepareForReuse()
-    restart()
   }
 }

@@ -288,6 +288,8 @@ class BaseMessageCell: UICollectionViewCell {
   func setupViews() {
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     contentView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
+    contentView.addSubview(bubbleView)
   }
   
  private func prepareViewsForReuse() {

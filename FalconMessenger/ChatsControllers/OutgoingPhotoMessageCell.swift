@@ -11,9 +11,7 @@ import UIKit
 class PhotoMessageCell: BaseMediaMessageCell {
 
   override func setupViews() {
-    
-    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
-    contentView.addSubview(bubbleView)
+    super.setupViews()
     bubbleView.addSubview(messageImageView)
     bubbleView.frame.size.width = BaseMessageCell.mediaMaxWidth
     bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
@@ -40,6 +38,12 @@ class PhotoMessageCell: BaseMediaMessageCell {
     bubbleView.addSubview(timeLabel)
   }
   
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
+    progressView.strokeColor = ThemeManager.currentTheme().outgoingProgressStrokeColor
+  }
+  
   func setupData(message: Message) {
     self.message = message
     let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
@@ -49,11 +53,5 @@ class PhotoMessageCell: BaseMediaMessageCell {
     timeLabel.text = self.message?.convertedTimestamp
     messageImageView.isUserInteractionEnabled = false
     bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble
-  }
-
-  override func prepareForReuse() {
-    super.prepareForReuse()
-      bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
-      progressView.strokeColor = ThemeManager.currentTheme().outgoingProgressStrokeColor
   }
 }

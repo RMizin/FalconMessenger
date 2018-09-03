@@ -22,11 +22,6 @@ class InformationMessageCell: UICollectionViewCell {
     return information
   }()
   
-  func setupData(message: Message) {
-    guard let messageText = message.text else { return }
-    information.text = messageText
-  }
-  
   override init(frame: CGRect) {
     super.init(frame: frame.integral)
     backgroundColor = .clear
@@ -41,5 +36,10 @@ class InformationMessageCell: UICollectionViewCell {
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  func setupData(message: Message) {
+    guard let messageText = message.text else { return }
+    information.text = messageText
   }
 }

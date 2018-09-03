@@ -21,9 +21,8 @@ class IncomingTextMessageCell: BaseMessageCell {
   }()
   
   override func setupViews() {
+    super.setupViews()
     textView.delegate = self
-    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
-    contentView.addSubview(bubbleView)
     bubbleView.addSubview(textView)
     textView.addSubview(nameLabel)
     bubbleView.addSubview(timeLabel)

@@ -10,13 +10,11 @@ import UIKit
 
 
 class IncomingPhotoMessageCell: BaseMediaMessageCell {
-  
 
-  var messageImageViewTopAnchor:NSLayoutConstraint!
+  var messageImageViewTopAnchor: NSLayoutConstraint!
+  
   override func setupViews() {
-    
-    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
-    contentView.addSubview(bubbleView)
+    super.setupViews()
     bubbleView.addSubview(messageImageView)
     bubbleView.addSubview(nameLabel)
     bubbleView.frame.origin = BaseMessageCell.incomingBubbleOrigin
@@ -49,13 +47,11 @@ class IncomingPhotoMessageCell: BaseMediaMessageCell {
   override func prepareForReuse() {
     super.prepareForReuse()
     messageImageViewTopAnchor.constant = 0
-    
     bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
     progressView.strokeColor = ThemeManager.currentTheme().incomingProgressStrokeColor
   }
   
   func setupData(message: Message, isGroupChat:Bool) {
-    
     self.message = message
     bubbleView.frame.size.height = frame.size.height.rounded()
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5, y: bubbleView.frame.height-timeLabel.frame.height-5)

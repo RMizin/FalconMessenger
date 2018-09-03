@@ -12,8 +12,7 @@ import AVFoundation
 class IncomingVoiceMessageCell: BaseVoiceMessageCell {
 
   override func setupViews() {
-    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
-    contentView.addSubview(bubbleView)
+    super.setupViews()
     bubbleView.addSubview(playerView)
     bubbleView.addSubview(nameLabel)
     bubbleView.addSubview(timeLabel)
@@ -23,6 +22,12 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     timeLabel.textColor = UIColor.darkGray.withAlphaComponent(0.7)
     playerView.timerLabel.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
     bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
+    playerView.timerLabel.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
   }
   
   func setupData(message: Message, isGroupChat:Bool) {
@@ -57,11 +62,5 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     } else {
       bubbleView.image = ThemeManager.currentTheme().incomingPartialBubble
     }
-  }
-  
-  override func prepareForReuse() {
-    super.prepareForReuse()
-    bubbleView.tintColor = ThemeManager.currentTheme().incomingBubbleTintColor
-    playerView.timerLabel.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
   }
 }

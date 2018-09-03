@@ -847,7 +847,7 @@ class ChatLogViewController: UIViewController {
       }
     }
     
-    if scrollView.contentOffset.y < 0 { //change 100 to whatever you want
+    if scrollView.contentOffset.y <= 0 { //change 100 to whatever you want
       if collectionView.contentSize.height < UIScreen.main.bounds.height - 50 {
         canRefresh = false
       }

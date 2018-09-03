@@ -20,6 +20,22 @@ class OutgoingTextMessageCell: BaseMessageCell {
     return textView
   }()
   
+  override func setupViews() {
+    super.setupViews()
+    textView.delegate = self
+    bubbleView.addSubview(textView)
+    contentView.addSubview(deliveryStatus)
+    bubbleView.addSubview(timeLabel)
+    timeLabel.backgroundColor = .clear
+    timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
+    bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
+  }
+  
   func setupData(message: Message) {
     self.message = message
     guard let messageText = message.text else { return }
@@ -51,23 +67,6 @@ class OutgoingTextMessageCell: BaseMessageCell {
    default:
       return portraitFrame.integral
     }
-  }
-  
-  override func setupViews() {
-    textView.delegate = self
-    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
-    contentView.addSubview(bubbleView)
-    bubbleView.addSubview(textView)
-    contentView.addSubview(deliveryStatus)
-    bubbleView.addSubview(timeLabel)
-    timeLabel.backgroundColor = .clear
-    timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
-    bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
-  }
-  
-  override func prepareForReuse() {
-    super.prepareForReuse()
-    bubbleView.tintColor = ThemeManager.currentTheme().outgoingBubbleTintColor
   }
 }
 
