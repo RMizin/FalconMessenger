@@ -156,7 +156,7 @@ class ContactsController: UITableViewController {
         filteredUsers = users
       
         guard isAppLoaded == false else {
-          DispatchQueue.main.async { [unowned self] in
+          DispatchQueue.main.async {
             self.tableView.reloadData()
           }; return
         }

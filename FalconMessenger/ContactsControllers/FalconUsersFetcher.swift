@@ -87,19 +87,18 @@ class FalconUsersFetcher: NSObject {
   fileprivate var falconUsers = [User]()
   fileprivate var falconUsersReference: DatabaseReference!
   fileprivate var falconUsersHandle = [(userID: String, handle: DatabaseHandle)]()
-  fileprivate let falconUsersLoadingGroup = DispatchGroup()
+  fileprivate var falconUsersLoadingGroup = DispatchGroup()
   fileprivate var isFalconUsersLoadingGroupFinished = false
   
   func loadFalconUsers() {
     let status = CNContactStore.authorizationStatus(for: .contacts)
-    if status == .denied || status == .restricted { print("contacts access"); return }
+    if status == .denied || status == .restricted { return }
     removeAllUsersObservers()
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
     databaseReference.keepSynced(true)
     databaseReference.observeSingleEvent(of: .value) { (snapshot) in
       guard snapshot.childSnapshot(forPath: "falconUsers").exists() else {
-        print("FU not exists")
         self.isFalconUsersLoadingGroupFinished = true
         self.updateDataSource(newUsers: [User]())
         return
@@ -111,18 +110,16 @@ class FalconUsersFetcher: NSObject {
       if let index = falconUsersIDs.index(of: currentUserID) {
         falconUsersIDs.remove(at: index)
       }
-      
       self.loadData(for: falconUsersIDs)
     }
   }
   
   fileprivate func loadData(for userIDs: [String]) {
-  
+    falconUsersLoadingGroup = DispatchGroup()
     userIDs.forEach { (_) in falconUsersLoadingGroup.enter() }
 
     falconUsersLoadingGroup.notify(queue: .main, execute: {
       self.isFalconUsersLoadingGroupFinished = true
-      print("group finished")
       self.updateDataSource(newUsers: self.falconUsers)
     })
     
@@ -131,9 +128,9 @@ class FalconUsersFetcher: NSObject {
       let element = (userID: userID, handle: handle)
       falconUsersHandle.insert(element, at: 0)
       falconUsersReference = Database.database().reference().child("users").child(element.userID)
-      falconUsersHandle[0].handle = falconUsersReference.observe( .value, with: { (snapshot) in
+      falconUsersHandle[0].handle = falconUsersReference.observe(.value, with: { (snapshot) in
         
-        guard var dictionary = snapshot.value as? [String: AnyObject] else {self.updateDataSource(newUsers: nil); return }
+        guard var dictionary = snapshot.value as? [String: AnyObject] else { self.updateDataSource(newUsers: nil); return }
         dictionary.updateValue(userID as AnyObject, forKey: "id")
         let falconUser = User(dictionary: dictionary)
         
