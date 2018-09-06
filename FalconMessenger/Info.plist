@@ -42,13 +42,15 @@
 	<key>NSCameraUsageDescription</key>
 	<string>To take photos and videos and send them via messages </string>
 	<key>NSContactsUsageDescription</key>
-	<string>Falcon messenger uses phone numbers as unique identifiers, so that it is easy for you to switch from other messaging apps and retain your social graph. We store your contacts in order to find your friends who also use Falcon. We only need the number and name (first and last) for this to work and store no other data about your contacts.</string>
+	<string>Falcon Messenger uses phone numbers only to find your friends who also use Falcon. We do not store your contacts anywhere.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>To get access to your chats</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To record video with the sound.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To save selected media to your photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>To select a profile photo or send photo or video via message</string>
+	<string>To save media to photo library or select a profile photo or send media via message</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
