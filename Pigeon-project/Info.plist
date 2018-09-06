@@ -45,6 +45,8 @@
 	<string>To get access to your chats</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To record video with the sound.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To save selected media to your photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To select a profile photo or send photo or video via message</string>
 	<key>UIBackgroundModes</key>
