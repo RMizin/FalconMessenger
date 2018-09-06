@@ -298,6 +298,8 @@ class BaseMessageCell: UICollectionViewCell {
     nameLabel.textColor = ThemeManager.currentTheme().authorNameTextColor
     bubbleView.image = nil
     timeLabel.backgroundColor = .clear
+    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    contentView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
   }
   
   override func prepareForReuse() {

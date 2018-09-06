@@ -327,8 +327,13 @@ class ChatLogViewController: UIViewController {
     bottomScrollConainer.translatesAutoresizingMaskIntoConstraints = false
     bottomScrollConainer.widthAnchor.constraint(equalToConstant: 45).isActive = true
     bottomScrollConainer.heightAnchor.constraint(equalToConstant: 45).isActive = true
-    bottomScrollConainer.rightAnchor.constraint(equalTo: inputContainerView.rightAnchor, constant: -10).isActive = true
-    bottomScrollConainer.bottomAnchor.constraint(equalTo: inputContainerView.topAnchor, constant: -10).isActive = true
+    
+    guard let view = view as? ChatLogContainerView else {
+      fatalError("Root view is not ChatLogContainerView")
+    }
+    
+    bottomScrollConainer.rightAnchor.constraint(equalTo: view.inputViewContainer.rightAnchor, constant: -10).isActive = true
+    bottomScrollConainer.bottomAnchor.constraint(equalTo: view.inputViewContainer.topAnchor, constant: -10).isActive = true
   }
   
   private func setupCollectionView() {
@@ -546,6 +551,8 @@ class ChatLogViewController: UIViewController {
       removeChatsControllerTypingObserver()
       navigationItem.rightBarButtonItem?.isEnabled = false
       if typingIndicatorReference != nil { typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle); typingIndicatorReference = nil }
+      guard DeviceType.isIPad else { return }
+      presentedViewController?.dismiss(animated: true, completion: nil)
     }
   }
   
@@ -718,7 +725,9 @@ class ChatLogViewController: UIViewController {
       self.groupedMessages = Message.groupedMessages(self.messages)
       guard let indexPath = Message.get(indexPathOf: self.messages[index], in: self.groupedMessages) else { return }
       DispatchQueue.main.async {
-        self.collectionView.reloadItems(at: [indexPath])
+        self.collectionView.performBatchUpdates({
+          self.collectionView.reloadItems(at: [indexPath])
+        }, completion: nil)
       }
    
       guard sentMessage.status == messageStatusDelivered, self.messages[index].messageUID == self.messages.last?.messageUID,

@@ -88,14 +88,10 @@ class ViewPlaceholder: UIView {
     }
 
      DispatchQueue.main.async {
-        view.addSubview(self)
-//      if #available(iOS 11.0, *) {
-//        self.topAnchor.constraint(equalTo: view.topAnchor, constant: 175).isActive = true
-//      } else {
+      view.addSubview(self)
       self.topAnchor.constraint(equalTo: view.topAnchor, constant: 135).isActive = true
-     // }
       self.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-      self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - 20).isActive = true
+      self.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
     }
   }
   

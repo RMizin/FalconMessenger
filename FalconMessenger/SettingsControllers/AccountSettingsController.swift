@@ -132,6 +132,9 @@ class AccountSettingsController: UITableViewController {
   
     sender.isSelected = !sender.isSelected
     
+    let generator = UIImpactFeedbackGenerator(style: .medium)
+    generator.impactOccurred()
+    
     if sender.isSelected {
       let theme = Theme.Dark
       ThemeManager.applyTheme(theme: theme)

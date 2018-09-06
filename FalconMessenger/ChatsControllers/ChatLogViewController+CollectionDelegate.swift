@@ -37,15 +37,18 @@ extension ChatLogViewController: CollectionDelegate {
       }
     }) { (_) in
       UIView.performWithoutAnimation {
-        if currentSectionsCount > self.groupedMessages.count {
-          guard indexPath.section-1 >= 0 else { return }
-          self.collectionView.reloadSections([indexPath.section-1])
-        } else {
-          self.collectionView.reloadSections([indexPath.section])
+        self.collectionView.performBatchUpdates({
+          if currentSectionsCount > self.groupedMessages.count {
+            guard indexPath.section-1 >= 0 else { return }
+            self.collectionView.reloadSections([indexPath.section-1])
+          } else {
+            self.collectionView.reloadSections([indexPath.section])
+          }
+        }) { (_) in
+          guard self.messages.count == 0 else { return }
+          self.navigationController?.popViewController(animated: true)
         }
       }
-      guard self.messages.count == 0 else { return }
-      self.navigationController?.popViewController(animated: true)
     }
   }
   
@@ -111,12 +114,16 @@ extension ChatLogViewController: CollectionDelegate {
       
     }) { (_) in
       self.updateMessageStatus(messageRef: reference)
-      guard oldSections == self.groupedMessages.count else { return }
+      guard oldSections <= self.groupedMessages.count else { return }
       UIView.performWithoutAnimation {
-        self.collectionView.reloadSections([indexPath.section])
+        self.collectionView.performBatchUpdates({
+           self.collectionView.reloadSections([indexPath.section])
+        }) { (_) in
+          guard self.isScrollViewAtTheBottom() else { return }
+          self.collectionView.scrollToBottom(animated: true)
+        }
       }
-      guard self.isScrollViewAtTheBottom() else { return }
-      self.collectionView.scrollToBottom(animated: true)
+      
     }
   }
 }

@@ -31,6 +31,10 @@ extension BaseMessageCell {
 }
   
   @objc func handleLongTap(_ longPressGesture: UILongPressGestureRecognizer) {
+    if longPressGesture.state == .began {
+      let generator = UIImpactFeedbackGenerator(style: .medium)
+      generator.impactOccurred()
+    }
     
     var contextMenuItems = [ContextMenuItems.copyItem, ContextMenuItems.deleteItem]
     let config = FTConfiguration.shared
