@@ -1,5 +1,5 @@
 //
-//  ChatLogController+PhotoEditor.swift
+//  ChatLogController+PhotoEditorDelegate.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/23/17.
@@ -14,7 +14,7 @@ import CropViewController
 private let nibName = "PhotoEditorViewController"
 private var selectedPhotoIndexPath: IndexPath!
 
-extension ChatLogViewController:CropViewControllerDelegate {
+extension ChatLogViewController: CropViewControllerDelegate {
   
   func presentPhotoEditor(forImageAt indexPath: IndexPath) {
     guard let image = inputContainerView.attachedMedia[indexPath.row].object?.asUIImage else { return }
