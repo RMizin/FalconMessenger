@@ -61,21 +61,21 @@ PODS:
     - GoogleUtilities/Network (~> 5.2)
     - "GoogleUtilities/NSData+zlib (~> 5.2)"
     - nanopb (~> 0.3)
-  - GoogleUtilities/AppDelegateSwizzler (5.2.2):
+  - GoogleUtilities/AppDelegateSwizzler (5.2.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (5.2.2)
-  - GoogleUtilities/Logger (5.2.2):
+  - GoogleUtilities/Environment (5.2.3)
+  - GoogleUtilities/Logger (5.2.3):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (5.2.2):
+  - GoogleUtilities/MethodSwizzler (5.2.3):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (5.2.2):
+  - GoogleUtilities/Network (5.2.3):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (5.2.2)"
-  - GoogleUtilities/Reachability (5.2.2):
+  - "GoogleUtilities/NSData+zlib (5.2.3)"
+  - GoogleUtilities/Reachability (5.2.3):
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.2.0)
   - leveldb-library (1.20)
@@ -136,7 +136,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   SDWebImage:
-    :commit: d989549b34b7726651ff6bd5a9c63b7fb8ab3dec
+    :commit: bb7adaca376722301cd4f2830252205e1f6df12a
     :git: https://github.com/rs/SDWebImage
 
 SPEC CHECKSUMS:
@@ -153,13 +153,13 @@ SPEC CHECKSUMS:
   FirebaseStorage: 43f823b96b72a08539eba21a7de043348a69d4c6
   FTPopOverMenu_Swift: c3795cb7a8b5dcf11468d8a2887ac75c4ff21dde
   GoogleAppMeasurement: f7507b39b70ad0bd80b3d81518b2f43868974307
-  GoogleUtilities: 06b66f9567769a7958db20a92f0128b2843e49d5
+  GoogleUtilities: 6f681e27050c5e130325e89fa0316dfca826f954
   GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  SDWebImage: e52654ceef9fdc19f4c612d64a5b6d3f05dd81a4
+  SDWebImage: fb5bb7e7b310e2d215c5abe3a7568109c67a80af
 
 PODFILE CHECKSUM: d05df54593a7f133c1e1414534a37d47a587df59
 
