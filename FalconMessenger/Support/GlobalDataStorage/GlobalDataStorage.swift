@@ -11,7 +11,7 @@ import UIKit
 
 let globalDataStorage = GlobalDataStorage()
 
-class GlobalDataStorage: NSObject {
+final class GlobalDataStorage: NSObject {
   
   var localPhones: [String] = [] {
     didSet {
@@ -28,6 +28,8 @@ class GlobalDataStorage: NSObject {
   let imageSourcePhotoLibrary = "imageSourcePhotoLibrary"
   
   let imageSourceCamera = "imageSourceCamera"
+  
+  static let reportDatabaseURL = "https://pigeon-project-79c81-d6fdd.firebaseio.com/"
   
   var isInsertingCellsToTop: Bool = false
   

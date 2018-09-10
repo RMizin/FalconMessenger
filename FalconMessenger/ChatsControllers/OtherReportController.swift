@@ -1,0 +1,91 @@
+//
+//  OtherReportController.swift
+//  FalconMessenger
+//
+//  Created by Roman Mizin on 9/10/18.
+//  Copyright © 2018 Roman Mizin. All rights reserved.
+//
+
+import UIKit
+
+protocol OtherReportDelegate: class {
+  func send(reportWith description: String)
+}
+
+class OtherReportController: UIViewController {
+  
+  weak var delegate: OtherReportDelegate?
+  
+  let textView: UITextView = {
+    let textView = UITextView()
+    textView.translatesAutoresizingMaskIntoConstraints = false
+    textView.layer.cornerRadius = 30
+    textView.layer.masksToBounds = true
+    textView.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+    textView.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    textView.textColor = ThemeManager.currentTheme().generalTitleColor
+    textView.textContainerInset = UIEdgeInsetsMake(10, 15, 10, 15)
+    textView.font = UIFont.systemFont(ofSize: 18)
+    
+    return textView
+  }()
+  
+  let reportSender = ReportSender()
+  
+  var reportedMessage: Message?
+  var controller: UIViewController?
+  var heightAnchor: NSLayoutConstraint!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+      
+      configureNavigationItem()
+      configureView()
+      configureTextView()
+    }
+  
+  fileprivate func configureNavigationItem() {
+    let sendButton = UIBarButtonItem(title: "Send", style: .done, target: self, action: #selector(send))
+    navigationItem.setRightBarButton(sendButton, animated: false)
+    navigationItem.rightBarButtonItem?.isEnabled = false
+    navigationItem.title = "Report"
+  }
+  
+  fileprivate func configureView() {
+    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    view.addSubview(textView)
+  }
+  
+  fileprivate func configureTextView() {
+    textView.delegate = self
+    textView.becomeFirstResponder()
+    textView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive = true
+    textView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
+    textView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
+    heightAnchor = textView.heightAnchor.constraint(equalToConstant: InputTextViewLayout.maxHeight()-10)
+    heightAnchor.isActive = true
+  }
+  
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    DispatchQueue.main.async {
+      self.heightAnchor.constant = InputTextViewLayout.maxHeight()-10
+    }
+  }
+  
+  @objc fileprivate func send() {
+    textView.resignFirstResponder()
+    navigationController?.popViewController(animated: true)
+    delegate?.send(reportWith: textView.text)
+  }
+}
+
+extension OtherReportController: UITextViewDelegate {
+  func textViewDidChange(_ textView: UITextView) {
+    if textView.text.count > 0 {
+      navigationItem.rightBarButtonItem?.isEnabled = true
+    } else {
+      navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+  }
+}

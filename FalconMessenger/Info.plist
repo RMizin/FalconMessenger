@@ -53,7 +53,6 @@
 	<string>To save media to photo library or select a profile photo or send media via message</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>audio</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

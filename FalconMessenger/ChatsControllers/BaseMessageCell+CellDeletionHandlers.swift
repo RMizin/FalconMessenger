@@ -14,6 +14,7 @@ struct ContextMenuItems {
   static let copyItem = "Copy"
   static let copyPreviewItem = "Copy image preview"
   static let deleteItem = "Delete for myself"
+  static let reportItem = "Report"
 }
 
 extension BaseMessageCell {
@@ -31,35 +32,34 @@ extension BaseMessageCell {
 }
   
   @objc func handleLongTap(_ longPressGesture: UILongPressGestureRecognizer) {
-    if longPressGesture.state == .began {
-      let generator = UIImpactFeedbackGenerator(style: .medium)
-      generator.impactOccurred()
-    }
+    guard longPressGesture.state == .began else { return }
+    let generator = UIImpactFeedbackGenerator(style: .medium)
+    generator.impactOccurred()
     
-    var contextMenuItems = [ContextMenuItems.copyItem, ContextMenuItems.deleteItem]
+    var contextMenuItems = [ContextMenuItems.copyItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
     let config = FTConfiguration.shared
     let expandedMenuWidth: CGFloat = 150
     let defaultMenuWidth: CGFloat = 100
     config.menuWidth = expandedMenuWidth
-
+  
     guard let indexPath = self.chatLogController?.collectionView.indexPath(for: self) else { return }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
-      contextMenuItems = [ContextMenuItems.deleteItem]
+      contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
-      contextMenuItems = [ContextMenuItems.deleteItem]
+      contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? PhotoMessageCell {
        cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       if !cell.playButton.isHidden {
-        contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
+        contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
         config.menuWidth = expandedMenuWidth
       }
     }
@@ -67,7 +67,7 @@ extension BaseMessageCell {
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
        cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       if !cell.playButton.isHidden {
-        contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
+        contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
         config.menuWidth = expandedMenuWidth
       }
     }
@@ -86,16 +86,33 @@ extension BaseMessageCell {
     }
     
     FTPopOverMenu.showForSender(sender: bubbleView, with: contextMenuItems, done: { (selectedIndex) in
-      guard contextMenuItems[selectedIndex] == ContextMenuItems.deleteItem else {
-        self.handleCopy(indexPath: indexPath)
+      
+      guard contextMenuItems[selectedIndex] != ContextMenuItems.reportItem else {
+        self.handleReport(indexPath: indexPath)
         return
       }
-      self.handleDeletion(indexPath: indexPath)
+      
+      guard contextMenuItems[selectedIndex] != ContextMenuItems.deleteItem else {
+        self.handleDeletion(indexPath: indexPath)
+        return
+      }
+      
+      self.handleCopy(indexPath: indexPath)
     }) { //completeion
      self.chatLogController?.collectionView.reloadItems(at: [indexPath])
     }
   }
   
+  fileprivate func handleReport(indexPath: IndexPath) {
+    self.chatLogController?.collectionView.reloadItems(at: [indexPath])
+    let reportAlert = ReportAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+    reportAlert.controller = chatLogController
+    reportAlert.reportedMessage = message
+    reportAlert.popoverPresentationController?.sourceView = bubbleView
+    reportAlert.popoverPresentationController?.sourceRect = CGRect(x: bubbleView.bounds.midX, y: bubbleView.bounds.maxY, width: 0, height: 0)
+    chatLogController?.present(reportAlert, animated: true, completion: nil)
+  }
+
   fileprivate func handleCopy(indexPath: IndexPath) {
     self.chatLogController?.collectionView.reloadItems(at: [indexPath])
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? PhotoMessageCell {

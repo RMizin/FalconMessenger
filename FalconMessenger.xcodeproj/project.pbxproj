@@ -26,6 +26,9 @@
 		4B2A9589205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift */; };
 		4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */; };
 		4B33693B2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */; };
+		4B3B7BAE2146F6F40060F41F /* ReportSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B7BAD2146F6F40060F41F /* ReportSender.swift */; };
+		4B3B7BB02146F7210060F41F /* ReportAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B7BAF2146F7210060F41F /* ReportAlertController.swift */; };
+		4B3B7BB32146FF620060F41F /* OtherReportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B7BB22146FF620060F41F /* OtherReportController.swift */; };
 		4B3DC3BD2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */; };
 		4B424D34213450120071913F /* BottomScrollConainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B424D33213450120071913F /* BottomScrollConainer.swift */; };
 		4B4B30FA21383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B30F921383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift */; };
@@ -237,6 +240,9 @@
 		4B2A9588205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsPictureAvatarOpenerDelegate.swift; path = ChatsControllers/GroupAdminControlsPictureAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
 		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
 		4B33693A2025014400F2A9E4 /* UserInfoPhoneNumberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoPhoneNumberTableViewCell.swift; path = ChatsControllers/UserInfoPhoneNumberTableViewCell.swift; sourceTree = "<group>"; };
+		4B3B7BAD2146F6F40060F41F /* ReportSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ReportSender.swift; path = ChatsControllers/ReportSender.swift; sourceTree = "<group>"; };
+		4B3B7BAF2146F7210060F41F /* ReportAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ReportAlertController.swift; path = ChatsControllers/ReportAlertController.swift; sourceTree = "<group>"; };
+		4B3B7BB22146FF620060F41F /* OtherReportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OtherReportController.swift; path = ChatsControllers/OtherReportController.swift; sourceTree = "<group>"; };
 		4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfileDataDatabaseUpdater.swift; path = AuthenticationControllers/UserProfileDataDatabaseUpdater.swift; sourceTree = "<group>"; };
 		4B424D33213450120071913F /* BottomScrollConainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BottomScrollConainer.swift; path = ChatsControllers/BottomScrollConainer.swift; sourceTree = "<group>"; };
 		4B4B30F921383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatLogViewControllerSupplementaryView.swift; path = ChatsControllers/ChatLogViewControllerSupplementaryView.swift; sourceTree = "<group>"; };
@@ -472,6 +478,34 @@
 				4B1A369E1F49A0BB00B4AA0A /* InputContainerView+AttachDataSource.swift */,
 			);
 			name = InputContainerView;
+			sourceTree = "<group>";
+		};
+		4B3B7BB12146FA610060F41F /* ReportSender */ = {
+			isa = PBXGroup;
+			children = (
+				4B3B7BAD2146F6F40060F41F /* ReportSender.swift */,
+				4B3B7BAF2146F7210060F41F /* ReportAlertController.swift */,
+				4B3B7BB22146FF620060F41F /* OtherReportController.swift */,
+			);
+			name = ReportSender;
+			sourceTree = "<group>";
+		};
+		4B3B7BB421470F710060F41F /* MessageFetcher */ = {
+			isa = PBXGroup;
+			children = (
+				4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */,
+				4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */,
+			);
+			name = MessageFetcher;
+			sourceTree = "<group>";
+		};
+		4B3B7BB521470F850060F41F /* SupplementaryView */ = {
+			isa = PBXGroup;
+			children = (
+				4B4B30F921383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift */,
+				4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */,
+			);
+			name = SupplementaryView;
 			sourceTree = "<group>";
 		};
 		4B4F45221F32230C00A6FF96 = {
@@ -1085,10 +1119,9 @@
 		4BC3B268212DF6850012C7BD /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				4B0FA7DB2065422600BEA090 /* MessagesFetcher.swift */,
-				4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */,
-				4B4B30F921383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift */,
-				4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */,
+				4B3B7BB421470F710060F41F /* MessageFetcher */,
+				4B3B7BB12146FA610060F41F /* ReportSender */,
+				4B3B7BB521470F850060F41F /* SupplementaryView */,
 			);
 			name = Support;
 			sourceTree = "<group>";
@@ -1512,6 +1545,7 @@
 				4B0FA7CF2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift in Sources */,
 				4B5E99DC212C6138001F067F /* InAppNotificationManager.swift in Sources */,
 				4B1058F72120979200CD6600 /* UserDefaultsManager.swift in Sources */,
+				4B3B7BB02146F7210060F41F /* ReportAlertController.swift in Sources */,
 				4B6BAFF520886C5F00A90F3A /* VerificationContainerView+Timer.swift in Sources */,
 				4BC3B262212DA6D50012C7BD /* ChatLogViewController.swift in Sources */,
 				4B5693D920CFFAAB005EAE15 /* CustomizedImageView.swift in Sources */,
@@ -1552,6 +1586,7 @@
 				4B6BB01E20886C5F00A90F3A /* ARSProgressLoader.swift in Sources */,
 				4BDB29552126C79000D77600 /* AboutTableViewController.swift in Sources */,
 				4BBF795D2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift in Sources */,
+				4B3B7BAE2146F6F40060F41F /* ReportSender.swift in Sources */,
 				4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */,
 				4BAD9758206E36AD008ADF6B /* ChangeGroupAdminController.swift in Sources */,
 				4B6BAFF220886C5F00A90F3A /* NewAdminTableViewCell.swift in Sources */,
@@ -1596,6 +1631,7 @@
 				4B5693D720CFFAAB005EAE15 /* InAppNotification.swift in Sources */,
 				4B2A9589205FDDE000FE4DF7 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift in Sources */,
 				4B1FEC1B213326860022421C /* CountriesTableViewController.swift in Sources */,
+				4B3B7BB32146FF620060F41F /* OtherReportController.swift in Sources */,
 				4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */,
 				4BEB13F31F39CE3E0048A984 /* FalconUsersTableViewCell.swift in Sources */,
 				4BBF7942213412BD00903F56 /* CountriesTableViewController+Search.swift in Sources */,
