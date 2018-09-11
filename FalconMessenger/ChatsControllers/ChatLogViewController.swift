@@ -36,6 +36,7 @@ class ChatLogViewController: UIViewController {
   
   var messagesFetcher: MessagesFetcher?
   let chatLogHistoryFetcher = ChatLogHistoryFetcher()
+  let userBlockingManager = UserBlockingManager()
 
   var membersReference: DatabaseReference!
   var membersAddingHandle: DatabaseHandle!
@@ -48,6 +49,15 @@ class ChatLogViewController: UIViewController {
   var chatAdminReference: DatabaseReference!
   var chatAdminHandle: DatabaseHandle!
   var messageChangesHandles = [(uid: String, handle: DatabaseHandle)]()
+  
+  
+  var currentUserBanReference: DatabaseReference!
+  var currentUserBanAddedHandle: DatabaseHandle!
+  var currentUserBanChangedHandle: DatabaseHandle!
+  
+  var companionBanReference: DatabaseReference!
+  var companionBanAddedHandle: DatabaseHandle!
+  var companionBanChangedHandle: DatabaseHandle!
   
   var conversation: Conversation?
   var messages = [Message]()
@@ -76,12 +86,24 @@ class ChatLogViewController: UIViewController {
     return chatInputContainerView
   }()
   
- private lazy var inputBlockerContainerView: InputBlockerContainerView = {
+  lazy var inputBlockerContainerView: InputBlockerContainerView = {
     var inputBlockerContainerView = InputBlockerContainerView()
-
     inputBlockerContainerView.backButton.addTarget(self, action: #selector(inputBlockerAction), for: .touchUpInside)
-    
+  
     return inputBlockerContainerView
+  }()
+  
+  lazy var unblockContainerView: UnblockContainerView = {
+    var unblockContainerView = UnblockContainerView()
+    unblockContainerView.backButton.addTarget(self, action: #selector(unblock), for: .touchUpInside)
+    
+    return unblockContainerView
+  }()
+  
+  lazy var userBlockedContainerView: UserBlockedContainerView = {
+    var userBlockedContainerView = UserBlockedContainerView()
+
+    return userBlockedContainerView
   }()
   
   lazy var bottomScrollConainer: BottomScrollConainer = {
@@ -90,6 +112,8 @@ class ChatLogViewController: UIViewController {
     bottomScrollConainer.isHidden = true
     return bottomScrollConainer
   }()
+  
+  
   
   @objc private func instantMoveToBottom() {
     collectionView.scrollToBottom(animated: true)
@@ -164,7 +188,7 @@ class ChatLogViewController: UIViewController {
     }
    
     if collectionView.numberOfSections == groupedMessages.count + 1 {
-      guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) as? TypingIndicatorCell else { return }
+      guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: groupedMessages.count)) as? TypingIndicatorCell else { return }
       cell.restart()
     }
   }
@@ -183,6 +207,8 @@ class ChatLogViewController: UIViewController {
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     if self.navigationController?.visibleViewController is UserInfoTableViewController ||
       self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
+       self.navigationController?.visibleViewController is OtherReportController ||
+
       UIApplication.topViewController() is CropViewController ||
       UIApplication.topViewController() is SFSafariViewController {
       return
@@ -212,6 +238,8 @@ class ChatLogViewController: UIViewController {
     if chatAdminReference != nil && chatAdminHandle != nil {
       chatAdminReference.removeObserver(withHandle: chatAdminHandle)
     }
+    
+    removeBanObservers()
     
     for element in messageChangesHandles {
       let messageID = element.uid
@@ -281,7 +309,7 @@ class ChatLogViewController: UIViewController {
     self.view = view
   }
   
-  private func reloadInputView(view: UIView) {
+  func reloadInputView(view: UIView) {
     if let currentView = self.view as? ChatLogContainerView {
       DispatchQueue.main.async {
         currentView.add(view)
@@ -440,6 +468,7 @@ class ChatLogViewController: UIViewController {
     } else {
       // regular default chat info controller
       let destination = UserInfoTableViewController()
+      destination.delegate = self
       destination.conversationID = conversation?.chatID ?? ""
       if DeviceType.isIPad {
         let navigation = UINavigationController(rootViewController: destination)
@@ -650,7 +679,7 @@ class ChatLogViewController: UIViewController {
     }
   }
   
-  fileprivate func handleTypingIndicatorAppearance(isEnabled: Bool) {
+  func handleTypingIndicatorAppearance(isEnabled: Bool) {
     if isEnabled {
       guard collectionView.numberOfSections < groupedMessages.count + 1 else { return }
       self.collectionView.performBatchUpdates ({
@@ -704,6 +733,7 @@ class ChatLogViewController: UIViewController {
         (self.navigationController?.visibleViewController is UserInfoTableViewController ||
           self.navigationController?.visibleViewController is ChatLogViewController ||
           self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
+          self.navigationController?.visibleViewController is OtherReportController ||
           UIApplication.topViewController() is CropViewController ||
           UIApplication.topViewController() is INSPhotosViewController ||
           UIApplication.topViewController() is SFSafariViewController) else { senderID = nil; return }

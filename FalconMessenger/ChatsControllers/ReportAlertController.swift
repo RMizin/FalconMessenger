@@ -11,8 +11,8 @@ import UIKit
 class ReportAlertController: UIAlertController {
 
   let reportSender = ReportSender()
-  var controller: UIViewController?
-  var reportedMessage: Message?
+  weak var controller: UIViewController?
+  weak var reportedMessage: Message?
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +33,15 @@ class ReportAlertController: UIAlertController {
         guard let sender = self.controller else { return }
         let destination = OtherReportController()
         destination.delegate = self
-        sender.navigationController?.pushViewController(destination, animated: true)
+        
+        if DeviceType.isIPad {
+          let navigation = UINavigationController(rootViewController: destination)
+          navigation.modalPresentationStyle = .popover
+          navigation.popoverPresentationController?.barButtonItem = sender.navigationItem.rightBarButtonItem
+          sender.present(navigation, animated: true, completion: nil)
+        } else {
+          sender.navigationController?.pushViewController(destination, animated: true)
+        }
       }
       
       addAction(spamAction)

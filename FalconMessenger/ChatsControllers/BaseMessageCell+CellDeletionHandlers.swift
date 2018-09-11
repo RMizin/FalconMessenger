@@ -15,12 +15,40 @@ struct ContextMenuItems {
   static let copyPreviewItem = "Copy image preview"
   static let deleteItem = "Delete for myself"
   static let reportItem = "Report"
+  
+  static func contextMenuItems(for messageType: MessageType, _ isIncludedReport: Bool) -> [String] {
+    guard isIncludedReport else {
+      return defaultMenuItems(for: messageType)
+    }
+    switch messageType {
+    case .textMessage, .photoMessage:
+      return [ContextMenuItems.copyItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+    case .videoMessage:
+      return [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+    case .voiceMessage:
+      return [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+    case .sendingMessage:
+      return  [ContextMenuItems.copyItem]
+    }
+  }
+  
+  static func defaultMenuItems(for messageType: MessageType) -> [String] {
+    switch messageType {
+    case .textMessage, .photoMessage:
+      return [ContextMenuItems.copyItem, ContextMenuItems.deleteItem]
+    case .videoMessage:
+      return [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
+    case .voiceMessage:
+      return [ContextMenuItems.deleteItem]
+    case .sendingMessage:
+      return  [ContextMenuItems.copyItem]
+    }
+  }
 }
 
 extension BaseMessageCell {
   
   func bubbleImage(currentColor: UIColor) -> UIColor {
-    
     switch currentColor {
     case ThemeManager.currentTheme().outgoingBubbleTintColor:
       return ThemeManager.currentTheme().selectedOutgoingBubbleTintColor
@@ -36,7 +64,8 @@ extension BaseMessageCell {
     let generator = UIImpactFeedbackGenerator(style: .medium)
     generator.impactOccurred()
     
-    var contextMenuItems = [ContextMenuItems.copyItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+    let isOutgoing = self.message?.fromId == Auth.auth().currentUser?.uid
+    var contextMenuItems = ContextMenuItems.contextMenuItems(for: .textMessage, !isOutgoing)
     let config = FTConfiguration.shared
     let expandedMenuWidth: CGFloat = 150
     let defaultMenuWidth: CGFloat = 100
@@ -47,19 +76,22 @@ extension BaseMessageCell {
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
-      contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+      contextMenuItems = ContextMenuItems.contextMenuItems(for: .voiceMessage, !isOutgoing)
+    //  contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if self.message?.status == messageStatusSending { return }
-      contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+        contextMenuItems = ContextMenuItems.contextMenuItems(for: .voiceMessage, !isOutgoing)
+     // contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? PhotoMessageCell {
        cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       if !cell.playButton.isHidden {
-        contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+        contextMenuItems = ContextMenuItems.contextMenuItems(for: .videoMessage, !isOutgoing)
+      //  contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
         config.menuWidth = expandedMenuWidth
       }
     }
@@ -67,7 +99,8 @@ extension BaseMessageCell {
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
        cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       if !cell.playButton.isHidden {
-        contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+        contextMenuItems = ContextMenuItems.contextMenuItems(for: .videoMessage, !isOutgoing)
+       // contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
         config.menuWidth = expandedMenuWidth
       }
     }
@@ -82,21 +115,23 @@ extension BaseMessageCell {
     
     if self.message?.messageUID == nil || self.message?.status == messageStatusSending {
       config.menuWidth = defaultMenuWidth
-      contextMenuItems = [ContextMenuItems.copyItem]
+      contextMenuItems = ContextMenuItems.contextMenuItems(for: .sendingMessage, !isOutgoing)
     }
     
     FTPopOverMenu.showForSender(sender: bubbleView, with: contextMenuItems, done: { (selectedIndex) in
       
       guard contextMenuItems[selectedIndex] != ContextMenuItems.reportItem else {
         self.handleReport(indexPath: indexPath)
+        print("handlong report")
         return
       }
       
       guard contextMenuItems[selectedIndex] != ContextMenuItems.deleteItem else {
         self.handleDeletion(indexPath: indexPath)
+        print("handling deletion")
         return
       }
-      
+      print("handling coly")
       self.handleCopy(indexPath: indexPath)
     }) { //completeion
      self.chatLogController?.collectionView.reloadItems(at: [indexPath])

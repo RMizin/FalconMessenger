@@ -21,9 +21,6 @@ class OtherReportController: UIViewController {
     textView.translatesAutoresizingMaskIntoConstraints = false
     textView.layer.cornerRadius = 30
     textView.layer.masksToBounds = true
-    textView.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
-    textView.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
-    textView.textColor = ThemeManager.currentTheme().generalTitleColor
     textView.textContainerInset = UIEdgeInsetsMake(10, 15, 10, 15)
     textView.font = UIFont.systemFont(ofSize: 18)
     
@@ -32,8 +29,8 @@ class OtherReportController: UIViewController {
   
   let reportSender = ReportSender()
   
-  var reportedMessage: Message?
-  var controller: UIViewController?
+  weak var reportedMessage: Message?
+  weak var controller: UIViewController?
   var heightAnchor: NSLayoutConstraint!
 
     override func viewDidLoad() {
@@ -42,7 +39,18 @@ class OtherReportController: UIViewController {
       configureNavigationItem()
       configureView()
       configureTextView()
+      changeTheme()
     }
+  
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+  
+  @objc fileprivate func changeTheme() {
+    textView.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
+    textView.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
+    textView.textColor = ThemeManager.currentTheme().generalTitleColor
+  }
   
   fileprivate func configureNavigationItem() {
     let sendButton = UIBarButtonItem(title: "Send", style: .done, target: self, action: #selector(send))
@@ -54,6 +62,7 @@ class OtherReportController: UIViewController {
   fileprivate func configureView() {
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     view.addSubview(textView)
+    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
   }
   
   fileprivate func configureTextView() {
@@ -75,7 +84,12 @@ class OtherReportController: UIViewController {
   
   @objc fileprivate func send() {
     textView.resignFirstResponder()
-    navigationController?.popViewController(animated: true)
+    if DeviceType.isIPad {
+      dismiss(animated: true, completion: nil)
+    } else {
+      navigationController?.popViewController(animated: true)
+    }
+
     delegate?.send(reportWith: textView.text)
   }
 }

@@ -12,6 +12,11 @@ import Firebase
 private let headerCellIdentifier = "headerCellIdentifier"
 private let phoneNumberCellIdentifier = "phoneNumberCellIdentifier"
 private let bioCellIdentifier = "bioCellIdentifier"
+private let adminControlsCellID = "adminControlsCellID"
+
+protocol UserBlockDelegate: class {
+  func blockUser(with uid: String)
+}
 
 class UserInfoTableViewController: UITableViewController {
 
@@ -30,8 +35,12 @@ class UserInfoTableViewController: UITableViewController {
 
   var userReference: DatabaseReference!
   var handle: DatabaseHandle!
-  var shouldDisplayContactAdder:Bool?
+  var shouldDisplayContactAdder: Bool?
   private var observer: NSObjectProtocol!
+  
+  weak var delegate: UserBlockDelegate?
+  
+  let adminControls = ["Block User"]
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -76,6 +85,7 @@ class UserInfoTableViewController: UITableViewController {
     tableView.separatorStyle = .none
     tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
     tableView.register(UserInfoPhoneNumberTableViewCell.self, forCellReuseIdentifier: phoneNumberCellIdentifier)
+    tableView.register(GroupAdminControlsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
   }
   
   fileprivate func getUserInfo() {
@@ -90,7 +100,7 @@ class UserInfoTableViewController: UITableViewController {
   }
 
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return 2
+    return 3
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -98,18 +108,19 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-  
     if indexPath.section == 0 {
       return 100
+    } else if indexPath.section == 2 {
+      return 130
     } else {
-      return 200
+      return 60
     }
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
    
-    let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! UserInfoPhoneNumberTableViewCell
+    let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 2)) as! UserInfoPhoneNumberTableViewCell
     
     if globalDataStorage.localPhones.contains(contactPhoneNumber.digits) {
       phoneNumberCell.add.isHidden = true
@@ -161,7 +172,7 @@ class UserInfoTableViewController: UITableViewController {
     
       return headerCell
       
-    } else {
+    } else if indexPath.section == 2 {
       let phoneNumberCell = tableView.dequeueReusableCell(withIdentifier: phoneNumberCellIdentifier,
                                                           for: indexPath) as? UserInfoPhoneNumberTableViewCell ?? UserInfoPhoneNumberTableViewCell()
       phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
@@ -190,6 +201,13 @@ class UserInfoTableViewController: UITableViewController {
       phoneNumberCell.bio.attributedText = setAttributedText(title: bioTitle, body: bioBody)
       
       return phoneNumberCell
+    } else {
+      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! GroupAdminControlsTableViewCell
+      cell.selectionStyle = .none
+      cell.title.text = adminControls[indexPath.row]
+      cell.title.textColor = FalconPalette.dismissRed
+    
+      return cell
     }
   }
   
@@ -206,5 +224,8 @@ class UserInfoTableViewController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
+    if indexPath.section == 1 {
+      delegate?.blockUser(with: conversationID)
+    }
   }
 }

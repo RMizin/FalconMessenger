@@ -37,6 +37,14 @@ struct MessageSubtitle {
   static let empty = "No messages here yet."
 }
 
+enum MessageType {
+  case textMessage
+  case photoMessage
+  case videoMessage
+  case voiceMessage
+  case sendingMessage
+}
+
 class Message: NSObject {
   
     var messageUID: String?
