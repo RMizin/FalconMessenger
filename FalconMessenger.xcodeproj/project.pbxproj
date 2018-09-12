@@ -104,6 +104,8 @@
 		4B6BB01E20886C5F00A90F3A /* ARSProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFDC20886C5E00A90F3A /* ARSProgressLoader.swift */; };
 		4B6BB01F20886C5F00A90F3A /* ARSLineProgressProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFDD20886C5E00A90F3A /* ARSLineProgressProtocols.swift */; };
 		4B6BB02320886C5F00A90F3A /* RoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */; };
+		4B790B4D214919AD00427C92 /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B790B4C214919AD00427C92 /* BlockedUsersTableViewController.swift */; };
+		4B790B4F21492E6000427C92 /* BlockUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B790B4E21492E6000427C92 /* BlockUserTableViewController.swift */; };
 		4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */; };
 		4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */; };
 		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
@@ -324,6 +326,8 @@
 		4B6BAFDC20886C5E00A90F3A /* ARSProgressLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSProgressLoader.swift; sourceTree = "<group>"; };
 		4B6BAFDD20886C5E00A90F3A /* ARSLineProgressProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressProtocols.swift; sourceTree = "<group>"; };
 		4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundProgressView.swift; sourceTree = "<group>"; };
+		4B790B4C214919AD00427C92 /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
+		4B790B4E21492E6000427C92 /* BlockUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserTableViewController.swift; sourceTree = "<group>"; };
 		4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMessageCell.swift; path = ChatsControllers/BaseMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
@@ -1167,6 +1171,8 @@
 			isa = PBXGroup;
 			children = (
 				4BDB29382126C79000D77600 /* PrivacyTableViewController.swift */,
+				4B790B4C214919AD00427C92 /* BlockedUsersTableViewController.swift */,
+				4B790B4E21492E6000427C92 /* BlockUserTableViewController.swift */,
 			);
 			path = PrivacyAndSecurity;
 			sourceTree = "<group>";
@@ -1650,6 +1656,7 @@
 				4B6BB00E20886C5F00A90F3A /* ImageCell.swift in Sources */,
 				4BDB294A2126C79000D77600 /* AccountSettingsTableViewCell.swift in Sources */,
 				4BFD07761FB08005003791D7 /* ViewPlaceholder.swift in Sources */,
+				4B790B4D214919AD00427C92 /* BlockedUsersTableViewController.swift in Sources */,
 				4BEDE4272067C77400C52EF4 /* InformationMessageCell.swift in Sources */,
 				4B6BAFEF20886C5F00A90F3A /* ThemeManager.swift in Sources */,
 				4BE8BB3B1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift in Sources */,
@@ -1676,6 +1683,7 @@
 				4B6BB00A20886C5F00A90F3A /* UIVIew+INSPhotoViewer.swift in Sources */,
 				4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */,
 				4BC9220E21394F0C0057100C /* CellPlayerView.swift in Sources */,
+				4B790B4F21492E6000427C92 /* BlockUserTableViewController.swift in Sources */,
 				4BB6D196206EA62F00FEF72E /* Message.swift in Sources */,
 				4B6BB01520886C5F00A90F3A /* FalconTextView.swift in Sources */,
 				4B6BB00020886C5F00A90F3A /* AvatarOpenerOverlay.swift in Sources */,

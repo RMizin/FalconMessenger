@@ -9,8 +9,6 @@
 import UIKit
 import Firebase
 
-
-
 class SelectParticipantsViewController: UIViewController {
   
   let falconUsersCellID = "falconUsersCellID"

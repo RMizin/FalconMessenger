@@ -149,6 +149,7 @@ class VerificationCodeController: UIViewController {
         basicErrorAlertWith(title: "Error", message: error?.localizedDescription ?? "Oops! Something happened, try again later.", controller: self)
         return
       }
+      NotificationCenter.default.post(name: .authenticationSucceeded, object: nil)
       let destination = UserProfileController()
       AppUtility.lockOrientation(.portrait)
       destination.userProfileContainerView.phone.text = self.enterVerificationContainerView.titleNumber.text

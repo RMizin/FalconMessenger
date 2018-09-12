@@ -34,15 +34,39 @@ class PrivacyTableViewController: SwitchTableViewController {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return privacyElements.count
+    if section == 1 {
+      return privacyElements.count
+    }
+    return 1
+  }
+  
+  override func numberOfSections(in tableView: UITableView) -> Int {
+    return 2
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    if indexPath.section == 1 {
+      let cell = tableView.dequeueReusableCell(withIdentifier: privacyTableViewCellID, for: indexPath) as! SwitchTableViewCell
+      cell.currentViewController = self
+      cell.setupCell(object: privacyElements[indexPath.row], index: indexPath.row)
+      
+      return cell
+    }
     
-    let cell = tableView.dequeueReusableCell(withIdentifier: privacyTableViewCellID, for: indexPath) as! SwitchTableViewCell
-    cell.currentViewController = self
-    cell.setupCell(object: privacyElements[indexPath.row], index: indexPath.row)
-   
+    let cell = tableView.dequeueReusableCell(withIdentifier: "identifier") ?? UITableViewCell(style: .default, reuseIdentifier: "identifier")
+    cell.accessoryType = .disclosureIndicator
+    cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
+    cell.textLabel?.text = "Blocked Users"
+    cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+    cell.backgroundColor = view.backgroundColor
+    
     return cell
+  }
+  
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    if indexPath.section == 0 {
+      let destination = BlockedUsersTableViewController()
+      navigationController?.pushViewController(destination, animated: true)
+    }
   }
 }

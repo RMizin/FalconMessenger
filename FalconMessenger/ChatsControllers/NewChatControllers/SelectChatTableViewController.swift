@@ -46,6 +46,7 @@ class SelectChatTableViewController: UITableViewController {
     if !globalDataStorage.falconUsers.isEmpty {
       self.viewPlaceholder.remove(from: self.view, priority: .high)
     }
+    
     if self.searchBar != nil && !self.searchBar!.isFirstResponder {
       self.setUpCollation()
     }
@@ -200,6 +201,18 @@ class SelectChatTableViewController: UITableViewController {
 
   var chatLogController: ChatLogViewController? = nil
   var messagesFetcher: MessagesFetcher? = nil
+
+ fileprivate func removeBannedUsers(users: [User]) -> [User] {
+    var users = users
+    globalDataStorage.blockedUsers.forEach { (blockedUID) in
+    guard let index = users.index(where: { (user) -> Bool in
+        return user.id == blockedUID
+    }) else { return }
+      
+      users.remove(at: index)
+    }
+    return users
+  }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
@@ -212,8 +225,9 @@ class SelectChatTableViewController: UITableViewController {
     
     if indexPath.section == 0 {
       let destination = SelectGroupMembersController()
+      let users = removeBannedUsers(users: self.users)
       destination.users = users
-      destination.filteredUsers = filteredUsers
+      destination.filteredUsers = users
       destination.setUpCollation()
       self.navigationController?.pushViewController(destination, animated: true)
     } else {

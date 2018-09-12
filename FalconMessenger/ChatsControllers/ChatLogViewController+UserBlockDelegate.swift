@@ -83,7 +83,6 @@ extension ChatLogViewController: UserBlockDelegate {
   
   fileprivate func handleBlockUI(_ isYouHasBeenBlocked: Bool, _ isYouBlockedSomebody: Bool) {
     self.reloadInputViews()
-    
     if isYouHasBeenBlocked && isYouBlockedSomebody || isYouBlockedSomebody && !isYouHasBeenBlocked {
       reloadInputView(view: unblockContainerView)
       navigationItem.rightBarButtonItem?.isEnabled = false

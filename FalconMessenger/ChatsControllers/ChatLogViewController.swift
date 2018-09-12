@@ -207,8 +207,7 @@ class ChatLogViewController: UIViewController {
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     if self.navigationController?.visibleViewController is UserInfoTableViewController ||
       self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
-       self.navigationController?.visibleViewController is OtherReportController ||
-
+      self.navigationController?.visibleViewController is OtherReportController ||
       UIApplication.topViewController() is CropViewController ||
       UIApplication.topViewController() is SFSafariViewController {
       return
