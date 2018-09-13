@@ -69,8 +69,15 @@ class OtherReportController: UIViewController {
     textView.delegate = self
     textView.becomeFirstResponder()
     textView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive = true
-    textView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
-    textView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
+ 
+    if #available(iOS 11.0, *) {
+      textView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
+      textView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
+    } else {
+      textView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
+      textView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
+    }
+  
     heightAnchor = textView.heightAnchor.constraint(equalToConstant: InputTextViewLayout.maxHeight()-10)
     heightAnchor.isActive = true
   }
