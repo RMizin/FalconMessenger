@@ -43,42 +43,40 @@ extension ChatLogViewController: UserBlockDelegate {
     
     var isYouHasBeenBlocked = false
     var isYouBlockedSomebody = false
+
+    let reference = Database.database(url: GlobalDataStorage.reportDatabaseURL).reference()
+    currentUserBanReference = reference.child("blacklists").child(currentUserID).child("banned")
+    companionBanReference = reference.child("blacklists").child(currentUserID).child("bannedBy")
+  
+    currentUserBanAddedHandle = currentUserBanReference.observe(.childAdded, with: { (snapshot) in
+      if snapshot.key == conversationID {
+        isYouBlockedSomebody = true
+        self.handleBlockUI(isYouHasBeenBlocked, isYouBlockedSomebody)
+      }
+    })
     
-    // observe if you banned somebody
-    currentUserBanReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID)
-      .child(messageMetaDataFirebaseFolder)
+    currentUserBanChangedHandle = currentUserBanReference.observe(.childRemoved, with: { (snapshot) in
+       if snapshot.key == conversationID {
+        isYouBlockedSomebody = false
+        self.handleBlockUI(isYouHasBeenBlocked, isYouBlockedSomebody)
+      }
+    })
     
-    currentUserBanAddedHandle = currentUserBanReference.observe(.childAdded) { (snapshot) in
-      guard snapshot.key == "banned" else { return }
-      guard let isBanned = snapshot.value as? Bool else { return }
-      isYouBlockedSomebody = isBanned
-      self.handleBlockUI(isYouHasBeenBlocked, isYouBlockedSomebody)
-    }
+    companionBanAddedHandle = companionBanReference.observe(.childAdded, with: { (snapshot) in
+      print("shild added \(snapshot.key)")
+      if snapshot.key == conversationID {
+        isYouHasBeenBlocked = true
+        self.handleBlockUI(isYouHasBeenBlocked, isYouBlockedSomebody)
+      }
+    })
     
-   currentUserBanChangedHandle = currentUserBanReference.observe(.childChanged) { (snapshot) in
-      guard snapshot.key == "banned" else { return }
-      guard let isBanned = snapshot.value as? Bool else { return }
-      isYouBlockedSomebody = isBanned
-      self.handleBlockUI(isYouHasBeenBlocked, isYouBlockedSomebody)
-    }
-    
-    //observe is you has been banned by somebody
-    companionBanReference = Database.database().reference().child("user-messages").child(conversationID).child(currentUserID)
-      .child(messageMetaDataFirebaseFolder)
-    
-   companionBanAddedHandle = companionBanReference.observe(.childAdded) { (snapshot) in
-      guard snapshot.key == "banned" else { return }
-      guard let isBanned = snapshot.value as? Bool else { return }
-      isYouHasBeenBlocked = isBanned
-      self.handleBlockUI(isYouHasBeenBlocked, isYouBlockedSomebody)
-    }
-    
-    companionBanChangedHandle = companionBanReference.observe(.childChanged) { (snapshot) in
-      guard snapshot.key == "banned" else { return }
-      guard let isBanned = snapshot.value as? Bool else { return }
-      isYouHasBeenBlocked = isBanned
-      self.handleBlockUI(isYouHasBeenBlocked, isYouBlockedSomebody)
-    }
+    companionBanChangedHandle = companionBanReference.observe(.childRemoved, with: { (snapshot) in
+       print("shild removed \(snapshot.key)")
+      if snapshot.key == conversationID {
+        isYouHasBeenBlocked = false
+        self.handleBlockUI(isYouHasBeenBlocked, isYouBlockedSomebody)
+      }
+    })
   }
   
   fileprivate func handleBlockUI(_ isYouHasBeenBlocked: Bool, _ isYouBlockedSomebody: Bool) {

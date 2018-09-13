@@ -20,31 +20,17 @@ class UserBlockingManager: NSObject {
   }
   
   fileprivate func changeBlockedState(to state: Bool, userID: String) {
-    guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-    ARSLineProgress.show()
-    let reference = Database.database().reference()
-      .child("user-messages").child(currentUserID).child(userID)
-      .child(messageMetaDataFirebaseFolder)//.child("banned")
-    
     if state == true {
       updateBlacklist(add: true, userID: userID)
     } else {
       updateBlacklist(remove: true, userID: userID)
-    }
-    
-    reference.updateChildValues(["banned": state]) { (error, _) in
-      guard error == nil else {
-        ARSLineProgress.showFail()
-        return
-      }
-      ARSLineProgress.hide()
     }
   }
   
   fileprivate func updateBlacklist(remove: Bool = false, add: Bool = false, userID: String) {
     guard remove != false || add != false else { return }
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-    
+    ARSLineProgress.show()
     // you banned your partner
     let currentUserBanned = Database
       .database(url: GlobalDataStorage.reportDatabaseURL).reference().child("blacklists").child(currentUserID).child("banned")
@@ -53,14 +39,32 @@ class UserBlockingManager: NSObject {
       .database(url: GlobalDataStorage.reportDatabaseURL).reference().child("blacklists").child(userID).child("bannedBy")
     
     if remove == true {
-      currentUserBanned.child(userID).removeValue()
-      companionBannedBy.child(currentUserID).removeValue()
+      let removingGroup = DispatchGroup()
+      removingGroup.enter(); removingGroup.enter()
+      removingGroup.notify(queue: .main) {
+        ARSLineProgress.hide()
+      }
+      currentUserBanned.child(userID).removeValue { (error, _) in
+        removingGroup.leave()
+      }
+      companionBannedBy.child(currentUserID).removeValue { (error, _) in
+        removingGroup.leave()
+      }
       return
     }
     
     if add == true {
-      currentUserBanned.updateChildValues([userID: userID])
-      companionBannedBy.updateChildValues([currentUserID: currentUserID])
+      let addingGroup = DispatchGroup()
+      addingGroup.enter(); addingGroup.enter()
+      addingGroup.notify(queue: .main) {
+        ARSLineProgress.hide()
+      }
+      currentUserBanned.updateChildValues([userID: userID]) { (_, _) in
+        addingGroup.leave()
+      }
+      companionBannedBy.updateChildValues([currentUserID: currentUserID]) { (_, _) in
+        addingGroup.leave()
+      }
       return
     }
   }
