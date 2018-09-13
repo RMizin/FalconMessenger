@@ -74,6 +74,14 @@ let cameraNotExistsMessage = "You don't have camera"
 let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
 let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
 
+extension UICollectionView {
+  func deselectAllItems(animated: Bool = false) {
+    for indexPath in self.indexPathsForSelectedItems ?? [] {
+      self.deselectItem(at: indexPath, animated: animated)
+    }
+  }
+}
+
 extension Array {
   public func stablePartition(by condition: (Element) throws -> Bool) rethrows -> ([Element], [Element]) {
     var indexes = Set<Int>()

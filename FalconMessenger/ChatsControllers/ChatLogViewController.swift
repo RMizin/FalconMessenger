@@ -152,7 +152,7 @@ class ChatLogViewController: UIViewController {
     }
   }
   
-  //MARK: LIFECYCLE
+  //MARK: - Lifecycle
   
   override func loadView() {
     super.loadView()
@@ -505,7 +505,7 @@ class ChatLogViewController: UIViewController {
   }
   
   
-  // MARK: Observers
+  // MARK: - Observers
   
   func observeMembersChanges() {
     
@@ -595,7 +595,7 @@ class ChatLogViewController: UIViewController {
      typingIndicatorManager?.observeChangesForGroupTypingIndicator(with: chatID)
   }
   
-  func removeSubtitleInGroupChat() {
+  fileprivate func removeSubtitleInGroupChat() {
     if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName {
       let subtitle = ""
       navigationItem.setTitle(title: title, subtitle: subtitle)
@@ -603,6 +603,8 @@ class ChatLogViewController: UIViewController {
     }
   }
   
+  
+  //MARK: - Typing indicator
   private var localTyping = false
   
   var isTyping: Bool {
@@ -717,6 +719,7 @@ class ChatLogViewController: UIViewController {
     }
   }
   
+  //MARK: - Message status
   func updateMessageStatus(messageRef: DatabaseReference) {
     
     guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else { return }
@@ -736,9 +739,20 @@ class ChatLogViewController: UIViewController {
           UIApplication.topViewController() is CropViewController ||
           UIApplication.topViewController() is INSPhotosViewController ||
           UIApplication.topViewController() is SFSafariViewController) else { senderID = nil; return }
-      messageRef.updateChildValues(["seen" : true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
+      messageRef.updateChildValues(["seen": true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
         self.resetBadgeForSelf()
       })
+    })
+  }
+  
+  fileprivate func resetBadgeForSelf() {
+    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
+    let badgeRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(messageMetaDataFirebaseFolder).child("badge")
+    badgeRef.runTransactionBlock({ (mutableData) -> TransactionResult in
+      var value = mutableData.value as? Int
+      value = 0
+      mutableData.value = value!
+      return TransactionResult.success(withValue: mutableData)
     })
   }
   
@@ -765,6 +779,8 @@ class ChatLogViewController: UIViewController {
     }
   }
   
+  
+  //MARK: - Title view
   fileprivate func configureProgressBar() {
     
     guard navigationController?.navigationBar != nil else { return }
@@ -811,6 +827,8 @@ class ChatLogViewController: UIViewController {
     onlineStatusInString = manageNavigationItemTitle(onlineStatusObject:  status)
   }
   
+  
+ 
   func configureTitleViewWithOnlineStatus() {
     
     if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs?.count {
@@ -900,388 +918,23 @@ class ChatLogViewController: UIViewController {
     }
   }
   
-  
   //MARK: Messages sending
   
   @objc func handleSend() {
-    
     guard currentReachabilityStatus != .notReachable else {
-      basicErrorAlertWith(title: "No internet", message: noInternetError, controller: self)
+      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
       return
     }
 
     isTyping = false
-    let text = inputContainerView.inputTextView.text ?? ""
-    
-    inputContainerView.inputTextView.text = ""
-    inputContainerView.confirugeHeightConstraint()
-    inputContainerView.sendButton.isEnabled = false
-    inputContainerView.placeholderLabel.isHidden = false
-    inputContainerView.inputTextView.isScrollEnabled = false
-    
-    if text != "" {
-      let properties = ["text": text]
-      handleMediaMessageSending(textMessageProperties: properties as [String : AnyObject])
-    } else {
-      handleMediaMessageSending(textMessageProperties: nil)
+    let text = inputContainerView.inputTextView.text
+    let media = inputContainerView.attachedMedia
+    if mediaPickerController != nil {
+      mediaPickerController.collectionView.deselectAllItems()
     }
-  }
-  
-  func handleMediaMessageSending(textMessageProperties: [String : AnyObject]?) {
-    
-    let textMessageIDReference = Database.database().reference().child("messages")
-    let childtextMessageIDReference = textMessageIDReference.childByAutoId()
-    
-    guard !inputContainerView.attachedMedia.isEmpty else {
-      if let unwrappedTextMessageProperties = textMessageProperties {
-        sendMessageWithProperties(unwrappedTextMessageProperties, updateLocaly: true, updateRemotely: true, childRef: childtextMessageIDReference)
-      }
-      return
-    }
-    
-    if let unwrappedTextMessageProperties = textMessageProperties {
-      sendMessageWithProperties(unwrappedTextMessageProperties, updateLocaly: true, updateRemotely: false, childRef: childtextMessageIDReference)
-    }
-    
-    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
-    
-    let attachedMedia = inputContainerView.attachedMedia
-    
-    if mediaPickerController != nil, let selected = mediaPickerController.collectionView.indexPathsForSelectedItems {
-      for indexPath in selected  { mediaPickerController.collectionView.deselectItem(at: indexPath, animated: false) }
-    }
-    
-    inputContainerView.attachedMedia.removeAll()
-    inputContainerView.attachCollectionView.reloadData()
-    inputContainerView.resetChatInputConntainerViewSettings()
-    
-    var mediaToUpload = CGFloat()
-    var progressArray = [(objectID: String, progress: Double)]()
-    var mediaMessageObjectsToSend = [(properties: [String:AnyObject], childRef: DatabaseReference)]()
-    let uploadMediaGroup = DispatchGroup()
-    
-    for mediaObject in attachedMedia {
-      uploadMediaGroup.enter()
-      let isVideoMessage = mediaObject.phAsset?.mediaType == PHAssetMediaType.video
-      guard isVideoMessage else { mediaToUpload += 1; continue }
-      mediaToUpload += 2
-    }
-    
-    uploadMediaGroup.notify(queue: DispatchQueue.main, execute: {
-      if let unwrappedTextMessageProperties = textMessageProperties {
-        self.sendMessageWithProperties(unwrappedTextMessageProperties, updateLocaly: false, updateRemotely: true, childRef: childtextMessageIDReference)
-      }
-      
-      mediaMessageObjectsToSend.forEach({ (element) in
-        self.sendMediaMessageWithProperties(element.properties, childRef: element.childRef)
-      })
-    })
-    
-    let defaultMessageStatus = messageStatusDelivered
-    
-    for attachedMedia in attachedMedia {
-      
-      let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-      let ref = Database.database().reference().child("messages")
-      let childRef = ref.childByAutoId()
-      
-      let isVoiceMessage = attachedMedia.audioObject != nil
-      let isPhotoMessage = (attachedMedia.phAsset?.mediaType == PHAssetMediaType.image || attachedMedia.phAsset == nil) && attachedMedia.audioObject == nil
-      let isVideoMessage = attachedMedia.phAsset?.mediaType == PHAssetMediaType.video
-      
-      
-      if isVoiceMessage {
-        let bae64string = attachedMedia.audioObject?.base64EncodedString()
-        let properties: [String: AnyObject] = ["voiceEncodedString": bae64string as AnyObject]
-        let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "voiceEncodedString": bae64string as AnyObject]
-        
-        reloadCollectionViewAfterSending(values: values)
-        mediaMessageObjectsToSend.append((properties: properties, childRef: childRef))
-        uploadMediaGroup.leave()
-        
-        let id = childRef.key
-        progressArray = setProgressForElement(progress: 1.0, id: id, array: progressArray)
-        updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
-        
-      } else
-        
-        if isPhotoMessage {
-          let id = childRef.key
-          let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": attachedMedia.object!.asUIImage!, "imageWidth":attachedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": attachedMedia.object!.asUIImage!.size.height as AnyObject]
-          
-          reloadCollectionViewAfterSending(values: values)
-          uploadToFirebaseStorageUsingImage(attachedMedia.object!.asUIImage!, progress: { (snapshot) in
-            if let progressCount = snapshot?.progress?.fractionCompleted {
-              progressArray = self.setProgressForElement(progress: progressCount*0.98, id: id, array: progressArray)
-              self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
-            }
-          }) { (imageURL) in
-            progressArray = self.setProgressForElement(progress: 1.0, id: id, array: progressArray)
-            self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
-            let image = attachedMedia.object!.asUIImage!
-            let properties: [String: AnyObject] = ["imageUrl": imageURL as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
-            mediaMessageObjectsToSend.append((properties: properties, childRef: childRef))
-            uploadMediaGroup.leave()
-          }
-        } else
-          
-          if isVideoMessage {
-            
-            guard let path = attachedMedia.fileURL else { return }
-            let videoId = childRef.key
-            let imageId = childRef.key + "image"
-            let valuesForVideo: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "localImage": attachedMedia.object!.asUIImage!, "imageWidth":attachedMedia.object!.asUIImage!.size.width as AnyObject, "imageHeight": attachedMedia.object!.asUIImage!.size.height as AnyObject, "localVideoUrl" : path as AnyObject]
-            
-            reloadCollectionViewAfterSending(values: valuesForVideo)
-            uploadToFirebaseStorageUsingVideo(attachedMedia.videoObject!, progress: {[unowned self] (snapshot) in
-              if let progressCount = snapshot?.progress?.fractionCompleted {
-                progressArray = self.setProgressForElement(progress: progressCount*0.98, id: videoId, array: progressArray)
-                self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
-              }
-            }) { (videoURL) in
-              progressArray = self.setProgressForElement(progress: 1.0, id: videoId, array: progressArray)
-              self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
-              
-              self.uploadToFirebaseStorageUsingImage(attachedMedia.object!.asUIImage!, progress: { [unowned self] (snapshot) in
-                
-                if let progressCount = snapshot?.progress?.fractionCompleted {
-                  progressArray = self.setProgressForElement(progress: progressCount*0.98, id: imageId, array: progressArray)
-                  self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
-                }
-                
-                }, completion: { (imageUrl) in
-                  progressArray = self.setProgressForElement(progress: 1.0, id: imageId, array: progressArray)
-                  self.updateProgressBar(array: progressArray, totalUploadsCount: mediaToUpload)
-                  let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": attachedMedia.object!.asUIImage?.size.width as AnyObject, "imageHeight": attachedMedia.object!.asUIImage?.size.height as AnyObject, "videoUrl": videoURL as AnyObject]
-                  mediaMessageObjectsToSend.append((properties: properties, childRef: childRef))
-                  uploadMediaGroup.leave()
-              })
-            }
-      }
-    }
-  }
-  
-  func setProgressForElement(progress: Double, id: String, array: [(objectID: String, progress: Double)]) -> [(objectID: String, progress: Double)] {
-    var array = array
-    guard let index = array.index(where: { (element) -> Bool in
-      return element.objectID == id
-    }) else {
-      array.insert((objectID: id, progress: progress), at: 0)
-      return array
-    }
-    array[index].progress = progress
-    return array
-  }
-  
-  fileprivate func updateProgressBar(array: [(objectID: String, progress: Double)] , totalUploadsCount: CGFloat) {
-    guard uploadProgressBar.progress < 1.0 else { return }
-    
-    let totalProgressArray = array.map({$0.progress})
-    let completedUploadsCount = totalProgressArray.reduce(0, +)
-    
-    print(completedUploadsCount/Double(totalUploadsCount))
-    let progress = completedUploadsCount/Double(totalUploadsCount)
-    
-    
-    uploadProgressBar.setProgress(Float(progress), animated: true)
-    if progress >= 0.99999 {
-      DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [unowned self] in
-        self.uploadProgressBar.setProgress(0.0, animated: false)
-      })
-    }
-  }
-  
-  func sendMediaMessageWithProperties(_ properties: [String: AnyObject], childRef: DatabaseReference) {
-    
-    let defaultMessageStatus = messageStatusDelivered
-    
-    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
-    
-    let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    
-    var values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
-    
-    properties.forEach({values[$0] = $1})
-    updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
-  }
-  
-  fileprivate func uploadToFirebaseStorageUsingImage(_ image: UIImage, progress: ((_ progress: StorageTaskSnapshot?) -> Void)? = nil, completion: @escaping (_ imageUrl: String) -> ()) {
-    let imageName = UUID().uuidString
-    let ref = Storage.storage().reference().child("messageImages").child(imageName)
-    
-    guard let uploadData = UIImageJPEGRepresentation(image, 1) else { return }
-    let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
-      guard error == nil else { return }
-      
-      ref.downloadURL(completion: { (url, error) in
-        guard error == nil, let imageURL = url else { completion(""); return }
-        completion(imageURL.absoluteString)
-      })
-    })
-    uploadTask.observe(.progress) { (progressSnap) in
-      progress!(progressSnap)
-    }
-  }
-  
-  fileprivate func uploadToFirebaseStorageUsingVideo(_ uploadData: Data, progress: ((_ progress: StorageTaskSnapshot?) -> Void)? = nil, completion: @escaping (_ videoUrl: String) -> ()) {
-    
-    let videoName = UUID().uuidString + ".mov"
-    let ref = Storage.storage().reference().child("messageMovies").child(videoName)
-    
-    let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
-      guard error == nil else { return }
-      ref.downloadURL(completion: { (url, error) in
-        guard error == nil, let videoURL = url else { completion(""); return }
-        completion(videoURL.absoluteString)
-      })
-    })
-    uploadTask.observe(.progress) { (progressSnap) in
-      progress!(progressSnap)
-    }
-  }
-  
-  fileprivate func reloadCollectionViewAfterSending(values: [String: AnyObject]) {
-    
-    var values = values
-    guard let messagesFetcher = messagesFetcher else { return }
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      values = messagesFetcher.preloadCellData(to: values, isGroupChat: true)
-    } else {
-      values = messagesFetcher.preloadCellData(to: values, isGroupChat: true)
-    }
-    
-    let message = Message(dictionary: values)
-    messages.append(message)
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
-    } else {
-      messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)
-    }
-    
-    messages.last?.status = messageStatusSending
-    
-    let oldNumberOfSections = groupedMessages.count
-    groupedMessages = Message.groupedMessages(messages)
-    guard let indexPath = Message.get(indexPathOf: message, in: groupedMessages) else { return }
-    
-    collectionView.performBatchUpdates({
-      if oldNumberOfSections < groupedMessages.count {
-        
-        collectionView.insertSections([indexPath.section])
-        
-        guard indexPath.section-1 >= 0, groupedMessages[indexPath.section-1].count-1 >= 0 else { return }
-        let previousItem = groupedMessages[indexPath.section-1].count-1
-        collectionView.reloadItems(at: [IndexPath(row: previousItem, section: indexPath.section-1)])
-      } else {
-        collectionView.insertItems(at: [indexPath])
-        let previousRow = groupedMessages[indexPath.section].count-2
-        self.collectionView.reloadItems(at: [IndexPath(row: previousRow, section: indexPath.section)])
-      }
-    }) { (_) in
-      self.collectionView.scrollToBottom(animated: true)
-    }
-  }
-  
-  fileprivate func sendMessageWithProperties(_ properties: [String: AnyObject], updateLocaly:Bool, updateRemotely:Bool, childRef: DatabaseReference ) {
-    
-    let defaultMessageStatus = messageStatusDelivered
-    
-    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
-    
-    let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    var values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp]
-    
-    properties.forEach({values[$0] = $1})
-    
-    if updateLocaly && updateRemotely {
-      reloadCollectionViewAfterSending(values: values)
-      updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
-    } else if updateLocaly && !updateRemotely {
-      reloadCollectionViewAfterSending(values: values)
-    } else if !updateLocaly && updateRemotely {
-      updateConversationsData(childRef: childRef, values: values, toId: toId, fromId: fromId)
-    }
-  }
-  
-  fileprivate func updateConversationsData(childRef: DatabaseReference, values: [String: AnyObject], toId: String, fromId: String ) {
-    
-    childRef.updateChildValues(values) { (error, ref) in
-      guard error == nil else { return }
-      let messageId = childRef.key
-      
-      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
-        
-        let groupMessagesRef = Database.database().reference().child("groupChats").child(toId).child(userMessagesFirebaseFolder)
-        groupMessagesRef.updateChildValues([messageId: fromId])
-        
-        // needed to update ui for current user as fast as possible
-        //for other members this update handled by backend
-        let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
-        userMessagesRef.updateChildValues([messageId: fromId])
-        
-        // incrementing badge for group chats handled by backend, to reduce number of write operations from device
-        
-      } else {
-        
-        let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
-        userMessagesRef.updateChildValues([messageId: fromId])
-        
-        let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(userMessagesFirebaseFolder)
-        recipientUserMessagesRef.updateChildValues([messageId: fromId])
-        
-        self.incrementBadgeForDefaultChat()
-      }
-      self.updateLastMessageForMembers()
-    }
-  }
-  
-  func incrementBadgeForDefaultChat() {
-    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid, toId != fromId else { return }
-    runTransaction(firstChild: toId, secondChild: fromId)
-  }
-  
-  func resetBadgeForSelf() {
-    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
-    let badgeRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(messageMetaDataFirebaseFolder).child("badge")
-    badgeRef.runTransactionBlock({ (mutableData) -> TransactionResult in
-      var value = mutableData.value as? Int
-      value = 0
-      mutableData.value = value!
-      return TransactionResult.success(withValue: mutableData)
-    })
-  }
-  
-  func updateLastMessageForMembers() {
-    
-    guard let fromID = Auth.auth().currentUser?.uid,let conversationID = conversation?.chatID else { return }
-    let isGroupChat = conversation?.isGroupChat ?? false
-    
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      
-      // updates only for current user
-      // for other users this update handled by Backend to reduce write operations on device
-      
-      let lastMessageQRef = Database.database().reference().child("user-messages").child(fromID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
-      lastMessageQRef.observeSingleEvent(of: .childAdded) { (snapshot) in
-        let ref = Database.database().reference().child("user-messages").child(fromID).child(conversationID).child(messageMetaDataFirebaseFolder)
-        let childValues: [String: Any] = ["lastMessageID": snapshot.key]
-        ref.updateChildValues(childValues)
-      }
-    } else {
-      guard let toID = conversation?.chatID, let uID = Auth.auth().currentUser?.uid else { return }
-      let lastMessageQORef = Database.database().reference().child("user-messages").child(uID).child(toID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
-      lastMessageQORef.observeSingleEvent(of: .childAdded) { (snapshot) in
-        let ref = Database.database().reference().child("user-messages").child(uID).child(toID).child(messageMetaDataFirebaseFolder)
-        let childValues: [String: Any] = ["chatID": toID, "lastMessageID": snapshot.key, "isGroupChat": isGroupChat/*, "chatParticipantsIDs": participantsIDs*/]
-        ref.updateChildValues(childValues)
-      }
-      
-      let lastMessageQIRef = Database.database().reference().child("user-messages").child(toID).child(uID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
-      lastMessageQIRef.observeSingleEvent(of: .childAdded) { (snapshot) in
-        let ref = Database.database().reference().child("user-messages").child(toID).child(uID).child(messageMetaDataFirebaseFolder)
-        let childValues: [String: Any] = ["chatID": uID, "lastMessageID": snapshot.key, "isGroupChat": isGroupChat/*, "chatParticipantsIDs": participantsIDs*/]
-        ref.updateChildValues(childValues)
-      }
-    }
+    inputContainerView.prepareForSend()
+    let messageSender = MessageSender(conversation, text: text, media: media)
+    messageSender.delegate = self
+    messageSender.sendMessage()
   }
 }

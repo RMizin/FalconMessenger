@@ -173,6 +173,16 @@ class InputContainerView: UIControl {
 
 extension InputContainerView {
   
+  func prepareForSend() {
+    inputTextView.text = ""
+    sendButton.isEnabled = false
+    placeholderLabel.isHidden = false
+    inputTextView.isScrollEnabled = false
+    attachedMedia.removeAll()
+    attachCollectionView.reloadData()
+    resetChatInputConntainerViewSettings()
+  }
+  
   func resetChatInputConntainerViewSettings() {
     guard attachedMedia.isEmpty else { return }
     attachCollectionView.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
