@@ -175,15 +175,15 @@ class PhoneNumberContainerView: UIView {
   }
   
   private func configureTextViewText() {
+    let font = UIFont.boldSystemFont(ofSize: 14)
+    let termsAndConditionsAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/19PQFh9LzXz1HO2Zq6U7ysCESIbGoodY6rBJbOeCyjkc/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue, NSAttributedStringKey.font: font] as [NSAttributedStringKey : Any]
     
-    let termsAndConditionsAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/19PQFh9LzXz1HO2Zq6U7ysCESIbGoodY6rBJbOeCyjkc/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue] as [NSAttributedStringKey : Any]
+    let privacyPolicyAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue, NSAttributedStringKey.font: font] as [NSAttributedStringKey : Any]
+ //and Conditions
+    let termsAttributedString = NSMutableAttributedString(string: "By signing up, you agree to the Terms of Service.", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor, NSAttributedStringKey.font: font])
+    termsAttributedString.setAttributes(termsAndConditionsAttributes, range: NSMakeRange(31, 17))
     
-    let privacyPolicyAttributes = [NSAttributedStringKey.link: URL(string: "https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing")!,NSAttributedStringKey.foregroundColor: UIColor.blue] as [NSAttributedStringKey : Any]
-
-    let termsAttributedString = NSMutableAttributedString(string: "By signing up, you agree to the Terms and Conditions of Service.", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor])
-    termsAttributedString.setAttributes(termsAndConditionsAttributes, range: NSMakeRange(31, 22))
-    
-    let privacyAttributedString = NSMutableAttributedString(string: " Also if you still have not read the Privacy Policy, please take a look before signing up.", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor])
+    let privacyAttributedString = NSMutableAttributedString(string: " Also if you still have not read the Privacy Policy, please take a look before signing up.", attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor, NSAttributedStringKey.font: font])
     privacyAttributedString.setAttributes(privacyPolicyAttributes, range: NSMakeRange(37, 14))
     termsAttributedString.append(privacyAttributedString)
     

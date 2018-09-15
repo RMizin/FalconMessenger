@@ -81,7 +81,7 @@ class Message: NSObject {
   
     var imageCellHeight: NSNumber?
   
-    var isCrooked:Bool? // local only
+    var isCrooked: Bool? // local only
   
     var senderName: String? //local only, group messages only
       
