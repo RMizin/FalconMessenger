@@ -23,6 +23,7 @@ class Conversation: NSObject {
   var pinned: Bool?
   var muted: Bool?
   var isTyping: Bool? // local only
+  var permitted: Bool?
   
   func messageText() -> String {
     
@@ -54,5 +55,6 @@ class Conversation: NSObject {
     badge = dictionary?["badge"] as? Int
     pinned = dictionary?["pinned"] as? Bool
     muted = dictionary?["muted"] as? Bool
+    permitted = dictionary?["permitted"] as? Bool
   }
 }

@@ -113,7 +113,7 @@ enum Theme: Int {
   var controlButtonsColor: UIColor {
     switch self {
     case .Default:
-      return   UIColor(red:0.94, green:0.94, blue:0.96, alpha:1.0)
+      return UIColor(red: 0.94, green: 0.94, blue: 0.96, alpha: 1.0)
     case .Dark:
       return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
     }
@@ -255,6 +255,9 @@ enum Theme: Int {
       return UIColor(red: 0.20, green: 0.20, blue: 0.20, alpha: 1.0)
     }
   }
+  
+  
+ 
   
   var incomingBubbleTextColor: UIColor {
     switch self {

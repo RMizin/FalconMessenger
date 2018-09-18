@@ -173,6 +173,7 @@
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
 		4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCE1AB91F3714A000C0EBF7 /* User.swift */; };
+		4BDB21C42150F72600609054 /* ViewBlockerContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB21C32150F72600609054 /* ViewBlockerContainer.swift */; };
 		4BDB294A2126C79000D77600 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */; };
 		4BDB294B2126C79000D77600 /* AccountSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29352126C79000D77600 /* AccountSettingsController.swift */; };
 		4BDB294C2126C79000D77600 /* PrivacyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29382126C79000D77600 /* PrivacyTableViewController.swift */; };
@@ -400,6 +401,7 @@
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
 		4BCE1AB91F3714A000C0EBF7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Model/User.swift; sourceTree = "<group>"; };
+		4BDB21C32150F72600609054 /* ViewBlockerContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewBlockerContainer.swift; path = ChatsControllers/ViewBlockerContainer.swift; sourceTree = "<group>"; };
 		4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		4BDB29352126C79000D77600 /* AccountSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsController.swift; sourceTree = "<group>"; };
 		4BDB29382126C79000D77600 /* PrivacyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyTableViewController.swift; sourceTree = "<group>"; };
@@ -1183,9 +1185,18 @@
 				4B2E59A9214AB0B70081B74E /* MessageSender */,
 				4B3B7BB421470F710060F41F /* MessageFetcher */,
 				4B3B7BB12146FA610060F41F /* ReportSender */,
+				4BDB21C22150F6C900609054 /* ViewBlocker */,
 				4B3B7BB521470F850060F41F /* SupplementaryView */,
 			);
 			name = Support;
+			sourceTree = "<group>";
+		};
+		4BDB21C22150F6C900609054 /* ViewBlocker */ = {
+			isa = PBXGroup;
+			children = (
+				4BDB21C32150F72600609054 /* ViewBlockerContainer.swift */,
+			);
+			name = ViewBlocker;
 			sourceTree = "<group>";
 		};
 		4BDB29332126C79000D77600 /* SettingsControllers */ = {
@@ -1680,6 +1691,7 @@
 				4BDB29592126CA8B00D77600 /* SwitchTableViewController.swift in Sources */,
 				4B18BACA2097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift in Sources */,
 				4BE44DA8212B3A3000E722B8 /* ContactsFetcher.swift in Sources */,
+				4BDB21C42150F72600609054 /* ViewBlockerContainer.swift in Sources */,
 				4BE8BB441FCA83D200EB35FA /* PlayerView.swift in Sources */,
 				4BDB29532126C79000D77600 /* NotificationsTableViewController.swift in Sources */,
 				4B6BAFEA20886C5F00A90F3A /* SelectedParticipantsCollectionViewCell.swift in Sources */,

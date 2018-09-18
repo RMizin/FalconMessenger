@@ -402,6 +402,43 @@ class ChatLogViewController: UIViewController {
     
     configureRefreshControlInitialTintColor()
     configureCellContextMenuView()
+    addBlockerView()
+  }
+  
+  fileprivate let blocker = ViewBlockerContainer()
+  
+  fileprivate func addBlockerView() {
+    guard let chatID = conversation?.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
+    guard chatID != currentUserID else { return }
+    let contains = globalDataStorage.falconUsers.contains { (user) -> Bool in
+      return user.id == chatID
+    }
+    
+    let permitted = conversation?.permitted ?? false
+    guard contains == false, permitted != true else { return }
+    
+    if let isGroupChat = conversation?.isGroupChat, !isGroupChat {
+      view.addSubview(blocker)
+      blocker.translatesAutoresizingMaskIntoConstraints = false
+      blocker.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+      blocker.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+      blocker.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+      blocker.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+    }
+  }
+  
+  @objc func removeBlockerView() {
+    blocker.remove(from: view)
+    guard let chatID = conversation?.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
+    Database.database().reference()
+    .child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
+    .updateChildValues(["permitted": true])
+  }
+  
+  @objc func blockAndDelete() {
+    guard let chatID = conversation?.chatID else { return }
+    userBlockingManager.blockUser(userID: chatID)
+    inputBlockerAction()
   }
   
   @objc private func changeTheme() {
