@@ -17,7 +17,7 @@ class BaseMediaMessageCell: BaseMessageCell {
     let image = UIImage(named: "play")
     button.isHidden = true
     button.setImage(image, for: .normal)
-    button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+    button.addTarget(self, action: #selector(handleZoomTap(_:)), for: .touchUpInside)
     
     return button
   }()
@@ -56,9 +56,7 @@ class BaseMediaMessageCell: BaseMessageCell {
       DispatchQueue.main.async {
         self.progressView.progress = self.messageImageView.sd_imageProgress.fractionCompleted
       }
-      
     }, completed: { (_, error, _, _) in
-      
       if error != nil {
         self.progressView.isHidden = false
         self.messageImageView.isUserInteractionEnabled = false
@@ -70,33 +68,10 @@ class BaseMediaMessageCell: BaseMessageCell {
       self.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
     })
   }
-  
-  @objc func handlePlay() {
-    
-    var url: URL! = nil
-    
-    if message?.localVideoUrl != nil {
-      let videoUrlString = message?.localVideoUrl
-      url = URL(string: videoUrlString!)
-      self.chatLogController?.performZoomInForVideo( url: url)
-      return
-    }
-    
-    if message?.videoUrl != nil {
-      let videoUrlString = message?.videoUrl
-      url =  URL(string: videoUrlString!)
-      self.chatLogController?.performZoomInForVideo( url: url)
-      return
-    }
-  }
-  
+
   @objc func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
-    if message?.videoUrl != nil || message?.localVideoUrl != nil {
-      handlePlay()
-      return
-    }
     guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
-    self.chatLogController?.openSelectedPhoto(at: indexPath)
+    self.chatLogController?.handleOpen(madiaAt: indexPath)
   }
   
   override func prepareForReuse() {

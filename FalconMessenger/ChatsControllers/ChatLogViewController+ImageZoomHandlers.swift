@@ -15,10 +15,42 @@ private var inputContainerViewWasFirstResponder = false
 
 extension ChatLogViewController {
 
-  func performZoomInForVideo( url: URL) {
-    let player = AVPlayer(url: url)
-    let inBubblePlayerViewController = AVPlayerViewController()
+  func handleOpen(madiaAt indexPath: IndexPath) {
+    let message = groupedMessages[indexPath.section][indexPath.item]
+    if message.videoUrl != nil || message.localVideoUrl != nil {
+      guard let url = urlForVideo(at: indexPath) else {
+        basicErrorAlertWith(title: "Error", message: "This video is no longer exists", controller: self);
+        return
+      }
+      let viewController = viewControllerForVideo(with: url)
+      present(viewController, animated: true, completion: nil)
+      return
+    }
+    
+    guard let viewController = openSelectedPhoto(at: indexPath) else { return }
+    present(viewController, animated: true, completion: nil)
+  }
   
+  func urlForVideo(at indexPath: IndexPath) -> URL? {
+    let message = groupedMessages[indexPath.section][indexPath.item]
+    
+    if message.localVideoUrl != nil {
+      let videoUrlString = message.localVideoUrl
+      return URL(string: videoUrlString!)
+    }
+    
+    if message.videoUrl != nil {
+      let videoUrlString = message.videoUrl
+      return URL(string: videoUrlString!)
+    }
+    
+    return nil
+  }
+  
+  func viewControllerForVideo(with url: URL) -> UIViewController {
+    let player = AVPlayer(url: url)
+    
+    let inBubblePlayerViewController = AVPlayerViewController()
     inBubblePlayerViewController.player = player
     inBubblePlayerViewController.modalTransitionStyle = .crossDissolve
     if DeviceType.isIPad {
@@ -30,7 +62,8 @@ extension ChatLogViewController {
     if self.inputContainerView.inputTextView.isFirstResponder {
       self.inputContainerView.inputTextView.resignFirstResponder()
     }
-    present(inBubblePlayerViewController, animated: true, completion: nil)
+    player.play()
+    return inBubblePlayerViewController
   }
   
   func configurePhotoToolbarInfo(for messagesWithPhotos: [Message], at photoIndex: Int) -> NSMutableAttributedString? {
@@ -58,20 +91,20 @@ extension ChatLogViewController {
     combination.append(attributedCaptionSummary)
     return combination
   }
-  
-  func openSelectedPhoto(at indexPath : IndexPath) {
+
+  func openSelectedPhoto(at indexPath: IndexPath) -> UIViewController? {
     var photos: [INSPhotoViewable] = setupPhotosData()
     var initialPhotoIndex: Int!
     
     if groupedMessages[indexPath.section][indexPath.row].localImage != nil {
-      guard let initial = photos.index(where: {$0.image == groupedMessages[indexPath.section][indexPath.row].localImage }) else { return }
+      guard let initial = photos.index(where: {$0.image == groupedMessages[indexPath.section][indexPath.row].localImage }) else { return nil }
       initialPhotoIndex = initial
     } else {
-      guard let initial = photos.index(where: {$0.messageUID == groupedMessages[indexPath.section][indexPath.row].messageUID }) else { return }
+      guard let initial = photos.index(where: {$0.messageUID == groupedMessages[indexPath.section][indexPath.row].messageUID }) else { return nil }
       initialPhotoIndex = initial
     }
     
-    guard let cell = collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return }
+    guard let cell = collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
     let currentPhoto = photos[initialPhotoIndex]
     let referenceView = cell.messageImageView
     let galleryPreview = INSPhotosViewController(photos: photos, initialPhoto: currentPhoto, referenceView: referenceView)
@@ -81,9 +114,7 @@ extension ChatLogViewController {
     inputContainerView.inputTextView.resignFirstResponder()
     galleryPreview.modalPresentationStyle = .overFullScreen
     galleryPreview.modalPresentationCapturesStatusBarAppearance = true
-    present(galleryPreview, animated: true, completion: {
-      self.inputAccessoryView?.isHidden = true
-    })
+    return galleryPreview
   }
   
   func setupPhotosData() -> [INSPhotoViewable] {

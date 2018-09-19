@@ -210,6 +210,7 @@
 		4BEDE42C2068172C00C52EF4 /* InputBlockerContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEDE42B2068172C00C52EF4 /* InputBlockerContainerView.swift */; };
 		4BF07B2F2053429F00A68023 /* FalconUsersFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF07B2E2053429F00A68023 /* FalconUsersFetcher.swift */; };
 		4BF07B312053437000A68023 /* ContactsController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF07B302053437000A68023 /* ContactsController+SearchHandlers.swift */; };
+		4BF3ABCF2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF3ABCE2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift */; };
 		4BFA878920F2270F0083C673 /* PopOverMenuConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFA878820F2270F0083C673 /* PopOverMenuConfiguration.swift */; };
 		4BFAA0D32025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */; };
 		4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */; };
@@ -438,6 +439,7 @@
 		4BEDE42B2068172C00C52EF4 /* InputBlockerContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InputBlockerContainerView.swift; path = ChatsControllers/InputBlockerContainerView.swift; sourceTree = "<group>"; };
 		4BF07B2E2053429F00A68023 /* FalconUsersFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FalconUsersFetcher.swift; path = ContactsControllers/FalconUsersFetcher.swift; sourceTree = "<group>"; };
 		4BF07B302053437000A68023 /* ContactsController+SearchHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ContactsController+SearchHandlers.swift"; path = "ContactsControllers/ContactsController+SearchHandlers.swift"; sourceTree = "<group>"; };
+		4BF3ABCE2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+PreviewingDelegate.swift"; path = "ChatsControllers/ChatLogViewController+PreviewingDelegate.swift"; sourceTree = "<group>"; };
 		4BFA878820F2270F0083C673 /* PopOverMenuConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PopOverMenuConfiguration.swift; path = ChatsControllers/PopOverMenuConfiguration.swift; sourceTree = "<group>"; };
 		4BFAA0D22025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoCreateContactTableViewController.swift; path = ChatsControllers/UserInfoCreateContactTableViewController.swift; sourceTree = "<group>"; };
 		4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactDataTableViewCell.swift; path = ChatsControllers/ContactDataTableViewCell.swift; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 				4BDFACAA2147D88D00603963 /* ChatLogViewController+UserBlockDelegate.swift */,
 				4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */,
 				4BE5712C1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift */,
+				4BF3ABCE2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift */,
 			);
 			name = "ChatLogViewController+Delegate";
 			sourceTree = "<group>";
@@ -1640,6 +1643,7 @@
 				4B6BAFF520886C5F00A90F3A /* VerificationContainerView+Timer.swift in Sources */,
 				4BC3B262212DA6D50012C7BD /* ChatLogViewController.swift in Sources */,
 				4B5693D920CFFAAB005EAE15 /* CustomizedImageView.swift in Sources */,
+				4BF3ABCF2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift in Sources */,
 				4BC3B264212DA93E0012C7BD /* ChatCollectionView.swift in Sources */,
 				4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */,
 				4B8CA9EE211C49B300E6A66C /* BubbleCircle.swift in Sources */,

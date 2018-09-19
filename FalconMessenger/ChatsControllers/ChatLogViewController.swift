@@ -372,6 +372,10 @@ class ChatLogViewController: UIViewController {
       navigationItem.largeTitleDisplayMode = .never
     }
     
+    if traitCollection.forceTouchCapability == .available {
+      registerForPreviewing(with: self, sourceView: collectionView)
+    }
+    
     collectionView.delegate = self
     collectionView.dataSource = self
     chatLogHistoryFetcher.delegate = self

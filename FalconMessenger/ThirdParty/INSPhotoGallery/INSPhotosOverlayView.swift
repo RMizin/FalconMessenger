@@ -42,7 +42,7 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
     open weak var photosViewController: INSPhotosViewController?
     private var currentPhoto: INSPhotoViewable?
     
-    private var topShadow: CAGradientLayer!
+  //  private var topShadow: CAGradientLayer!
     var bottomShadow: CAGradientLayer!
     
     var leftBarButtonItem: UIBarButtonItem? {
@@ -161,16 +161,26 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
         navigationItem = UINavigationItem(title: "")
         navigationBar.items = [navigationItem]
         addSubview(navigationBar)
-      var topConstraint: NSLayoutConstraint!
-      if #available(iOS 11.0, *) {
-         topConstraint = NSLayoutConstraint(item: navigationBar, attribute: .top, relatedBy: .equal, toItem: self.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0)
-      } else {
-         topConstraint = NSLayoutConstraint(item: navigationBar, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0)
-      }
-        let widthConstraint = NSLayoutConstraint(item: navigationBar, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0, constant: 0.0)
-        let horizontalPositionConstraint = NSLayoutConstraint(item: navigationBar, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
-        self.addConstraints([topConstraint,widthConstraint,horizontalPositionConstraint])
-        
+        if #available(iOS 11.0, *) {
+          navigationBar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        } else {
+          navigationBar.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        }
+        navigationBar.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        navigationBar.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+      
+        let safeAreaView = UINavigationBar()
+        safeAreaView.translatesAutoresizingMaskIntoConstraints = false
+        safeAreaView.alpha = navigationBar.alpha
+        safeAreaView.barTintColor = navigationBar.barTintColor
+        safeAreaView.barStyle = navigationBar.barStyle
+        safeAreaView.clipsToBounds = navigationBar.clipsToBounds
+        addSubview(safeAreaView)
+        safeAreaView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        safeAreaView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        safeAreaView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        safeAreaView.bottomAnchor.constraint(equalTo: navigationBar.topAnchor).isActive = true
+      
         if let bundlePath = Bundle(for: type(of: self)).path(forResource: "INSPhotoGallery", ofType: "bundle") {
             let bundle = Bundle(path: bundlePath)
             leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose", in: bundle, compatibleWith: nil), landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape", in: bundle, compatibleWith: nil), style: .plain, target: self, action: #selector(INSPhotosOverlayView.closeButtonTapped(_:)))
@@ -205,10 +215,10 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
         let startColor = UIColor.black.withAlphaComponent(0.8)
         let endColor = UIColor.black.withAlphaComponent(0.8)
         
-        self.topShadow = CAGradientLayer()
-        topShadow.colors = [startColor.cgColor, endColor.cgColor]
-        self.layer.insertSublayer(topShadow, at: 0)
-        
+//        self.topShadow = CAGradientLayer()
+//        topShadow.colors = [startColor.cgColor, endColor.cgColor]
+//        self.layer.insertSublayer(topShadow, at: 0)
+      
         self.bottomShadow = CAGradientLayer()
         bottomShadow.colors = [endColor.cgColor, startColor.cgColor]
         self.layer.insertSublayer(bottomShadow, at: 0)
@@ -223,10 +233,10 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
         let window = UIApplication.shared.keyWindow
         let bottomSafeArea = window?.safeAreaInsets.bottom ?? 0.0
         bottomShadow.frame = CGRect(x: 0, y: self.frame.height - 60 - bottomSafeArea, width: self.frame.width, height: 60 + bottomSafeArea)
-        topShadow.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: UIApplication.shared.statusBarFrame.size.height )
+       // topShadow.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: UIApplication.shared.statusBarFrame.size.height )
       } else {
         bottomShadow.frame = CGRect(x: 0, y: self.frame.height - 60 , width: self.frame.width, height: 60)
-        topShadow.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: 60)
+      //  topShadow.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: 60)
       }
     }
     
