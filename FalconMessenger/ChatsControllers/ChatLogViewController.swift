@@ -538,7 +538,9 @@ class ChatLogViewController: UIViewController {
   }
   
   @objc func keyboardDidHide(notification: NSNotification) {
-    inputContainerView.inputTextView.inputView = nil
+    DispatchQueue.main.async {
+      self.inputContainerView.inputTextView.inputView = nil
+    }
   }
   
   

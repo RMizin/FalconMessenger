@@ -17,6 +17,10 @@ extension ChatLogViewController {
     if inputContainerView.attachButton.isSelected || inputContainerView.recordVoiceButton.isSelected {
       inputContainerView.inputTextView.inputView = nil
       inputContainerView.inputTextView.reloadInputViews()
+      UIView.performWithoutAnimation {
+        inputContainerView.inputTextView.resignFirstResponder()
+        inputContainerView.inputTextView.becomeFirstResponder()
+      }
     } else {
       guard !inputContainerView.inputTextView.isFirstResponder else { return }
       inputContainerView.inputTextView.becomeFirstResponder()
@@ -29,7 +33,7 @@ extension ChatLogViewController {
     
     checkAuthorisationStatus()
     if mediaPickerController == nil { mediaPickerController = MediaPickerControllerNew() }
-    if  inputContainerView.attachButton.isSelected {
+    if inputContainerView.attachButton.isSelected {
       setAttachButtonSelected(isSelected: false)
     } else {
       setAttachButtonSelected(isSelected: true)
