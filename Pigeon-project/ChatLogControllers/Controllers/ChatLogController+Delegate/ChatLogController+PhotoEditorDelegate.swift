@@ -14,7 +14,7 @@ import CropViewController
 private let nibName = "PhotoEditorViewController"
 private var selectedPhotoIndexPath: IndexPath!
 
-extension ChatLogController:CropViewControllerDelegate {
+extension ChatLogController: CropViewControllerDelegate {
   
   func presentPhotoEditor(forImageAt indexPath: IndexPath) {
     guard let image = inputContainerView.selectedMedia[indexPath.row].object?.asUIImage else { return }

@@ -63,7 +63,7 @@ class BaseMessageCell: RevealableCollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func configureDeliveryStatus(at indexPath: IndexPath, lastMessageIndex: Int, message:Message ) {
+  func configureDeliveryStatus(at indexPath: IndexPath, lastMessageIndex: Int, message: Message) {
     switch indexPath.row == lastMessageIndex {
     case true:
       DispatchQueue.main.async {
@@ -83,7 +83,7 @@ class BaseMessageCell: RevealableCollectionViewCell {
     }
   }
   
-  func setupTimestampView(message: Message, isOutgoing:Bool) {
+  func setupTimestampView(message: Message, isOutgoing: Bool) {
     DispatchQueue.main.async {
       let view = self.chatLogController?.collectionView?.dequeueReusableRevealableView(withIdentifier: "timestamp") as? TimestampView ?? TimestampView()
       view.titleLabel.text = message.convertedTimestamp

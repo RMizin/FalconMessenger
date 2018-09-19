@@ -35,8 +35,8 @@ extension ChatLogController: CollectionDelegate {
     let insertionIndex = messages.insertionIndexOf(elem: message, isOrderedBefore: { (message1, message2) -> Bool in
       return Int(truncating: message1.timestamp!) < Int(truncating: message2.timestamp!)
     })
+    self.messages.insert(message, at: insertionIndex)
     self.collectionView?.performBatchUpdates ({
-      self.messages.insert(message, at: insertionIndex)
       let indexPath = IndexPath(item: insertionIndex, section: 0)
       self.collectionView?.insertItems(at: [indexPath])
       

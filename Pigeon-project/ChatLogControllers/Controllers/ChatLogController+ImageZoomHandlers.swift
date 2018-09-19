@@ -114,7 +114,7 @@ extension ChatLogController {
     return photos
   }
   
-  func setupGalleryDismissHandler(galleryPreview:INSPhotosViewController) {
+  func setupGalleryDismissHandler(galleryPreview: INSPhotosViewController) {
     
     galleryPreview.didDismissHandler = { viewController in
       self.inputAccessoryView?.isHidden = false

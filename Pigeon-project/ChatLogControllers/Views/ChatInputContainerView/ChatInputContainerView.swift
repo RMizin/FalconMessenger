@@ -221,6 +221,16 @@ class ChatInputContainerView: UIView {
 
 extension ChatInputContainerView {
   
+  func prepareForSend() {
+    inputTextView.text = ""
+    sendButton.isEnabled = false
+    placeholderLabel.isHidden = false
+    inputTextView.isScrollEnabled = false
+    selectedMedia.removeAll()
+    attachedImages.reloadData()
+    resetChatInputConntainerViewSettings()
+  }
+  
   func resetChatInputConntainerViewSettings () {
     
     if selectedMedia.count == 0 {

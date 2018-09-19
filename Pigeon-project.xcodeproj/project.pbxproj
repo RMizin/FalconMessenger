@@ -13,6 +13,11 @@
 		4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */; };
 		4B5E99DE212CC0C0001F067F /* InAppNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5E99DD212CC0C0001F067F /* InAppNotificationManager.swift */; };
 		4B5E99E0212CC0D5001F067F /* ConversationsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5E99DF212CC0D5001F067F /* ConversationsFetcher.swift */; };
+		4BA1E778215250BF00391BCB /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA1E777215250BF00391BCB /* MessageSender.swift */; };
+		4BA1E77A215250F900391BCB /* StorageMediaUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA1E779215250F900391BCB /* StorageMediaUploader.swift */; };
+		4BA1E77C2152511B00391BCB /* UploadProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA1E77B2152511B00391BCB /* UploadProgress.swift */; };
+		4BA1E77F2152518700391BCB /* ChatLogController+MessageSenderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA1E77E2152518700391BCB /* ChatLogController+MessageSenderDelegate.swift */; };
+		4BA1E7832152582F00391BCB /* ChatLogController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA1E7822152582F00391BCB /* ChatLogController+DataSource.swift */; };
 		4BAEE46421272B380045AB10 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE44E21272B380045AB10 /* AccountSettingsTableViewCell.swift */; };
 		4BAEE46521272B380045AB10 /* AccountSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE44F21272B380045AB10 /* AccountSettingsController.swift */; };
 		4BAEE46621272B380045AB10 /* PrivacyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE45221272B380045AB10 /* PrivacyTableViewController.swift */; };
@@ -85,7 +90,7 @@
 		4BAEE51021272D890045AB10 /* ChangeGroupAdminController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D021272D880045AB10 /* ChangeGroupAdminController.swift */; };
 		4BAEE51121272D890045AB10 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D121272D880045AB10 /* BaseMediaMessageCell.swift */; };
 		4BAEE51221272D890045AB10 /* UserInfoPhoneNumberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D221272D880045AB10 /* UserInfoPhoneNumberTableViewCell.swift */; };
-		4BAEE51321272D890045AB10 /* ChatLogController+PhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D321272D880045AB10 /* ChatLogController+PhotoEditor.swift */; };
+		4BAEE51321272D890045AB10 /* ChatLogController+PhotoEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D321272D880045AB10 /* ChatLogController+PhotoEditorDelegate.swift */; };
 		4BAEE51421272D890045AB10 /* VoiceRecordingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D421272D880045AB10 /* VoiceRecordingViewController.swift */; };
 		4BAEE51521272D890045AB10 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D521272D880045AB10 /* ChatLogController.swift */; };
 		4BAEE51621272D890045AB10 /* GroupAdminControlsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE4D621272D880045AB10 /* GroupAdminControlsTableViewCell.swift */; };
@@ -177,7 +182,7 @@
 		4BAEE5F6212735E50045AB10 /* AvatarOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B3212735E50045AB10 /* AvatarOpener.swift */; };
 		4BAEE5F7212735E50045AB10 /* AvatarOpenerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B4212735E50045AB10 /* AvatarOpenerOverlay.swift */; };
 		4BB46C6A2136E6F8005405BB /* ChatLogHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */; };
-		4BB46C6C2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C6B2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */; };
+		4BB46C6C2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */; };
 		4BE44DAA212B5CC600E722B8 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
@@ -204,6 +209,11 @@
 		4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralTabBarController.swift; sourceTree = "<group>"; };
 		4B5E99DD212CC0C0001F067F /* InAppNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationManager.swift; sourceTree = "<group>"; };
 		4B5E99DF212CC0D5001F067F /* ConversationsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsFetcher.swift; sourceTree = "<group>"; };
+		4BA1E777215250BF00391BCB /* MessageSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
+		4BA1E779215250F900391BCB /* StorageMediaUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageMediaUploader.swift; sourceTree = "<group>"; };
+		4BA1E77B2152511B00391BCB /* UploadProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadProgress.swift; sourceTree = "<group>"; };
+		4BA1E77E2152518700391BCB /* ChatLogController+MessageSenderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatLogController+MessageSenderDelegate.swift"; sourceTree = "<group>"; };
+		4BA1E7822152582F00391BCB /* ChatLogController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatLogController+DataSource.swift"; sourceTree = "<group>"; };
 		4BAEE44E21272B380045AB10 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		4BAEE44F21272B380045AB10 /* AccountSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsController.swift; sourceTree = "<group>"; };
 		4BAEE45221272B380045AB10 /* PrivacyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyTableViewController.swift; sourceTree = "<group>"; };
@@ -276,7 +286,7 @@
 		4BAEE4D021272D880045AB10 /* ChangeGroupAdminController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeGroupAdminController.swift; sourceTree = "<group>"; };
 		4BAEE4D121272D880045AB10 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMediaMessageCell.swift; sourceTree = "<group>"; };
 		4BAEE4D221272D880045AB10 /* UserInfoPhoneNumberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoPhoneNumberTableViewCell.swift; sourceTree = "<group>"; };
-		4BAEE4D321272D880045AB10 /* ChatLogController+PhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ChatLogController+PhotoEditor.swift"; sourceTree = "<group>"; };
+		4BAEE4D321272D880045AB10 /* ChatLogController+PhotoEditorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ChatLogController+PhotoEditorDelegate.swift"; sourceTree = "<group>"; };
 		4BAEE4D421272D880045AB10 /* VoiceRecordingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceRecordingViewController.swift; sourceTree = "<group>"; };
 		4BAEE4D521272D880045AB10 /* ChatLogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		4BAEE4D621272D880045AB10 /* GroupAdminControlsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupAdminControlsTableViewCell.swift; sourceTree = "<group>"; };
@@ -369,7 +379,7 @@
 		4BAEE5B3212735E50045AB10 /* AvatarOpener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarOpener.swift; sourceTree = "<group>"; };
 		4BAEE5B4212735E50045AB10 /* AvatarOpenerOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarOpenerOverlay.swift; sourceTree = "<group>"; };
 		4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogHistoryFetcher.swift; sourceTree = "<group>"; };
-		4BB46C6B2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatLogViewController+ChatHistoryFetcherDelegate.swift"; sourceTree = "<group>"; };
+		4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatLogController+ChatHistoryFetcherDelegate.swift"; sourceTree = "<group>"; };
 		4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsFetcher.swift; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
@@ -432,6 +442,44 @@
 				4B0FD3FD20AAF8F300A08DB1 /* GoogleService-Info.plist */,
 			);
 			path = "Pigeon-project";
+			sourceTree = "<group>";
+		};
+		4BA1E77D2152513600391BCB /* MessageSender */ = {
+			isa = PBXGroup;
+			children = (
+				4BA1E7812152580200391BCB /* Model */,
+				4BAEE4A621272D880045AB10 /* InformationMessageSender.swift */,
+				4BA1E777215250BF00391BCB /* MessageSender.swift */,
+				4BA1E779215250F900391BCB /* StorageMediaUploader.swift */,
+			);
+			path = MessageSender;
+			sourceTree = "<group>";
+		};
+		4BA1E780215255E400391BCB /* ChatLogController+Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				4BAEE4D321272D880045AB10 /* ChatLogController+PhotoEditorDelegate.swift */,
+				4BAEE4E321272D880045AB10 /* ChatLogController+CollectionDelegate.swift */,
+				4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */,
+				4BA1E77E2152518700391BCB /* ChatLogController+MessageSenderDelegate.swift */,
+			);
+			path = "ChatLogController+Delegate";
+			sourceTree = "<group>";
+		};
+		4BA1E7812152580200391BCB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4BA1E77B2152511B00391BCB /* UploadProgress.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4BA1E784215259A900391BCB /* ChatLogController+DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				4BA1E7822152582F00391BCB /* ChatLogController+DataSource.swift */,
+			);
+			path = "ChatLogController+DataSource";
 			sourceTree = "<group>";
 		};
 		4BAEE44D21272B380045AB10 /* SettingsControllers */ = {
@@ -631,13 +679,13 @@
 		4BAEE4AD21272D880045AB10 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4BA1E77D2152513600391BCB /* MessageSender */,
+				4BA1E780215255E400391BCB /* ChatLogController+Delegate */,
+				4BA1E784215259A900391BCB /* ChatLogController+DataSource */,
 				4BAEE4D521272D880045AB10 /* ChatLogController.swift */,
-				4BB46C6B2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */,
-				4BAEE4D321272D880045AB10 /* ChatLogController+PhotoEditor.swift */,
 				4BAEE4BC21272D880045AB10 /* ChatLogController+ImageZoomHandlers.swift */,
 				4BAEE4BA21272D880045AB10 /* ChatLogController+MediaPickerHandlers.swift */,
 				4BAEE4E021272D880045AB10 /* ChatLogController+VoiceRecordingHandlers.swift */,
-				4BAEE4E321272D880045AB10 /* ChatLogController+CollectionDelegate.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1140,7 +1188,6 @@
 		4BE87E5F21275369000FC3BC /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				4BAEE4A621272D880045AB10 /* InformationMessageSender.swift */,
 				4BAEE4B821272D880045AB10 /* MessagesFetcher.swift */,
 				4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */,
 			);
@@ -1328,9 +1375,10 @@
 				4BAEE5C6212735E50045AB10 /* ARSLineProgress.swift in Sources */,
 				4BAEE50121272D890045AB10 /* OutgoingPhotoMessageCell.swift in Sources */,
 				4BAEE50F21272D890045AB10 /* PlayerCellView.swift in Sources */,
-				4BB46C6C2136E71F005405BB /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */,
+				4BB46C6C2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift in Sources */,
 				4B5E99DE212CC0C0001F067F /* InAppNotificationManager.swift in Sources */,
 				4BAEE5D1212735E50045AB10 /* SelectedParticipantsCollectionView.swift in Sources */,
+				4BA1E77C2152511B00391BCB /* UploadProgress.swift in Sources */,
 				4BAEE5D7212735E50045AB10 /* AnnouncementFactory.swift in Sources */,
 				4BAEE5EF212735E50045AB10 /* RevealableCollectionViewCell.swift in Sources */,
 				4BAEE4F621272D890045AB10 /* GroupPictureAvatarOpenerDelegate.swift in Sources */,
@@ -1340,11 +1388,13 @@
 				4BAEE46421272B380045AB10 /* AccountSettingsTableViewCell.swift in Sources */,
 				4BAEE49721272C5E0045AB10 /* FalconUsersFetcher.swift in Sources */,
 				4BAEE48521272C4F0045AB10 /* AuthVerificationController.swift in Sources */,
+				4BA1E7832152582F00391BCB /* ChatLogController+DataSource.swift in Sources */,
 				4BAEE5E5212735E50045AB10 /* EnterVerificationCodeController.swift in Sources */,
 				4BAEE49B21272C5E0045AB10 /* ContactsDetailController.swift in Sources */,
 				4BAEE46B21272B380045AB10 /* SwitchTableViewController.swift in Sources */,
 				4BAEE48421272C4F0045AB10 /* AuthPhoneNumberController.swift in Sources */,
 				4BAEE50B21272D890045AB10 /* UserCell+ConfigureCell.swift in Sources */,
+				4BA1E77A215250F900391BCB /* StorageMediaUploader.swift in Sources */,
 				4BAEE48721272C4F0045AB10 /* OnboardingContainerView.swift in Sources */,
 				4BAEE5CE212735E50045AB10 /* SelectParticipantsViewController+SearchHandlers.swift in Sources */,
 				4BAEE5C8212735E50045AB10 /* ARSLineProgressCustomization.swift in Sources */,
@@ -1404,6 +1454,7 @@
 				4BAEE5D9212735E50045AB10 /* ActionCell.swift in Sources */,
 				4BAEE5F5212735E50045AB10 /* NavigationItemActivityIndicator.swift in Sources */,
 				4BAEE51C21272D890045AB10 /* BaseMessageCell+CellDeletionHandlers.swift in Sources */,
+				4BA1E778215250BF00391BCB /* MessageSender.swift in Sources */,
 				4BAEE4F021272D890045AB10 /* AddGroupMembersController.swift in Sources */,
 				4BAEE51D21272D890045AB10 /* BaseMessageCell.swift in Sources */,
 				4BAEE5D4212735E50045AB10 /* UIView+Extensions.swift in Sources */,
@@ -1428,7 +1479,7 @@
 				4BAEE5B8212735E50045AB10 /* INSPhotosInteractionAnimator.swift in Sources */,
 				4BAEE5EA212735E50045AB10 /* Country.swift in Sources */,
 				4BAEE4FE21272D890045AB10 /* OutgoingVoiceMessageCell.swift in Sources */,
-				4BAEE51321272D890045AB10 /* ChatLogController+PhotoEditor.swift in Sources */,
+				4BAEE51321272D890045AB10 /* ChatLogController+PhotoEditorDelegate.swift in Sources */,
 				4BAEE4EF21272D890045AB10 /* IncomingPhotoMessageCell.swift in Sources */,
 				4BAEE5F7212735E50045AB10 /* AvatarOpenerOverlay.swift in Sources */,
 				4BAEE4EC21272D890045AB10 /* UserInfoCreateContactTableViewController.swift in Sources */,
@@ -1464,6 +1515,7 @@
 				4BAEE5BD212735E50045AB10 /* INSPhoto.swift in Sources */,
 				4BAEE49921272C5E0045AB10 /* ContactsController+SearchHandlers.swift in Sources */,
 				4BAEE5CF212735E50045AB10 /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
+				4BA1E77F2152518700391BCB /* ChatLogController+MessageSenderDelegate.swift in Sources */,
 				4BB46C6A2136E6F8005405BB /* ChatLogHistoryFetcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

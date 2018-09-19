@@ -17,6 +17,10 @@ extension ChatLogController {
     if inputContainerView.attachButton.isSelected || inputContainerView.recordVoiceButton.isSelected {
       self.inputContainerView.inputTextView.inputView = nil
       self.inputContainerView.inputTextView.reloadInputViews()
+      UIView.performWithoutAnimation {
+        self.inputContainerView.inputTextView.resignFirstResponder()
+        self.inputContainerView.inputTextView.becomeFirstResponder()
+      }
     } else {
       UIView.performWithoutAnimation {
         self.inputContainerView.inputTextView.inputView = nil
@@ -76,5 +80,4 @@ extension ChatLogController {
       }
     }
   }
-
 }

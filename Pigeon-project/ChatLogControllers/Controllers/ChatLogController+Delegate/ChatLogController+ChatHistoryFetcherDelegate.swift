@@ -1,5 +1,5 @@
 //
-//  ChatLogViewController+ChatHistoryFetcherDelegate.swift
+//  ChatLogController+ChatHistoryFetcherDelegate.swift
 //  Pigeon-project
 //
 //  Created by Roman Mizin on 8/29/18.
