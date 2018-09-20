@@ -9,9 +9,10 @@
 import UIKit
 import Firebase
 
+
 class ReportSender: NSObject {
-  
-  func sendReport(_ description: String?, _ controller: UIViewController?, _ message: Message?) {
+
+  func sendReport(_ description: String?, _ controller: UIViewController?, _ message: Message?, _ indexPath: IndexPath? = nil, _ cell: BaseMessageCell? = nil) {
     
     guard let controller = controller else { return }
     ARSLineProgress.show()
@@ -34,7 +35,10 @@ class ReportSender: NSObject {
         basicErrorAlertWith(title: "Error", message: error?.localizedDescription ?? "Try again later", controller: controller)
         return
       }
-      ARSLineProgress.showSuccess()
+       ARSLineProgress.hide()
+       basicErrorAlertWith(title: "Your report has bees sent", message: "We will review your report and react as soon as possible", controller: controller)
+      guard let indexPath = indexPath , let cell = cell else { return }
+      cell.handleDeletion(indexPath: indexPath)
     }
   }
 }

@@ -20,6 +20,7 @@ func setUserNotificationToken(token: String) {
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
   var window: UIWindow?
+  var tabBarController: GeneralTabBarController?
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
   
@@ -30,22 +31,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   
     userDefaults.configureInitialLaunch()
     
-    let tabBarController = GeneralTabBarController()
+    tabBarController = GeneralTabBarController()
     let detailViewController = SplitPlaceholderViewController()
     let splitViewController = SplitViewController()
-    splitViewController.viewControllers = [tabBarController, detailViewController]
+    splitViewController.viewControllers = [tabBarController, detailViewController] as! [UIViewController]
     window = UIWindow(frame: UIScreen.main.bounds)
     if DeviceType.isIPad {
       window?.rootViewController = splitViewController
     } else { //nesessary to disable split screen on iPhones+
-      let navigationController = UINavigationController(rootViewController: tabBarController)
+      let navigationController = UINavigationController(rootViewController: tabBarController ?? UIViewController())
       navigationController.navigationBar.isHidden = true
       window?.rootViewController = navigationController
     }
   
     window?.makeKeyAndVisible()
     window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    tabBarController.presentOnboardingController()
+    tabBarController?.presentOnboardingController()
 
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self

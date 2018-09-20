@@ -142,6 +142,7 @@ extension BaseMessageCell {
     self.chatLogController?.collectionView.reloadItems(at: [indexPath])
     let reportAlert = ReportAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     reportAlert.controller = chatLogController
+    reportAlert.indexPath = indexPath
     reportAlert.reportedMessage = message
     reportAlert.popoverPresentationController?.sourceView = bubbleView
     reportAlert.popoverPresentationController?.sourceRect = CGRect(x: bubbleView.bounds.midX, y: bubbleView.bounds.maxY, width: 0, height: 0)
@@ -173,7 +174,7 @@ extension BaseMessageCell {
     }
   }
   
-  fileprivate func handleDeletion(indexPath: IndexPath) {
+  func handleDeletion(indexPath: IndexPath) {
     guard let uid = Auth.auth().currentUser?.uid, let partnerID = self.message?.chatPartnerId(), let messageID = self.message?.messageUID, self.currentReachabilityStatus != .notReachable else {
       self.chatLogController?.collectionView.reloadItems(at: [indexPath])
       guard let controllerToDisplayOn = self.chatLogController else { return }
@@ -183,7 +184,7 @@ extension BaseMessageCell {
     
     var deletionReference: DatabaseReference!
     
-    if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
+    if let isGroupChat = self.chatLogController?.conversation?.isGroupChat, isGroupChat {
       guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
       deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(userMessagesFirebaseFolder).child(messageID)
     } else {

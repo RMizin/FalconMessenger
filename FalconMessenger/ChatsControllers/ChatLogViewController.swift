@@ -32,22 +32,14 @@ class ChatLogViewController: UIViewController {
   
   weak var deleteAndExitDelegate: DeleteAndExitDelegate?
   
-  weak var typingIndicatorManager: TypingIndicatorManager?
-  
   var messagesFetcher: MessagesFetcher?
   let chatLogHistoryFetcher = ChatLogHistoryFetcher()
   let userBlockingManager = UserBlockingManager()
+  let groupMembersManager = GroupMembersManager()
 
-  var membersReference: DatabaseReference!
-  var membersAddingHandle: DatabaseHandle!
-  var membersRemovingHandle: DatabaseHandle!
   var typingIndicatorReference: DatabaseReference!
   var typingIndicatorHandle: DatabaseHandle!
   var userStatusReference: DatabaseReference!
-  var chatNameReference: DatabaseReference!
-  var chatNameHandle: DatabaseHandle!
-  var chatAdminReference: DatabaseReference!
-  var chatAdminHandle: DatabaseHandle!
   var messageChangesHandles = [(uid: String, handle: DatabaseHandle)]()
   
   
@@ -222,21 +214,7 @@ class ChatLogViewController: UIViewController {
       userStatusReference.removeObserver(withHandle: userHandler)
     }
     
-    if membersReference != nil && membersAddingHandle != nil {
-      membersReference.removeObserver(withHandle: membersAddingHandle)
-    }
-    
-    if membersReference != nil && membersRemovingHandle != nil {
-      membersReference.removeObserver(withHandle: membersRemovingHandle)
-    }
-    
-    if chatNameReference != nil && chatNameHandle != nil {
-      chatNameReference.removeObserver(withHandle: chatNameHandle)
-    }
-    
-    if chatAdminReference != nil && chatAdminHandle != nil {
-      chatAdminReference.removeObserver(withHandle: chatAdminHandle)
-    }
+    groupMembersManager.removeAllObservers()
     
     removeBanObservers()
     
@@ -347,6 +325,7 @@ class ChatLogViewController: UIViewController {
   
   @objc func closeChatLog() {
     splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
+    chatLogPresenter.deallocate()
   }
   
   private func setupBottomScrollButton() {
@@ -379,6 +358,8 @@ class ChatLogViewController: UIViewController {
     collectionView.delegate = self
     collectionView.dataSource = self
     chatLogHistoryFetcher.delegate = self
+    groupMembersManager.delegate = self
+    groupMembersManager.observeMembersChanges(conversation)
     
     if DeviceType.isIPad {
       addIPadCloseButton()
@@ -544,105 +525,6 @@ class ChatLogViewController: UIViewController {
   @objc func keyboardDidHide(notification: NSNotification) {
     DispatchQueue.main.async {
       self.inputContainerView.inputTextView.inputView = nil
-    }
-  }
-  
-  
-  // MARK: - Observers
-  
-  func observeMembersChanges() {
-    
-    guard let chatID = conversation?.chatID else { return }
-    
-    chatNameReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatName")
-    chatNameHandle = chatNameReference.observe(.value, with: { (snapshot) in
-      guard let newName = snapshot.value as? String else { return }
-      self.conversation?.chatName = newName
-      if self.isCurrentUserMemberOfCurrentGroup() {
-        self.configureTitleViewWithOnlineStatus()
-      }
-    })
-    
-    chatAdminReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("admin")
-    chatAdminHandle = chatAdminReference.observe(.value, with: { (snapshot) in
-      guard let newAdmin = snapshot.value as? String else { return }
-      self.conversation?.admin = newAdmin
-    })
-    
-    membersReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
-    membersAddingHandle = membersReference.observe(.childAdded) { (snapshot) in
-      guard let id = snapshot.value as? String, let members = self.conversation?.chatParticipantsIDs else { return }
-      
-      if let _ = members.index(where: { (memberID) -> Bool in
-        return memberID == id }) {
-      } else {
-        self.conversation?.chatParticipantsIDs?.append(id)
-        self.changeUIAfterChildAddedIfNeeded()
-      }
-    }
-    
-    membersRemovingHandle = membersReference.observe(.childRemoved) { (snapshot) in
-      guard let id = snapshot.value as? String, let members = self.conversation?.chatParticipantsIDs else { return }
-      
-      guard let memberIndex = members.index(where: { (memberID) -> Bool in
-        return memberID == id
-      }) else { return }
-      self.conversation?.chatParticipantsIDs?.remove(at: memberIndex)
-      self.changeUIAfterChildRemovedIfNeeded()
-    }
-  }
-  
-  func isCurrentUserMemberOfCurrentGroup() -> Bool {
-    guard let membersIDs = conversation?.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) else { return false }
-    return true
-  }
-  
-  func changeUIAfterChildAddedIfNeeded() {
-    if isCurrentUserMemberOfCurrentGroup() {
-      configureTitleViewWithOnlineStatus()
-      if typingIndicatorReference == nil {
-        reloadInputViews()
-        reloadInputView(view: inputContainerView)
-        observeTypingIndicator()
-        addChatsControllerTypingObserver()
-        navigationItem.rightBarButtonItem?.isEnabled = true
-      }
-    }
-  }
-  
-  func changeUIAfterChildRemovedIfNeeded() {
-    if isCurrentUserMemberOfCurrentGroup() {
-      configureTitleViewWithOnlineStatus()
-    } else {
-      inputContainerView.inputTextView.resignFirstResponder()
-      handleTypingIndicatorAppearance(isEnabled: false)
-      removeSubtitleInGroupChat()
-      reloadInputViews()
-      reloadInputView(view: inputBlockerContainerView)
-      removeChatsControllerTypingObserver()
-      navigationItem.rightBarButtonItem?.isEnabled = false
-      if typingIndicatorReference != nil { typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle); typingIndicatorReference = nil }
-      guard DeviceType.isIPad else { return }
-      presentedViewController?.dismiss(animated: true, completion: nil)
-    }
-  }
-  
-  fileprivate func removeChatsControllerTypingObserver() {
-    guard let chatID = conversation?.chatID else { return }
-    typingIndicatorManager?.removeTypingIndicator(for: chatID)
-  }
-  
-  fileprivate func addChatsControllerTypingObserver() {
-     guard let chatID = conversation?.chatID else { return }
-     typingIndicatorManager?.observeChangesForDefaultTypingIndicator(with: chatID)
-     typingIndicatorManager?.observeChangesForGroupTypingIndicator(with: chatID)
-  }
-  
-  fileprivate func removeSubtitleInGroupChat() {
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName {
-      let subtitle = ""
-      navigationItem.setTitle(title: title, subtitle: subtitle)
-      return
     }
   }
   

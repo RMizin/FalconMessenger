@@ -199,9 +199,6 @@ class SelectChatTableViewController: UITableViewController {
     return cell
   }
 
-  var chatLogController: ChatLogViewController? = nil
-  var messagesFetcher: MessagesFetcher? = nil
-
  fileprivate func removeBannedUsers(users: [User]) -> [User] {
     var users = users
     globalDataStorage.blockedUsers.forEach { (blockedUID) in
@@ -215,14 +212,6 @@ class SelectChatTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
-    if chatLogController != nil && DeviceType.isIPad { //bugfix
-      chatLogController?.closeChatLog()
-      chatLogController = nil
-      messagesFetcher?.delegate = nil
-      messagesFetcher = nil
-    }
-    
     if indexPath.section == 0 {
       let destination = SelectGroupMembersController()
       let users = removeBannedUsers(users: self.users)
@@ -232,7 +221,6 @@ class SelectChatTableViewController: UITableViewController {
       self.navigationController?.pushViewController(destination, animated: true)
     } else {
       let falconUser = filteredUsersWithSection[indexPath.section][indexPath.row]
-      
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
       let conversationDictionary: [String: AnyObject] = ["chatID": falconUser.id as AnyObject, "chatName": falconUser.name as AnyObject,
                                                          "isGroupChat": false  as AnyObject,
@@ -241,41 +229,7 @@ class SelectChatTableViewController: UITableViewController {
                                                          "chatParticipantsIDs": [falconUser.id, currentUserID] as AnyObject]
       
       let conversation = Conversation(dictionary: conversationDictionary)
-      chatLogController = ChatLogViewController()
-      messagesFetcher = MessagesFetcher()
-      messagesFetcher?.delegate = self
-      messagesFetcher?.loadMessagesData(for: conversation)
+      chatLogPresenter.open(conversation)
     }
-  }
-}
-
-extension SelectChatTableViewController: MessagesDelegate {
-  
-  func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
-    chatLogController?.updateMessageStatus(messageRef: reference)
-  }
-  
-  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-    chatLogController?.hidesBottomBarWhenPushed = true
-    chatLogController?.messagesFetcher = messagesFetcher
-    chatLogController?.messages = messages
-    chatLogController?.conversation = conversation
-    chatLogController?.groupedMessages = Message.groupedMessages(messages)
-    chatLogController?.observeTypingIndicator()
-    chatLogController?.configureTitleViewWithOnlineStatus()
-    chatLogController?.observeBlockChanges()
-    chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
-    guard let destination = chatLogController else { return }
-    
-    if DeviceType.isIPad {
-      let navigationController = UINavigationController(rootViewController: destination)
-      splitViewController?.showDetailViewController(navigationController, sender: self)
-    } else {
-      navigationController?.pushViewController(destination, animated: true)
-      chatLogController = nil
-      messagesFetcher?.delegate = nil
-      messagesFetcher = nil
-    }
-    deselectItem()
   }
 }

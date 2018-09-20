@@ -118,6 +118,9 @@
 		4B80BE372130217100A32E01 /* ChatLogViewControllerTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */; };
 		4B86C0C620513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B86C0C520513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift */; };
 		4B88F2DA206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B88F2D9206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift */; };
+		4B8CA13D2153C6EC009F8AA3 /* ChatLogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA13C2153C6EC009F8AA3 /* ChatLogPresenter.swift */; };
+		4B8CA13F215405B5009F8AA3 /* GroupMembersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA13E215405B5009F8AA3 /* GroupMembersManager.swift */; };
+		4B8CA141215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA140215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift */; };
 		4B8CA9EB211C49B300E6A66C /* TypingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA9E7211C49B200E6A66C /* TypingIndicator.swift */; };
 		4B8CA9EC211C49B300E6A66C /* TypingBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA9E8211C49B200E6A66C /* TypingBubble.swift */; };
 		4B8CA9EE211C49B300E6A66C /* BubbleCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA9EA211C49B200E6A66C /* BubbleCircle.swift */; };
@@ -346,6 +349,9 @@
 		4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogViewControllerTitleView.swift; path = ChatsControllers/ChatLogViewControllerTitleView.swift; sourceTree = "<group>"; };
 		4B86C0C520513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SelectChatTableViewController+SearchHandlers.swift"; path = "ChatsControllers/NewChatControllers/SelectChatTableViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
 		4B88F2D9206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "GroupAdminControlsTableViewController+NameEditing.swift"; path = "ChatsControllers/GroupAdminControlsTableViewController+NameEditing.swift"; sourceTree = "<group>"; };
+		4B8CA13C2153C6EC009F8AA3 /* ChatLogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogPresenter.swift; path = ChatsControllers/ChatLogPresenter.swift; sourceTree = "<group>"; };
+		4B8CA13E215405B5009F8AA3 /* GroupMembersManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupMembersManager.swift; path = ChatsControllers/GroupMembersManager.swift; sourceTree = "<group>"; };
+		4B8CA140215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+GroupMembersDelegate.swift"; path = "ChatsControllers/ChatLogViewController+GroupMembersDelegate.swift"; sourceTree = "<group>"; };
 		4B8CA9E7211C49B200E6A66C /* TypingIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingIndicator.swift; sourceTree = "<group>"; };
 		4B8CA9E8211C49B200E6A66C /* TypingBubble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingBubble.swift; sourceTree = "<group>"; };
 		4B8CA9EA211C49B200E6A66C /* BubbleCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleCircle.swift; sourceTree = "<group>"; };
@@ -532,6 +538,7 @@
 				4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */,
 				4BE5712C1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift */,
 				4BF3ABCE2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift */,
+				4B8CA140215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift */,
 			);
 			name = "ChatLogViewController+Delegate";
 			sourceTree = "<group>";
@@ -955,6 +962,16 @@
 			name = Base;
 			sourceTree = "<group>";
 		};
+		4B8CA145215433AD009F8AA3 /* Suppoet */ = {
+			isa = PBXGroup;
+			children = (
+				4B5E99D9212C42F6001F067F /* ConversationsFetcher.swift */,
+				4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */,
+				4B5E99DB212C6138001F067F /* InAppNotificationManager.swift */,
+			);
+			name = Suppoet;
+			sourceTree = "<group>";
+		};
 		4B8CA9E6211C49B200E6A66C /* TypingIndicator */ = {
 			isa = PBXGroup;
 			children = (
@@ -1185,6 +1202,8 @@
 		4BC3B268212DF6850012C7BD /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4B8CA13C2153C6EC009F8AA3 /* ChatLogPresenter.swift */,
+				4B8CA13E215405B5009F8AA3 /* GroupMembersManager.swift */,
 				4B2E59A9214AB0B70081B74E /* MessageSender */,
 				4B3B7BB421470F710060F41F /* MessageFetcher */,
 				4B3B7BB12146FA610060F41F /* ReportSender */,
@@ -1335,14 +1354,12 @@
 		4BE72A6E204E9DC4009A22EA /* ChatsControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4B8CA145215433AD009F8AA3 /* Suppoet */,
 				4BE72A77204E9EC2009A22EA /* Cells */,
 				4BBBCBFA205851E100926800 /* ChatsTableViewController.swift */,
 				4BFBB107208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift */,
 				4BBBCBFC2058804900926800 /* ChatsTableViewController+SearchHandlers.swift */,
 				4BBBCC0020588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift */,
-				4B5E99D9212C42F6001F067F /* ConversationsFetcher.swift */,
-				4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */,
-				4B5E99DB212C6138001F067F /* InAppNotificationManager.swift */,
 			);
 			name = ChatsControllers;
 			sourceTree = "<group>";
@@ -1627,6 +1644,7 @@
 				4B6BB01D20886C5F00A90F3A /* ARSStatus.swift in Sources */,
 				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */,
+				4B8CA13D2153C6EC009F8AA3 /* ChatLogPresenter.swift in Sources */,
 				4B6BB01A20886C5F00A90F3A /* ARSLineProgress.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
 				4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */,
@@ -1749,6 +1767,7 @@
 				4B790B4F21492E6000427C92 /* BlockUserTableViewController.swift in Sources */,
 				4BB6D196206EA62F00FEF72E /* Message.swift in Sources */,
 				4B6BB01520886C5F00A90F3A /* FalconTextView.swift in Sources */,
+				4B8CA13F215405B5009F8AA3 /* GroupMembersManager.swift in Sources */,
 				4B6BB00020886C5F00A90F3A /* AvatarOpenerOverlay.swift in Sources */,
 				4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */,
 				4BBF79402133727100903F56 /* CountriesFetcher.swift in Sources */,
@@ -1769,6 +1788,7 @@
 				4BF07B2F2053429F00A68023 /* FalconUsersFetcher.swift in Sources */,
 				4B2143081F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift in Sources */,
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
+				4B8CA141215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift in Sources */,
 				4B6BB00F20886C5F00A90F3A /* AnimationController.swift in Sources */,
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,
 				4BC3B25D212DA10A0012C7BD /* KeyboardFrameObserver.swift in Sources */,

@@ -226,20 +226,8 @@ class ContactsController: UITableViewController {
       }
     }
 
-    var chatLogController: ChatLogViewController? = nil
-    var messagesFetcher: MessagesFetcher? = nil
-  
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-      
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-      
-      if chatLogController != nil && DeviceType.isIPad { //bugfix
-        chatLogController?.closeChatLog()
-        chatLogController = nil
-        messagesFetcher?.delegate = nil
-        messagesFetcher = nil
-      }
-      
       if indexPath.section == 0 {
      
         let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
@@ -247,14 +235,9 @@ class ContactsController: UITableViewController {
                                                           "chatParticipantsIDs": [currentUserID] as AnyObject]
         
         let conversation = Conversation(dictionary: conversationDictionary)
-        chatLogController = ChatLogViewController()
-        
-        messagesFetcher = MessagesFetcher()
-        messagesFetcher?.delegate = self
-        messagesFetcher?.loadMessagesData(for: conversation)
-      }
-      
-      if indexPath.section == 1 {
+        chatLogPresenter.open(conversation)
+
+      } else if indexPath.section == 1 {
         let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject,
                                                            "chatName": filteredUsers[indexPath.row].name as AnyObject,
                                                            "isGroupChat": false  as AnyObject,
@@ -262,14 +245,10 @@ class ContactsController: UITableViewController {
                                                            "chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
                                                            "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
         
-        let conversation = Conversation(dictionary: conversationDictionary)
-        chatLogController = ChatLogViewController()
-        messagesFetcher = MessagesFetcher()
-        messagesFetcher?.delegate = self
-        messagesFetcher?.loadMessagesData(for: conversation)
-      }
-    
-      if indexPath.section == 2 {
+       let conversation = Conversation(dictionary: conversationDictionary)
+       chatLogPresenter.open(conversation)
+
+      } else if indexPath.section == 2 {
         let destination = ContactsDetailController()
         destination.contactName = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName
         if let photo = filteredContacts[indexPath.row].thumbnailImageData {
@@ -324,36 +303,5 @@ extension ContactsController: ContactsUpdatesDelegate {
       return
     }
     viewPlaceholder.remove(from: view, priority: .high)
-  }
-}
-
-extension ContactsController: MessagesDelegate {
-  
-  func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
-    chatLogController?.updateMessageStatus(messageRef: reference)
-  }
-  
-  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-    chatLogController?.hidesBottomBarWhenPushed = true
-    chatLogController?.messagesFetcher = messagesFetcher
-    chatLogController?.messages = messages
-    chatLogController?.conversation = conversation
-    chatLogController?.groupedMessages = Message.groupedMessages(messages)
-    chatLogController?.observeTypingIndicator()
-    chatLogController?.configureTitleViewWithOnlineStatus()
-    chatLogController?.observeBlockChanges()
-    chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
-    guard let destination = chatLogController else { return }
-        
-    if DeviceType.isIPad {
-      let navigationController = UINavigationController(rootViewController: destination)
-      splitViewController?.showDetailViewController(navigationController, sender: self)
-    } else {
-      navigationController?.pushViewController(destination, animated: true)
-      chatLogController = nil
-      messagesFetcher?.delegate = nil
-      messagesFetcher = nil
-    }
-    deselectItem()
   }
 }

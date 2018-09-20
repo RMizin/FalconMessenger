@@ -16,6 +16,8 @@ protocol TypingIndicatorDelegate: class {
 
 private let typingIndicatorDatabaseID = "typingIndicator"
 
+let typingIndicatorManager = TypingIndicatorManager()
+
 class TypingIndicatorManager: NSObject {
   
   weak var delegate: TypingIndicatorDelegate?

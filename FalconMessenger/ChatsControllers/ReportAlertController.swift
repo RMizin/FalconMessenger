@@ -13,6 +13,7 @@ class ReportAlertController: UIAlertController {
   let reportSender = ReportSender()
   weak var controller: UIViewController?
   weak var reportedMessage: Message?
+  var indexPath: IndexPath?
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +56,12 @@ class ReportAlertController: UIAlertController {
     guard let sender = self.controller, let reportedMessage = self.reportedMessage else { return }
     let isConnected = self.checkInternetConnection()
     guard isConnected else { return }
-    self.reportSender.sendReport(title, sender, reportedMessage)
+    if let controller = self.controller as? ChatLogViewController, let indexPath = self.indexPath, let cell = controller.collectionView.cellForItem(at: indexPath) as? BaseMessageCell {
+
+      self.reportSender.sendReport(title, sender, reportedMessage, indexPath, cell)
+    } else {
+      self.reportSender.sendReport(title, sender, reportedMessage)
+    }
   }
   
   fileprivate func checkInternetConnection() -> Bool {

@@ -51,7 +51,6 @@ class ChatsTableViewController: UITableViewController {
   
   let conversationsFetcher = ConversationsFetcher()
   let notificationsManager = InAppNotificationManager()
-  let typingIndicatorManager = TypingIndicatorManager()
 
   let viewPlaceholder = ViewPlaceholder()
   let navigationItemActivityIndicator = NavigationItemActivityIndicator()
@@ -76,13 +75,6 @@ class ChatsTableViewController: UITableViewController {
   
   deinit {
     NotificationCenter.default.removeObserver(self)
-  }
-  
-  fileprivate func deselectItem() {
-    guard DeviceType.isIPad else { return }
-    if let indexPath = tableView.indexPathForSelectedRow {
-      tableView.deselectRow(at: indexPath, animated: true)
-    }
   }
   
   fileprivate func addObservers() {
@@ -254,25 +246,25 @@ class ChatsTableViewController: UITableViewController {
         
         for conversation in self.filtededConversations {
           guard let chatID = conversation.chatID else { return }
-        
+
           if let isGroupChat = conversation.isGroupChat, isGroupChat {
             if let members = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, members.contains(uid) {
-              self.typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+              typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
             }
           } else {
-            self.typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
+            typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
           }
         }
         
-        for conversation in self.filteredPinnedConversations  {
+        for conversation in self.filteredPinnedConversations {
           guard let chatID = conversation.chatID else { return }
         
           if let isGroupChat = conversation.isGroupChat, isGroupChat {
             if let members = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, members.contains(uid) {
-              self.typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+              typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
             }
           } else {
-            self.typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
+            typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
           }
         }
       })
@@ -381,9 +373,6 @@ class ChatsTableViewController: UITableViewController {
     
     return cell
   }
-  
-  var chatLogController: ChatLogViewController? = nil
-  var messagesFetcher: MessagesFetcher? = nil
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     var conversation: Conversation!
@@ -395,23 +384,11 @@ class ChatsTableViewController: UITableViewController {
       let unpinnedConversation = filtededConversations[indexPath.row]
       conversation = unpinnedConversation
     }
-    
-    if chatLogController != nil && DeviceType.isIPad { //bugfix
-      chatLogController?.closeChatLog()
-      chatLogController = nil
-      messagesFetcher?.delegate = nil
-      messagesFetcher = nil
-    }
-    
-    chatLogController = ChatLogViewController()
-    messagesFetcher = MessagesFetcher()
-    messagesFetcher?.delegate = self
-    messagesFetcher?.loadMessagesData(for: conversation)
+    chatLogPresenter.open(conversation)
   }
 }
 
 extension ChatsTableViewController: DeleteAndExitDelegate {
-  
   func deleteAndExit(from conversationID: String) {
     
     let pinnedIDs = pinnedConversations.map({$0.chatID ?? ""})
@@ -431,64 +408,6 @@ extension ChatsTableViewController: DeleteAndExitDelegate {
     return index
   }
 }
-
-extension ChatsTableViewController: MessagesDelegate {
-  
-  func currentTab() -> UINavigationController? {
-    guard let appDelegate = tabBarController as? GeneralTabBarController else { return nil }
-    switch self.tabBarController!.selectedIndex {
-    case 0:
-      let controller = appDelegate.contactsController.navigationController
-      return controller
-    case 1:
-      let controller = navigationController
-      return controller
-    case 2:
-      let controller = appDelegate.settingsController.navigationController
-      return controller
-    default: break
-    }
-    return nil
-  }
-  
-  func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
-   chatLogController?.updateMessageStatus(messageRef: reference)
-  }
-  
-  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-    chatLogController?.hidesBottomBarWhenPushed = true
-    chatLogController?.messagesFetcher = messagesFetcher
-    chatLogController?.messages = messages
-    chatLogController?.conversation = conversation
-    chatLogController?.groupedMessages = Message.groupedMessages(messages)
-    chatLogController?.deleteAndExitDelegate = self
-    chatLogController?.typingIndicatorManager = typingIndicatorManager
- 
-    if let membersIDs = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
-      chatLogController?.observeTypingIndicator()
-      chatLogController?.configureTitleViewWithOnlineStatus()
-    }
-    
-    chatLogController?.observeMembersChanges()
-    chatLogController?.observeBlockChanges()
-    
-    chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
-    guard let destination = chatLogController else { return }
-
-    if DeviceType.isIPad {
-      let navigationController = UINavigationController(rootViewController: destination)
-      splitViewController?.showDetailViewController(navigationController, sender: self)
-    } else {
-      currentTab()?.pushViewController(destination, animated: true)
-      chatLogController = nil
-      messagesFetcher?.delegate = nil
-      messagesFetcher = nil
-    }
-    deselectItem()
-  }
-}
-
-
 
 extension ChatsTableViewController: ConversationUpdatesDelegate {
   
@@ -545,7 +464,7 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
   }
   
   func conversations(didRemove: Bool, chatID: String) {
-     typingIndicatorManager.removeTypingIndicator(for: chatID)
+    typingIndicatorManager.removeTypingIndicator(for: chatID)
   }
   
   func conversations(addedNewConversation: Bool, chatID: String) {

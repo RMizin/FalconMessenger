@@ -124,11 +124,7 @@ class InAppNotificationManager: NSObject {
   fileprivate func showInAppNotification(conversation: Conversation, title: String, subtitle: String, resource: Any?, placeholder: Data?) {
     let notification: InAppNotification = InAppNotification(resource: resource, title: title, subtitle: subtitle, data: placeholder)
     InAppNotificationDispatcher.shared.show(notification: notification) { (_) in
-      //TOREDO
-//      self.chatLogController = ChatLogController(collectionViewLayout: AutoSizingCollectionViewFlowLayout())
-//      self.messagesFetcher = MessagesFetcher()
-//      self.messagesFetcher?.delegate = self
-//      self.messagesFetcher?.loadMessagesData(for: conversation)
+      chatLogPresenter.open(conversation)
     }
   }
   

@@ -17,7 +17,6 @@ extension ChatLogViewController: UserBlockDelegate {
     } else {
       navigationController?.popViewController(animated: true)
     }
-    
     userBlockingManager.blockUser(userID: uid)
   }
   
