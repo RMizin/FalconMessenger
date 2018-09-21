@@ -16,17 +16,14 @@ class InputContainerView: UIControl {
   
   weak var mediaPickerController: MediaPickerControllerNew?
   weak var trayDelegate: ImagePickerTrayControllerDelegate?
-  
   var attachedMedia = [MediaObject]()
-  
+  fileprivate var tap = UITapGestureRecognizer()
   static let commentOrSendPlaceholder =  "Comment or Send"
   static let messagePlaceholder = "Message"
  
   weak var chatLogController: ChatLogViewController? {
     didSet {
       sendButton.addTarget(chatLogController, action: #selector(ChatLogViewController.handleSend), for: .touchUpInside)
-      attachButton.addTarget(chatLogController, action: #selector(ChatLogViewController.togglePhoto), for: .touchDown)
-      recordVoiceButton.addTarget(chatLogController, action: #selector(ChatLogViewController.toggleVoiceRecording), for: .touchDown)
     }
   }
   
@@ -54,22 +51,25 @@ class InputContainerView: UIControl {
     return placeholderLabel
   }()
   
-  let attachButton: UIButton = {
-    let attachButton = UIButton()
+  let attachButton: RespondingButton = {
+    let attachButton = RespondingButton(controller: MediaPickerControllerNew())
     attachButton.tintColor = FalconPalette.defaultBlue
     attachButton.translatesAutoresizingMaskIntoConstraints = false
     attachButton.setImage(UIImage(named: "ConversationAttach"), for: .normal)
     attachButton.setImage(UIImage(named: "SelectedModernConversationAttach"), for: .selected)
+    attachButton.addTarget(self, action: #selector(togglePhoto), for: .touchDown)
     
     return attachButton
   }()
   
-  let recordVoiceButton: UIButton = {
-    let recordVoiceButton = UIButton()
+  let recordVoiceButton: RespondingButton = {
+    let recordVoiceButton = RespondingButton(controller: VoiceRecordingViewController())
     recordVoiceButton.tintColor = FalconPalette.defaultBlue
     recordVoiceButton.translatesAutoresizingMaskIntoConstraints = false
+   
     recordVoiceButton.setImage(UIImage(named: "microphone"), for: .normal)
     recordVoiceButton.setImage(UIImage(named: "microphoneSelected"), for: .selected)
+    recordVoiceButton.addTarget(self, action: #selector(toggleVoiceRecording), for: .touchDown)
     
     return recordVoiceButton
   }()
@@ -108,10 +108,12 @@ class InputContainerView: UIControl {
     }
   }
   
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     
     NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(inputViewResigned), name: .inputViewResigned, object: nil)
     addHeightConstraints()
     backgroundColor = ThemeManager.currentTheme().barBackgroundColor
     addSubview(attachButton)
@@ -120,6 +122,18 @@ class InputContainerView: UIControl {
     addSubview(sendButton)
     addSubview(placeholderLabel)
     inputTextView.addSubview(attachCollectionView)
+    
+    if let inputViewController = attachButton.mediaInputViewController as? MediaPickerControllerNew {
+      mediaPickerController = inputViewController
+      mediaPickerController?.mediaPickerDelegate = self
+    }
+    
+    if let voiceRecordingViewController = recordVoiceButton.mediaInputViewController as? VoiceRecordingViewController {
+      voiceRecordingViewController.mediaPickerDelegate = self
+    }
+    
+    tap = UITapGestureRecognizer(target: self, action: #selector(toggleTextView))
+    tap.delegate = self
 
     if #available(iOS 11.0, *) {
       attachButton.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 5).isActive = true
@@ -163,11 +177,53 @@ class InputContainerView: UIControl {
   @objc func changeTheme() {
     backgroundColor = ThemeManager.currentTheme().barBackgroundColor
     inputTextView.changeTheme()
+    attachButton.changeTheme()
+    recordVoiceButton.changeTheme()
   }
   
   required init?(coder aDecoder: NSCoder) {
       super.init(coder: aDecoder)
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  @objc func toggleTextView () {
+    print("toggling")
+    inputTextView.inputView = nil
+    inputTextView.reloadInputViews()
+    UIView.performWithoutAnimation {
+      inputTextView.resignFirstResponder()
+      inputTextView.becomeFirstResponder()
+    }
+  }
+  
+  @objc fileprivate func inputViewResigned() {
+    inputTextView.removeGestureRecognizer(tap)
+  }
+
+  @objc func togglePhoto () {
+    checkAuthorisationStatus()
+    
+    if attachButton.isFirstResponder {
+    _ = attachButton.resignFirstResponder()
+    } else {
+      _ = attachButton.becomeFirstResponder()
+      inputTextView.addGestureRecognizer(tap)
+    }
+  }
+  
+  @objc func toggleVoiceRecording () {
+    if recordVoiceButton.isFirstResponder {
+      _ = recordVoiceButton.resignFirstResponder()
+    } else {
+      _ = recordVoiceButton.becomeFirstResponder()
+      inputTextView.addGestureRecognizer(tap)
+    }
+  }
+  
+  func resignAllResponders() {
+    inputTextView.resignFirstResponder()
+    _ = attachButton.resignFirstResponder()
+    _ = recordVoiceButton.resignFirstResponder()
   }
 }
 
@@ -223,7 +279,7 @@ extension InputContainerView: UITextViewDelegate {
       sendButton.isEnabled = false
     }
   }
-  
+
   func textViewDidChange(_ textView: UITextView) {
     confirugeHeightConstraint()
     placeholderLabel.isHidden = !textView.text.isEmpty
@@ -232,19 +288,10 @@ extension InputContainerView: UITextViewDelegate {
   }
   
   func textViewDidEndEditing(_ textView: UITextView) {
-      attachButton.isSelected = false
-      recordVoiceButton.isSelected = false
-   
     if chatLogController?.chatLogAudioPlayer != nil  {
       chatLogController?.chatLogAudioPlayer.stop()
       chatLogController?.chatLogAudioPlayer = nil
     }
-    guard chatLogController != nil, chatLogController?.voiceRecordingViewController != nil,
-      chatLogController!.voiceRecordingViewController.recorder != nil else {
-      return
-    }
-    guard chatLogController!.voiceRecordingViewController.recorder.isRecording  else { return }
-    chatLogController?.voiceRecordingViewController.stop()
   }
   
   func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

@@ -53,7 +53,6 @@ public class ImagePickerTrayController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 1)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
@@ -105,6 +104,7 @@ public class ImagePickerTrayController: UIViewController {
     if imageManager != nil {
       imageManager = nil
     }
+    
     collectionView.removeFromSuperview()
     print("\n TRAY CONTROLLER DID DEINIT \n")
   }
@@ -151,7 +151,8 @@ public class ImagePickerTrayController: UIViewController {
         imageManager = nil
       }
       
-        transitionController = TransitionController(trayController: self)
+        transitionController = TransitionController(frame: collectionView.frame)
+        transitionController?.delegate = self
         modalPresentationStyle = .custom
         transitioningDelegate = transitionController
     }
@@ -160,12 +161,14 @@ public class ImagePickerTrayController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
   
+  
+  
+  var heightConstraint: NSLayoutConstraint!
     public override func loadView() {
         super.loadView()
  
       view.addSubview(collectionView)
       collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-    
       if #available(iOS 11.0, *) {
         collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
         collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
@@ -437,4 +440,10 @@ extension ImagePickerTrayController: UIImagePickerControllerDelegate, UINavigati
             delegate?.controller?(self, didTakeImage: image)
         }
     }
+}
+
+extension ImagePickerTrayController: TransitionControllerDelegate {
+  func dismiss() {
+    dismiss(animated: true, completion: nil)
+  }
 }

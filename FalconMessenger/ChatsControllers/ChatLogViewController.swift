@@ -55,11 +55,8 @@ class ChatLogViewController: UIViewController {
   var messages = [Message]()
   var groupedMessages = [[Message]]()
   var typingIndicatorSection: [String] = []
-  
-  var mediaPickerController: MediaPickerControllerNew! = nil
-  var voiceRecordingViewController: VoiceRecordingViewController! = nil
+
   var chatLogAudioPlayer: AVAudioPlayer!
-  var inputTextViewTapGestureRecognizer = UITapGestureRecognizer()
   var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
 
   private var shouldScrollToBottom: Bool = true
@@ -236,11 +233,7 @@ class ChatLogViewController: UIViewController {
       messagesFetcher.collectionDelegate = nil
       messagesFetcher.delegate = nil
     }
-
-    guard voiceRecordingViewController != nil, voiceRecordingViewController.recorder != nil else { return }
-    
-    voiceRecordingViewController.stop()
-    voiceRecordingViewController.deleteAllRecordings()
+     inputContainerView.recordVoiceButton.reset()
   }
   
   deinit {
@@ -294,18 +287,18 @@ class ChatLogViewController: UIViewController {
     }
   }
   
-  fileprivate func blockInputViewConstraints() {
+  func blockInputViewConstraints() {
     guard let view = view as? ChatLogContainerView else { return }
     if let constant = keyboardLayoutGuide.topConstant {
       print(constant)
-      if inputContainerView.inputTextView.isFirstResponder {
+      if inputContainerView.inputTextView.isFirstResponder || inputContainerView.attachButton.isFirstResponder || inputContainerView.recordVoiceButton.isFirstResponder {
         view.blockBottomConstraint(constant: -constant)
         view.layoutIfNeeded()
       }
     }
   }
   
-  fileprivate func unblockInputViewConstraints() {
+  func unblockInputViewConstraints() {
     guard let view = view as? ChatLogContainerView else { return }
     view.unblockBottomConstraint()
   }
@@ -366,13 +359,7 @@ class ChatLogViewController: UIViewController {
     }
     
     collectionView.addObserver(self, forKeyPath: "contentSize", options: .old, context: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
-    inputTextViewTapGestureRecognizer = UITapGestureRecognizer(target: inputContainerView.chatLogController,
-                                                               action: #selector(ChatLogViewController.toggleTextView))
-    
-    inputTextViewTapGestureRecognizer.delegate = inputContainerView
-
     collectionView.addSubview(refreshControl)
     collectionView.register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
     collectionView.register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)
@@ -467,7 +454,8 @@ class ChatLogViewController: UIViewController {
   }
   
   @objc func getInfoAction() {
-    inputContainerView.inputTextView.resignFirstResponder()
+    inputContainerView.resignAllResponders()
+    
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       
       let destination = GroupAdminControlsTableViewController()
@@ -521,13 +509,6 @@ class ChatLogViewController: UIViewController {
       collectionView.scrollToBottom(animated: false)
     }
   }
-  
-  @objc func keyboardDidHide(notification: NSNotification) {
-    DispatchQueue.main.async {
-      self.inputContainerView.inputTextView.inputView = nil
-    }
-  }
-  
   
   //MARK: - Typing indicator
   private var localTyping = false
@@ -854,9 +835,7 @@ class ChatLogViewController: UIViewController {
     isTyping = false
     let text = inputContainerView.inputTextView.text
     let media = inputContainerView.attachedMedia
-    if mediaPickerController != nil {
-      mediaPickerController.collectionView.deselectAllItems()
-    }
+    inputContainerView.attachButton.reset()
     inputContainerView.prepareForSend()
     let messageSender = MessageSender(conversation, text: text, media: media)
     messageSender.delegate = self

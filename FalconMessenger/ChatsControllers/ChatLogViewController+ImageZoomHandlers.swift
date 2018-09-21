@@ -58,10 +58,7 @@ extension ChatLogViewController {
     } else {
       inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
     }
-    
-    if self.inputContainerView.inputTextView.isFirstResponder {
-      self.inputContainerView.inputTextView.resignFirstResponder()
-    }
+    self.inputContainerView.resignAllResponders()
     player.play()
     return inBubblePlayerViewController
   }
@@ -111,7 +108,7 @@ extension ChatLogViewController {
     galleryPreview.overlayView.setHidden(true, animated: false)
     
     setupGalleryDismissHandler(galleryPreview: galleryPreview)
-    inputContainerView.inputTextView.resignFirstResponder()
+    self.inputContainerView.resignAllResponders()
     galleryPreview.modalPresentationStyle = .overFullScreen
     galleryPreview.modalPresentationCapturesStatusBarAppearance = true
     return galleryPreview

@@ -85,6 +85,7 @@ extension OutgoingTextMessageCell: UITextViewDelegate {
     
     svc.preferredControlTintColor = FalconPalette.defaultBlue
     svc.preferredBarTintColor = ThemeManager.currentTheme().generalBackgroundColor
+    chatLogController?.inputContainerView.resignAllResponders()
     chatLogController?.present(svc, animated: true, completion: nil)
     
     return false

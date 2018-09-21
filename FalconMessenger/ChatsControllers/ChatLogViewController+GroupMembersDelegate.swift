@@ -69,7 +69,7 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
     if isCurrentUserMemberOfCurrentGroup() {
       configureTitleViewWithOnlineStatus()
     } else {
-      inputContainerView.inputTextView.resignFirstResponder()
+      self.inputContainerView.resignAllResponders()
       handleTypingIndicatorAppearance(isEnabled: false)
       removeSubtitleInGroupChat()
       reloadInputViews()

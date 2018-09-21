@@ -61,12 +61,10 @@ struct InputTextViewLayout {
 }
 
 class InputTextView: UITextView {
-
   override init(frame: CGRect, textContainer: NSTextContainer?) {
     super.init(frame: frame, textContainer: textContainer)
    
     font = UIFont.systemFont(ofSize: 18)
-  
     isScrollEnabled = false
     layer.cornerRadius = 18
     textContainerInset = InputTextViewLayout.defaultInsets

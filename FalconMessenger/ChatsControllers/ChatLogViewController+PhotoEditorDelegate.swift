@@ -18,7 +18,7 @@ extension ChatLogViewController: CropViewControllerDelegate {
   
   func presentPhotoEditor(forImageAt indexPath: IndexPath) {
     guard let image = inputContainerView.attachedMedia[indexPath.row].object?.asUIImage else { return }
-    inputContainerView.inputTextView.resignFirstResponder()
+    inputContainerView.resignAllResponders()
     let cropController = CropViewController(croppingStyle: .default, image: image)
     cropController.delegate = self
     selectedPhotoIndexPath = indexPath
@@ -60,7 +60,7 @@ extension ChatLogViewController: CropViewControllerDelegate {
     }
  
     playerViewController.player = player
-    inputContainerView.inputTextView.resignFirstResponder()
+    inputContainerView.resignAllResponders()
     present(playerViewController, animated: true, completion: nil)
   }
 }

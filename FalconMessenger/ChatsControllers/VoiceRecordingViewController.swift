@@ -12,22 +12,17 @@ import AVFoundation
 class VoiceRecordingViewController: UIViewController {
   
   var recorder: AVAudioRecorder!
-  
   var player: AVAudioPlayer!
-  
-  weak var inputContainerView: InputContainerView?
-
+  weak var mediaPickerDelegate: MediaPickerDelegate?
   let voiceRecordingContainerView = VoiceRecordingContainerView()
-  
   var meterTimer: Timer!
-  
   var soundFileURL: URL!
   
   override func viewDidLoad() {
     super.viewDidLoad()
-     print("VOICE INIT")
-    view.addSubview(voiceRecordingContainerView)
+    print("VOICE INIT")
     
+    view.addSubview(voiceRecordingContainerView)
     view.addSubview(voiceRecordingContainerView)
     voiceRecordingContainerView.translatesAutoresizingMaskIntoConstraints = false
     voiceRecordingContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -76,7 +71,6 @@ class VoiceRecordingViewController: UIViewController {
     }
   }
   
-  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     recorder = nil
@@ -89,10 +83,10 @@ class VoiceRecordingViewController: UIViewController {
   
   @objc func record(_ sender: UIButton) {
     
-    print("\(#function)")
+  //  print("\(#function)")
     
     if player != nil && player.isPlaying {
-      print("stopping")
+    //  print("stopping")
       player.stop()
     }
     
@@ -100,7 +94,7 @@ class VoiceRecordingViewController: UIViewController {
    
       recordWithPermission(true, completionHandler: { (isCompleted) in
         if isCompleted {
-          print("recording. recorder nil")
+         // print("recording. recorder nil")
           DispatchQueue.main.async {
             self.voiceRecordingContainerView.recordButton.setTitle("Pause", for: .normal)
             self.voiceRecordingContainerView.stopButton.isEnabled = true
@@ -117,13 +111,13 @@ class VoiceRecordingViewController: UIViewController {
     } else
     
     if recorder != nil && recorder.isRecording {
-      print("pausing")
+    //  print("pausing")
       recorder.pause()
       voiceRecordingContainerView.waveForm.amplitude = 0
       voiceRecordingContainerView.recordButton.setTitle("Continue", for: .normal)
       
     } else {
-      print("recording")
+    //  print("recording")
       voiceRecordingContainerView.recordButton.setTitle("Pause", for: .normal)
    //   voiceRecordingContainerView.playButton.isEnabled = false
       voiceRecordingContainerView.stopButton.isEnabled = true
@@ -135,12 +129,12 @@ class VoiceRecordingViewController: UIViewController {
   }
   
   @objc func stop() {
-    
-    print("\(#function)")
+  //  print("\(#function)")
     
     recorder?.stop()
     player?.stop()
     meterTimer.invalidate()
+    voiceRecordingContainerView.statusLabel.text = "00:00:00"
     
     voiceRecordingContainerView.recordButton.setTitle("Record", for: .normal)
     let session = AVAudioSession.sharedInstance()
@@ -151,28 +145,28 @@ class VoiceRecordingViewController: UIViewController {
       voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
       voiceRecordingContainerView.recordButton.isEnabled = true
     } catch {
-      print("could not make session inactive")
-      print(error.localizedDescription)
+//      print("could not make session inactive")
+//      print(error.localizedDescription)
     }
     
     //recorder = nil
   }
   
   func setupRecorder() {
-    print("\(#function)")
+   // print("\(#function)")
     
     let format = DateFormatter()
-    format.dateFormat="yyyy-MM-dd-HH-mm-ss"
+    format.dateFormat = "yyyy-MM-dd-HH-mm-ss"
     let currentFileName = "recording-\(format.string(from: Date())).m4a"
-    print(currentFileName)
+  //  print(currentFileName)
     
     let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     self.soundFileURL = documentsDirectory.appendingPathComponent(currentFileName)
-    print("writing to soundfile url: '\(soundFileURL!)'")
+   // print("writing to soundfile url: '\(soundFileURL!)'")
     
     if FileManager.default.fileExists(atPath: soundFileURL.absoluteString) {
       // probably won't happen. want to do something about it?
-      print("soundfile \(soundFileURL.absoluteString) exists")
+   //   print("soundfile \(soundFileURL.absoluteString) exists")
     }
     
     let recordSettings: [String: Any] = [
@@ -191,20 +185,20 @@ class VoiceRecordingViewController: UIViewController {
       recorder.prepareToRecord() // creates/overwrites the file at soundFileURL
     } catch {
       recorder = nil
-      print(error.localizedDescription)
+    //  print(error.localizedDescription)
     }
     
   }
-    typealias CompletionHandler = (_ success: Bool) -> Void
+  typealias CompletionHandler = (_ success: Bool) -> Void
   func recordWithPermission(_ setup: Bool, completionHandler: @escaping CompletionHandler) {
-    print("\(#function)")
+   // print("\(#function)")
     
     AVAudioSession.sharedInstance().requestRecordPermission {
       [unowned self] granted in
       if granted {
          completionHandler(true)
         DispatchQueue.main.async {
-          print("Permission to record granted")
+        //  print("Permission to record granted")
           self.setSessionPlayAndRecord()
           if setup {
             self.setupRecorder()
@@ -220,58 +214,56 @@ class VoiceRecordingViewController: UIViewController {
         }
       } else {
         completionHandler(false)
-        print("Permission to record not granted")
+       // print("Permission to record not granted")
       }
     }
     
     if AVAudioSession.sharedInstance().recordPermission() == .denied {
-      print("permission denied")
+     // print("permission denied")
     }
   }
   
   func setSessionPlayback() {
-    print("\(#function)")
-    
+   // print("\(#function)")
     let session = AVAudioSession.sharedInstance()
     
     do {
       try session.setCategory(AVAudioSessionCategoryPlayback, with: .defaultToSpeaker)
       
     } catch {
-      print("could not set session category")
-      print(error.localizedDescription)
+//      print("could not set session category")
+//      print(error.localizedDescription)
     }
     
     do {
       try session.setActive(true)
     } catch {
-      print("could not make session active")
-      print(error.localizedDescription)
+//      print("could not make session active")
+//      print(error.localizedDescription)
     }
   }
   
   func setSessionPlayAndRecord() {
-    print("\(#function)")
+   // print("\(#function)")
     
     let session = AVAudioSession.sharedInstance()
     do {
       try session.setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
     } catch {
-      print("could not set session category")
-      print(error.localizedDescription)
+//      print("could not set session category")
+//      print(error.localizedDescription)
     }
     
     do {
       try session.setActive(true)
     } catch {
-      print("could not make session active")
-      print(error.localizedDescription)
+//      print("could not make session active")
+//      print(error.localizedDescription)
     }
   }
   
   func deleteAllRecordings() {
-    print("\(#function)")
-    
+  //  print("\(#function)")
     
     let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
@@ -290,24 +282,22 @@ class VoiceRecordingViewController: UIViewController {
         //                    let path = docsDir + "/" + recordings[i]
         
         //                    print("removing \(path)")
-        print("removing \(recordings[i])")
+       // print("removing \(recordings[i])")
         do {
           try fileManager.removeItem(at: recordings[i])
         } catch {
-          print("could not remove \(recordings[i])")
-          print(error.localizedDescription)
+       //   print("could not remove \(recordings[i])")
+        //  print(error.localizedDescription)
         }
       }
-      
     } catch {
-      print("could not get contents of directory at \(documentsDirectory)")
-      print(error.localizedDescription)
+    //  print("could not get contents of directory at \(documentsDirectory)")
+     // print(error.localizedDescription)
     }
-    
   }
   
   func askForNotifications() {
-    print("\(#function)")
+ //   print("\(#function)")
     
     NotificationCenter.default.addObserver(self,
                                            selector: #selector(VoiceRecordingViewController.background(_:)),
@@ -326,33 +316,30 @@ class VoiceRecordingViewController: UIViewController {
   }
   
   @objc func background(_ notification: Notification) {
-    print("\(#function)")
-    
+   // print("\(#function)")
   }
   
   @objc func foreground(_ notification: Notification) {
-    print("\(#function)")
-    
+  //  print("\(#function)")
   }
   
-  
   @objc func routeChange(_ notification: Notification) {
-    print("\(#function)")
+  //  print("\(#function)")
     
     if let userInfo = (notification as NSNotification).userInfo {
-      print("routeChange \(userInfo)")
+    //  print("routeChange \(userInfo)")
       
       //print("userInfo \(userInfo)")
       if let reason = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt {
         //print("reason \(reason)")
         switch AVAudioSessionRouteChangeReason(rawValue: reason)! {
         case AVAudioSessionRouteChangeReason.newDeviceAvailable:
-          print("NewDeviceAvailable")
-          print("did you plug in headphones?")
+//          print("NewDeviceAvailable")
+//          print("did you plug in headphones?")
           checkHeadphones()
         case AVAudioSessionRouteChangeReason.oldDeviceUnavailable:
-          print("OldDeviceUnavailable")
-          print("did you unplug headphones?")
+//          print("OldDeviceUnavailable")
+//          print("did you unplug headphones?")
           checkHeadphones()
         case AVAudioSessionRouteChangeReason.categoryChange:
           print("CategoryChange")
@@ -366,15 +353,13 @@ class VoiceRecordingViewController: UIViewController {
           print("NoSuitableRouteForCategory")
         case AVAudioSessionRouteChangeReason.routeConfigurationChange:
           print("RouteConfigurationChange")
-          
         }
       }
     }
-
   }
   
   func checkHeadphones() {
-    print("\(#function)")
+ //   print("\(#function)")
     
     // check NewDeviceAvailable and OldDeviceUnavailable for them being plugged in/unplugged
     let currentRoute = AVAudioSession.sharedInstance().currentRoute
@@ -393,72 +378,52 @@ class VoiceRecordingViewController: UIViewController {
   }
 }
 
-
 extension String {
   
   public func isAudio() -> Bool {
     // Add here your image formats.
     let imageFormats = ["m4a"]
-    
     if let ext = self.getExtension() {
       return imageFormats.contains(ext)
     }
-    
     return false
   }
   
   public func getExtension() -> String? {
     let ext = (self as NSString).pathExtension
-    
     if ext.isEmpty {
       return nil
     }
-    
     return ext
   }
   
   public func isURL() -> Bool {
     return URL(string: self) != nil
   }
-  
 }
 
 // MARK: AVAudioRecorderDelegate
 extension VoiceRecordingViewController: AVAudioRecorderDelegate {
   
-  func insertItemsToCollectionViewAnimated(at indexPath: [IndexPath], mediaObject: [String: AnyObject]) {
-    
-    inputContainerView?.expandCollection()
-    self.inputContainerView?.attachCollectionView.performBatchUpdates ({
-      self.inputContainerView?.attachCollectionView.insertItems(at: indexPath)
-    }, completion: nil)
-    
-    self.inputContainerView?.attachCollectionView.scrollToItem(at: IndexPath(item: self.inputContainerView!.attachedMedia.count - 1 , section: 0), at: .right, animated: true)
-  }
-  
   func stackOverflowAnswer(data: Data) {
-  //  if let data = UIImagePNGRepresentation(#imageLiteral(resourceName: "VanGogh.jpg")) as Data? {
-      print("There were \(data.count) bytes")
+    //  print("There were \(data.count) bytes")
       let bcf = ByteCountFormatter()
       bcf.allowedUnits = [.useMB] // optional: restricts the units to MB only
       bcf.countStyle = .file
-      let string = bcf.string(fromByteCount: Int64(data.count))
-      print("formatted result: \(string)")
-  //  }
+    //  let string = bcf.string(fromByteCount: Int64(data.count))
+     // print("formatted result: \(string)")
   }
-  
   
   func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder,
                                        successfully flag: Bool) {
     
-    print("\(#function)")
+   // print("\(#function)")
     
-    print("finished recording \(flag)")
+  //  print("finished recording \(flag)")
     voiceRecordingContainerView.stopButton.isEnabled = false
     voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
     voiceRecordingContainerView.recordButton.setTitle("Record", for: UIControlState())
    
-    
     var soundData: Data!
     
     do {
@@ -466,47 +431,43 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
         stackOverflowAnswer(data: soundData)
       let mediaObject = ["audioObject": soundData ,
                          "fileURL" : soundFileURL] as [String: AnyObject]
-      self.inputContainerView?.attachedMedia.append(MediaObject(dictionary: mediaObject))
+      
+      mediaPickerDelegate?.didSelectMedia(mediaObject: MediaObject(dictionary: mediaObject))
       soundData = nil
-      if self.inputContainerView!.attachedMedia.count - 1 >= 0 {
-        self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: self.inputContainerView!.attachedMedia.count - 1 , section: 0) ], mediaObject: mediaObject)
-      } else {
-        self.insertItemsToCollectionViewAnimated(at: [ IndexPath(item: 0 , section: 0) ], mediaObject: mediaObject)
-      }
       self.recorder.deleteRecording()
       self.voiceRecordingContainerView.statusLabel.text = "00:00:00"
       self.voiceRecordingContainerView.waveForm.amplitude = 0
     } catch {
-      print("error converting sound to data")
+      //print("error converting sound to data")
     }
   }
   
   func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder,
                                         error: Error?) {
-    print("\(#function)")
+   // print("\(#function)")
     
-    if let e = error {
-      print("\(e.localizedDescription)")
-    }
+ //   if let e = error {
+     // print("\(e.localizedDescription)")
+  //  }
   }
 }
 
 // MARK: AVAudioPlayerDelegate
 extension VoiceRecordingViewController: AVAudioPlayerDelegate {
   func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-    print("\(#function)")
+   // print("\(#function)")
     
-    print("finished playing \(flag)")
+  //  print("finished playing \(flag)")
     voiceRecordingContainerView.recordButton.isEnabled = true
     voiceRecordingContainerView.stopButton.isEnabled = false
     voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
   }
   
   func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-    print("\(#function)")
+    //print("\(#function)")
     
-    if let e = error {
-      print("\(e.localizedDescription)")
-    }
+//    if let e = error {
+//      print("\(e.localizedDescription)")
+//    }
   }
 }

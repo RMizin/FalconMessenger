@@ -9,10 +9,13 @@
 import Foundation
 import UIKit
 
+
+protocol TransitionControllerDelegate: class {
+  func dismiss()
+}
 class TransitionController: NSObject {
-    
-    fileprivate weak var trayController: ImagePickerTrayController?
-    
+  
+    weak var delegate: TransitionControllerDelegate?
     var allowsInteractiveTransition = true
     
     fileprivate let gestureRecognizer = UIPanGestureRecognizer()
@@ -23,9 +26,11 @@ class TransitionController: NSObject {
   deinit {
     print("\n transition controller DE init \n")
   }
-    
-    init(trayController: ImagePickerTrayController) {
-        self.trayController = trayController
+  
+  var collectionFrame = CGRect.zero
+  
+    init(frame: CGRect) {
+        self.collectionFrame = frame
         super.init()
       
       print("\n transition controller INIT \n")
@@ -79,10 +84,9 @@ extension TransitionController: UIGestureRecognizerDelegate {
     }
     
     @objc fileprivate func didRecognizePan(gestureRecognizer: UIPanGestureRecognizer) {
-        guard let trayController = trayController,
-            let view = gestureRecognizer.view else {
-                cancel()
-                return
+        guard collectionFrame != CGRect.zero, let view = gestureRecognizer.view else {
+          cancel()
+          return
         }
         
         if gestureRecognizer.state == .began {
@@ -92,14 +96,14 @@ extension TransitionController: UIGestureRecognizerDelegate {
             let end = gestureRecognizer.location(in: gestureRecognizer.view).y
             let translation = gestureRecognizer.translation(in: gestureRecognizer.view)
             let start = end - translation.y
-            let threshold = view.frame.maxY - trayController.collectionView.frame.height
+            let threshold = view.frame.maxY - collectionFrame.height//trayController.collectionView.frame.height
             if let transition = interactiveTransition {
                 let progress = end-threshold
-                transition.update(progress/trayController.collectionView.frame.height)
+                transition.update(progress/collectionFrame.height)
             }
             if start < threshold && end >= threshold && interactiveTransition == nil {
                 interactiveTransition = UIPercentDrivenInteractiveTransition()
-                trayController.dismiss(animated: true, completion: nil)
+                delegate?.dismiss()
             }
         }
         else if gestureRecognizer.state == .cancelled {
@@ -121,14 +125,11 @@ extension TransitionController: UIGestureRecognizerDelegate {
             }
         }
     }
-    
 }
 
 fileprivate extension UIPanGestureRecognizer {
-    
-    fileprivate func cancel() {
-        isEnabled = false
-        isEnabled = true
-    }
-    
+  fileprivate func cancel() {
+    isEnabled = false
+    isEnabled = true
+  }
 }
