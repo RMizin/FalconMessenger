@@ -139,7 +139,9 @@ extension BaseMessageCell {
   }
   
   fileprivate func handleReport(indexPath: IndexPath) {
-    self.chatLogController?.collectionView.reloadItems(at: [indexPath])
+    chatLogController?.collectionView.reloadItems(at: [indexPath])
+    chatLogController?.inputContainerView.resignAllResponders()
+    
     let reportAlert = ReportAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     reportAlert.controller = chatLogController
     reportAlert.indexPath = indexPath

@@ -38,6 +38,7 @@ class RespondingButton: UIButton, UIKeyInput {
   }
   
   override func becomeFirstResponder() -> Bool {
+    NotificationCenter.default.post(name: .inputViewResponded, object: nil)
     isSelected = true
     return super.becomeFirstResponder()
   }

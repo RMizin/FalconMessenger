@@ -114,6 +114,7 @@ class InputContainerView: UIControl {
     
     NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(inputViewResigned), name: .inputViewResigned, object: nil)
+     NotificationCenter.default.addObserver(self, selector: #selector(inputViewResponded), name: .inputViewResponded, object: nil)
     addHeightConstraints()
     backgroundColor = ThemeManager.currentTheme().barBackgroundColor
     addSubview(attachButton)
@@ -199,6 +200,12 @@ class InputContainerView: UIControl {
   @objc fileprivate func inputViewResigned() {
     inputTextView.removeGestureRecognizer(tap)
   }
+  
+  @objc fileprivate func inputViewResponded() {
+    guard let recognizers = inputTextView.gestureRecognizers else { return }
+    guard !recognizers.contains(tap) else { return }
+    inputTextView.addGestureRecognizer(tap)
+  }
 
   @objc func togglePhoto () {
     checkAuthorisationStatus()
@@ -207,7 +214,7 @@ class InputContainerView: UIControl {
     _ = attachButton.resignFirstResponder()
     } else {
       _ = attachButton.becomeFirstResponder()
-      inputTextView.addGestureRecognizer(tap)
+    //  inputTextView.addGestureRecognizer(tap)
     }
   }
   
@@ -216,7 +223,7 @@ class InputContainerView: UIControl {
       _ = recordVoiceButton.resignFirstResponder()
     } else {
       _ = recordVoiceButton.becomeFirstResponder()
-      inputTextView.addGestureRecognizer(tap)
+     // inputTextView.addGestureRecognizer(tap)
     }
   }
   
