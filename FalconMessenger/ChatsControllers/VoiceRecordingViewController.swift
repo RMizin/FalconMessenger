@@ -12,7 +12,7 @@ import AVFoundation
 class VoiceRecordingViewController: UIViewController {
   
   var recorder: AVAudioRecorder!
-  var player: AVAudioPlayer!
+  //var player: AVAudioPlayer!
   weak var mediaPickerDelegate: MediaPickerDelegate?
   let voiceRecordingContainerView = VoiceRecordingContainerView()
   var meterTimer: Timer!
@@ -43,7 +43,7 @@ class VoiceRecordingViewController: UIViewController {
     voiceRecordingContainerView.stopButton.isEnabled = false
     voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
 
-    setSessionPlayback()
+  //  setSessionPlayback()
     askForNotifications()
     checkHeadphones()
   }
@@ -74,7 +74,7 @@ class VoiceRecordingViewController: UIViewController {
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     recorder = nil
-    player = nil
+  //  player = nil
   }
   
 //  @IBAction func removeAll(_ sender: AnyObject) {
@@ -85,17 +85,17 @@ class VoiceRecordingViewController: UIViewController {
     
   //  print("\(#function)")
     
-    if player != nil && player.isPlaying {
-    //  print("stopping")
-      player.stop()
-    }
+//    if player != nil && player.isPlaying {
+//    //  print("stopping")
+//      player.stop()
+//    }
     
     if recorder == nil {
    
-      recordWithPermission(true, completionHandler: { (isCompleted) in
+      recordWithPermission(true, completionHandler: { [unowned self] (isCompleted) in
         if isCompleted {
          // print("recording. recorder nil")
-          DispatchQueue.main.async {
+          DispatchQueue.main.async { [unowned self] in
             self.voiceRecordingContainerView.recordButton.setTitle("Pause", for: .normal)
             self.voiceRecordingContainerView.stopButton.isEnabled = true
             self.voiceRecordingContainerView.stopButton.setTitleColor(.red, for: .normal)
@@ -118,13 +118,15 @@ class VoiceRecordingViewController: UIViewController {
       
     } else {
     //  print("recording")
+     // recorder.record()
       voiceRecordingContainerView.recordButton.setTitle("Pause", for: .normal)
    //   voiceRecordingContainerView.playButton.isEnabled = false
       voiceRecordingContainerView.stopButton.isEnabled = true
       voiceRecordingContainerView.stopButton.setTitleColor(.red, for: .normal)
       
       //            recorder.record()
-      recordWithPermission(false, completionHandler: { (completed) in })
+      continuePlay()
+     // recordWithPermission(false, completionHandler: { (completed) in })
     }
   }
   
@@ -132,7 +134,7 @@ class VoiceRecordingViewController: UIViewController {
   //  print("\(#function)")
     
     recorder?.stop()
-    player?.stop()
+   // player?.stop()
     meterTimer.invalidate()
     voiceRecordingContainerView.statusLabel.text = "00:00:00"
     
@@ -189,6 +191,21 @@ class VoiceRecordingViewController: UIViewController {
     }
     
   }
+  
+  
+  func continuePlay() {
+    setSessionPlayAndRecord()
+    recorder.record(forDuration: 1800)
+    meterTimer.invalidate()
+    meterTimer = nil
+    meterTimer = Timer.scheduledTimer(timeInterval: 0.01,
+                                           target: self,
+                                           selector: #selector(self.updateAudioMeter(_:)),
+                                           userInfo: nil,
+                                           repeats: true)
+    RunLoop.main.add(self.meterTimer, forMode: .commonModes)
+  }
+  
   typealias CompletionHandler = (_ success: Bool) -> Void
   func recordWithPermission(_ setup: Bool, completionHandler: @escaping CompletionHandler) {
    // print("\(#function)")
@@ -197,7 +214,7 @@ class VoiceRecordingViewController: UIViewController {
       [unowned self] granted in
       if granted {
          completionHandler(true)
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned self] in
         //  print("Permission to record granted")
           self.setSessionPlayAndRecord()
           if setup {
@@ -223,29 +240,29 @@ class VoiceRecordingViewController: UIViewController {
     }
   }
   
-  func setSessionPlayback() {
-   // print("\(#function)")
-    let session = AVAudioSession.sharedInstance()
-    
-    do {
-      try session.setCategory(AVAudioSessionCategoryPlayback, with: .defaultToSpeaker)
-      
-    } catch {
-//      print("could not set session category")
-//      print(error.localizedDescription)
-    }
-    
-    do {
-      try session.setActive(true)
-    } catch {
-//      print("could not make session active")
-//      print(error.localizedDescription)
-    }
-  }
+//  func setSessionPlayback() {
+//   // print("\(#function)")
+//    let session = AVAudioSession.sharedInstance()
+//
+//    do {
+//      try session.setCategory(AVAudioSessionCategoryPlayback, with: .defaultToSpeaker)
+//
+//    } catch {
+////      print("could not set session category")
+////      print(error.localizedDescription)
+//    }
+//
+//    do {
+//      try session.setActive(true)
+//    } catch {
+////      print("could not make session active")
+////      print(error.localizedDescription)
+//    }
+//  }
   
   func setSessionPlayAndRecord() {
    // print("\(#function)")
-    
+
     let session = AVAudioSession.sharedInstance()
     do {
       try session.setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
@@ -253,7 +270,7 @@ class VoiceRecordingViewController: UIViewController {
 //      print("could not set session category")
 //      print(error.localizedDescription)
     }
-    
+
     do {
       try session.setActive(true)
     } catch {
@@ -440,6 +457,7 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
     } catch {
       //print("error converting sound to data")
     }
+    self.recorder = nil
   }
   
   func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder,
