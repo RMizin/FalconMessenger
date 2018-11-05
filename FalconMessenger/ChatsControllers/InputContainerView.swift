@@ -208,8 +208,11 @@ class InputContainerView: UIControl {
   }
 
   @objc func togglePhoto () {
-    checkAuthorisationStatus()
     
+    checkAuthorisationStatus()
+    UIView.performWithoutAnimation {
+      _ = recordVoiceButton.resignFirstResponder()
+    }
     if attachButton.isFirstResponder {
     _ = attachButton.resignFirstResponder()
     } else {
@@ -219,6 +222,10 @@ class InputContainerView: UIControl {
   }
   
   @objc func toggleVoiceRecording () {
+    UIView.performWithoutAnimation {
+       _ = attachButton.resignFirstResponder()
+    }
+    
     if recordVoiceButton.isFirstResponder {
       _ = recordVoiceButton.resignFirstResponder()
     } else {
