@@ -9,6 +9,8 @@
 import UIKit
 import Firebase
 import Photos
+import FirebaseDatabase
+import FirebaseAuth
 
 protocol MessageSenderDelegate: class {
   func update(with values: [String: AnyObject])
@@ -92,7 +94,7 @@ class MessageSender: NSObject {
     
     let reference = Database.database().reference().child("messages").childByAutoId()
     
-    let messageUID = reference.key
+    guard let messageUID = reference.key else { return }
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
@@ -120,7 +122,7 @@ class MessageSender: NSObject {
     
     let reference = Database.database().reference().child("messages").childByAutoId()
     
-    let messageUID = reference.key
+    guard let messageUID = reference.key else { return }
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
@@ -166,12 +168,12 @@ class MessageSender: NSObject {
     
     let reference = Database.database().reference().child("messages").childByAutoId()
     
-    let messageUID = reference.key
+    guard let messageUID = reference.key else { return }
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
-    let videoID = reference.key
-    let imageID = reference.key + "image"
+    guard let videoID = reference.key else { return }
+    let imageID = (reference.key ?? "") + "image"
     
     let defaultData: [String: AnyObject] = ["messageUID": messageUID as AnyObject,
                                             "toId": toID as AnyObject,
@@ -226,7 +228,7 @@ class MessageSender: NSObject {
     
     let reference = Database.database().reference().child("messages").childByAutoId()
     
-    let messageUID = reference.key
+    guard let messageUID = reference.key else { return }
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     let bae64string = object.audioObject?.base64EncodedString()
@@ -259,7 +261,7 @@ class MessageSender: NSObject {
   fileprivate func updateDatabase(at reference: DatabaseReference, with values: [String: AnyObject], toID: String, fromID: String ) {
     reference.updateChildValues(values) { (error, _) in
       guard error == nil else { return }
-      let messageID = reference.key
+      guard let messageID = reference.key else { return }
       
       if let isGroupChat = self.conversation?.isGroupChat, isGroupChat, let membersIDs = self.conversation?.chatParticipantsIDs {
         for memberID in membersIDs {

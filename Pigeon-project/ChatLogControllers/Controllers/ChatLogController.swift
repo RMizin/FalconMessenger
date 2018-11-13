@@ -23,18 +23,12 @@ class ChatLogController: UICollectionViewController {
   var conversation: Conversation?
   var messagesFetcher: MessagesFetcher!
   let chatLogHistoryFetcher = ChatLogHistoryFetcher()
+  let groupMembersManager = GroupMembersManager()
   
   let reference = Database.database().reference()
   var membersReference: DatabaseReference!
   var typingIndicatorReference: DatabaseReference!
   var userStatusReference: DatabaseReference!
-  var chatNameReference: DatabaseReference!
-  var chatAdminReference: DatabaseReference!
-  
-  var membersAddingHandle: DatabaseHandle!
-  var membersRemovingHandle: DatabaseHandle!
-  var chatNameHandle: DatabaseHandle!
-  var chatAdminHandle: DatabaseHandle!
   
   var messages = [Message]()
   var sections = ["Messages"]
@@ -108,89 +102,6 @@ class ChatLogController: UICollectionViewController {
     let indexPath = IndexPath(item: 0, section: 1)
     DispatchQueue.main.async {
       self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
-    }
-  }
-
-  func observeMembersChanges() {
-    guard let chatID = conversation?.chatID else { return }
-    let groupChatsReference = Database.database().reference().child("groupChats").child(chatID)
-
-    chatNameReference = groupChatsReference.child(messageMetaDataFirebaseFolder).child("chatName")
-    chatNameHandle = chatNameReference.observe(.value, with: { (snapshot) in
-      guard let newName = snapshot.value as? String else { return }
-      self.conversation?.chatName = newName
-      if self.isCurrentUserMemberOfCurrentGroup() {
-        self.configureTitleViewWithOnlineStatus()
-      }
-    })
-
-    chatAdminReference = groupChatsReference.child(messageMetaDataFirebaseFolder).child("admin")
-    chatAdminHandle = chatAdminReference.observe(.value, with: { (snapshot) in
-      guard let newAdmin = snapshot.value as? String else { return }
-      self.conversation?.admin = newAdmin
-    })
-    
-    membersReference = groupChatsReference.child(messageMetaDataFirebaseFolder).child("chatParticipantsIDs")
-    membersAddingHandle = membersReference.observe(.childAdded) { (snapshot) in
-      guard let snapID = snapshot.value as? String, let members = self.conversation?.chatParticipantsIDs else { return }
-
-      if let _ = members.index(where: { (memberID) -> Bool in
-        return memberID == snapID }) {
-      } else {
-        self.conversation?.chatParticipantsIDs?.append(snapID)
-        self.changeUIAfterChildAddedIfNeeded()
-        print("NEW MEMBER JOINED THE GROUP")
-      }
-    }
-
-    membersRemovingHandle = membersReference.observe(.childRemoved) { (snapshot) in
-      guard let snapID = snapshot.value as? String, let members = self.conversation?.chatParticipantsIDs else { return }
-      guard let memberIndex = members.index(where: { (memberID) -> Bool in
-        return memberID == snapID
-      }) else { return }
-      self.conversation?.chatParticipantsIDs?.remove(at: memberIndex)
-      self.changeUIAfterChildRemovedIfNeeded()
-      print("MEMBER LEFT THE GROUP")
-    }
-  }
-
-  func isCurrentUserMemberOfCurrentGroup() -> Bool {
-    guard let membersIDs = conversation?.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid,
-      membersIDs.contains(uid) else { return false }
-    return true
-  }
-
-  func changeUIAfterChildAddedIfNeeded() {
-    if isCurrentUserMemberOfCurrentGroup() {
-      configureTitleViewWithOnlineStatus()
-      if typingIndicatorReference == nil {
-        reloadInputViews()
-        observeTypingIndicator()
-        navigationItem.rightBarButtonItem?.isEnabled = true
-      }
-    }
-  }
-
-  func changeUIAfterChildRemovedIfNeeded() {
-    if isCurrentUserMemberOfCurrentGroup() {
-      configureTitleViewWithOnlineStatus()
-    } else {
-      inputContainerView.inputTextView.resignFirstResponder()
-      handleTypingIndicatorAppearance(isEnabled: false)
-      removeSubtitleInGroupChat()
-      reloadInputViews()
-      navigationItem.rightBarButtonItem?.isEnabled = false
-      guard typingIndicatorReference != nil else { return }
-      typingIndicatorReference.removeAllObservers()
-      typingIndicatorReference = nil
-    }
-  }
-
-  func removeSubtitleInGroupChat() {
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName {
-      let subtitle = ""
-      navigationItem.setTitle(title: title, subtitle: subtitle)
-      return
     }
   }
 
@@ -276,7 +187,7 @@ class ChatLogController: UICollectionViewController {
     }
   }
 
-  fileprivate func handleTypingIndicatorAppearance(isEnabled: Bool) {
+  func handleTypingIndicatorAppearance(isEnabled: Bool) {
 
     let sectionsIndexSet: IndexSet = [1]
 
@@ -433,21 +344,7 @@ class ChatLogController: UICollectionViewController {
       userStatusReference.removeObserver(withHandle: userHandler)
     }
 
-    if membersReference != nil && membersAddingHandle != nil {
-      membersReference.removeObserver(withHandle: membersAddingHandle)
-    }
-
-    if membersReference != nil && membersRemovingHandle != nil {
-      membersReference.removeObserver(withHandle: membersRemovingHandle)
-    }
-
-    if chatNameReference != nil && chatNameHandle != nil {
-      chatNameReference.removeObserver(withHandle: chatNameHandle)
-    }
-
-    if chatAdminReference != nil && chatAdminHandle != nil {
-      chatAdminReference.removeObserver(withHandle: chatAdminHandle)
-    }
+    groupMembersManager.removeAllObservers()
 
     isTyping = false
 
@@ -539,6 +436,8 @@ class ChatLogController: UICollectionViewController {
     inputTextViewTapGestureRecognizer.delegate = inputContainerView
 
     chatLogHistoryFetcher.delegate = self
+    groupMembersManager.delegate = self
+    groupMembersManager.observeMembersChanges(conversation)
     
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     collectionView?.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle

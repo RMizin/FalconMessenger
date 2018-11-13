@@ -388,8 +388,6 @@ extension ChatsTableViewController: MessagesDelegate {
       chatLogController?.configureTitleViewWithOnlineStatus()
     }
     
-    chatLogController?.observeMembersChanges()
-    
     chatLogController?.messagesFetcher.collectionDelegate = chatLogController
     guard let destination = chatLogController else { return }
     

@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B0FD3FE20AAF8F300A08DB1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B0FD3FD20AAF8F300A08DB1 /* GoogleService-Info.plist */; };
 		4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */; };
 		4B5E99DE212CC0C0001F067F /* InAppNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5E99DD212CC0C0001F067F /* InAppNotificationManager.swift */; };
 		4B5E99E0212CC0D5001F067F /* ConversationsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5E99DF212CC0D5001F067F /* ConversationsFetcher.swift */; };
+		4B6521F8219B3A0A00FF655E /* ChatLogController+GroupMembersDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6521F7219B3A0A00FF655E /* ChatLogController+GroupMembersDelegate.swift */; };
+		4B6521FA219B3A4400FF655E /* GroupMembersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6521F9219B3A4400FF655E /* GroupMembersManager.swift */; };
 		4BA1E778215250BF00391BCB /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA1E777215250BF00391BCB /* MessageSender.swift */; };
 		4BA1E77A215250F900391BCB /* StorageMediaUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA1E779215250F900391BCB /* StorageMediaUploader.swift */; };
 		4BA1E77C2152511B00391BCB /* UploadProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA1E77B2152511B00391BCB /* UploadProgress.swift */; };
@@ -184,6 +185,7 @@
 		4BB46C6A2136E6F8005405BB /* ChatLogHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */; };
 		4BB46C6C2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */; };
 		4BE44DAA212B5CC600E722B8 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */; };
+		4BE9F1DD219B43B800C6768F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9F1DC219B43B800C6768F /* GoogleService-Info.plist */; };
 		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
 
@@ -201,7 +203,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4B0FD3FD20AAF8F300A08DB1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B4F452B1F32230C00A6FF96 /* Pigeon-project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pigeon-project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -209,6 +210,8 @@
 		4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralTabBarController.swift; sourceTree = "<group>"; };
 		4B5E99DD212CC0C0001F067F /* InAppNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationManager.swift; sourceTree = "<group>"; };
 		4B5E99DF212CC0D5001F067F /* ConversationsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsFetcher.swift; sourceTree = "<group>"; };
+		4B6521F7219B3A0A00FF655E /* ChatLogController+GroupMembersDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatLogController+GroupMembersDelegate.swift"; sourceTree = "<group>"; };
+		4B6521F9219B3A4400FF655E /* GroupMembersManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMembersManager.swift; sourceTree = "<group>"; };
 		4BA1E777215250BF00391BCB /* MessageSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		4BA1E779215250F900391BCB /* StorageMediaUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageMediaUploader.swift; sourceTree = "<group>"; };
 		4BA1E77B2152511B00391BCB /* UploadProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadProgress.swift; sourceTree = "<group>"; };
@@ -381,6 +384,8 @@
 		4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogHistoryFetcher.swift; sourceTree = "<group>"; };
 		4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatLogController+ChatHistoryFetcherDelegate.swift"; sourceTree = "<group>"; };
 		4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsFetcher.swift; sourceTree = "<group>"; };
+		4BE9F1DC219B43B800C6768F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4BE9F1DE219B457C00C6768F /* Pigeon-project.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pigeon-project.entitlements"; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
 		A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pigeon_project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -427,6 +432,7 @@
 		4B4F452D1F32230C00A6FF96 /* Pigeon-project */ = {
 			isa = PBXGroup;
 			children = (
+				4BE9F1DE219B457C00C6768F /* Pigeon-project.entitlements */,
 				4BAEE47221272C4F0045AB10 /* AuthenticationControllers */,
 				4BAEE48821272C5E0045AB10 /* ContactsControllers */,
 				4BAEE4A421272D880045AB10 /* ChatsControllers */,
@@ -439,7 +445,7 @@
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
 				4B4F453C1F32230C00A6FF96 /* Info.plist */,
-				4B0FD3FD20AAF8F300A08DB1 /* GoogleService-Info.plist */,
+				4BE9F1DC219B43B800C6768F /* GoogleService-Info.plist */,
 			);
 			path = "Pigeon-project";
 			sourceTree = "<group>";
@@ -462,6 +468,7 @@
 				4BAEE4E321272D880045AB10 /* ChatLogController+CollectionDelegate.swift */,
 				4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */,
 				4BA1E77E2152518700391BCB /* ChatLogController+MessageSenderDelegate.swift */,
+				4B6521F7219B3A0A00FF655E /* ChatLogController+GroupMembersDelegate.swift */,
 			);
 			path = "ChatLogController+Delegate";
 			sourceTree = "<group>";
@@ -1190,6 +1197,7 @@
 			children = (
 				4BAEE4B821272D880045AB10 /* MessagesFetcher.swift */,
 				4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */,
+				4B6521F9219B3A4400FF655E /* GroupMembersManager.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1283,7 +1291,7 @@
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
 				4BAEE5B9212735E50045AB10 /* INSPhotoGallery.bundle in Resources */,
 				4BAEE52421272D890045AB10 /* typingIndicator.gif in Resources */,
-				4B0FD3FE20AAF8F300A08DB1 /* GoogleService-Info.plist in Resources */,
+				4BE9F1DD219B43B800C6768F /* GoogleService-Info.plist in Resources */,
 				4BAEE5BF212735E50045AB10 /* notification.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1441,8 +1449,10 @@
 				4BAEE546212735200045AB10 /* SplashScreenContainer+BiometricalControl.swift in Sources */,
 				4BAEE5ED212735E50045AB10 /* NewAdminTableViewCell.swift in Sources */,
 				4BAEE4EB21272D890045AB10 /* OutgoingTextMessageCell.swift in Sources */,
+				4B6521F8219B3A0A00FF655E /* ChatLogController+GroupMembersDelegate.swift in Sources */,
 				4BAEE49A21272C5E0045AB10 /* ContactsController.swift in Sources */,
 				4BAEE46A21272B380045AB10 /* StorageTableViewController.swift in Sources */,
+				4B6521FA219B3A4400FF655E /* GroupMembersManager.swift in Sources */,
 				4BAEE46521272B380045AB10 /* AccountSettingsController.swift in Sources */,
 				4BAEE51E21272D890045AB10 /* ChatLogController+VoiceRecordingHandlers.swift in Sources */,
 				4BAEE5CD212735E50045AB10 /* SelectParticipantsTableView.swift in Sources */,

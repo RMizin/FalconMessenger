@@ -9,6 +9,8 @@
 import UIKit
 import Firebase
 import SDWebImage
+import FirebaseDatabase
+import FirebaseAuth
 
 
 class GroupProfileTableViewController: UITableViewController {
@@ -126,7 +128,7 @@ extension GroupProfileTableViewController {
     
     let membersIDs = fetchMembersIDs()
     let chatImage = groupProfileTableHeaderContainer.profileImageView.image
-    let chatID = Database.database().reference().child("user-messages").child(currentUserID).childByAutoId().key
+    let chatID = Database.database().reference().child("user-messages").child(currentUserID).childByAutoId().key ?? ""
     let groupChatsReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
     let childValues: [String: AnyObject] = ["chatID": chatID as AnyObject, "chatName": chatName as AnyObject, "chatParticipantsIDs": membersIDs.1 as AnyObject, "admin": currentUserID as AnyObject,"isGroupChat": true as AnyObject]
   

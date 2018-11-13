@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class InformationMessageSender: NSObject {
   
@@ -24,8 +26,8 @@ class InformationMessageSender: NSObject {
     let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject, "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "text": text as AnyObject, "isInformationMessage": true as AnyObject]
     
     childRef.updateChildValues(values) { (error, _) in
-      guard error == nil else { return }
-      let messageId = childRef.key
+      guard error == nil, let messageId = childRef.key else { return }
+     
       
       for memberID in membersIDs {
         let currentUserMessages = self.userMessagesReference.child(memberID).child(toId).child(userMessagesFirebaseFolder)
