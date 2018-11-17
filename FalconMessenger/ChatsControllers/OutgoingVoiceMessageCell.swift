@@ -39,7 +39,8 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.timerLabel.text = message.voiceDuration
     playerView.startingTime = message.voiceStartTime ?? 0
     playerView.seconds = message.voiceStartTime ?? 0
-    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5, y: bubbleView.frame.height-timeLabel.frame.height-5)
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5,
+                                     y: bubbleView.frame.height-timeLabel.frame.height-5)
     timeLabel.text = self.message?.convertedTimestamp
     guard message.voiceEncodedString != nil else { return }
   

@@ -15,10 +15,10 @@ protocol VerificationDelegate: class {
 }
 
 class PhoneNumberController: UIViewController {
-  
+
   let phoneNumberContainerView = PhoneNumberContainerView()
   weak var verificationDelegate: VerificationDelegate?
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     if #available(iOS 11.0, *) {
@@ -27,13 +27,13 @@ class PhoneNumberController: UIViewController {
       navigationController?.navigationBar.prefersLargeTitles = true
     }
     phoneNumberContainerView.termsAndPrivacy.delegate = self
-    
+
     definesPresentationContext = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     configureNavigationBar()
     configurePhoneNumberContainerView()
   }
-    
+
   func configurePhoneNumberContainerView() {
     view.addSubview(phoneNumberContainerView)
     phoneNumberContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -42,21 +42,24 @@ class PhoneNumberController: UIViewController {
     phoneNumberContainerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
     phoneNumberContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
   }
-  
+
   @objc func leftBarButtonDidTap() {
     phoneNumberContainerView.phoneNumber.resignFirstResponder()
     self.dismiss(animated: true) {
       AppUtility.lockOrientation(.allButUpsideDown)
     }
   }
-  
+
   fileprivate func configureNavigationBar () {
-    let rightBarButton = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(rightBarButtonDidTap))
+    let rightBarButton = UIBarButtonItem(title: "Next",
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(rightBarButtonDidTap))
     navigationItem.rightBarButtonItem = rightBarButton
     navigationItem.rightBarButtonItem?.isEnabled = false
     extendedLayoutIncludesOpaqueBars = true
   }
-  
+
   @objc func openCountryCodesList() {
     let picker = CountriesTableViewController()
     picker.delegate = self
@@ -64,11 +67,11 @@ class PhoneNumberController: UIViewController {
     phoneNumberContainerView.phoneNumber.resignFirstResponder()
     navigationController?.pushViewController(picker, animated: true)
   }
-  
+
   @objc func textFieldDidChange(_ textField: UITextField) {
       setRightBarButtonStatus()
   }
-  
+
   func setRightBarButtonStatus() {
     if phoneNumberContainerView.phoneNumber.text!.count < 9 || phoneNumberContainerView.countryCode.text == " - " {
       self.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -76,9 +79,9 @@ class PhoneNumberController: UIViewController {
       self.navigationItem.rightBarButtonItem?.isEnabled = true
     }
   }
-  
+
   var isVerificationSent = false
-  
+
   @objc func rightBarButtonDidTap () {
     if currentReachabilityStatus == .notReachable {
       verificationDelegate?.verificationFinished(with: false, error: noInternetError)
@@ -94,21 +97,20 @@ class PhoneNumberController: UIViewController {
   func sendSMSConfirmation () {
     print("tappped sms confirmation")
     let phoneNumberForVerification = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
-    
+
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
       print("\n Recieved Phone number verification ID: \(verificationID ?? "nil")\n")
       if let error = error {
         self.verificationDelegate?.verificationFinished(with: false, error: error.localizedDescription)
         return
-      } 
-      
+      }
       print("verification sent")
       self.isVerificationSent = true
       userDefaults.updateObject(for: userDefaults.authVerificationID, with: verificationID)
       self.isVerificationSent = true
       userDefaults.updateObject(for: userDefaults.changeNumberAuthVerificationID, with: verificationID)
       self.verificationDelegate?.verificationFinished(with: true, error: nil)
-    } 
+    }
   }
 }
 

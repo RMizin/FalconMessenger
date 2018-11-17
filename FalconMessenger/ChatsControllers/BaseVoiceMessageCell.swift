@@ -18,7 +18,6 @@ class BaseVoiceMessageCell: BaseMessageCell {
     return playerView
   }()
   
-  
   override func prepareForReuse() {
     super.prepareForReuse()
     playerView.play.isSelected = false

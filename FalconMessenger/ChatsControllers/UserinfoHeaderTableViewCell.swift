@@ -38,8 +38,7 @@ class UserinfoHeaderTableViewCell: UITableViewCell {
     
     return subtitle
   }()
-  
-  
+
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
@@ -65,18 +64,16 @@ class UserinfoHeaderTableViewCell: UITableViewCell {
     subtitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
     subtitle.heightAnchor.constraint(equalToConstant: 33).isActive = true
   }
-  
-  
+
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func prepareForReuse() {
     super.prepareForReuse()
-    
+
     icon.image = UIImage(named: "UserpicIcon")
     title.text = ""
     subtitle.text = ""
   }
-
 }

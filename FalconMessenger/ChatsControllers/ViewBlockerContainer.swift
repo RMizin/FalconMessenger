@@ -34,7 +34,7 @@ class ViewBlockerContainer: UIView {
     show.titleLabel?.sizeToFit()
     show.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
     show.layer.cornerRadius = 25
-    show.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0.0, 10.0)
+    show.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     show.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
     show.addTarget(self, action: #selector(ChatLogViewController.removeBlockerView), for: .touchUpInside)
     
@@ -51,7 +51,7 @@ class ViewBlockerContainer: UIView {
     blockAndDelete.titleLabel?.sizeToFit()
     blockAndDelete.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
     blockAndDelete.layer.cornerRadius = 25
-    blockAndDelete.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0.0, 10.0)
+    blockAndDelete.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     blockAndDelete.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
     blockAndDelete.addTarget(self, action: #selector(ChatLogViewController.blockAndDelete), for: .touchUpInside)
     

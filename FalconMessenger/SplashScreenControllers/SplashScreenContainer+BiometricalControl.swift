@@ -8,19 +8,18 @@
 
 import LocalAuthentication
 
-
 extension SplashScreenContainer {
-  
+
   func showSecuredData() {
     restoreNotificationsState()
-    
+
     let isBiometricalAuthEnabled = userDefaults.currentBoolObjectState(for: userDefaults.biometricalAuth)
     guard isBiometricalAuthEnabled else { return }
     DispatchQueue.main.async {
       self.removeFromSuperview()
     }
   }
-  
+
   func temporaryDisableNotifications() {
     guard bannersState == nil, soundsState == nil, vibrationState == nil else { return }
     bannersState = userDefaults.currentBoolObjectState(for: userDefaults.inAppNotifications)
@@ -42,7 +41,7 @@ extension SplashScreenContainer {
     var authError: NSError?
     let reason = "To get access to the Falcon Messenger"
     temporaryDisableNotifications()
-    
+
     guard localAuthenticationContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) else {
       guard let error = authError else { return }
       self.showPasscodeController(error: error, reason: reason)
@@ -54,7 +53,7 @@ extension SplashScreenContainer {
       }
       return
     }
-  
+
     DispatchQueue.main.async {
       self.configureSplashForBiometrics()
     }

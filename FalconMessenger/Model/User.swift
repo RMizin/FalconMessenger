@@ -18,7 +18,7 @@ class User: NSObject {
   var phoneNumber: String?
   var onlineStatus: AnyObject?
   var isSelected: Bool! = false // local only
-  
+
   init(dictionary: [String: AnyObject]) {
     super.init()
     self.id = dictionary["id"] as? String
@@ -30,7 +30,7 @@ class User: NSObject {
     self.onlineStatus = dictionary["OnlineStatus"]// as? AnyObject
   }
 }
-  
+
 extension User { // local only
   var titleFirstLetter: String {
     guard let name = name else {return "" }

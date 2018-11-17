@@ -17,7 +17,7 @@ protocol MessagesDelegate: class {
 }
 
 protocol CollectionDelegate: class {
-  func collectionView(shouldBeUpdatedWith message: Message, reference:DatabaseReference)
+  func collectionView(shouldBeUpdatedWith message: Message, reference: DatabaseReference)
   func collectionView(shouldRemoveMessage id: String)
   func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message)
 }
@@ -35,9 +35,7 @@ class MessagesFetcher: NSObject {
   var messagesReference: DatabaseReference!
   
   private let messagesToLoad = 50
-  
- 
-  
+
   weak var delegate: MessagesDelegate?
   weak var collectionDelegate: CollectionDelegate?
   
@@ -69,8 +67,7 @@ class MessagesFetcher: NSObject {
     loadingMessagesGroup.enter()
     newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
     observeManualRemoving(currentUserID: currentUserID, conversationID: conversationID)
-    
-    
+
     loadingMessagesGroup.notify(queue: .main, execute: {
       guard self.messages.count != 0 else {
         if self.isInitialChatMessagesLoad {
@@ -95,7 +92,7 @@ class MessagesFetcher: NSObject {
     })
   }
   
-  func observeManualRemoving(currentUserID:String, conversationID:String) {
+  func observeManualRemoving(currentUserID:String, conversationID: String) {
     guard manualRemovingReference == nil else { return }
     
     manualRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
@@ -137,20 +134,22 @@ class MessagesFetcher: NSObject {
     }
   }
   
-  func handleMessageInsertionInRuntime(newDictionary : [String:AnyObject]) {
+  func handleMessageInsertionInRuntime(newDictionary : [String: AnyObject]) {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let message = Message(dictionary: newDictionary)
     preloadURL(message: message)
     let isOutBoxMessage = message.fromId == currentUserID || message.fromId == message.toId
     
-    self.loadUserNameForOneMessage(message: message) {  [unowned self] (isCompleted, messageWithName) in
+    self.loadUserNameForOneMessage(message: message) { [unowned self] (_, messageWithName) in
       if !isOutBoxMessage {
-        self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,reference: self.messagesReference)
+        self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName, reference: self.messagesReference)
       } else {
         if let isInformationMessage = message.isInformationMessage, isInformationMessage {
-          self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,reference: self.messagesReference)
+          self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,
+                                                  reference: self.messagesReference)
         } else {
-          self.collectionDelegate?.collectionView(shouldUpdateOutgoingMessageStatusFrom: self.messagesReference, message: messageWithName)
+          self.collectionDelegate?.collectionView(shouldUpdateOutgoingMessageStatusFrom: self.messagesReference,
+                                                  message: messageWithName)
         }
       }
     }
@@ -161,8 +160,8 @@ class MessagesFetcher: NSObject {
     SDWebImagePrefetcher.shared.prefetchURLs([url])
   }
   
-  typealias loadNameCompletionHandler = (_ success: Bool, _ message: Message) -> Void
-  func loadUserNameForOneMessage(message: Message, completion: @escaping loadNameCompletionHandler) {
+  typealias LoadNameCompletionHandler = (_ success: Bool, _ message: Message) -> Void
+  func loadUserNameForOneMessage(message: Message, completion: @escaping LoadNameCompletionHandler) {
     
     guard let senderID = message.fromId else { completion(true, message); return }
     
@@ -182,7 +181,7 @@ class MessagesFetcher: NSObject {
     for _ in messages {
       loadedUserNamesGroup.enter()
     }
-    
+
     loadedUserNamesGroup.notify(queue: .main, execute: {
       self.loadingNamesGroup.leave()
     })
@@ -240,20 +239,20 @@ class MessagesFetcher: NSObject {
     return messages
   }
   
-  func preloadCellData(to dictionary: [String:AnyObject], isGroupChat: Bool) -> [String:AnyObject] {
+  func preloadCellData(to dictionary: [String:AnyObject], isGroupChat: Bool) -> [String: AnyObject] {
     var dictionary = dictionary
     
     if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
-      dictionary.updateValue(estimateFrameForText(messageText, orientation: .portrait) as AnyObject , forKey: "estimatedFrameForText")
-      dictionary.updateValue(estimateFrameForText(messageText, orientation: .landscapeLeft) as AnyObject , forKey: "landscapeEstimatedFrameForText")
+      dictionary.updateValue(estimateFrameForText(messageText, orientation: .portrait) as AnyObject, forKey: "estimatedFrameForText")
+      dictionary.updateValue(estimateFrameForText(messageText, orientation: .landscapeLeft) as AnyObject, forKey: "landscapeEstimatedFrameForText")
     } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight = Message(dictionary: dictionary).imageHeight?.floatValue {
-      
+
       let aspect = CGFloat(imageHeight / imageWidth)
       let maxWidth = BaseMessageCell.mediaMaxWidth
       let cellHeight = aspect * maxWidth
-      dictionary.updateValue( cellHeight as AnyObject , forKey: "imageCellHeight")
+      dictionary.updateValue(cellHeight as AnyObject, forKey: "imageCellHeight")
     }
-    
+
     if let voiceEncodedString = Message(dictionary: dictionary).voiceEncodedString { /* pre-encoding voice messages */
       let decoded = Data(base64Encoded: voiceEncodedString) as AnyObject
       let duration = self.getAudioDurationInHours(from: decoded as! Data) as AnyObject
@@ -267,35 +266,41 @@ class MessagesFetcher: NSObject {
       let date = Date(timeIntervalSince1970: TimeInterval(truncating: messageTimestamp))
       let convertedTimestamp = timestampOfChatLogMessage(date) as AnyObject
       let shortConvertedTimestamp = date.getShortDateStringFromUTC() as AnyObject
-      
+
       dictionary.updateValue(convertedTimestamp, forKey: "convertedTimestamp")
       dictionary.updateValue(shortConvertedTimestamp, forKey: "shortConvertedTimestamp")
     }
-    
+
     return dictionary
   }
   
   func estimateFrameForText(_ text: String, orientation: UIDeviceOrientation) -> CGRect {
     var size = CGSize()
     let portraitSize = CGSize(width: BaseMessageCell.bubbleViewMaxWidth, height: BaseMessageCell.bubbleViewMaxHeight)
-    let landscapeSize = CGSize(width: BaseMessageCell.landscapeBubbleViewMaxWidth, height: BaseMessageCell.bubbleViewMaxHeight)
-    
+    let landscapeSize = CGSize(width: BaseMessageCell.landscapeBubbleViewMaxWidth,
+                               height: BaseMessageCell.bubbleViewMaxHeight)
+
     switch orientation {
-      case .landscapeRight, .landscapeLeft:
-        size = landscapeSize
-        break
-      default:
-        size = portraitSize
-        break
+    case .landscapeRight, .landscapeLeft:
+      size = landscapeSize
+      break
+    default:
+      size = portraitSize
     }
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: MessageFontsAppearance.defaultMessageTextFont], context: nil).integral
+    return NSString(string: text).boundingRect(with: size,
+                                               options: options,
+                                               attributes: [NSAttributedStringKey.font: MessageFontsAppearance.defaultMessageTextFont],
+                                               context: nil).integral
   }
   
   func estimateFrameForText(width: CGFloat, text: String, font: UIFont) -> CGRect { /* information messages only */
     let size = CGSize(width: width, height: BaseMessageCell.bubbleViewMaxHeight)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: font], context: nil).integral
+    return NSString(string: text).boundingRect(with: size,
+                                               options: options,
+                                               attributes: [NSAttributedStringKey.font: font],
+                                               context: nil).integral
   }
   
   func getAudioDurationInHours(from data: Data) -> String? {
@@ -305,12 +310,12 @@ class MessagesFetcher: NSObject {
       let hours = Int(duration) / 3600
       let minutes = Int(duration) / 60 % 60
       let seconds = Int(duration) % 60
-      return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
+      return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
     } catch {
-      return String(format:"%02i:%02i:%02i", 0, 0, 0)
+      return String(format: "%02i:%02i:%02i", 0, 0, 0)
     }
   }
-  
+
   func getAudioDurationInSeconds(from data: Data) -> Int? {
     do {
       chatLogAudioPlayer = try AVAudioPlayer(data: data)

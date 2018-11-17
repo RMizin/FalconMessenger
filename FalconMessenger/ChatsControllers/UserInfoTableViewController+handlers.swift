@@ -18,12 +18,12 @@ extension UserInfoTableViewController {
     let overlay = INSPhotosOverlayView()
     overlay.bottomShadow.isHidden = true
 
-    imageView.sd_setImage(with: URL(string: user!.photoURL!)) { (image, error, cacheType, url) in
+    imageView.sd_setImage(with: URL(string: user!.photoURL!)) { (image, _, _, _) in
       let photo = INSPhoto(image: image, thumbnailImage: nil, messageUID: nil)
       let photos: [INSPhotoViewable] = [photo]
     
       let indexPath = IndexPath(row: 0, section: 0)
-      let cell = self.tableView.cellForRow(at: indexPath) as! UserinfoHeaderTableViewCell
+      let cell = self.tableView.cellForRow(at: indexPath) as? UserinfoHeaderTableViewCell ?? UserinfoHeaderTableViewCell()
       let currentPhoto = photos[indexPath.row]
       let galleryPreview = INSPhotosViewController(photos: photos, initialPhoto: currentPhoto, referenceView: cell.icon)
     

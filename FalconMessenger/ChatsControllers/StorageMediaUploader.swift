@@ -16,7 +16,7 @@ class StorageMediaUploader: NSObject {
     let ref = Storage.storage().reference().child("messageImages").child(imageName)
     
     guard let uploadData = UIImageJPEGRepresentation(image, 1) else { return }
-    let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+    let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (_, error) in
       guard error == nil else { return }
       
       ref.downloadURL(completion: { (url, error) in
@@ -33,8 +33,8 @@ class StorageMediaUploader: NSObject {
     
     let videoName = UUID().uuidString + ".mov"
     let ref = Storage.storage().reference().child("messageMovies").child(videoName)
-    
-    let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+
+    let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (_, error) in
       guard error == nil else { return }
       ref.downloadURL(completion: { (url, error) in
         guard error == nil, let videoURL = url else { completion(""); return }

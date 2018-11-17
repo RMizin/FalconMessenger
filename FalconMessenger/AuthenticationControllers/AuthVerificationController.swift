@@ -15,7 +15,7 @@ class AuthVerificationController: VerificationCodeController {
     super.viewDidLoad()
     setRightBarButton(with: "Next")
   }
-  
+
   override func rightBarButtonDidTap() {
     super.rightBarButtonDidTap()
     authenticate()

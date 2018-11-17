@@ -15,10 +15,10 @@ class OnboardingContainerView: UIView {
     logoImageView.translatesAutoresizingMaskIntoConstraints = false
     logoImageView.image = UIImage(named: "FalconLogo")
     logoImageView.contentMode = .scaleAspectFit
-    
+
     return logoImageView
   }()
-  
+
   let welcomeTitle: UILabel = {
     let welcomeTitle = UILabel()
     welcomeTitle.translatesAutoresizingMaskIntoConstraints = false
@@ -29,7 +29,7 @@ class OnboardingContainerView: UIView {
     welcomeTitle.sizeToFit()
     return welcomeTitle
   }()
-  
+
   let startMessaging: UIButton = {
     let startMessaging = UIButton()
     startMessaging.translatesAutoresizingMaskIntoConstraints = false
@@ -41,35 +41,34 @@ class OnboardingContainerView: UIView {
     startMessaging.sizeToFit()
     return startMessaging
   }()
-  
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
-    
+
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     addSubview(logoImageView)
     addSubview(welcomeTitle)
     addSubview(startMessaging)
-    
+
     NSLayoutConstraint.activate([
       logoImageView.topAnchor.constraint(equalTo: topAnchor),
       logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 55),
       logoImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -55),
       logoImageView.heightAnchor.constraint(equalTo: logoImageView.widthAnchor),
-      
+
       welcomeTitle.heightAnchor.constraint(equalToConstant: 50),
       welcomeTitle.bottomAnchor.constraint(equalTo: startMessaging.topAnchor, constant: -10),
       startMessaging.centerXAnchor.constraint(equalTo: centerXAnchor),
-      welcomeTitle.centerXAnchor.constraint(equalTo: centerXAnchor)      
-    ])
-    
+      welcomeTitle.centerXAnchor.constraint(equalTo: centerXAnchor)
+      ])
+
     if #available(iOS 11.0, *) {
        startMessaging.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
     } else {
        startMessaging.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50).isActive = true
     }
   }
-  
+
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
   }

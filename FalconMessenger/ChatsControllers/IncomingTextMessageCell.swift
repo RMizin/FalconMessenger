@@ -15,8 +15,10 @@ class IncomingTextMessageCell: BaseMessageCell {
   let textView: FalconTextView = {
     let textView = FalconTextView()
     textView.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
-    textView.textContainerInset = UIEdgeInsetsMake(textViewTopInset, incomingTextViewLeftInset, textViewBottomInset, incomingTextViewRightInset)
-    
+    textView.textContainerInset =  UIEdgeInsets(top: textViewTopInset,
+                                                left: incomingTextViewLeftInset,
+                                                bottom: textViewBottomInset,
+                                                right: incomingTextViewRightInset)
     return textView
   }()
   
@@ -56,7 +58,8 @@ class IncomingTextMessageCell: BaseMessageCell {
       textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
     }
     
-    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width, y: bubbleView.frame.height-timeLabel.frame.height-5)
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width,
+                                     y: bubbleView.frame.height-timeLabel.frame.height-5)
  
     if let isCrooked = self.message?.isCrooked, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().incomingBubble
@@ -66,13 +69,16 @@ class IncomingTextMessageCell: BaseMessageCell {
   }
   
   fileprivate func setupDefaultBubbleViewSize(message: Message) -> CGSize {
-    guard let portaritEstimate = message.estimatedFrameForText?.width, let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGSize() }
+    guard let portaritEstimate = message.estimatedFrameForText?.width,
+      let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGSize() }
     
     let portraitRect = setupFrameWithLabel(bubbleView.frame.origin.x, BaseMessageCell.bubbleViewMaxWidth,
-                                           portaritEstimate, BaseMessageCell.incomingMessageHorisontalInsets, frame.size.height, 10).integral
+                                           portaritEstimate, BaseMessageCell.incomingMessageHorisontalInsets,
+                                           frame.size.height, 10).integral
     
     let landscapeRect = setupFrameWithLabel(bubbleView.frame.origin.x, BaseMessageCell.landscapeBubbleViewMaxWidth,
-                                           landscapeEstimate, BaseMessageCell.incomingMessageHorisontalInsets, frame.size.height, 10).integral
+                                           landscapeEstimate, BaseMessageCell.incomingMessageHorisontalInsets,
+                                           frame.size.height, 10).integral
     switch UIDevice.current.orientation {
     case .landscapeRight, .landscapeLeft:
       return landscapeRect.size
@@ -91,23 +97,32 @@ class IncomingTextMessageCell: BaseMessageCell {
     
     switch UIDevice.current.orientation {
     case .landscapeRight, .landscapeLeft:
-      return getGroupBubbleSize(messageWidth: landscapeWidth, bubbleMaxWidth: landscapeBubbleMaxW, authorMaxWidth: landscapeAuthoMaxW)
+      return getGroupBubbleSize(messageWidth: landscapeWidth,
+                                bubbleMaxWidth: landscapeBubbleMaxW,
+                                authorMaxWidth: landscapeAuthoMaxW)
     default:
-      return getGroupBubbleSize(messageWidth: portaritWidth, bubbleMaxWidth: portraitBubbleMaxW, authorMaxWidth: portraitAuthorMaxW)
+      return getGroupBubbleSize(messageWidth: portaritWidth,
+                                bubbleMaxWidth: portraitBubbleMaxW,
+                                authorMaxWidth: portraitAuthorMaxW)
     }
   }
   
   fileprivate func getGroupBubbleSize(messageWidth: CGFloat, bubbleMaxWidth: CGFloat, authorMaxWidth: CGFloat) -> CGSize {
     let horisontalInsets = BaseMessageCell.incomingMessageHorisontalInsets
     
-    let rect = setupFrameWithLabel(bubbleView.frame.origin.x, bubbleMaxWidth, messageWidth, horisontalInsets, frame.size.height, 10).integral
+    let rect = setupFrameWithLabel(bubbleView.frame.origin.x,
+                                   bubbleMaxWidth,
+                                   messageWidth,
+                                   horisontalInsets,
+                                   frame.size.height, 10).integral
 
     if nameLabel.frame.size.width >= rect.width - horisontalInsets {
       if nameLabel.frame.size.width >= authorMaxWidth {
         nameLabel.frame.size.width = authorMaxWidth
         return CGSize(width: bubbleMaxWidth, height: frame.size.height.rounded())
       }
-      return CGSize(width: (nameLabel.frame.size.width + horisontalInsets).rounded(), height: frame.size.height.rounded())
+      return CGSize(width: (nameLabel.frame.size.width + horisontalInsets).rounded(),
+                    height: frame.size.height.rounded())
     } else {
       return rect.size
     }

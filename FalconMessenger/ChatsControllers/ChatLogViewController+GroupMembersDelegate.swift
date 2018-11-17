@@ -35,17 +35,15 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
   
   func removeMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
-    
+
     guard let memberIndex = members.index(where: { (memberID) -> Bool in
       return memberID == id
     }) else { return }
-    
-    
+
     self.conversation?.chatParticipantsIDs?.remove(at: memberIndex)
     self.changeUIAfterChildRemovedIfNeeded()
   }
-  
-  
+
   func isCurrentUserMemberOfCurrentGroup() -> Bool {
     guard let membersIDs = conversation?.chatParticipantsIDs,
           let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) else { return false }
@@ -76,7 +74,10 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
       reloadInputView(view: inputBlockerContainerView)
       removeChatsControllerTypingObserver()
       navigationItem.rightBarButtonItem?.isEnabled = false
-      if typingIndicatorReference != nil { typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle); typingIndicatorReference = nil }
+      if typingIndicatorReference != nil {
+        typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle)
+        typingIndicatorReference = nil
+      }
       guard DeviceType.isIPad else { return }
       presentedViewController?.dismiss(animated: true, completion: nil)
     }

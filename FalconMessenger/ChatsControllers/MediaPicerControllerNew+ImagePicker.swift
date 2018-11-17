@@ -12,7 +12,6 @@ import AssetsLibrary
 import MobileCoreServices
 import AVFoundation
 
-
 extension MediaPickerControllerNew {
   
  @objc func openPhotoLibrary() {
@@ -46,7 +45,7 @@ extension MediaPickerControllerNew {
 //  }
   
   
-  override func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+  override func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
     
     if picker.sourceType == UIImagePickerControllerSourceType.camera {
       
@@ -60,7 +59,7 @@ extension MediaPickerControllerNew {
               
               PHAssetChangeRequest.creationRequestForAsset(from: originalImage)
               
-            }, completionHandler: { (isSaved, error) in
+            }, completionHandler: { (isSaved, _) in
               
               guard isSaved else {
                 self.delegate?.controller?(self, didTakeImage: originalImage)
@@ -91,15 +90,15 @@ extension MediaPickerControllerNew {
               
               PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: pickedVideo)
               
-            }) { isSaved, error in
-              
+            }) { isSaved, _ in
+
               guard isSaved else {
                 let alertMessage = videoRecordedButLibraryUnavailableError
                 self.dismissImagePicker()
                 basicErrorAlertWith(title: basicTitleForAccessError, message: alertMessage, controller: self)
                 return
               }
-                
+
               let options = PHFetchOptions()
               options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
               options.fetchLimit = 1
@@ -126,12 +125,12 @@ extension MediaPickerControllerNew {
         
         guard let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems else { return }
                 
-        for selectedIndexPath in selectedIndexPaths {
-          if self.assets[selectedIndexPath.item] == asset {
+        for selectedIndexPath in selectedIndexPaths where self.assets[selectedIndexPath.item] == asset {
+        //  if  {
             print("you selected already selected image")
             dismissImagePicker()
             return
-          }
+        //  }
         }
     
         guard let indexForSelection = self.assets.index(where: { (phAsset) -> Bool in
@@ -151,7 +150,6 @@ extension MediaPickerControllerNew {
       }
     }
   }
-  
   
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
     dismissImagePicker()

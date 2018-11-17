@@ -7,7 +7,7 @@
 //
 
 import UIKit
-  
+
 class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
   override func prepare() {

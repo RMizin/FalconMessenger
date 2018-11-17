@@ -71,7 +71,8 @@ extension ChatLogPresenter: MessagesDelegate {
     chatLogController?.groupedMessages = Message.groupedMessages(messages)
     chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
   
-    if let membersIDs = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
+    if let membersIDs = conversation.chatParticipantsIDs,
+      let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
       chatLogController?.observeTypingIndicator()
       chatLogController?.configureTitleViewWithOnlineStatus()
     }

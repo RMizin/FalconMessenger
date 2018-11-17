@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class SelectGroupMembersController: SelectParticipantsViewController {
   
   override func viewDidLoad() {

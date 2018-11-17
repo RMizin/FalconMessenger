@@ -185,7 +185,9 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
   }
   
   func phoneLabelText() -> String {
-    let mutStr = phoneLabel.attributedText?.mutableCopy() as! NSMutableAttributedString
+    guard let mutStr = phoneLabel.attributedText?.mutableCopy() as? NSMutableAttributedString else {
+      return ""
+    }
     let range = (mutStr.string as NSString).range(of: "mobile\n")
     mutStr.deleteCharacters(in: range)
     return mutStr.string

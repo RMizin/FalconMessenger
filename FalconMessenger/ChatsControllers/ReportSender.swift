@@ -36,7 +36,9 @@ class ReportSender: NSObject {
         return
       }
        ARSLineProgress.hide()
-       basicErrorAlertWith(title: "Your report has bees sent", message: "We will review your report and react as soon as possible", controller: controller)
+       basicErrorAlertWith(title: "Your report has bees sent",
+                           message: "We will review your report and react as soon as possible",
+                           controller: controller)
       guard let indexPath = indexPath , let cell = cell else { return }
       cell.handleDeletion(indexPath: indexPath)
     }

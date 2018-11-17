@@ -16,7 +16,7 @@ class ChatCollectionView: UICollectionView {
     super.init(frame: .zero, collectionViewLayout: AutoSizingCollectionViewFlowLayout())
     
     alwaysBounceVertical = true
-    contentInset = UIEdgeInsetsMake(20, 0, 20, 0)
+    contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
     delaysContentTouches = false
     isPrefetchingEnabled = true
     keyboardDismissMode = .interactive
@@ -40,13 +40,15 @@ class ChatCollectionView: UICollectionView {
   
   public func scrollToBottom(animated: Bool) {
     guard contentSize.height > bounds.size.height else { return }
-    setContentOffset(CGPoint(x: 0, y: (contentSize.height - bounds.size.height) + (contentInset.bottom)), animated: animated)
+    setContentOffset(CGPoint(x: 0, y: (contentSize.height - bounds.size.height) + (contentInset.bottom)),
+                     animated: animated)
   }
   
   public func instantMoveToBottom() {
     guard contentSize.height > bounds.size.height else { return }
     UIView.performWithoutAnimation {
-      setContentOffset(CGPoint(x: 0, y: (contentSize.height - bounds.size.height) + (contentInset.bottom)), animated: false)
+      setContentOffset(CGPoint(x: 0, y: (contentSize.height - bounds.size.height) + (contentInset.bottom)),
+                       animated: false)
     }
   }
 }

@@ -30,7 +30,7 @@ class ReportAlertController: UIAlertController {
         self.sendReport(action.title ?? "Pornography")
       }
       
-      let otherAction = UIAlertAction(title: "Other", style: .default) { (action) in
+      let otherAction = UIAlertAction(title: "Other", style: .default) { (_) in
         guard let sender = self.controller else { return }
         let destination = OtherReportController()
         destination.delegate = self
@@ -56,7 +56,9 @@ class ReportAlertController: UIAlertController {
     guard let sender = self.controller, let reportedMessage = self.reportedMessage else { return }
     let isConnected = self.checkInternetConnection()
     guard isConnected else { return }
-    if let controller = self.controller as? ChatLogViewController, let indexPath = self.indexPath, let cell = controller.collectionView.cellForItem(at: indexPath) as? BaseMessageCell {
+    if let controller = self.controller as? ChatLogViewController,
+      let indexPath = self.indexPath,
+      let cell = controller.collectionView.cellForItem(at: indexPath) as? BaseMessageCell {
 
       self.reportSender.sendReport(title, sender, reportedMessage, indexPath, cell)
     } else {
@@ -67,7 +69,9 @@ class ReportAlertController: UIAlertController {
   fileprivate func checkInternetConnection() -> Bool {
      guard currentReachabilityStatus != .notReachable else {
       guard let controller = self.controller else { return false }
-      basicErrorAlertWith(title: "No Internet Connection", message: "Check your internet connection and try again.", controller: controller)
+      basicErrorAlertWith(title: "No Internet Connection",
+                          message: "Check your internet connection and try again.",
+                          controller: controller)
       return false
     }
     return true

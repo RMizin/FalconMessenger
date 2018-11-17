@@ -21,7 +21,7 @@ class OtherReportController: UIViewController {
     textView.translatesAutoresizingMaskIntoConstraints = false
     textView.layer.cornerRadius = 30
     textView.layer.masksToBounds = true
-    textView.textContainerInset = UIEdgeInsetsMake(10, 15, 10, 15)
+    textView.textContainerInset = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 10)
     textView.font = UIFont.systemFont(ofSize: 18)
     
     return textView

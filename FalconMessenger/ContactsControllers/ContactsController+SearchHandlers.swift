@@ -9,21 +9,23 @@
 import UIKit
 
 extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
-  
+
   func updateSearchResults(for searchController: UISearchController) {}
-  
+
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     searchBar.text = nil
     filteredUsers = users
     filteredContacts = contacts
-    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {
+      self.tableView.reloadData()
+    }, completion: nil)
     guard #available(iOS 11.0, *) else {
       searchBar.setShowsCancelButton(false, animated: true)
       searchBar.resignFirstResponder()
       return
     }
   }
-  
+
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     guard #available(iOS 11.0, *) else {
@@ -32,23 +34,25 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
     }
     return true
   }
-  
+
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    filteredUsers = searchText.isEmpty ? users : users.filter({ (User) -> Bool in
-      return User.name!.lowercased().contains(searchText.lowercased())
+    filteredUsers = searchText.isEmpty ? users : users.filter({ (user) -> Bool in
+      return user.name!.lowercased().contains(searchText.lowercased())
     })
-    
+
     filteredContacts = searchText.isEmpty ? contacts : contacts.filter({ (CNContact) -> Bool in
       let contactFullName = CNContact.givenName.lowercased() + " " + CNContact.familyName.lowercased()
       return contactFullName.lowercased().contains(searchText.lowercased())
     })
-    
-    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
+
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {
+      self.tableView.reloadData()
+    }, completion: nil)
   }
 }
 
 extension ContactsController { /* hiding keyboard */
-  
+
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     if #available(iOS 11.0, *) {
       searchContactsController?.resignFirstResponder()
@@ -57,7 +61,7 @@ extension ContactsController { /* hiding keyboard */
       searchBar?.resignFirstResponder()
     }
   }
-  
+
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     if #available(iOS 11.0, *) {
       searchContactsController?.searchBar.endEditing(true)

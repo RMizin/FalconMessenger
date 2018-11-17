@@ -54,7 +54,7 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
     
       let indexPath = IndexPath(item: index!, section: 2)
     
-      self.mediaPickerController?.collectionView.deselectItem(at: indexPath , animated: true)
+      self.mediaPickerController?.collectionView.deselectItem(at: indexPath, animated: true)
     
       self.mediaPickerController?.delegate?.controller?(self.mediaPickerController!,
                                                                               didDeselectAsset: self.attachedMedia[row].phAsset!,
@@ -62,7 +62,8 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = attachCollectionView.dequeueReusableCell(withReuseIdentifier: attachCollectionViewCellID, for: indexPath) as! AttachCollectionViewCell
+    let cell = attachCollectionView.dequeueReusableCell(withReuseIdentifier: attachCollectionViewCellID,
+                                                        for: indexPath) as? AttachCollectionViewCell ?? AttachCollectionViewCell()
     
     cell.chatInputContainerView = self
   
@@ -72,7 +73,7 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
       let data = attachedMedia[indexPath.row].audioObject!
       let duration = getAudioDurationInHours(from: data)
       cell.image.contentMode = .scaleAspectFit
-      cell.image.image = UIImage(named:"VoiceMemo")
+      cell.image.image = UIImage(named: "VoiceMemo")
       cell.playerViewHeightAnchor.constant = 20
       cell.playerView.timerLabel.text = duration
       cell.playerView.startingTime = getAudioDurationInSeconds(from: data)!
@@ -121,12 +122,12 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
       return CGSize(width: newWidth, height: newHeight)
     }
 
-    let oldHeight = UIImage(named:"VoiceMemo")!.size.height
+    let oldHeight = UIImage(named: "VoiceMemo")!.size.height
     let scaleFactor = AttachCollectionView.cellHeight / oldHeight
-    let newWidth = UIImage(named:"VoiceMemo")!.size.width * scaleFactor
+    let newWidth = UIImage(named: "VoiceMemo")!.size.width * scaleFactor
     let newHeight = oldHeight * scaleFactor
-    
-    return CGSize(width: newWidth , height: newHeight)
+
+    return CGSize(width: newWidth, height: newHeight)
   }
   
  private func getAudioDurationInHours(from data: Data) -> String? {
@@ -136,10 +137,10 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
       let hours = Int(duration) / 3600
       let minutes = Int(duration) / 60 % 60
       let seconds = Int(duration) % 60
-      return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
+      return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
     } catch {
       print("error playing")
-      return String(format:"%02i:%02i:%02i", 0, 0, 0)
+      return String(format: "%02i:%02i:%02i", 0, 0, 0)
     }
   }
   

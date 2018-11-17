@@ -11,7 +11,7 @@ import UIKit
 extension UserProfileController: AvatarOpenerDelegate {
   func avatarOpener(avatarPickerDidPick image: UIImage) {
     userProfileContainerView.profileImageView.showActivityIndicator()
-    userProfileDataDatabaseUpdater.deleteCurrentPhoto { [weak self] (isDeleted) in
+    userProfileDataDatabaseUpdater.deleteCurrentPhoto { [weak self] (_) in
       self?.userProfileDataDatabaseUpdater.updateUserProfile(with: image, completion: { [weak self] (isUpdated) in
         self?.userProfileContainerView.profileImageView.hideActivityIndicator()
         guard isUpdated, self != nil else {

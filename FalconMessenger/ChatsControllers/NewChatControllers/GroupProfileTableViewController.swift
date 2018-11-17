@@ -40,7 +40,8 @@ class GroupProfileTableViewController: UITableViewController {
     edgesForExtendedLayout = [UIRectEdge.top, UIRectEdge.bottom]
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .done, target: self, action: #selector(createGroupChat))
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .done, target: self,
+                                                        action: #selector(createGroupChat))
     navigationItem.rightBarButtonItem?.isEnabled = false
   }
   
@@ -54,11 +55,15 @@ class GroupProfileTableViewController: UITableViewController {
   }
   
   fileprivate func configureContainerView() {
-    groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
+    let tapGesture = UITapGestureRecognizer(target: self,
+                                            action: #selector(openUserProfilePicture))
+    groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(tapGesture)
     groupProfileTableHeaderContainer.name.delegate = self
     groupProfileTableHeaderContainer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 170)
     tableView.tableHeaderView = groupProfileTableHeaderContainer
-    groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    groupProfileTableHeaderContainer.name.addTarget(self,
+                                                    action: #selector(textFieldDidChange(_:)),
+                                                    for: .editingChanged)
   }
   
   fileprivate func configureColorsAccordingToTheme() {
@@ -99,7 +104,8 @@ class GroupProfileTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: selectedFlaconUsersCellID, for: indexPath) as! FalconUsersTableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: selectedFlaconUsersCellID,
+                                             for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
     let user = selectedFlaconUsers[indexPath.row]
     cell.configureCell(for: user)
     return cell
@@ -118,7 +124,9 @@ extension GroupProfileTableViewController {
 
   @objc func createGroupChat() {
     
-    guard currentReachabilityStatus != .notReachable, let chatName = groupProfileTableHeaderContainer.name.text, let currentUserID = Auth.auth().currentUser?.uid else {
+    guard currentReachabilityStatus != .notReachable,
+      let chatName = groupProfileTableHeaderContainer.name.text,
+      let currentUserID = Auth.auth().currentUser?.uid else {
       basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
       return
     }
@@ -127,7 +135,11 @@ extension GroupProfileTableViewController {
     let chatImage = groupProfileTableHeaderContainer.profileImageView.image
     let chatID = Database.database().reference().child("user-messages").child(currentUserID).childByAutoId().key
     let groupChatsReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
-    let childValues: [String: AnyObject] = ["chatID": chatID as AnyObject, "chatName": chatName as AnyObject, "chatParticipantsIDs": membersIDs.1 as AnyObject, "admin": currentUserID as AnyObject,"isGroupChat": true as AnyObject]
+    let childValues = ["chatID": chatID as AnyObject,
+                       "chatName": chatName as AnyObject,
+                       "chatParticipantsIDs": membersIDs.1 as AnyObject,
+                       "admin": currentUserID as AnyObject,
+                       "isGroupChat": true as AnyObject]
   
     chatCreatingGroup.enter()
     chatCreatingGroup.enter()
@@ -137,14 +149,16 @@ extension GroupProfileTableViewController {
     chatCreatingGroup.notify(queue: DispatchQueue.main, execute: {
       self.hideActivityIndicator()
       print("Chat creating finished...")
-      self.informationMessageSender.sendInformatoinMessage(chatID: chatID, membersIDs: membersIDs.0, text: "New group has been created")
+      self.informationMessageSender.sendInformatoinMessage(chatID: chatID,
+                                                           membersIDs: membersIDs.0,
+                                                           text: "New group has been created")
       self.navigationController?.backToViewController(viewController: ChatsTableViewController.self)
     })
   }
   
-  func fetchMembersIDs() -> ([String], [String:AnyObject]) {
+  func fetchMembersIDs() -> ([String], [String: AnyObject]) {
     var membersIDs = [String]()
-    var membersIDsDictionary = [String:AnyObject]()
+    var membersIDsDictionary = [String: AnyObject]()
     
     guard let currentUserID = Auth.auth().currentUser?.uid else { return (membersIDs, membersIDsDictionary) }
     
@@ -169,16 +183,16 @@ extension GroupProfileTableViewController {
     self.navigationController?.view.isUserInteractionEnabled = true
     ARSLineProgress.showSuccess()
   }
-  
+
   func uploadAvatar(chatImage: UIImage?, reference: DatabaseReference) {
-    
+
     guard let image = chatImage else {
       reference.updateChildValues(["chatOriginalPhotoURL": "", "chatThumbnailPhotoURL": ""]) { (_, _) in
-        self.chatCreatingGroup.leave();
+        self.chatCreatingGroup.leave()
       }
       return
     }
-    
+
     let thumbnailImage = createImageThumbnail(image)
     var images = [(image: UIImage, quality: CGFloat, key: String)]()
     images.append((image: image, quality: 0.5, key: "chatOriginalPhotoURL"))
@@ -198,7 +212,7 @@ extension GroupProfileTableViewController {
       }
     }
   }
-  
+
   func createGroupNode(reference: DatabaseReference, childValues: [String: Any], noImagesToUpload: Bool) {
     showActivityIndicator()
     let nodeCreationGroup = DispatchGroup()
@@ -206,7 +220,7 @@ extension GroupProfileTableViewController {
     nodeCreationGroup.notify(queue: DispatchQueue.main, execute: {
       self.chatCreatingGroup.leave()
     })
-    reference.updateChildValues(childValues) { (error, reference) in
+    reference.updateChildValues(childValues) { (_, _) in
       nodeCreationGroup.leave()
     }
   }

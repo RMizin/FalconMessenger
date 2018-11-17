@@ -32,11 +32,11 @@ class UserBlockingManager: NSObject {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     ARSLineProgress.show()
     // you banned your partner
-    let currentUserBanned = Database
-      .database(url: GlobalDataStorage.reportDatabaseURL).reference().child("blacklists").child(currentUserID).child("banned")
+    let currentUserBanned = Database.database(url: GlobalDataStorage.reportDatabaseURL).reference()
+      .child("blacklists").child(currentUserID).child("banned")
   
-    let companionBannedBy = Database
-      .database(url: GlobalDataStorage.reportDatabaseURL).reference().child("blacklists").child(userID).child("bannedBy")
+    let companionBannedBy = Database.database(url: GlobalDataStorage.reportDatabaseURL).reference()
+      .child("blacklists").child(userID).child("bannedBy")
     
     if remove == true {
       let removingGroup = DispatchGroup()
@@ -47,7 +47,7 @@ class UserBlockingManager: NSObject {
       currentUserBanned.child(userID).removeValue { (error, _) in
         removingGroup.leave()
       }
-      companionBannedBy.child(currentUserID).removeValue { (error, _) in
+      companionBannedBy.child(currentUserID).removeValue { (_, _) in
         removingGroup.leave()
       }
       return

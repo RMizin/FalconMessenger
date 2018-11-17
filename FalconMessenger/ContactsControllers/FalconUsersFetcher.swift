@@ -17,20 +17,20 @@ protocol FalconUsersUpdatesDelegate: class {
 }
 
 class FalconUsersFetcher: NSObject {
-  
+
   weak var delegate: FalconUsersUpdatesDelegate?
   fileprivate let phoneNumberKit = PhoneNumberKit()
   lazy var functions = Functions.functions()
-  
+
   func loadAndSyncFalconUsers() {
     userDefaults.updateObject(for: userDefaults.contactsSyncronizationStatus, with: false)
     removeAllUsersObservers()
     requestFalconUsers()
   }
-  
+
   fileprivate func prepareNumbers(from numbers: [String]) -> [String] {
     var preparedNumbers = [String]()
-    
+
     for number in numbers {
       do {
         let countryCode = try phoneNumberKit.parse(number).countryCode
@@ -41,40 +41,40 @@ class FalconUsersFetcher: NSObject {
 
     return preparedNumbers
   }
-  
+
   fileprivate func requestFalconUsers() {
-   
+
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let numbers = prepareNumbers(from: globalDataStorage.localPhones)
     print("https reqest called")
     functions.httpsCallable("fetchContacts").call(["preparedNumbers": numbers]) { (result, _) in
       guard let response = result?.data as? [[String: AnyObject]] else { return }
       var fetchedUsers = [User]()
-      
+
       for object in response {
         let user = User(dictionary: object)
         if let uid = user.id, uid != currentUserID {
           fetchedUsers.append(user)
         }
       }
-  
+
       userDefaults.updateObject(for: userDefaults.contactsSyncronizationStatus, with: true)
       self.updateFalconUsers(with: fetchedUsers)
       print("Contacts fetching completed", fetchedUsers.count)
     }
   }
-  
+
   fileprivate func updateFalconUsers(with fetchedUsers: [User]) {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let databaseReference = Database.database().reference().child("users").child(currentUserID)
     let falconUserIDs = fetchedUsers.map({$0.id ?? "" })
-    
+
     var falconUserIDsDictionary = [AnyHashable: Any]()
-    
+
     falconUserIDs.forEach { (item) in
       falconUserIDsDictionary[item] = item
     }
-    
+
     /*databaseReference.updateChildValues(["falconUsers" : falconUserIDsDictionary]) { (_, _) in
       self.loadFalconUsers()
     }*/
@@ -89,7 +89,7 @@ class FalconUsersFetcher: NSObject {
   fileprivate var falconUsersHandle = [(userID: String, handle: DatabaseHandle)]()
   fileprivate var falconUsersLoadingGroup = DispatchGroup()
   fileprivate var isFalconUsersLoadingGroupFinished = false
-  
+
   func loadFalconUsers() {
     let status = CNContactStore.authorizationStatus(for: .contacts)
     if status == .denied || status == .restricted { return }
@@ -103,7 +103,7 @@ class FalconUsersFetcher: NSObject {
         self.updateDataSource(newUsers: [User]())
         return
       }
-    
+
       guard let dictionary = snapshot.childSnapshot(forPath: "falconUsers").value as? [String: String] else { return }
       var falconUsersIDs = Array(dictionary.values)
 
@@ -113,7 +113,7 @@ class FalconUsersFetcher: NSObject {
       self.loadData(for: falconUsersIDs)
     }
   }
-  
+
   fileprivate func loadData(for userIDs: [String]) {
     falconUsersLoadingGroup = DispatchGroup()
     userIDs.forEach { (_) in falconUsersLoadingGroup.enter() }
@@ -122,22 +122,25 @@ class FalconUsersFetcher: NSObject {
       self.isFalconUsersLoadingGroupFinished = true
       self.updateDataSource(newUsers: self.falconUsers)
     })
-    
+
     userIDs.forEach { (userID) in
       let handle = DatabaseHandle()
       let element = (userID: userID, handle: handle)
       falconUsersHandle.insert(element, at: 0)
       falconUsersReference = Database.database().reference().child("users").child(element.userID)
       falconUsersHandle[0].handle = falconUsersReference.observe(.value, with: { (snapshot) in
-        
-        guard var dictionary = snapshot.value as? [String: AnyObject] else { self.updateDataSource(newUsers: nil); return }
+
+        guard var dictionary = snapshot.value as? [String: AnyObject] else {
+          self.updateDataSource(newUsers: nil)
+          return
+        }
         dictionary.updateValue(userID as AnyObject, forKey: "id")
         let falconUser = User(dictionary: dictionary)
-        
+
         if let thumbnail = falconUser.thumbnailPhotoURL, let url = URL(string: thumbnail) {
           SDWebImagePrefetcher.shared.prefetchURLs([url])
         }
-    
+
         if let index = self.falconUsers.index(where: { (user) -> Bool in
           return user.id == falconUser.id
         }) {
@@ -162,7 +165,7 @@ class FalconUsersFetcher: NSObject {
   fileprivate func removeAllUsersObservers() {
     falconUsers.removeAll()
     isFalconUsersLoadingGroupFinished = false
-    
+
     guard falconUsersReference != nil else { return }
     for element in falconUsersHandle {
       falconUsersReference = Database.database().reference().child("users").child(element.userID)
@@ -174,7 +177,7 @@ class FalconUsersFetcher: NSObject {
       falconUsersHandle.remove(at: index)
     }
   }
-  
+
   fileprivate func rearrangeUsers(users: [User]) -> [User] { /* Moves Online users to the top  */
     var users = users
     for user in users where user.onlineStatus as? String == statusOnline {
@@ -182,7 +185,7 @@ class FalconUsersFetcher: NSObject {
     }
     return users
   }
-  
+
   fileprivate func sortUsers(users: [User]) -> [User] { /* Sort users by last online date  */
     let sortedUsers = users.sorted(by: { (user1, user2) -> Bool in
       let timestamp1 = user1.onlineStatus as? TimeInterval

@@ -32,15 +32,15 @@ enum ViewPlaceholderSubtitle: String {
 }
 
 class ViewPlaceholder: UIView {
-  
+
   var title = UILabel()
   var subtitle = UILabel()
 
   var placeholderPriority: ViewPlaceholderPriority = .low
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
-    
+
     backgroundColor = .clear
     translatesAutoresizingMaskIntoConstraints = false
   
@@ -49,37 +49,38 @@ class ViewPlaceholder: UIView {
     title.textAlignment = .center
     title.numberOfLines = 0
     title.translatesAutoresizingMaskIntoConstraints = false
-  
+
     subtitle.font = .systemFont(ofSize: 13)
     subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
     subtitle.textAlignment = .center
     subtitle.numberOfLines = 0
     subtitle.translatesAutoresizingMaskIntoConstraints = false
-    
+
     addSubview(title)
-   
+
     title.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
     title.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
     title.heightAnchor.constraint(equalToConstant: 45).isActive = true
-    
+
     addSubview(subtitle)
     subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 5).isActive = true
     subtitle.leftAnchor.constraint(equalTo: leftAnchor, constant: 35).isActive = true
     subtitle.rightAnchor.constraint(equalTo: rightAnchor, constant: -35).isActive = true
     subtitle.heightAnchor.constraint(equalToConstant: 50).isActive = true
   }
-  
+
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  func add(for view: UIView, title: ViewPlaceholderTitle, subtitle: ViewPlaceholderSubtitle, priority: ViewPlaceholderPriority, position: ViewPlaceholderPosition) {
+
+  func add(for view: UIView, title: ViewPlaceholderTitle, subtitle: ViewPlaceholderSubtitle,
+           priority: ViewPlaceholderPriority, position: ViewPlaceholderPosition) {
 
     guard priority.rawValue >= placeholderPriority.rawValue else { return }
     placeholderPriority = priority
     self.title.text = title.rawValue
     self.subtitle.text = subtitle.rawValue
-    
+
     if position == .center {
       self.title.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 0).isActive = true
     }
@@ -94,7 +95,7 @@ class ViewPlaceholder: UIView {
       self.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
     }
   }
-  
+
   func remove(from view: UIView, priority: ViewPlaceholderPriority) {
     guard priority.rawValue >= placeholderPriority.rawValue else { return }
     for subview in view.subviews where subview is ViewPlaceholder {

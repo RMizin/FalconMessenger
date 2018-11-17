@@ -11,10 +11,10 @@ import UIKit
 class OnboardingController: UIViewController {
 
   let onboardingContainerView = OnboardingContainerView()
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+
     if #available(iOS 11.0, *) {
       navigationItem.largeTitleDisplayMode = .automatic
       navigationController?.navigationBar.prefersLargeTitles = true
@@ -32,14 +32,14 @@ class OnboardingController: UIViewController {
     onboardingContainerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     setColorsAccordingToTheme()
   }
-  
+
   fileprivate func setColorsAccordingToTheme() {
     let theme = ThemeManager.currentTheme()
     ThemeManager.applyTheme(theme: theme)
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     onboardingContainerView.backgroundColor = view.backgroundColor
   }
-  
+
   @objc func startMessagingDidTap () {
     let destination = AuthPhoneNumberController()
     navigationController?.pushViewController(destination, animated: true)

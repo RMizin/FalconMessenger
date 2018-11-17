@@ -9,8 +9,7 @@
 import UIKit
 import Firebase
 
-
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+private func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
     return l < r
@@ -21,7 +20,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+private func > <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
     return l > r
@@ -46,7 +45,7 @@ enum MessageType {
 }
 
 class Message: NSObject {
-  
+
     var messageUID: String?
     var isInformationMessage: Bool?
 
@@ -59,15 +58,15 @@ class Message: NSObject {
   
     var status: String?
     var seen: Bool?
-  
+
     var imageUrl: String?
     var imageHeight: NSNumber?
     var imageWidth: NSNumber?
-  
+
     var localImage: UIImage?
   
     var localVideoUrl: String?
-  
+
     var voiceData: Data?
     var voiceDuration: String?
     var voiceStartTime: Int?
@@ -76,7 +75,7 @@ class Message: NSObject {
     var videoUrl: String?
   
     var estimatedFrameForText: CGRect?
-  
+
     var landscapeEstimatedFrameForText: CGRect?
   
     var imageCellHeight: NSNumber?
@@ -84,110 +83,109 @@ class Message: NSObject {
     var isCrooked: Bool? // local only
   
     var senderName: String? //local only, group messages only
-      
+
     func chatPartnerId() -> String? {
         return fromId == Auth.auth().currentUser?.uid ? toId : fromId
     }
   
     init(dictionary: [String: AnyObject]) {
         super.init()
-      
+
         messageUID = dictionary["messageUID"] as? String
         isInformationMessage = dictionary["isInformationMessage"] as? Bool
         fromId = dictionary["fromId"] as? String
         text = dictionary["text"] as? String
         toId = dictionary["toId"] as? String
         timestamp = dictionary["timestamp"] as? NSNumber
-      
+
         convertedTimestamp = dictionary["convertedTimestamp"] as? String
         shortConvertedTimestamp = dictionary["shortConvertedTimestamp"] as? String
-      
+
         status = dictionary["status"] as? String
         seen = dictionary["seen"] as? Bool
-        
+
         imageUrl = dictionary["imageUrl"] as? String
         imageHeight = dictionary["imageHeight"] as? NSNumber
         imageWidth = dictionary["imageWidth"] as? NSNumber
-        
+
         videoUrl = dictionary["videoUrl"] as? String
-      
+
         localImage = dictionary["localImage"] as? UIImage
         localVideoUrl = dictionary["localVideoUrl"] as? String
-      
+
         voiceEncodedString = dictionary["voiceEncodedString"] as? String
         voiceData = dictionary["voiceData"] as? Data //unused
         voiceDuration = dictionary["voiceDuration"] as? String
         voiceStartTime = dictionary["voiceStartTime"] as? Int
-      
+
         estimatedFrameForText = dictionary["estimatedFrameForText"] as? CGRect
         landscapeEstimatedFrameForText = dictionary["landscapeEstimatedFrameForText"] as? CGRect
         imageCellHeight = dictionary["imageCellHeight"] as? NSNumber
       
         senderName = dictionary["senderName"] as? String
-      
+
         isCrooked = dictionary["isCrooked"] as? Bool
     }
-  
-  
+
   static func groupedMessages(_ messages: [Message]) -> [[Message]] {
     let grouped = Dictionary.init(grouping: messages) { (message) -> String in
       return message.shortConvertedTimestamp ?? ""
     }
-    
+
     let keys = grouped.keys.sorted { (time1, time2) -> Bool in
       return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
     }
-    
+
     var groupedMessages = [[Message]]()
     keys.forEach({
       groupedMessages.append(grouped[$0]!)
     })
-    
+
     return groupedMessages
   }
-  
+
   static func get(indexPathOf message: Message, in groupedArray: [[Message]]) -> IndexPath? {
     guard let section = groupedArray.index(where: { (messages) -> Bool in
       for message1 in messages where message1 == message {
         return true
       }; return false
     }) else { return nil }
-    
+
     guard let row = groupedArray[section].index(where: { (message1) -> Bool in
       return message1.messageUID == message.messageUID
     }) else { return IndexPath(row: -1, section: section) }
     
     return IndexPath(row: row, section: section)
   }
-  
+
   static func get(indexPathOf messageUID: String? = nil , localPhoto: UIImage? = nil, in groupedArray: [[Message]]) -> IndexPath? {
-    
+
     if messageUID != nil {
-      
+
       guard let section = groupedArray.index(where: { (messages) -> Bool in
         for message1 in messages where message1.messageUID == messageUID {
           return true
         }; return false
       }) else { return nil }
-      
+
       guard let row = groupedArray[section].index(where: { (message1) -> Bool in
         return message1.messageUID == messageUID
       }) else { return IndexPath(row: -1, section: section) }
-      
+
        return IndexPath(row: row, section: section)
       
     } else if localPhoto != nil {
-      
+
       guard let section = groupedArray.index(where: { (messages) -> Bool in
         for message1 in messages where message1.localImage == localPhoto {
           return true
         }; return false
       }) else { return nil }
-      
+
       guard let row = groupedArray[section].index(where: { (message1) -> Bool in
         return message1.localImage == localPhoto
       }) else { return IndexPath(row: -1, section: section) }
-      
+
        return IndexPath(row: row, section: section)
     }
      return nil

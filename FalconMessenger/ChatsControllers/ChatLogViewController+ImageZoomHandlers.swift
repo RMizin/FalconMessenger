@@ -19,7 +19,9 @@ extension ChatLogViewController {
     let message = groupedMessages[indexPath.section][indexPath.item]
     if message.videoUrl != nil || message.localVideoUrl != nil {
       guard let url = urlForVideo(at: indexPath) else {
-        basicErrorAlertWith(title: "Error", message: "This video is no longer exists", controller: self);
+        basicErrorAlertWith(title: "Error",
+                            message: "This video is no longer exists",
+                            controller: self)
         return
       }
       let viewController = viewControllerForVideo(with: url)
@@ -67,7 +69,8 @@ extension ChatLogViewController {
     guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = conversation?.chatName  else { return nil }
     var titleString = String()
   
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let senderName = messagesWithPhotos[photoIndex].senderName {
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat,
+      let senderName = messagesWithPhotos[photoIndex].senderName {
       titleString = senderName + "\n"
     } else {
       titleString = chatPartnerName + "\n"
@@ -75,9 +78,10 @@ extension ChatLogViewController {
     
     let isChattingWithSelf = messagesWithPhotos[photoIndex].fromId == uid ?  true : false
     if isChattingWithSelf { titleString = "You\n" }
-    let titleAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)]
-    let title = NSMutableAttributedString(string: titleString , attributes: titleAttributes)
-    let date = Date(timeIntervalSince1970:  messagesWithPhotos[photoIndex].timestamp!.doubleValue )
+    let titleAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white,
+                           NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)]
+    let title = NSMutableAttributedString(string: titleString, attributes: titleAttributes)
+    let date = Date(timeIntervalSince1970: messagesWithPhotos[photoIndex].timestamp!.doubleValue)
     let timestamp = timeAgoSinceDate(date)
     let summaryAttributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor,
                       NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)]
@@ -100,11 +104,13 @@ extension ChatLogViewController {
       guard let initial = photos.index(where: {$0.messageUID == groupedMessages[indexPath.section][indexPath.row].messageUID }) else { return nil }
       initialPhotoIndex = initial
     }
-    
+
     guard let cell = collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
     let currentPhoto = photos[initialPhotoIndex]
     let referenceView = cell.messageImageView
-    let galleryPreview = INSPhotosViewController(photos: photos, initialPhoto: currentPhoto, referenceView: referenceView)
+    let galleryPreview = INSPhotosViewController(photos: photos,
+                                                 initialPhoto: currentPhoto,
+                                                 referenceView: referenceView)
     galleryPreview.overlayView.setHidden(true, animated: false)
     
     setupGalleryDismissHandler(galleryPreview: galleryPreview)
@@ -113,7 +119,7 @@ extension ChatLogViewController {
     galleryPreview.modalPresentationCapturesStatusBarAppearance = true
     return galleryPreview
   }
-  
+
   func setupPhotosData() -> [INSPhotoViewable] {
     var photos: [INSPhotoViewable] = []
     let messagesWithPhotos = self.messages.filter({ (message) -> Bool in
@@ -143,17 +149,21 @@ extension ChatLogViewController {
     return photos
   }
   
-  func setupGalleryDismissHandler(galleryPreview:INSPhotosViewController) {
+  func setupGalleryDismissHandler(galleryPreview: INSPhotosViewController) {
     galleryPreview.didDismissHandler = { viewController in
       self.inputAccessoryView?.isHidden = false
     }
     galleryPreview.referenceViewForPhotoWhenDismissingHandler = { photo in
       if photo.messageUID == nil {
-        guard let indexPath = Message.get(indexPathOf: nil, localPhoto: photo.image, in: self.groupedMessages) else { return nil }
+        guard let indexPath = Message.get(indexPathOf: nil,
+                                          localPhoto: photo.image,
+                                          in: self.groupedMessages) else { return nil }
         guard let cellForDismiss = self.collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
         return cellForDismiss.messageImageView
       } else {
-        guard let indexPath = Message.get(indexPathOf: photo.messageUID, localPhoto: nil, in: self.groupedMessages) else { return nil}
+        guard let indexPath = Message.get(indexPathOf: photo.messageUID,
+                                          localPhoto: nil,
+                                          in: self.groupedMessages) else { return nil}
         guard let cellForDismiss = self.collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
         return cellForDismiss.messageImageView
       }

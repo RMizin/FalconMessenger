@@ -15,12 +15,12 @@ class BottomScrollConainer: UIView {
     scrollButton.translatesAutoresizingMaskIntoConstraints = false
     scrollButton.imageView?.contentMode = .scaleAspectFit
     scrollButton.contentMode = .center
-    scrollButton.imageEdgeInsets = UIEdgeInsetsMake(7, 10, 3, 10)
+
+    scrollButton.imageEdgeInsets = UIEdgeInsets(top: 7, left: 10, bottom: 3, right: 10)
 
     return scrollButton
   }()
   
-
   override init(frame: CGRect) {
     super.init(frame: frame)
     changeTheme()

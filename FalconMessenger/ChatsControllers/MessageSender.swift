@@ -63,7 +63,7 @@ class MessageSender: NSObject {
     mediaUploadGroup.enter() // for text message
     mediaCount += 1 // for text message
     
-    attachedMedia.forEach { (object) in
+    attachedMedia.forEach { (_) in
       mediaUploadGroup.enter()
       mediaCount += 1
     }
@@ -75,7 +75,7 @@ class MessageSender: NSObject {
     })
   }
  
-  //MARK: TEXT MESSAGE
+  // MARK: TEXT MESSAGE
   fileprivate func sendTextMessage() {
     guard let toID = conversation?.chatID, let fromID = Auth.auth().currentUser?.uid, let text = self.text else {
       self.mediaCount -= 1
@@ -110,7 +110,7 @@ class MessageSender: NSObject {
     self.updateProgress(self.progress, mediaCount: self.mediaCount)
   }
   
-  //MARK: PHOTO MESSAGE
+  // MARK: PHOTO MESSAGE
   fileprivate func sendPhotoMessage(object: MediaObject) {
     guard let toID = conversation?.chatID, let fromID = Auth.auth().currentUser?.uid else {
       self.mediaUploadGroup.leave()
@@ -118,7 +118,6 @@ class MessageSender: NSObject {
     }
    
     let reference = Database.database().reference().child("messages").childByAutoId()
-    
     let messageUID = reference.key
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
@@ -131,17 +130,17 @@ class MessageSender: NSObject {
                                            "timestamp": timestamp,
                                            "imageWidth": object.object!.asUIImage!.size.width as AnyObject,
                                            "imageHeight": object.object!.asUIImage!.size.height as AnyObject]
-    
-    var localData: [String: AnyObject] = ["localImage": object.object!.asUIImage!]  //"localVideoUrl": path as AnyObject]
+
+    var localData: [String: AnyObject] = ["localImage": object.object!.asUIImage!]
     defaultData.forEach({ localData[$0] = $1 })
 
     delegate?.update(with: localData)
-    
+
     storageUploader.upload(object.object!.asUIImage!, progress: { (snapshot) in
-      
+
       if let progressCount = snapshot?.progress?.fractionCompleted {
         
-        self.progress.setProgress(progressCount * 0.98, id: messageUID) //= self.setProgress(progressCount * 0.98, id: messageUID, array: self.progress)
+        self.progress.setProgress(progressCount * 0.98, id: messageUID)
         self.updateProgress(self.progress, mediaCount: self.mediaCount)
       }
       
@@ -156,7 +155,7 @@ class MessageSender: NSObject {
     }
   }
   
-  //MARK: VIDEO MESSAGE
+  // MARK: VIDEO MESSAGE
   fileprivate func sendVideoMessage(object: MediaObject) {
     guard let toID = conversation?.chatID, let fromID = Auth.auth().currentUser?.uid, let path = object.fileURL else {
       self.mediaUploadGroup.leave()
@@ -168,7 +167,7 @@ class MessageSender: NSObject {
     let messageUID = reference.key
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    
+
     let videoID = reference.key
     let imageID = reference.key + "image"
 
@@ -180,8 +179,7 @@ class MessageSender: NSObject {
                                             "timestamp": timestamp,
                                             "imageWidth": object.object!.asUIImage!.size.width as AnyObject,
                                             "imageHeight": object.object!.asUIImage!.size.height as AnyObject]
-    
-    
+
     var localData: [String: AnyObject] = ["localImage": object.object!.asUIImage!, "localVideoUrl": path as AnyObject]
     defaultData.forEach({ localData[$0] = $1 })
 
@@ -202,7 +200,6 @@ class MessageSender: NSObject {
           self.progress.setProgress(progressCount * 0.98, id: imageID)
           self.updateProgress(self.progress, mediaCount: self.mediaCount)
         }
-        
       }, completion: { (imageURL) in
         self.progress.setProgress(1.0, id: messageUID)
         self.updateProgress(self.progress, mediaCount: self.mediaCount)
@@ -215,8 +212,8 @@ class MessageSender: NSObject {
       })
     }
   }
-  
-  //MARK: VOICE MESSAGE
+
+  // MARK: VOICE MESSAGE
   fileprivate func sendVoiceMessage(object: MediaObject) {
     guard let toID = conversation?.chatID, let fromID = Auth.auth().currentUser?.uid else {
       self.mediaUploadGroup.leave()
@@ -250,63 +247,63 @@ class MessageSender: NSObject {
     let progress = completedUploadsCount/Double(mediaCount)
     
     delegate?.update(mediaSending: progress, animated: true)
-    
+
     guard progress >= 0.99999 else { return }
     self.delegate?.update(mediaSending: 0.0, animated: false)
   }
-  
+
   fileprivate func updateDatabase(at reference: DatabaseReference, with values: [String: AnyObject], toID: String, fromID: String ) {
-    
+
     reference.updateChildValues(values) { (error, _) in
       guard error == nil else { return }
       let messageID = reference.key
       
       if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
-        
+
         let groupMessagesRef = Database.database().reference().child("groupChats").child(toID).child(userMessagesFirebaseFolder)
         groupMessagesRef.updateChildValues([messageID: fromID])
-        
+
         // needed to update ui for current user as fast as possible
         //for other members this update handled by backend
         let userMessagesRef = Database.database().reference().child("user-messages").child(fromID).child(toID).child(userMessagesFirebaseFolder)
         userMessagesRef.updateChildValues([messageID: fromID])
-        
+
         // incrementing badge for group chats handled by backend, to reduce number of write operations from device
         self.updateGroupLastMessage()
       } else {
-        
+
         let userMessagesRef = Database.database().reference().child("user-messages").child(fromID).child(toID).child(userMessagesFirebaseFolder)
         userMessagesRef.updateChildValues([messageID: fromID])
         
         let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toID).child(fromID).child(userMessagesFirebaseFolder)
         recipientUserMessagesRef.updateChildValues([messageID: fromID])
-        
+
         self.incrementBadge()
         self.updateDefaultChatLastMessage()
       }
     }
   }
-  
+
   fileprivate func incrementBadge() { /* default chats only, group chats badges handled by backend */
     guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid, toId != fromId else { return }
     runTransaction(firstChild: toId, secondChild: fromId)
   }
-  
+
   fileprivate func updateDefaultChatLastMessage() {
     guard let fromID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID else { return }
-    
+
     let lastMessageQORef = Database.database().reference()
       .child("user-messages").child(fromID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
-    
+
     lastMessageQORef.observeSingleEvent(of: .childAdded) { (snapshot) in
       let ref = Database.database().reference().child("user-messages").child(fromID).child(conversationID).child(messageMetaDataFirebaseFolder)
       let childValues: [String: Any] = ["chatID": conversationID, "lastMessageID": snapshot.key, "isGroupChat": false]
       ref.updateChildValues(childValues)
     }
-    
+
     let lastMessageQIRef = Database.database().reference()
       .child("user-messages").child(conversationID).child(fromID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
-    
+
     lastMessageQIRef.observeSingleEvent(of: .childAdded) { (snapshot) in
       let ref = Database.database().reference().child("user-messages").child(conversationID).child(fromID).child(messageMetaDataFirebaseFolder)
       let childValues: [String: Any] = ["chatID": fromID, "lastMessageID": snapshot.key, "isGroupChat": false]
@@ -317,8 +314,8 @@ class MessageSender: NSObject {
   fileprivate func updateGroupLastMessage() {
     // updates only for current user
     // for other users this update handled by Backend to reduce write operations on device
-    guard let fromID = Auth.auth().currentUser?.uid,let conversationID = conversation?.chatID else { return }
-    
+    guard let fromID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID else { return }
+
     let lastMessageQRef = Database.database().reference()
       .child("user-messages").child(fromID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(1))
     

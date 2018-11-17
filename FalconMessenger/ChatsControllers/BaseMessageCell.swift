@@ -179,7 +179,7 @@ class BaseMessageCell: UICollectionViewCell {
   static let groupTextMessageInsets = groupIncomingTextViewTopInset + textViewBottomInset
   
   static let defaultTextMessageInsets = textViewBottomInset + textViewTopInset
-  
+
   static let defaultVoiceMessageHeight: CGFloat = 35
   
   static let groupIncomingVoiceMessageHeight: CGFloat = defaultVoiceMessageHeight + incomingGroupMessageAuthorNameLabelHeightWithInsets
@@ -213,7 +213,7 @@ class BaseMessageCell: UICollectionViewCell {
     
     return nameLabel
   }()
-  
+
   let timeLabel: UILabel = {
     let timeLabel = UILabel()
     timeLabel.font = MessageFontsAppearance.defaultTimeLabelTextFont
@@ -227,7 +227,7 @@ class BaseMessageCell: UICollectionViewCell {
     timeLabel.textAlignment = .center
     timeLabel.alpha = 0.85
     timeLabel.text = "10:46 AM"
-    
+
     return timeLabel
   }()
   
@@ -235,7 +235,7 @@ class BaseMessageCell: UICollectionViewCell {
     super.init(frame: frame)
     setupViews()
   }
-  
+
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -251,19 +251,18 @@ class BaseMessageCell: UICollectionViewCell {
     switch indexPath == lastIndexPath {
     case true:
       DispatchQueue.main.async {
-        self.deliveryStatus.frame = CGRect(x: self.frame.width - 80, y: self.bubbleView.frame.height + 2, width: 70, height: 10)//.integral
+        self.deliveryStatus.frame = CGRect(x: self.frame.width - 80, y: self.bubbleView.frame.height + 2,
+                                           width: 70, height: 10)//.integral
         self.deliveryStatus.text = message.status
         self.deliveryStatus.isHidden = false
         self.deliveryStatus.layoutIfNeeded()
       }
-      break
-      
+
     default:
       DispatchQueue.main.async {
         self.deliveryStatus.isHidden = true
         self.deliveryStatus.layoutIfNeeded()
       }
-      break
     }
   }
   

@@ -136,7 +136,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
     groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
     groupProfileTableHeaderContainer.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
     tableView.tableHeaderView = groupProfileTableHeaderContainer
-     self.groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openUserProfilePicture)))
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.openUserProfilePicture))
+    self.groupProfileTableHeaderContainer.profileImageView.addGestureRecognizer(tapGesture)
   }
   
   fileprivate func setupColorsAccordingToTheme() {
@@ -176,7 +177,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
           self.groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
         }
     
-        self.groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
+        self.groupProfileTableHeaderContainer.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options: [.continueInBackground, .scaleDownLargeImages], completed: { (_, _, _, _) in
            if self.onceToken == 0 {
             self.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
             self.onceToken = 1
@@ -215,11 +216,11 @@ class GroupAdminControlsTableViewController: UITableViewController {
           return member.id == snapshot.key }) {
            self.tableView.beginUpdates()
           self.members[userIndex] = user
-          self.tableView.reloadRows(at: [IndexPath(row:userIndex,section: 1)], with: .none)
+          self.tableView.reloadRows(at: [IndexPath(row: userIndex, section: 1)], with: .none)
         } else {
           self.tableView.beginUpdates()
           self.members.append(user)
-          
+
           self.tableView.headerView(forSection: 1)?.textLabel?.text = "\(self.members.count) members"
            self.tableView.headerView(forSection: 1)?.textLabel?.sizeToFit()
           var index = 0
@@ -239,7 +240,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       
       self.tableView.beginUpdates()
       self.members.remove(at: memberIndex)
-      self.tableView.deleteRows(at: [IndexPath(row:memberIndex, section: 1)], with: .left)
+      self.tableView.deleteRows(at: [IndexPath(row: memberIndex, section: 1)], with: .left)
       self.tableView.headerView(forSection: 1)?.textLabel?.text = "\(self.members.count) members"
       self.tableView.headerView(forSection: 1)?.textLabel?.sizeToFit()
       self.tableView.endUpdates()
@@ -296,7 +297,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     footerView.backgroundColor = UIColor.clear
     return footerView
   }
-  
+
   override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
     view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
     if let headerTitle = view as? UITableViewHeaderFooterView {
@@ -304,20 +305,22 @@ class GroupAdminControlsTableViewController: UITableViewController {
       headerTitle.textLabel?.font = UIFont.systemFont(ofSize: 14)
     }
   }
-  
+
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if section == 0 {
       return adminControls.count
     }
     return members.count
   }
-  
+
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 60
   }
   
   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-    guard indexPath.section == 1, members[indexPath.row].id != conversationAdminID, members[indexPath.row].id != Auth.auth().currentUser!.uid else { return false }
+    guard indexPath.section == 1,
+      members[indexPath.row].id != conversationAdminID,
+      members[indexPath.row].id != Auth.auth().currentUser!.uid else { return false }
     return true
   }
   
@@ -338,7 +341,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+
     if indexPath.section == 0 {
       if adminControls == defaultAdminControlls {
         groupLeaveAlert()
@@ -352,18 +355,18 @@ class GroupAdminControlsTableViewController: UITableViewController {
         }
       }
     }
-    
+
     tableView.deselectRow(at: indexPath, animated: true)
   }
-  
+
   fileprivate func groupLeaveAlert() {
-    
+
     let alertAdminTitle = "Your are admin of this group. If you want to leave the group, you must select new admin first."
     let alertDefaultTitle = "Are you sure?"
     let message = isCurrentUserAdministrator ? alertAdminTitle : alertDefaultTitle
     let okActionTitle = isCurrentUserAdministrator ? "Choose admin" : "Leave"
     let alertController = UIAlertController(title: "Warning", message: message , preferredStyle: .alert)
-    
+
     let okAction = UIAlertAction(title: okActionTitle, style: UIAlertActionStyle.default) {
       UIAlertAction in
       if self.isCurrentUserAdministrator {
@@ -372,13 +375,13 @@ class GroupAdminControlsTableViewController: UITableViewController {
         self.leaveTheGroup()
       }
     }
-   
+
     let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
     alertController.addAction(okAction)
     alertController.addAction(cancelAction)
     self.present(alertController, animated: true, completion: nil)
   }
-  
+
   func addMembers() {
     let filteredMemebrs = globalDataStorage.falconUsers.filter { user in
       return !members.contains { member in
@@ -391,7 +394,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     destination.users = filteredMemebrs
     destination.chatIDForUsersUpdate = chatID
     destination.setUpCollation()
-    
+
     self.navigationController?.pushViewController(destination, animated: true)
   }
   
@@ -404,7 +407,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     guard let index = members.index(where: { (user) -> Bool in
       return user.id == uid
     }), let currentUserName = members[index].name else { return }
-    
+
     var destination: SelectNewAdminTableViewController!
     
     if shouldLeaveTheGroup {
@@ -420,7 +423,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     destination.setUpCollation()
     self.navigationController?.pushViewController(destination, animated: true)
   }
-  
+
   func leaveTheGroup() {
     ARSLineProgress.ars_showOnView(self.view)
     guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -438,14 +441,15 @@ class GroupAdminControlsTableViewController: UITableViewController {
       self.navigationController?.popViewController(animated: true)
     }
   }
-  
+
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
  
     if indexPath.section == 0 {
-      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! GroupAdminControlsTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID,
+                                               for: indexPath) as? GroupAdminControlsTableViewCell ?? GroupAdminControlsTableViewCell()
       cell.selectionStyle = .none
       cell.title.text = adminControls[indexPath.row]
-    
+
       if cell.title.text == adminControls.last {
         cell.title.textColor = FalconPalette.dismissRed
       } else {
@@ -454,7 +458,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
       return cell
     
     } else {
-      let cell = tableView.dequeueReusableCell(withIdentifier: membersCellID, for: indexPath) as! FalconUsersTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: membersCellID,
+                                               for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
       cell.selectionStyle = .default
       if members[indexPath.row].id == conversationAdminID {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
@@ -467,7 +472,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       } else {
         cell.accessoryView = nil
       }
-      
+
       if let name = members[indexPath.row].name {
         cell.title.text = name
       }
@@ -492,25 +497,23 @@ class GroupAdminControlsTableViewController: UITableViewController {
           cell.subtitle.text = subtitle
         }
       }
-      
+
       guard let url = members[indexPath.row].thumbnailPhotoURL else { return cell }
-      
-      
-      cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage], completed: { (image, error, cacheType, url) in
-        
+
+      cell.icon.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "UserpicIcon"), options: [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage], completed: { (image, _, cacheType, _) in
         guard image != nil else { return }
         guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
           cell.icon.image = image
           return
         }
-        
-        UIView.transition(with:  cell.icon,
+
+        UIView.transition(with: cell.icon,
                           duration: 0.2,
                           options: .transitionCrossDissolve,
                           animations: { cell.icon.image = image },
                           completion: nil)
       })
-      
+
       return cell
     }
   }

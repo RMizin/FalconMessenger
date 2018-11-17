@@ -21,7 +21,7 @@ extension ChatLogViewController: UIViewControllerPreviewingDelegate {
       viewController.view.backgroundColor = .clear
       let imageView = viewController.currentPhotoViewController?.scalingImageView.imageView
       let radius = (imageView?.image?.size.width ?? 20) * 0.05
-      viewController.currentPhotoViewController?.scalingImageView.imageView.layer.cornerRadius = radius//scalingImageView.layer.cornerRadius = 20
+      viewController.currentPhotoViewController?.scalingImageView.imageView.layer.cornerRadius = radius
       viewController.currentPhotoViewController?.scalingImageView.imageView.layer.masksToBounds = true
       return viewController
     } else if let url = urlForVideo(at: indexPath) {

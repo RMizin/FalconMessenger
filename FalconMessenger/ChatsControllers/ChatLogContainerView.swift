@@ -88,10 +88,12 @@ class ChatLogContainerView: UIView {
   }
   
   func add(_ inputView: UIView) {
-    
-    for subview in inputViewContainer.subviews where subview is InputContainerView || subview is InputBlockerContainerView {
+
+    for subview in inputViewContainer.subviews
+      where subview is InputContainerView || subview is InputBlockerContainerView {
       subview.removeFromSuperview()
     }
+
     inputView.translatesAutoresizingMaskIntoConstraints = false
     inputViewContainer.addSubview(inputView)
     inputView.topAnchor.constraint(equalTo: inputViewContainer.topAnchor).isActive = true

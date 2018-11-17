@@ -91,7 +91,6 @@ extension BaseMessageCell {
        cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       if !cell.playButton.isHidden {
         contextMenuItems = ContextMenuItems.contextMenuItems(for: .videoMessage, !isOutgoing)
-      //  contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
         config.menuWidth = expandedMenuWidth
       }
     }
@@ -100,7 +99,6 @@ extension BaseMessageCell {
        cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       if !cell.playButton.isHidden {
         contextMenuItems = ContextMenuItems.contextMenuItems(for: .videoMessage, !isOutgoing)
-       // contextMenuItems = [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
         config.menuWidth = expandedMenuWidth
       }
     }
@@ -147,7 +145,8 @@ extension BaseMessageCell {
     reportAlert.indexPath = indexPath
     reportAlert.reportedMessage = message
     reportAlert.popoverPresentationController?.sourceView = bubbleView
-    reportAlert.popoverPresentationController?.sourceRect = CGRect(x: bubbleView.bounds.midX, y: bubbleView.bounds.maxY, width: 0, height: 0)
+    reportAlert.popoverPresentationController?.sourceRect = CGRect(x: bubbleView.bounds.midX, y: bubbleView.bounds.maxY,
+                                                                   width: 0, height: 0)
     chatLogController?.present(reportAlert, animated: true, completion: nil)
   }
 
@@ -156,14 +155,18 @@ extension BaseMessageCell {
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? PhotoMessageCell {
       if cell.messageImageView.image == nil {
         guard let controllerToDisplayOn = self.chatLogController else { return }
-        basicErrorAlertWith(title: basicErrorTitleForAlert, message: copyingImageError, controller: controllerToDisplayOn)
+        basicErrorAlertWith(title: basicErrorTitleForAlert,
+                            message: copyingImageError,
+                            controller: controllerToDisplayOn)
         return
       }
       UIPasteboard.general.image = cell.messageImageView.image
     } else if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
       if cell.messageImageView.image == nil {
         guard let controllerToDisplayOn = self.chatLogController else { return }
-        basicErrorAlertWith(title: basicErrorTitleForAlert, message: copyingImageError, controller: controllerToDisplayOn)
+        basicErrorAlertWith(title: basicErrorTitleForAlert,
+                            message: copyingImageError,
+                            controller: controllerToDisplayOn)
         return
       }
       UIPasteboard.general.image = cell.messageImageView.image
@@ -177,7 +180,8 @@ extension BaseMessageCell {
   }
   
   func handleDeletion(indexPath: IndexPath) {
-    guard let uid = Auth.auth().currentUser?.uid, let partnerID = self.message?.chatPartnerId(), let messageID = self.message?.messageUID, self.currentReachabilityStatus != .notReachable else {
+    guard let uid = Auth.auth().currentUser?.uid, let partnerID = self.message?.chatPartnerId(),
+      let messageID = self.message?.messageUID, self.currentReachabilityStatus != .notReachable else {
       self.chatLogController?.collectionView.reloadItems(at: [indexPath])
       guard let controllerToDisplayOn = self.chatLogController else { return }
       basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerToDisplayOn)
@@ -185,7 +189,7 @@ extension BaseMessageCell {
     }
     
     var deletionReference: DatabaseReference!
-    
+
     if let isGroupChat = self.chatLogController?.conversation?.isGroupChat, isGroupChat {
       guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
       deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(userMessagesFirebaseFolder).child(messageID)
@@ -195,8 +199,8 @@ extension BaseMessageCell {
     
     deletionReference.removeValue(completionBlock: { (error, reference) in
       if error != nil { return }
-      
-      if let isGroupChat = self.chatLogController?.conversation?.isGroupChat , isGroupChat {
+
+      if let isGroupChat = self.chatLogController?.conversation?.isGroupChat, isGroupChat {
         
         guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
         

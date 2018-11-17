@@ -30,7 +30,7 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.timerLabel.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
   }
   
-  func setupData(message: Message, isGroupChat:Bool) {
+  func setupData(message: Message, isGroupChat: Bool) {
     self.message = message
     
     if isGroupChat {
@@ -49,7 +49,8 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
                                 height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-19).integral
     }
     
-    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-1, y: bubbleView.frame.height-timeLabel.frame.height-5)
+    timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-1,
+                                     y: bubbleView.frame.height-timeLabel.frame.height-5)
     timeLabel.text = self.message?.convertedTimestamp
     guard message.voiceEncodedString != nil else { return }
 

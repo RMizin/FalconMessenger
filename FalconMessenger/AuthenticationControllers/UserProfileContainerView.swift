@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class BioTextView: UITextView {
   override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
     if action == #selector(UIResponderStandardEditActions.paste(_:)) {
@@ -38,7 +37,7 @@ class UserProfileContainerView: UIView {
     profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
     profileImageView.layer.cornerRadius = 48
     profileImageView.isUserInteractionEnabled = true
-    
+
     return profileImageView
   }()
   
@@ -49,10 +48,10 @@ class UserProfileContainerView: UIView {
     addPhotoLabel.numberOfLines = 2
     addPhotoLabel.textColor = FalconPalette.defaultBlue
     addPhotoLabel.textAlignment = .center
-    
+
     return addPhotoLabel
   }()
-  
+
   var name: PasteRestrictedTextField = {
     let name = PasteRestrictedTextField()
     name.font = UIFont.systemFont(ofSize: 20)
@@ -65,7 +64,7 @@ class UserProfileContainerView: UIView {
     name.returnKeyType = .done
     name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     name.textColor = ThemeManager.currentTheme().generalTitleColor
-  
+
     return name
   }()
   
@@ -80,10 +79,10 @@ class UserProfileContainerView: UIView {
     phone.isEnabled = false
     phone.textColor = ThemeManager.currentTheme().generalSubtitleColor
     phone.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
-   
+
     return phone
   }()
-  
+
   let bioPlaceholderLabel: UILabel = {
     let bioPlaceholderLabel = UILabel()
     bioPlaceholderLabel.text = "Bio"
@@ -95,14 +94,14 @@ class UserProfileContainerView: UIView {
 
     return bioPlaceholderLabel
   }()
-  
+
   let userData: UIView = {
     let userData = UIView()
     userData.translatesAutoresizingMaskIntoConstraints = false
     userData.layer.cornerRadius = 30
     userData.layer.borderWidth = 1
     userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
-    
+
     return userData
   }()
 
@@ -122,25 +121,25 @@ class UserProfileContainerView: UIView {
     bio.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
     bio.textContainer.lineBreakMode = .byTruncatingTail
     bio.returnKeyType = .done
-    
+
     return bio
   }()
-  
+
   let countLabel: UILabel = {
     let countLabel = UILabel()
     countLabel.translatesAutoresizingMaskIntoConstraints = false
     countLabel.sizeToFit()
     countLabel.textColor = ThemeManager.currentTheme().generalSubtitleColor
     countLabel.isHidden = true
-    
+
     return countLabel
   }()
-  
+
   let bioMaxCharactersCount = 70
 
   override init(frame: CGRect) {
     super.init(frame: frame)
-    
+
     addSubview(addPhotoLabel)
     addSubview(profileImageView)
     addSubview(userData)
@@ -149,14 +148,14 @@ class UserProfileContainerView: UIView {
     userData.addSubview(name)
     userData.addSubview(phone)
     bio.addSubview(bioPlaceholderLabel)
-    
+
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-  
+
       NSLayoutConstraint.activate([
         profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 30),
         profileImageView.widthAnchor.constraint(equalToConstant: 100),
         profileImageView.heightAnchor.constraint(equalToConstant: 100),
-        
+
         addPhotoLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor),
         addPhotoLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor),
         addPhotoLabel.widthAnchor.constraint(equalToConstant: 100),
@@ -165,49 +164,48 @@ class UserProfileContainerView: UIView {
         userData.topAnchor.constraint(equalTo: profileImageView.topAnchor, constant: 0),
         userData.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 10),
         userData.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 0),
-        
+
         name.topAnchor.constraint(equalTo: userData.topAnchor, constant: 0),
         name.leftAnchor.constraint(equalTo: userData.leftAnchor, constant: 0),
         name.rightAnchor.constraint(equalTo: userData.rightAnchor, constant: 0),
         name.heightAnchor.constraint(equalToConstant: 50),
-        
+
         phone.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 0),
         phone.leftAnchor.constraint(equalTo: userData.leftAnchor, constant: 0),
         phone.rightAnchor.constraint(equalTo: userData.rightAnchor, constant: 0),
         phone.heightAnchor.constraint(equalToConstant: 50),
-        
+
         bio.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
 
         countLabel.widthAnchor.constraint(equalToConstant: 30),
         countLabel.heightAnchor.constraint(equalToConstant: 30),
         countLabel.rightAnchor.constraint(equalTo: bio.rightAnchor, constant: -5),
         countLabel.bottomAnchor.constraint(equalTo: bio.bottomAnchor, constant: -5),
-        
+
         bioPlaceholderLabel.centerXAnchor.constraint(equalTo: bio.centerXAnchor, constant: 0),
-        bioPlaceholderLabel.centerYAnchor.constraint(equalTo: bio.centerYAnchor, constant: 0),
+        bioPlaceholderLabel.centerYAnchor.constraint(equalTo: bio.centerYAnchor, constant: 0)
       ])
-    
+
     bioPlaceholderLabel.font = UIFont.systemFont(ofSize: 20)//(bio.font!.pointSize - 1)
     bioPlaceholderLabel.isHidden = !bio.text.isEmpty
-   
-    
+
     if #available(iOS 11.0, *) {
       NSLayoutConstraint.activate([
         profileImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10),
         bio.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10),
         bio.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10),
-        userData.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10),
+        userData.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10)
       ])
     } else {
       NSLayoutConstraint.activate([
         profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
         bio.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
         bio.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-        userData.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+        userData.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
       ])
     }
   }
-  
+
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
   }

@@ -42,7 +42,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   }
   
    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    guard indexPath.section != groupedMessages.count else {print("getting data for indicator"); return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell }
+    guard indexPath.section != groupedMessages.count else { return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell }
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       return selectCell(for: indexPath, isGroupChat: true)!
     } else {
@@ -114,7 +114,6 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
               
               return cell
             }
-            break
           case false:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
             cell.chatLogController = self
@@ -127,10 +126,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
               cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
               return cell
             }
-            break
           }
         } else
-          
+
           if isVoiceMessage {
             switch isOutgoingMessage {
             case true:
@@ -154,7 +152,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   }
   
    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-    
+
     if let cell = cell as? OutgoingVoiceMessageCell {
       guard cell.isSelected, chatLogAudioPlayer != nil else { return }
       chatLogAudioPlayer.stop()
@@ -173,7 +171,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
       } catch {}
     }
   }
-  
+
    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
     guard let cell = collectionView.cellForItem(at: indexPath) as? BaseVoiceMessageCell, chatLogAudioPlayer != nil else { return }
     chatLogAudioPlayer.stop()
@@ -207,7 +205,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
       try AVAudioSession.sharedInstance().setActive(true)
     } catch {}
     do {
-      chatLogAudioPlayer = try AVAudioPlayer(data:  data)
+      chatLogAudioPlayer = try AVAudioPlayer(data: data)
       chatLogAudioPlayer.prepareToPlay()
       chatLogAudioPlayer.volume = 1.0
       chatLogAudioPlayer.play()
@@ -217,11 +215,11 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
       chatLogAudioPlayer = nil
     }
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     return selectSize(indexPath: indexPath)
   }
-  
+
   func selectSize(indexPath: IndexPath) -> CGSize {
     guard indexPath.section != groupedMessages.count else {return CGSize(width: collectionView.frame.width, height: 30) }
     var cellHeight: CGFloat = 80
@@ -232,34 +230,41 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
     let isInformationMessage = message.isInformationMessage ?? false
     let isGroupChat = conversation!.isGroupChat ?? false
-    
+
     guard !isInformationMessage else {
         guard let messagesFetcher = messagesFetcher else { return CGSize(width: 0, height: 0) }
       let infoMessageWidth = collectionView.frame.width
         guard let messageText = message.text else { return CGSize(width: 0, height: 0 ) }
-      let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth, text: messageText, font: MessageFontsAppearance.defaultInformationMessageTextFont).height + 25
+      let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth,
+                                                                   text: messageText,
+                                                                   font: MessageFontsAppearance.defaultInformationMessageTextFont).height + 25
       return CGSize(width: infoMessageWidth, height: infoMessageHeight)
     }
-    
+
     guard !isTextMessage else {
 
-      let portraitHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.estimatedFrameForText, indexPath: indexPath)
-      let landscapeHeight = setupCellHeight(isGroupChat: isGroupChat, isOutgoingMessage: isOutgoingMessage, frame: message.landscapeEstimatedFrameForText, indexPath: indexPath)
+      let portraitHeight = setupCellHeight(isGroupChat: isGroupChat,
+                                           isOutgoingMessage: isOutgoingMessage,
+                                           frame: message.estimatedFrameForText,
+                                           indexPath: indexPath)
+
+      let landscapeHeight = setupCellHeight(isGroupChat: isGroupChat,
+                                            isOutgoingMessage: isOutgoingMessage,
+                                            frame: message.landscapeEstimatedFrameForText,
+                                            indexPath: indexPath)
       
       switch UIDevice.current.orientation {
       case .landscapeRight, .landscapeLeft:
         cellHeight = landscapeHeight
-        break
       default:
         cellHeight = portraitHeight
-        break
       }
       
       return CGSize(width: collectionView.frame.width, height: cellHeight)
     }
-    
+
     guard !isPhotoVideoMessage else {
-      
+
       if CGFloat(truncating: message.imageCellHeight!) < BaseMessageCell.minimumMediaCellHeight {
         if isGroupChat, !isOutgoingMessage {
           cellHeight = BaseMessageCell.incomingGroupMinimumMediaCellHeight
@@ -273,7 +278,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
           cellHeight = CGFloat(truncating: message.imageCellHeight!)
         }
       }
-      
+
       return CGSize(width: collectionView.frame.width, height: cellHeight)
     }
   
@@ -287,10 +292,10 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     return CGSize(width: collectionView.frame.width, height: cellHeight)
   }
-  
+
   fileprivate func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: CGRect?, indexPath: IndexPath) -> CGFloat {
     guard let frame = frame else { return 0 }
- 
+
     var timeHeight: CGFloat!
     let bubbleMaxWidth = UIDevice.current.orientation.isLandscape ? BaseMessageCell.landscapeBubbleViewMaxWidth : BaseMessageCell.bubbleViewMaxWidth
     if (frame.width + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
@@ -299,9 +304,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     } else {
       timeHeight = BaseMessageCell.messageTimeHeight
     }
-  
+
     if isGroupChat, !isOutgoingMessage {
-    
+
       return frame.height + BaseMessageCell.groupTextMessageInsets + timeHeight
     } else {
       return frame.height + BaseMessageCell.defaultTextMessageInsets + timeHeight

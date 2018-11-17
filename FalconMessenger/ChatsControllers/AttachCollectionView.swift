@@ -15,7 +15,7 @@ class AttachCollectionView: UICollectionView {
   
   override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
     super.init(frame: frame, collectionViewLayout: AttachCollectionViewLayout())
-  
+
     showsVerticalScrollIndicator = false
     showsHorizontalScrollIndicator = false
     backgroundColor = .clear

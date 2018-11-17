@@ -42,7 +42,6 @@ class ChatLogViewController: UIViewController {
   var userStatusReference: DatabaseReference!
   var messageChangesHandles = [(uid: String, handle: DatabaseHandle)]()
   
-  
   var currentUserBanReference: DatabaseReference!
   var currentUserBanAddedHandle: DatabaseHandle!
   var currentUserBanChangedHandle: DatabaseHandle!
@@ -74,11 +73,11 @@ class ChatLogViewController: UIViewController {
     
     return chatInputContainerView
   }()
-  
+
   lazy var inputBlockerContainerView: InputBlockerContainerView = {
     var inputBlockerContainerView = InputBlockerContainerView()
     inputBlockerContainerView.backButton.addTarget(self, action: #selector(inputBlockerAction), for: .touchUpInside)
-  
+
     return inputBlockerContainerView
   }()
   
@@ -102,8 +101,6 @@ class ChatLogViewController: UIViewController {
     return bottomScrollConainer
   }()
   
-  
-  
   @objc private func instantMoveToBottom() {
     collectionView.scrollToBottom(animated: true)
   }
@@ -116,8 +113,9 @@ class ChatLogViewController: UIViewController {
     
     return refreshControl
   }()
-  
-  fileprivate func configureRefreshControlInitialTintColor() { /* fixes bug of not setting refresh control tint color on initial refresh */
+
+  /* fixes bug of not setting refresh control tint color on initial refresh */
+  fileprivate func configureRefreshControlInitialTintColor() {
     collectionView.contentOffset = CGPoint(x: 0, y: -refreshControl.frame.size.height)
     refreshControl.beginRefreshing()
     refreshControl.endRefreshing()
@@ -141,7 +139,7 @@ class ChatLogViewController: UIViewController {
     }
   }
   
-  //MARK: - Lifecycle
+  // MARK: - Lifecycle
   
   override func loadView() {
     super.loadView()
@@ -158,11 +156,14 @@ class ChatLogViewController: UIViewController {
     configurePlaceholderTitleView()
     setupBottomScrollButton()
   }
-  
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-   
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+
+    NotificationCenter.default.addObserver(self,
+                                           selector: #selector(keyboardWillShow(_:)),
+                                           name: NSNotification.Name.UIKeyboardWillShow,
+                                           object: nil)
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -181,7 +182,7 @@ class ChatLogViewController: UIViewController {
       cell.restart()
     }
   }
-  
+
   private var savedContentOffset: CGPoint!
   
   override func viewWillDisappear(_ animated: Bool) {
@@ -206,21 +207,21 @@ class ChatLogViewController: UIViewController {
     if typingIndicatorReference != nil {
       typingIndicatorReference.removeObserver(withHandle: typingIndicatorHandle)
     }
-    
+
     if userStatusReference != nil {
       userStatusReference.removeObserver(withHandle: userHandler)
     }
-    
+
     groupMembersManager.removeAllObservers()
-    
+
     removeBanObservers()
-    
+
     for element in messageChangesHandles {
       let messageID = element.uid
       let messagesReference = Database.database().reference().child("messages").child(messageID)
       messagesReference.removeObserver(withHandle: element.handle)
     }
-    
+
     if let messagesFetcher = messagesFetcher {
       if messagesFetcher.userMessagesReference != nil {
         messagesFetcher.userMessagesReference.removeAllObservers()
@@ -245,7 +246,7 @@ class ChatLogViewController: UIViewController {
     super.willTransition(to: newCollection, with: coordinator)
     collectionView.collectionViewLayout.invalidateLayout()
   }
-  
+
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
     collectionView.collectionViewLayout.invalidateLayout()
@@ -255,8 +256,8 @@ class ChatLogViewController: UIViewController {
       self.collectionView.reloadData()
     }
   }
-  
-  override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+
+  override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
     if let observedObject = object as? ChatCollectionView, observedObject == collectionView {
       collectionViewLoaded = true
       collectionView.removeObserver(self, forKeyPath: "contentSize")
@@ -264,12 +265,12 @@ class ChatLogViewController: UIViewController {
   }
   
   // MARK: - Setup
-  
+
   private func loadViews() {
     let view = ChatLogContainerView()
     view.backgroundView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     view.add(collectionView)
-    
+
     if let membersIDs = conversation?.chatParticipantsIDs,
       let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
         view.add(inputContainerView)
@@ -278,7 +279,7 @@ class ChatLogViewController: UIViewController {
     }
     self.view = view
   }
-  
+
   func reloadInputView(view: UIView) {
     if let currentView = self.view as? ChatLogContainerView {
       DispatchQueue.main.async {
@@ -286,23 +287,25 @@ class ChatLogViewController: UIViewController {
       }
     }
   }
-  
+
   func blockInputViewConstraints() {
     guard let view = view as? ChatLogContainerView else { return }
     if let constant = keyboardLayoutGuide.topConstant {
       print(constant)
-      if inputContainerView.inputTextView.isFirstResponder || inputContainerView.attachButton.isFirstResponder || inputContainerView.recordVoiceButton.isFirstResponder {
+      if inputContainerView.inputTextView.isFirstResponder ||
+        inputContainerView.attachButton.isFirstResponder ||
+        inputContainerView.recordVoiceButton.isFirstResponder {
         view.blockBottomConstraint(constant: -constant)
         view.layoutIfNeeded()
       }
     }
   }
-  
+
   func unblockInputViewConstraints() {
     guard let view = view as? ChatLogContainerView else { return }
     view.unblockBottomConstraint()
   }
-  
+
   private func setupInputView() {
     guard let view = view as? ChatLogContainerView else {
       fatalError("Root view is not ChatLogContainerView")
@@ -310,54 +313,56 @@ class ChatLogViewController: UIViewController {
     view.addLayoutGuide(keyboardLayoutGuide)
     view.inputViewContainer.bottomAnchor.constraint(equalTo: keyboardLayoutGuide.topAnchor).isActive = true
   }
-  
+
   private func addIPadCloseButton() {
     let leftBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(closeChatLog))
     navigationItem.leftBarButtonItem = leftBarButton
   }
-  
+
   @objc func closeChatLog() {
     splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
     chatLogPresenter.deallocate()
   }
-  
+
   private func setupBottomScrollButton() {
     view.addSubview(bottomScrollConainer)
     bottomScrollConainer.translatesAutoresizingMaskIntoConstraints = false
     bottomScrollConainer.widthAnchor.constraint(equalToConstant: 45).isActive = true
     bottomScrollConainer.heightAnchor.constraint(equalToConstant: 45).isActive = true
-    
+
     guard let view = view as? ChatLogContainerView else {
       fatalError("Root view is not ChatLogContainerView")
     }
-    
-    bottomScrollConainer.rightAnchor.constraint(equalTo: view.inputViewContainer.rightAnchor, constant: -10).isActive = true
-    bottomScrollConainer.bottomAnchor.constraint(equalTo: view.inputViewContainer.topAnchor, constant: -10).isActive = true
+
+    bottomScrollConainer.rightAnchor.constraint(equalTo: view.inputViewContainer.rightAnchor,
+                                                constant: -10).isActive = true
+    bottomScrollConainer.bottomAnchor.constraint(equalTo: view.inputViewContainer.topAnchor,
+                                                 constant: -10).isActive = true
   }
   
   private func setupCollectionView() {
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.bottom
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    
+
     if #available(iOS 11.0, *) {
       navigationItem.largeTitleDisplayMode = .never
     }
-    
+
     if traitCollection.forceTouchCapability == .available {
       registerForPreviewing(with: self, sourceView: collectionView)
     }
-    
+
     collectionView.delegate = self
     collectionView.dataSource = self
     chatLogHistoryFetcher.delegate = self
     groupMembersManager.delegate = self
     groupMembersManager.observeMembersChanges(conversation)
-    
+
     if DeviceType.isIPad {
       addIPadCloseButton()
     }
-    
+
     collectionView.addObserver(self, forKeyPath: "contentSize", options: .old, context: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
     collectionView.addSubview(refreshControl)
@@ -370,25 +375,26 @@ class ChatLogViewController: UIViewController {
     collectionView.register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
     collectionView.register(InformationMessageCell.self, forCellWithReuseIdentifier: informationMessageCellID)
     collectionView.register(ChatLogViewControllerSupplementaryView.self,
-                            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "lol")
-    
+                            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+                            withReuseIdentifier: "lol")
+
     configureRefreshControlInitialTintColor()
     configureCellContextMenuView()
     addBlockerView()
   }
-  
+
   fileprivate let blocker = ViewBlockerContainer()
-  
+
   fileprivate func addBlockerView() {
     guard let chatID = conversation?.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
     guard chatID != currentUserID else { return }
     let contains = globalDataStorage.falconUsers.contains { (user) -> Bool in
       return user.id == chatID
     }
-    
+
     let permitted = conversation?.permitted ?? false
     guard contains == false, permitted != true else { return }
-    
+
     if let isGroupChat = conversation?.isGroupChat, !isGroupChat {
       view.addSubview(blocker)
       blocker.translatesAutoresizingMaskIntoConstraints = false
@@ -398,7 +404,7 @@ class ChatLogViewController: UIViewController {
       blocker.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
   }
-  
+
   @objc func removeBlockerView() {
     blocker.remove(from: view)
     guard let chatID = conversation?.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
@@ -406,27 +412,27 @@ class ChatLogViewController: UIViewController {
     .child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)
     .updateChildValues(["permitted": true])
   }
-  
+
   @objc func blockAndDelete() {
     guard let chatID = conversation?.chatID else { return }
     userBlockingManager.blockUser(userID: chatID)
     inputBlockerAction()
   }
-  
+
   @objc private func changeTheme() {
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
     navigationController?.navigationBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
     refreshControl.tintColor = ThemeManager.currentTheme().generalTitleColor
     collectionView.updateColors()
-    
+
     func updateTitleColor() {
       if let stack = navigationItem.titleView as? UIStackView, stack.arrangedSubviews.indices.contains(0) {
         guard let title = stack.arrangedSubviews[0] as? UILabel  else { return }
         title.textColor = ThemeManager.currentTheme().generalTitleColor
       }
     }
-    
+
     func updateTypingIndicatorIfNeeded() {
       if collectionView.numberOfSections == groupedMessages.count + 1 {
         guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) as? TypingIndicatorCell else { return }
@@ -437,14 +443,15 @@ class ChatLogViewController: UIViewController {
     updateTypingIndicatorIfNeeded()
     inputContainerView.inputTextView.reloadInputViews()
   }
-  
+
   func setRightBarButtonItem () {
-    
+
     let infoButton = UIButton(type: .infoLight)
     infoButton.addTarget(self, action: #selector(getInfoAction), for: .touchUpInside)
     let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
-    
-    guard let uid = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, uid != conversationID  else { return }
+
+    guard let uid = Auth.auth().currentUser?.uid,
+      let conversationID = conversation?.chatID, uid != conversationID  else { return }
     navigationItem.rightBarButtonItem = infoBarButtonItem
     if isCurrentUserMemberOfCurrentGroup() {
       navigationItem.rightBarButtonItem?.isEnabled = true
@@ -452,20 +459,20 @@ class ChatLogViewController: UIViewController {
       navigationItem.rightBarButtonItem?.isEnabled = false
     }
   }
-  
+
   @objc func getInfoAction() {
     inputContainerView.resignAllResponders()
-    
+
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
-      
+
       let destination = GroupAdminControlsTableViewController()
       destination.chatID = conversation?.chatID ?? ""
       if conversation?.admin != Auth.auth().currentUser?.uid {
         destination.adminControls = destination.defaultAdminControlls
       }
-      
+
       if DeviceType.isIPad {
-       
+
         let navigation = UINavigationController(rootViewController: destination)
          navigation.modalPresentationStyle = .popover
          navigation.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
@@ -497,22 +504,21 @@ class ChatLogViewController: UIViewController {
     } else {
       navigationController?.popViewController(animated: true)
     }
-    
+
     deleteAndExitDelegate?.deleteAndExit(from: chatID)
   }
-  
-  
+
   // MARK: - Keyboard
-  
+
   @objc open dynamic func keyboardWillShow(_ notification: Notification) {
     if isScrollViewAtTheBottom() {
       collectionView.scrollToBottom(animated: false)
     }
   }
-  
-  //MARK: - Typing indicator
+
+  // MARK: - Typing indicator
   private var localTyping = false
-  
+
   var isTyping: Bool {
     get {
       return localTyping
@@ -520,7 +526,7 @@ class ChatLogViewController: UIViewController {
     set {
       localTyping = newValue
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-      let typingData: NSDictionary = [currentUserID : newValue] //??
+      let typingData: NSDictionary = [currentUserID: newValue] //??
       if localTyping {
         sendTypingStatus(data: typingData)
       } else {
@@ -536,41 +542,42 @@ class ChatLogViewController: UIViewController {
       }
     }
   }
-  
+
   func sendTypingStatus(data: NSDictionary) {
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
-    
+    guard let currentUserID = Auth.auth().currentUser?.uid,
+      let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
+
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       let userIsTypingRef = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
-      userIsTypingRef.updateChildValues(data as! [AnyHashable : Any])
+      userIsTypingRef.updateChildValues(data as! [AnyHashable: Any])
     } else {
       let userIsTypingRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
       userIsTypingRef.setValue(data)
     }
   }
-  
+
   func observeTypingIndicator () {
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
-    
+    guard let currentUserID = Auth.auth().currentUser?.uid,
+      let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
+
     if let isGroupChat = conversation?.isGroupChat, isGroupChat {
       let indicatorRemovingReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID).child(currentUserID)
       indicatorRemovingReference.onDisconnectRemoveValue()
       typingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
       typingIndicatorHandle = typingIndicatorReference.observe(.value, with: { (snapshot) in
-        
-        guard let dictionary = snapshot.value as? [String:AnyObject], let firstKey = dictionary.first?.key else {
+
+        guard let dictionary = snapshot.value as? [String: AnyObject], let firstKey = dictionary.first?.key else {
           self.handleTypingIndicatorAppearance(isEnabled: false)
           return
         }
-        
+
         if firstKey == currentUserID && dictionary.count == 1 {
           self.handleTypingIndicatorAppearance(isEnabled: false)
           return
         }
-        
+
         self.handleTypingIndicatorAppearance(isEnabled: true)
       })
-      
     } else {
       let indicatorRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(typingIndicatorDatabaseID)
       indicatorRemovingReference.onDisconnectRemoveValue()
@@ -585,7 +592,7 @@ class ChatLogViewController: UIViewController {
       })
     }
   }
-  
+
   func handleTypingIndicatorAppearance(isEnabled: Bool) {
     if isEnabled {
       guard collectionView.numberOfSections < groupedMessages.count + 1 else { return }
@@ -593,7 +600,7 @@ class ChatLogViewController: UIViewController {
         self.typingIndicatorSection = ["TypingIndicator"]
         print("inserting")
         self.collectionView.insertSections([groupedMessages.count])
-        
+
       }, completion: { (isCompleted) in
         print(isCompleted)
         if self.isScrollViewAtTheBottom() {
@@ -603,17 +610,17 @@ class ChatLogViewController: UIViewController {
           self.collectionView.scrollToBottom(animated: true)
         }
       })
-      
+
     } else {
-      
+
       guard collectionView.numberOfSections == groupedMessages.count + 1 else { return }
       self.collectionView.performBatchUpdates ({
           self.typingIndicatorSection.removeAll()
-        
+
         if self.collectionView.numberOfSections > groupedMessages.count {
           self.collectionView.deleteSections([groupedMessages.count])
-          
-          guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: groupedMessages.count ) ) as? TypingIndicatorCell else {
+
+          guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: groupedMessages.count)) as? TypingIndicatorCell else {
             return
           }
           cell.typingIndicator.stopAnimating()
@@ -624,18 +631,18 @@ class ChatLogViewController: UIViewController {
       }, completion: nil)
     }
   }
-  
-  //MARK: - Message status
+
+  // MARK: - Message status
   func updateMessageStatus(messageRef: DatabaseReference) {
-    
+
     guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else { return }
-    
+
     var senderID: String?
-    
+
     messageRef.child("fromId").observeSingleEvent(of: .value, with: { (snapshot) in
-      
+
       if !snapshot.exists() { return }
-      
+
       senderID = snapshot.value as? String
       guard uid != senderID,
         (self.navigationController?.visibleViewController is UserInfoTableViewController ||
@@ -645,12 +652,12 @@ class ChatLogViewController: UIViewController {
           UIApplication.topViewController() is CropViewController ||
           UIApplication.topViewController() is INSPhotosViewController ||
           UIApplication.topViewController() is SFSafariViewController) else { senderID = nil; return }
-      messageRef.updateChildValues(["seen": true, "status": messageStatusRead], withCompletionBlock: { (error, reference) in
+      messageRef.updateChildValues(["seen": true, "status": messageStatusRead], withCompletionBlock: { (_, _) in
         self.resetBadgeForSelf()
       })
     })
   }
-  
+
   fileprivate func resetBadgeForSelf() {
     guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
     let badgeRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(messageMetaDataFirebaseFolder).child("badge")
@@ -661,15 +668,15 @@ class ChatLogViewController: UIViewController {
       return TransactionResult.success(withValue: mutableData)
     })
   }
-  
+
   func updateMessageStatusUI(sentMessage: Message) {
     DispatchQueue.global(qos: .default).async {
       guard let index = self.messages.index(where: { (message) -> Bool in
         return message.messageUID == sentMessage.messageUID
       }) else { return }
-      
+
       guard index >= 0 else { return }
-      
+
       self.messages[index].status = sentMessage.status
       self.groupedMessages = Message.groupedMessages(self.messages)
       guard let indexPath = Message.get(indexPathOf: self.messages[index], in: self.groupedMessages) else { return }
@@ -678,30 +685,30 @@ class ChatLogViewController: UIViewController {
           self.collectionView.reloadItems(at: [indexPath])
         }, completion: nil)
       }
-   
-      guard sentMessage.status == messageStatusDelivered, self.messages[index].messageUID == self.messages.last?.messageUID,
+
+      guard sentMessage.status == messageStatusDelivered,
+        self.messages[index].messageUID == self.messages.last?.messageUID,
         userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
       SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
     }
   }
-  
-  
-  //MARK: - Title view
+
+  // MARK: - Title view
   fileprivate func configureProgressBar() {
-    
+
     guard navigationController?.navigationBar != nil else { return }
     guard !uploadProgressBar.isDescendant(of: navigationController!.navigationBar) else { return }
-    
+
     navigationController?.navigationBar.addSubview(uploadProgressBar)
     uploadProgressBar.translatesAutoresizingMaskIntoConstraints = false
     uploadProgressBar.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor).isActive = true
     uploadProgressBar.leftAnchor.constraint(equalTo: navigationController!.navigationBar.leftAnchor).isActive = true
     uploadProgressBar.rightAnchor.constraint(equalTo: navigationController!.navigationBar.rightAnchor).isActive = true
   }
-  
+
   fileprivate var userHandler: UInt = 01
   fileprivate var onlineStatusInString: String?
-  
+
   func setupTitleName() {
     guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
     if currentUserID == toId {
@@ -710,62 +717,64 @@ class ChatLogViewController: UIViewController {
       self.navigationItem.setTitle(title: conversation?.chatName ?? "", subtitle: "")
     }
   }
-  
+
   func configurePlaceholderTitleView() {
-    
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs?.count {
+
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat,
+      let title = conversation?.chatName,
+      let membersCount = conversation?.chatParticipantsIDs?.count {
+
       let subtitle = "\(membersCount) members"
       self.navigationItem.setTitle(title: title, subtitle: subtitle)
       return
     }
-    
+
     guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
-    
+
     if currentUserID == toId {
       self.navigationItem.title = NameConstants.personalStorage
       return
     }
-    
+
     guard let index = globalDataStorage.falconUsers.index(where: { (user) -> Bool in
       return user.id == conversation?.chatID
     }) else { return }
     let status = globalDataStorage.falconUsers[index].onlineStatus as AnyObject
-    onlineStatusInString = manageNavigationItemTitle(onlineStatusObject:  status)
+    onlineStatusInString = manageNavigationItemTitle(onlineStatusObject: status)
   }
-  
-  
- 
+
   func configureTitleViewWithOnlineStatus() {
-    
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs?.count {
+
+    if let isGroupChat = conversation?.isGroupChat, isGroupChat,
+      let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs?.count {
       let subtitle = "\(membersCount) members"
       navigationItem.setTitle(title: title, subtitle: subtitle)
       return
     }
-    
+
     guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
-    
+
     if currentUserID == toId {
       navigationItem.title = NameConstants.personalStorage
       return
     }
-    
+
     if userStatusReference != nil {
       userStatusReference.removeObserver(withHandle: userHandler)
     }
-    
+
     userStatusReference = Database.database().reference().child("users").child(toId)
     userHandler = userStatusReference.observe(.value, with: { (snapshot) in
       guard snapshot.exists() else { return }
-      
+
       let value = snapshot.value as? NSDictionary
       let status = value?["OnlineStatus"] as AnyObject
-      self.onlineStatusInString = self.manageNavigationItemTitle(onlineStatusObject:  status)
+      self.onlineStatusInString = self.manageNavigationItemTitle(onlineStatusObject: status)
     })
   }
-  
+
   fileprivate func manageNavigationItemTitle(onlineStatusObject: AnyObject) -> String {
-    
+
     guard let title = conversation?.chatName else { return "" }
     if let onlineStatusStringStamp = onlineStatusObject as? String {
       if onlineStatusStringStamp == statusOnline { // user online
@@ -777,8 +786,9 @@ class ChatLogViewController: UIViewController {
         self.navigationItem.setTitle(title: title, subtitle: subtitle)
         return subtitle
       }
-      
-    } else if let onlineStatusTimeIntervalStamp = onlineStatusObject as? TimeInterval { //user got server timestamp in miliseconds
+
+      //user got server timestamp in miliseconds
+    } else if let onlineStatusTimeIntervalStamp = onlineStatusObject as? TimeInterval {
       let date = Date(timeIntervalSince1970: onlineStatusTimeIntervalStamp/1000)
       let subtitle = "Last seen " + timeAgoSinceDate(date)
       self.navigationItem.setTitle(title: title, subtitle: subtitle)
@@ -786,19 +796,19 @@ class ChatLogViewController: UIViewController {
     }
     return ""
   }
-  
-  //MARK: Scroll view
+
+  // MARK: Scroll view
   func isScrollViewAtTheBottom() -> Bool {
     if collectionView.contentOffset.y >= (collectionView.contentSize.height - collectionView.frame.size.height - 450) {
       return true
     }
     return false
   }
-  
+
   private var canRefresh = true
-  
+
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    
+
     if isScrollViewAtTheBottom() {
       DispatchQueue.main.async {
         self.bottomScrollConainer.isHidden = true
@@ -808,12 +818,12 @@ class ChatLogViewController: UIViewController {
         self.bottomScrollConainer.isHidden = false
       }
     }
-    
+
     if scrollView.contentOffset.y <= 0 { //change 100 to whatever you want
       if collectionView.contentSize.height < UIScreen.main.bounds.height - 50 {
         canRefresh = false
       }
-      
+
       if canRefresh && !refreshControl.isRefreshing {
         canRefresh = false
         refreshControl.beginRefreshing()
@@ -823,9 +833,9 @@ class ChatLogViewController: UIViewController {
       canRefresh = true
     }
   }
-  
-  //MARK: Messages sending
-  
+
+  // MARK: Messages sending
+
   @objc func handleSend() {
     guard currentReachabilityStatus != .notReachable else {
       basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)

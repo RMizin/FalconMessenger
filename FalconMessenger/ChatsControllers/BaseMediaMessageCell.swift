@@ -28,7 +28,7 @@ class BaseMediaMessageCell: BaseMessageCell {
     messageImageView.layer.cornerRadius = 15
     messageImageView.layer.masksToBounds = true
     messageImageView.isUserInteractionEnabled = true
-    messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action:  #selector(handleZoomTap)))
+    messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomTap)))
     
     return messageImageView
   }()
@@ -50,7 +50,7 @@ class BaseMediaMessageCell: BaseMessageCell {
   func setupImageFromURL(message: Message, messageImageUrl: URL) {
     progressView.startLoading()
     progressView.isHidden = false
-    let options:SDWebImageOptions = [.continueInBackground, .lowPriority, .scaleDownLargeImages]
+    let options: SDWebImageOptions = [.continueInBackground, .lowPriority, .scaleDownLargeImages]
     messageImageView.sd_setImage(with: messageImageUrl, placeholderImage: nil, options: options, progress: { (_, _, _) in
       
       DispatchQueue.main.async {

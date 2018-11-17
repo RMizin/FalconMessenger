@@ -16,15 +16,15 @@ private let falconUsersCellID = "falconUsersCellID"
 private let currentUserCellID = "currentUserCellID"
 
 class ContactsController: UITableViewController {
-  
+
   var contacts = [CNContact]()
   var filteredContacts = [CNContact]()
   var users = [User]()
   var filteredUsers = [User]()
-  
+
   var searchBar: UISearchBar?
   var searchContactsController: UISearchController?
-  
+
   let phoneNumberKit = PhoneNumberKit()
   let viewPlaceholder = ViewPlaceholder()
   let falconUsersFetcher = FalconUsersFetcher()
@@ -43,33 +43,33 @@ class ContactsController: UITableViewController {
         self.contactsFetcher.fetchContacts()
       }
     }
-  
+
     deinit {
       NotificationCenter.default.removeObserver(self)
     }
-  
+
     fileprivate var shouldReSyncUsers = false
-  
+
     override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
-      
+
       guard shouldReSyncUsers else { return }
       shouldReSyncUsers = false
       falconUsersFetcher.loadFalconUsers()
       contactsFetcher.syncronizeContacts(contacts: contacts)
     }
-  
+
     fileprivate func deselectItem() {
       guard DeviceType.isIPad else { return }
       if let indexPath = tableView.indexPathForSelectedRow {
         tableView.deselectRow(at: indexPath, animated: true)
       }
     }
-  
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
       return ThemeManager.currentTheme().statusBarStyle
     }
-  
+
     fileprivate func configureViewController() {
       falconUsersFetcher.delegate = self
       contactsFetcher.delegate = self
@@ -84,7 +84,7 @@ class ContactsController: UITableViewController {
       tableView.register(CurrentUserTableViewCell.self, forCellReuseIdentifier: currentUserCellID)
       tableView.separatorStyle = .none
     }
-  
+
     fileprivate func setupSearchController() {
       if #available(iOS 11.0, *) {
         searchContactsController = UISearchController(searchResultsController: nil)
@@ -101,17 +101,23 @@ class ContactsController: UITableViewController {
         tableView.tableHeaderView = searchBar
       }
     }
-  
+
     fileprivate func addContactsObserver() {
-      NotificationCenter.default.addObserver(self, selector: #selector(contactStoreDidChange), name: .CNContactStoreDidChange, object: nil)
+      NotificationCenter.default.addObserver(self,
+                                             selector: #selector(contactStoreDidChange),
+                                             name: .CNContactStoreDidChange,
+                                             object: nil)
     }
     fileprivate func removeContactsObserver() {
       NotificationCenter.default.removeObserver(self, name: .CNContactStoreDidChange, object: nil)
     }
-  
+
     fileprivate func addObservers() {
       NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
-      NotificationCenter.default.addObserver(self, selector: #selector(cleanUpController), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
+      NotificationCenter.default.addObserver(self,
+                                             selector: #selector(cleanUpController),
+                                             name: NSNotification.Name(rawValue: "clearUserData"),
+                                             object: nil)
     }
   
     @objc func contactStoreDidChange(notification: NSNotification) {
@@ -123,18 +129,18 @@ class ContactsController: UITableViewController {
         self.contactsFetcher.fetchContacts()
       }
     }
-  
+
     @objc fileprivate func changeTheme() {
       view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       tableView.sectionIndexBackgroundColor = view.backgroundColor
       tableView.backgroundColor = view.backgroundColor
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.reloadData()
-      
+
       navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
       navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
     }
-  
+
     @objc func cleanUpController() {
       filteredUsers.removeAll()
       users.removeAll()
@@ -143,10 +149,10 @@ class ContactsController: UITableViewController {
       userDefaults.removeObject(for: userDefaults.contactsCount)
       userDefaults.removeObject(for: userDefaults.contactsSyncronizationStatus)
     }
-  
+
     fileprivate var isAppLoaded = false
     fileprivate func reloadTableView(updatedUsers: [User]) {
-     
+
       let searchBar = correctSearchBarForCurrentIOSVersion()
       let isSearchInactive = searchBar.text?.isEmpty ?? true
     //  let isSearchControllerEmpty = filteredUsers.count == 0
@@ -154,17 +160,19 @@ class ContactsController: UITableViewController {
    //   if isSearchInProgress && !isSearchControllerEmpty { return } else {
         users = updatedUsers
         filteredUsers = users
-      
+
         guard isAppLoaded == false else {
           DispatchQueue.main.async {
             self.tableView.reloadData()
           }; return
         }
         isAppLoaded = true
-        UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: nil)
+        UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {
+          self.tableView.reloadData()
+        }, completion: nil)
      // }
     }
-  
+
     fileprivate func correctSearchBarForCurrentIOSVersion() -> UISearchBar {
       var searchBar = UISearchBar()
       if #available(iOS 11.0, *) {
@@ -174,7 +182,7 @@ class ContactsController: UITableViewController {
       }
       return searchBar
     }
-  
+
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -190,7 +198,7 @@ class ContactsController: UITableViewController {
         return filteredContacts.count
       }
     }
-  
+
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       return 65
     }
@@ -215,11 +223,13 @@ class ContactsController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       if indexPath.section == 0 {
-        let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as? CurrentUserTableViewCell ?? CurrentUserTableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID,
+                                                 for: indexPath) as? CurrentUserTableViewCell ?? CurrentUserTableViewCell()
         cell.title.text = NameConstants.personalStorage
         return cell
       } else {
-        let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID, for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID,
+                                                 for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
         let parameter = indexPath.section == 1 ? filteredUsers[indexPath.row] : filteredContacts[indexPath.row]
         cell.configureCell(for: parameter)
         return cell
@@ -229,22 +239,22 @@ class ContactsController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
       if indexPath.section == 0 {
-     
+
         let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
                                                           "isGroupChat": false  as AnyObject,
                                                           "chatParticipantsIDs": [currentUserID] as AnyObject]
-        
+
         let conversation = Conversation(dictionary: conversationDictionary)
         chatLogPresenter.open(conversation)
 
       } else if indexPath.section == 1 {
-        let conversationDictionary: [String: AnyObject] = ["chatID": filteredUsers[indexPath.row].id as AnyObject,
-                                                           "chatName": filteredUsers[indexPath.row].name as AnyObject,
-                                                           "isGroupChat": false  as AnyObject,
-                                                           "chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
-                                                           "chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
-                                                           "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
-        
+        let conversationDictionary = ["chatID": filteredUsers[indexPath.row].id as AnyObject,
+                                      "chatName": filteredUsers[indexPath.row].name as AnyObject,
+                                      "isGroupChat": false  as AnyObject,
+                                      "chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
+                                      "chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
+                                      "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
+
        let conversation = Conversation(dictionary: conversationDictionary)
        chatLogPresenter.open(conversation)
 
@@ -262,11 +272,11 @@ class ContactsController: UITableViewController {
     }
 }
 
-extension ContactsController: FalconUsersUpdatesDelegate { 
+extension ContactsController: FalconUsersUpdatesDelegate {
   func falconUsers(shouldBeUpdatedTo users: [User]) {
     globalDataStorage.falconUsers = users
     reloadTableView(updatedUsers: users)
-    
+
     let syncronizationStatus = userDefaults.currentBoolObjectState(for: userDefaults.contactsSyncronizationStatus)
     guard syncronizationStatus == true else { return }
     addContactsObserver()
@@ -279,16 +289,19 @@ extension ContactsController: FalconUsersUpdatesDelegate {
 extension ContactsController: ContactsUpdatesDelegate {
   func contacts(shouldPerformSyncronization: Bool) {
     guard shouldPerformSyncronization else { return }
-    
+
     DispatchQueue.main.async { [unowned self] in
-      self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .updatingUsers, activityPriority: .medium, color: ThemeManager.currentTheme().generalTitleColor)
+      self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem,
+                                                                 with: .updatingUsers,
+                                                                 activityPriority: .medium,
+                                                                 color: ThemeManager.currentTheme().generalTitleColor)
     }
-    
+
     DispatchQueue.global(qos: .default).async { [unowned self] in
       self.falconUsersFetcher.loadAndSyncFalconUsers()
     }
   }
-  
+
   func contacts(updateDatasource contacts: [CNContact]) {
     self.contacts = contacts
     self.filteredContacts = contacts
@@ -296,7 +309,7 @@ extension ContactsController: ContactsUpdatesDelegate {
       self.tableView.reloadData()
     }
   }
-  
+
   func contacts(handleAccessStatus: Bool) {
     guard handleAccessStatus else {
       viewPlaceholder.add(for: view, title: .denied, subtitle: .denied, priority: .high, position: .top)

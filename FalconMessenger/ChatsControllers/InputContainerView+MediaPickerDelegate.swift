@@ -15,9 +15,9 @@ extension InputContainerView: MediaPickerDelegate {
     attachedMedia.append(mediaObject)
     
     if attachedMedia.count - 1 >= 0 {
-      insertItemsToCollectionViewAnimated(at: [ IndexPath(item: attachedMedia.count - 1 , section: 0) ])
+      insertItemsToCollectionViewAnimated(at: [IndexPath(item: attachedMedia.count - 1, section: 0)])
     } else {
-      insertItemsToCollectionViewAnimated(at: [ IndexPath(item: 0 , section: 0) ])
+      insertItemsToCollectionViewAnimated(at: [IndexPath(item: 0, section: 0)])
     }
   }
   
@@ -76,14 +76,14 @@ extension InputContainerView: MediaPickerDelegate {
     attachCollectionView.deleteItems(at: [indexPath])
     resetChatInputConntainerViewSettings()
   }
-  
-  
+
   fileprivate func insertItemsToCollectionViewAnimated(at indexPath: [IndexPath]) {
     expandCollection()
     attachCollectionView.performBatchUpdates ({
       attachCollectionView.insertItems(at: indexPath)
     }, completion: nil)
-    attachCollectionView.scrollToItem(at: IndexPath(item: attachedMedia.count - 1 , section: 0), at: .right, animated: true)
+    attachCollectionView.scrollToItem(at: IndexPath(item: attachedMedia.count - 1, section: 0),
+                                      at: .right, animated: true)
   }
   
   func checkAuthorisationStatus() {
@@ -100,7 +100,6 @@ extension InputContainerView: MediaPickerDelegate {
           self.mediaPickerController?.imageManager = PHCachingImageManager()
           self.mediaPickerController?.fetchAssets()
           self.mediaPickerController?.collectionView.reloadData()
-          break
         case .denied, .restricted, .notDetermined:
           break
         }

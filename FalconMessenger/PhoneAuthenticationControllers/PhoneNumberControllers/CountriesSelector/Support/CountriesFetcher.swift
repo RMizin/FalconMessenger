@@ -14,7 +14,7 @@ import UIKit
 }
 
 class CountriesFetcher: NSObject {
-  
+
   weak var delegate: CountriesFetcherDelegate?
 
    func fetchCountries () {
@@ -23,14 +23,14 @@ class CountriesFetcher: NSObject {
     do {
       let data = try Data(contentsOf: url)
       let plist = try PropertyListSerialization.propertyList(from: data, options: .mutableContainers, format: nil)
-      guard let countriesArray = plist as? [[String : String]] else { return }
+      guard let countriesArray = plist as? [[String: String]] else { return }
       fetch(countriesArray)
     } catch {
       fatalError()
     }
   }
-  
-  fileprivate func fetch(_ plist: [[String : String]]) {
+
+  fileprivate func fetch(_ plist: [[String: String]]) {
     var countries = [Country]()
     for dictionary in plist {
       let country = Country(dictionary: dictionary)
@@ -39,11 +39,10 @@ class CountriesFetcher: NSObject {
     delegate?.countriesFetcher?(self, didFetch: countries)
     currentCountry(countries: countries)
   }
-  
+
   fileprivate func currentCountry(countries: [Country]) {
-     let currentCountryCode = NSLocale.current.regionCode
+    let currentCountryCode = NSLocale.current.regionCode
     for country in countries where country.code == currentCountryCode {
-      print("delegating")
       delegate?.countriesFetcher?(self, currentCountry: country)
     }
   }

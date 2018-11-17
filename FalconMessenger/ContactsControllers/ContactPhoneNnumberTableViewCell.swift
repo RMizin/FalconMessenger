@@ -10,39 +10,38 @@ import UIKit
 import Contacts
 
 class ContactPhoneNnumberTableViewCell: UITableViewCell {
-  
+
   var title: UILabel = {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
     title.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
     title.textColor = FalconPalette.defaultBlue
-    
+
     return title
   }()
-  
+
   var subtitle: UILabel = {
     var subtitle = UILabel()
     subtitle.translatesAutoresizingMaskIntoConstraints = false
     subtitle.font = UIFont.systemFont(ofSize: 18)
     subtitle.textColor = ThemeManager.currentTheme().generalTitleColor
-    
+
     return subtitle
   }()
-  
+
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-    
+
     backgroundColor = .clear
     selectionStyle = .none
     title.backgroundColor = backgroundColor
-    
- 
+
     contentView.addSubview(title)
     title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
     title.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
     title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
     title.heightAnchor.constraint(equalToConstant: 18).isActive = true
-    
+
     contentView.addSubview(subtitle)
     subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 5).isActive = true
     subtitle.leadingAnchor.constraint(equalTo: title.leadingAnchor).isActive = true

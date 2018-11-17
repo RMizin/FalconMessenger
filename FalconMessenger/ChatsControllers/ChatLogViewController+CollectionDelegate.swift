@@ -106,10 +106,10 @@ extension ChatLogViewController: CollectionDelegate {
     collectionView.performBatchUpdates({
       if oldSections < groupedMessages.count {
         collectionView.insertSections([indexPath.section])
-        //TODO: scroll to bottom
+        // TODO: scroll to bottom
       } else {
         collectionView.insertItems(at: [indexPath])
-        //TODO: scroll to bottom
+        // TODO: scroll to bottom
       }
       
     }) { (_) in

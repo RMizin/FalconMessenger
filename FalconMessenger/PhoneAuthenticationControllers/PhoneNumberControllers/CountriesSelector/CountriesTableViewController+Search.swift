@@ -9,7 +9,7 @@
 import UIKit
 
 extension CountriesTableViewController: UISearchBarDelegate, UISearchControllerDelegate {
-  
+
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     if #available(iOS 11.0, *) {
       searchController?.searchBar.endEditing(true)
@@ -17,18 +17,20 @@ extension CountriesTableViewController: UISearchBarDelegate, UISearchControllerD
       self.searchBar?.endEditing(true)
     }
   }
-  
+
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     searchBar.text = nil
     filteredCountries = countries
     guard countries.count > 0 else { return }
-    
+
     searchBar.setShowsCancelButton(false, animated: true)
     searchBar.resignFirstResponder()
     setUpCollation()
-    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {
+      self.tableView.reloadData()
+    }, completion: nil)
   }
-  
+
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     searchBar.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     guard #available(iOS 11.0, *) else {
@@ -37,7 +39,7 @@ extension CountriesTableViewController: UISearchBarDelegate, UISearchControllerD
     }
     return true
   }
-  
+
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     filteredCountries = searchText.isEmpty ? countries : countries.filter({ (country) -> Bool in
       return country.name!.lowercased().contains(searchText.lowercased()) ||
@@ -45,7 +47,9 @@ extension CountriesTableViewController: UISearchBarDelegate, UISearchControllerD
         country.dialCode!.lowercased().contains(searchText.lowercased())
     })
     setUpCollation()
-    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
+    UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {
+      self.tableView.reloadData()
+    }, completion: nil)
   }
 }
 

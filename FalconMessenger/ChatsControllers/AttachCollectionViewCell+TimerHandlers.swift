@@ -13,7 +13,11 @@ extension AttachCollectionViewCell {
   typealias CompletionHandler = (_ success: Bool) -> Void
   
   func runTimer() {
-    playerView.timer = Timer.scheduledTimer(timeInterval: 1, target: self,  selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
+    playerView.timer = Timer.scheduledTimer(timeInterval: 1,
+                                            target: self,
+                                            selector: (#selector(updateTimer)),
+                                            userInfo: nil,
+                                            repeats: true)
   }
   
   @objc func updateTimer() {
@@ -36,10 +40,10 @@ extension AttachCollectionViewCell {
     })
   }
   
-  func timeString(time:TimeInterval) -> String {
+  func timeString(time: TimeInterval) -> String {
     let hours = Int(time) / 3600
     let minutes = Int(time) / 60 % 60
     let seconds = Int(time) % 60
-    return String(format:"%02i:%02i:%02i", hours, minutes, seconds)
+    return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
   }
 }

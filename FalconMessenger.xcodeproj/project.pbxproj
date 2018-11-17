@@ -964,14 +964,14 @@
 			name = Base;
 			sourceTree = "<group>";
 		};
-		4B8CA145215433AD009F8AA3 /* Suppoet */ = {
+		4B8CA145215433AD009F8AA3 /* Support */ = {
 			isa = PBXGroup;
 			children = (
 				4B5E99D9212C42F6001F067F /* ConversationsFetcher.swift */,
 				4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */,
 				4B5E99DB212C6138001F067F /* InAppNotificationManager.swift */,
 			);
-			name = Suppoet;
+			name = Support;
 			sourceTree = "<group>";
 		};
 		4B8CA9E6211C49B200E6A66C /* TypingIndicator */ = {
@@ -1354,7 +1354,7 @@
 		4BE72A6E204E9DC4009A22EA /* ChatsControllers */ = {
 			isa = PBXGroup;
 			children = (
-				4B8CA145215433AD009F8AA3 /* Suppoet */,
+				4B8CA145215433AD009F8AA3 /* Support */,
 				4BE72A77204E9EC2009A22EA /* Cells */,
 				4BBBCBFA205851E100926800 /* ChatsTableViewController.swift */,
 				4BFBB107208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift */,
@@ -1488,6 +1488,7 @@
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
 				26079EBE940EC05B11EA8844 /* [CP] Copy Pods Resources */,
+				4BAA4DE821A04924000E0E63 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1578,6 +1579,8 @@
 				"${PODS_ROOT}/PhoneNumberKit/PhoneNumberKit/Resources/PhoneNumberMetadata.json",
 			);
 			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TOCropViewControllerBundle.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PhoneNumberMetadata.json",
@@ -1585,6 +1588,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4BAA4DE821A04924000E0E63 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#if which swiftlint >/dev/null; then\n#swiftlint\n#else\n#echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
 			showEnvVarsInLog = 0;
 		};
 		92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */ = {

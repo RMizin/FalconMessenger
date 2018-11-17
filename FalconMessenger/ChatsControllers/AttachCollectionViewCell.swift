@@ -123,10 +123,9 @@ class AttachCollectionViewCell: UICollectionViewCell {
     
     return layoutAttributes
   }
-  
 
   @objc func longTap(_ gestureReconizer: UILongPressGestureRecognizer) {
-    
+
     let locationInView = gestureReconizer.location(in: chatInputContainerView.attachCollectionView)
     
     guard let indexPath = chatInputContainerView.attachCollectionView.indexPathForItem(at: locationInView) else {
@@ -167,7 +166,7 @@ class AttachCollectionViewCell: UICollectionViewCell {
       } catch {
         print("error playing")
       }
-      
+
       chatInputContainerView.audioPlayer.stop()
       cell.resetTimer()
       UIView.animate(withDuration: 0.2, animations: {

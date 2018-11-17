@@ -31,7 +31,7 @@ class Conversation: NSObject {
     let isVideoMessage = (lastMessage?.imageUrl != nil || lastMessage?.localImage != nil) && lastMessage?.videoUrl != nil
     let isVoiceMessage = lastMessage?.voiceEncodedString != nil
     let isTextMessage = lastMessage?.text != nil
-    
+
     guard !isImageMessage else { return  MessageSubtitle.image }
     guard !isVideoMessage else { return MessageSubtitle.video }
     guard !isVoiceMessage else { return MessageSubtitle.audio }
@@ -42,7 +42,7 @@ class Conversation: NSObject {
   
   init(dictionary: [String: AnyObject]?) {
     super.init()
-    
+
     chatID = dictionary?["chatID"] as? String
     chatName = dictionary?["chatName"] as? String
     chatPhotoURL = dictionary?["chatOriginalPhotoURL"] as? String

@@ -21,7 +21,7 @@ class MediaObject: NSObject {
   
   init(dictionary: [String: AnyObject]) {
     super.init()
-    
+
     object = dictionary["object"] as? Data
     videoObject = dictionary["videoObject"] as? Data
     audioObject = dictionary["audioObject"] as? Data

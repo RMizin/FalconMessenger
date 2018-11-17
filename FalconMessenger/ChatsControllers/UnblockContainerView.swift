@@ -10,7 +10,6 @@ import UIKit
 
 class UnblockContainerView: InputBlockerContainerView {
 
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
     

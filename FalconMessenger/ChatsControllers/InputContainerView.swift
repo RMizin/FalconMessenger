@@ -6,12 +6,11 @@
 //  Copyright © 2017 Roman Mizin. All rights reserved.
 //
 
-
 import UIKit
 import AVFoundation
 
 class InputContainerView: UIControl {
-  
+
   var audioPlayer: AVAudioPlayer!
   
   weak var mediaPickerController: MediaPickerControllerNew?
@@ -20,7 +19,7 @@ class InputContainerView: UIControl {
   fileprivate var tap = UITapGestureRecognizer()
   static let commentOrSendPlaceholder =  "Comment or Send"
   static let messagePlaceholder = "Message"
- 
+
   weak var chatLogController: ChatLogViewController? {
     didSet {
       sendButton.addTarget(chatLogController, action: #selector(ChatLogViewController.handleSend), for: .touchUpInside)
@@ -84,12 +83,12 @@ class InputContainerView: UIControl {
   }()
   
   private var heightConstraint: NSLayoutConstraint!
-  
+
   private func addHeightConstraints() {
     heightConstraint = heightAnchor.constraint(equalToConstant: InputTextViewLayout.minHeight)
     heightConstraint.isActive = true
   }
-  
+
   func confirugeHeightConstraint() {
     let size = inputTextView.sizeThatFits(CGSize(width: inputTextView.bounds.size.width, height: .infinity))
     let height = size.height + 12
@@ -107,14 +106,16 @@ class InputContainerView: UIControl {
       self.confirugeHeightConstraint()
     }
   }
-  
 
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(inputViewResigned), name: .inputViewResigned, object: nil)
-     NotificationCenter.default.addObserver(self, selector: #selector(inputViewResponded), name: .inputViewResponded, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme),
+                                           name: .themeUpdated, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(inputViewResigned),
+                                           name: .inputViewResigned, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(inputViewResponded),
+                                           name: .inputViewResponded, object: nil)
     addHeightConstraints()
     backgroundColor = ThemeManager.currentTheme().barBackgroundColor
     addSubview(attachButton)
@@ -147,12 +148,12 @@ class InputContainerView: UIControl {
     attachButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     attachButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     attachButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
-    
+
     recordVoiceButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     recordVoiceButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     recordVoiceButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
     recordVoiceButton.leftAnchor.constraint(equalTo: attachButton.rightAnchor, constant: 0).isActive = true
-    
+
     inputTextView.topAnchor.constraint(equalTo: topAnchor, constant: 6).isActive = true
     inputTextView.leftAnchor.constraint(equalTo: recordVoiceButton.rightAnchor, constant: 3).isActive = true
     inputTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6).isActive = true
@@ -161,7 +162,8 @@ class InputContainerView: UIControl {
     placeholderLabel.isHidden = !inputTextView.text.isEmpty
     placeholderLabel.leftAnchor.constraint(equalTo: inputTextView.leftAnchor, constant: 12).isActive = true
     placeholderLabel.rightAnchor.constraint(equalTo: inputTextView.rightAnchor).isActive = true
-    placeholderLabel.topAnchor.constraint(equalTo: attachCollectionView.bottomAnchor, constant: inputTextView.font!.pointSize / 2.3).isActive = true
+    placeholderLabel.topAnchor.constraint(equalTo: attachCollectionView.bottomAnchor,
+                                          constant: inputTextView.font!.pointSize / 2.3).isActive = true
     placeholderLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
     
     sendButton.rightAnchor.constraint(equalTo: inputTextView.rightAnchor, constant: -4).isActive = true
@@ -174,7 +176,7 @@ class InputContainerView: UIControl {
   deinit {
     NotificationCenter.default.removeObserver(self)
   }
-  
+
   @objc func changeTheme() {
     backgroundColor = ThemeManager.currentTheme().barBackgroundColor
     inputTextView.changeTheme()
@@ -200,7 +202,7 @@ class InputContainerView: UIControl {
   @objc fileprivate func inputViewResigned() {
     inputTextView.removeGestureRecognizer(tap)
   }
-  
+
   @objc fileprivate func inputViewResponded() {
     guard let recognizers = inputTextView.gestureRecognizers else { return }
     guard !recognizers.contains(tap) else { return }
@@ -208,7 +210,7 @@ class InputContainerView: UIControl {
   }
 
   @objc func togglePhoto () {
-    
+
     checkAuthorisationStatus()
     UIView.performWithoutAnimation {
       _ = recordVoiceButton.resignFirstResponder()
@@ -225,7 +227,7 @@ class InputContainerView: UIControl {
     UIView.performWithoutAnimation {
        _ = attachButton.resignFirstResponder()
     }
-    
+
     if recordVoiceButton.isFirstResponder {
       _ = recordVoiceButton.resignFirstResponder()
     } else {
@@ -233,7 +235,7 @@ class InputContainerView: UIControl {
      // inputTextView.addGestureRecognizer(tap)
     }
   }
-  
+
   func resignAllResponders() {
     inputTextView.resignFirstResponder()
     _ = attachButton.resignFirstResponder()
@@ -252,7 +254,7 @@ extension InputContainerView {
     attachCollectionView.reloadData()
     resetChatInputConntainerViewSettings()
   }
-  
+
   func resetChatInputConntainerViewSettings() {
     guard attachedMedia.isEmpty else { return }
     attachCollectionView.frame = CGRect(x: 0, y: 0, width: inputTextView.frame.width, height: 0)
@@ -261,11 +263,12 @@ extension InputContainerView {
     sendButton.isEnabled = !inputTextView.text.isEmpty
     confirugeHeightConstraint()
   }
-  
+
   func expandCollection() {
     sendButton.isEnabled = (!inputTextView.text.isEmpty || !attachedMedia.isEmpty)
     placeholderLabel.text = InputContainerView.commentOrSendPlaceholder
-    attachCollectionView.frame = CGRect(x: 0, y: 3, width: inputTextView.frame.width, height: AttachCollectionView.height)
+    attachCollectionView.frame = CGRect(x: 0, y: 3,
+                                        width: inputTextView.frame.width, height: AttachCollectionView.height)
     inputTextView.textContainerInset = InputTextViewLayout.extendedInsets
     confirugeHeightConstraint()
   }
@@ -276,7 +279,7 @@ extension InputContainerView: UIGestureRecognizerDelegate {
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     return true
   }
-  
+
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
     guard attachCollectionView.bounds.contains(touch.location(in: attachCollectionView)) else { return true }
       return false
@@ -284,7 +287,7 @@ extension InputContainerView: UIGestureRecognizerDelegate {
 }
 
 extension InputContainerView: UITextViewDelegate {
-  
+
  private func handleSendButtonState() {
     let whiteSpaceIsEmpty = inputTextView.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty
     if (attachedMedia.count > 0 && !whiteSpaceIsEmpty) || (inputTextView.text != "" && !whiteSpaceIsEmpty) {
@@ -300,14 +303,14 @@ extension InputContainerView: UITextViewDelegate {
     chatLogController?.isTyping = !textView.text.isEmpty
     handleSendButtonState()
   }
-  
+
   func textViewDidEndEditing(_ textView: UITextView) {
-    if chatLogController?.chatLogAudioPlayer != nil  {
+    if chatLogController?.chatLogAudioPlayer != nil {
       chatLogController?.chatLogAudioPlayer.stop()
       chatLogController?.chatLogAudioPlayer = nil
     }
   }
-  
+
   func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
     guard text == "\n", let chatLogController = self.chatLogController else { return true }
     if chatLogController.isScrollViewAtTheBottom() {

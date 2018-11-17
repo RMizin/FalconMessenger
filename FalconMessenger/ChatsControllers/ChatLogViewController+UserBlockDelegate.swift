@@ -12,7 +12,7 @@ import Firebase
 extension ChatLogViewController: UserBlockDelegate {
   
   func blockUser(with uid: String) {
-    if DeviceType.isIPad  {
+    if DeviceType.isIPad {
       presentedViewController?.dismiss(animated: true, completion: nil)
     } else {
       navigationController?.popViewController(animated: true)

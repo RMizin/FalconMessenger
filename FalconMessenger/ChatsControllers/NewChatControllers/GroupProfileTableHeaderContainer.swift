@@ -17,14 +17,13 @@ class GroupProfileTableHeaderContainer: UIView {
     profileImageView.contentMode = .scaleAspectFill
     profileImageView.layer.masksToBounds = true
     profileImageView.layer.borderWidth = 1
-    profileImageView.layer.borderColor = ThemeManager.currentTheme().generalSubtitleColor.cgColor//ThemeManager.currentTheme().inputTextViewColor.cgColor
+    profileImageView.layer.borderColor = ThemeManager.currentTheme().generalSubtitleColor.cgColor
     profileImageView.layer.cornerRadius = 48
     profileImageView.isUserInteractionEnabled = true
   
     return profileImageView
   }()
 
-  
   let addPhotoLabelAdminText = "Add\nphoto"
   let addPhotoLabelRegularText = "No photo\nprovided"
   
@@ -44,7 +43,8 @@ class GroupProfileTableHeaderContainer: UIView {
     name.font = UIFont.systemFont(ofSize: 20)
     name.translatesAutoresizingMaskIntoConstraints = false
     name.textAlignment = .center
-    name.attributedPlaceholder = NSAttributedString(string:"Group name", attributes:[NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
+    let attributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
+    name.attributedPlaceholder = NSAttributedString(string:"Group name", attributes: attributes)
     name.borderStyle = .none
     name.autocorrectionType = .no
     name.returnKeyType = .done
@@ -63,7 +63,6 @@ class GroupProfileTableHeaderContainer: UIView {
     return userData
   }()
 
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
     
@@ -93,18 +92,18 @@ class GroupProfileTableHeaderContainer: UIView {
       name.centerYAnchor.constraint(equalTo: userData.centerYAnchor, constant: 0),
       name.leftAnchor.constraint(equalTo: userData.leftAnchor, constant: 0),
       name.rightAnchor.constraint(equalTo: userData.rightAnchor, constant: 0),
-      name.heightAnchor.constraint(equalToConstant: 50),
+      name.heightAnchor.constraint(equalToConstant: 50)
     ])
 
     if #available(iOS 11.0, *) {
       NSLayoutConstraint.activate([
         profileImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10),
-        userData.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10),
+        userData.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10)
       ])
     } else {
       NSLayoutConstraint.activate([
         profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-        userData.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+        userData.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
       ])
     }
   }

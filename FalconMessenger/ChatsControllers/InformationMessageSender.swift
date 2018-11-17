@@ -10,9 +10,9 @@ import UIKit
 import Firebase
 
 class InformationMessageSender: NSObject {
-  
+
   func sendInformatoinMessage(chatID: String?, membersIDs: [String], text: String) {
-    
+
     let ref = Database.database().reference().child("messages")
     let childRef = ref.childByAutoId()
     let defaultMessageStatus = messageStatusDelivered
@@ -20,8 +20,15 @@ class InformationMessageSender: NSObject {
     guard let toId = chatID, let fromId = Auth.auth().currentUser?.uid else { return }
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject , "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "text": text as AnyObject, "isInformationMessage": true as AnyObject]
-    childRef.updateChildValues(values) { (error, ref) in
+    let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject,
+                                       "toId": toId as AnyObject,
+                                       "status": defaultMessageStatus as AnyObject,
+                                       "seen": false as AnyObject,
+                                       "fromId": fromId as AnyObject,
+                                       "timestamp": timestamp,
+                                       "text": text as AnyObject,
+                                       "isInformationMessage": true as AnyObject]
+    childRef.updateChildValues(values) { (error, _) in
       
       guard error == nil else { return }
       

@@ -65,7 +65,9 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   fileprivate func addObservers() {
-    observer = NotificationCenter.default.addObserver(forName: .localPhonesUpdated, object: nil, queue: .main) { [weak self] notification in
+    observer = NotificationCenter.default.addObserver(forName: .localPhonesUpdated,
+                                                      object: nil,
+                                                      queue: .main) { [weak self] _ in
       DispatchQueue.main.async {
         self?.tableView.reloadData()
       }
@@ -120,7 +122,7 @@ class UserInfoTableViewController: UITableViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
    
-    let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 2)) as! UserInfoPhoneNumberTableViewCell
+    let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 2)) as? UserInfoPhoneNumberTableViewCell ?? UserInfoPhoneNumberTableViewCell()
     
     if globalDataStorage.localPhones.contains(contactPhoneNumber.digits) {
       phoneNumberCell.add.isHidden = true
@@ -149,7 +151,7 @@ class UserInfoTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
     if indexPath.section == 0 {
-      
+
       let headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier,
                                                      for: indexPath) as? UserinfoHeaderTableViewCell ?? UserinfoHeaderTableViewCell()
       
@@ -162,10 +164,16 @@ class UserInfoTableViewController: UITableViewController {
     
       headerCell.selectionStyle = .none
       
-      guard let photoURL = user?.photoURL else { headerCell.icon.image = UIImage(named: "UserpicIcon"); return headerCell }
+      guard let photoURL = user?.photoURL else {
+        headerCell.icon.image = UIImage(named: "UserpicIcon")
+        return headerCell
+      }
       headerCell.icon.showActivityIndicator()
-      headerCell.icon.sd_setImage(with: URL(string: photoURL), placeholderImage: UIImage(named: "UserpicIcon"), options: [.continueInBackground, .scaleDownLargeImages], completed: { (image, error, cacheType, url) in
-         headerCell.icon.hideActivityIndicator()
+      headerCell.icon.sd_setImage(with: URL(string: photoURL),
+                                  placeholderImage: UIImage(named: "UserpicIcon"),
+                                  options: [.continueInBackground, .scaleDownLargeImages],
+                                  completed: { (_, error, _, _) in
+        headerCell.icon.hideActivityIndicator()
         guard error == nil else { return }
         headerCell.icon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.openPhoto)))
       })
@@ -194,15 +202,16 @@ class UserInfoTableViewController: UITableViewController {
       let phoneBody = user?.phoneNumber ?? ""
       if phoneBody == "" || phoneBody == " " { phoneTitle = "" }
       phoneNumberCell.phoneLabel.attributedText = setAttributedText(title: phoneTitle, body: phoneBody)
-      
+
       var bioTitle = "bio\n"
       let bioBody = user?.bio ?? ""
       if bioBody == "" || bioBody == " " { bioTitle = "" }
       phoneNumberCell.bio.attributedText = setAttributedText(title: bioTitle, body: bioBody)
-      
+
       return phoneNumberCell
     } else {
-      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID, for: indexPath) as! GroupAdminControlsTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID,
+                                               for: indexPath) as? GroupAdminControlsTableViewCell ?? GroupAdminControlsTableViewCell()
       cell.selectionStyle = .none
       cell.title.text = adminControls[indexPath.row]
       cell.title.textColor = FalconPalette.dismissRed
@@ -213,8 +222,10 @@ class UserInfoTableViewController: UITableViewController {
   
   func setAttributedText(title: String, body: String) -> NSAttributedString {
     let mutableAttributedString = NSMutableAttributedString()
-    let titleAttributes = [ NSAttributedStringKey.foregroundColor: FalconPalette.defaultBlue, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)]
-    let bodyAttributes = [ NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18)]
+    let titleAttributes = [NSAttributedStringKey.foregroundColor: FalconPalette.defaultBlue,
+                           NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)]
+    let bodyAttributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor,
+                          NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18)]
     let titleAttributedString = NSAttributedString(string: title, attributes: titleAttributes)
     let bodyAttributedString = NSAttributedString(string: body, attributes: bodyAttributes)
     mutableAttributedString.append(titleAttributedString)

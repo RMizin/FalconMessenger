@@ -15,7 +15,7 @@ private let contactPhoneNnumberTableViewCellID = "contactPhoneNnumberTableViewCe
 private let invitationText = "Hey! Download Falcon Messenger on the App Store. https://itunes.apple.com/ua/app/falcon-messenger/id1313765714?mt=8 "
 
 class ContactsDetailController: UITableViewController {
-  
+
   var contactName = String()
   var contactPhoto: UIImage!
   var contactPhoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
@@ -43,23 +43,24 @@ class ContactsDetailController: UITableViewController {
         return 1
       }
     }
-  
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       if indexPath.section == 0 {
-        let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID, for: indexPath) as? CurrentUserTableViewCell ?? CurrentUserTableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: currentUserCellID,
+                                                 for: indexPath) as? CurrentUserTableViewCell ?? CurrentUserTableViewCell()
         cell.selectionStyle = .none
         cell.iconWidthAnchor.constant = CurrentUserTableViewCell.iconSizeLargeConstant
         cell.iconHeightAnchor.constant = CurrentUserTableViewCell.iconSizeLargeConstant
         cell.icon.layer.cornerRadius = CurrentUserTableViewCell.iconLargreCornerRadius
         cell.title.font = UIFont.systemFont(ofSize: 18)
         cell.title.text = contactName
-        
+
         if contactPhoto != nil {
           cell.icon.image = contactPhoto
         } else {
           cell.icon.image = UIImage(named: "UserpicIcon")
         }
-        
+
         return cell
       } else {
         let cell = tableView.dequeueReusableCell(withIdentifier: contactPhoneNnumberTableViewCellID,
@@ -75,13 +76,15 @@ class ContactsDetailController: UITableViewController {
         return cell
       }
     }
-  
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       tableView.deselectRow(at: indexPath, animated: true)
       if indexPath.section == 2 {
         if MFMessageComposeViewController.canSendText() {
           guard contactPhoneNumbers.indices.contains(0) else {
-            basicErrorAlertWith(title: "Error", message: "This user doesn't have any phone number provided.", controller: self)
+            basicErrorAlertWith(title: "Error",
+                                message: "This user doesn't have any phone number provided.",
+                                controller: self)
             return
           }
           let destination = MFMessageComposeViewController()
