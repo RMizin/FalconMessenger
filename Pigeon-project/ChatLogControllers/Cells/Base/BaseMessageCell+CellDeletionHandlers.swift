@@ -65,7 +65,17 @@ extension BaseMessageCell {
       contextMenuItems = [ContextMenuItems.copyItem]
     }
 
-    FTPopOverMenu.showForSender(sender: bubbleView, with: contextMenuItems, done: { (selectedIndex) in
+		var cellConfig = [FTCellConfiguration]()
+		for _ in contextMenuItems {
+			let element = FTCellConfiguration()
+			element.textAlignment = .center
+			cellConfig.append(element)
+		}
+
+		FTPopOverMenu.showForSender(sender: bubbleView,
+																with: contextMenuItems,
+																menuImageArray: nil,
+																cellConfigurationArray: cellConfig, done: { (selectedIndex) in
 
       if contextMenuItems[selectedIndex] == ContextMenuItems.copyItem ||
         contextMenuItems[selectedIndex] == ContextMenuItems.copyPreviewItem {

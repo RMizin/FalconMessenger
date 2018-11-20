@@ -21,9 +21,10 @@ class InformationMessageSender: NSObject {
     let childRef = ref.childByAutoId()
     let defaultMessageStatus = messageStatusDelivered
     guard let toId = chatID, let fromId = Auth.auth().currentUser?.uid else { return }
+		guard let childRefKey = childRef.key else { return }
     
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject, "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "text": text as AnyObject, "isInformationMessage": true as AnyObject]
+    let values: [String: AnyObject] = ["messageUID": childRefKey as AnyObject, "toId": toId as AnyObject, "status": defaultMessageStatus as AnyObject, "seen": false as AnyObject, "fromId": fromId as AnyObject, "timestamp": timestamp, "text": text as AnyObject, "isInformationMessage": true as AnyObject]
     
     childRef.updateChildValues(values) { (error, _) in
       guard error == nil, let messageId = childRef.key else { return }
