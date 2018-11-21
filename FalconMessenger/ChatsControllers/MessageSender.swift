@@ -91,7 +91,7 @@ class MessageSender: NSObject {
    
     let reference = Database.database().reference().child("messages").childByAutoId()
     
-    let messageUID = reference.key
+		guard let messageUID = reference.key else { return }
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
@@ -118,7 +118,7 @@ class MessageSender: NSObject {
     }
    
     let reference = Database.database().reference().child("messages").childByAutoId()
-    let messageUID = reference.key
+		guard let messageUID = reference.key else { return }
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     
@@ -164,12 +164,13 @@ class MessageSender: NSObject {
   
     let reference = Database.database().reference().child("messages").childByAutoId()
     
-    let messageUID = reference.key
+		guard let messageUID = reference.key else { return }
+	//	guard let imageIDKey = reference.key else { return }
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
 
-    let videoID = reference.key
-    let imageID = reference.key + "image"
+    let videoID = messageUID
+    let imageID = messageUID + "image"
 
     let defaultData: [String: AnyObject] = ["messageUID": messageUID as AnyObject,
                                             "toId": toID as AnyObject,
@@ -222,7 +223,7 @@ class MessageSender: NSObject {
 
     let reference = Database.database().reference().child("messages").childByAutoId()
     
-    let messageUID = reference.key
+		guard let messageUID = reference.key else { return }
     let messageStatus = messageStatusDelivered
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
     let bae64string = object.audioObject?.base64EncodedString()
@@ -252,12 +253,11 @@ class MessageSender: NSObject {
     self.delegate?.update(mediaSending: 0.0, animated: false)
   }
 
-  fileprivate func updateDatabase(at reference: DatabaseReference, with values: [String: AnyObject], toID: String, fromID: String ) {
+  fileprivate func updateDatabase(at reference: DatabaseReference, with values: [String: AnyObject], toID: String, fromID: String) {
 
     reference.updateChildValues(values) { (error, _) in
-      guard error == nil else { return }
-      let messageID = reference.key
-      
+			guard let messageID = reference.key else { return }
+
       if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
 
         let groupMessagesRef = Database.database().reference().child("groupChats").child(toID).child(userMessagesFirebaseFolder)

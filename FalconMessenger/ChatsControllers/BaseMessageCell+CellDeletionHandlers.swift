@@ -115,8 +115,18 @@ extension BaseMessageCell {
       config.menuWidth = defaultMenuWidth
       contextMenuItems = ContextMenuItems.contextMenuItems(for: .sendingMessage, !isOutgoing)
     }
-    
-    FTPopOverMenu.showForSender(sender: bubbleView, with: contextMenuItems, done: { (selectedIndex) in
+
+		var cellConfig = [FTCellConfiguration]()
+		for _ in contextMenuItems {
+			let element = FTCellConfiguration()
+			element.textAlignment = .center
+			cellConfig.append(element)
+		}
+
+		FTPopOverMenu.showForSender(sender: bubbleView,
+																with: contextMenuItems,
+																menuImageArray: nil,
+																cellConfigurationArray: cellConfig, done: { (selectedIndex) in
       
       guard contextMenuItems[selectedIndex] != ContextMenuItems.reportItem else {
         self.handleReport(indexPath: indexPath)

@@ -133,7 +133,7 @@ extension GroupProfileTableViewController {
     
     let membersIDs = fetchMembersIDs()
     let chatImage = groupProfileTableHeaderContainer.profileImageView.image
-    let chatID = Database.database().reference().child("user-messages").child(currentUserID).childByAutoId().key
+		guard let chatID = Database.database().reference().child("user-messages").child(currentUserID).childByAutoId().key else { return }
     let groupChatsReference = Database.database().reference().child("groupChats").child(chatID).child(messageMetaDataFirebaseFolder)
     let childValues = ["chatID": chatID as AnyObject,
                        "chatName": chatName as AnyObject,

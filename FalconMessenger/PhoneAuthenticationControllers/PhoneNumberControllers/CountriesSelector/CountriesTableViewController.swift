@@ -46,6 +46,7 @@ class CountriesTableViewController: UITableViewController {
     if #available(iOS 11.0, *) {
       navigationController?.navigationBar.prefersLargeTitles = true
     }
+    definesPresentationContext = true
     extendedLayoutIncludesOpaqueBars = true
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle

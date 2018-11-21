@@ -16,11 +16,12 @@ class InformationMessageSender: NSObject {
     let ref = Database.database().reference().child("messages")
     let childRef = ref.childByAutoId()
     let defaultMessageStatus = messageStatusDelivered
+		guard let childRefKey = childRef.key else { return }
     
     guard let toId = chatID, let fromId = Auth.auth().currentUser?.uid else { return }
-    
+
     let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
-    let values: [String: AnyObject] = ["messageUID": childRef.key as AnyObject,
+    let values: [String: AnyObject] = ["messageUID": childRefKey as AnyObject,
                                        "toId": toId as AnyObject,
                                        "status": defaultMessageStatus as AnyObject,
                                        "seen": false as AnyObject,
@@ -32,15 +33,15 @@ class InformationMessageSender: NSObject {
       
       guard error == nil else { return }
       
-      let messageId = childRef.key
+			guard let messageID = childRef.key else { return }
       let groupMessagesRef = Database.database().reference().child("groupChats").child(toId).child(userMessagesFirebaseFolder)
-      groupMessagesRef.updateChildValues([messageId: fromId])
+      groupMessagesRef.updateChildValues([messageID: fromId])
       
       //needed to update ui for current user as fast as possible
       //for other members this update handled by backend
       let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(userMessagesFirebaseFolder)
-      userMessagesRef.updateChildValues([messageId: fromId])
-      self.updateLastMessageForSelf(chatID: chatID, messageID: messageId)
+      userMessagesRef.updateChildValues([messageID: fromId])
+      self.updateLastMessageForSelf(chatID: chatID, messageID: messageID)
     }
   }
 
