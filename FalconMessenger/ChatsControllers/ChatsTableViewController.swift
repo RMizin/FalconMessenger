@@ -341,8 +341,13 @@ class ChatsTableViewController: UITableViewController {
     let delete = setupDeleteAction(at: indexPath)
     let pin = setupPinAction(at: indexPath)
     let mute = setupMuteAction(at: indexPath)
+
+		if let cell = tableView.cellForRow(at: indexPath) as? UserCell  {
+			guard cell.nameLabel.text != NameConstants.personalStorage else { return [delete, pin] }
+			return [delete, pin, mute]
+		}
  
-    return [delete, pin, mute]
+   return [delete, pin, mute]
   }
 
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -23,7 +23,7 @@ extension UserCell {
     placeHolderImage = isPersonalStorage ? UIImage(named: "PersonalStorage") : placeHolderImage
     
     nameLabel.text = chatName
-    muteIndicator.isHidden = !isConversationMuted
+    muteIndicator.isHidden = !isConversationMuted || isPersonalStorage
     
     if let isTyping = conversations[indexPath.row].isTyping, isTyping {
       messageLabel.text = "typing"

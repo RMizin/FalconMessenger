@@ -64,7 +64,7 @@ extension ChatsTableViewController {
       let muteTitle = isConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
     }
-    mute.backgroundColor =  UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
+    mute.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
     return mute
   }
   
