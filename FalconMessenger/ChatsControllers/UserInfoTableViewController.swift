@@ -40,7 +40,7 @@ class UserInfoTableViewController: UITableViewController {
   
   weak var delegate: UserBlockDelegate?
   
-  let adminControls = ["Block User"]
+  let adminControls = ["Shared Media", "Block User"]
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -106,6 +106,11 @@ class UserInfoTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+		if section == 1 {
+			return adminControls.count
+		}
+
     return 1
   }
   
@@ -212,9 +217,11 @@ class UserInfoTableViewController: UITableViewController {
     } else {
       let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID,
                                                for: indexPath) as? GroupAdminControlsTableViewCell ?? GroupAdminControlsTableViewCell()
+
+
       cell.selectionStyle = .none
       cell.title.text = adminControls[indexPath.row]
-      cell.title.textColor = FalconPalette.dismissRed
+			cell.title.textColor = cell.title.text == adminControls.last ? FalconPalette.dismissRed : FalconPalette.defaultBlue
     
       return cell
     }
@@ -236,7 +243,13 @@ class UserInfoTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
     if indexPath.section == 1 {
-      delegate?.blockUser(with: conversationID)
+			if indexPath.row == 0 {
+				let destination = SharedMediaController(collectionViewLayout: UICollectionViewFlowLayout())
+				destination.fetchingData = (userID: Auth.auth().currentUser!.uid, chatID: conversationID)
+				navigationController?.pushViewController(destination, animated: true)
+			} else {
+				delegate?.blockUser(with: conversationID)
+			}
     }
   }
 }
