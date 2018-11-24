@@ -11,14 +11,14 @@ import Firebase
 
 extension GroupAdminControlsTableViewController: AvatarOpenerDelegate {
   func avatarOpener(avatarPickerDidPick image: UIImage) {
-    navigationController?.view.isUserInteractionEnabled = false
+		navigationController?.view.isUserInteractionEnabled = false
     groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
     deleteCurrentPhoto { [weak self] (_) in
       self?.updateUserProfile(with: image, completion: { [weak self] (isUpdated) in
         self?.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
         self?.navigationController?.view.isUserInteractionEnabled = true
-        guard isUpdated, self != nil else {
-          basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError, controller: self!)
+        guard isUpdated else {
+          basicErrorAlertWith(title: basicErrorTitleForAlert, message: thumbnailUploadError, controller: self)
           return
         }
         self?.groupProfileTableHeaderContainer.profileImageView.image = image
@@ -27,13 +27,13 @@ extension GroupAdminControlsTableViewController: AvatarOpenerDelegate {
   }
   
   func avatarOpener(didPerformDeletionAction: Bool) {
-    navigationController?.view.isUserInteractionEnabled = false
+		navigationController?.view.isUserInteractionEnabled = false
     groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
     deleteCurrentPhoto { [weak self] (isDeleted) in
-      self?.navigationController?.view.isUserInteractionEnabled = true
+     	self?.navigationController?.view.isUserInteractionEnabled = true
       self?.groupProfileTableHeaderContainer.profileImageView.hideActivityIndicator()
-      guard isDeleted, self != nil else {
-        basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self!)
+      guard isDeleted else {
+        basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: self)
         return
       }
       self?.groupProfileTableHeaderContainer.profileImageView.image = nil

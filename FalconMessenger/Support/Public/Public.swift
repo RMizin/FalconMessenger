@@ -415,8 +415,8 @@ extension SystemSoundID {
   }
 }
 
-func basicErrorAlertWith (title: String, message: String, controller: UIViewController) {
-  
+func basicErrorAlertWith (title: String, message: String, controller: UIViewController?) {
+	guard let controller = controller else { return }
   let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
   alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
   controller.present(alert, animated: true, completion: nil)

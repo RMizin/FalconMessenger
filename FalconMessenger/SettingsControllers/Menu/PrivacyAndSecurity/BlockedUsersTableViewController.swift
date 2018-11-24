@@ -146,7 +146,9 @@ class BlockedUsersTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if indexPath.section == 0 {
       newChat()
-    }
+		} else {
+			tableView.deselectRow(at: indexPath, animated: true)
+		}
   }
   
   @objc fileprivate func newChat() {

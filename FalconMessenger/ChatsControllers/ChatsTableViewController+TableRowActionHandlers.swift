@@ -38,6 +38,7 @@ extension ChatsTableViewController {
   
   func setupMuteAction(at indexPath: IndexPath) -> UITableViewRowAction {
     let mute = UITableViewRowAction(style: .default, title: "Mute") { _, _ in
+			self.hapticFeedback()
       if indexPath.section == 0 {
         if #available(iOS 11.0, *) {} else {
           self.tableView.setEditing(false, animated: true)
@@ -70,6 +71,7 @@ extension ChatsTableViewController {
   
   func setupPinAction(at indexPath: IndexPath) -> UITableViewRowAction {
     let pin = UITableViewRowAction(style: .default, title: "Pin") { _, _ in
+			self.hapticFeedback()
       if indexPath.section == 0 {
         self.unpinConversation(at: indexPath)
       } else if indexPath.section == 1 {
@@ -85,6 +87,7 @@ extension ChatsTableViewController {
   
   func setupDeleteAction(at indexPath: IndexPath) -> UITableViewRowAction {
     let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+			self.hapticFeedback()
       self.deleteConversation(at: indexPath)
     }
     
@@ -181,6 +184,11 @@ extension ChatsTableViewController {
       completion()
     }
   }
+
+	fileprivate func hapticFeedback() {
+		let generator = UIImpactFeedbackGenerator(style: .medium)
+		generator.impactOccurred()
+	}
   
   func deleteConversation(at indexPath: IndexPath) {
     guard currentReachabilityStatus != .notReachable else {

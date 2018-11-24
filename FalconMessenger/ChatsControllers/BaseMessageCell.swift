@@ -252,7 +252,7 @@ class BaseMessageCell: UICollectionViewCell {
     case true:
       DispatchQueue.main.async {
         self.deliveryStatus.frame = CGRect(x: self.frame.width - 80, y: self.bubbleView.frame.height + 2,
-                                           width: 70, height: 10)//.integral
+                                           width: 70, height: 12)//.integral
         self.deliveryStatus.text = message.status
         self.deliveryStatus.isHidden = false
         self.deliveryStatus.layoutIfNeeded()
@@ -287,7 +287,7 @@ class BaseMessageCell: UICollectionViewCell {
   func setupViews() {
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     contentView.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))) )
+    bubbleView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongTap(_:))))
     contentView.addSubview(bubbleView)
   }
   

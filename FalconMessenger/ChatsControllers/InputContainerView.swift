@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class InputContainerView: UIControl {
+final class InputContainerView: UIControl {
 
   var audioPlayer: AVAudioPlayer!
   
@@ -17,7 +17,7 @@ class InputContainerView: UIControl {
   weak var trayDelegate: ImagePickerTrayControllerDelegate?
   var attachedMedia = [MediaObject]()
   fileprivate var tap = UITapGestureRecognizer()
-  static let commentOrSendPlaceholder =  "Comment or Send"
+  static let commentOrSendPlaceholder = "Comment or Send"
   static let messagePlaceholder = "Message"
 
   weak var chatLogController: ChatLogViewController? {
