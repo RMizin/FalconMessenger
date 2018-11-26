@@ -28,8 +28,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
   let informationMessageSender = InformationMessageSender()
   
   var members = [User]()
-  let fullAdminControlls = ["Add members", "Change administrator", "Leave the group"]
-  let defaultAdminControlls = ["Leave the group"]
+  let fullAdminControlls = ["Shared Media", "Add members", "Change administrator", "Leave the group"]
+  let defaultAdminControlls = ["Shared Media", "Leave the group"]
   var adminControls = [String]()
   
   var chatID = String() {
@@ -80,6 +80,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     
     if self.navigationController?.visibleViewController is AddGroupMembersController ||
       self.navigationController?.visibleViewController is ChangeGroupAdminController ||
+			self.navigationController?.visibleViewController is SharedMediaController ||
       self.navigationController?.visibleViewController is LeaveGroupAndChangeAdminController {
       return
     }
@@ -344,11 +345,18 @@ class GroupAdminControlsTableViewController: UITableViewController {
 
     if indexPath.section == 0 {
       if adminControls == defaultAdminControlls {
-        groupLeaveAlert()
+				if indexPath.row == 0 {
+					openSharedMedia()
+				} else {
+					groupLeaveAlert()
+				}
+
       } else {
-        if indexPath.row == 0 {
+				if indexPath.row == 0 {
+					openSharedMedia()
+				} else if indexPath.row == 1 {
           addMembers()
-        } else if indexPath.row == 1 {
+        } else if indexPath.row == 2 {
           self.changeAdministrator(shouldLeaveTheGroup: false)
         } else {
           groupLeaveAlert()
@@ -358,6 +366,12 @@ class GroupAdminControlsTableViewController: UITableViewController {
 
     tableView.deselectRow(at: indexPath, animated: true)
   }
+
+	fileprivate func openSharedMedia() {
+		let destination = SharedMediaController(collectionViewLayout: UICollectionViewFlowLayout())
+		destination.fetchingData = (userID: Auth.auth().currentUser!.uid, chatID: chatID)
+		navigationController?.pushViewController(destination, animated: true)
+	}
 
   fileprivate func groupLeaveAlert() {
 

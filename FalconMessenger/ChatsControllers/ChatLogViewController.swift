@@ -451,7 +451,10 @@ class ChatLogViewController: UIViewController {
     let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 
     guard let uid = Auth.auth().currentUser?.uid,
-      let conversationID = conversation?.chatID, uid != conversationID  else { return }
+      let conversationID = conversation?.chatID, uid != conversationID  else {
+				navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(openSharedMediaForStorage))
+				return
+		}
     navigationItem.rightBarButtonItem = infoBarButtonItem
     if isCurrentUserMemberOfCurrentGroup() {
       navigationItem.rightBarButtonItem?.isEnabled = true
@@ -459,6 +462,14 @@ class ChatLogViewController: UIViewController {
       navigationItem.rightBarButtonItem?.isEnabled = false
     }
   }
+
+	@objc fileprivate func openSharedMediaForStorage() {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		let destination = SharedMediaController(collectionViewLayout: UICollectionViewFlowLayout())
+		destination.fetchingData = (userID: uid, chatID: uid)
+		inputContainerView.resignAllResponders()
+		navigationController?.pushViewController(destination, animated: true)
+	}
 
   @objc func getInfoAction() {
     inputContainerView.resignAllResponders()

@@ -60,6 +60,7 @@ class Message: NSObject {
     var seen: Bool?
 
     var imageUrl: String?
+	 	var thumbnailImageUrl: String?
     var imageHeight: NSNumber?
     var imageWidth: NSNumber?
 
@@ -105,6 +106,7 @@ class Message: NSObject {
         seen = dictionary["seen"] as? Bool
 
         imageUrl = dictionary["imageUrl"] as? String
+				thumbnailImageUrl = dictionary["thumbnailImageUrl"] as? String
         imageHeight = dictionary["imageHeight"] as? NSNumber
         imageWidth = dictionary["imageWidth"] as? NSNumber
 

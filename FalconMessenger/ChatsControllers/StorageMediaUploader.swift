@@ -28,6 +28,24 @@ class StorageMediaUploader: NSObject {
       progress!(progressSnap)
     }
   }
+
+	func uploadThumbnail(_ image: UIImage, progress: ((_ progress: StorageTaskSnapshot?) -> Void)? = nil, completion: @escaping (_ imageUrl: String) -> ()) {
+		let imageName = UUID().uuidString + "thumbnail"
+		let ref = Storage.storage().reference().child("messageImages").child(imageName)
+
+		guard let uploadData = UIImageJPEGRepresentation(image, 1) else { return }
+		let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (_, error) in
+			guard error == nil else { return }
+
+			ref.downloadURL(completion: { (url, error) in
+				guard error == nil, let imageURL = url else { completion(""); return }
+				completion(imageURL.absoluteString)
+			})
+		})
+		uploadTask.observe(.progress) { (progressSnap) in
+			progress!(progressSnap)
+		}
+	}
   
   func upload(_ uploadData: Data, progress: ((_ progress: StorageTaskSnapshot?) -> Void)? = nil, completion: @escaping (_ videoUrl: String) -> ()) {
     

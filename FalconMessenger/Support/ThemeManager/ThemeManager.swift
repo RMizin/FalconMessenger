@@ -6,9 +6,8 @@
 //  Copyright © 2017 Roman Mizin. All rights reserved.
 //
 
-
-
 import UIKit
+import SDWebImage
 
 
 extension NSNotification.Name {
@@ -109,6 +108,15 @@ enum Theme: Int {
       return .lightGray
     }
   }
+
+	var sdWebImageActivityIndicator: SDWebImageActivityIndicator {
+		switch self {
+		case .Default:
+			return SDWebImageActivityIndicator.gray
+		case .Dark:
+			return SDWebImageActivityIndicator.white
+		}
+	}
   
   var controlButtonsColor: UIColor {
     switch self {

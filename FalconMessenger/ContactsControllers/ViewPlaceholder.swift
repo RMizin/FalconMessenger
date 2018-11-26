@@ -23,12 +23,14 @@ enum ViewPlaceholderTitle: String {
   case denied = "Falcon doesn't have access to your contacts"
   case empty = "You don't have any Falcon Users yet."
   case emptyChat = "You don't have any active conversations yet."
+	case emptySharedMedia = "You don't have any shared media yet."
 }
 
 enum ViewPlaceholderSubtitle: String {
   case denied = "Please go to your iPhone Settings –– Privacy –– Contacts. Then select ON for Falcon."
   case empty = "You can invite your friends to Flacon Messenger at the Contacts tab  "
   case emptyChat = "You can select somebody in Contacts, and send your first message."
+	case emptyString = ""
 }
 
 class ViewPlaceholder: UIView {

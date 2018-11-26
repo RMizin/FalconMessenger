@@ -9,6 +9,5 @@
 import UIKit
 
 protocol SharedMediaDelegate: class {
-	func sharedPhotos(with photoURLs: [[SharedPhoto]])
-	func sharedVideos(with videoURLs: [[SharedVideo]])
+	func sharedMedia(with elements: [[SharedMedia]])
 }

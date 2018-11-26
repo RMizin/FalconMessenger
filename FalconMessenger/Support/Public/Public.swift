@@ -577,18 +577,18 @@ extension UIScrollView {
 
 func createImageThumbnail (_ image: UIImage) -> UIImage {
   
-  let actualHeight:CGFloat = image.size.height
-  let actualWidth:CGFloat = image.size.width
-  let imgRatio:CGFloat = actualWidth/actualHeight
-  let maxWidth:CGFloat = 150.0
-  let resizedHeight:CGFloat = maxWidth/imgRatio
-  let compressionQuality:CGFloat = 0.5
+  let actualHeight: CGFloat = image.size.height
+  let actualWidth: CGFloat = image.size.width
+  let imgRatio: CGFloat = actualWidth/actualHeight
+  let maxWidth: CGFloat = 150.0
+  let resizedHeight: CGFloat = maxWidth/imgRatio
+  let compressionQuality: CGFloat = 0.7
   
-  let rect:CGRect = CGRect(x: 0, y: 0, width: maxWidth, height: resizedHeight)
+  let rect: CGRect = CGRect(x: 0, y: 0, width: maxWidth, height: resizedHeight)
   UIGraphicsBeginImageContext(rect.size)
   image.draw(in: rect)
   let img: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-  let imageData:Data = UIImageJPEGRepresentation(img, compressionQuality)!
+  let imageData: Data = UIImageJPEGRepresentation(img, compressionQuality)!
   UIGraphicsEndImageContext()
   
   return UIImage(data: imageData)!

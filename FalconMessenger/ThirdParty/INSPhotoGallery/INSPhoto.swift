@@ -19,7 +19,7 @@
 
 import Foundation
 import UIKit
-
+import SDWebImage
 /*
  * This is marked as @objc because of Swift bug http://stackoverflow.com/questions/30100787/fatal-error-array-cannot-be-bridged-from-objective-c-why-are-you-even-trying when passing for example [INSPhoto] array
  * to INSPhotosViewController
@@ -76,36 +76,24 @@ import UIKit
             completion(image, nil)
             return
         }
-        loadImageWithURL(imageURL, completion: completion)
+
+			SDWebImageManager.shared.loadImage(with: imageURL,
+																				 options: [.scaleDownLargeImages, .continueInBackground],
+																				 progress: nil) { (image, _, error, _, _, _) in
+				completion(image, error)
+			}
     }
     @objc open func loadThumbnailImageWithCompletionHandler(_ completion: @escaping (_ image: UIImage?, _ error: Error?) -> ()) {
         if let thumbnailImage = thumbnailImage {
             completion(thumbnailImage, nil)
             return
         }
-        loadImageWithURL(thumbnailImageURL, completion: completion)
-    }
-    
-    open func loadImageWithURL(_ url: URL?, completion: @escaping (_ image: UIImage?, _ error: Error?) -> ()) {
-        let session = URLSession(configuration: URLSessionConfiguration.default)
 
-      
-        if let imageURL = url {
-            session.dataTask(with: imageURL, completionHandler: { (response, data, error) in
-                DispatchQueue.main.async(execute: { () -> Void in
-                    if error != nil {
-                        completion(nil, error)
-                    } else if let response = response, let image = UIImage(data: response) {
-                        completion(image, nil)
-                    } else {
-                        completion(nil, NSError(domain: "INSPhotoDomain", code: -1, userInfo: [ NSLocalizedDescriptionKey: "Couldn't load image"]))
-                    }
-                    session.finishTasksAndInvalidate()
-                })
-            }).resume()
-        } else {
-            completion(nil, NSError(domain: "INSPhotoDomain", code: -2, userInfo: [ NSLocalizedDescriptionKey: "Image URL not found."]))
-        }
+			SDWebImageManager.shared.loadImage(with: thumbnailImageURL,
+																				 options: [.scaleDownLargeImages, .continueInBackground],
+																				 progress: nil) { (image, _, error, _, _, _) in
+				completion(image, error)
+			}
     }
 }
 

@@ -63,9 +63,9 @@ class MessageSender: NSObject {
     mediaUploadGroup.enter() // for text message
     mediaCount += 1 // for text message
     
-    attachedMedia.forEach { (_) in
+    attachedMedia.forEach { (media) in
       mediaUploadGroup.enter()
-      mediaCount += 1
+			mediaCount += 1
     }
     
     mediaUploadGroup.notify(queue: .global(qos: .default), execute: {
@@ -136,24 +136,45 @@ class MessageSender: NSObject {
 
     delegate?.update(with: localData)
 
-    storageUploader.upload(object.object!.asUIImage!, progress: { (snapshot) in
-
-      if let progressCount = snapshot?.progress?.fractionCompleted {
-        
-        self.progress.setProgress(progressCount * 0.98, id: messageUID)
-        self.updateProgress(self.progress, mediaCount: self.mediaCount)
-      }
-      
-    }) { (imageURL) in
-      self.progress.setProgress(1.0, id: messageUID)
-      self.updateProgress(self.progress, mediaCount: self.mediaCount)
-      var remoteData: [String: AnyObject] = ["imageUrl": imageURL as AnyObject]
-      defaultData.forEach({ remoteData[$0] = $1 })
-    
-      self.mediaToSend.append((values: remoteData, reference: reference))
-      self.mediaUploadGroup.leave()
-    }
+		storageUploader.uploadThumbnail(createImageThumbnail(object.object!.asUIImage!), progress: { (snapshot) in
+//			if let progressCount = snapshot?.progress?.fractionCompleted {
+//
+//				self.progress.setProgress(progressCount * 0.98, id: messageUID)
+//				self.updateProgress(self.progress, mediaCount: self.mediaCount)
+//			}
+		}) { (thumbnailImageUrl) in
+			self.uploadOriginalImage(object: object,
+															 defaultData: defaultData,
+															 messageUID: messageUID,
+															 reference: reference,
+															 thumbnailImageUrl: thumbnailImageUrl)
+		}
   }
+
+	fileprivate func uploadOriginalImage(object: MediaObject,
+																			 defaultData: [String: AnyObject],
+																			 messageUID: String,
+																			 reference: DatabaseReference,
+																			 thumbnailImageUrl: String) {
+		storageUploader.upload(object.object!.asUIImage!, progress: { (snapshot) in
+
+			if let progressCount = snapshot?.progress?.fractionCompleted {
+
+				self.progress.setProgress(progressCount * 0.98, id: messageUID)
+				self.updateProgress(self.progress, mediaCount: self.mediaCount)
+			}
+
+		}) { (imageURL) in
+			self.progress.setProgress(1.0, id: messageUID)
+			self.updateProgress(self.progress, mediaCount: self.mediaCount)
+			var remoteData: [String: AnyObject] = ["imageUrl": imageURL as AnyObject,
+																						 "thumbnailImageUrl": thumbnailImageUrl as AnyObject]
+			defaultData.forEach({ remoteData[$0] = $1 })
+
+			self.mediaToSend.append((values: remoteData, reference: reference))
+			self.mediaUploadGroup.leave()
+		}
+	}
   
   // MARK: VIDEO MESSAGE
   fileprivate func sendVideoMessage(object: MediaObject) {
@@ -185,7 +206,6 @@ class MessageSender: NSObject {
     defaultData.forEach({ localData[$0] = $1 })
 
     delegate?.update(with: localData)
-    
     storageUploader.upload(object.videoObject!, progress: { [unowned self] (snapshot) in
       if let progressCount = snapshot?.progress?.fractionCompleted {
        self.progress.setProgress(progressCount * 0.98, id: videoID)
@@ -194,25 +214,51 @@ class MessageSender: NSObject {
     }) { (videoURL) in
       self.progress.setProgress(1.0, id: messageUID)
       self.updateProgress(self.progress, mediaCount: self.mediaCount)
-
-      self.storageUploader.upload(object.object!.asUIImage!, progress: { [unowned self] (snapshot) in
-        
-        if let progressCount = snapshot?.progress?.fractionCompleted {
-          self.progress.setProgress(progressCount * 0.98, id: imageID)
-          self.updateProgress(self.progress, mediaCount: self.mediaCount)
-        }
-      }, completion: { (imageURL) in
-        self.progress.setProgress(1.0, id: messageUID)
-        self.updateProgress(self.progress, mediaCount: self.mediaCount)
-
-        var remoteData: [String: AnyObject] = ["imageUrl": imageURL as AnyObject, "videoUrl": videoURL as AnyObject]
-        defaultData.forEach({ remoteData[$0] = $1 })
-        
-        self.mediaToSend.append((values: remoteData, reference: reference))
-        self.mediaUploadGroup.leave()
-      })
+		self.storageUploader.uploadThumbnail(createImageThumbnail(object.object!.asUIImage!), progress: { (snapshot) in
+//				if let progressCount = snapshot?.progress?.fractionCompleted {
+//
+//					self.progress.setProgress(progressCount * 0.98, id: messageUID)
+//					self.updateProgress(self.progress, mediaCount: self.mediaCount)
+//				}
+			}) { (thumbnailImageUrl) in
+				self.uploadVideoPreviewImage(object: object,
+																defaultData: defaultData,
+																messageUID: messageUID,
+																reference: reference,
+																thumbnailImageUrl: thumbnailImageUrl,
+																imageID: imageID, videoURL: videoURL)
+			}
     }
   }
+
+	fileprivate func uploadVideoPreviewImage(object: MediaObject,
+																					 defaultData: [String: AnyObject],
+																					 messageUID: String,
+																					 reference: DatabaseReference,
+																					 thumbnailImageUrl: String, imageID: String,
+																					 videoURL: String) {
+
+		storageUploader.upload(object.object!.asUIImage!, progress: { [unowned self] (snapshot) in
+
+			if let progressCount = snapshot?.progress?.fractionCompleted {
+				self.progress.setProgress(progressCount * 0.98, id: imageID)
+				self.updateProgress(self.progress, mediaCount: self.mediaCount)
+			}
+			}, completion: { (imageURL) in
+				self.progress.setProgress(1.0, id: messageUID)
+				self.updateProgress(self.progress, mediaCount: self.mediaCount)
+
+				var remoteData: [String: AnyObject] = ["imageUrl": imageURL as AnyObject,
+																							 "videoUrl": videoURL as AnyObject,
+																							 "thumbnailImageUrl": thumbnailImageUrl as AnyObject]
+				defaultData.forEach({ remoteData[$0] = $1 })
+
+				self.mediaToSend.append((values: remoteData, reference: reference))
+				self.mediaUploadGroup.leave()
+		})
+	}
+
+
 
   // MARK: VOICE MESSAGE
   fileprivate func sendVoiceMessage(object: MediaObject) {

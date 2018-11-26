@@ -40,7 +40,7 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     lazy private(set) var activityIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityIndicator.startAnimating()
         return activityIndicator
     }()
@@ -73,19 +73,15 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         
         view.addGestureRecognizer(doubleTapGestureRecognizer)
         view.addGestureRecognizer(longPressGestureRecognizer)
-    //  navigationController?.navigationBar.barStyle = .blackTranslucent
-        
-//modalPresentationCapturesStatusBarAppearance = true
         
         if let image = photo.image {
             self.scalingImageView.image = image
             self.activityIndicator.stopAnimating()
         } else if let thumbnailImage = photo.thumbnailImage {
-            self.scalingImageView.image = thumbnailImage
-            self.activityIndicator.stopAnimating()
+            self.scalingImageView.image = blurEffect(image: thumbnailImage)
             loadFullSizeImage()
         } else {
-            loadThumbnailImage()
+					loadThumbnailImage()
         }
 
     }
@@ -94,16 +90,36 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         super.viewWillLayoutSubviews()
         scalingImageView.frame = view.bounds
     }
-    
+
+	var context = CIContext(options: nil)
+
+	func blurEffect(image: UIImage) -> UIImage {
+
+		let currentFilter = CIFilter(name: "CIGaussianBlur")
+		let beginImage = CIImage(image: image)
+		currentFilter!.setValue(beginImage, forKey: kCIInputImageKey)
+		currentFilter!.setValue(10, forKey: kCIInputRadiusKey)
+
+		let cropFilter = CIFilter(name: "CICrop")
+		cropFilter!.setValue(currentFilter!.outputImage, forKey: kCIInputImageKey)
+		cropFilter!.setValue(CIVector(cgRect: beginImage!.extent), forKey: "inputRectangle")
+
+		let output = cropFilter!.outputImage
+		let cgimg = context.createCGImage(output!, from: output!.extent)
+		let processedImage = UIImage(cgImage: cgimg!)
+		return processedImage
+	//	bg.image =
+	}
+
     private func loadThumbnailImage() {
         view.bringSubview(toFront: activityIndicator)
         photo.loadThumbnailImageWithCompletionHandler { [weak self] (image, error) -> () in
             
             let completeLoading = {
-                self?.scalingImageView.image = image
-                if image != nil {
-                    self?.activityIndicator.stopAnimating()
-                }
+							self?.scalingImageView.image = self?.blurEffect(image: image ?? UIImage())
+//                if image != nil {
+//                //    self?.activityIndicator.stopAnimating()
+//                }
                 self?.loadFullSizeImage()
             }
             
@@ -118,11 +134,12 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func loadFullSizeImage() {
+			print("loading full size")
         view.bringSubview(toFront: activityIndicator)
         self.photo.loadImageWithCompletionHandler({ [weak self] (image, error) -> () in
             let completeLoading = {
                 self?.activityIndicator.stopAnimating()
-                self?.scalingImageView.image = image    
+                self?.scalingImageView.image = image
             }
             
             if Thread.isMainThread {
