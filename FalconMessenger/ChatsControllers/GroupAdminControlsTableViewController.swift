@@ -63,6 +63,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
   }
   
   var groupAvatarURL: String?
+	var conversation: Conversation?
   
   var currentName = String()
   
@@ -171,8 +172,8 @@ class GroupAdminControlsTableViewController: UITableViewController {
     chatHandle = chatReference.observe( .value) { (snapshot) in
       guard let conversationDictionary = snapshot.value as? [String: AnyObject] else { return }
       let conversation = Conversation(dictionary: conversationDictionary)
-      
-      if let url = conversation.chatPhotoURL {
+      self.conversation = conversation
+      if let url = conversation.chatThumbnailPhotoURL {
         self.groupAvatarURL = url
         if self.onceToken == 0 {
           self.groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
@@ -265,7 +266,10 @@ class GroupAdminControlsTableViewController: UITableViewController {
     }
     avatarOpener.delegate = self
     avatarOpener.handleAvatarOpening(avatarView: groupProfileTableHeaderContainer.profileImageView, at: self,
-                                     isEditButtonEnabled: isCurrentUserAdministrator, title: .group)
+																		 isEditButtonEnabled: isCurrentUserAdministrator,
+																		 title: .group,
+																		 urlString: conversation?.chatPhotoURL,
+																		 thumbnailURLString: conversation?.chatThumbnailPhotoURL)
   }
   
   // MARK: - Table view data source

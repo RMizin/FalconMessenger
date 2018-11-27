@@ -79,8 +79,12 @@ class GroupProfileTableViewController: UITableViewController {
       return
     }
     avatarOpener.delegate = self 
-    avatarOpener.handleAvatarOpening(avatarView: groupProfileTableHeaderContainer.profileImageView, at: self,
-                                     isEditButtonEnabled: true, title: .group)
+    avatarOpener.handleAvatarOpening(avatarView: groupProfileTableHeaderContainer.profileImageView,
+																		 at: self,
+																		 isEditButtonEnabled: true,
+																		 title: .group,
+																		 urlString: nil,
+																		 thumbnailURLString: nil)
   }
   
   @objc func textFieldDidChange(_ textField: UITextField) {

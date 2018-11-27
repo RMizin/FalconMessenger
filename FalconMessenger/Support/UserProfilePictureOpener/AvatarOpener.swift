@@ -11,6 +11,7 @@ import Firebase
 import Photos
 import AVFoundation
 import CropViewController
+import SDWebImage
 
 protocol AvatarOpenerDelegate: class {
  func avatarOpener(avatarPickerDidPick image: UIImage)
@@ -28,7 +29,12 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
   
   weak var delegate: AvatarOpenerDelegate?
    
-  func handleAvatarOpening(avatarView: UIImageView, at controller: UIViewController, isEditButtonEnabled: Bool, title: AvatarOverlayTitle) {
+	func handleAvatarOpening(avatarView: UIImageView,
+													 at controller: UIViewController,
+													 isEditButtonEnabled: Bool,
+													 title: AvatarOverlayTitle,
+													 urlString: String?,
+													 thumbnailURLString: String?) {
   
     parentController = controller
     avatarImageView = avatarView
@@ -39,15 +45,55 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
       openPhotoManager(empty: true)
       break
     case false:
-      openAvatar(avatarView: avatarView, at: controller)
+			openPhoto(urlString: urlString, thumbnailURLString: thumbnailURLString, avatarView: avatarView, controller: controller)
       break
     }
   }
 
-  private func openAvatar(avatarView: UIImageView, at controller: UIViewController) {
-   
-    let currentPhoto = INSPhoto(image: avatarView.image, thumbnailImage: nil, messageUID: nil)
-    galleryPreview = INSPhotosViewController(photos: [currentPhoto], initialPhoto: currentPhoto, referenceView: avatarView)
+
+	private func openPhoto(urlString: String?, thumbnailURLString: String?, avatarView: UIImageView, controller: UIViewController) {
+
+		let localPhoto = urlString == nil && thumbnailURLString == nil
+		if localPhoto {
+			let currentPhoto = INSPhoto(image: avatarView.image, thumbnailImage: nil, messageUID: nil)
+			openAvatar(avatarView: avatarView, controller: controller, photo: currentPhoto)
+			return
+		}
+
+		guard let urlString = urlString else { return }
+		let overlay = INSPhotosOverlayView()
+		overlay.bottomShadow.isHidden = true
+
+	//	guard let urlString = conversation.chatPhotoURL else { return }
+		var photo: INSPhoto!
+
+		let cacheKey = SDWebImageManager.shared.cacheKey(for: URL(string: urlString))
+
+		SDImageCache.shared.containsImage(forKey: cacheKey, cacheType: .disk) { (cacheType) in
+			if cacheType == SDImageCacheType.disk {
+				SDWebImageManager.shared.loadImage(with: URL(string: urlString),
+																					 options: [.scaleDownLargeImages, .continueInBackground],
+																					 progress: nil, completed:
+					{ (image, _, _, _, _, _) in
+						photo = INSPhoto(image: image, thumbnailImage: image, messageUID: nil)
+						self.openAvatar(avatarView: avatarView, controller: controller, photo: photo)
+						//self.presentPhoto(photo: photo, overlay: overlay)
+				})
+			} else {
+				if let thumbnailURLString = thumbnailURLString {
+					photo = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: thumbnailURLString), messageUID: nil)
+				} else {
+					photo = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: urlString), messageUID: nil)
+				}
+				self.openAvatar(avatarView: avatarView, controller: controller, photo: photo)
+			}
+		}
+	}
+
+	private func openAvatar(avatarView: UIImageView, controller: UIViewController, photo: INSPhoto) {
+   	let photos: [INSPhotoViewable] = [photo]
+		let currentPhoto = photos[0]
+    galleryPreview = INSPhotosViewController(photos: photos, initialPhoto: currentPhoto, referenceView: avatarView)
     overlay.photosViewController = galleryPreview
     galleryPreview?.overlayView = overlay
     galleryPreview?.overlayView.setHidden(true, animated: false)

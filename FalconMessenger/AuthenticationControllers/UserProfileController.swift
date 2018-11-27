@@ -68,8 +68,12 @@ class UserProfileController: UIViewController {
         return
       }
       avatarOpener.delegate = self
-      avatarOpener.handleAvatarOpening(avatarView: userProfileContainerView.profileImageView, at: self,
-                                       isEditButtonEnabled: true, title: .user)
+      avatarOpener.handleAvatarOpening(avatarView: userProfileContainerView.profileImageView,
+																			 at: self,
+																			 isEditButtonEnabled: true,
+																			 title: .user,
+																			 urlString: nil,
+																			 thumbnailURLString: nil)
     }
 }
 

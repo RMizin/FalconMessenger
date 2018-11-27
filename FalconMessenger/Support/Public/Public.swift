@@ -582,7 +582,7 @@ func createImageThumbnail (_ image: UIImage) -> UIImage {
   let imgRatio: CGFloat = actualWidth/actualHeight
   let maxWidth: CGFloat = 150.0
   let resizedHeight: CGFloat = maxWidth/imgRatio
-  let compressionQuality: CGFloat = 0.7
+  let compressionQuality: CGFloat = 0.6
   
   let rect: CGRect = CGRect(x: 0, y: 0, width: maxWidth, height: resizedHeight)
   UIGraphicsBeginImageContext(rect.size)

@@ -53,7 +53,10 @@ class UserInfoTableViewController: UITableViewController {
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    
+		if self.navigationController?.visibleViewController is SharedMediaController {
+			return
+		}
+		
     if userReference != nil {
       userReference.removeObserver(withHandle: handle)
     }
@@ -169,7 +172,7 @@ class UserInfoTableViewController: UITableViewController {
     
       headerCell.selectionStyle = .none
       
-      guard let photoURL = user?.photoURL else {
+      guard let photoURL = user?.thumbnailPhotoURL else {
         headerCell.icon.image = UIImage(named: "UserpicIcon")
         return headerCell
       }

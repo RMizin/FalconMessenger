@@ -198,6 +198,7 @@ class ChatLogViewController: UIViewController {
     if self.navigationController?.visibleViewController is UserInfoTableViewController ||
       self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
       self.navigationController?.visibleViewController is OtherReportController ||
+			self.navigationController?.visibleViewController is SharedMediaController ||
       UIApplication.topViewController() is CropViewController ||
       UIApplication.topViewController() is SFSafariViewController {
       return
@@ -215,7 +216,7 @@ class ChatLogViewController: UIViewController {
     groupMembersManager.removeAllObservers()
 
     removeBanObservers()
-
+		// MARK: - DATABASE REMOVING OBSERVERS // TO MOVE
     for element in messageChangesHandles {
       let messageID = element.uid
       let messagesReference = Database.database().reference().child("messages").child(messageID)
@@ -404,7 +405,7 @@ class ChatLogViewController: UIViewController {
       blocker.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
   }
-
+// MARK: - DATABASE REMOVE BLOCKER VIEW // TO MOVE
   @objc func removeBlockerView() {
     blocker.remove(from: view)
     guard let chatID = conversation?.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
@@ -452,7 +453,9 @@ class ChatLogViewController: UIViewController {
 
     guard let uid = Auth.auth().currentUser?.uid,
       let conversationID = conversation?.chatID, uid != conversationID  else {
-				navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(openSharedMediaForStorage))
+				navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .organize,
+																														target: self,
+																														action: #selector(openSharedMediaForStorage))
 				return
 		}
     navigationItem.rightBarButtonItem = infoBarButtonItem
@@ -527,7 +530,7 @@ class ChatLogViewController: UIViewController {
     }
   }
 
-  // MARK: - Typing indicator
+// MARK: - DATABASE TYPING INDICATOR // TO MOVE
   private var localTyping = false
 
   var isTyping: Bool {
@@ -643,7 +646,7 @@ class ChatLogViewController: UIViewController {
     }
   }
 
-  // MARK: - Message status
+ // MARK: - DATABASE MESSAGE STATUS // TO MOVE
   func updateMessageStatus(messageRef: DatabaseReference) {
 
     guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else { return }
@@ -660,6 +663,7 @@ class ChatLogViewController: UIViewController {
           self.navigationController?.visibleViewController is ChatLogViewController ||
           self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
           self.navigationController?.visibleViewController is OtherReportController ||
+					self.navigationController?.visibleViewController is SharedMediaController ||
           UIApplication.topViewController() is CropViewController ||
           UIApplication.topViewController() is INSPhotosViewController ||
           UIApplication.topViewController() is SFSafariViewController) else { senderID = nil; return }
@@ -754,6 +758,7 @@ class ChatLogViewController: UIViewController {
     onlineStatusInString = manageNavigationItemTitle(onlineStatusObject: status)
   }
 
+	// MARK: - DATABASE ONLINE STATUS // TO MOVE
   func configureTitleViewWithOnlineStatus() {
 
     if let isGroupChat = conversation?.isGroupChat, isGroupChat,

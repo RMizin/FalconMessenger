@@ -108,7 +108,6 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
 		let cgimg = context.createCGImage(output!, from: output!.extent)
 		let processedImage = UIImage(cgImage: cgimg!)
 		return processedImage
-	//	bg.image =
 	}
 
     private func loadThumbnailImage() {

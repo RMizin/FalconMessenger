@@ -84,14 +84,26 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 			var viewableElement: INSPhotoViewable!
 
-			if let thumbnailImageURL = element.thumbnailImageUrl {
-				viewableElement = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: thumbnailImageURL), messageUID: element.id)
-			} else {
-				viewableElement = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: urlString), messageUID: element.id)
+			let cacheKey = SDWebImageManager.shared.cacheKey(for: URL(string: urlString))
 
+			SDImageCache.shared.containsImage(forKey: cacheKey, cacheType: .disk) { (cacheType) in
+				if cacheType == SDImageCacheType.disk {
+					SDWebImageManager.shared.loadImage(with: URL(string: urlString),
+																						 options: [.scaleDownLargeImages, .continueInBackground],
+																						 progress: nil, completed:
+						{ (image, _, _, _, _, _) in
+							viewableElement = INSPhoto(image: image, thumbnailImage: image, messageUID: element.id)
+							self.updateViewables(element: element, viewableElement: viewableElement)
+					})
+				} else {
+					if let thumbnailURLString = element.thumbnailImageUrl {
+						viewableElement = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: thumbnailURLString), messageUID: element.id)
+					} else {
+						viewableElement = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: urlString), messageUID: element.id)
+					}
+					self.updateViewables(element: element, viewableElement: viewableElement)
+				}
 			}
-			updateViewables(element: element, viewableElement: viewableElement)
-
 		})})
 	}
 

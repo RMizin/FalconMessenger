@@ -109,7 +109,10 @@ class AccountSettingsController: UITableViewController {
     }
     avatarOpener.delegate = self
     avatarOpener.handleAvatarOpening(avatarView: userProfileContainerView.profileImageView, at: self,
-                                     isEditButtonEnabled: true, title: .user)
+																		 isEditButtonEnabled: true,
+																		 title: .user,
+																		 urlString: nil,
+																		 thumbnailURLString: nil)
     cancelBarButtonPressed()
   }
   
