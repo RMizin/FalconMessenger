@@ -197,13 +197,17 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		} else {
 			inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
 		}
-	//	self.inputContainerView.resignAllResponders()
 		player.play()
 		return inBubblePlayerViewController
 	}
 }
 
 extension SharedMediaController: SharedMediaDelegate {
+	func sharedMedia(error: Bool) {
+		ARSLineProgress.hide()
+		viewPlaceholder.add(for: view, title: .emptySharedMedia, subtitle: .emptyString, priority: .medium, position: .center)
+	}
+
 
 	func sharedMedia(with elements: [[SharedMedia]]) {
 		ARSLineProgress.hide()

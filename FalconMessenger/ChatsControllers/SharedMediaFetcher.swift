@@ -20,7 +20,8 @@ class SharedMediaFetcher: NSObject {
 	
 
 	func fetchMedia(userID: String?, chatID: String?) {
-		guard let userID = userID, let chatID = chatID else { return }
+
+		guard let userID = userID, let chatID = chatID else { delegate?.sharedMedia(error: true); return }
 		let database = Database.database().reference()
 		let itemsPerPage = 500 * pagesToLoad
 		pagesToLoad += 1
@@ -28,7 +29,11 @@ class SharedMediaFetcher: NSObject {
 		let reference = database.child("user-messages").child(userID).child(chatID).child("userMessages").queryLimited(toLast: UInt(itemsPerPage))
 		reference.keepSynced(true)
 		reference.observeSingleEvent(of: .value) { (snapshot) in
-			guard let messageIDsDictionary = snapshot.value as? [String: AnyObject] else { print("returning"); return }
+			guard let messageIDsDictionary = snapshot.value as? [String: AnyObject] else {
+				self.delegate?.sharedMedia(error: true);
+				return
+			}
+
 			let messageIDs = Array(messageIDsDictionary.keys)
 			self.mediaGroup = DispatchGroup()
 			messageIDs.forEach({ _ in self.mediaGroup.enter() })

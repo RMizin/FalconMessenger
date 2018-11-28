@@ -10,4 +10,5 @@ import UIKit
 
 protocol SharedMediaDelegate: class {
 	func sharedMedia(with elements: [[SharedMedia]])
+	func sharedMedia(error: Bool)
 }
