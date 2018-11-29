@@ -115,11 +115,6 @@ class ChatLogHistoryFetcher: NSObject {
       var updatedMessages = self.previousMessages + self.messages
       updatedMessages = self.messagesFetcher.configureTails(for: updatedMessages, isGroupChat: self.isGroupChat)
       query.removeObserver(withHandle: self.userMessageHande)
-      print(self.previousMessages.count)
-      var indexPaths = [IndexPath]()
-      Array(0..<self.previousMessages.count).forEach({ (index) in
-        indexPaths.append(IndexPath(item: index, section: 0))
-      })
       self.delegate?.chatLogHistory(updated: updatedMessages)
     })
   }

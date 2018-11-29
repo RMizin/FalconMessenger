@@ -26,7 +26,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 	fileprivate var isLoading = false
 	fileprivate var viewable = [INSPhotoViewable]()
-	fileprivate let sharedMediaFetcher = SharedMediaFetcher()
+	fileprivate let sharedMediaHistoryFetcher = SharedMediaHistoryFetcher()
 	fileprivate let viewPlaceholder = ViewPlaceholder()
 
 	var fetchingData: (userID: String, chatID: String)? {
@@ -63,18 +63,16 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		let nrOfCellsPerRow: CGFloat = 4
 		
 		let itemWidth = collectionViewSize.width/nrOfCellsPerRow
-		//layout.estimatedItemSize = CGSize(width: itemWidth-2, height: itemWidth-2)
 		layout.itemSize = CGSize(width: itemWidth-2, height: itemWidth-2)
 
 		if #available(iOS 11.0, *) {
 			collectionView?.contentInsetAdjustmentBehavior = .always
 		}
 
-		collectionView?.addRefreshFooter { [unowned self] (footer) in
-			print("in refresh")
-			guard self.isLoading == false else { return }
-			self.isLoading = true
-			self.sharedMediaFetcher.fetchMedia(userID: self.fetchingData?.userID, chatID: self.fetchingData?.chatID)
+		collectionView?.addRefreshFooter { [weak self] (footer) in
+			guard self?.isLoading == false else { return }
+			self?.isLoading = true
+			self?.sharedMediaHistoryFetcher.loadPreviousMedia(self?.fetchingData)
 		}
 	}
 
@@ -119,9 +117,9 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 	}
 
 	fileprivate func fetchPhotos() {
-		sharedMediaFetcher.delegate = self
+		sharedMediaHistoryFetcher.delegate = self
 		ARSLineProgress.ars_showOnView(view)
-		sharedMediaFetcher.fetchMedia(userID: fetchingData?.userID, chatID: fetchingData?.chatID)
+		sharedMediaHistoryFetcher.loadPreviousMedia(fetchingData)
 	}
 
 	// MARK: UICollectionViewDataSource
@@ -202,34 +200,63 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 	}
 }
 
-extension SharedMediaController: SharedMediaDelegate {
-	func sharedMedia(error: Bool) {
+extension SharedMediaController: SharedMediaHistoryDelegate {
+
+	func sharedMediaHistory(allLoaded: Bool) {
+		DispatchQueue.main.async {
+			self.collectionView?.removeRefreshFooter()
+		}
+		isLoading = false
 		ARSLineProgress.hide()
-		viewPlaceholder.add(for: view, title: .emptySharedMedia, subtitle: .emptyString, priority: .medium, position: .center)
 	}
 
-
-	func sharedMedia(with elements: [[SharedMedia]]) {
-		ARSLineProgress.hide()
-
-		if elements.count == 0 {
+	func sharedMediaHistory(isEmpty: Bool) {
+		if isEmpty {
 			viewPlaceholder.add(for: view, title: .emptySharedMedia, subtitle: .emptyString, priority: .medium, position: .center)
+			ARSLineProgress.hide()
+			return
 		} else {
 			viewPlaceholder.remove(from: view, priority: .medium)
 		}
+	}
 
-		if elements.count == sharedMedia.count {
-			DispatchQueue.main.async {
-				self.collectionView?.removeRefreshFooter()
-			}
-			return
-		}
-		isLoading = false
-		sharedMedia = elements
+	func sharedMediaHistory(updated sharedMedia: [SharedMedia]) {
+		let oldSectionsIndexes = self.sharedMedia.count > 0 ? self.sharedMedia.count-1 : 0
 
+		var flattenArray = Array(self.sharedMedia.joined())
+		flattenArray.append(contentsOf: sharedMedia)
+
+		let newSharedMedia = SharedMedia.groupedSharedMedia(flattenArray)
+		let numberOfSectionsForReload = newSharedMedia.count - self.sharedMedia.count
+
+		self.sharedMedia = newSharedMedia
 		self.collectionView?.refreshFooter?.stopLoading()
-		DispatchQueue.main.async {
-			self.collectionView?.reloadData()
+		isLoading = false
+
+		UIView.performWithoutAnimation {
+			collectionView?.performBatchUpdates({
+				var indexSet = IndexSet()
+
+				if numberOfSectionsForReload >= 1 {
+					for index in 1...numberOfSectionsForReload {
+						let indexSetElement = self.sharedMedia.count - index
+						indexSet.insert(indexSetElement)
+					}
+				}
+
+				if self.sharedMedia.count == 1 && self.collectionView?.numberOfSections == 1 {
+					collectionView?.reloadSections([0])
+					return
+				}
+
+				if oldSectionsIndexes > 0 {
+					collectionView?.reloadSections([oldSectionsIndexes])
+				}
+
+				collectionView?.insertSections(indexSet)
+			}, completion: { (_) in
+				ARSLineProgress.hide()
+			})
 		}
 	}
 }

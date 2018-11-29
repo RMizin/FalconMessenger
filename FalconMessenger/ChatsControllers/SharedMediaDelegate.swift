@@ -8,7 +8,8 @@
 
 import UIKit
 
-protocol SharedMediaDelegate: class {
-	func sharedMedia(with elements: [[SharedMedia]])
-	func sharedMedia(error: Bool)
+protocol SharedMediaHistoryDelegate: class {
+	func sharedMediaHistory(isEmpty: Bool)
+	func sharedMediaHistory(allLoaded: Bool)
+	func sharedMediaHistory(updated sharedMedia: [SharedMedia])
 }

@@ -31,7 +31,6 @@
 		4B3134F221A9DEEC00D20583 /* SharedMediaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3134F121A9DEEC00D20583 /* SharedMediaController.swift */; };
 		4B3134F921A9EDED00D20583 /* SharedMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3134F821A9EDED00D20583 /* SharedMedia.swift */; };
 		4B3134FE21A9EE4500D20583 /* SharedMediaDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3134FD21A9EE4500D20583 /* SharedMediaDelegate.swift */; };
-		4B31350021A9EE7300D20583 /* SharedMediaFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3134FF21A9EE7300D20583 /* SharedMediaFetcher.swift */; };
 		4B31350421A9EED500D20583 /* SharedVoiceMessagesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B31350321A9EED500D20583 /* SharedVoiceMessagesFetcher.swift */; };
 		4B31350621A9F56D00D20583 /* SharedMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B31350521A9F56D00D20583 /* SharedMediaCell.swift */; };
 		4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */; };
@@ -137,6 +136,7 @@
 		4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498731F3244CA008DA07F /* UserProfileController.swift */; };
 		4B9498781F324919008DA07F /* OnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498771F324919008DA07F /* OnboardingController.swift */; };
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
+		4BA60EB621AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA60EB521AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift */; };
 		4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */; };
 		4BAD9752206E3532008ADF6B /* SelectGroupMembersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9751206E3532008ADF6B /* SelectGroupMembersController.swift */; };
 		4BAD9755206E35FE008ADF6B /* AddGroupMembersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9754206E35FE008ADF6B /* AddGroupMembersController.swift */; };
@@ -269,7 +269,6 @@
 		4B3134F121A9DEEC00D20583 /* SharedMediaController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharedMediaController.swift; path = ChatsControllers/SharedMediaController.swift; sourceTree = "<group>"; };
 		4B3134F821A9EDED00D20583 /* SharedMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharedMedia.swift; path = ChatsControllers/SharedMedia.swift; sourceTree = "<group>"; };
 		4B3134FD21A9EE4500D20583 /* SharedMediaDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharedMediaDelegate.swift; path = ChatsControllers/SharedMediaDelegate.swift; sourceTree = "<group>"; };
-		4B3134FF21A9EE7300D20583 /* SharedMediaFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharedMediaFetcher.swift; path = ChatsControllers/SharedMediaFetcher.swift; sourceTree = "<group>"; };
 		4B31350321A9EED500D20583 /* SharedVoiceMessagesFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharedVoiceMessagesFetcher.swift; path = ChatsControllers/SharedVoiceMessagesFetcher.swift; sourceTree = "<group>"; };
 		4B31350521A9F56D00D20583 /* SharedMediaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharedMediaCell.swift; path = ChatsControllers/SharedMediaCell.swift; sourceTree = "<group>"; };
 		4B32F84F1F38759F00807FFB /* ContactsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsDetailController.swift; path = ContactsControllers/ContactsDetailController.swift; sourceTree = "<group>"; };
@@ -378,6 +377,7 @@
 		4B9498731F3244CA008DA07F /* UserProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileController.swift; path = AuthenticationControllers/UserProfileController.swift; sourceTree = "<group>"; };
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingController.swift; path = AuthenticationControllers/OnboardingController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingContainerView.swift; path = AuthenticationControllers/OnboardingContainerView.swift; sourceTree = "<group>"; };
+		4BA60EB521AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharedMediaHistoryFetcher.swift; path = ChatsControllers/SharedMediaHistoryFetcher.swift; sourceTree = "<group>"; };
 		4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrentUserTableViewCell.swift; path = ContactsControllers/CurrentUserTableViewCell.swift; sourceTree = "<group>"; };
 		4BAD9751206E3532008ADF6B /* SelectGroupMembersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectGroupMembersController.swift; path = ChatsControllers/NewChatControllers/SelectGroupMembersController.swift; sourceTree = "<group>"; };
 		4BAD9754206E35FE008ADF6B /* AddGroupMembersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddGroupMembersController.swift; path = ChatsControllers/AddGroupMembersController.swift; sourceTree = "<group>"; };
@@ -582,7 +582,7 @@
 			isa = PBXGroup;
 			children = (
 				4B3134FD21A9EE4500D20583 /* SharedMediaDelegate.swift */,
-				4B3134FF21A9EE7300D20583 /* SharedMediaFetcher.swift */,
+				4BA60EB521AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift */,
 				4B31350321A9EED500D20583 /* SharedVoiceMessagesFetcher.swift */,
 			);
 			name = Fetchers;
@@ -1707,6 +1707,7 @@
 				4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */,
 				4B8CA13D2153C6EC009F8AA3 /* ChatLogPresenter.swift in Sources */,
 				4B6BB01A20886C5F00A90F3A /* ARSLineProgress.swift in Sources */,
+				4BA60EB621AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
 				4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */,
 				4B6BB01F20886C5F00A90F3A /* ARSLineProgressProtocols.swift in Sources */,
@@ -1717,7 +1718,6 @@
 				4BDFACAD2147DA2900603963 /* UserBlockingManager.swift in Sources */,
 				4BBF79552134370C00903F56 /* SplitPlaceholderViewController.swift in Sources */,
 				4B0FA7CF2063CD5E00BEA090 /* GroupAdminControlsTableViewCell.swift in Sources */,
-				4B31350021A9EE7300D20583 /* SharedMediaFetcher.swift in Sources */,
 				4B5E99DC212C6138001F067F /* InAppNotificationManager.swift in Sources */,
 				4B1058F72120979200CD6600 /* UserDefaultsManager.swift in Sources */,
 				4B3B7BB02146F7210060F41F /* ReportAlertController.swift in Sources */,
