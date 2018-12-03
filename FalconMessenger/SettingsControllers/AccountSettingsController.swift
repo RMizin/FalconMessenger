@@ -17,13 +17,13 @@ class AccountSettingsController: UITableViewController {
   
   let accountSettingsCellId = "userProfileCell"
 
-  var firstSection = [( icon: UIImage(named: "Notification") , title: "Notifications and Sounds" ),
-                      ( icon: UIImage(named: "Privacy") , title: "Privacy and Security" ),
-                      ( icon: UIImage(named: "ChangeNumber") , title: "Change Number"),
-                      ( icon: UIImage(named: "Storage") , title: "Data and Storage")]
+  var firstSection = [( icon: UIImage(named: "Notification"), title: "Notifications and Sounds"),
+                      ( icon: UIImage(named: "Privacy"), title: "Privacy and Security"),
+                      ( icon: UIImage(named: "ChangeNumber"), title: "Change Number"),
+                      ( icon: UIImage(named: "Storage"), title: "Data and Storage")]
   
-  var secondSection = [( icon: UIImage(named: "Legal") , title: "About"),
-                       ( icon: UIImage(named: "Logout") , title: "Log Out")]
+  var secondSection = [( icon: UIImage(named: "Legal"), title: "About"),
+                       ( icon: UIImage(named: "Logout"), title: "Log Out")]
   
   let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
   let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))

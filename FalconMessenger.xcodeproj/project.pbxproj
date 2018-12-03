@@ -59,6 +59,7 @@
 		4B63646B1F977AAC00A5D3BF /* UserInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */; };
 		4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */; };
 		4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */; };
+		4B67E22F21B52143005EB981 /* SnapshotLockerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B67E22E21B52143005EB981 /* SnapshotLockerView.swift */; };
 		4B6BAF8C20886B3900A90F3A /* notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B6BAF8920886B3800A90F3A /* notification.caf */; };
 		4B6BAF8D20886B3900A90F3A /* sent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B6BAF8A20886B3800A90F3A /* sent.caf */; };
 		4B6BAFE420886C5F00A90F3A /* ParticipantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9020886C5D00A90F3A /* ParticipantTableViewCell.swift */; };
@@ -298,6 +299,7 @@
 		4B63646A1F977AAC00A5D3BF /* UserInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoTableViewController.swift; path = ChatsControllers/UserInfoTableViewController.swift; sourceTree = "<group>"; };
 		4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserinfoHeaderTableViewCell.swift; path = ChatsControllers/UserinfoHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UserInfoTableViewController+handlers.swift"; path = "ChatsControllers/UserInfoTableViewController+handlers.swift"; sourceTree = "<group>"; };
+		4B67E22E21B52143005EB981 /* SnapshotLockerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLockerView.swift; sourceTree = "<group>"; };
 		4B6BAF8920886B3800A90F3A /* notification.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notification.caf; sourceTree = "<group>"; };
 		4B6BAF8A20886B3800A90F3A /* sent.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sent.caf; sourceTree = "<group>"; };
 		4B6BAF9020886C5D00A90F3A /* ParticipantTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantTableViewCell.swift; sourceTree = "<group>"; };
@@ -1166,6 +1168,7 @@
 			isa = PBXGroup;
 			children = (
 				4BBF79512134370C00903F56 /* AppDelegate.swift */,
+				4B67E22E21B52143005EB981 /* SnapshotLockerView.swift */,
 				4BBF79522134370C00903F56 /* TabBarController */,
 				4BBF794E2134370C00903F56 /* SplitViewController */,
 			);
@@ -1811,6 +1814,7 @@
 				4B3DC3BD2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift in Sources */,
 				4B6BB01C20886C5F00A90F3A /* ARSLineProgressCustomization.swift in Sources */,
 				4B0FA7DE2065A1D600BEA090 /* ChatLogViewController+CollectionDelegate.swift in Sources */,
+				4B67E22F21B52143005EB981 /* SnapshotLockerView.swift in Sources */,
 				4B6BB01B20886C5F00A90F3A /* ARSLineProgressExtensions.swift in Sources */,
 				4BDB29512126C79000D77600 /* SwitchObject.swift in Sources */,
 				4BAD9752206E3532008ADF6B /* SelectGroupMembersController.swift in Sources */,
