@@ -10,7 +10,7 @@ target 'FalconMessenger' do
   pod 'Firebase/Messaging'
   pod 'Firebase/Functions'
   
-  pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage', :branch => '5.x', :modular_headers => true
+	pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage', :branch => '5.x', :modular_headers => true
   pod 'PhoneNumberKit'
   pod 'FTPopOverMenu_Swift'
   pod 'CropViewController'

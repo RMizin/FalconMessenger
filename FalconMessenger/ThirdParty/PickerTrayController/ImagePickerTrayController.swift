@@ -234,7 +234,7 @@ public class ImagePickerTrayController: UIViewController {
     
     for indexPathForSelection in newSelectedIndexPaths {
       UIView.performWithoutAnimation {
-         self.collectionView.selectItem(at: indexPathForSelection, animated: false, scrollPosition: UICollectionViewScrollPosition.bottom )
+				self.collectionView.selectItem(at: indexPathForSelection, animated: false, scrollPosition: UICollectionView.ScrollPosition.bottom )
       }
      
     }
@@ -433,13 +433,16 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
 
 
 extension ImagePickerTrayController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
-        //  delegate?.controller?(self, didTakeImage: image, with: assets.last!)
-            delegate?.controller?(self, didTakeImage: image)
-        }
-    }
+
+	public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+		if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+			//  delegate?.controller?(self, didTakeImage: image, with: assets.last!)
+			delegate?.controller?(self, didTakeImage: image)
+		}
+	}
+//    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+//
+//    }
 }
 
 extension ImagePickerTrayController: TransitionControllerDelegate {

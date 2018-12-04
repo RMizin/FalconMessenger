@@ -203,7 +203,7 @@ class VoiceRecordingViewController: UIViewController {
                                            selector: #selector(self.updateAudioMeter(_:)),
                                            userInfo: nil,
                                            repeats: true)
-    RunLoop.main.add(self.meterTimer, forMode: .commonModes)
+		RunLoop.main.add(self.meterTimer, forMode: RunLoop.Mode.common)
   }
   
   typealias CompletionHandler = (_ success: Bool) -> Void
@@ -226,7 +226,7 @@ class VoiceRecordingViewController: UIViewController {
                                                  selector: #selector(self.updateAudioMeter(_:)),
                                                  userInfo: nil,
                                                  repeats: true)
-          RunLoop.main.add(self.meterTimer, forMode: .commonModes)
+					RunLoop.main.add(self.meterTimer, forMode: RunLoop.Mode.common)
         }
       } else {
         completionHandler(false)
@@ -234,7 +234,7 @@ class VoiceRecordingViewController: UIViewController {
       }
     }
 
-    if AVAudioSession.sharedInstance().recordPermission() == .denied {
+		if AVAudioSession.sharedInstance().recordPermission == .denied {
      // print("permission denied")
     }
   }
@@ -264,7 +264,9 @@ class VoiceRecordingViewController: UIViewController {
 
     let session = AVAudioSession.sharedInstance()
     do {
-      try session.setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+			try session.setCategory(.playAndRecord, mode: .default, options: .defaultToSpeaker)
+		//	try session.setCategory(., with: .defaultToSpeaker)
+		//	try session.setActive(true)
     } catch {
 //      print("could not set session category")
 //      print(error.localizedDescription)
@@ -317,17 +319,17 @@ class VoiceRecordingViewController: UIViewController {
 
     NotificationCenter.default.addObserver(self,
                                            selector: #selector(VoiceRecordingViewController.background(_:)),
-                                           name: NSNotification.Name.UIApplicationWillResignActive,
+																					 name: UIApplication.willResignActiveNotification,
                                            object: nil)
 
     NotificationCenter.default.addObserver(self,
                                            selector: #selector(VoiceRecordingViewController.foreground(_:)),
-                                           name: NSNotification.Name.UIApplicationWillEnterForeground,
+																					 name: UIApplication.willEnterForegroundNotification,
                                            object: nil)
 
     NotificationCenter.default.addObserver(self,
                                            selector: #selector(VoiceRecordingViewController.routeChange(_:)),
-                                           name: NSNotification.Name.AVAudioSessionRouteChange,
+																					 name: AVAudioSession.routeChangeNotification,
                                            object: nil)
   }
   
@@ -348,26 +350,26 @@ class VoiceRecordingViewController: UIViewController {
       //print("userInfo \(userInfo)")
       if let reason = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt {
         //print("reason \(reason)")
-        switch AVAudioSessionRouteChangeReason(rawValue: reason)! {
-        case AVAudioSessionRouteChangeReason.newDeviceAvailable:
+				switch AVAudioSession.RouteChangeReason(rawValue: reason)! {
+				case AVAudioSession.RouteChangeReason.newDeviceAvailable:
 //          print("NewDeviceAvailable")
 //          print("did you plug in headphones?")
           checkHeadphones()
-        case AVAudioSessionRouteChangeReason.oldDeviceUnavailable:
+				case AVAudioSession.RouteChangeReason.oldDeviceUnavailable:
 //          print("OldDeviceUnavailable")
 //          print("did you unplug headphones?")
           checkHeadphones()
-        case AVAudioSessionRouteChangeReason.categoryChange:
+				case AVAudioSession.RouteChangeReason.categoryChange:
           print("CategoryChange")
-        case AVAudioSessionRouteChangeReason.override:
+				case AVAudioSession.RouteChangeReason.override:
           print("Override")
-        case AVAudioSessionRouteChangeReason.wakeFromSleep:
+				case AVAudioSession.RouteChangeReason.wakeFromSleep:
           print("WakeFromSleep")
-        case AVAudioSessionRouteChangeReason.unknown:
+				case AVAudioSession.RouteChangeReason.unknown:
           print("Unknown")
-        case AVAudioSessionRouteChangeReason.noSuitableRouteForCategory:
+				case AVAudioSession.RouteChangeReason.noSuitableRouteForCategory:
           print("NoSuitableRouteForCategory")
-        case AVAudioSessionRouteChangeReason.routeConfigurationChange:
+				case AVAudioSession.RouteChangeReason.routeConfigurationChange:
           print("RouteConfigurationChange")
         }
       }
@@ -381,7 +383,7 @@ class VoiceRecordingViewController: UIViewController {
     let currentRoute = AVAudioSession.sharedInstance().currentRoute
     if !currentRoute.outputs.isEmpty {
       for description in currentRoute.outputs {
-        if description.portType == AVAudioSessionPortHeadphones {
+				if description.portType == AVAudioSession.Port.headphones {
           print("headphones are plugged in")
           break
         } else {
@@ -438,7 +440,7 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
   //  print("finished recording \(flag)")
     voiceRecordingContainerView.stopButton.isEnabled = false
     voiceRecordingContainerView.stopButton.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
-    voiceRecordingContainerView.recordButton.setTitle("Record", for: UIControlState())
+		voiceRecordingContainerView.recordButton.setTitle("Record", for: UIControl.State())
 
     var soundData: Data!
 

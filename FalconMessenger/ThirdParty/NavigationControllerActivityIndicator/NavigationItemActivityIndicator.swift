@@ -33,7 +33,7 @@ class NavigationItemActivityIndicator: NSObject {
   
   var isActive = false
   var currentPriority:ActivityPriority = .low
-  let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
+	let activityIndicatorView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.white)
   let titleLabel = UILabel()
   
   func showActivityIndicator(for navigationItem: UINavigationItem, with title: UINavigationItemMessage, activityPriority: ActivityPriority , color: UIColor) {

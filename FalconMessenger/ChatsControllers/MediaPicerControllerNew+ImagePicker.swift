@@ -43,17 +43,18 @@ extension MediaPickerControllerNew {
 //    }
 //    return true
 //  }
-  
-  
-  override func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
+
+
+  override func imagePickerController(_ picker: UIImagePickerController,
+																			didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     
-    if picker.sourceType == UIImagePickerControllerSourceType.camera {
+		if picker.sourceType == UIImagePickerController.SourceType.camera {
       
-      if let mediaType = info[UIImagePickerControllerMediaType] as? String {
+			if let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String {
         
         if mediaType  == "public.image" {
           
-          guard let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage else { return }
+					guard let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
       
             PHPhotoLibrary.shared().performChanges ({
               
@@ -84,7 +85,7 @@ extension MediaPickerControllerNew {
         
         if mediaType == "public.movie" {
           
-          if let pickedVideo = info[UIImagePickerControllerMediaURL] as? URL {
+					if let pickedVideo = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
             
             PHPhotoLibrary.shared().performChanges ({
               
@@ -118,7 +119,7 @@ extension MediaPickerControllerNew {
       
     } else {
       
-      if let imageURL = info[UIImagePickerControllerReferenceURL] as? URL {
+			if let imageURL = info[UIImagePickerController.InfoKey.referenceURL] as? URL {
         
         let result = PHAsset.fetchAssets(withALAssetURLs: [imageURL], options: nil)
         let asset = result.firstObject

@@ -38,7 +38,7 @@ class CurrentUserTableViewCell: UITableViewCell {
   static let iconLargreCornerRadius: CGFloat = iconSizeLargeConstant * 0.5
 
   let spacing: CGFloat = 15
-  override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
 
     backgroundColor = .clear

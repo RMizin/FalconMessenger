@@ -20,7 +20,7 @@ class ContactDataTableViewCell: UITableViewCell {
     return textField
   }()
   
-  override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)
     
     addSubview(textField)

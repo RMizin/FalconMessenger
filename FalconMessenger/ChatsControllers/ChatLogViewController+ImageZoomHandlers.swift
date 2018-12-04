@@ -78,13 +78,13 @@ extension ChatLogViewController {
     
     let isChattingWithSelf = messagesWithPhotos[photoIndex].fromId == uid ?  true : false
     if isChattingWithSelf { titleString = "You\n" }
-    let titleAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white,
-                           NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)]
+		let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white,
+													 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
     let title = NSMutableAttributedString(string: titleString, attributes: titleAttributes)
     let date = Date(timeIntervalSince1970: messagesWithPhotos[photoIndex].timestamp!.doubleValue)
     let timestamp = timeAgoSinceDate(date)
-    let summaryAttributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor,
-                      NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)]
+		let summaryAttributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor,
+														 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
     let attributedCaptionSummary = NSMutableAttributedString(string: timestamp, attributes: summaryAttributes)
     
     let combination = NSMutableAttributedString()

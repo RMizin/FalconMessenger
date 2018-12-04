@@ -162,7 +162,7 @@ class ChatLogViewController: UIViewController {
 
     NotificationCenter.default.addObserver(self,
                                            selector: #selector(keyboardWillShow(_:)),
-                                           name: NSNotification.Name.UIKeyboardWillShow,
+																					 name: UIResponder.keyboardWillShowNotification,
                                            object: nil)
   }
   
@@ -194,7 +194,7 @@ class ChatLogViewController: UIViewController {
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
 
-    NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
     if self.navigationController?.visibleViewController is UserInfoTableViewController ||
       self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
       self.navigationController?.visibleViewController is OtherReportController ||
@@ -376,7 +376,7 @@ class ChatLogViewController: UIViewController {
     collectionView.register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
     collectionView.register(InformationMessageCell.self, forCellWithReuseIdentifier: informationMessageCellID)
     collectionView.register(ChatLogViewControllerSupplementaryView.self,
-                            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+														forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                             withReuseIdentifier: "lol")
 
     configureRefreshControlInitialTintColor()

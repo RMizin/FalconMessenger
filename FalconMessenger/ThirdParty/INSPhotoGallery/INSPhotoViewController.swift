@@ -40,9 +40,9 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     lazy private(set) var activityIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        activityIndicator.startAnimating()
-        return activityIndicator
+			let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+			activityIndicator.startAnimating()
+			return activityIndicator
     }()
     
     public init(photo: INSPhotoViewable) {
@@ -111,7 +111,7 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
 	}
 
     private func loadThumbnailImage() {
-        view.bringSubview(toFront: activityIndicator)
+				view.bringSubviewToFront(activityIndicator)
         photo.loadThumbnailImageWithCompletionHandler { [weak self] (image, error) -> () in
             
             let completeLoading = {
@@ -134,7 +134,7 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     
     private func loadFullSizeImage() {
 			print("loading full size")
-        view.bringSubview(toFront: activityIndicator)
+			view.bringSubviewToFront(activityIndicator)
         self.photo.loadImageWithCompletionHandler({ [weak self] (image, error) -> () in
             let completeLoading = {
                 self?.activityIndicator.stopAnimating()
@@ -152,9 +152,9 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc private func handleLongPressWithGestureRecognizer(_ recognizer: UILongPressGestureRecognizer) {
-        if recognizer.state == UIGestureRecognizerState.began {
+			if recognizer.state == UIGestureRecognizer.State.began {
             longPressGestureHandler?(recognizer)
-        }
+			}
     }
     
     @objc private func handleDoubleTapWithGestureRecognizer(_ recognizer: UITapGestureRecognizer) {

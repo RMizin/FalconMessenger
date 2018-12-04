@@ -15,7 +15,7 @@ class StorageMediaUploader: NSObject {
     let imageName = UUID().uuidString
     let ref = Storage.storage().reference().child("messageImages").child(imageName)
     
-    guard let uploadData = UIImageJPEGRepresentation(image, 1) else { return }
+    guard let uploadData = image.jpegData(compressionQuality: 1) else { return }
     let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (_, error) in
       guard error == nil else { return }
       
@@ -33,7 +33,7 @@ class StorageMediaUploader: NSObject {
 		let imageName = UUID().uuidString + "thumbnail"
 		let ref = Storage.storage().reference().child("messageImages").child(imageName)
 
-		guard let uploadData = UIImageJPEGRepresentation(image, 1) else { return }
+		guard let uploadData = image.jpegData(compressionQuality: 1) else { return }
 		let uploadTask = ref.putData(uploadData, metadata: nil, completion: { (_, error) in
 			guard error == nil else { return }
 

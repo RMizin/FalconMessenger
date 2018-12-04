@@ -14,7 +14,7 @@ class OutgoingTextMessageCell: BaseMessageCell {
   
   let textView: FalconTextView = {
     let textView = FalconTextView()
-    textView.textContainerInset = UIEdgeInsetsMake(textViewTopInset, outgoingTextViewLeftInset, textViewBottomInset, outgoingTextViewRightInset)
+		textView.textContainerInset = UIEdgeInsets(top: textViewTopInset, left: outgoingTextViewLeftInset, bottom: textViewBottomInset, right: outgoingTextViewRightInset)
     textView.textColor = ThemeManager.currentTheme().outgoingBubbleTextColor
 
     return textView

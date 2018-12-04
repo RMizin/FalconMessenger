@@ -28,7 +28,7 @@ extension UserCell {
     if let isTyping = conversations[indexPath.row].isTyping, isTyping {
       messageLabel.text = "typing"
       typingIndicatorTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateTypingIndicatorTimer), userInfo: nil, repeats: true)
-      RunLoop.main.add(self.typingIndicatorTimer!, forMode: .commonModes)
+			RunLoop.main.add(self.typingIndicatorTimer!, forMode: RunLoop.Mode.common)
     } else {
       typingIndicatorTimer?.invalidate()
       messageLabel.text = conversations[indexPath.row].messageText()

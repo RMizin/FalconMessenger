@@ -43,7 +43,7 @@ class VerificationContainerView: UIView {
     verificationCode.layer.cornerRadius = 25
     verificationCode.layer.borderWidth = 1
     verificationCode.attributedPlaceholder = NSAttributedString(string: "Code",
-                                                                attributes: [NSAttributedStringKey.foregroundColor:
+																																attributes: [NSAttributedString.Key.foregroundColor:
       ThemeManager.currentTheme().generalSubtitleColor])
     verificationCode.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
     if !DeviceType.isIPad {

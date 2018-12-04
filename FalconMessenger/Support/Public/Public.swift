@@ -219,7 +219,7 @@ extension Int {
 
 extension String {
   func sizeOfString(usingFont font: UIFont) -> CGSize {
-    let fontAttributes = [NSAttributedStringKey.font: font]
+		let fontAttributes = [NSAttributedString.Key.font: font]
     return self.capitalized.size(withAttributes: fontAttributes)
   }
 }
@@ -375,8 +375,8 @@ extension UITextField {
     doneToolbar.barStyle = ThemeManager.currentTheme().barStyle
     let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.doneButtonAction))
-    let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14),
-                                                     NSAttributedStringKey.baselineOffset: -1]
+		let attributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
+																											NSAttributedString.Key.baselineOffset: -1]
     done.setTitleTextAttributes(attributes, for: .normal)
     done.setTitleTextAttributes(attributes, for: .selected)
     doneToolbar.clipsToBounds = true
@@ -417,8 +417,8 @@ extension SystemSoundID {
 
 func basicErrorAlertWith (title: String, message: String, controller: UIViewController?) {
 	guard let controller = controller else { return }
-  let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-  alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel, handler: nil))
+	let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+	alert.addAction(UIAlertAction(title: "Close", style: UIAlertAction.Style.cancel, handler: nil))
   controller.present(alert, animated: true, completion: nil)
 }
 
@@ -460,10 +460,10 @@ func setOnlineStatus()  {
 
 extension UIImage {
   var asJPEGData: Data? {
-    return UIImageJPEGRepresentation(self, 1)   // QUALITY min = 0 / max = 1
+    return self.jpegData(compressionQuality: 1)   // QUALITY min = 0 / max = 1
   }
   var asPNGData: Data? {
-    return UIImagePNGRepresentation(self)
+		return self.pngData()
   }
 }
 
@@ -588,7 +588,7 @@ func createImageThumbnail (_ image: UIImage) -> UIImage {
   UIGraphicsBeginImageContext(rect.size)
   image.draw(in: rect)
   let img: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-  let imageData: Data = UIImageJPEGRepresentation(img, compressionQuality)!
+	let imageData: Data = img.jpegData(compressionQuality: compressionQuality)!
   UIGraphicsEndImageContext()
   
   return UIImage(data: imageData)!
@@ -628,11 +628,11 @@ func compressImage(image: UIImage) -> Data {
     }
   }
   
-  let rect = CGRect(x:0.0, y:0.0, width:actualWidth, height:actualHeight);
+  let rect = CGRect(x: 0.0, y: 0.0, width: actualWidth, height: actualHeight);
   UIGraphicsBeginImageContext(rect.size)
   image.draw(in: rect)
   let img = UIGraphicsGetImageFromCurrentImageContext()
-  let imageData = UIImageJPEGRepresentation(img!, compressionQuality);
+	let imageData = img!.jpegData(compressionQuality: compressionQuality)
   UIGraphicsEndImageContext();
   
   return imageData!
@@ -683,7 +683,7 @@ public extension UIView {
     let defaultTranslation = -8
     
     let animation : CABasicAnimation = CABasicAnimation(keyPath: "transform.translation.x")
-    animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+		animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
     
     animation.repeatCount = count ?? Float(defaultRepeatCount)
     animation.duration = (duration ?? defaultTotalDuration)/TimeInterval(animation.repeatCount)
@@ -697,7 +697,7 @@ func uploadAvatarForUserToFirebaseStorageUsingImage(_ image: UIImage, quality: C
   let imageName = UUID().uuidString
   let ref = Storage.storage().reference().child("userProfilePictures").child(imageName)
   
-  if let uploadData = UIImageJPEGRepresentation(image, quality) {
+  if let uploadData = image.jpegData(compressionQuality: quality) {
     ref.putData(uploadData, metadata: nil) { (metadata, error) in
       guard error == nil else { completion(""); return }
       
@@ -720,10 +720,10 @@ private var backgroundView: UIView = {
 }()
 
 private var activityIndicator: UIActivityIndicatorView = {
-  var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+	var activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
   activityIndicator.hidesWhenStopped = true
   activityIndicator.frame = CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0);
-  activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
+	activityIndicator.style = UIActivityIndicatorView.Style.whiteLarge
   activityIndicator.autoresizingMask = [.flexibleLeftMargin , .flexibleRightMargin , .flexibleTopMargin , .flexibleBottomMargin]
   activityIndicator.isUserInteractionEnabled = false
   
@@ -737,7 +737,7 @@ extension UIImageView {
     
     self.addSubview(backgroundView)
     self.addSubview(activityIndicator)
-    activityIndicator.activityIndicatorViewStyle = .white
+		activityIndicator.style = .white
     activityIndicator.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
     backgroundView.translatesAutoresizingMaskIntoConstraints = false
     backgroundView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true

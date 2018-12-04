@@ -74,7 +74,7 @@ class ActionCell: UICollectionViewCell {
     return true
   }
   
-  fileprivate func performCallAction(index: Int, message: String, sourceType: UIImagePickerControllerSourceType) {
+	fileprivate func performCallAction(index: Int, message: String, sourceType: UIImagePickerController.SourceType) {
     var authorizationStatus = Bool()
     
     if sourceType == .camera {

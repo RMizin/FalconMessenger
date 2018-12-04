@@ -199,7 +199,7 @@ class SelectParticipantsViewController: UIViewController {
     selectedParticipantsCollectionView.alwaysBounceVertical = true
     selectedParticipantsCollectionView.backgroundColor = .clear
     selectedParticipantsCollectionView.register(SelectedParticipantsCollectionViewCell.self, forCellWithReuseIdentifier: selectedParticipantsCollectionViewCellID)
-    selectedParticipantsCollectionView.decelerationRate = UIScrollViewDecelerationRateFast
+		selectedParticipantsCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
     selectedParticipantsCollectionView.isScrollEnabled = true
     selectedParticipantsCollectionView.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     

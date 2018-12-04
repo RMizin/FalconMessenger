@@ -179,20 +179,20 @@ class PhoneNumberContainerView: UIView {
     let privacyURL = URL(string: "https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing")!
     let termsString = "By signing up, you agree to the Terms of Service."
     let privacyString = " Also if you still have not read the Privacy Policy, please take a look before signing up."
-    let termsAndConditionsAttributes = [NSAttributedStringKey.link: termsURL,
-                                        NSAttributedStringKey.foregroundColor: UIColor.blue,
-                                        NSAttributedStringKey.font: font] as [NSAttributedStringKey : Any]
+		let termsAndConditionsAttributes = [NSAttributedString.Key.link: termsURL,
+																				NSAttributedString.Key.foregroundColor: UIColor.blue,
+																				NSAttributedString.Key.font: font] as [NSAttributedString.Key : Any]
 
-    let privacyPolicyAttributes = [NSAttributedStringKey.link: privacyURL,
-                                   NSAttributedStringKey.foregroundColor: UIColor.blue,
-                                   NSAttributedStringKey.font: font] as [NSAttributedStringKey : Any]
+		let privacyPolicyAttributes = [NSAttributedString.Key.link: privacyURL,
+																	 NSAttributedString.Key.foregroundColor: UIColor.blue,
+																	 NSAttributedString.Key.font: font] as [NSAttributedString.Key : Any]
  //and Conditions
     let termsAttributedString = NSMutableAttributedString(string: termsString,
-                                                          attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor,
-                                                                       NSAttributedStringKey.font: font])
+																													attributes: [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalTitleColor,
+																																			 NSAttributedString.Key.font: font])
     termsAttributedString.setAttributes(termsAndConditionsAttributes, range: NSRange(location: 31, length: 17))
 
-    let privacyAttributedString = NSMutableAttributedString(string: privacyString, attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor, NSAttributedStringKey.font: font])
+		let privacyAttributedString = NSMutableAttributedString(string: privacyString, attributes: [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalTitleColor, NSAttributedString.Key.font: font])
     privacyAttributedString.setAttributes(privacyPolicyAttributes, range: NSRange(location: 37, length: 14))
     termsAttributedString.append(privacyAttributedString)
     termsAndPrivacy.attributedText = termsAttributedString

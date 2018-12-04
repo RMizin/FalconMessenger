@@ -130,7 +130,7 @@ open class TypingBubble: UIView {
         contentBubble.layer.cornerRadius = contentBubbleFrameCornerRadius
             
         let insets = UIEdgeInsets(top: offset, left: contentBubbleFrameCornerRadius / 1.25, bottom: offset, right: contentBubbleFrameCornerRadius / 1.25)
-        typingIndicator.frame = UIEdgeInsetsInsetRect(contentBubble.bounds, insets)
+        typingIndicator.frame =  contentBubble.bounds.inset(by: insets)// UIEdgeInsetsInsetRect(contentBubble.bounds, insets)
     }
     
     // MARK: - Animation API

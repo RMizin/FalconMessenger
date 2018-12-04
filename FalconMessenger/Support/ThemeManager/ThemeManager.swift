@@ -25,7 +25,7 @@ struct ThemeManager {
     UINavigationBar.appearance().barTintColor = theme.barBackgroundColor
     UITabBar.appearance().barTintColor = theme.barBackgroundColor
     UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
-    UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: theme.generalTitleColor]
+		UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: theme.generalTitleColor]
     NotificationCenter.default.post(name: .themeUpdated, object: nil)
   }
   
@@ -339,7 +339,7 @@ enum Theme: Int {
     }
   }
   
-  var scrollBarStyle: UIScrollViewIndicatorStyle {
+	var scrollBarStyle: UIScrollView.IndicatorStyle {
     switch self {
     case .Default:
       return .default

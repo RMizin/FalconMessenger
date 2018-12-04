@@ -122,7 +122,7 @@ class AccountSettingsController: UITableViewController {
     nightMode.setImage(UIImage(named: "defaultTheme"), for: .normal)
     nightMode.setImage(UIImage(named: "darkTheme"), for: .selected)
     nightMode.imageView?.contentMode = .scaleAspectFit
-    nightMode.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
+		nightMode.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     nightMode.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
     nightMode.addTarget(self, action: #selector(rightBarButtonDidTap(sender:)), for: .touchUpInside)
     nightMode.isSelected = Bool(ThemeManager.currentTheme().rawValue)

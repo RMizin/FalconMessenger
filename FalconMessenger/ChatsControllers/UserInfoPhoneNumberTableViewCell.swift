@@ -99,7 +99,7 @@ class UserInfoPhoneNumberTableViewCell: UITableViewCell {
   var phoneTopConstraint: NSLayoutConstraint!
   var contactStatusHeightConstraint: NSLayoutConstraint!
   
-  override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)
     selectionStyle = .none
     addSubview(copy)

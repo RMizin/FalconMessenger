@@ -201,7 +201,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     do {
-      try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers)
+			try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .mixWithOthers)
       try AVAudioSession.sharedInstance().setActive(true)
     } catch {}
     do {

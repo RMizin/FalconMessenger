@@ -29,7 +29,7 @@ class ChangePhoneNumberController: PhoneNumberController, VerificationDelegate {
     
     phoneNumberContainerView.termsAndPrivacy.isHidden = true
     phoneNumberContainerView.instructions.text = "Please confirm your country code\nand enter your NEW phone number."
-    let attributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
+		let attributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
     phoneNumberContainerView.phoneNumber.attributedPlaceholder = NSAttributedString(string: "New phone number", attributes: attributes)
     verificationDelegate = self
   }

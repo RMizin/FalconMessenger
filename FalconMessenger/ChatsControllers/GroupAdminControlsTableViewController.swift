@@ -329,12 +329,12 @@ class GroupAdminControlsTableViewController: UITableViewController {
     return true
   }
   
-  override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
     guard isCurrentUserAdministrator else { return .none }
     return .delete
   }
   
- override  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+	override  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     if editingStyle == .delete {
       let membersIDs = self.members.map { $0.id ?? "" }
       let text = "Admin removed user \(self.members[indexPath.row].name ?? "") from the group"
@@ -385,7 +385,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     let okActionTitle = isCurrentUserAdministrator ? "Choose admin" : "Leave"
     let alertController = UIAlertController(title: "Warning", message: message , preferredStyle: .alert)
 
-    let okAction = UIAlertAction(title: okActionTitle, style: UIAlertActionStyle.default) {
+		let okAction = UIAlertAction(title: okActionTitle, style: UIAlertAction.Style.default) {
       UIAlertAction in
       if self.isCurrentUserAdministrator {
         self.changeAdministrator(shouldLeaveTheGroup: true)
@@ -484,7 +484,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
         label.text = "admin"
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        cell.accessoryType = UITableViewCellAccessoryType.none
+				cell.accessoryType = UITableViewCell.AccessoryType.none
         cell.accessoryView = label
         cell.accessoryView?.backgroundColor = UIColor.clear
       } else {

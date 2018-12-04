@@ -20,7 +20,7 @@ class AttachCollectionView: UICollectionView {
     showsHorizontalScrollIndicator = false
     backgroundColor = .clear
     autoresizesSubviews = false
-    decelerationRate = UIScrollViewDecelerationRateFast
+		decelerationRate = UIScrollView.DecelerationRate.fast
   }
   
   required init?(coder aDecoder: NSCoder) {

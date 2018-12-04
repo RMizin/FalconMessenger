@@ -253,24 +253,23 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
     picker.modalPresentationCapturesStatusBarAppearance = true
     parentController?.present(picker, animated: true, completion: nil)
   }
-  
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-    
-    var selectedImageFromPicker: UIImage?
-    if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-      selectedImageFromPicker = editedImage
-      
-    } else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-      selectedImageFromPicker = originalImage
-    }
-    
-    if let selectedImage = selectedImageFromPicker {
-      let cropController = CropViewController(croppingStyle: .default, image: selectedImage)
-      cropController.delegate = self
-      picker.pushViewController(cropController, animated: true)
-    }
-  }
-  
+
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+		var selectedImageFromPicker: UIImage?
+		if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+			selectedImageFromPicker = editedImage
+
+		} else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+			selectedImageFromPicker = originalImage
+		}
+
+		if let selectedImage = selectedImageFromPicker {
+			let cropController = CropViewController(croppingStyle: .default, image: selectedImage)
+			cropController.delegate = self
+			picker.pushViewController(cropController, animated: true)
+		}
+	}
+
   func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
     cropViewController.delegate = nil
     delegate?.avatarOpener(avatarPickerDidPick: image)

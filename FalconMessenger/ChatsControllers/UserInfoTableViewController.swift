@@ -232,10 +232,10 @@ class UserInfoTableViewController: UITableViewController {
   
   func setAttributedText(title: String, body: String) -> NSAttributedString {
     let mutableAttributedString = NSMutableAttributedString()
-    let titleAttributes = [NSAttributedStringKey.foregroundColor: FalconPalette.defaultBlue,
-                           NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)]
-    let bodyAttributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor,
-                          NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18)]
+		let titleAttributes = [NSAttributedString.Key.foregroundColor: FalconPalette.defaultBlue,
+													 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)]
+		let bodyAttributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalTitleColor,
+													NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)]
     let titleAttributedString = NSAttributedString(string: title, attributes: titleAttributes)
     let bodyAttributedString = NSAttributedString(string: body, attributes: bodyAttributes)
     mutableAttributedString.append(titleAttributedString)

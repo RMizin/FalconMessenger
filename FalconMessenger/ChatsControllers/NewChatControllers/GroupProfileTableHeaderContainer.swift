@@ -43,7 +43,7 @@ class GroupProfileTableHeaderContainer: UIView {
     name.font = UIFont.systemFont(ofSize: 20)
     name.translatesAutoresizingMaskIntoConstraints = false
     name.textAlignment = .center
-    let attributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
+		let attributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
     name.attributedPlaceholder = NSAttributedString(string:"Group name", attributes: attributes)
     name.borderStyle = .none
     name.autocorrectionType = .no

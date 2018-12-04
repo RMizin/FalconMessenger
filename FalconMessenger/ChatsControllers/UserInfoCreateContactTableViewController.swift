@@ -89,7 +89,7 @@ class CreateContactTableViewController: UITableViewController {
       cell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       cell.textField.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       cell.textField.textColor = ThemeManager.currentTheme().generalTitleColor
-      let attributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
+			let attributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
 
       if indexPath.row == 0 {
         cell.textField.keyboardType = .default

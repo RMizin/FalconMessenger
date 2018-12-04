@@ -290,7 +290,7 @@ class MessagesFetcher: NSObject {
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
     return NSString(string: text).boundingRect(with: size,
                                                options: options,
-                                               attributes: [NSAttributedStringKey.font: MessageFontsAppearance.defaultMessageTextFont],
+																							 attributes: [NSAttributedString.Key.font: MessageFontsAppearance.defaultMessageTextFont],
                                                context: nil).integral
   }
   
@@ -299,7 +299,7 @@ class MessagesFetcher: NSObject {
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
     return NSString(string: text).boundingRect(with: size,
                                                options: options,
-                                               attributes: [NSAttributedStringKey.font: font],
+																							 attributes: [NSAttributedString.Key.font: font],
                                                context: nil).integral
   }
   

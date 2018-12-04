@@ -73,7 +73,7 @@ class PlayerView: UIView {
   func runTimer() {
     timer?.invalidate()
     timer = Timer.scheduledTimer(timeInterval: 1, target: self,  selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
-    RunLoop.main.add(timer!, forMode: .commonModes)
+		RunLoop.main.add(timer!, forMode: RunLoop.Mode.common)
   }
   
   @objc func updateTimer() {

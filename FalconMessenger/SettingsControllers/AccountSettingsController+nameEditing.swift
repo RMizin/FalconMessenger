@@ -24,7 +24,10 @@ extension AccountSettingsController: UITextViewDelegate {
   func estimateFrameForText(_ text: String, width: CGFloat) -> CGRect {
     let size = CGSize(width: width, height: 10000)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil).integral
+		return NSString(string: text).boundingRect(with: size,
+																							 options: options,
+																							 attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)],
+																							 context: nil).integral
   }
   
   func tableHeaderHeight() -> CGFloat {

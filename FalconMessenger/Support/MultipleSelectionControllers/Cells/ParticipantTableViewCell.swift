@@ -44,7 +44,7 @@ class ParticipantTableViewCell: UITableViewCell {
   }()
   
 
-  override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     
     gestureReconizer = UITapGestureRecognizer(target: self, action: #selector(cellTapped))

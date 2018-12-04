@@ -40,7 +40,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 		collectionView?.register(SharedMediaCell.self, forCellWithReuseIdentifier: sharedMediaCellID)
 		collectionView?.register(ChatLogViewControllerSupplementaryView.self,
-														 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+														 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
 														 withReuseIdentifier: sharedMediaSupplementaryID)
 		configureController()
 	}

@@ -11,7 +11,7 @@ import UIKit
 class SnapshotLockerView: UIView {
 
 	let blurEffectView: UIVisualEffectView = {
-		let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.light))
+		let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.light))
 		blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		blurEffectView.translatesAutoresizingMaskIntoConstraints = false
 		return blurEffectView

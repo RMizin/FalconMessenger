@@ -27,7 +27,7 @@ class ChatCollectionView: UICollectionView {
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     if DeviceType.isIPad {
-      let visibleSections = indexPathsForVisibleSupplementaryElements(ofKind: UICollectionElementKindSectionHeader).map({$0.section})
+			let visibleSections = indexPathsForVisibleSupplementaryElements(ofKind: UICollectionView.elementKindSectionHeader).map({$0.section})
       UIView.performWithoutAnimation {
         reloadSections(IndexSet(visibleSections))
       }

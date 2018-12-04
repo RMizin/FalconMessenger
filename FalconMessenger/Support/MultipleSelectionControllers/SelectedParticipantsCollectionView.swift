@@ -39,7 +39,7 @@ extension SelectParticipantsViewController: UICollectionViewDelegate, UICollecti
   func estimateFrameForText(_ text: String) -> CGRect {
     let size = CGSize(width: 200, height: 10000)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-    return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13)], context: nil).integral
+		return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13)], context: nil).integral
   }
 }
 
