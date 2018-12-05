@@ -153,10 +153,8 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		collectionView.deselectItem(at: indexPath, animated: false)
-		guard let cell = collectionView.cellForItem(at: indexPath) as? SharedMediaCell else {
-			return
-		}
-
+		guard let cell = collectionView.cellForItem(at: indexPath) as? SharedMediaCell else { return }
+		guard cell.sharedPhotoImageView.image != UIImage(named: "imagePlaceholder") else { return }
 		let currentElement = sharedMedia[indexPath.section][indexPath.row]
 		if let videoURL = currentElement.videoURL, let url = URL(string: videoURL) {
 			let viewController = viewControllerForVideo(with: url)

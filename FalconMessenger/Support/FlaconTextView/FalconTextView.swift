@@ -18,7 +18,7 @@ class FalconTextView: UITextView {
     isScrollEnabled = false
     
     dataDetectorTypes = .all
-		linkTextAttributes = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single]
+		linkTextAttributes = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
   }
   
   override init(frame: CGRect, textContainer: NSTextContainer?) {
@@ -31,7 +31,8 @@ class FalconTextView: UITextView {
 
   override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
     guard let pos = closestPosition(to: point) else { return false }
-		guard let range = tokenizer.rangeEnclosingPosition(pos, with: .character, inDirection: UITextDirection(rawValue: UITextLayoutDirection.left.rawValue)) else { return false }
+
+		guard let range = tokenizer.rangeEnclosingPosition(pos, with: .character, inDirection: .layout(.left)) else { return false }
     let startIndex = offset(from: beginningOfDocument, to: range.start)
     
 		return attributedText.attribute(NSAttributedString.Key.link, at: startIndex, effectiveRange: nil) != nil

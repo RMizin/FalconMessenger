@@ -99,10 +99,11 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
 		let beginImage = CIImage(image: image)
 		currentFilter!.setValue(beginImage, forKey: kCIInputImageKey)
 		currentFilter!.setValue(10, forKey: kCIInputRadiusKey)
+		guard let unwrappedBeginImage = beginImage else { return UIImage(named: "imagePlaceholder")! }
 
 		let cropFilter = CIFilter(name: "CICrop")
 		cropFilter!.setValue(currentFilter!.outputImage, forKey: kCIInputImageKey)
-		cropFilter!.setValue(CIVector(cgRect: beginImage!.extent), forKey: "inputRectangle")
+		cropFilter!.setValue(CIVector(cgRect: unwrappedBeginImage.extent), forKey: "inputRectangle")
 
 		let output = cropFilter!.outputImage
 		let cgimg = context.createCGImage(output!, from: output!.extent)

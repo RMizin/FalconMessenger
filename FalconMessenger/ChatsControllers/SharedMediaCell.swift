@@ -28,6 +28,8 @@ class SharedMediaCell: UICollectionViewCell {
 		sharedPhotoImageView.contentMode = .scaleAspectFill
 		sharedPhotoImageView.layer.masksToBounds = true
 		sharedPhotoImageView.isUserInteractionEnabled = true
+		sharedPhotoImageView.image = UIImage(named: "imagePlaceholder")
+		sharedPhotoImageView.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
 		return sharedPhotoImageView
 	}()
 
@@ -65,7 +67,12 @@ class SharedMediaCell: UICollectionViewCell {
 		if let thumbnailURL = sharedElement.thumbnailImageUrl {
 			url = thumbnailURL
 		}
-		sharedPhotoImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground]) { (image, _, _, _) in
+
+		sharedPhotoImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "imagePlaceholder"), options: [.scaleDownLargeImages, .continueInBackground]) { (image, error, _, _) in
+			if error != nil {
+				self.playButton.isHidden = true
+				return
+			}
 			self.sharedPhotoImageView.sd_imageIndicator?.stopAnimatingIndicator()
 			self.sharedPhotoImageView.sd_imageIndicator = nil
 
@@ -78,6 +85,6 @@ class SharedMediaCell: UICollectionViewCell {
 	override func prepareForReuse() {
 		super.prepareForReuse()
 		playButton.isHidden = true
-		sharedPhotoImageView.image = nil
+		sharedPhotoImageView.image = UIImage(named: "imagePlaceholder")
 	}
 }
