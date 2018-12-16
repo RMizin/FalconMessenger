@@ -20,6 +20,9 @@
 		4B1FEC1D213336DE0022421C /* CountriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1FEC1C213336DE0022421C /* CountriesTableViewCell.swift */; };
 		4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */; };
 		4B2143081F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143071F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift */; };
+		4B2733C721C5461000B3879F /* PresenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2733C621C5461000B3879F /* PresenseManager.swift */; };
+		4B2733CA21C5482F00B3879F /* FalconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2733C921C5482F00B3879F /* FalconViewController.swift */; };
+		4B2733CC21C5483D00B3879F /* FalconTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2733CB21C5483D00B3879F /* FalconTableViewController.swift */; };
 		4B27F6782089C92E0068077E /* TypingIndicatorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */; };
 		4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */; };
 		4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */; };
@@ -259,6 +262,9 @@
 		4B1FEC1C213336DE0022421C /* CountriesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesTableViewCell.swift; sourceTree = "<group>"; };
 		4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingPhotoMessageCell.swift; path = ChatsControllers/OutgoingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4B2143071F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+ImageZoomHandlers.swift"; path = "ChatsControllers/ChatLogViewController+ImageZoomHandlers.swift"; sourceTree = "<group>"; };
+		4B2733C621C5461000B3879F /* PresenseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenseManager.swift; sourceTree = "<group>"; };
+		4B2733C921C5482F00B3879F /* FalconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconViewController.swift; sourceTree = "<group>"; };
+		4B2733CB21C5483D00B3879F /* FalconTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconTableViewController.swift; sourceTree = "<group>"; };
 		4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TypingIndicatorManager.swift; path = ChatsControllers/TypingIndicatorManager.swift; sourceTree = "<group>"; };
 		4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsTableViewController.swift; path = ChatsControllers/GroupAdminControlsTableViewController.swift; sourceTree = "<group>"; };
@@ -531,6 +537,23 @@
 			name = InputContainerView;
 			sourceTree = "<group>";
 		};
+		4B2733C521C545EB00B3879F /* PresenseManager */ = {
+			isa = PBXGroup;
+			children = (
+				4B2733C621C5461000B3879F /* PresenseManager.swift */,
+			);
+			path = PresenseManager;
+			sourceTree = "<group>";
+		};
+		4B2733C821C5481B00B3879F /* FalconControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4B2733C921C5482F00B3879F /* FalconViewController.swift */,
+				4B2733CB21C5483D00B3879F /* FalconTableViewController.swift */,
+			);
+			path = FalconControllers;
+			sourceTree = "<group>";
+		};
 		4B2E59A9214AB0B70081B74E /* MessageSender */ = {
 			isa = PBXGroup;
 			children = (
@@ -748,6 +771,8 @@
 		4B6BAF8B20886B3800A90F3A /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4B2733C821C5481B00B3879F /* FalconControllers */,
+				4B2733C521C545EB00B3879F /* PresenseManager */,
 				4B08E370208872B800C64EAA /* Public */,
 				4B6BAF8820886B3800A90F3A /* Sounds */,
 				4B08E36F208872AF00C64EAA /* ThemeManager */,
@@ -1728,9 +1753,11 @@
 				4BC3B262212DA6D50012C7BD /* ChatLogViewController.swift in Sources */,
 				4B5693D920CFFAAB005EAE15 /* CustomizedImageView.swift in Sources */,
 				4BF3ABCF2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift in Sources */,
+				4B2733C721C5461000B3879F /* PresenseManager.swift in Sources */,
 				4BC3B264212DA93E0012C7BD /* ChatCollectionView.swift in Sources */,
 				4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */,
 				4B8CA9EE211C49B300E6A66C /* BubbleCircle.swift in Sources */,
+				4B2733CA21C5482F00B3879F /* FalconViewController.swift in Sources */,
 				4B62E5FE2077EC7900546294 /* BaseVoiceMessageCell.swift in Sources */,
 				4B2E59AB214AB0F60081B74E /* MessageSender.swift in Sources */,
 				4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */,
@@ -1862,6 +1889,7 @@
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
 				4B8CA141215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift in Sources */,
 				4B6BB00F20886C5F00A90F3A /* AnimationController.swift in Sources */,
+				4B2733CC21C5483D00B3879F /* FalconTableViewController.swift in Sources */,
 				4B31350621A9F56D00D20583 /* SharedMediaCell.swift in Sources */,
 				4B3134F921A9EDED00D20583 /* SharedMedia.swift in Sources */,
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,

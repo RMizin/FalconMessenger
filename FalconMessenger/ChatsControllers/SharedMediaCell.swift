@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SDWebImage
+//import SDWebImage
 
 class SharedMediaCell: UICollectionViewCell {
 
@@ -28,7 +28,7 @@ class SharedMediaCell: UICollectionViewCell {
 		sharedPhotoImageView.contentMode = .scaleAspectFill
 		sharedPhotoImageView.layer.masksToBounds = true
 		sharedPhotoImageView.isUserInteractionEnabled = true
-		sharedPhotoImageView.image = UIImage(named: "imagePlaceholder")
+		sharedPhotoImageView.sd_imageIndicator = ThemeManager.currentTheme().sdWebImageActivityIndicator
 		sharedPhotoImageView.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
 		return sharedPhotoImageView
 	}()
@@ -61,21 +61,15 @@ class SharedMediaCell: UICollectionViewCell {
 	func configureCell(sharedElement: SharedMedia) {
 		guard var url = sharedElement.imageURL else { return }
 
-		sharedPhotoImageView.sd_imageIndicator = ThemeManager.currentTheme().sdWebImageActivityIndicator
-		sharedPhotoImageView.sd_imageIndicator?.startAnimatingIndicator()
-
 		if let thumbnailURL = sharedElement.thumbnailImageUrl {
 			url = thumbnailURL
 		}
 
-		sharedPhotoImageView.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "imagePlaceholder"), options: [.scaleDownLargeImages, .continueInBackground]) { (image, error, _, _) in
+		sharedPhotoImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground]) { (image, error, _, _) in
 			if error != nil {
 				self.playButton.isHidden = true
 				return
 			}
-			self.sharedPhotoImageView.sd_imageIndicator?.stopAnimatingIndicator()
-			self.sharedPhotoImageView.sd_imageIndicator = nil
-
 			if sharedElement.videoURL != nil {
 				self.playButton.isHidden = false
 			}
@@ -85,6 +79,6 @@ class SharedMediaCell: UICollectionViewCell {
 	override func prepareForReuse() {
 		super.prepareForReuse()
 		playButton.isHidden = true
-		sharedPhotoImageView.image = UIImage(named: "imagePlaceholder")
+		sharedPhotoImageView.image = nil
 	}
 }

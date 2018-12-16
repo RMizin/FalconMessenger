@@ -62,8 +62,8 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		let collectionViewSize = collectionView!.frame.size
 		let nrOfCellsPerRow: CGFloat = 4
 		
-		let itemWidth = collectionViewSize.width/nrOfCellsPerRow
-		layout.itemSize = CGSize(width: itemWidth-2, height: itemWidth-2)
+		let itemWidth = UIDevice.current.orientation.isLandscape ? collectionViewSize.height/nrOfCellsPerRow : collectionViewSize.width/nrOfCellsPerRow
+		layout.itemSize = CGSize(width: itemWidth - 2, height: itemWidth - 2)
 
 		if #available(iOS 11.0, *) {
 			collectionView?.contentInsetAdjustmentBehavior = .always
@@ -164,9 +164,12 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 		guard let initialPhotoIndex = viewable.index(where: {$0.messageUID == currentElement.id }) else { return }
 		let currentPhoto = viewable[initialPhotoIndex]
+		let overlay = INSPhotosOverlayView()
+		overlay.bottomShadow.isHidden = true
 		let galleryPreview = INSPhotosViewController(photos: viewable,
 																								 initialPhoto: currentPhoto,
 																								 referenceView: cell)
+		galleryPreview.overlayView = overlay
 		galleryPreview.referenceViewForPhotoWhenDismissingHandler = { [weak self] photo in
 			guard let indexPath = SharedMedia.get(indexPathOf: photo,
 																						in: self?.sharedMedia ?? [[SharedMedia]]()) else { return nil }
