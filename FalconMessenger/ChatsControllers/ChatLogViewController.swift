@@ -242,21 +242,20 @@ class ChatLogViewController: UIViewController {
     NotificationCenter.default.removeObserver(self)
     print("\n CHATLOG CONTROLLER DE INIT \n")
   }
-  
-  override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-    super.willTransition(to: newCollection, with: coordinator)
-    collectionView.collectionViewLayout.invalidateLayout()
-  }
 
-  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-    super.viewWillTransition(to: size, with: coordinator)
-    collectionView.collectionViewLayout.invalidateLayout()
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 
-    inputContainerView.handleRotation()
-    DispatchQueue.main.async { [unowned self] in
-      self.collectionView.reloadData()
-    }
-  }
+		//TODO content offset fix
+		//TODO inputContainerView height fix
+
+		DispatchQueue.main.async { [unowned self] in
+			self.collectionView.reloadData()
+		}
+		
+		inputContainerView.handleRotation()
+		collectionView.collectionViewLayout.invalidateLayout()
+		super.traitCollectionDidChange(previousTraitCollection)
+	}
 
   override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
     if let observedObject = object as? ChatCollectionView, observedObject == collectionView {
