@@ -44,7 +44,7 @@ BIOMETRICS SUPPORT: Keep your conversations away from unwanted eyes by using you
 ## How to run the app
 Follow these simple steps:
 
-1. Open the Pigeon-project.xcworkspace in Xcode.
+1. Open the FalconMessenger.xcworkspace in Xcode.
 2. Change the Bundle Identifier to match your domain.
 3. Go to Firebase and create new project.
 4. Select "Add Firebase to your iOS app" option, type the bundle Identifier & click continue.
@@ -71,11 +71,18 @@ Follow these simple steps:
 
 		{ 
 		  "rules": {
-		    ".read": true,
+		    ".read": "auth != null",
 		    ".write": "auth != null",
 
-		    "users": {
-		      ".indexOn": "phoneNumber"
+
+		     "users": {
+			".indexOn": "phoneNumber",
+			"$user_id": {
+			  // grants write access to the owner of this user account
+			  // whose uid must exactly match the key ($user_id)
+			  ".write": "$user_id === auth.uid"
+
+			}
 		    }
 		  }   
 		}
@@ -83,6 +90,15 @@ Follow these simple steps:
 Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
 11. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
+
+12. Install Firebase Cloud Functions. 
+<b> Important Note: Cloud functions a responsible for Sending Group messages and fetching Falcon Users. So it's quite important for you to configure everything poperly.</b>
+	Step-by-Step guide is availible here: https://firebase.google.com/docs/functions/
+	Video Guide: https://www.youtube.com/watch?v=DYfP-UIKxH0
+	
+13. Copy and Paste Cloud functions from provided [Index.js](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file to your own Index.js file.
+
+14. Run "Firebase Delpoy" in the terminal from your cloud Functions Directory to configure Cloud Functions.
 
 
 ## Compatibility
