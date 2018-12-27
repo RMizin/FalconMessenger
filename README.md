@@ -5,6 +5,13 @@
 
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://perfectradiousa.files.wordpress.com/2016/09/itunes-app-store-logo.png"  width="350" alt="App Store" /></a>
 
+
+<br>[] Обновить скрины
+<br>[]Cделать маленький хедер вместо большого
+<br>[]Cделать список фич в стиле презентации эппл
+<br>[]Сделать побольше скринов
+<br>[]Может быть сделать гифку
+
 ## Features
 
 CLOUD-BASED: You won't lose any of your data when you change your mobile phone or reinstall the app. All you need is to re-authenticate with your phone number.
@@ -42,7 +49,8 @@ BIOMETRICS SUPPORT: Keep your conversations away from unwanted eyes by using you
 
 
 ## How to run the app
-Follow these simple steps:
+
+Follow these steps:
 
 1. Open the FalconMessenger.xcworkspace in Xcode.
 2. Change the Bundle Identifier to match your domain.
@@ -87,25 +95,29 @@ Follow these simple steps:
 		  }   
 		}
 
-Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
+Note before next step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
 11. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
 12. Install Firebase Cloud Functions. 
-<b> Important Note: Cloud functions a responsible for Sending Group messages and fetching Falcon Users. So it's quite important for you to configure everything poperly.</b>
-	Step-by-Step guide is availible here: https://firebase.google.com/docs/functions/
-	Video Guide: https://www.youtube.com/watch?v=DYfP-UIKxH0
+<b><br> Important Note: Cloud functions a responsible for Sending Group messages and fetching Falcon Users. So it's quite important for you to configure everything poperly.</b>
+	<br>Step-by-Step guide is availible here: https://firebase.google.com/docs/functions/
+	<br>Video Guide: https://www.youtube.com/watch?v=DYfP-UIKxH0
 	
-13. Copy and Paste Cloud functions from provided [Index.js](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file to your own Index.js file.
+13. Copy and Paste Cloud functions from provided [Index.js](https://github.com/RMizin/FalconMessenger/blob/master/CloudFunctions.js) file to your own Index.js file.
 
 14. Run "Firebase Delpoy" in the terminal from your cloud Functions Directory to configure Cloud Functions.
 
+15. Configuring Reporting and Blacklisting//todo
+16. If you do not have paid Apple Developer Account , you might also see this error: "Your development team, "Name", does not support the Push Notifications capability". 
+	<br> To fix this, go to Project->Targets->FalconMessenger->Capabilities and Deselect Push Notifications option
+	//todo
+	
+Any unexpected errors? falconmessenger.help@gmail.com
 
 ## Compatibility
-Falcon Messenger is written in Swift 4 and requires iOS 10.0 or later.
+Falcon Messenger is written in Swift 4.2 and requires iOS 10.0 or later.
 
 
 ## License
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
-
-Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
