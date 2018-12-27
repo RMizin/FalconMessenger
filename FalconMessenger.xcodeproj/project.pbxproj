@@ -120,6 +120,10 @@
 		4B6BB02320886C5F00A90F3A /* RoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */; };
 		4B790B4D214919AD00427C92 /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B790B4C214919AD00427C92 /* BlockedUsersTableViewController.swift */; };
 		4B790B4F21492E6000427C92 /* BlockUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B790B4E21492E6000427C92 /* BlockUserTableViewController.swift */; };
+		4B79785B21D4C68100BB5A55 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784821D4C44100BB5A55 /* Realm.framework */; };
+		4B79785C21D4C68100BB5A55 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784821D4C44100BB5A55 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B79785D21D4C68600BB5A55 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784721D4C44100BB5A55 /* RealmSwift.framework */; };
+		4B79785E21D4C68600BB5A55 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784721D4C44100BB5A55 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */; };
 		4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */; };
 		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
@@ -235,6 +239,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		4B79785721D4C56200BB5A55 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B79785E21D4C68600BB5A55 /* RealmSwift.framework in Embed Frameworks */,
+				4B79785C21D4C68100BB5A55 /* Realm.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -364,6 +380,10 @@
 		4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundProgressView.swift; sourceTree = "<group>"; };
 		4B790B4C214919AD00427C92 /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		4B790B4E21492E6000427C92 /* BlockUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserTableViewController.swift; sourceTree = "<group>"; };
+		4B79784221D4BF8B00BB5A55 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
+		4B79784321D4BF8B00BB5A55 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
+		4B79784721D4C44100BB5A55 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = FalconMessenger/ThirdParty/Realm/RealmSwift.framework; sourceTree = "<group>"; };
+		4B79784821D4C44100BB5A55 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = FalconMessenger/ThirdParty/Realm/Realm.framework; sourceTree = "<group>"; };
 		4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMessageCell.swift; path = ChatsControllers/BaseMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
@@ -486,6 +506,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B79785B21D4C68100BB5A55 /* Realm.framework in Frameworks */,
+				4B79785D21D4C68600BB5A55 /* RealmSwift.framework in Frameworks */,
 				0E021BAC99C749D2A57CDA08 /* libPods-FalconMessenger.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -496,6 +518,8 @@
 		2AF4427B37282913090A248D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B79784821D4C44100BB5A55 /* Realm.framework */,
+				4B79784721D4C44100BB5A55 /* RealmSwift.framework */,
 				28F15AD41DA41AD704250781 /* libPods-FalconMessenger.a */,
 			);
 			name = Frameworks;
@@ -964,6 +988,16 @@
 				4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */,
 			);
 			path = RoundProgressView;
+			sourceTree = "<group>";
+		};
+		4B79784121D4BF8B00BB5A55 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4B79784221D4BF8B00BB5A55 /* RealmSwift.framework */,
+				4B79784321D4BF8B00BB5A55 /* Realm.framework */,
+			);
+			name = Frameworks;
+			path = FalconMessenger/Frameworks;
 			sourceTree = "<group>";
 		};
 		4B7ACCB71F3A3C74000606E1 /* Cells */ = {
@@ -1556,6 +1590,7 @@
 		E788FC79B73E9599A409079F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				4B79784121D4BF8B00BB5A55 /* Frameworks */,
 				761FFCFE86D58DCDD8D5A95F /* Pods-FalconMessenger.debug.xcconfig */,
 				D3478EECF33D7E0795B137A3 /* Pods-FalconMessenger.release.xcconfig */,
 			);
@@ -1572,9 +1607,11 @@
 				92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */,
 				4B4F45271F32230C00A6FF96 /* Sources */,
 				4B4F45281F32230C00A6FF96 /* Frameworks */,
+				4B79785721D4C56200BB5A55 /* Embed Frameworks */,
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
 				26079EBE940EC05B11EA8844 /* [CP] Copy Pods Resources */,
+				4B79784021D4BE4000BB5A55 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1675,6 +1712,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		4B79784021D4BE4000BB5A55 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"\n#\"${PROJECT_DIR}/FalconMessenger/Frameworks/Realm.framework/strip-frameworks.sh\"\n\n";
 		};
 		92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2052,7 +2106,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 761FFCFE86D58DCDD8D5A95F /* Pods-FalconMessenger.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -2063,7 +2116,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FalconMessenger/ThirdParty/Realm",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -2084,7 +2140,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D3478EECF33D7E0795B137A3 /* Pods-FalconMessenger.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -2095,7 +2150,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FalconMessenger/ThirdParty/Realm",
+				);
 				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
