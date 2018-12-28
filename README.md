@@ -130,4 +130,6 @@ Any unexpected errors? falconmessenger.help@gmail.com
 <p align="center">
  <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/LicenseTitle.png?token=ASVYwndXHjWYb578DXiMgfuyO4xEQgVKks5cL0cswA%3D%3D" />
 <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/License.png?token=ASVYwmVSy_ogS4wYYhzs5OjIt5btLSh6ks5cL0cqwA%3D%3D" />
+	
+<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/License.png?token=ASVYwmVSy_ogS4wYYhzs5OjIt5btLSh6ks5cL0cqwA%3D%3D" alt="LICENSE.md" /></a>
 </p> 
