@@ -58,7 +58,11 @@ class UserProfileContainerView: UIView {
     name.enablesReturnKeyAutomatically = true
     name.translatesAutoresizingMaskIntoConstraints = false
     name.textAlignment = .center
-    name.placeholder = "Enter name"
+
+		let placeholder = NSAttributedString(string: "Enter name",
+																				 attributes: [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
+		name.attributedPlaceholder = placeholder
+
     name.borderStyle = .none
     name.autocorrectionType = .no
     name.returnKeyType = .done
@@ -74,7 +78,10 @@ class UserProfileContainerView: UIView {
     phone.translatesAutoresizingMaskIntoConstraints = false
     phone.textAlignment = .center
     phone.keyboardType = .numberPad
-    phone.placeholder = "Phone number"
+		let placeholder = NSAttributedString(string: "Phone number",
+																				 attributes: [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
+		phone.attributedPlaceholder = placeholder
+
     phone.borderStyle = .none
     phone.isEnabled = false
     phone.textColor = ThemeManager.currentTheme().generalSubtitleColor

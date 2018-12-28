@@ -118,6 +118,7 @@
 		4B6BB01E20886C5F00A90F3A /* ARSProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFDC20886C5E00A90F3A /* ARSProgressLoader.swift */; };
 		4B6BB01F20886C5F00A90F3A /* ARSLineProgressProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFDD20886C5E00A90F3A /* ARSLineProgressProtocols.swift */; };
 		4B6BB02320886C5F00A90F3A /* RoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */; };
+		4B78663421D536AD00CC739F /* UserExistenceChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B78663321D536AD00CC739F /* UserExistenceChecker.swift */; };
 		4B790B4D214919AD00427C92 /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B790B4C214919AD00427C92 /* BlockedUsersTableViewController.swift */; };
 		4B790B4F21492E6000427C92 /* BlockUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B790B4E21492E6000427C92 /* BlockUserTableViewController.swift */; };
 		4B79785B21D4C68100BB5A55 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784821D4C44100BB5A55 /* Realm.framework */; };
@@ -378,6 +379,7 @@
 		4B6BAFDC20886C5E00A90F3A /* ARSProgressLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSProgressLoader.swift; sourceTree = "<group>"; };
 		4B6BAFDD20886C5E00A90F3A /* ARSLineProgressProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressProtocols.swift; sourceTree = "<group>"; };
 		4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundProgressView.swift; sourceTree = "<group>"; };
+		4B78663321D536AD00CC739F /* UserExistenceChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserExistenceChecker.swift; path = AuthenticationControllers/UserExistenceChecker.swift; sourceTree = "<group>"; };
 		4B790B4C214919AD00427C92 /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		4B790B4E21492E6000427C92 /* BlockUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserTableViewController.swift; sourceTree = "<group>"; };
 		4B79784221D4BF8B00BB5A55 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
@@ -1540,6 +1542,7 @@
 				4B91B8B91F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift */,
 				4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */,
 				4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */,
+				4B78663321D536AD00CC739F /* UserExistenceChecker.swift */,
 			);
 			name = "User profile";
 			sourceTree = "<group>";
@@ -1756,6 +1759,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */,
+				4B78663421D536AD00CC739F /* UserExistenceChecker.swift in Sources */,
 				4B8D07711FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift in Sources */,
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
 				4BCA3EB221AA801300E586AB /* RefreshControl.swift in Sources */,

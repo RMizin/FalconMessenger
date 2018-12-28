@@ -37,6 +37,9 @@ class VerificationContainerView: UIView {
     verificationCode.translatesAutoresizingMaskIntoConstraints = false
     verificationCode.textAlignment = .center
     verificationCode.keyboardType = .numberPad
+		if #available(iOS 12.0, *) {
+			verificationCode.textContentType = .oneTimeCode
+		}
     verificationCode.textColor = ThemeManager.currentTheme().generalTitleColor
     verificationCode.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
     verificationCode.backgroundColor = .clear

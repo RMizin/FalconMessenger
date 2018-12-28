@@ -65,6 +65,7 @@ class CountriesTableViewController: UITableViewController {
       searchController?.searchBar.delegate = self
       searchController?.hidesNavigationBarDuringPresentation = false
       navigationItem.searchController = searchController
+			navigationItem.hidesSearchBarWhenScrolling = false
     } else {
       searchBar = UISearchBar()
       searchBar?.delegate = self

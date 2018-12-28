@@ -13,6 +13,7 @@ import PhoneNumberKit
 class VerificationCodeController: UIViewController {
 
   let enterVerificationContainerView = VerificationContainerView()
+	let userExistenceChecker = UserExistenceChecker()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -156,17 +157,33 @@ class VerificationCodeController: UIViewController {
         return
       }
       NotificationCenter.default.post(name: .authenticationSucceeded, object: nil)
-      let destination = UserProfileController()
       AppUtility.lockOrientation(.portrait)
-      destination.userProfileContainerView.phone.text = self.enterVerificationContainerView.titleNumber.text
-      destination.checkIfUserDataExists(completionHandler: { (isCompleted) in
-        guard isCompleted else {ARSLineProgress.showFail(); return }
-        ARSLineProgress.hide()
-        guard self.navigationController != nil else { return }
-        if !(self.navigationController!.topViewController!.isKind(of: UserProfileController.self)) {
-          self.navigationController?.pushViewController(destination, animated: true)
-        }
-      })
+			self.userExistenceChecker.delegate = self
+			self.userExistenceChecker.checkIfUserDataExists()
     }
   }
+}
+
+extension VerificationCodeController: UserExistenceDelegate {
+	func user(isAlreadyExists: Bool, name: String?, bio: String?, image: UIImage?) {
+		let destination = UserProfileController()
+		destination.userProfileContainerView.phone.text = enterVerificationContainerView.titleNumber.text
+
+		ARSLineProgress.hide()
+		if !isAlreadyExists {
+			guard self.navigationController != nil else { return }
+			if !(self.navigationController!.topViewController!.isKind(of: UserProfileController.self)) {
+				self.navigationController?.pushViewController(destination, animated: true)
+			}
+		} else {
+			if DeviceType.isIPad {
+				let tabBarController = GeneralTabBarController()
+				self.splitViewController?.show(tabBarController, sender: self)
+			} else {
+				self.dismiss(animated: true) {
+					AppUtility.lockOrientation(.allButUpsideDown)
+				}
+			}
+		}
+	}
 }
