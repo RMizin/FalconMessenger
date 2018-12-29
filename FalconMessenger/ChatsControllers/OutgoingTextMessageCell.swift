@@ -45,7 +45,7 @@ class OutgoingTextMessageCell: BaseMessageCell {
     textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5, y: bubbleView.frame.height-timeLabel.frame.height-5)
     
-    if let isCrooked = self.message?.isCrooked, isCrooked {
+    if let isCrooked = self.message?.isCrooked.value, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().outgoingBubble
     } else {
       bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble

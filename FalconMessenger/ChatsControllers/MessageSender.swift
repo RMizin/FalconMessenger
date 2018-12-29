@@ -304,7 +304,7 @@ class MessageSender: NSObject {
     reference.updateChildValues(values) { (error, _) in
 			guard let messageID = reference.key else { return }
 
-      if let isGroupChat = self.conversation?.isGroupChat, isGroupChat {
+      if let isGroupChat = self.conversation?.isGroupChat.value, isGroupChat {
 
         let groupMessagesRef = Database.database().reference().child("groupChats").child(toID).child(userMessagesFirebaseFolder)
         groupMessagesRef.updateChildValues([messageID: fromID])

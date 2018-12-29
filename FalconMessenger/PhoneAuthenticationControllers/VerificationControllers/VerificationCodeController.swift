@@ -176,6 +176,12 @@ extension VerificationCodeController: UserExistenceDelegate {
 				self.navigationController?.pushViewController(destination, animated: true)
 			}
 		} else {
+			if Messaging.messaging().fcmToken != nil {
+				setUserNotificationToken(token: Messaging.messaging().fcmToken!)
+			}
+
+			setOnlineStatus()
+
 			if DeviceType.isIPad {
 				let tabBarController = GeneralTabBarController()
 				self.splitViewController?.show(tabBarController, sender: self)

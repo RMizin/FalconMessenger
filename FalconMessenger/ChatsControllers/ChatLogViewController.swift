@@ -124,7 +124,7 @@ class ChatLogViewController: UIViewController {
   @objc func performRefresh() {
     guard let conversation = self.conversation else { return }
     
-    if let isGroupChat = conversation.isGroupChat, isGroupChat {
+    if let isGroupChat = conversation.isGroupChat.value, isGroupChat {
       chatLogHistoryFetcher.loadPreviousMessages(messages, conversation, messagesToLoad, true)
     } else {
       chatLogHistoryFetcher.loadPreviousMessages(messages, conversation, messagesToLoad, false)
@@ -392,10 +392,10 @@ class ChatLogViewController: UIViewController {
       return user.id == chatID
     }
 
-    let permitted = conversation?.permitted ?? false
+    let permitted = conversation?.permitted.value ?? false
     guard contains == false, permitted != true else { return }
 
-    if let isGroupChat = conversation?.isGroupChat, !isGroupChat {
+    if let isGroupChat = conversation?.isGroupChat.value, !isGroupChat {
       view.addSubview(blocker)
       blocker.translatesAutoresizingMaskIntoConstraints = false
       blocker.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -476,7 +476,7 @@ class ChatLogViewController: UIViewController {
   @objc func getInfoAction() {
     inputContainerView.resignAllResponders()
 
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
 
       let destination = GroupAdminControlsTableViewController()
       destination.chatID = conversation?.chatID ?? ""
@@ -543,7 +543,7 @@ class ChatLogViewController: UIViewController {
       if localTyping {
         sendTypingStatus(data: typingData)
       } else {
-        if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+        if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
           guard let conversationID = conversation?.chatID else { return }
           let userIsTypingRef = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID).child(currentUserID)
           userIsTypingRef.removeValue()
@@ -560,7 +560,7 @@ class ChatLogViewController: UIViewController {
     guard let currentUserID = Auth.auth().currentUser?.uid,
       let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
 
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
       let userIsTypingRef = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
       userIsTypingRef.updateChildValues(data as! [AnyHashable: Any])
     } else {
@@ -573,7 +573,7 @@ class ChatLogViewController: UIViewController {
     guard let currentUserID = Auth.auth().currentUser?.uid,
       let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
 
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
       let indicatorRemovingReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID).child(currentUserID)
       indicatorRemovingReference.onDisconnectRemoveValue()
       typingIndicatorReference = Database.database().reference().child("groupChatsTemp").child(conversationID).child(typingIndicatorDatabaseID)
@@ -734,9 +734,9 @@ class ChatLogViewController: UIViewController {
 
   func configurePlaceholderTitleView() {
 
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat,
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat,
       let title = conversation?.chatName,
-      let membersCount = conversation?.chatParticipantsIDs?.count {
+			let membersCount = conversation?.chatParticipantsIDs.count {
 
       let subtitle = "\(membersCount) members"
       self.navigationItem.setTitle(title: title, subtitle: subtitle)
@@ -760,8 +760,8 @@ class ChatLogViewController: UIViewController {
 	// MARK: - DATABASE ONLINE STATUS // TO MOVE
   func configureTitleViewWithOnlineStatus() {
 
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat,
-      let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs?.count {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat,
+			let title = conversation?.chatName, let membersCount = conversation?.chatParticipantsIDs.count {
       let subtitle = "\(membersCount) members"
       navigationItem.setTitle(title: title, subtitle: subtitle)
       return

@@ -37,14 +37,14 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.frame = CGRect(x: 3, y: 14, width: bubbleView.frame.width-17,
                               height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-19).integral
     playerView.timerLabel.text = message.voiceDuration
-    playerView.startingTime = message.voiceStartTime ?? 0
-    playerView.seconds = message.voiceStartTime ?? 0
+    playerView.startingTime = message.voiceStartTime.value ?? 0
+    playerView.seconds = message.voiceStartTime.value ?? 0
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5,
                                      y: bubbleView.frame.height-timeLabel.frame.height-5)
     timeLabel.text = self.message?.convertedTimestamp
     guard message.voiceEncodedString != nil else { return }
   
-    if let isCrooked = self.message?.isCrooked, isCrooked {
+    if let isCrooked = self.message?.isCrooked.value, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().outgoingBubble
     } else {
       bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble

@@ -23,7 +23,7 @@ extension ChatLogViewController: MessageSenderDelegate {
     
     var values = values
     guard let messagesFetcher = messagesFetcher else { return }
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
       values = messagesFetcher.preloadCellData(to: values, isGroupChat: true)
     } else {
       values = messagesFetcher.preloadCellData(to: values, isGroupChat: true)
@@ -31,7 +31,7 @@ extension ChatLogViewController: MessageSenderDelegate {
     
     let message = Message(dictionary: values)
     messages.append(message)
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
     } else {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)

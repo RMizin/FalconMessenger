@@ -156,6 +156,10 @@
 		4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D195206EA62F00FEF72E /* MediaObject.swift */; };
 		4BB74A01206E2FFB0014837E /* AuthPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */; };
 		4BB74A03206E300C0014837E /* AuthVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A02206E300C0014837E /* AuthVerificationController.swift */; };
+		4BBBB66F21D78C9100FFFFF8 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784821D4C44100BB5A55 /* Realm.framework */; };
+		4BBBB67021D78C9100FFFFF8 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784821D4C44100BB5A55 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BBBB67221D78C9400FFFFF8 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784721D4C44100BB5A55 /* RealmSwift.framework */; };
+		4BBBB67321D78C9400FFFFF8 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784721D4C44100BB5A55 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */; };
 		4BBBCBF52057D01000926800 /* GroupProfileTableHeaderContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF42057D01000926800 /* GroupProfileTableHeaderContainer.swift */; };
 		4BBBCBF72057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF62057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift */; };
@@ -246,6 +250,18 @@
 			files = (
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BBBB67121D78C9100FFFFF8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4BBBB67321D78C9400FFFFF8 /* RealmSwift.framework in Embed Frameworks */,
+				4BBBB67021D78C9100FFFFF8 /* Realm.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -496,6 +512,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BBBB66F21D78C9100FFFFF8 /* Realm.framework in Frameworks */,
+				4BBBB67221D78C9400FFFFF8 /* RealmSwift.framework in Frameworks */,
 				0E021BAC99C749D2A57CDA08 /* libPods-FalconMessenger.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1146,6 +1164,13 @@
 			name = PhoneAuthentication;
 			sourceTree = "<group>";
 		};
+		4BBBB66E21D7810400FFFFF8 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Realm;
+			sourceTree = "<group>";
+		};
 		4BBBCBF12057CE8B00926800 /* SetGroupProfileControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1282,8 +1307,8 @@
 		4BC26B2C1F3A236A0093A9D2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4BB6D193206EA62F00FEF72E /* Message.swift */,
 				4BB6D194206EA62F00FEF72E /* Conversation.swift */,
+				4BB6D193206EA62F00FEF72E /* Message.swift */,
 				4BCE1AB91F3714A000C0EBF7 /* User.swift */,
 				4BB6D195206EA62F00FEF72E /* MediaObject.swift */,
 			);
@@ -1473,6 +1498,7 @@
 		4BE72A6E204E9DC4009A22EA /* ChatsControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4BBBB66E21D7810400FFFFF8 /* Realm */,
 				4B8CA145215433AD009F8AA3 /* Support */,
 				4BE72A77204E9EC2009A22EA /* Cells */,
 				4BBBCBFA205851E100926800 /* ChatsTableViewController.swift */,
@@ -1606,9 +1632,11 @@
 				92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */,
 				4B4F45271F32230C00A6FF96 /* Sources */,
 				4B4F45281F32230C00A6FF96 /* Frameworks */,
+				4BBBB67121D78C9100FFFFF8 /* Embed Frameworks */,
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
 				26079EBE940EC05B11EA8844 /* [CP] Copy Pods Resources */,
+				4BBBB67421D78CB900FFFFF8 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1709,6 +1737,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		4BBBB67421D78CB900FFFFF8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nbash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"\n";
 		};
 		92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2099,7 +2144,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FalconMessenger/ThirdParty/Realm",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -2130,7 +2178,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FalconMessenger/ThirdParty/Realm",
+				);
 				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

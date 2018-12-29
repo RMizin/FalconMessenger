@@ -57,11 +57,11 @@ extension ChatsTableViewController {
     }
     
     if indexPath.section == 0 {
-      let isPinnedConversationMuted = filteredPinnedConversations[indexPath.row].muted == true
+      let isPinnedConversationMuted = filteredPinnedConversations[indexPath.row].muted.value == true
       let muteTitle = isPinnedConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
     } else if indexPath.section == 1 {
-      let isConversationMuted = filtededConversations[indexPath.row].muted == true
+      let isConversationMuted = filtededConversations[indexPath.row].muted.value == true
       let muteTitle = isConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
     }
@@ -240,22 +240,22 @@ extension ChatsTableViewController {
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
     
     if section == 0 {
-      guard conversation.muted != nil else {
+      guard conversation.muted.value != nil else {
         updateMutedDatabaseValue(to: true, currentUserID: currentUserID, conversationID: conversationID)
         return
       }
-      guard conversation.muted! else {
+      guard conversation.muted.value! else {
         updateMutedDatabaseValue(to: true, currentUserID: currentUserID, conversationID: conversationID)
         return
       }
       updateMutedDatabaseValue(to: false, currentUserID: currentUserID, conversationID: conversationID)
       
     } else if section == 1 {
-      guard conversation.muted != nil else {
+      guard conversation.muted.value != nil else {
         updateMutedDatabaseValue(to: true, currentUserID: currentUserID, conversationID: conversationID)
         return
       }
-      guard conversation.muted! else {
+      guard conversation.muted.value! else {
         updateMutedDatabaseValue(to: true, currentUserID: currentUserID, conversationID: conversationID)
         return
       }

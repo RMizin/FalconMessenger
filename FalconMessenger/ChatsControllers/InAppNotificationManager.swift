@@ -79,14 +79,14 @@ class InAppNotificationManager: NSObject {
     if let index = conversations.index(where: { (conv) -> Bool in
       return conv.chatID == conversation.chatID
     }) {
-      let isGroupChat = conversations[index].isGroupChat ?? false
-      if let muted = conversations[index].muted, !muted, let chatName = conversations[index].chatName {
+      let isGroupChat = conversations[index].isGroupChat.value ?? false
+      if let muted = conversations[index].muted.value, !muted, let chatName = conversations[index].chatName {
         self.playNotificationSound()
         
         if userDefaults.currentBoolObjectState(for: userDefaults.inAppNotifications) {
           self.showInAppNotification(conversation: conversations[index], title: chatName, subtitle: self.subtitleForMessage(message: message), resource: conversationAvatar(resource: conversations[index].chatThumbnailPhotoURL, isGroupChat: isGroupChat), placeholder: conversationPlaceholder(isGroupChat: isGroupChat) )
         }
-      } else if let chatName = conversations[index].chatName , conversations[index].muted == nil   {
+      } else if let chatName = conversations[index].chatName, conversations[index].muted.value == nil {
         self.playNotificationSound()
         if userDefaults.currentBoolObjectState(for: userDefaults.inAppNotifications) {
           self.showInAppNotification(conversation: conversations[index], title: chatName, subtitle: self.subtitleForMessage(message: message), resource: conversationAvatar(resource: conversations[index].chatThumbnailPhotoURL, isGroupChat: isGroupChat), placeholder: conversationPlaceholder(isGroupChat: isGroupChat))

@@ -55,10 +55,10 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     guard message.voiceEncodedString != nil else { return }
 
     playerView.timerLabel.text = message.voiceDuration
-    playerView.startingTime = message.voiceStartTime ?? 0
-    playerView.seconds = message.voiceStartTime ?? 0
+    playerView.startingTime = message.voiceStartTime.value ?? 0
+    playerView.seconds = message.voiceStartTime.value ?? 0
     
-    if let isCrooked = self.message?.isCrooked, isCrooked {
+    if let isCrooked = self.message?.isCrooked.value, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().incomingBubble
     } else {
       bubbleView.image = ThemeManager.currentTheme().incomingPartialBubble

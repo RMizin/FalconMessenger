@@ -70,12 +70,19 @@ extension ChatLogPresenter: MessagesDelegate {
     chatLogController?.conversation = conversation
     chatLogController?.groupedMessages = Message.groupedMessages(messages)
     chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
-  
-    if let membersIDs = conversation.chatParticipantsIDs,
-      let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
-      chatLogController?.observeTypingIndicator()
-      chatLogController?.configureTitleViewWithOnlineStatus()
-    }
+
+// without realm
+//    if let membersIDs = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
+//      chatLogController?.observeTypingIndicator()
+//      chatLogController?.configureTitleViewWithOnlineStatus()
+//    }
+
+		// with realm
+		if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
+			chatLogController?.observeTypingIndicator()
+			chatLogController?.configureTitleViewWithOnlineStatus()
+		}
+
     chatLogController?.observeBlockChanges()
     
     chatLogController?.messagesFetcher?.collectionDelegate = chatLogController

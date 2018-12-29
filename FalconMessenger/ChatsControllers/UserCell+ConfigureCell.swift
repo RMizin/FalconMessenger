@@ -15,9 +15,9 @@ extension UserCell {
   func configureCell(for indexPath: IndexPath, conversations: [Conversation]) {
     
     let isPersonalStorage = conversations[indexPath.row].chatID == Auth.auth().currentUser?.uid
-    let isConversationMuted = conversations[indexPath.row].muted != nil && conversations[indexPath.row].muted!
+    let isConversationMuted = conversations[indexPath.row].muted.value != nil && conversations[indexPath.row].muted.value!
     let chatName = isPersonalStorage ? NameConstants.personalStorage : conversations[indexPath.row].chatName
-    let isGroupChat = conversations[indexPath.row].isGroupChat ?? false
+    let isGroupChat = conversations[indexPath.row].isGroupChat.value ?? false
     
     var placeHolderImage = isGroupChat ? UIImage(named: "GroupIcon") : UIImage(named: "UserpicIcon")
     placeHolderImage = isPersonalStorage ? UIImage(named: "PersonalStorage") : placeHolderImage
@@ -25,7 +25,7 @@ extension UserCell {
     nameLabel.text = chatName
     muteIndicator.isHidden = !isConversationMuted || isPersonalStorage
     
-    if let isTyping = conversations[indexPath.row].isTyping, isTyping {
+    if let isTyping = conversations[indexPath.row].isTyping.value, isTyping {
       messageLabel.text = "typing"
       typingIndicatorTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateTypingIndicatorTimer), userInfo: nil, repeats: true)
 			RunLoop.main.add(self.typingIndicatorTimer!, forMode: RunLoop.Mode.common)
@@ -55,8 +55,8 @@ extension UserCell {
       }
     }
 
-    let badgeString = conversations[indexPath.row].badge?.toString()
-    let badgeInt = conversations[indexPath.row].badge ?? 0
+		let badgeString = conversations[indexPath.row].badge.value?.toString()
+    let badgeInt = conversations[indexPath.row].badge.value ?? 0
     
     guard badgeInt > 0, conversations[indexPath.row].lastMessage?.fromId != Auth.auth().currentUser?.uid else {
       badgeLabel.isHidden = true

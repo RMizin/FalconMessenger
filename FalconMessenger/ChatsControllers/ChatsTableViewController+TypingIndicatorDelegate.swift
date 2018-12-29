@@ -44,7 +44,7 @@ extension ChatsTableViewController: TypingIndicatorDelegate {
       completion(false, conversations, nil)
       return
     }
-    conversations[index].isTyping = typingStatus
+    conversations[index].isTyping.value = typingStatus
     completion(true, conversations, index)
   }
   

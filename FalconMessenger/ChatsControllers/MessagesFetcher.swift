@@ -60,7 +60,7 @@ class MessagesFetcher: NSObject {
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
     
     var isGroupChat = Bool()
-    if let groupChat = conversation.isGroupChat, groupChat { isGroupChat = true } else { isGroupChat = false }
+    if let groupChat = conversation.isGroupChat.value, groupChat { isGroupChat = true } else { isGroupChat = false }
     
     userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
     
@@ -144,7 +144,7 @@ class MessagesFetcher: NSObject {
       if !isOutBoxMessage {
         self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName, reference: self.messagesReference)
       } else {
-        if let isInformationMessage = message.isInformationMessage, isInformationMessage {
+        if let isInformationMessage = message.isInformationMessage.value, isInformationMessage {
           self.collectionDelegate?.collectionView(shouldBeUpdatedWith: messageWithName,
                                                   reference: self.messagesReference)
         } else {
@@ -211,29 +211,29 @@ class MessagesFetcher: NSObject {
     for index in (0..<messages.count) {
       
       guard messages.indices.contains(index + 1) else {
-        messages[index].isCrooked = true
+        messages[index].isCrooked.value = true
         continue
       }
     
       if messages[index].fromId == messages[index + 1].fromId {
         if messages[index].shortConvertedTimestamp != messages[index + 1].shortConvertedTimestamp {
-          messages[index].isCrooked = true
+          messages[index].isCrooked.value = true
         } else {
-          messages[index].isCrooked = false
+          messages[index].isCrooked.value = false
         }
       
-        messages[index + 1].isCrooked = true
+        messages[index + 1].isCrooked.value = true
       } else {
-        messages[index].isCrooked = true
-        messages[index + 1].isCrooked = true
+        messages[index].isCrooked.value = true
+        messages[index + 1].isCrooked.value = true
       }
       
-      if let isInfoMessage = messages[index + 1].isInformationMessage, isInfoMessage {
-        messages[index].isCrooked = true
+      if let isInfoMessage = messages[index + 1].isInformationMessage.value, isInfoMessage {
+        messages[index].isCrooked.value = true
       }
       
-      if let isInfoMessage = messages[index].isInformationMessage, isInfoMessage {
-        messages[index + 1].isCrooked = true
+      if let isInfoMessage = messages[index].isInformationMessage.value, isInfoMessage {
+        messages[index + 1].isCrooked.value = true
       }
     }
     return messages

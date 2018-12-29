@@ -93,7 +93,7 @@ extension ChatLogViewController: CollectionDelegate {
   fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
     messages.insert(message, at: insertionIndex)
     guard let messagesFetcher = messagesFetcher else { return }
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
     } else {
       messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)

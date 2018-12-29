@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import SystemConfiguration
 import Photos
+import RealmSwift
 
 struct ScreenSize {
   static let width = UIScreen.main.bounds.size.width
@@ -73,6 +74,21 @@ let deletionErrorMessage = "There was a problem when deleting. Try again later."
 let cameraNotExistsMessage = "You don't have camera"
 let thumbnailUploadError = "Failed to upload your image to database. Please, check your internet connection and try again."
 let fullsizePictureUploadError = "Failed to upload fullsize image to database. Please, check your internet connection and try again. Despite this error, thumbnail version of this picture has been uploaded, but you still should re-upload your fullsize image."
+
+extension List where Element == String {
+	func assign(_ array: [String]?) {
+		guard let array = array else { return }
+		removeAll()
+		insert(contentsOf: array, at: 0)
+	}
+
+	func assign(_ array: List<String>?) {
+		guard let array = array else { return }
+		removeAll()
+		insert(contentsOf: array, at: 0)
+	}
+}
+
 
 extension UICollectionView {
   func deselectAllItems(animated: Bool = false) {

@@ -28,7 +28,7 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
     if let _ = members.index(where: { (memberID) -> Bool in
       return memberID == id }) {
     } else {
-      self.conversation?.chatParticipantsIDs?.append(id)
+			self.conversation?.chatParticipantsIDs.append(id)
       self.changeUIAfterChildAddedIfNeeded()
     }
   }
@@ -40,7 +40,7 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
       return memberID == id
     }) else { return }
 
-    self.conversation?.chatParticipantsIDs?.remove(at: memberIndex)
+		self.conversation?.chatParticipantsIDs.remove(at: memberIndex)
     self.changeUIAfterChildRemovedIfNeeded()
   }
 
@@ -95,7 +95,7 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
   }
   
   fileprivate func removeSubtitleInGroupChat() {
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat, let title = conversation?.chatName {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat, let title = conversation?.chatName {
       let subtitle = ""
       navigationItem.setTitle(title: title, subtitle: subtitle)
       return

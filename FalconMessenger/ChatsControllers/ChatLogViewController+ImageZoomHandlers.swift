@@ -69,7 +69,7 @@ extension ChatLogViewController {
     guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = conversation?.chatName  else { return nil }
     var titleString = String()
   
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat,
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat,
       let senderName = messagesWithPhotos[photoIndex].senderName {
       titleString = senderName + "\n"
     } else {

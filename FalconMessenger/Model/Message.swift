@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import RealmSwift
 
 private func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
@@ -44,56 +45,60 @@ enum MessageType {
   case sendingMessage
 }
 
-class Message: NSObject {
+class Message: Object {
 
-    var messageUID: String?
-    var isInformationMessage: Bool?
+    @objc dynamic var messageUID: String?
 
-    var fromId: String?
-    var text: String?
-    var toId: String?
-    var timestamp: NSNumber?
-    var convertedTimestamp: String? // local only
-    var shortConvertedTimestamp: String? //local only
+    let isInformationMessage = RealmOptional<Bool>()
+
+    @objc dynamic var fromId: String?
+    @objc dynamic var text: String?
+    @objc dynamic var toId: String?
+    @objc dynamic var timestamp: NSNumber? = 0
+    @objc dynamic var convertedTimestamp: String? // local only
+    @objc dynamic var shortConvertedTimestamp: String? //local only
   
-    var status: String?
-    var seen: Bool?
+    @objc dynamic var status: String?
+    let seen = RealmOptional<Bool>()
 
-    var imageUrl: String?
-	 	var thumbnailImageUrl: String?
-    var imageHeight: NSNumber?
-    var imageWidth: NSNumber?
+    @objc dynamic var imageUrl: String?
+	 	@objc dynamic var thumbnailImageUrl: String?
+    @objc dynamic var imageHeight: NSNumber? = 0
+    @objc dynamic var imageWidth: NSNumber? = 0
 
-    var localImage: UIImage?
+		var localImage: UIImage?
   
-    var localVideoUrl: String?
+    @objc dynamic var localVideoUrl: String?
 
-    var voiceData: Data?
-    var voiceDuration: String?
-    var voiceStartTime: Int?
-    var voiceEncodedString: String?
+    @objc dynamic var voiceData: Data?
+    @objc dynamic var voiceDuration: String?
 
-    var videoUrl: String?
+    let voiceStartTime = RealmOptional<Int>()
+
+    @objc dynamic var voiceEncodedString: String?
+
+    @objc dynamic var videoUrl: String?
   
     var estimatedFrameForText: CGRect?
 
     var landscapeEstimatedFrameForText: CGRect?
   
-    var imageCellHeight: NSNumber?
+    @objc dynamic var imageCellHeight: NSNumber? = 0
   
-    var isCrooked: Bool? // local only
+    let isCrooked = RealmOptional<Bool>() // local only
   
-    var senderName: String? //local only, group messages only
+    @objc dynamic var senderName: String? //local only, group messages only
+
 
     func chatPartnerId() -> String? {
         return fromId == Auth.auth().currentUser?.uid ? toId : fromId
     }
   
-    init(dictionary: [String: AnyObject]) {
-        super.init()
+    convenience init(dictionary: [String: AnyObject]) {
+        self.init()
 
         messageUID = dictionary["messageUID"] as? String
-        isInformationMessage = dictionary["isInformationMessage"] as? Bool
+        isInformationMessage.value = dictionary["isInformationMessage"] as? Bool
         fromId = dictionary["fromId"] as? String
         text = dictionary["text"] as? String
         toId = dictionary["toId"] as? String
@@ -103,7 +108,7 @@ class Message: NSObject {
         shortConvertedTimestamp = dictionary["shortConvertedTimestamp"] as? String
 
         status = dictionary["status"] as? String
-        seen = dictionary["seen"] as? Bool
+        seen.value = dictionary["seen"] as? Bool
 
         imageUrl = dictionary["imageUrl"] as? String
 				thumbnailImageUrl = dictionary["thumbnailImageUrl"] as? String
@@ -118,7 +123,7 @@ class Message: NSObject {
         voiceEncodedString = dictionary["voiceEncodedString"] as? String
         voiceData = dictionary["voiceData"] as? Data //unused
         voiceDuration = dictionary["voiceDuration"] as? String
-        voiceStartTime = dictionary["voiceStartTime"] as? Int
+        voiceStartTime.value = dictionary["voiceStartTime"] as? Int
 
         estimatedFrameForText = dictionary["estimatedFrameForText"] as? CGRect
         landscapeEstimatedFrameForText = dictionary["landscapeEstimatedFrameForText"] as? CGRect
@@ -126,7 +131,7 @@ class Message: NSObject {
       
         senderName = dictionary["senderName"] as? String
 
-        isCrooked = dictionary["isCrooked"] as? Bool
+        isCrooked.value = dictionary["isCrooked"] as? Bool
     }
 
   static func groupedMessages(_ messages: [Message]) -> [[Message]] {

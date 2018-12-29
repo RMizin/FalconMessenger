@@ -7,23 +7,29 @@
 //
 
 import UIKit
+import RealmSwift
 
-class Conversation: NSObject {
+class Conversation: Object {
   
-  var chatID: String?
-  var chatName: String?
-  var chatPhotoURL: String?
-  var chatThumbnailPhotoURL: String?
-  var lastMessageID: String?
-  var lastMessage: Message?
-  var isGroupChat: Bool?
-  var chatParticipantsIDs: [String]?
-  var admin: String?
-  var badge: Int?
-  var pinned: Bool?
-  var muted: Bool?
-  var isTyping: Bool? // local only
-  var permitted: Bool?
+  @objc dynamic var chatID: String?
+  @objc dynamic var chatName: String?
+  @objc dynamic var chatPhotoURL: String?
+  @objc dynamic var chatThumbnailPhotoURL: String?
+  @objc dynamic var lastMessageID: String?
+  @objc dynamic var lastMessage: Message?
+
+	let isGroupChat = RealmOptional<Bool>()
+
+  let chatParticipantsIDs = List<String>()//[String]?
+
+  @objc dynamic var admin: String?
+
+	let badge = RealmOptional<Int>()
+
+  let pinned = RealmOptional<Bool>()
+  let muted = RealmOptional<Bool>()
+  let isTyping = RealmOptional<Bool>() // local only
+  let permitted = RealmOptional<Bool>()
   
   func messageText() -> String {
     
@@ -40,8 +46,8 @@ class Conversation: NSObject {
     return MessageSubtitle.empty
   }
   
-  init(dictionary: [String: AnyObject]?) {
-    super.init()
+  convenience init(dictionary: [String: AnyObject]?) {
+    self.init()
 
     chatID = dictionary?["chatID"] as? String
     chatName = dictionary?["chatName"] as? String
@@ -49,12 +55,14 @@ class Conversation: NSObject {
     chatThumbnailPhotoURL = dictionary?["chatThumbnailPhotoURL"] as? String
     lastMessageID = dictionary?["lastMessageID"] as? String
     lastMessage = dictionary?["lastMessage"] as? Message
-    isGroupChat = dictionary?["isGroupChat"] as? Bool
-    chatParticipantsIDs = dictionary?["chatParticipantsIDs"] as? [String]
+    isGroupChat.value = dictionary?["isGroupChat"] as? Bool
+
+    chatParticipantsIDs.assign(dictionary?["chatParticipantsIDs"] as? [String])
+		
     admin = dictionary?["admin"] as? String
-    badge = dictionary?["badge"] as? Int
-    pinned = dictionary?["pinned"] as? Bool
-    muted = dictionary?["muted"] as? Bool
-    permitted = dictionary?["permitted"] as? Bool
+    badge.value = dictionary?["badge"] as? Int
+    pinned.value = dictionary?["pinned"] as? Bool
+    muted.value = dictionary?["muted"] as? Bool
+    permitted.value = dictionary?["permitted"] as? Bool
   }
 }

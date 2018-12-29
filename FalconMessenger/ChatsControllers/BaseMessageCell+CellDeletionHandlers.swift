@@ -200,7 +200,7 @@ extension BaseMessageCell {
     
     var deletionReference: DatabaseReference!
 
-    if let isGroupChat = self.chatLogController?.conversation?.isGroupChat, isGroupChat {
+    if let isGroupChat = self.chatLogController?.conversation?.isGroupChat.value, isGroupChat {
       guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
       deletionReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(userMessagesFirebaseFolder).child(messageID)
     } else {
@@ -210,7 +210,7 @@ extension BaseMessageCell {
     deletionReference.removeValue(completionBlock: { (error, reference) in
       if error != nil { return }
 
-      if let isGroupChat = self.chatLogController?.conversation?.isGroupChat, isGroupChat {
+      if let isGroupChat = self.chatLogController?.conversation?.isGroupChat.value, isGroupChat {
         
         guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
         

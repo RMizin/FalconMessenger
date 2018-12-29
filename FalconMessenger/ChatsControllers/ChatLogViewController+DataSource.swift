@@ -43,7 +43,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   
    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard indexPath.section != groupedMessages.count else { return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell }
-    if let isGroupChat = conversation?.isGroupChat, isGroupChat {
+    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
       return selectCell(for: indexPath, isGroupChat: true)!
     } else {
       return selectCell(for: indexPath, isGroupChat: false)!
@@ -65,7 +65,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
     let isVoiceMessage = message.voiceEncodedString != nil
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
-    let isInformationMessage = message.isInformationMessage ?? false
+    let isInformationMessage = message.isInformationMessage.value ?? false
     
     if isInformationMessage {
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: informationMessageCellID, for: indexPath) as! InformationMessageCell
@@ -228,8 +228,8 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
     let isVoiceMessage = message.voiceEncodedString != nil
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
-    let isInformationMessage = message.isInformationMessage ?? false
-    let isGroupChat = conversation!.isGroupChat ?? false
+    let isInformationMessage = message.isInformationMessage.value ?? false
+    let isGroupChat = conversation!.isGroupChat.value ?? false
 
     guard !isInformationMessage else {
         guard let messagesFetcher = messagesFetcher else { return CGSize(width: 0, height: 0) }

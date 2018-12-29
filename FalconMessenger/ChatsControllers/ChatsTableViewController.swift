@@ -202,12 +202,12 @@ class ChatsTableViewController: UITableViewController {
     var badge = 0
     
     for conversation in filtededConversations {
-      guard let lastMessage = conversation.lastMessage, let conversationBadge = conversation.badge, lastMessage.fromId != uid  else { continue }
+      guard let lastMessage = conversation.lastMessage, let conversationBadge = conversation.badge.value, lastMessage.fromId != uid  else { continue }
       badge += conversationBadge
     }
     
     for conversation in filteredPinnedConversations {
-      guard let lastMessage = conversation.lastMessage, let conversationBadge = conversation.badge, lastMessage.fromId != uid  else { continue }
+      guard let lastMessage = conversation.lastMessage, let conversationBadge = conversation.badge.value, lastMessage.fromId != uid  else { continue }
       badge += conversationBadge
     }
     
@@ -247,10 +247,16 @@ class ChatsTableViewController: UITableViewController {
         for conversation in self.filtededConversations {
           guard let chatID = conversation.chatID else { return }
 
-          if let isGroupChat = conversation.isGroupChat, isGroupChat {
-            if let members = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, members.contains(uid) {
-              typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
-            }
+          if let isGroupChat = conversation.isGroupChat.value, isGroupChat {
+						//without realm
+//            if let members = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, members.contains(uid) {
+//              typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+//            }
+
+						//with realm
+						if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
+							typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+						}
           } else {
             typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
           }
@@ -259,10 +265,15 @@ class ChatsTableViewController: UITableViewController {
         for conversation in self.filteredPinnedConversations {
           guard let chatID = conversation.chatID else { return }
         
-          if let isGroupChat = conversation.isGroupChat, isGroupChat {
-            if let members = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, members.contains(uid) {
-              typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
-            }
+          if let isGroupChat = conversation.isGroupChat.value, isGroupChat {
+//without realm
+//            if let members = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, members.contains(uid) {
+//              typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+//            }
+//with realm
+						if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
+							typingIndicatorManager.observeChangesForGroupTypingIndicator(with: chatID)
+						}
           } else {
             typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
           }
@@ -431,7 +442,7 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
     notificationsManager.observersForNotifications(conversations: conversations)
     
     let (pinned, unpinned) = conversations.stablePartition { (element) -> Bool in
-      let isPinned = element.pinned ?? false
+      let isPinned = element.pinned.value ?? false
       return isPinned == true
     }
   

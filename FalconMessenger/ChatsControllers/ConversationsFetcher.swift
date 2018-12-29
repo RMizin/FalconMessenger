@@ -179,7 +179,7 @@ class ConversationsFetcher: NSObject {
       conversation.chatName = user.name
       conversation.chatPhotoURL = user.photoURL
       conversation.chatThumbnailPhotoURL = user.thumbnailPhotoURL
-      conversation.chatParticipantsIDs = [chatID, currentUserID]
+      conversation.chatParticipantsIDs.assign([chatID, currentUserID]) // = [chatID, currentUserID]
       self.prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
       self.updateConversationArrays(with: conversation)
     })
@@ -197,8 +197,8 @@ class ConversationsFetcher: NSObject {
       conversation.chatName = metaInfo.chatName
       conversation.chatPhotoURL = metaInfo.chatPhotoURL
       conversation.chatThumbnailPhotoURL = metaInfo.chatThumbnailPhotoURL
-      conversation.chatParticipantsIDs =  metaInfo.chatParticipantsIDs
-      conversation.isGroupChat = metaInfo.isGroupChat
+      conversation.chatParticipantsIDs.assign(metaInfo.chatParticipantsIDs) //= metaInfo.chatParticipantsIDs
+      conversation.isGroupChat.value = metaInfo.isGroupChat.value
       conversation.admin = metaInfo.admin
       conversation.chatID = metaInfo.chatID
       self.prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
@@ -226,13 +226,13 @@ class ConversationsFetcher: NSObject {
   }
   
   func update(conversation: Conversation, at index: Int) {
-    if conversation.isTyping == nil {
-      let isTyping = conversations[index].isTyping
-      conversation.isTyping = isTyping
+    if conversation.isTyping.value == nil {
+      let isTyping = conversations[index].isTyping.value
+      conversation.isTyping.value = isTyping
     }
  
-    guard isGroupAlreadyFinished, (conversations[index].muted != conversation.muted) else {
-      if isGroupAlreadyFinished && conversations[index].pinned != conversation.pinned {
+    guard isGroupAlreadyFinished, (conversations[index].muted.value != conversation.muted.value) else {
+      if isGroupAlreadyFinished && conversations[index].pinned.value != conversation.pinned.value {
         conversations[index] = conversation
         delegate?.conversations(update: conversations[index], reloadNeeded: false)
         return
@@ -302,7 +302,7 @@ class ConversationsFetcher: NSObject {
     
     if let membersIDsKey = membersIDsKey, snapshot.key == membersIDsKey {
       guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
-      conversations[index].chatParticipantsIDs = Array(dictionary.keys)
+      conversations[index].chatParticipantsIDs.assign(Array(dictionary.keys)) //= Array(dictionary.keys)
       delegate?.conversations(update: conversations[index], reloadNeeded: true)
     }
     
