@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import Photos
 import SDWebImage
+import RealmSwift
 
 protocol MessagesDelegate: class {
   func messages(shouldBeUpdatedTo messages: [Message], conversation:Conversation)
@@ -43,7 +44,7 @@ class MessagesFetcher: NSObject {
   
   private var loadingMessagesGroup = DispatchGroup()
   private var loadingNamesGroup = DispatchGroup()
-   private var chatLogAudioPlayer: AVAudioPlayer!
+	private var chatLogAudioPlayer: AVAudioPlayer!
   
   
   func cleanAllObservers() {
@@ -65,7 +66,7 @@ class MessagesFetcher: NSObject {
     userMessagesReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder).queryLimited(toLast: UInt(messagesToLoad))
     
     loadingMessagesGroup.enter()
-    newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat)
+		newLoadMessages(reference: userMessagesReference, isGroupChat: isGroupChat, conversation: conversation)
     observeManualRemoving(currentUserID: currentUserID, conversationID: conversationID)
 
     loadingMessagesGroup.notify(queue: .main, execute: {
@@ -102,7 +103,7 @@ class MessagesFetcher: NSObject {
     })
   }
   
-  func newLoadMessages(reference: DatabaseQuery, isGroupChat: Bool) {
+	func newLoadMessages(reference: DatabaseQuery, isGroupChat: Bool, conversation: Conversation) {
     var loadedMessages = [Message]()
     let loadedMessagesGroup = DispatchGroup()
     
@@ -127,7 +128,21 @@ class MessagesFetcher: NSObject {
             self.handleMessageInsertionInRuntime(newDictionary: dictionary)
             return
           }
-          loadedMessages.append(Message(dictionary: dictionary))
+
+			//		let message = Message(dictionary: dictionary)
+			//	//	message.conversation = conversation
+
+					let message = Message(dictionary: dictionary)
+					message.conversation = conversation
+//to move
+					// add last message to local storage
+					let realm = try! Realm()
+					realm.beginWrite()
+					realm.create(Message.self, value: message, update: true)
+					try! realm.commitWrite()
+
+
+          loadedMessages.append(message)
           loadedMessagesGroup.leave()
         })
       })

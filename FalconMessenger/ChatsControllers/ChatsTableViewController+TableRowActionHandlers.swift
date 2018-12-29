@@ -205,12 +205,15 @@ extension ChatsTableViewController {
       guard let index = pinnedConversations.index(where: { (conversation) -> Bool in
         return conversation.chatID == filteredPinnedConversations[indexPath.row].chatID
       }) else { return }
+			realmDelete(conversation: filteredPinnedConversations[indexPath.row])
       filteredPinnedConversations.remove(at: indexPath.row)
       pinnedConversations.remove(at: index)
+
     } else {
       guard let index = conversations.index(where: { (conversation) -> Bool in
         return conversation.chatID == filtededConversations[indexPath.row].chatID
       }) else { return }
+			realmDelete(conversation: filtededConversations[indexPath.row])
       filtededConversations.remove(at: indexPath.row)
       conversations.remove(at: index)
     }

@@ -89,10 +89,17 @@ class Message: Object {
   
     @objc dynamic var senderName: String? //local only, group messages only
 
+	 //let conversation = LinkingObjects(fromType: Conversation.self, property: "messages")
+		@objc dynamic var conversation: Conversation?// = nil
+
 
     func chatPartnerId() -> String? {
         return fromId == Auth.auth().currentUser?.uid ? toId : fromId
     }
+
+		override static func primaryKey() -> String? {
+			return "messageUID"
+		}
   
     convenience init(dictionary: [String: AnyObject]) {
         self.init()

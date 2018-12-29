@@ -160,6 +160,7 @@
 		4BBBB67021D78C9100FFFFF8 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784821D4C44100BB5A55 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BBBB67221D78C9400FFFFF8 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784721D4C44100BB5A55 /* RealmSwift.framework */; };
 		4BBBB67321D78C9400FFFFF8 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784721D4C44100BB5A55 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BBBB67621D7FD6700FFFFF8 /* ChatsRealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBB67521D7FD6700FFFFF8 /* ChatsRealmManager.swift */; };
 		4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */; };
 		4BBBCBF52057D01000926800 /* GroupProfileTableHeaderContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF42057D01000926800 /* GroupProfileTableHeaderContainer.swift */; };
 		4BBBCBF72057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF62057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift */; };
@@ -424,6 +425,7 @@
 		4BB6D195206EA62F00FEF72E /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaObject.swift; path = Model/MediaObject.swift; sourceTree = "<group>"; };
 		4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthPhoneNumberController.swift; path = AuthenticationControllers/AuthPhoneNumberController.swift; sourceTree = "<group>"; };
 		4BB74A02206E300C0014837E /* AuthVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthVerificationController.swift; path = AuthenticationControllers/AuthVerificationController.swift; sourceTree = "<group>"; };
+		4BBBB67521D7FD6700FFFFF8 /* ChatsRealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatsRealmManager.swift; path = ChatsControllers/ChatsRealmManager.swift; sourceTree = "<group>"; };
 		4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableViewController.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableViewController.swift; sourceTree = "<group>"; };
 		4BBBCBF42057D01000926800 /* GroupProfileTableHeaderContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableHeaderContainer.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableHeaderContainer.swift; sourceTree = "<group>"; };
 		4BBBCBF62057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupPictureAvatarOpenerDelegate.swift; path = ChatsControllers/NewChatControllers/GroupPictureAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
@@ -1167,6 +1169,7 @@
 		4BBBB66E21D7810400FFFFF8 /* Realm */ = {
 			isa = PBXGroup;
 			children = (
+				4BBBB67521D7FD6700FFFFF8 /* ChatsRealmManager.swift */,
 			);
 			name = Realm;
 			sourceTree = "<group>";
@@ -1893,6 +1896,7 @@
 				4BDB21C42150F72600609054 /* ViewBlockerContainer.swift in Sources */,
 				4BE8BB441FCA83D200EB35FA /* PlayerView.swift in Sources */,
 				4BDB29532126C79000D77600 /* NotificationsTableViewController.swift in Sources */,
+				4BBBB67621D7FD6700FFFFF8 /* ChatsRealmManager.swift in Sources */,
 				4B6BAFEA20886C5F00A90F3A /* SelectedParticipantsCollectionViewCell.swift in Sources */,
 				4BBF79542134370C00903F56 /* SplitViewController.swift in Sources */,
 				4B6BB00B20886C5F00A90F3A /* CameraOverlayView.swift in Sources */,

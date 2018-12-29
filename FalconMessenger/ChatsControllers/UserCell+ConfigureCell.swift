@@ -33,7 +33,8 @@ extension UserCell {
       typingIndicatorTimer?.invalidate()
       messageLabel.text = conversations[indexPath.row].messageText()
     }
-    
+
+
     if let lastMessage = conversations[indexPath.row].lastMessage {
       let date = Date(timeIntervalSince1970: lastMessage.timestamp as! TimeInterval)
       timeLabel.text = timestampOfLastMessage(date)

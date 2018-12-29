@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import SDWebImage
+import RealmSwift
 
 protocol ConversationUpdatesDelegate: class {
   func conversations(didStartFetching: Bool)
@@ -159,9 +160,24 @@ class ConversationsFetcher: NSObject {
     lastMessageReference.observeSingleEvent(of: .value, with: { (snapshot) in
       guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
       dictionary.updateValue(messageID as AnyObject, forKey: "messageUID")
-      
+			//dictionary.updateValue(conversation as AnyObject, forKey: "conversation")
+			//print("xxx lol", conversation.chatID)
+
       let message = Message(dictionary: dictionary)
-      conversation.lastMessage = message
+		//	let rc = RelationalConversation()
+			//rc.chatID = conversation.chatID
+			message.conversation = conversation
+
+			// add last message to local storage
+			let realm = try! Realm()
+			realm.beginWrite()
+	//		realm.deleteAll()
+			realm.create(Message.self, value: message, update: true)
+			try! realm.commitWrite()
+
+
+		//	conversation.lastMessage = message
+
       self.loadAddictionalMetadata(for: conversation)
     })
   }

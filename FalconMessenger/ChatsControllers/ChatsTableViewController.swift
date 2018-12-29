@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import SDWebImage
+import RealmSwift
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
@@ -54,6 +55,12 @@ class ChatsTableViewController: UITableViewController {
 
   let viewPlaceholder = ViewPlaceholder()
   let navigationItemActivityIndicator = NavigationItemActivityIndicator()
+
+//	let realm = try! Realm()
+	//let results = try! Realm().objects(Conversation.self).sorted(byKeyPath: "date")
+
+	//let realmConversations = try! Realm().objects(Conversation.self)//.filter("pinned = '\(false)'")
+//	let realmPinnedConversations = try! Realm().objects(Conversation.self).filter("pinned = '\(false)'")
   
 
   override func viewDidLoad() {
@@ -62,6 +69,8 @@ class ChatsTableViewController: UITableViewController {
     configureTableView()
     setupSearchController()
     addObservers()
+
+	print("xxx", 	Realm.Configuration.defaultConfiguration.fileURL)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -448,28 +457,41 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
   
     self.conversations = unpinned
     self.pinnedConversations = pinned
+
+		realmUpdate(conversations: unpinned)
+		realmUpdate(conversations: pinned)
+		
     
     handleReloadTable()
     navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
   }
-  
+
+
+
+
   func conversations(update conversation: Conversation, reloadNeeded: Bool) {
     let chatID = conversation.chatID ?? ""
     
     if let index = conversations.index(where: {$0.chatID == chatID}) {
       conversations[index] = conversation
+			realmUpdate(conversation: conversation)
     }
     if let index = pinnedConversations.index(where: {$0.chatID == chatID}) {
       pinnedConversations[index] = conversation
+			realmUpdate(conversation: conversation)
     }
     if let index = filtededConversations.index(where: {$0.chatID == chatID}) {
       filtededConversations[index] = conversation
+			realmUpdate(conversation: conversation)
+
       let indexPath = IndexPath(row: index, section: 1)
       if reloadNeeded { updateCell(at: indexPath) }
      
     }
     if let index = filteredPinnedConversations.index(where: {$0.chatID == chatID}) {
       filteredPinnedConversations[index] = conversation
+			realmUpdate(conversation: conversation)
+
       let indexPath = IndexPath(row: index, section: 0)
       if reloadNeeded { updateCell(at: indexPath) }
     }

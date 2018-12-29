@@ -103,6 +103,7 @@ class ChatLogHistoryFetcher: NSObject {
       dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
       dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: self.isGroupChat)
       let message = Message(dictionary: dictionary)
+		//	message.conversation = self.conversation
       self.messagesFetcher.loadUserNameForOneMessage(message: message, completion: { (_, newMessage)  in
         self.previousMessages.append(newMessage)
         self.loadingGroup.leave()

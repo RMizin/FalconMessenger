@@ -9,6 +9,21 @@
 import UIKit
 import RealmSwift
 
+//class RelationalConversation: Object {
+//	  @objc dynamic var chatID: String?
+//		let messages = LinkingObjects(fromType: Message.self, property: "conversation")
+//	//	var lastMessage = messages
+//	var lastMessage: Message? {
+//
+//	//	messages.sor
+//
+//		//var mostRecent = messages.reduce(messages[0], { $0.timestamp > $1.timestamp ? $0 : $1 } )
+//
+//		return messages.last
+//
+//	}
+//}
+
 class Conversation: Object {
   
   @objc dynamic var chatID: String?
@@ -16,21 +31,34 @@ class Conversation: Object {
   @objc dynamic var chatPhotoURL: String?
   @objc dynamic var chatThumbnailPhotoURL: String?
   @objc dynamic var lastMessageID: String?
-  @objc dynamic var lastMessage: Message?
+//	@objc dynamic var lastMessage: Message?
 
-	let isGroupChat = RealmOptional<Bool>()
+	@objc dynamic var lastMessage: Message? {
+		let realm = try! Realm()
+		let results = realm.objects(Message.self).filter("conversation.chatID = '\(chatID ?? "")'")
+		let currentConvers = results.first
+		return currentConvers?.conversation?.messages.last
+	}
 
-  let chatParticipantsIDs = List<String>()//[String]?
+	@objc dynamic var admin: String?
 
-  @objc dynamic var admin: String?
+  let chatParticipantsIDs = List<String>()
 
 	let badge = RealmOptional<Int>()
 
+	let isGroupChat = RealmOptional<Bool>()
   let pinned = RealmOptional<Bool>()
   let muted = RealmOptional<Bool>()
   let isTyping = RealmOptional<Bool>() // local only
   let permitted = RealmOptional<Bool>()
-  
+
+//	let messages = List<Message>()
+	let messages = LinkingObjects(fromType: Message.self, property: "conversation")
+
+	override class func ignoredProperties() -> [String] {
+		return ["lastMessage"]
+	}
+
   func messageText() -> String {
     
     let isImageMessage = (lastMessage?.imageUrl != nil || lastMessage?.localImage != nil) && lastMessage?.videoUrl == nil
@@ -45,6 +73,10 @@ class Conversation: Object {
     
     return MessageSubtitle.empty
   }
+
+	override static func primaryKey() -> String? {
+		return "chatID"
+	}
   
   convenience init(dictionary: [String: AnyObject]?) {
     self.init()
@@ -54,7 +86,7 @@ class Conversation: Object {
     chatPhotoURL = dictionary?["chatOriginalPhotoURL"] as? String
     chatThumbnailPhotoURL = dictionary?["chatThumbnailPhotoURL"] as? String
     lastMessageID = dictionary?["lastMessageID"] as? String
-    lastMessage = dictionary?["lastMessage"] as? Message
+  // lastMessage = dictionary?["lastMessage"] as? Message
     isGroupChat.value = dictionary?["isGroupChat"] as? Bool
 
     chatParticipantsIDs.assign(dictionary?["chatParticipantsIDs"] as? [String])
