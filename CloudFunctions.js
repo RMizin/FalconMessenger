@@ -4,7 +4,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp ({
     credential: admin.credential.applicationDefault(),
-    databaseURL: 'https://pigeon-project-79c81.firebaseio.com'
+    databaseURL: 'https://your-database-URL.firebaseio.com'
 });
 
 

@@ -49,30 +49,21 @@ final class InputContainerView: UIControl {
     
     return placeholderLabel
   }()
-  
-  let attachButton: RespondingButton = {
-    let attachButton = RespondingButton(controller: MediaPickerControllerNew())
-    attachButton.tintColor = FalconPalette.defaultBlue
-    attachButton.translatesAutoresizingMaskIntoConstraints = false
-    attachButton.setImage(UIImage(named: "ConversationAttach"), for: .normal)
-    attachButton.setImage(UIImage(named: "SelectedModernConversationAttach"), for: .selected)
+
+  var attachButton: MediaPickerRespondingButton = {
+    var attachButton = MediaPickerRespondingButton()
     attachButton.addTarget(self, action: #selector(togglePhoto), for: .touchDown)
     
     return attachButton
   }()
   
-  let recordVoiceButton: RespondingButton = {
-    let recordVoiceButton = RespondingButton(controller: VoiceRecordingViewController())
-    recordVoiceButton.tintColor = FalconPalette.defaultBlue
-    recordVoiceButton.translatesAutoresizingMaskIntoConstraints = false
-   
-    recordVoiceButton.setImage(UIImage(named: "microphone"), for: .normal)
-    recordVoiceButton.setImage(UIImage(named: "microphoneSelected"), for: .selected)
+  var recordVoiceButton: VoiceRecorderRespondingButton = {
+    var recordVoiceButton = VoiceRecorderRespondingButton()
     recordVoiceButton.addTarget(self, action: #selector(toggleVoiceRecording), for: .touchDown)
     
     return recordVoiceButton
   }()
-  
+
   let sendButton: UIButton = {
     let sendButton = UIButton(type: .custom)
     sendButton.setImage(UIImage(named: "send"), for: .normal)
@@ -124,16 +115,7 @@ final class InputContainerView: UIControl {
     addSubview(sendButton)
     addSubview(placeholderLabel)
     inputTextView.addSubview(attachCollectionView)
-    
-    if let inputViewController = attachButton.mediaInputViewController as? MediaPickerControllerNew {
-      mediaPickerController = inputViewController
-      mediaPickerController?.mediaPickerDelegate = self
-    }
-    
-    if let voiceRecordingViewController = recordVoiceButton.mediaInputViewController as? VoiceRecordingViewController {
-      voiceRecordingViewController.mediaPickerDelegate = self
-    }
-    
+
     tap = UITapGestureRecognizer(target: self, action: #selector(toggleTextView))
     tap.delegate = self
 
@@ -218,7 +200,14 @@ final class InputContainerView: UIControl {
     if attachButton.isFirstResponder {
     _ = attachButton.resignFirstResponder()
     } else {
-      _ = attachButton.becomeFirstResponder()
+
+			if attachButton.controller == nil {
+				attachButton.controller = MediaPickerControllerNew()
+				mediaPickerController = attachButton.controller
+				mediaPickerController?.mediaPickerDelegate = self
+			}
+
+			_ = attachButton.becomeFirstResponder()
     //  inputTextView.addGestureRecognizer(tap)
     }
   }
@@ -231,6 +220,12 @@ final class InputContainerView: UIControl {
     if recordVoiceButton.isFirstResponder {
       _ = recordVoiceButton.resignFirstResponder()
     } else {
+
+			if recordVoiceButton.controller == nil {
+				recordVoiceButton.controller = VoiceRecordingViewController()
+				recordVoiceButton.controller?.mediaPickerDelegate = self
+			}
+
       _ = recordVoiceButton.becomeFirstResponder()
      // inputTextView.addGestureRecognizer(tap)
     }
