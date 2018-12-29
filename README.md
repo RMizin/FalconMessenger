@@ -1,56 +1,50 @@
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitle.png" />
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Title.png?token=ASVYwnRnfMFJiXEBdpwj0039RvI5x5T5ks5cL0FXwA%3D%3D" />
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/TitleDesc.png?token=ASVYwjn3bpxTi0bVUorBhkdFmVp8YMUSks5cL0F-wA%3D%3D" />
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/DOnAppStore.png?token=ASVYwm02WeVAXy0c0YBVOQ6vBXJxk2kTks5cL0GtwA%3D%3D" alt="App Store" /></a>
 </p> 
 
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://perfectradiousa.files.wordpress.com/2016/09/itunes-app-store-logo.png"  width="350" alt="App Store" /></a>
+<br>
+<br>
 
+<p align="center"> 
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/FeaturesTitle.png?token=ASVYwg-PUYSChmbL2cCHccg5Ct6aofSIks5cL0ILwA%3D%3D" />
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Features1.png?token=ASVYwmy0HRhGQ6EFobEi5nv-JUAI2U0pks5cL0K0wA%3D%3D"  width="288"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Features2.png?token=ASVYwsn1m04j42LDpMZTKSEoaEmzhVZUks5cL0LRwA%3D%3D" width="288" />
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Features3.png?token=ASVYwsGVVlne2s8SXXOySPmYK6FkApW4ks5cL0LZwA%3D%3D" width="288" />
+</p> 
 
-<br>[] Обновить скрины
-<br>[]Cделать маленький хедер вместо большого
-<br>[]Cделать список фич в стиле презентации эппл
-<br>[]Сделать побольше скринов
-<br>[]Может быть сделать гифку
+<br>
+<br>
 
-## Features
-
-CLOUD-BASED: You won't lose any of your data when you change your mobile phone or reinstall the app. All you need is to re-authenticate with your phone number.
-
-SYNCED: Your messages sync seamlessly across any number of your devices.
-
-GROUP CHATS: Create group chats, and have fun together with your friends, family or even enemies.
-
-NIGHT MODE: Falcon messenger has a beautiful pure black night mode, which looks especially amazing on iPhone X.
-
-PERSONAL CLOUD STORAGE: You can store text, photos, videos and voice messages in the cloud, by sending them to your personal storage.
-
-SIMPLE AUTHENTICATION PROCESS: No emails and passwords anymore. Authenticate with your phone number and start using Falcon Messenger within a minute.
-
-BIOMETRICS SUPPORT: Keep your conversations away from unwanted eyes by using your Touch ID, Face ID or Passcode to unlock Falcon Messenger.
-
-## User Interface
-### Day color theme
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightWelcome.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightContacts.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightChats.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightGroupChat.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightSettings.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/UITitle.png?token=ASVYwkoI5uQfblXJp2iaPuXO09Le9Gshks5cL0OQwA%3D%3D" />
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/IPhoneScreensUI.png?token=ASVYwpdYcvUxoPGR9yVWVyDzGWMZNEm6ks5cL0PYwA%3D%3D" />
+<img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/IPadScreensUI.png?token=ASVYwtwgyYkC_N42DM9R6XOOygl8pcSbks5cL0PlwA%3D%3D" />
+</p> 
+
+<br>
+<br>
+
+<p align="center">
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/SomeFeaturesInAction.png?token=ASVYwmPY0ukxXopVJIEvgWCFoUROIgTWks5cL0WowA%3D%3D" />
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/BlackList.png?token=ASVYwlHGtzy6hV7Bh2r9sgQ3leVqLhclks5cL0ZFwA%3D%3D"  width="288"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/TypingIndicator.png?token=ASVYwhUHgZStuTpokL72DYsPhHQt9pgnks5cL0Y5wA%3D%3D" width="288" />
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Themes.png?token=ASVYwiGb3J_i8i18Znru5yPatbRi5PToks5cL0YuwA%3D%3D" width="288" />
 </p>
-
-### Night color theme
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkWelcome.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkContacts.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkChats.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkGroupChat.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkSettings.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Shared.png?token=ASVYwpY_QxlJ3JGiuKwQDuT1TrIBJ52Cks5cL0ZzwA%3D%3D"  width="288"/>
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/ChatLog.png?token=ASVYwk68p2h73zLOH1zi1xtEDx5KilIIks5cL0aGwA%3D%3D" width="288" />
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/GroupChats.png?token=ASVYwpxjnXSsPUK3MwcP9jtGbr44-3hQks5cL0adwA%3D%3D" width="288" />
+</p>
+	
+<br>
+<br>
+
+<p align="center">
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/HowTouRunTitle.png?token=ASVYwlzQH1rXZfIGx09f9uGYMSbx8ziFks5cL0SFwA%3D%3D" />
 </p> 
-
-
-## How to run the app
-
-Follow these steps:
 
 1. Open the FalconMessenger.xcworkspace in Xcode.
 2. Change the Bundle Identifier to match your domain.
@@ -105,6 +99,12 @@ Note before next step:<i> if you don't have cocoapods installed on your computer
 	<br>Video Guide: https://www.youtube.com/watch?v=DYfP-UIKxH0
 	
 13. Copy and Paste Cloud functions from provided [Index.js](https://github.com/RMizin/FalconMessenger/blob/master/CloudFunctions.js) file to your own Index.js file.
+14. Change in your index.js file DatabeseURL: to Yours
+
+		admin.initializeApp ({
+		    credential: admin.credential.applicationDefault(),
+		    databaseURL: 'https://your-Databse-URL.firebaseio.com'
+		});
 
 14. Run "Firebase Delpoy" in the terminal from your cloud Functions Directory to configure Cloud Functions.
 
@@ -113,11 +113,21 @@ Note before next step:<i> if you don't have cocoapods installed on your computer
 	<br> To fix this, go to Project->Targets->FalconMessenger->Capabilities and Deselect Push Notifications option
 	//todo
 	
+	
 Any unexpected errors? falconmessenger.help@gmail.com
 
-## Compatibility
-Falcon Messenger is written in Swift 4.2 and requires iOS 10.0 or later.
+<br>
+<br>
 
+<p align="center">
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/CompatibilityTitle.png?token=ASVYwhrOwi60a631WfFgfodfY-J0JNyDks5cL0cQwA%3D%3D" />
+<img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Compatibility.png?token=ASVYwhZaj4Qy2pifJ5nc_kxLi6lAI2oiks5cL0cUwA%3D%3D" />
+</p> 
 
-## License
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
+<br>
+<br>
+
+<p align="center">
+ <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/LicenseTitle.png?token=ASVYwndXHjWYb578DXiMgfuyO4xEQgVKks5cL0cswA%3D%3D" />
+<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/License.png?token=ASVYwmVSy_ogS4wYYhzs5OjIt5btLSh6ks5cL0cqwA%3D%3D" alt="LICENSE.md" /></a>
+</p> 
