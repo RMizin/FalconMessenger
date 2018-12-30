@@ -131,7 +131,8 @@ class ConversationsFetcher: NSObject {
   }
   
   fileprivate var conversationReferenceHandle = [(handle: DatabaseHandle, currentUserID: String, chatID: String)]()
-  
+
+
   fileprivate func loadConversation(for chatID: String) {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
 
@@ -146,12 +147,13 @@ class ConversationsFetcher: NSObject {
       
       self.delegate?.conversations(didStartUpdatingData: true)
       let conversation = Conversation(dictionary: dictionary)
-      
-      guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
-        self.loadAddictionalMetadata(for: conversation)
-        return
-      }
-      self.loadLastMessage(for: lastMessageID, conversation: conversation)
+			conversation.isTyping.value = conversation.getTyping()
+
+				guard let lastMessageID = conversation.lastMessageID else { //if no messages in chat yet
+					self.loadAddictionalMetadata(for: conversation)
+					return
+				}
+				self.loadLastMessage(for: lastMessageID, conversation: conversation)
     })
   }
   

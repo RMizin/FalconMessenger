@@ -202,6 +202,22 @@ class ChatsRealmManager {
 		}
 	}
 
+	func update(conversations: [Conversation], tokens: [NotificationToken]) {
+			autoreleasepool {
+				let realm = try! Realm()
+
+				realm.beginWrite()
+				for conversation in conversations {
+					conversation.isTyping.value = realm.objects(Conversation.self).filter("chatID = %@", conversation.chatID ?? "").first?.isTyping.value
+					realm.create(Conversation.self, value: conversation, update: true)
+				}
+				try! realm.commitWrite(withoutNotifying: tokens)
+			}
+	}
+
+
+
+
 	func delete(conversation: Conversation) {
 		realm.beginWrite()
 		let result = realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")

@@ -89,7 +89,6 @@ extension List where Element == String {
 	}
 }
 
-
 extension UICollectionView {
   func deselectAllItems(animated: Bool = false) {
     for indexPath in self.indexPathsForSelectedItems ?? [] {

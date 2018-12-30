@@ -13,9 +13,10 @@ extension ChatsTableViewController: TypingIndicatorDelegate {
   
   func typingIndicator(isActive: Bool, for chatID: String) {
 
+		print("xxx typing indicator CHANGED TO \(isActive)")
 
 		realmManager.realm.beginWrite()
-		realmManager.realm.objects(Conversation.self).filter("chatID = '\(chatID)'").first?.isTyping.value = isActive
+		realmManager.realm.objects(Conversation.self).filter("chatID = %@", chatID).first?.isTyping.value = isActive
 		try! realmManager.realm.commitWrite()
 
 

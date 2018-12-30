@@ -10,11 +10,59 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "567889081.986722"
+            timestampString = "567905584.278506"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "600"
-            endingLineNumber = "600"
+            startingLineNumber = "690"
+            endingLineNumber = "690"
+            landmarkName = "conversations(update:reloadNeeded:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
+            timestampString = "567905584.278643"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "694"
+            endingLineNumber = "694"
+            landmarkName = "conversations(update:reloadNeeded:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
+            timestampString = "567905584.278753"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "696"
+            endingLineNumber = "696"
+            landmarkName = "conversations(update:reloadNeeded:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
+            timestampString = "567905584.27886"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "629"
+            endingLineNumber = "629"
             landmarkName = "conversations(didFinishFetching:conversations:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "567889081.9871809"
+            timestampString = "567905584.2789479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "601"
-            endingLineNumber = "601"
+            startingLineNumber = "629"
+            endingLineNumber = "629"
             landmarkName = "conversations(didFinishFetching:conversations:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,12 +90,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "567889081.987516"
+            timestampString = "567905584.279035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "657"
-            endingLineNumber = "657"
-            landmarkName = "conversations(update:reloadNeeded:)"
+            startingLineNumber = "629"
+            endingLineNumber = "629"
+            landmarkName = "conversations(didFinishFetching:conversations:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,13 +105,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "567889081.987806"
+            filePath = "FalconMessenger/ChatsControllers/ConversationsFetcher.swift"
+            timestampString = "567905584.279106"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "661"
-            endingLineNumber = "661"
-            landmarkName = "conversations(update:reloadNeeded:)"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "loadConversation(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -73,13 +121,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "567889081.988085"
+            filePath = "FalconMessenger/ChatsControllers/ConversationsFetcher.swift"
+            timestampString = "567905584.27916"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "663"
-            endingLineNumber = "663"
-            landmarkName = "conversations(update:reloadNeeded:)"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "loadConversation(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

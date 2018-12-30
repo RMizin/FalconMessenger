@@ -92,9 +92,9 @@ class ChatsTableViewController: UITableViewController {
 					UIView.performWithoutAnimation {
 						print("xxx in pinned update", deletions.count, insertions.count, modifications.count)
 						self.tableView.beginUpdates()
-						self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 1) }, with: .none)
-						self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 1) }, with: .left)
-						UIView.performWithoutAnimation { self.tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: 1) }, with: .none) }
+						self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 0) }, with: .none)
+						self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 0) }, with: .left)
+						UIView.performWithoutAnimation { self.tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: 0) }, with: .none) }
 						self.tableView.endUpdates()
 					}
 				}
@@ -370,7 +370,7 @@ class ChatsTableViewController: UITableViewController {
 //    filtededConversations = conversations
 
     if !isAppLoaded {
-   //   UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: { (_) in
+      UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData()}, completion: { (_) in
         self.initAllTabs()
         
 				for conversation in self.realmAllConversations {
@@ -407,8 +407,8 @@ class ChatsTableViewController: UITableViewController {
 //            typingIndicatorManager.observeChangesForDefaultTypingIndicator(with: chatID)
 //          }
 //        }
-				self.observeDataSourceChanges()
-   //  })
+
+     })
       
       configureTabBarBadge()
     } else {
@@ -416,9 +416,9 @@ class ChatsTableViewController: UITableViewController {
 //      if isSearching {
 //        UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
 ////      } else {
-//			DispatchQueue.main.async {
-//				self.tableView.reloadData()
-//			}
+			DispatchQueue.main.async {
+				self.tableView.reloadData()
+			}
 
 //      }
     }
@@ -582,24 +582,56 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
    // self.conversations = unpinned
     //self.pinnedConversations = pinned
 
-//guard let token1 = pinnedConversationsNotificationToken, let token2 = unpinnedConversationsNotificationToken else { return }
+		if !isAppLoaded {
+			self.observeDataSourceChanges()
+		}
+		guard let token1 = pinnedConversationsNotificationToken, let token2 = unpinnedConversationsNotificationToken else { return }
 
-//		DispatchQueue.global(qos: .userInitiated).async {
-//			autoreleasepool {
-//				let realm = try! Realm()
-//
-//				realm.beginWrite()
-//				for conversation in conversations {
-//					realm.create(Conversation.self, value: conversation, update: true)
-//				}
-//				try! realm.commitWrite(withoutNotifying: [self.pinnedConversationsNotificationToken!, self.unpinnedConversationsNotificationToken!])
-//
-//			}
-//		}
-
-		realmManager.update(conversations: conversations)
+		realmManager.update(conversations: conversations, tokens: [token1, token2])
 		self.handleReloadTable()
 		self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
+
+
+
+//		if !isAppLoaded {
+//			realmManager.realm.beginWrite()
+//			for conversation in conversations {
+//				conversation.isTyping.value = realmManager.realm.objects(Conversation.self).filter("chatID = %@", conversation.chatID ?? "").first?.isTyping.value
+//				realmManager.realm.create(Conversation.self, value: conversation, update: true)
+//
+//			}
+//			try! realmManager.realm.commitWrite(withoutNotifying: [token1, token2])
+//
+//
+//
+//
+//			self.handleReloadTable()
+//			self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
+//		} else {
+//		//	DispatchQueue.global(qos: .userInteractive).async {/
+//				autoreleasepool {
+//					self.realmManager.realm.beginWrite()
+//					for conversation in conversations {
+//						conversation.isTyping.value = realmManager.realm.objects(Conversation.self).filter("chatID = %@", conversation.chatID ?? "").first?.isTyping.value
+//						print(conversation.isTyping.value)
+//					//	dump(conversation.is)
+//						self.realmManager.realm.create(Conversation.self, value: conversation, update: true)
+//					}
+//					try! self.realmManager.realm.commitWrite(withoutNotifying: [token1, token2])
+//				//	DispatchQueue.main.async {
+//						self.handleReloadTable()
+//						self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
+//				//	}
+//				}
+//		//	}
+//
+//		}
+
+
+
+
+	//	self.handleReloadTable()
+	//	self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
 	//	realmUpdate(conversations: unpinned)
 	//	realmUpdate(conversations: pinned)
 		
@@ -611,6 +643,7 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
 
 
   func conversations(update conversation: Conversation, reloadNeeded: Bool) {
+		print(conversation.isTyping.value)
    //let chatID = conversation.chatID ?? ""
     
 //    if let index = conversations.index(where: {$0.chatID == chatID}) {

@@ -73,6 +73,11 @@ class Conversation: Object {
   let pinned = RealmOptional<Bool>()
   let muted = RealmOptional<Bool>()
 	let isTyping = RealmOptional<Bool>()
+
+	func getTyping() -> Bool {
+		return try! Realm().objects(Conversation.self).filter("chatID = %@", chatID ?? "").first?.isTyping.value ?? false
+	}
+	
   let permitted = RealmOptional<Bool>()
 
 //	let messages = List<Message>()
