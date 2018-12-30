@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import Photos
 import SDWebImage
-import RealmSwift
+//import RealmSwift
 
 protocol MessagesDelegate: class {
   func messages(shouldBeUpdatedTo messages: [Message], conversation:Conversation)
@@ -136,10 +136,10 @@ class MessagesFetcher: NSObject {
 					message.conversation = conversation
 //to move
 					// add last message to local storage
-					let realm = try! Realm()
-					realm.beginWrite()
-					realm.create(Message.self, value: message, update: true)
-					try! realm.commitWrite()
+//					let realm = try! Realm()
+//					realm.beginWrite()
+//					realm.create(Message.self, value: message, update: true)
+//					try! realm.commitWrite()
 
 
           loadedMessages.append(message)
@@ -216,7 +216,7 @@ class MessagesFetcher: NSObject {
   
   func sortedMessages(unsortedMessages: [Message]) -> [Message] {
     let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
-      return message1.timestamp!.int64Value < message2.timestamp!.int64Value
+			return message1.timestamp.value! < message2.timestamp.value!
     })
     return sortedMessages
   }
@@ -260,7 +260,7 @@ class MessagesFetcher: NSObject {
     if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
       dictionary.updateValue(estimateFrameForText(messageText, orientation: .portrait) as AnyObject, forKey: "estimatedFrameForText")
       dictionary.updateValue(estimateFrameForText(messageText, orientation: .landscapeLeft) as AnyObject, forKey: "landscapeEstimatedFrameForText")
-    } else if let imageWidth = Message(dictionary: dictionary).imageWidth?.floatValue, let imageHeight = Message(dictionary: dictionary).imageHeight?.floatValue {
+		} else if let imageWidth = Message(dictionary: dictionary).imageWidth.value, let imageHeight = Message(dictionary: dictionary).imageHeight.value {
 
       let aspect = CGFloat(imageHeight / imageWidth)
       let maxWidth = BaseMessageCell.mediaMaxWidth
@@ -277,8 +277,8 @@ class MessagesFetcher: NSObject {
       dictionary.updateValue(startTime, forKey: "voiceStartTime")
     }
     
-    if let messageTimestamp = Message(dictionary: dictionary).timestamp {  /* pre-converting timeintervals into dates */
-      let date = Date(timeIntervalSince1970: TimeInterval(truncating: messageTimestamp))
+    if let messageTimestamp = Message(dictionary: dictionary).timestamp.value {  /* pre-converting timeintervals into dates */
+			let date = Date(timeIntervalSince1970: TimeInterval(messageTimestamp))
       let convertedTimestamp = timestampOfChatLogMessage(date) as AnyObject
       let shortConvertedTimestamp = date.getShortDateStringFromUTC() as AnyObject
 

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0E021BAC99C749D2A57CDA08 /* libPods-FalconMessenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28F15AD41DA41AD704250781 /* libPods-FalconMessenger.a */; };
 		4B01BB6821D683A500FF229B /* VoiceRecorderRespondingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01BB6721D683A500FF229B /* VoiceRecorderRespondingButton.swift */; };
 		4B01BB6A21D683BA00FF229B /* MediaPickerRespondingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01BB6921D683BA00FF229B /* MediaPickerRespondingButton.swift */; };
 		4B01BB6D21D6842D00FF229B /* RespondingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01BB6C21D6842D00FF229B /* RespondingButton.swift */; };
@@ -156,10 +155,6 @@
 		4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6D195206EA62F00FEF72E /* MediaObject.swift */; };
 		4BB74A01206E2FFB0014837E /* AuthPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */; };
 		4BB74A03206E300C0014837E /* AuthVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A02206E300C0014837E /* AuthVerificationController.swift */; };
-		4BBBB66F21D78C9100FFFFF8 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784821D4C44100BB5A55 /* Realm.framework */; };
-		4BBBB67021D78C9100FFFFF8 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784821D4C44100BB5A55 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BBBB67221D78C9400FFFFF8 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784721D4C44100BB5A55 /* RealmSwift.framework */; };
-		4BBBB67321D78C9400FFFFF8 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B79784721D4C44100BB5A55 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BBBB67621D7FD6700FFFFF8 /* ChatsRealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBB67521D7FD6700FFFFF8 /* ChatsRealmManager.swift */; };
 		4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */; };
 		4BBBCBF52057D01000926800 /* GroupProfileTableHeaderContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBBCBF42057D01000926800 /* GroupProfileTableHeaderContainer.swift */; };
@@ -220,6 +215,10 @@
 		4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */; };
 		4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */; };
 		4BE44DA8212B3A3000E722B8 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE44DA7212B3A3000E722B8 /* ContactsFetcher.swift */; };
+		4BE56EA521D8C7FB0045EABD /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBBB69721D8BD1F00FFFFF8 /* Realm.framework */; };
+		4BE56EA621D8C7FB0045EABD /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBBB69721D8BD1F00FFFFF8 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BE56EA721D8C8040045EABD /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBBB69821D8BD1F00FFFFF8 /* RealmSwift.framework */; };
+		4BE56EA821D8C8040045EABD /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBBB69821D8BD1F00FFFFF8 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift */; };
 		4BE72A71204E9E2D009A22EA /* SelectChatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE72A70204E9E2D009A22EA /* SelectChatTableViewController.swift */; };
 		4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB381FC9F8C100EB35FA /* VoiceRecordingViewController.swift */; };
@@ -240,6 +239,7 @@
 		4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */; };
 		4BFBB108208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFBB107208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift */; };
 		4BFD07761FB08005003791D7 /* ViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFD07751FB08005003791D7 /* ViewPlaceholder.swift */; };
+		E6A8B70EF8A742AD9D5CCF2B /* libPods-FalconMessenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65B1F802CF6D868348BF7E6D /* libPods-FalconMessenger.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -253,14 +253,14 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4BBBB67121D78C9100FFFFF8 /* Embed Frameworks */ = {
+		4BE56EA421D8C1340045EABD /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4BBBB67321D78C9400FFFFF8 /* RealmSwift.framework in Embed Frameworks */,
-				4BBBB67021D78C9100FFFFF8 /* Realm.framework in Embed Frameworks */,
+				4BE56EA821D8C8040045EABD /* RealmSwift.framework in Embed Frameworks */,
+				4BE56EA621D8C7FB0045EABD /* Realm.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,7 +268,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		28F15AD41DA41AD704250781 /* libPods-FalconMessenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FalconMessenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		12A07DB84FCB2E680BA20EDF /* Pods-FalconMessenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FalconMessenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger.release.xcconfig"; sourceTree = "<group>"; };
 		4B01BB6721D683A500FF229B /* VoiceRecorderRespondingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceRecorderRespondingButton.swift; path = ChatsControllers/VoiceRecorderRespondingButton.swift; sourceTree = "<group>"; };
 		4B01BB6921D683BA00FF229B /* MediaPickerRespondingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaPickerRespondingButton.swift; path = ChatsControllers/MediaPickerRespondingButton.swift; sourceTree = "<group>"; };
 		4B01BB6C21D6842D00FF229B /* RespondingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RespondingButton.swift; sourceTree = "<group>"; };
@@ -387,10 +387,6 @@
 		4B78663321D536AD00CC739F /* UserExistenceChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserExistenceChecker.swift; path = AuthenticationControllers/UserExistenceChecker.swift; sourceTree = "<group>"; };
 		4B790B4C214919AD00427C92 /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		4B790B4E21492E6000427C92 /* BlockUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserTableViewController.swift; sourceTree = "<group>"; };
-		4B79784221D4BF8B00BB5A55 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
-		4B79784321D4BF8B00BB5A55 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
-		4B79784721D4C44100BB5A55 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = FalconMessenger/ThirdParty/Realm/RealmSwift.framework; sourceTree = "<group>"; };
-		4B79784821D4C44100BB5A55 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = FalconMessenger/ThirdParty/Realm/Realm.framework; sourceTree = "<group>"; };
 		4B7ACCB81F3A3CA9000606E1 /* BaseMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMessageCell.swift; path = ChatsControllers/BaseMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
@@ -426,6 +422,8 @@
 		4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthPhoneNumberController.swift; path = AuthenticationControllers/AuthPhoneNumberController.swift; sourceTree = "<group>"; };
 		4BB74A02206E300C0014837E /* AuthVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthVerificationController.swift; path = AuthenticationControllers/AuthVerificationController.swift; sourceTree = "<group>"; };
 		4BBBB67521D7FD6700FFFFF8 /* ChatsRealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatsRealmManager.swift; path = ChatsControllers/ChatsRealmManager.swift; sourceTree = "<group>"; };
+		4BBBB69721D8BD1F00FFFFF8 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = FalconMessenger/Frameworks/Realm/Realm.framework; sourceTree = "<group>"; };
+		4BBBB69821D8BD1F00FFFFF8 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = FalconMessenger/Frameworks/Realm/RealmSwift.framework; sourceTree = "<group>"; };
 		4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableViewController.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableViewController.swift; sourceTree = "<group>"; };
 		4BBBCBF42057D01000926800 /* GroupProfileTableHeaderContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableHeaderContainer.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableHeaderContainer.swift; sourceTree = "<group>"; };
 		4BBBCBF62057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupPictureAvatarOpenerDelegate.swift; path = ChatsControllers/NewChatControllers/GroupPictureAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
@@ -505,8 +503,8 @@
 		4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactDataTableViewCell.swift; path = ChatsControllers/ContactDataTableViewCell.swift; sourceTree = "<group>"; };
 		4BFBB107208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+TypingIndicatorDelegate.swift"; path = "ChatsControllers/ChatsTableViewController+TypingIndicatorDelegate.swift"; sourceTree = "<group>"; };
 		4BFD07751FB08005003791D7 /* ViewPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewPlaceholder.swift; path = ContactsControllers/ViewPlaceholder.swift; sourceTree = "<group>"; };
-		761FFCFE86D58DCDD8D5A95F /* Pods-FalconMessenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FalconMessenger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger.debug.xcconfig"; sourceTree = "<group>"; };
-		D3478EECF33D7E0795B137A3 /* Pods-FalconMessenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FalconMessenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger.release.xcconfig"; sourceTree = "<group>"; };
+		65B1F802CF6D868348BF7E6D /* libPods-FalconMessenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FalconMessenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7BD86EB100754A0BF260A9C /* Pods-FalconMessenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FalconMessenger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -514,9 +512,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BBBB66F21D78C9100FFFFF8 /* Realm.framework in Frameworks */,
-				4BBBB67221D78C9400FFFFF8 /* RealmSwift.framework in Frameworks */,
-				0E021BAC99C749D2A57CDA08 /* libPods-FalconMessenger.a in Frameworks */,
+				4BE56EA721D8C8040045EABD /* RealmSwift.framework in Frameworks */,
+				4BE56EA521D8C7FB0045EABD /* Realm.framework in Frameworks */,
+				E6A8B70EF8A742AD9D5CCF2B /* libPods-FalconMessenger.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,9 +524,9 @@
 		2AF4427B37282913090A248D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4B79784821D4C44100BB5A55 /* Realm.framework */,
-				4B79784721D4C44100BB5A55 /* RealmSwift.framework */,
-				28F15AD41DA41AD704250781 /* libPods-FalconMessenger.a */,
+				4BBBB69721D8BD1F00FFFFF8 /* Realm.framework */,
+				4BBBB69821D8BD1F00FFFFF8 /* RealmSwift.framework */,
+				65B1F802CF6D868348BF7E6D /* libPods-FalconMessenger.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -555,6 +553,15 @@
 				4B6BAFB220886C5E00A90F3A /* Public.swift */,
 			);
 			path = Public;
+			sourceTree = "<group>";
+		};
+		4B0E76E039E2F5E741A90AE5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D7BD86EB100754A0BF260A9C /* Pods-FalconMessenger.debug.xcconfig */,
+				12A07DB84FCB2E680BA20EDF /* Pods-FalconMessenger.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		4B1058F52120977600CD6600 /* UserDefaultsManager */ = {
@@ -685,9 +692,9 @@
 			isa = PBXGroup;
 			children = (
 				4B4F452D1F32230C00A6FF96 /* FalconMessenger */,
-				E788FC79B73E9599A409079F /* Pods */,
 				2AF4427B37282913090A248D /* Frameworks */,
 				4B08E36E2088725C00C64EAA /* FalconMessenger.app */,
+				4B0E76E039E2F5E741A90AE5 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1005,16 +1012,6 @@
 				4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */,
 			);
 			path = RoundProgressView;
-			sourceTree = "<group>";
-		};
-		4B79784121D4BF8B00BB5A55 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				4B79784221D4BF8B00BB5A55 /* RealmSwift.framework */,
-				4B79784321D4BF8B00BB5A55 /* Realm.framework */,
-			);
-			name = Frameworks;
-			path = FalconMessenger/Frameworks;
 			sourceTree = "<group>";
 		};
 		4B7ACCB71F3A3C74000606E1 /* Cells */ = {
@@ -1615,16 +1612,6 @@
 			name = CreateNewContact;
 			sourceTree = "<group>";
 		};
-		E788FC79B73E9599A409079F /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				4B79784121D4BF8B00BB5A55 /* Frameworks */,
-				761FFCFE86D58DCDD8D5A95F /* Pods-FalconMessenger.debug.xcconfig */,
-				D3478EECF33D7E0795B137A3 /* Pods-FalconMessenger.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1632,14 +1619,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B4F453F1F32230C00A6FF96 /* Build configuration list for PBXNativeTarget "FalconMessenger" */;
 			buildPhases = (
-				92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */,
+				7183EB494791913EB6E040B1 /* [CP] Check Pods Manifest.lock */,
 				4B4F45271F32230C00A6FF96 /* Sources */,
 				4B4F45281F32230C00A6FF96 /* Frameworks */,
-				4BBBB67121D78C9100FFFFF8 /* Embed Frameworks */,
+				4BE56EA421D8C1340045EABD /* Embed Frameworks */,
+				4BBBB67421D78CB900FFFFF8 /* ShellScript */,
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
-				26079EBE940EC05B11EA8844 /* [CP] Copy Pods Resources */,
-				4BBBB67421D78CB900FFFFF8 /* ShellScript */,
+				53E0DEB341FA758A2EF7CBE0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1719,10 +1706,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		26079EBE940EC05B11EA8844 /* [CP] Copy Pods Resources */ = {
+		4BBBB67421D78CB900FFFFF8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nbash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"\n";
+		};
+		53E0DEB341FA758A2EF7CBE0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh",
@@ -1741,7 +1747,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4BBBB67421D78CB900FFFFF8 /* ShellScript */ = {
+		7183EB494791913EB6E040B1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1749,25 +1755,12 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nbash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"\n";
-		};
-		92B3139BCF183B65AB86C41F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-FalconMessenger-checkManifestLockResult.txt",
 			);
@@ -2136,7 +2129,7 @@
 		};
 		4B4F45401F32230C00A6FF96 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 761FFCFE86D58DCDD8D5A95F /* Pods-FalconMessenger.debug.xcconfig */;
+			baseConfigurationReference = D7BD86EB100754A0BF260A9C /* Pods-FalconMessenger.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
@@ -2150,7 +2143,7 @@
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/FalconMessenger/ThirdParty/Realm",
+					"$(PROJECT_DIR)/FalconMessenger/Frameworks/Realm",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2170,7 +2163,7 @@
 		};
 		4B4F45411F32230C00A6FF96 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D3478EECF33D7E0795B137A3 /* Pods-FalconMessenger.release.xcconfig */;
+			baseConfigurationReference = 12A07DB84FCB2E680BA20EDF /* Pods-FalconMessenger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
@@ -2184,13 +2177,14 @@
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/FalconMessenger/ThirdParty/Realm",
+					"$(PROJECT_DIR)/FalconMessenger/Frameworks/Realm",
 				);
 				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACH_O_TYPE = mh_execute;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "mizin.Pigeon-project";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

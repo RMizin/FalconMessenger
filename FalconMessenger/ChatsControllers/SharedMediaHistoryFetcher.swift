@@ -107,14 +107,14 @@ class SharedMediaHistoryFetcher: NSObject {
 			dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
 			let message = Message(dictionary: dictionary)
 
-			guard let messageID = message.messageUID, let timestamp = message.timestamp else {
+			guard let messageID = message.messageUID, let timestamp = message.timestamp.value else {
 				return
 			}
 
 			if let imageURL = message.imageUrl {
 				let thumbnailImageUrl = message.thumbnailImageUrl ?? nil
 				let videoURL = message.videoUrl ?? nil
-				let date = Date(timeIntervalSince1970: TimeInterval(truncating: timestamp))
+				let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
 				let shortTimestamp = date.getShortDateStringFromUTC() as String
 
 				let sharedElement = SharedMedia(id: messageID,

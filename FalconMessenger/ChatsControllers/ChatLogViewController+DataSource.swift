@@ -265,7 +265,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
 
     guard !isPhotoVideoMessage else {
 
-      if CGFloat(truncating: message.imageCellHeight!) < BaseMessageCell.minimumMediaCellHeight {
+      if CGFloat(message.imageCellHeight.value!) < BaseMessageCell.minimumMediaCellHeight {
         if isGroupChat, !isOutgoingMessage {
           cellHeight = BaseMessageCell.incomingGroupMinimumMediaCellHeight
         } else {
@@ -273,9 +273,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
         }
       } else {
         if isGroupChat, !isOutgoingMessage {
-          cellHeight = CGFloat(truncating: message.imageCellHeight!) + BaseMessageCell.incomingGroupMessageAuthorNameLabelHeightWithInsets
+          cellHeight = CGFloat(message.imageCellHeight.value!) + BaseMessageCell.incomingGroupMessageAuthorNameLabelHeightWithInsets
         } else {
-          cellHeight = CGFloat(truncating: message.imageCellHeight!)
+          cellHeight = CGFloat(message.imageCellHeight.value!)
         }
       }
 

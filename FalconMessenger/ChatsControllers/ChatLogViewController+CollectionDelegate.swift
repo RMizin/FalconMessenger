@@ -71,7 +71,7 @@ extension ChatLogViewController: CollectionDelegate {
   
   func sortedMessages(unsortedMessages: [Message]) -> [Message] {
     let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
-      return message1.timestamp!.int32Value < message2.timestamp!.int32Value
+      return message1.timestamp.value! < message2.timestamp.value!
     })
     return sortedMessages
   }

@@ -45,6 +45,8 @@ enum MessageType {
   case sendingMessage
 }
 
+let defaultMessage = Message(dictionary: ["timestamp": 0 as AnyObject])
+
 class Message: Object {
 
     @objc dynamic var messageUID: String?
@@ -54,7 +56,7 @@ class Message: Object {
     @objc dynamic var fromId: String?
     @objc dynamic var text: String?
     @objc dynamic var toId: String?
-    @objc dynamic var timestamp: NSNumber? = 0
+    let timestamp = RealmOptional<Int64>()
     @objc dynamic var convertedTimestamp: String? // local only
     @objc dynamic var shortConvertedTimestamp: String? //local only
   
@@ -63,8 +65,8 @@ class Message: Object {
 
     @objc dynamic var imageUrl: String?
 	 	@objc dynamic var thumbnailImageUrl: String?
-    @objc dynamic var imageHeight: NSNumber? = 0
-    @objc dynamic var imageWidth: NSNumber? = 0
+    let imageHeight = RealmOptional<Double>()
+    let imageWidth = RealmOptional<Double>()
 
 		var localImage: UIImage?
   
@@ -83,7 +85,7 @@ class Message: Object {
 
     var landscapeEstimatedFrameForText: CGRect?
   
-    @objc dynamic var imageCellHeight: NSNumber? = 0
+		let imageCellHeight = RealmOptional<Double>()
   
     let isCrooked = RealmOptional<Bool>() // local only
   
@@ -109,7 +111,7 @@ class Message: Object {
         fromId = dictionary["fromId"] as? String
         text = dictionary["text"] as? String
         toId = dictionary["toId"] as? String
-        timestamp = dictionary["timestamp"] as? NSNumber
+        timestamp.value = dictionary["timestamp"] as? Int64
 
         convertedTimestamp = dictionary["convertedTimestamp"] as? String
         shortConvertedTimestamp = dictionary["shortConvertedTimestamp"] as? String
@@ -119,8 +121,8 @@ class Message: Object {
 
         imageUrl = dictionary["imageUrl"] as? String
 				thumbnailImageUrl = dictionary["thumbnailImageUrl"] as? String
-        imageHeight = dictionary["imageHeight"] as? NSNumber
-        imageWidth = dictionary["imageWidth"] as? NSNumber
+        imageHeight.value = dictionary["imageHeight"] as? Double
+        imageWidth.value = dictionary["imageWidth"] as? Double
 
         videoUrl = dictionary["videoUrl"] as? String
 
@@ -134,7 +136,7 @@ class Message: Object {
 
         estimatedFrameForText = dictionary["estimatedFrameForText"] as? CGRect
         landscapeEstimatedFrameForText = dictionary["landscapeEstimatedFrameForText"] as? CGRect
-        imageCellHeight = dictionary["imageCellHeight"] as? NSNumber
+        imageCellHeight.value = dictionary["imageCellHeight"] as? Double
       
         senderName = dictionary["senderName"] as? String
 

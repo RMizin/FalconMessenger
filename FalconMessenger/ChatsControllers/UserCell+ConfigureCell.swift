@@ -27,7 +27,7 @@ extension UserCell {
     
     if let isTyping = conversations[indexPath.row].isTyping.value, isTyping {
       messageLabel.text = "typing"
-      typingIndicatorTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateTypingIndicatorTimer), userInfo: nil, repeats: true)
+      typingIndicatorTimer = Timer.scheduledTimer(timeInterval: 0.15, target: self, selector: #selector(updateTypingIndicatorTimer), userInfo: nil, repeats: true)
 			RunLoop.main.add(self.typingIndicatorTimer!, forMode: RunLoop.Mode.common)
     } else {
       typingIndicatorTimer?.invalidate()
@@ -36,7 +36,7 @@ extension UserCell {
 
 
     if let lastMessage = conversations[indexPath.row].lastMessage {
-      let date = Date(timeIntervalSince1970: lastMessage.timestamp as! TimeInterval)
+			let date = Date(timeIntervalSince1970: TimeInterval(exactly: lastMessage.timestamp.value!)!)
       timeLabel.text = timestampOfLastMessage(date)
       timeLabelWidthAnchor.constant = timeLabelWidth(text: timeLabel.text ?? "")
     }

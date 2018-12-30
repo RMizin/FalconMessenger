@@ -44,24 +44,24 @@ extension ChatsTableViewController {
           self.tableView.setEditing(false, animated: true)
         }
         self.delayWithSeconds(1, completion: {
-          self.handleMuteConversation(section: indexPath.section, for: self.filteredPinnedConversations[indexPath.row])
+          self.handleMuteConversation(section: indexPath.section, for: self.realmPinnedConversations[indexPath.row])
         })
       } else if indexPath.section == 1 {
         if #available(iOS 11.0, *) {} else {
           self.tableView.setEditing(false, animated: true)
         }
         self.delayWithSeconds(1, completion: {
-          self.handleMuteConversation(section: indexPath.section, for: self.filtededConversations[indexPath.row])
+          self.handleMuteConversation(section: indexPath.section, for: self.realmUnpinnedConversations[indexPath.row])
         })
       }
     }
     
     if indexPath.section == 0 {
-      let isPinnedConversationMuted = filteredPinnedConversations[indexPath.row].muted.value == true
+      let isPinnedConversationMuted = realmPinnedConversations[indexPath.row].muted.value == true
       let muteTitle = isPinnedConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
     } else if indexPath.section == 1 {
-      let isConversationMuted = filtededConversations[indexPath.row].muted.value == true
+      let isConversationMuted = realmUnpinnedConversations[indexPath.row].muted.value == true
       let muteTitle = isConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
     }
@@ -96,38 +96,56 @@ extension ChatsTableViewController {
   }
 
   func unpinConversation(at indexPath: IndexPath) {
-    let conversation = filteredPinnedConversations[indexPath.row]
+    let conversation = realmPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
     
-    guard let index = pinnedConversations.index(where: { (conversation) -> Bool in
-      return conversation.chatID == filteredPinnedConversations[indexPath.row].chatID
-    }) else { return }
-    
-    let pinnedElement = filteredPinnedConversations[indexPath.row]
-    
-    let filteredIndexToInsert = filtededConversations.insertionIndex(of: pinnedElement, using: { (conversation1, conversation2) -> Bool in
-      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
-    })
-    
-    let unfilteredIndexToInsert = conversations.insertionIndex(of: pinnedElement, using: { (conversation1, conversation2) -> Bool in
-      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
-    })
-    
-    filtededConversations.insert(pinnedElement, at: filteredIndexToInsert)
-    conversations.insert(pinnedElement, at: unfilteredIndexToInsert)
-    filteredPinnedConversations.remove(at: indexPath.row)
-    pinnedConversations.remove(at: index)
-    let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 1)
-    
-    tableView.beginUpdates()
-    if #available(iOS 11.0, *) {
-    } else {
-      tableView.setEditing(false, animated: true)
-    }
-    tableView.moveRow(at: indexPath, to: destinationIndexPath)
-   
-    tableView.endUpdates()
-    
+//    guard let index = pinnedConversations.index(where: { (conversation) -> Bool in
+//      return conversation.chatID == filteredPinnedConversations[indexPath.row].chatID
+//    }) else { return }
+
+//		chatsTableViewRealmObserver.move(realmPinnedConversations[indexPath.row],
+//																		 at: indexPath,
+//																		 from: realmPinnedConversations,
+//																		 to: realmUnpinnedConversations)
+
+ //   let pinnedElement = realmPinnedConversations[indexPath.row]
+//	//	pinnedConversationsNotificationToken?.invalidate()
+//	//	pinnedConversationsNotificationToken
+//		//	realmManager.realm.beginWrite()
+//		realmPinnedConversations[indexPath.row].pinned.value = false
+//		chatsTableViewRealmObserver.update(type: .reloadRow, conversation: realmPinnedConversations[indexPath.row])
+//		///	try! realmManager.realm.commitWrite()
+//
+//
+//		let conversationToInsert = realmPinnedConversations[indexPath.row]//.mutableCopy() as! Conversation
+//		conversationToInsert.pinned.value = false
+//
+//		realmManager.delete(conversation: realmPinnedConversations[indexPath.row])
+//		realmManager.update(conversation: conversationToInsert)
+//    let filteredIndexToInsert = filtededConversations.insertionIndex(of: pinnedElement, using: { (conversation1, conversation2) -> Bool in
+//      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+//    })
+//
+//    let indexToInsert = realmUnpinnedConversations.insertionIndex(of: pinnedElement, using: { (conversation1, conversation2) -> Bool in
+//      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+//    })
+//
+//
+//    realmUnpinnedConversations.insert(pinnedElement, at: indexToInsert)
+//    conversations.insert(pinnedElement, at: unfilteredIndexToInsert)
+//    realmPinnedConversations.remove(at: indexPath.row)
+//    pinnedConversations.remove(at: index)
+//    let destinationIndexPath = IndexPath(row: indexToInsert, section: 1)
+//
+//    tableView.beginUpdates()
+//    if #available(iOS 11.0, *) {
+//    } else {
+//      tableView.setEditing(false, animated: true)
+//    }
+////    tableView.moveRow(at: indexPath, to: destinationIndexPath)
+////
+//   tableView.endUpdates()
+
     let metadataRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataRef.updateChildValues(["pinned": false], withCompletionBlock: { (error, reference) in
       if error != nil {
@@ -136,39 +154,67 @@ extension ChatsTableViewController {
       }
     })
   }
-  
+
+
   func pinConversation(at indexPath: IndexPath) {
     
-    let conversation = filtededConversations[indexPath.row]
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
-    
-    guard let index = conversations.index(where: { (conversation) -> Bool in
-      return conversation.chatID == filtededConversations[indexPath.row].chatID
-    }) else { return }
-    
-    let elementToPin = filtededConversations[indexPath.row]
-    
-    let filteredIndexToInsert = filteredPinnedConversations.insertionIndex(of: elementToPin, using: { (conversation1, conversation2) -> Bool in
-      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
-    })
-    
-    let unfilteredIndexToInsert = pinnedConversations.insertionIndex(of: elementToPin, using: { (conversation1, conversation2) -> Bool in
-      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
-    })
-    
-    filteredPinnedConversations.insert(elementToPin, at: filteredIndexToInsert)
-    pinnedConversations.insert(elementToPin, at: unfilteredIndexToInsert)
-    filtededConversations.remove(at: indexPath.row)
-    conversations.remove(at: index)
-    let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 0)
+    let conversation = realmUnpinnedConversations[indexPath.row]
+   	guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
 
-    tableView.beginUpdates()
-    tableView.moveRow(at: indexPath, to: destinationIndexPath)
-    if #available(iOS 11.0, *) {
-    } else {
-      tableView.setEditing(false, animated: true)
-    }
-    tableView.endUpdates()
+//		realmManager.realm.beginWrite()
+//		realmUnpinnedConversations[indexPath.row].pinned.value = true
+//		try! realmManager.realm.commitWrite()
+
+	//	let conversationToInsert = realmUnpinnedConversations[indexPath.row]//.mutableCopy() as! Conversation
+		//conversationToInsert.pinned.value = true
+
+
+
+	//	realmManager.delete(conversation: realmUnpinnedConversations[indexPath.row])
+	//	realmManager.update(conversation: conversationToInsert)
+//
+//    guard let index = conversations.index(where: { (conversation) -> Bool in
+//      return conversation.chatID == filtededConversations[indexPath.row].chatID
+//    }) else { return }
+////
+//    let elementToPin = realmUnpinnedConversations[indexPath.row]
+////
+//    let filteredIndexToInsert = realmPinnedConversations.insertionIndex(of: elementToPin, using: { (conversation1, conversation2) -> Bool in
+//			return conversation1.lastMessage?.timestamp.value! > conversation2.lastMessage?.timestamp.value!
+//    })
+
+//		chatsTableViewRealmObserver.move(realmUnpinnedConversations[indexPath.row],
+//																		 at: indexPath,
+//																		 from: realmUnpinnedConversations,
+//																		 to: realmPinnedConversations)
+//    let unfilteredIndexToInsert = pinnedConversations.insertionIndex(of: elementToPin, using: { (conversation1, conversation2) -> Bool in
+//      return conversation1.lastMessage?.timestamp?.int32Value > conversation2.lastMessage?.timestamp?.int32Value
+//    })
+//
+//    filteredPinnedConversations.insert(elementToPin, at: filteredIndexToInsert)
+//    pinnedConversations.insert(elementToPin, at: unfilteredIndexToInsert)
+//    filtededConversations.remove(at: indexPath.row)
+//    conversations.remove(at: index)
+//   let destinationIndexPath = IndexPath(row: filteredIndexToInsert, section: 0)
+//		pinnedConversationsNotificationToken?.invalidate()
+//		unpinnedConversationsNotificationToken?.invalidate()
+//
+//    tableView.beginUpdates()
+//    tableView.moveRow(at: indexPath, to: destinationIndexPath)
+//
+//		realmManager.realm.beginWrite()
+//
+//		realmManager.delete(conversation: realmUnpinnedConversations[indexPath.row])
+//		realmUnpinnedConversations[indexPath.row].pinned.value = true
+//		realmManager.update(conversation: realmUnpinnedConversations[indexPath.row])
+//		try! realmManager.realm.commitWrite()
+//    if #available(iOS 11.0, *) {
+//    } else {
+//      tableView.setEditing(false, animated: true)
+//    }
+   // tableView.endUpdates()
+		//observeDataSourceChanges()
+
 
     let metadataReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataReference.updateChildValues(["pinned": true], withCompletionBlock: { (error, reference) in
@@ -195,36 +241,16 @@ extension ChatsTableViewController {
       basicErrorAlertWith(title: "Error", message: noInternetError, controller: self)
       return
     }
-    
-    let conversation = indexPath.section == 0 ? filteredPinnedConversations[indexPath.row] : filtededConversations[indexPath.row]
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
-    
-    tableView.beginUpdates()
-    
-    if indexPath.section == 0  {
-      guard let index = pinnedConversations.index(where: { (conversation) -> Bool in
-        return conversation.chatID == filteredPinnedConversations[indexPath.row].chatID
-      }) else { return }
-			realmDelete(conversation: filteredPinnedConversations[indexPath.row])
-      filteredPinnedConversations.remove(at: indexPath.row)
-      pinnedConversations.remove(at: index)
 
-    } else {
-      guard let index = conversations.index(where: { (conversation) -> Bool in
-        return conversation.chatID == filtededConversations[indexPath.row].chatID
-      }) else { return }
-			realmDelete(conversation: filtededConversations[indexPath.row])
-      filtededConversations.remove(at: indexPath.row)
-      conversations.remove(at: index)
-    }
-    
-    tableView.deleteRows(at: [indexPath], with: .left)
-    tableView.endUpdates()
-    
+
+    let conversation = indexPath.section == 0 ? realmPinnedConversations[indexPath.row] : realmUnpinnedConversations[indexPath.row]
+    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
+	//	chatsTableViewRealmObserver.delete(at: indexPath)
+
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
     configureTabBarBadge()
-    if conversations.count <= 0 && pinnedConversations.count <= 0 {
+    if realmAllConversations.count <= 0 {
       checkIfThereAnyActiveChats(isEmpty: true)
     }
   }

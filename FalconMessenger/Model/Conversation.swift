@@ -37,8 +37,31 @@ class Conversation: Object {
 		let realm = try! Realm()
 		let results = realm.objects(Message.self).filter("conversation.chatID = '\(chatID ?? "")'")
 		let currentConvers = results.first
-		return currentConvers?.conversation?.messages.last
+
+		let lastMessage = currentConvers?.conversation?.messages.last
+	///	let timestamp = lastMessage?.timestamp?.doubleValue ?? 0.0
+		//timestamp?.doubleValue ?? 0.0
+//		realm.beginWrite()
+//		lastMessageTimestamp = timestamp// Date(timeIntervalSince1970: TimeInterval(exactly: timestamp ?? 0) ?? 0)
+//		try! realm.commitWrite()
+	//	lastMessage?.timestamp
+
+//		realm.beginWrite()
+//		lastMessageTimestamp.value = lastMessage?.timestamp.value
+//		try! realm.commitWrite()
+
+		return lastMessage
 	}
+
+	let lastMessageTimestamp = RealmOptional<Int64>()
+//	{
+////		let realm = try! Realm()
+////		let results = realm.objects(Message.self).filter("conversation.chatID = '\(chatID ?? "")'")
+////		let currentConvers = results.first
+//	//	Date.t
+//	//	lastMessage.t
+//		return lastMessage?.timestamp.value
+//	}
 
 	@objc dynamic var admin: String?
 
@@ -49,7 +72,7 @@ class Conversation: Object {
 	let isGroupChat = RealmOptional<Bool>()
   let pinned = RealmOptional<Bool>()
   let muted = RealmOptional<Bool>()
-  let isTyping = RealmOptional<Bool>() // local only
+	let isTyping = RealmOptional<Bool>()
   let permitted = RealmOptional<Bool>()
 
 //	let messages = List<Message>()
@@ -97,4 +120,26 @@ class Conversation: Object {
     muted.value = dictionary?["muted"] as? Bool
     permitted.value = dictionary?["permitted"] as? Bool
   }
+
+	static func convertIntoDict(conversation: Conversation) -> [String:AnyObject] {
+		var dictionary =  [String:AnyObject]()
+
+
+		dictionary["chatID"] = conversation.chatID as AnyObject
+		dictionary["chatName"] = conversation.chatName as AnyObject
+		dictionary["chatOriginalPhotoURL"] = conversation.chatPhotoURL as AnyObject
+		dictionary["chatThumbnailPhotoURL"] = conversation.chatThumbnailPhotoURL as AnyObject
+		dictionary["lastMessageID"] = conversation.lastMessageID as AnyObject
+		dictionary["isGroupChat"] = conversation.isGroupChat as AnyObject
+	//		dictionary?["chatID"]
+
+		dictionary["chatParticipantsIDs"] = conversation.chatParticipantsIDs as AnyObject
+		dictionary["admin"] = conversation.admin as AnyObject
+		dictionary["badge"] = conversation.badge as AnyObject
+		dictionary["pinned"] = conversation.pinned as AnyObject
+		dictionary["muted"] = conversation.muted as AnyObject
+		dictionary["permitted"] = conversation.permitted as AnyObject
+
+		return dictionary
+	}
 }

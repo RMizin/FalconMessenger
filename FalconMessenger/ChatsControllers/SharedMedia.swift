@@ -14,12 +14,12 @@ class SharedMedia: NSObject {
 	var imageURL: String?
 	var thumbnailImageUrl: String?
 	var videoURL: String?
-	var timestamp: NSNumber?
+	var timestamp: Int64?
 	var shortConvertedTimestamp: String? //local only
 	var image: UIImage? //local only
 	var thumbnailImage: UIImage? //local only
 
-	init(id: String, imageURL: String, timestamp: NSNumber, convertedTimestamp: String, videoURL: String?, thumbnailImageUrl: String?) {
+	init(id: String, imageURL: String, timestamp: Int64, convertedTimestamp: String, videoURL: String?, thumbnailImageUrl: String?) {
 		super.init()
 		self.id = id
 		self.imageURL = imageURL

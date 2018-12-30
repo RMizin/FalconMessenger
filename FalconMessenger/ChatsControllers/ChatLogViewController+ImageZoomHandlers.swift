@@ -81,7 +81,7 @@ extension ChatLogViewController {
 		let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white,
 													 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
     let title = NSMutableAttributedString(string: titleString, attributes: titleAttributes)
-    let date = Date(timeIntervalSince1970: messagesWithPhotos[photoIndex].timestamp!.doubleValue)
+		let date = Date(timeIntervalSince1970: TimeInterval(messagesWithPhotos[photoIndex].timestamp.value!))
     let timestamp = timeAgoSinceDate(date)
 		let summaryAttributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor,
 														 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]

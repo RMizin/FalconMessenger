@@ -166,11 +166,16 @@ class ConversationsFetcher: NSObject {
       let message = Message(dictionary: dictionary)
 		//	let rc = RelationalConversation()
 			//rc.chatID = conversation.chatID
+			let realm = try! Realm()
+			realm.beginWrite()
+			conversation.lastMessageTimestamp.value = message.timestamp.value
+		//	try! realm.commitWrite()
+
 			message.conversation = conversation
 
 			// add last message to local storage
-			let realm = try! Realm()
-			realm.beginWrite()
+
+
 	//		realm.deleteAll()
 			realm.create(Message.self, value: message, update: true)
 			try! realm.commitWrite()

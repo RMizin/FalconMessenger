@@ -15,8 +15,8 @@ extension ChatsTableViewController: UISearchBarDelegate, UISearchControllerDeleg
   
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     searchBar.text = nil
-    filtededConversations = conversations
-    filteredPinnedConversations = pinnedConversations
+//    filtededConversations = conversations
+//    filteredPinnedConversations = pinnedConversations
     handleReloadTable(isSearching: true)
     guard #available(iOS 11.0, *) else {
       searchBar.setShowsCancelButton(false, animated: true)
@@ -26,23 +26,24 @@ extension ChatsTableViewController: UISearchBarDelegate, UISearchControllerDeleg
   }
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    
-    filtededConversations = searchText.isEmpty ? conversations :
-      conversations.filter({ (conversation) -> Bool in
-        if let chatName = conversation.chatName {
-          return chatName.lowercased().contains(searchText.lowercased())
-        }
-        return ("").lowercased().contains(searchText.lowercased())
-      })
-    
-    filteredPinnedConversations = searchText.isEmpty ? pinnedConversations :
-      pinnedConversations.filter({ (conversation) -> Bool in
-        if let chatName = conversation.chatName {
-          return chatName.lowercased().contains(searchText.lowercased())
-        }
-        return ("").lowercased().contains(searchText.lowercased())
-      })
-    
+
+		
+//    filtededConversations = searchText.isEmpty ? conversations :
+//      conversations.filter({ (conversation) -> Bool in
+//        if let chatName = conversation.chatName {
+//          return chatName.lowercased().contains(searchText.lowercased())
+//        }
+//        return ("").lowercased().contains(searchText.lowercased())
+//      })
+//
+//    filteredPinnedConversations = searchText.isEmpty ? pinnedConversations :
+//      pinnedConversations.filter({ (conversation) -> Bool in
+//        if let chatName = conversation.chatName {
+//          return chatName.lowercased().contains(searchText.lowercased())
+//        }
+//        return ("").lowercased().contains(searchText.lowercased())
+//      })
+
     handleReloadTableAfterSearch()
   }
   
