@@ -90,8 +90,6 @@ class Message: Object {
     let isCrooked = RealmOptional<Bool>() // local only
   
     @objc dynamic var senderName: String? //local only, group messages only
-
-	 //let conversation = LinkingObjects(fromType: Conversation.self, property: "messages")
 		@objc dynamic var conversation: Conversation?// = nil
 
 

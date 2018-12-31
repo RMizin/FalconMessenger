@@ -16,12 +16,34 @@ extension UserCell {
     
     let isPersonalStorage = conversations[indexPath.row].chatID == Auth.auth().currentUser?.uid
     let isConversationMuted = conversations[indexPath.row].muted.value != nil && conversations[indexPath.row].muted.value!
-    let chatName = isPersonalStorage ? NameConstants.personalStorage : conversations[indexPath.row].chatName
+  //  let chatName = isPersonalStorage ? NameConstants.personalStorage : conversations[indexPath.row].chatName
+		let chatName = conversations[indexPath.row].chatName
     let isGroupChat = conversations[indexPath.row].isGroupChat.value ?? false
     
     var placeHolderImage = isGroupChat ? UIImage(named: "GroupIcon") : UIImage(named: "UserpicIcon")
     placeHolderImage = isPersonalStorage ? UIImage(named: "PersonalStorage") : placeHolderImage
-    
+
+		if let url = conversations[indexPath.row].chatThumbnailPhotoURL, !isPersonalStorage, url != "" {
+			profileImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options:
+			[.continueInBackground, .scaleDownLargeImages]) { (image, error, cacheType, url) in
+
+				guard error == nil else {
+					self.profileImageView.image = placeHolderImage
+					return
+				}
+
+//				guard image != nil, cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
+//					self.profileImageView.image = image
+//					return
+//				}
+//
+//				UIView.transition(with: self.profileImageView, duration: 0.15, options: .transitionCrossDissolve,
+//													animations: { self.profileImageView.image = image }, completion: nil)
+			}
+		} else {
+			profileImageView.image = placeHolderImage
+		}
+
     nameLabel.text = chatName
     muteIndicator.isHidden = !isConversationMuted || isPersonalStorage
     
@@ -39,21 +61,6 @@ extension UserCell {
 			let date = Date(timeIntervalSince1970: TimeInterval(exactly: lastMessage.timestamp.value!)!)
       timeLabel.text = timestampOfLastMessage(date)
       timeLabelWidthAnchor.constant = timeLabelWidth(text: timeLabel.text ?? "")
-    }
-  
-    profileImageView.image = placeHolderImage
-    
-    if let url = conversations[indexPath.row].chatThumbnailPhotoURL, !isPersonalStorage, url != "" {
-      profileImageView.sd_setImage(with: URL(string: url), placeholderImage: placeHolderImage, options:
-      [.continueInBackground, .scaleDownLargeImages, .avoidAutoSetImage]) { (image, error, cacheType, url) in
-        guard image != nil, cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-          self.profileImageView.image = image
-          return
-        }
-        
-        UIView.transition(with: self.profileImageView, duration: 0.2, options: .transitionCrossDissolve,
-                          animations: { self.profileImageView.image = image }, completion: nil)
-      }
     }
 
 		let badgeString = conversations[indexPath.row].badge.value?.toString()

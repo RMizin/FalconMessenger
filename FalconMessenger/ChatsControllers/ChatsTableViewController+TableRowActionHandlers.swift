@@ -9,25 +9,25 @@
 import UIKit
 import Firebase
 
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l > r
-  default:
-    return rhs < lhs
-  }
-}
+//fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+//  switch (lhs, rhs) {
+//  case let (l?, r?):
+//    return l < r
+//  case (nil, _?):
+//    return true
+//  default:
+//    return false
+//  }
+//}
+//
+//fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+//  switch (lhs, rhs) {
+//  case let (l?, r?):
+//    return l > r
+//  default:
+//    return rhs < lhs
+//  }
+//}
 
 private let pinErrorTitle = "Error pinning/unpinning"
 private let pinErrorMessage = "Changes won't be saved across app restarts. Check your internet connection, re-launch the app, and try again."
@@ -103,7 +103,7 @@ extension ChatsTableViewController {
 		realmPinnedConversations[indexPath.row].pinned.value = false
 
 		let indexToInsert = realmUnpinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
-			return conversation1.lastMessage?.timestamp.value > conversation2.lastMessage?.timestamp.value
+			return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
 		})
 
 		let destinationIndexPath = IndexPath(row: indexToInsert, section: 1)
@@ -129,7 +129,7 @@ extension ChatsTableViewController {
 		realmUnpinnedConversations[indexPath.row].pinned.value = true
 
 		let indexToInsert = realmPinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
-			return conversation1.lastMessage?.timestamp.value > conversation2.lastMessage?.timestamp.value
+			return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
 		})
 		let destinationIndexPath = IndexPath(row: indexToInsert, section: 0)
 		tableView.beginUpdates()
@@ -163,10 +163,23 @@ extension ChatsTableViewController {
       return
     }
 
-
     let conversation = indexPath.section == 0 ? realmPinnedConversations[indexPath.row] : realmUnpinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
-	//	chatsTableViewRealmObserver.delete(at: indexPath)
+
+		realmManager.realm.beginWrite()
+		let result = realmManager.realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
+		let messagesResult = realmManager.realm.objects(Message.self).filter("conversation.chatID = '\(conversation.chatID ?? "")'")
+
+		print("xxx", messagesResult.count)
+
+		realmManager.realm.delete(messagesResult)
+		realmManager.realm.delete(result)
+
+		tableView.beginUpdates()
+		tableView.deleteRows(at: [indexPath], with: .left)
+		tableView.endUpdates()
+		try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
+
 
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()

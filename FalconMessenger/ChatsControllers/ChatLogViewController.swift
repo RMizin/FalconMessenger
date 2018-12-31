@@ -248,8 +248,8 @@ class ChatLogViewController: UIViewController {
 		//TODO content offset fix
 		//TODO inputContainerView height fix
 
-		DispatchQueue.main.async { [unowned self] in
-			self.collectionView.reloadData()
+		DispatchQueue.main.async { [weak self] in
+			self?.collectionView.reloadData()
 		}
 		
 		inputContainerView.handleRotation()

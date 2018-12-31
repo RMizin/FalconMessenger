@@ -15,9 +15,14 @@ extension ChatsTableViewController: UISearchBarDelegate, UISearchControllerDeleg
   
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     searchBar.text = nil
-//    filtededConversations = conversations
-//    filteredPinnedConversations = pinnedConversations
-    handleReloadTable(isSearching: true)
+		setupDataSource()
+
+    UIView.transition(with: tableView,
+											duration: 0.15,
+											options: .transitionCrossDissolve,
+											animations: { self.tableView.reloadData() },
+											completion: nil)
+
     guard #available(iOS 11.0, *) else {
       searchBar.setShowsCancelButton(false, animated: true)
       searchBar.resignFirstResponder()
@@ -26,25 +31,18 @@ extension ChatsTableViewController: UISearchBarDelegate, UISearchControllerDeleg
   }
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+		let objects = realmManager.realm.objects(Conversation.self)
+		let pinnedObjects = objects.filter("pinned == true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
+		let unpinnedObjects = objects.filter("pinned != true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
 
-		
-//    filtededConversations = searchText.isEmpty ? conversations :
-//      conversations.filter({ (conversation) -> Bool in
-//        if let chatName = conversation.chatName {
-//          return chatName.lowercased().contains(searchText.lowercased())
-//        }
-//        return ("").lowercased().contains(searchText.lowercased())
-//      })
-//
-//    filteredPinnedConversations = searchText.isEmpty ? pinnedConversations :
-//      pinnedConversations.filter({ (conversation) -> Bool in
-//        if let chatName = conversation.chatName {
-//          return chatName.lowercased().contains(searchText.lowercased())
-//        }
-//        return ("").lowercased().contains(searchText.lowercased())
-//      })
+		realmPinnedConversations = searchText.isEmpty ? pinnedObjects : pinnedObjects.filter("chatName contains[cd] %@", searchText)
 
-    handleReloadTableAfterSearch()
+		realmUnpinnedConversations = searchText.isEmpty ? unpinnedObjects : unpinnedObjects.filter("chatName contains[cd] %@", searchText)
+		UIView.transition(with: tableView,
+											duration: 0.15,
+											options: .transitionCrossDissolve,
+											animations: { self.tableView.reloadData() },
+											completion: nil)
   }
   
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -60,7 +58,6 @@ extension ChatsTableViewController: UISearchBarDelegate, UISearchControllerDeleg
 extension ChatsTableViewController { /* hiding keyboard */
   
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-    
     if #available(iOS 11.0, *) {
       searchChatsController?.searchBar.endEditing(true)
     } else {

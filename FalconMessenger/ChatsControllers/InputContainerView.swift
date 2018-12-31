@@ -91,10 +91,11 @@ final class InputContainerView: UIControl {
   
   func handleRotation() {
     attachCollectionView.collectionViewLayout.invalidateLayout()
-    DispatchQueue.main.async { [unowned self] in
-      self.attachCollectionView.frame.size.width = self.inputTextView.frame.width
-      self.attachCollectionView.reloadData()
-      self.confirugeHeightConstraint()
+    DispatchQueue.main.async { [weak self] in
+			guard let width = self?.inputTextView.frame.width else { return }
+      self?.attachCollectionView.frame.size.width = width//self?.inputTextView.frame.width
+      self?.attachCollectionView.reloadData()
+      self?.confirugeHeightConstraint()
     }
   }
 
