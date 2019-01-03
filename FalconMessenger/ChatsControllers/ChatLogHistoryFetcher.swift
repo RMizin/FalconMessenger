@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import RealmSwift
 
 protocol ChatLogHistoryDelegate: class {
   func chatLogHistory(isEmpty: Bool)
@@ -103,7 +104,8 @@ class ChatLogHistoryFetcher: NSObject {
       dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
       dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: self.isGroupChat)
       let message = Message(dictionary: dictionary)
-		//	message.conversation = self.conversation
+			message.conversation = self.conversation
+
       self.messagesFetcher.loadUserNameForOneMessage(message: message, completion: { (_, newMessage)  in
         self.previousMessages.append(newMessage)
         self.loadingGroup.leave()
@@ -113,8 +115,14 @@ class ChatLogHistoryFetcher: NSObject {
   
   fileprivate func notifyWhenGroupFinished(query: DatabaseQuery) {
     loadingGroup.notify(queue: DispatchQueue.main, execute: {
-      var updatedMessages = self.previousMessages + self.messages
-      updatedMessages = self.messagesFetcher.configureTails(for: updatedMessages, isGroupChat: self.isGroupChat)
+      let updatedMessages = self.previousMessages + self.messages
+
+//			//MARK: REALM
+//			let realm = try! Realm()
+//			try! realm.write {
+//				updatedMessages = self.messagesFetcher.configureTails(for: updatedMessages, isGroupChat: self.isGroupChat)
+//			}
+
       query.removeObserver(withHandle: self.userMessageHande)
       self.delegate?.chatLogHistory(updated: updatedMessages)
     })

@@ -16,7 +16,7 @@ private var inputContainerViewWasFirstResponder = false
 extension ChatLogViewController {
 
   func handleOpen(madiaAt indexPath: IndexPath) {
-    let message = groupedMessages[indexPath.section][indexPath.item]
+    let message = groupedMessages[indexPath.section].messages[indexPath.item]
     if message.videoUrl != nil || message.localVideoUrl != nil {
       guard let url = urlForVideo(at: indexPath) else {
         basicErrorAlertWith(title: "Error",
@@ -34,7 +34,7 @@ extension ChatLogViewController {
   }
   
   func urlForVideo(at indexPath: IndexPath) -> URL? {
-    let message = groupedMessages[indexPath.section][indexPath.item]
+    let message = groupedMessages[indexPath.section].messages[indexPath.item]
     
     if message.localVideoUrl != nil {
       let videoUrlString = message.localVideoUrl
@@ -97,11 +97,11 @@ extension ChatLogViewController {
     var photos: [INSPhotoViewable] = setupPhotosData()
     var initialPhotoIndex: Int!
     
-    if groupedMessages[indexPath.section][indexPath.row].localImage != nil {
-      guard let initial = photos.index(where: {$0.image == groupedMessages[indexPath.section][indexPath.row].localImage }) else { return nil }
+    if groupedMessages[indexPath.section].messages[indexPath.row].localImage != nil {
+      guard let initial = photos.index(where: {$0.image == groupedMessages[indexPath.section].messages[indexPath.row].localImage }) else { return nil }
       initialPhotoIndex = initial
     } else {
-      guard let initial = photos.index(where: {$0.messageUID == groupedMessages[indexPath.section][indexPath.row].messageUID }) else { return nil }
+      guard let initial = photos.index(where: {$0.messageUID == groupedMessages[indexPath.section].messages[indexPath.row].messageUID }) else { return nil }
       initialPhotoIndex = initial
     }
 
@@ -122,7 +122,8 @@ extension ChatLogViewController {
 
   func setupPhotosData() -> [INSPhotoViewable] {
     var photos: [INSPhotoViewable] = []
-    let messagesWithPhotos = self.messages.filter({ (message) -> Bool in
+
+    let messagesWithPhotos = Array(conversation!.messages).filter({ (message) -> Bool in
       return (message.imageUrl != nil || message.localImage != nil) && (message.localVideoUrl == nil && message.videoUrl == nil)
     })
     
@@ -140,7 +141,10 @@ extension ChatLogViewController {
           photos.append(newPhoto)
           imageView = nil
         })
-      } else if let localImage = messagesWithPhotos[photoIndex].localImage {
+
+
+      } else if let localImageData = messagesWithPhotos[photoIndex].localImage?.image, let localImage = UIImage.init(data: localImageData) {
+
         let newPhoto = INSPhoto(image: localImage, thumbnailImage: nil, messageUID: nil)
         newPhoto.attributedTitle = combination
         photos.append(newPhoto)

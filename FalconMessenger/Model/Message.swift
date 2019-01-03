@@ -47,6 +47,68 @@ enum MessageType {
 
 let defaultMessage = Message(dictionary: ["timestamp": 0 as AnyObject])
 
+class RealmRect: Object {
+	@objc dynamic var messageUID: String?
+	let x =  RealmOptional<Double>()
+	let y = RealmOptional<Double>()
+	let width = RealmOptional<Double>()
+	let height = RealmOptional<Double>()
+
+	override static func primaryKey() -> String? {
+		return "messageUID"
+	}
+
+
+	convenience init(cgrect: CGRect, messageUID: String) {
+		self.init()
+		self.messageUID = messageUID
+		x.value = Double(cgrect.origin.x)
+		y.value = Double(cgrect.origin.y)
+		width.value = Double(cgrect.size.width)
+		height.value = Double(cgrect.size.height)
+
+	}
+}
+
+class SectionedMessage: Object {
+
+	@objc var title: String?
+	var messages: Results<Message>!
+	var notificationToken: NotificationToken?
+
+	convenience init(messages: Results<Message> , title: String) {
+		self.init()
+
+		self.title = title
+		self.messages = messages
+	}
+
+	deinit {
+		print("deinits section message")
+		if notificationToken != nil {
+			notificationToken?.invalidate()
+		}
+	}
+}
+
+
+class RealmUIImage: Object {
+
+	@objc dynamic var messageUID: String?
+	@objc dynamic var image: Data?
+
+	convenience init(image: UIImage, messageUID: String) {
+		self.init()
+
+		self.messageUID = messageUID
+		self.image = image.jpegData(compressionQuality: 0.5)
+	}
+
+	override static func primaryKey() -> String? {
+		return "messageUID"
+	}
+}
+
 class Message: Object {
 
     @objc dynamic var messageUID: String?
@@ -68,7 +130,7 @@ class Message: Object {
     let imageHeight = RealmOptional<Double>()
     let imageWidth = RealmOptional<Double>()
 
-		var localImage: UIImage?
+		@objc dynamic var localImage: RealmUIImage?
   
     @objc dynamic var localVideoUrl: String?
 
@@ -81,9 +143,9 @@ class Message: Object {
 
     @objc dynamic var videoUrl: String?
   
-    var estimatedFrameForText: CGRect?
+    @objc dynamic var estimatedFrameForText: RealmRect?
 
-    var landscapeEstimatedFrameForText: CGRect?
+     @objc dynamic var landscapeEstimatedFrameForText: RealmRect?
   
 		let imageCellHeight = RealmOptional<Double>()
   
@@ -124,7 +186,11 @@ class Message: Object {
 
         videoUrl = dictionary["videoUrl"] as? String
 
-        localImage = dictionary["localImage"] as? UIImage
+				if let image = dictionary["localImage"] as? UIImage {
+					localImage = RealmUIImage(image: image, messageUID: dictionary["messageUID"] as? String ?? "")
+				}
+
+        //localImage = dictionary["localImage"] as? UIImage
         localVideoUrl = dictionary["localVideoUrl"] as? String
 
         voiceEncodedString = dictionary["voiceEncodedString"] as? String
@@ -132,8 +198,15 @@ class Message: Object {
         voiceDuration = dictionary["voiceDuration"] as? String
         voiceStartTime.value = dictionary["voiceStartTime"] as? Int
 
-        estimatedFrameForText = dictionary["estimatedFrameForText"] as? CGRect
-        landscapeEstimatedFrameForText = dictionary["landscapeEstimatedFrameForText"] as? CGRect
+				if let cgrect = dictionary["estimatedFrameForText"] as? CGRect {
+					estimatedFrameForText = RealmRect(cgrect: cgrect, messageUID: dictionary["messageUID"] as? String ?? "")
+				}
+
+				if let cgrect = dictionary["landscapeEstimatedFrameForText"] as? CGRect {
+					landscapeEstimatedFrameForText = RealmRect(cgrect: cgrect,
+																										 messageUID: (dictionary["messageUID"] as? String ?? "") + "landscape")
+				}
+
         imageCellHeight.value = dictionary["imageCellHeight"] as? Double
       
         senderName = dictionary["senderName"] as? String
@@ -141,66 +214,67 @@ class Message: Object {
         isCrooked.value = dictionary["isCrooked"] as? Bool
     }
 
-  static func groupedMessages(_ messages: [Message]) -> [[Message]] {
-    let grouped = Dictionary.init(grouping: messages) { (message) -> String in
-      return message.shortConvertedTimestamp ?? ""
-    }
+//  static func groupedMessages(_ messages: [Message]) -> [[Message]] {
+//    let grouped = Dictionary.init(grouping: messages) { (message) -> String in
+//      return message.shortConvertedTimestamp ?? ""
+//    }
+//
+//    let keys = grouped.keys.sorted { (time1, time2) -> Bool in
+//      return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
+//    }
+//
+//    var groupedMessages = [[Message]]()
+//    keys.forEach({
+//      groupedMessages.append(grouped[$0]!)
+//    })
+//
+//    return groupedMessages
+//  }
 
-    let keys = grouped.keys.sorted { (time1, time2) -> Bool in
-      return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
-    }
-
-    var groupedMessages = [[Message]]()
-    keys.forEach({
-      groupedMessages.append(grouped[$0]!)
-    })
-
-    return groupedMessages
-  }
-
-  static func get(indexPathOf message: Message, in groupedArray: [[Message]]) -> IndexPath? {
+  static func get(indexPathOf message: Message, in groupedArray: [SectionedMessage]) -> IndexPath? {
     guard let section = groupedArray.index(where: { (messages) -> Bool in
-      for message1 in messages where message1 == message {
+      for message1 in messages.messages where message1 == message {
         return true
       }; return false
     }) else { return nil }
 
-    guard let row = groupedArray[section].index(where: { (message1) -> Bool in
+    guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
       return message1.messageUID == message.messageUID
     }) else { return IndexPath(row: -1, section: section) }
-    
+
     return IndexPath(row: row, section: section)
   }
 
-  static func get(indexPathOf messageUID: String? = nil , localPhoto: UIImage? = nil, in groupedArray: [[Message]]) -> IndexPath? {
+  static func get(indexPathOf messageUID: String? = nil , localPhoto: UIImage? = nil, in groupedArray: [SectionedMessage]) -> IndexPath? {
+
 
     if messageUID != nil {
 
       guard let section = groupedArray.index(where: { (messages) -> Bool in
-        for message1 in messages where message1.messageUID == messageUID {
+        for message1 in messages.messages where message1.messageUID == messageUID {
           return true
         }; return false
       }) else { return nil }
 
-      guard let row = groupedArray[section].index(where: { (message1) -> Bool in
+      guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
         return message1.messageUID == messageUID
       }) else { return IndexPath(row: -1, section: section) }
 
        return IndexPath(row: row, section: section)
-      
+
     } else if localPhoto != nil {
 
       guard let section = groupedArray.index(where: { (messages) -> Bool in
-        for message1 in messages where message1.localImage == localPhoto {
+        for message1 in messages.messages where message1.localImage == localPhoto {
           return true
         }; return false
       }) else { return nil }
 
-      guard let row = groupedArray[section].index(where: { (message1) -> Bool in
+      guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
         return message1.localImage == localPhoto
       }) else { return IndexPath(row: -1, section: section) }
 
-       return IndexPath(row: row, section: section)
+			return IndexPath(row: row, section: section)
     }
      return nil
   }

@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     ThemeManager.applyTheme(theme: ThemeManager.currentTheme())
     
     FirebaseApp.configure()
-    Database.database().isPersistenceEnabled = true
+		Database.database().isPersistenceEnabled = true
   
     userDefaults.configureInitialLaunch()
     

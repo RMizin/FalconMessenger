@@ -22,7 +22,7 @@ class ChatsRealmManager {
 	func update(conversations: [Conversation], tokens: [NotificationToken]) {
 			autoreleasepool {
 				let realm = try! Realm()
-
+			///	guard !realm.isInWriteTransaction else {  try! realm.commitWrite(); return }
 				realm.beginWrite()
 				for conversation in conversations {
 					conversation.isTyping.value = realm.objects(Conversation.self).filter("chatID = %@", conversation.chatID ?? "").first?.isTyping.value

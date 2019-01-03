@@ -69,15 +69,15 @@ class IncomingTextMessageCell: BaseMessageCell {
   }
   
   fileprivate func setupDefaultBubbleViewSize(message: Message) -> CGSize {
-    guard let portaritEstimate = message.estimatedFrameForText?.width,
-      let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGSize() }
+    guard let portaritEstimate = message.estimatedFrameForText?.width.value,
+      let landscapeEstimate = message.landscapeEstimatedFrameForText?.width.value else { return CGSize() }
     
     let portraitRect = setupFrameWithLabel(bubbleView.frame.origin.x, BaseMessageCell.bubbleViewMaxWidth,
-                                           portaritEstimate, BaseMessageCell.incomingMessageHorisontalInsets,
+                                           CGFloat(portaritEstimate), BaseMessageCell.incomingMessageHorisontalInsets,
                                            frame.size.height, 10).integral
     
     let landscapeRect = setupFrameWithLabel(bubbleView.frame.origin.x, BaseMessageCell.landscapeBubbleViewMaxWidth,
-                                           landscapeEstimate, BaseMessageCell.incomingMessageHorisontalInsets,
+                                           CGFloat(landscapeEstimate), BaseMessageCell.incomingMessageHorisontalInsets,
                                            frame.size.height, 10).integral
     switch UIDevice.current.orientation {
     case .landscapeRight, .landscapeLeft:
@@ -88,8 +88,8 @@ class IncomingTextMessageCell: BaseMessageCell {
   }
   
   fileprivate func setupGroupBubbleViewSize(message: Message) -> CGSize {
-    guard let portaritWidth = message.estimatedFrameForText?.width else { return CGSize() }
-    guard let landscapeWidth = message.landscapeEstimatedFrameForText?.width  else { return CGSize() }
+    guard let portaritWidth = message.estimatedFrameForText?.width.value else { return CGSize() }
+    guard let landscapeWidth = message.landscapeEstimatedFrameForText?.width.value  else { return CGSize() }
     let portraitBubbleMaxW = BaseMessageCell.bubbleViewMaxWidth
     let portraitAuthorMaxW = BaseMessageCell.incomingGroupMessageAuthorNameLabelMaxWidth
     let landscapeBubbleMaxW = BaseMessageCell.landscapeBubbleViewMaxWidth
@@ -97,11 +97,11 @@ class IncomingTextMessageCell: BaseMessageCell {
     
     switch UIDevice.current.orientation {
     case .landscapeRight, .landscapeLeft:
-      return getGroupBubbleSize(messageWidth: landscapeWidth,
+      return getGroupBubbleSize(messageWidth: CGFloat(landscapeWidth),
                                 bubbleMaxWidth: landscapeBubbleMaxW,
                                 authorMaxWidth: landscapeAuthoMaxW)
     default:
-      return getGroupBubbleSize(messageWidth: portaritWidth,
+      return getGroupBubbleSize(messageWidth: CGFloat(portaritWidth),
                                 bubbleMaxWidth: portraitBubbleMaxW,
                                 authorMaxWidth: portraitAuthorMaxW)
     }

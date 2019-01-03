@@ -168,7 +168,7 @@ extension ChatsTableViewController {
 
 		realmManager.realm.beginWrite()
 		let result = realmManager.realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
-		let messagesResult = realmManager.realm.objects(Message.self).filter("conversation.chatID = '\(conversation.chatID ?? "")'")
+		let messagesResult = conversation.messages//realmManager.realm.objects(Message.self).filter("conversation.chatID = '\(conversation.chatID ?? "")'")
 
 		print("xxx", messagesResult.count)
 

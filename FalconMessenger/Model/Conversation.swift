@@ -22,7 +22,7 @@ class Conversation: Object {
 		let results = realm.objects(Message.self).filter("conversation.chatID = '\(chatID ?? "")'")
 
 		let currentConvers = results.first
-		let lastMessage = currentConvers?.conversation?.messages.last
+		let lastMessage = currentConvers?.conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last
 
 		return lastMessage
 	}
@@ -37,7 +37,7 @@ class Conversation: Object {
 	let permitted = RealmOptional<Bool>()
 
 	var lastMessageRuntime: Message?
-	let messages = LinkingObjects(fromType: Message.self, property: "conversation")
+	let messages = LinkingObjects(fromType: Message.self, property: "conversation")//.sorted(byKeyPath: "timestamp", ascending: true)
 
 	func getTyping() -> Bool {
 		return try! Realm().objects(Conversation.self).filter("chatID = %@", chatID ?? "").first?.isTyping.value ?? false

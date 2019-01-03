@@ -20,7 +20,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
       if section == groupedMessages.count {
         return 1
       } else {
-        return groupedMessages[section].count
+        return groupedMessages[section].messages.count
       }
     }
   
@@ -29,9 +29,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
    if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "lol",
                                                                    for: indexPath) as? ChatLogViewControllerSupplementaryView {
       guard groupedMessages.indices.contains(indexPath.section),
-      groupedMessages[indexPath.section].indices.contains(indexPath.row) else { header.label.text = ""; return header }
+      groupedMessages[indexPath.section].messages.indices.contains(indexPath.row) else { header.label.text = ""; return header }
     
-      header.label.text = groupedMessages[indexPath.section][indexPath.row].shortConvertedTimestamp
+      header.label.text = groupedMessages[indexPath.section].messages[indexPath.row].shortConvertedTimestamp
       return header
     }
     return UICollectionReusableView()
@@ -44,9 +44,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard indexPath.section != groupedMessages.count else { return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell }
     if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
-      return selectCell(for: indexPath, isGroupChat: true)!
+      return selectCell(for: indexPath, isGroupChat: true)! //?? UICollectionViewCell()
     } else {
-      return selectCell(for: indexPath, isGroupChat: false)!
+      return selectCell(for: indexPath, isGroupChat: false)!// ?? UICollectionViewCell()
     }
   }
   
@@ -59,10 +59,12 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   
   fileprivate func selectCell(for indexPath: IndexPath, isGroupChat: Bool) -> UICollectionViewCell? {
 
-    let message = groupedMessages[indexPath.section][indexPath.row] //sometimes crash
-
+    let message = groupedMessages[indexPath.section].messages[indexPath.row] //sometimes crash
+		//print(message)
+		
     let isTextMessage = message.text != nil
     let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
+	//	print(message.imageUrl, message.localImage)
     let isVoiceMessage = message.voiceEncodedString != nil
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
     let isInformationMessage = message.isInformationMessage.value ?? false
@@ -79,9 +81,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
           cell.chatLogController = self
           cell.setupData(message: message)
-          DispatchQueue.global(qos: .default).async { [unowned self] in
+        //  DispatchQueue.global(qos: .default).async { [unowned self] in
             cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-          }
+         // }
           
           return cell
         case false:
@@ -98,19 +100,19 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
             cell.chatLogController = self
             cell.setupData(message: message)
-            if let image = message.localImage {
+            if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
               cell.setupImageFromLocalData(message: message, image: image)
-              DispatchQueue.global(qos: .default).async { [unowned self] in
+             // DispatchQueue.global(qos: .default).async { [unowned self] in
                 cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-              }
+            //  }
   
               return cell
             }
             if let messageImageUrl = message.imageUrl {
               cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
-              DispatchQueue.global(qos: .default).async { [unowned self] in
+            //  DispatchQueue.global(qos: .default).async { [unowned self] in
                 cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-              }
+           //   }
               
               return cell
             }
@@ -118,7 +120,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
             cell.chatLogController = self
             cell.setupData(message: message, isGroupChat: isGroupChat)
-            if let image = message.localImage {
+            if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
               cell.setupImageFromLocalData(message: message, image: image)
               return cell
             }
@@ -136,9 +138,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
               cell.chatLogController = self
               cell.setupData(message: message)
               
-              DispatchQueue.global(qos: .default).async { [unowned self] in
+           //   DispatchQueue.global(qos: .default).async { [unowned self] in
                 cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-              }
+           //   }
               
               return cell
             case false:
@@ -184,7 +186,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   
    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard groupedMessages.indices.contains(indexPath.section) else { return }
-    let message = groupedMessages[indexPath.section][indexPath.item]
+    let message = groupedMessages[indexPath.section].messages[indexPath.item]
     guard let voiceEncodedString = message.voiceEncodedString else { return }
     guard let data = Data(base64Encoded: voiceEncodedString) else { return }
     guard let cell = collectionView.cellForItem(at: indexPath) as? BaseVoiceMessageCell else { return }
@@ -223,7 +225,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   func selectSize(indexPath: IndexPath) -> CGSize {
     guard indexPath.section != groupedMessages.count else {return CGSize(width: collectionView.frame.width, height: 30) }
     var cellHeight: CGFloat = 80
-    let message = groupedMessages[indexPath.section][indexPath.item]
+    let message = groupedMessages[indexPath.section].messages[indexPath.item]
     let isTextMessage = message.text != nil
     let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
     let isVoiceMessage = message.voiceEncodedString != nil
@@ -293,13 +295,13 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     return CGSize(width: collectionView.frame.width, height: cellHeight)
   }
 
-  fileprivate func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: CGRect?, indexPath: IndexPath) -> CGFloat {
-    guard let frame = frame else { return 0 }
+  fileprivate func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: RealmRect?, indexPath: IndexPath) -> CGFloat {
+    guard let frame = frame, let width = frame.width.value, let height = frame.height.value else { return 0 }
 
     var timeHeight: CGFloat!
     let bubbleMaxWidth = UIDevice.current.orientation.isLandscape ? BaseMessageCell.landscapeBubbleViewMaxWidth : BaseMessageCell.bubbleViewMaxWidth
-    if (frame.width + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
-      frame.width < BaseMessageCell.messageTimeWidth {
+    if (CGFloat(width) + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
+			CGFloat(width) < BaseMessageCell.messageTimeWidth {
       timeHeight = 0
     } else {
       timeHeight = BaseMessageCell.messageTimeHeight
@@ -307,9 +309,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
 
     if isGroupChat, !isOutgoingMessage {
 
-      return frame.height + BaseMessageCell.groupTextMessageInsets + timeHeight
+      return CGFloat(height) + BaseMessageCell.groupTextMessageInsets + timeHeight
     } else {
-      return frame.height + BaseMessageCell.defaultTextMessageInsets + timeHeight
+      return CGFloat(height) + BaseMessageCell.defaultTextMessageInsets + timeHeight
     }
   }
 }

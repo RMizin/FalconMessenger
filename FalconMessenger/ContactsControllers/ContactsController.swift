@@ -11,11 +11,14 @@ import Contacts
 import Firebase
 import SDWebImage
 import PhoneNumberKit
+import RealmSwift
 
 private let falconUsersCellID = "falconUsersCellID"
 private let currentUserCellID = "currentUserCellID"
 
 class ContactsController: UITableViewController {
+
+	let chatLogPresenter = ChatLogPresenter()
 
   var contacts = [CNContact]()
   var filteredContacts = [CNContact]()
@@ -240,23 +243,71 @@ class ContactsController: UITableViewController {
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
       if indexPath.section == 0 {
 
-        let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
-                                                          "isGroupChat": false  as AnyObject,
-                                                          "chatParticipantsIDs": [currentUserID] as AnyObject]
 
-        let conversation = Conversation(dictionary: conversationDictionary)
+				let realm = try! Realm()
+				//let messages = realm.objects(Message.self).filter("conversation.chatID == %@", currentUserID)
+				//let messages = conversation.mess
+//        let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
+//																													 "chatName": NameConstants.personalStorage as AnyObject,
+//                                                           "isGroupChat": false  as AnyObject,
+//                                                           "chatParticipantsIDs": [currentUserID] as AnyObject]
+
+
+				guard let conversation = realm.objects(Conversation.self).filter("chatID == %@", currentUserID).first else {
+
+					let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
+																														 "chatName": NameConstants.personalStorage as AnyObject,
+																														 "isGroupChat": false  as AnyObject,
+																														 "chatParticipantsIDs": [currentUserID] as AnyObject]
+
+					let conversation = Conversation(dictionary: conversationDictionary)
+
+					try! realm.write {
+						realm.create(Conversation.self, value: conversation, update: true)
+					}
+
+					if let realmConversation = realm.objects(Conversation.self).filter("chatID == %@", currentUserID).first {
+						chatLogPresenter.open(realmConversation)
+					}
+
+					return
+
+				}
+
+
+       // let conversation = Conversation(dictionary: conversationDictionary)
+//				try! realm.write {
+//
+//					conversation.messages.app = realm.objects(Message.self).filter("conversation.chatID == %@", currentUserID)
+//				}
+
+				//conversation.messages
         chatLogPresenter.open(conversation)
 
       } else if indexPath.section == 1 {
-        let conversationDictionary = ["chatID": filteredUsers[indexPath.row].id as AnyObject,
-                                      "chatName": filteredUsers[indexPath.row].name as AnyObject,
-                                      "isGroupChat": false  as AnyObject,
-                                      "chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
-                                      "chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
-                                      "chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
 
-       let conversation = Conversation(dictionary: conversationDictionary)
-       chatLogPresenter.open(conversation)
+				let realm = try! Realm()
+
+				guard let conversation = realm.objects(Conversation.self).filter("chatID == %@", filteredUsers[indexPath.row].id ?? "").first else {
+					let conversationDictionary = ["chatID": filteredUsers[indexPath.row].id as AnyObject,
+																				"chatName": filteredUsers[indexPath.row].name as AnyObject,
+																				"isGroupChat": false  as AnyObject,
+																				"chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
+																				"chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
+																				"chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
+
+					let conversation = Conversation(dictionary: conversationDictionary)
+					try! realm.write {
+						realm.create(Conversation.self, value: conversation, update: true)
+					}
+
+					if let realmConversation = realm.objects(Conversation.self).filter("chatID == %@", filteredUsers[indexPath.row].id ?? "").first {
+						chatLogPresenter.open(realmConversation)
+					}
+					return
+				}
+
+				chatLogPresenter.open(conversation)
 
       } else if indexPath.section == 2 {
         let destination = ContactsDetailController()

@@ -53,15 +53,17 @@ class OutgoingTextMessageCell: BaseMessageCell {
   }
   
   fileprivate func setupBubbleViewFrame(message: Message) -> CGRect {
-    guard let portaritEstimate = message.estimatedFrameForText?.width,
-      let landscapeEstimate = message.landscapeEstimatedFrameForText?.width else { return CGRect() }
+		guard let portaritEstimate = message.estimatedFrameForText?.width.value,
+		let landscapeEstimate = message.landscapeEstimatedFrameForText?.width.value else { return CGRect() }
 
-    let portraitX = frame.width - portaritEstimate - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
+
+
+    let portraitX = frame.width - CGFloat(portaritEstimate) - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
     let portraitFrame = setupFrameWithLabel(portraitX, BaseMessageCell.bubbleViewMaxWidth,
-                                            portaritEstimate, BaseMessageCell.outgoingMessageHorisontalInsets, frame.size.height)
-    let landscapeX = frame.width - landscapeEstimate - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
+                                            CGFloat(portaritEstimate), BaseMessageCell.outgoingMessageHorisontalInsets, frame.size.height)
+    let landscapeX = frame.width - CGFloat(landscapeEstimate) - BaseMessageCell.outgoingMessageHorisontalInsets - BaseMessageCell.scrollIndicatorInset
     let landscapeFrame = setupFrameWithLabel(landscapeX, BaseMessageCell.landscapeBubbleViewMaxWidth,
-                                             landscapeEstimate, BaseMessageCell.outgoingMessageHorisontalInsets, frame.size.height)
+                                             CGFloat(landscapeEstimate), BaseMessageCell.outgoingMessageHorisontalInsets, frame.size.height)
     switch UIDevice.current.orientation {
     case .landscapeLeft, .landscapeRight:
       return landscapeFrame.integral

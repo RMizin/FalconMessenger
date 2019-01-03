@@ -74,8 +74,11 @@ class ChatsTableViewController: UITableViewController {
   
   fileprivate func addObservers() {
     NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+		  NotificationCenter.default.addObserver(self, selector: #selector(handleReloadTable), name: .messageSent, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(cleanUpController), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
   }
+
+
   
   @objc fileprivate func changeTheme() {
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
@@ -249,7 +252,7 @@ class ChatsTableViewController: UITableViewController {
     UIApplication.shared.applicationIconBadgeNumber = badge
   }
 
-  func handleReloadTable() {
+	@objc func handleReloadTable() {
     if !isAppLoaded {
       UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: { (_) in
         self.initAllTabs()
@@ -382,6 +385,8 @@ class ChatsTableViewController: UITableViewController {
       let unpinnedConversation = realmUnpinnedConversations[indexPath.row]
       conversation = unpinnedConversation
     }
+
+		
     chatLogPresenter.open(conversation)
   }
 }
@@ -431,8 +436,12 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
 		}
 
 		guard let token1 = pinnedConversationsNotificationToken, let token2 = unpinnedConversationsNotificationToken else { return }
-		realmManager.update(conversations: conversations, tokens: [token1, token2])
-		self.handleReloadTable()
+
+	//	if navigationController?.visibleViewController is ChatsTableViewController {
+			realmManager.update(conversations: conversations, tokens: [token1, token2])
+			self.handleReloadTable()
+	//	}
+
 		self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
   }
 

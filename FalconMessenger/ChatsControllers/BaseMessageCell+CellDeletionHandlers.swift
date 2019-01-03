@@ -9,6 +9,7 @@
 import UIKit
 import FTPopOverMenu_Swift
 import Firebase
+import RealmSwift
 
 struct ContextMenuItems {
   static let copyItem = "Copy"
@@ -63,25 +64,31 @@ extension BaseMessageCell {
     guard longPressGesture.state == .began else { return }
     let generator = UIImpactFeedbackGenerator(style: .medium)
     generator.impactOccurred()
-    
-    let isOutgoing = self.message?.fromId == Auth.auth().currentUser?.uid
+	//	print(message)
+
+		guard let indexPath = self.chatLogController?.collectionView.indexPath(for: self) else { return }
+
+		let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row]
+
+
+    let isOutgoing = message?.fromId == Auth.auth().currentUser?.uid
     var contextMenuItems = ContextMenuItems.contextMenuItems(for: .textMessage, !isOutgoing)
     let config = FTConfiguration.shared
     let expandedMenuWidth: CGFloat = 150
     let defaultMenuWidth: CGFloat = 100
     config.menuWidth = expandedMenuWidth
   
-    guard let indexPath = self.chatLogController?.collectionView.indexPath(for: self) else { return }
+
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
-      if self.message?.status == messageStatusSending { return }
+      if message?.status == messageStatusSending { return }
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       contextMenuItems = ContextMenuItems.contextMenuItems(for: .voiceMessage, !isOutgoing)
     //  contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
-      if self.message?.status == messageStatusSending { return }
+      if message?.status == messageStatusSending { return }
         contextMenuItems = ContextMenuItems.contextMenuItems(for: .voiceMessage, !isOutgoing)
      // contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
@@ -111,7 +118,7 @@ extension BaseMessageCell {
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
     
-    if self.message?.messageUID == nil || self.message?.status == messageStatusSending {
+    if message?.messageUID == nil || message?.status == messageStatusSending {
       config.menuWidth = defaultMenuWidth
       contextMenuItems = ContextMenuItems.contextMenuItems(for: .sendingMessage, !isOutgoing)
     }
@@ -190,8 +197,20 @@ extension BaseMessageCell {
   }
   
   func handleDeletion(indexPath: IndexPath) {
-    guard let uid = Auth.auth().currentUser?.uid, let partnerID = self.message?.chatPartnerId(),
-      let messageID = self.message?.messageUID, self.currentReachabilityStatus != .notReachable else {
+		guard	let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
+
+	//	let realm = try! Realm()
+	//	let message = realm.objects(Message.self).filter("messageUID == %@", message1.messageUID ?? "" )
+	//	let message1 = self.message
+
+//
+//		try! realm.write {
+//			realm.delete(message)
+//		}
+
+		//print(message)
+    guard let uid = Auth.auth().currentUser?.uid, let partnerID = message.chatPartnerId(),
+      let messageID = message.messageUID, self.currentReachabilityStatus != .notReachable else {
       self.chatLogController?.collectionView.reloadItems(at: [indexPath])
       guard let controllerToDisplayOn = self.chatLogController else { return }
       basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerToDisplayOn)
@@ -208,14 +227,30 @@ extension BaseMessageCell {
     }
     
     deletionReference.removeValue(completionBlock: { (error, reference) in
-      if error != nil { return }
+			guard let controllerToDisplayOn = self.chatLogController else { return }
+
+      guard error == nil else {
+				//guard let controllerToDisplayOn = self.chatLogController else { return }
+				basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: controllerToDisplayOn)
+				return
+			}
+
+			guard !message.isInvalidated else {
+				basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: controllerToDisplayOn)
+				return
+			}
+
+			let realm = try! Realm()
+			try! realm.write {
+				realm.delete(message)
+			}
 
       if let isGroupChat = self.chatLogController?.conversation?.isGroupChat.value, isGroupChat {
         
         guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
         
         var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(messageMetaDataFirebaseFolder)
-        if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
+        if let lastMessageID = self.chatLogController?.groupedMessages.last?.messages.last?.messageUID {
           lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
         } else {
           lastMessageReference = lastMessageReference.child("lastMessageID")
@@ -224,7 +259,7 @@ extension BaseMessageCell {
         
       } else {
         var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(messageMetaDataFirebaseFolder)
-        if let lastMessageID = self.chatLogController?.messages.last?.messageUID {
+        if let lastMessageID = self.chatLogController?.groupedMessages.last?.messages.last?.messageUID {
           lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
         } else {
           lastMessageReference = lastMessageReference.child("lastMessageID")

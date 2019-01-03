@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import Photos
 import SDWebImage
-//import RealmSwift
+import RealmSwift
 
 protocol MessagesDelegate: class {
   func messages(shouldBeUpdatedTo messages: [Message], conversation:Conversation)
@@ -85,7 +85,7 @@ class MessagesFetcher: NSObject {
         if self.isInitialChatMessagesLoad {
           self.messages = self.sortedMessages(unsortedMessages: self.messages)
         }
-        self.messages = self.configureTails(for: self.messages, isGroupChat: isGroupChat)
+       // self.messages = self.configureTails(for: self.messages, isGroupChat: isGroupChat)
         self.isInitialChatMessagesLoad = false
         self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
@@ -93,7 +93,7 @@ class MessagesFetcher: NSObject {
     })
   }
   
-  func observeManualRemoving(currentUserID:String, conversationID: String) {
+  func observeManualRemoving(currentUserID: String, conversationID: String) {
     guard manualRemovingReference == nil else { return }
     
     manualRemovingReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(userMessagesFirebaseFolder)
@@ -221,39 +221,40 @@ class MessagesFetcher: NSObject {
     return sortedMessages
   }
   
-  func configureTails(for messages: [Message], isGroupChat: Bool?) -> [Message] {
-    var messages = messages
-    for index in (0..<messages.count) {
-      
-      guard messages.indices.contains(index + 1) else {
-        messages[index].isCrooked.value = true
-        continue
-      }
-    
-      if messages[index].fromId == messages[index + 1].fromId {
-        if messages[index].shortConvertedTimestamp != messages[index + 1].shortConvertedTimestamp {
-          messages[index].isCrooked.value = true
-        } else {
-          messages[index].isCrooked.value = false
-        }
-      
-        messages[index + 1].isCrooked.value = true
-      } else {
-        messages[index].isCrooked.value = true
-        messages[index + 1].isCrooked.value = true
-      }
-      
-      if let isInfoMessage = messages[index + 1].isInformationMessage.value, isInfoMessage {
-        messages[index].isCrooked.value = true
-      }
-      
-      if let isInfoMessage = messages[index].isInformationMessage.value, isInfoMessage {
-        messages[index + 1].isCrooked.value = true
-      }
-    }
-    return messages
-  }
-  
+//	func configureTails(for messages: LinkingObjects<Message>, isGroupChat: Bool?) {
+//	// -> [Message] {
+// //   var messages = messages
+//    for index in (0..<messages.count) {
+//
+//      guard messages.indices.contains(index + 1) else {
+//        messages[index].isCrooked.value = true
+//        continue
+//      }
+//
+//      if messages[index].fromId == messages[index + 1].fromId {
+//        if messages[index].shortConvertedTimestamp != messages[index + 1].shortConvertedTimestamp {
+//          messages[index].isCrooked.value = true
+//        } else {
+//          messages[index].isCrooked.value = false
+//        }
+//
+//        messages[index + 1].isCrooked.value = true
+//      } else {
+//        messages[index].isCrooked.value = true
+//        messages[index + 1].isCrooked.value = true
+//      }
+//
+//      if let isInfoMessage = messages[index + 1].isInformationMessage.value, isInfoMessage {
+//        messages[index].isCrooked.value = true
+//      }
+//
+//      if let isInfoMessage = messages[index].isInformationMessage.value, isInfoMessage {
+//        messages[index + 1].isCrooked.value = true
+//      }
+//    }
+// //   return messages
+//  }
+
   func preloadCellData(to dictionary: [String:AnyObject], isGroupChat: Bool) -> [String: AnyObject] {
     var dictionary = dictionary
     

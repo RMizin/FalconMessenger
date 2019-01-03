@@ -12,6 +12,7 @@ import Photos
 import AudioToolbox
 import CropViewController
 import SafariServices
+import RealmSwift
 
 protocol DeleteAndExitDelegate: class {
   func deleteAndExit(from conversationID: String)
@@ -51,8 +52,8 @@ class ChatLogViewController: UIViewController {
   var companionBanChangedHandle: DatabaseHandle!
   
   var conversation: Conversation?
-  var messages = [Message]()
-  var groupedMessages = [[Message]]()
+  //var messages = [Message]()
+  var groupedMessages = [SectionedMessage]()
   var typingIndicatorSection: [String] = []
 
   var chatLogAudioPlayer: AVAudioPlayer!
@@ -123,11 +124,22 @@ class ChatLogViewController: UIViewController {
   
   @objc func performRefresh() {
     guard let conversation = self.conversation else { return }
-    
+		let allMessages = groupedMessages.flatMap { (sectionedMessage) -> [Message] in
+			return Array(sectionedMessage.messages)
+		}
+//
+//		print(allMessages.count)
+
+//	allMessages
+
+
+
+
+
     if let isGroupChat = conversation.isGroupChat.value, isGroupChat {
-      chatLogHistoryFetcher.loadPreviousMessages(messages, conversation, messagesToLoad, true)
+      chatLogHistoryFetcher.loadPreviousMessages(allMessages, conversation, messagesToLoad, true)
     } else {
-      chatLogHistoryFetcher.loadPreviousMessages(messages, conversation, messagesToLoad, false)
+      chatLogHistoryFetcher.loadPreviousMessages(allMessages, conversation, messagesToLoad, false)
     }
   }
   
@@ -156,6 +168,148 @@ class ChatLogViewController: UIViewController {
     configurePlaceholderTitleView()
     setupBottomScrollButton()
   }
+
+
+	func getRealmMessages(fromIndex: Int, toIndex: Int) {
+		let pagedMessages = List<Message>()
+
+		let mmm = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
+
+		for index in fromIndex...toIndex where index >= 0 && index < mmm.count {
+			print(index)
+			let pagedItem = mmm[index]
+			pagedMessages.append(pagedItem)
+		}
+	}
+	func getMessages(/*fromIndex: Int, toIndex: Int*/) {
+
+//		let realm = try! Realm()
+//		realm.beginWrite()
+//		messagesFetcher?.configureTails(for: conversation!.messages, isGroupChat: nil)
+//		try! realm.commitWrite()
+
+	//	let pagedMessages = List<Message>()
+
+	//	let mmm = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
+
+//		for index in fromIndex...toIndex where index >= 0 {
+//			print(index)
+//			let pagedItem = mmm[index]
+//			pagedMessages.append(pagedItem)
+//		}
+
+		let dates = conversation!.messages.map({ $0.shortConvertedTimestamp ?? "" })
+		let uniqueDates = Array(Set(dates))
+
+		guard uniqueDates.count > 0 else { return }
+
+		let keys = uniqueDates.sorted { (time1, time2) -> Bool in
+			return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
+		}
+
+		for date in keys {
+		//	let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
+			let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
+			let section = SectionedMessage(messages: messages, title: date)
+
+			observeChanges(for: section)
+			groupedMessages.append(section)
+		}
+	}
+
+
+	@objc func observeChanges(for section: SectionedMessage) {
+		guard section.messages != nil else { print("no section messages"); return }
+		
+		section.notificationToken = section.messages.observe { [weak self] (changes: RealmCollectionChange) in
+			switch changes {
+			case .initial: self?.collectionView.reloadData(); break
+			case .update(_, let deletions, let insertions, let modifications):
+				//let row = $0
+				print("update", deletions.count, insertions.count, modifications.count)
+
+
+				guard let sectionIndex = self?.groupedMessages.index(where: { (sectionedMessage) -> Bool in
+					return sectionedMessage.title == section.title
+				}) else {
+					print("update failed")
+
+//					guard let dates = self?.conversation!.messages.map({ $0.shortConvertedTimestamp ?? "" }) else { return }
+//					let uniqueDates = Array(Set(dates))
+//
+//					let keys = uniqueDates.sorted { (time1, time2) -> Bool in
+//						return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
+//					}
+//
+//					guard let newSectionTitle = keys.last else { return }
+//					guard let messages = self?.conversation!.messages
+//						.sorted(byKeyPath: "timestamp", ascending: true)
+//						.filter("shortConvertedTimestamp == %@", newSectionTitle) else { return }
+//
+//					let newSection = SectionedMessage(messages: messages, title: newSectionTitle)
+//				//	self?.observeChanges(for: newSection)
+//					self?.groupedMessages.append(newSection)
+
+				//	guard let unwrappedSelf = self else { return }
+//					let newSectionIndex = unwrappedSelf.groupedMessages.count - 1
+//
+//					self?.collectionView.performBatchUpdates({
+//						print("trying to inser section")
+//						self?.collectionView.insertSections(IndexSet([newSectionIndex]))
+//					}, completion: { (isCompleted) in
+//						print("insert section completed")
+//					})
+					return
+				}
+
+				print("update passed")
+
+				//	let indexPath = IndexPath(row: $0, section: sectionIndex)
+
+				self?.collectionView.performBatchUpdates({
+					self?.collectionView.reloadItems(at: modifications.map({ IndexPath(row: $0, section: sectionIndex) }))
+					self?.collectionView.deleteItems(at: deletions.map({ IndexPath(row: $0, section: sectionIndex) }))
+					self?.collectionView.insertItems(at: insertions.map({ IndexPath(row: $0, section: sectionIndex) }))
+				}, completion: { (isCompleted) in
+					print("update completed")
+
+					if insertions.count > 0 {
+						self?.collectionView.scrollToBottom(animated: true)
+					}
+
+					if self?.collectionView.numberOfItems(inSection: sectionIndex) == 0 {
+						print("removing section")
+
+						self?.collectionView.performBatchUpdates({
+
+							if let unwrappedSelf = self {
+
+								self?.groupedMessages.remove(at: sectionIndex)
+								self?.collectionView.deleteSections(IndexSet([sectionIndex]))
+
+								if unwrappedSelf.groupedMessages.count > 0, sectionIndex - 1 >= 0 {
+									var rowIndex = 0
+									if let messages = unwrappedSelf.groupedMessages[sectionIndex - 1].messages {
+										rowIndex = messages.count - 1 >= 0 ? messages.count - 1 : 0
+									}
+									self?.collectionView.reloadItems(at: [IndexPath(row: rowIndex,section: sectionIndex - 1)])
+								}
+							}
+
+						}, completion: { (isCompleted) in
+							print("delete section completed")
+							guard self?.groupedMessages.count == 0 else { return }
+							self?.navigationController?.popViewController(animated: true)
+
+						})
+					}
+				})
+
+				break
+			case .error(let err): fatalError("\(err)"); break
+			}
+		}
+	}
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -223,6 +377,10 @@ class ChatLogViewController: UIViewController {
       messagesReference.removeObserver(withHandle: element.handle)
     }
 
+		for message in groupedMessages {
+			message.notificationToken?.invalidate()
+		}
+
     if let messagesFetcher = messagesFetcher {
       if messagesFetcher.userMessagesReference != nil {
         messagesFetcher.userMessagesReference.removeAllObservers()
@@ -259,8 +417,11 @@ class ChatLogViewController: UIViewController {
 
   override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
     if let observedObject = object as? ChatCollectionView, observedObject == collectionView {
-      collectionViewLoaded = true
-      collectionView.removeObserver(self, forKeyPath: "contentSize")
+
+		//	if conve.count > 5 {
+				collectionViewLoaded = true
+				collectionView.removeObserver(self, forKeyPath: "contentSize")
+			//}
     }
   }
   
@@ -684,27 +845,37 @@ class ChatLogViewController: UIViewController {
   }
 
   func updateMessageStatusUI(sentMessage: Message) {
-    DispatchQueue.global(qos: .default).async {
-      guard let index = self.messages.index(where: { (message) -> Bool in
-        return message.messageUID == sentMessage.messageUID
-      }) else { return }
+  //  DispatchQueue.global(qos: .default).async {
+//      guard let index = messages.index(where: { (message) -> Bool in
+//        return message.messageUID == sentMessage.messageUID
+//      }) else { return }
+//
+  //    guard index >= 0 else { return }
 
-      guard index >= 0 else { return }
+		// MARK: REALM
+			let realm = try! Realm()
+		let messageToUpdate = conversation?.messages.filter("messageUID == %@", sentMessage.messageUID ?? "").first
+			try! realm.write {
+				messageToUpdate?.status = sentMessage.status
+				//messages[index].status = sentMessage.status
+			}
 
-      self.messages[index].status = sentMessage.status
-      self.groupedMessages = Message.groupedMessages(self.messages)
-      guard let indexPath = Message.get(indexPathOf: self.messages[index], in: self.groupedMessages) else { return }
-      DispatchQueue.main.async {
-        self.collectionView.performBatchUpdates({
-          self.collectionView.reloadItems(at: [indexPath])
-        }, completion: nil)
-      }
+   //   groupedMessages = Message.groupedMessages(messages)
+//      guard let indexPath = Message.get(indexPathOf: self.messages[index], in: self.groupedMessages) else { return }
+//      DispatchQueue.main.async {
+//        self.collectionView.performBatchUpdates({
+//          self.collectionView.reloadItems(at: [indexPath])
+//        }, completion: nil)
+//      }
+//
+//		conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last?.messageUID
 
-      guard sentMessage.status == messageStatusDelivered,
-        self.messages[index].messageUID == self.messages.last?.messageUID,
+      guard //sentMessage.status == messageStatusDelivered,
+					groupedMessages.last?.messages.last?.status == messageStatusDelivered,
+        	groupedMessages.last?.messages.last?.messageUID == conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last?.messageUID,
         userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
       SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
-    }
+ //   }
   }
 
   // MARK: - Title view

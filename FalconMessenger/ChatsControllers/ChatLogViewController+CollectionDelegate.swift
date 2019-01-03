@@ -8,50 +8,77 @@
 
 import UIKit
 import Firebase
+import RealmSwift
 
 extension ChatLogViewController: CollectionDelegate {
   
   func collectionView(shouldRemoveMessage id: String) {
-    guard let index = self.messages.index(where: { (message) -> Bool in
-      return message.messageUID == id
-    }) else { return }
-    performBatchUpdates(for: index, id: id)
+
+		let realm = try! Realm()
+		guard let messageToDelete = conversation?.messages.filter("messageUID == %@", id).first, !messageToDelete.isInvalidated else {
+			print("removing is invalidated"); return }
+		print("in oberve removing")
+		try! realm.write {
+			realm.delete(messageToDelete)
+		//	messagesFetcher?.configureTails(for: conversation!.messages, isGroupChat: nil)
+		}
+
+
+//    guard let index = self.messages.index(where: { (message) -> Bool in
+//      return message.messageUID == id
+//    }) else { return }
+  //  performBatchUpdates(for: index, id: id)
   }
   
-  func performBatchUpdates(for index: Int, id: String) {
-    guard let messagesFetcher = messagesFetcher else { return }
-    let removedMessage = messages[index]
-    messages.remove(at: index)
-    messages = messagesFetcher.configureTails(for: messages, isGroupChat: nil)
- 
-    guard let indexPath = Message.get(indexPathOf: removedMessage, in: groupedMessages) else { return }
-    
-    let currentSectionsCount = groupedMessages.count
-    groupedMessages = Message.groupedMessages(messages)
-    
-    collectionView.performBatchUpdates({
-      if currentSectionsCount > self.groupedMessages.count {
-         collectionView.deleteSections([indexPath.section])
-      } else {
-        collectionView.deleteItems(at: [indexPath])
-      }
-    }) { (_) in
-      UIView.performWithoutAnimation {
-        self.collectionView.performBatchUpdates({
-          if currentSectionsCount > self.groupedMessages.count {
-            guard indexPath.section-1 >= 0 else { return }
-            self.collectionView.reloadSections([indexPath.section-1])
-          } else {
-            self.collectionView.reloadSections([indexPath.section])
-          }
-        }) { (_) in
-          guard self.messages.count == 0 else { return }
-          self.navigationController?.popViewController(animated: true)
-        }
-      }
-    }
-  }
-  
+//  func performBatchUpdates(for index: Int, id: String) {
+//    guard let messagesFetcher = messagesFetcher else { return }
+//    let removedMessage = messages[index]
+//		let isRemovedMessageLast = index == messages.count - 1
+//
+//		//MARK: REALM
+//		let realm = try! Realm()
+//		let message = conversation?.messages.filter("messageUID == %@", id).first ?? removedMessage
+//
+//		try! realm.write {
+//			realm.delete(message)
+//			messages.remove(at: index)
+//		//	realm.delete(removedMessage)
+//			messages = messagesFetcher.configureTails(for: messages, isGroupChat: nil)
+//		}
+//
+//		if isRemovedMessageLast {
+//			NotificationCenter.default.post(name: .messageSent, object: nil)
+//		}
+//
+//
+//    guard let indexPath = Message.get(indexPathOf: removedMessage, in: groupedMessages) else { return }
+//
+//    let currentSectionsCount = groupedMessages.count
+//    groupedMessages = Message.groupedMessages(messages)
+//
+//    collectionView.performBatchUpdates({
+//      if currentSectionsCount > self.groupedMessages.count {
+//         collectionView.deleteSections([indexPath.section])
+//      } else {
+//        collectionView.deleteItems(at: [indexPath])
+//      }
+//    }) { (_) in
+//      UIView.performWithoutAnimation {
+//        self.collectionView.performBatchUpdates({
+//          if currentSectionsCount > self.groupedMessages.count {
+//            guard indexPath.section-1 >= 0 else { return }
+//            self.collectionView.reloadSections([indexPath.section-1])
+//          } else {
+//            self.collectionView.reloadSections([indexPath.section])
+//          }
+//        }) { (_) in
+//          guard self.messages.count == 0 else { return }
+//          self.navigationController?.popViewController(animated: true)
+//        }
+//      }
+//    }
+//  }
+
   func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message) {
     
     guard let messageID = message.messageUID else { return }
@@ -61,69 +88,86 @@ extension ChatLogViewController: CollectionDelegate {
     
     messageChangesHandles[0].handle = reference.observe(.childChanged, with: { (snapshot) in
       guard snapshot.exists(), snapshot.key == "status", let newMessageStatus = snapshot.value  else { return }
-      message.status = newMessageStatus as? String
+
+			//MARK: REALM
+//			let realm = try! Realm()
+//			try! realm.write {
+				message.status = newMessageStatus as? String
+		//	}
+
       self.updateMessageStatusUI(sentMessage: message)
     })
     
-    self.updateMessageStatus(messageRef: reference)
-    self.updateMessageStatusUI(sentMessage: message)
+    updateMessageStatus(messageRef: reference)
+    updateMessageStatusUI(sentMessage: message)
   }
   
-  func sortedMessages(unsortedMessages: [Message]) -> [Message] {
-    let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
-      return message1.timestamp.value! < message2.timestamp.value!
-    })
-    return sortedMessages
-  }
-  
+//  func sortedMessages(unsortedMessages: [Message]) -> [Message] {
+//    let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
+//      return message1.timestamp.value! < message2.timestamp.value!
+//    })
+//    return sortedMessages
+//  }
+
   func collectionView(shouldBeUpdatedWith message: Message, reference: DatabaseReference) {
-    
-    let insertionIndex = self.messages.insertionIndexOf(elem: message, isOrderedBefore: { (message1, message2) -> Bool in
-      return message1.messageUID! < message2.messageUID!
-    })
-    
-    guard let _ = self.messages.index(where: { (existentMessage) -> Bool in
-      return existentMessage.messageUID == message.messageUID
-    }) else {
-      peformBatchUpdate(for: message, at: insertionIndex, reference: reference)
-      return
-    }
+
+		let realm = try! Realm()
+
+		try! realm.write {
+			message.conversation = conversation
+			realm.create(Message.self, value: message, update: true)
+		//	messagesFetcher?.configureTails(for: conversation!.messages, isGroupChat: nil)
+		}
+
+		self.updateMessageStatus(messageRef: reference)
+//		guard self.isScrollViewAtTheBottom() else { return }
+//		self.collectionView.scrollToBottom(animated: true)
+//    let insertionIndex = self.messages.insertionIndexOf(elem: message, isOrderedBefore: { (message1, message2) -> Bool in
+//      return message1.messageUID! < message2.messageUID!
+//    })
+//
+//    guard let _ = self.messages.index(where: { (existentMessage) -> Bool in
+//      return existentMessage.messageUID == message.messageUID
+//    }) else {
+//      peformBatchUpdate(for: message, at: insertionIndex, reference: reference)
+//      return
+//    }
   }
   
-  fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
-    messages.insert(message, at: insertionIndex)
-    guard let messagesFetcher = messagesFetcher else { return }
-    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
-      messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
-    } else {
-      messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)
-    }
-    
-    let oldSections = groupedMessages.count
-    groupedMessages = Message.groupedMessages(messages)
-    guard let indexPath = Message.get(indexPathOf: message, in: groupedMessages) else { return }
-    
-    collectionView.performBatchUpdates({
-      if oldSections < groupedMessages.count {
-        collectionView.insertSections([indexPath.section])
-        // TODO: scroll to bottom
-      } else {
-        collectionView.insertItems(at: [indexPath])
-        // TODO: scroll to bottom
-      }
-      
-    }) { (_) in
-      self.updateMessageStatus(messageRef: reference)
-      guard oldSections <= self.groupedMessages.count else { return }
-      UIView.performWithoutAnimation {
-        self.collectionView.performBatchUpdates({
-           self.collectionView.reloadSections([indexPath.section])
-        }) { (_) in
-          guard self.isScrollViewAtTheBottom() else { return }
-          self.collectionView.scrollToBottom(animated: true)
-        }
-      }
-      
-    }
-  }
+//  fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
+//    messages.insert(message, at: insertionIndex)
+//    guard let messagesFetcher = messagesFetcher else { return }
+//    if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
+//      messages = messagesFetcher.configureTails(for: messages, isGroupChat: true)
+//    } else {
+//      messages = messagesFetcher.configureTails(for: messages, isGroupChat: false)
+//    }
+//    
+//    let oldSections = groupedMessages.count
+//    groupedMessages = Message.groupedMessages(messages)
+//    guard let indexPath = Message.get(indexPathOf: message, in: groupedMessages) else { return }
+//    
+//    collectionView.performBatchUpdates({
+//      if oldSections < groupedMessages.count {
+//        collectionView.insertSections([indexPath.section])
+//        // TODO: scroll to bottom
+//      } else {
+//        collectionView.insertItems(at: [indexPath])
+//        // TODO: scroll to bottom
+//      }
+//      
+//    }) { (_) in
+//      self.updateMessageStatus(messageRef: reference)
+//      guard oldSections <= self.groupedMessages.count else { return }
+//      UIView.performWithoutAnimation {
+//        self.collectionView.performBatchUpdates({
+//           self.collectionView.reloadSections([indexPath.section])
+//        }) { (_) in
+//          guard self.isScrollViewAtTheBottom() else { return }
+//          self.collectionView.scrollToBottom(animated: true)
+//        }
+//      }
+//      
+//    }
+//  }
 }

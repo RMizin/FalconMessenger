@@ -116,7 +116,7 @@ struct MessageFontsAppearance {
 
 class BaseMessageCell: UICollectionViewCell {
   
-  weak var message: Message?
+	weak var message: Message?
   
   weak var chatLogController: ChatLogViewController?
 
@@ -240,10 +240,10 @@ class BaseMessageCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func configureDeliveryStatus(at indexPath: IndexPath, groupMessages: [[Message]], message: Message) {
+  func configureDeliveryStatus(at indexPath: IndexPath, groupMessages: [SectionedMessage], message: Message) {
 
     guard let lastItem = groupMessages.last else { return }
-    let lastRow = lastItem.count - 1
+    let lastRow = lastItem.messages.count - 1
     let lastSection = groupMessages.count - 1
     
     let lastIndexPath = IndexPath(row: lastRow, section: lastSection)

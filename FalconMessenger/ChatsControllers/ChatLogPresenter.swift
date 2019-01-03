@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import RealmSwift
 
 let chatLogPresenter = ChatLogPresenter()
 
@@ -42,19 +43,71 @@ class ChatLogPresenter: NSObject {
       controller.tableView.deselectRow(at: indexPath, animated: true)
     }
   }
-  
-  public func open(_ conversation: Conversation) {
-    chatLogController = ChatLogViewController()
-    messagesFetcher = MessagesFetcher()
-    messagesFetcher?.delegate = self
-    messagesFetcher?.loadMessagesData(for: conversation)
-  }
-  
-  public func deallocate() {
-    chatLogController = nil
-    messagesFetcher?.delegate = nil
-    messagesFetcher = nil
-  }
+
+	fileprivate var isLoadedFromRealm = false
+	fileprivate var isLoadedFromFirebase = false
+
+	public func open(_ conversation: Conversation) {
+	 	isLoadedFromFirebase = false
+		isLoadedFromRealm = false
+		chatLogController = ChatLogViewController()
+		messagesFetcher = MessagesFetcher()
+		messagesFetcher?.delegate = self
+		
+		chatLogController?.hidesBottomBarWhenPushed = true
+		chatLogController?.messagesFetcher = messagesFetcher
+
+		chatLogController?.conversation = conversation
+
+
+		loadFromRealm(conversation: conversation)
+		messagesFetcher?.loadMessagesData(for: conversation)
+	}
+
+	fileprivate func loadFromRealm(conversation: Conversation) {
+		let isNotEnoughData = conversation.messages.count <= 3
+		if !isNotEnoughData {
+			print("opening from realm")
+			isLoadedFromRealm = true
+			openChatLog(for: conversation)
+		}
+	}
+
+	fileprivate func openChatLog(for conversation: Conversation) {
+		chatLogController?.getMessages()
+		chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
+
+		if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
+			chatLogController?.observeTypingIndicator()
+			chatLogController?.configureTitleViewWithOnlineStatus()
+		}
+
+		chatLogController?.observeBlockChanges()
+		chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
+		guard let destination = chatLogController else { return }
+
+		if DeviceType.isIPad {
+			let navigationController = UINavigationController(rootViewController: destination)
+			controller()?.splitViewController?.showDetailViewController(navigationController, sender: self)
+		} else {
+			controller()?.navigationController?.pushViewController(destination, animated: true)
+
+			if isLoadedFromRealm == true {
+				deallocate()
+			}
+
+			if isLoadedFromFirebase == true {
+				deallocate()
+			}
+		}
+		deselectItem()
+	}
+
+	public func deallocate() {
+		chatLogController = nil
+		messagesFetcher?.delegate = nil
+		messagesFetcher = nil
+	}
 }
 
 extension ChatLogPresenter: MessagesDelegate {
@@ -62,39 +115,26 @@ extension ChatLogPresenter: MessagesDelegate {
   func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
     chatLogController?.updateMessageStatus(messageRef: reference)
   }
-  
-  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-    chatLogController?.hidesBottomBarWhenPushed = true
-    chatLogController?.messagesFetcher = messagesFetcher
-    chatLogController?.messages = messages
-    chatLogController?.conversation = conversation
-    chatLogController?.groupedMessages = Message.groupedMessages(messages)
-    chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
 
-// without realm
-//    if let membersIDs = conversation.chatParticipantsIDs, let uid = Auth.auth().currentUser?.uid, membersIDs.contains(uid) {
-//      chatLogController?.observeTypingIndicator()
-//      chatLogController?.configureTitleViewWithOnlineStatus()
-//    }
+	fileprivate func addMessagesToRealm(messages: [Message]) {
+		guard messages.count > 0 else { return }
+		let realm = try! Realm()
 
-		// with realm
-		if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
-			chatLogController?.observeTypingIndicator()
-			chatLogController?.configureTitleViewWithOnlineStatus()
+		autoreleasepool {
+			realm.beginWrite()
+			for message in messages {
+				realm.create(Message.self, value: message, update: true)
+			}
+			try! realm.commitWrite()
 		}
+	}
 
-    chatLogController?.observeBlockChanges()
-    
-    chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
-    guard let destination = chatLogController else { return }
-    
-    if DeviceType.isIPad {
-      let navigationController = UINavigationController(rootViewController: destination)
-      controller()?.splitViewController?.showDetailViewController(navigationController, sender: self)
-    } else {
-     controller()?.navigationController?.pushViewController(destination, animated: true)
-     deallocate()
-    }
-    deselectItem()
-  }
+  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
+		// проверить не было ли удалено сообений
+		addMessagesToRealm(messages: messages)
+		guard isLoadedFromRealm == false else { return }
+		print("firebase update")
+		isLoadedFromFirebase = true
+		openChatLog(for: conversation)
+	}
 }

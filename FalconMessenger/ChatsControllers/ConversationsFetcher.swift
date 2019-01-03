@@ -155,14 +155,18 @@ class ConversationsFetcher: NSObject {
 				self.loadLastMessage(for: lastMessageID, conversation: conversation)
     })
   }
-  
+
+	fileprivate let messagesFetcher = MessagesFetcher()
+	
   fileprivate func loadLastMessage(for messageID: String, conversation: Conversation) {
     let lastMessageReference = Database.database().reference().child("messages").child(messageID)
     lastMessageReference.observeSingleEvent(of: .value, with: { (snapshot) in
       guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
       dictionary.updateValue(messageID as AnyObject, forKey: "messageUID")
+			dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: false)
 
       let message = Message(dictionary: dictionary)
+		//	message = self.messagesFetcher.configureTails(for: [message], isGroupChat: false).first ?? message
 			conversation.lastMessageTimestamp.value = message.timestamp.value
 
 			message.conversation = conversation
@@ -171,7 +175,7 @@ class ConversationsFetcher: NSObject {
       self.loadAddictionalMetadata(for: conversation)
     })
   }
-  
+
   fileprivate func loadAddictionalMetadata(for conversation: Conversation) {
     
     guard let chatID = conversation.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
