@@ -89,7 +89,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
         case false:
           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
           cell.chatLogController = self
-          cell.setupData(message: message, isGroupChat: isGroupChat)
+					cell.setupData(message: message, isGroupChat: isGroupChat)
           return cell
         }
       } else

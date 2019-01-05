@@ -8,39 +8,57 @@
 
 import UIKit
 import Firebase
+import RealmSwift
 
 extension ChatLogViewController: GroupMembersManagerDelegate {
   
   func updateName(name: String) {
-    self.conversation?.chatName = name
+		let realm = try! Realm()
+		try! realm.safeWrite {
+    	self.conversation?.chatName = name
+		}
     if self.isCurrentUserMemberOfCurrentGroup() {
       self.configureTitleViewWithOnlineStatus()
     }
   }
   
   func updateAdmin(admin: String) {
-    self.conversation?.admin = admin
+		let realm = try! Realm()
+
+		try! realm.safeWrite {
+			 self.conversation?.admin = admin
+		}
+
   }
   
   func addMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
+		let realm = try! Realm()
     
     if let _ = members.index(where: { (memberID) -> Bool in
       return memberID == id }) {
     } else {
-			self.conversation?.chatParticipantsIDs.append(id)
+
+			try! realm.safeWrite {
+				self.conversation?.chatParticipantsIDs.append(id)
+			}
+
       self.changeUIAfterChildAddedIfNeeded()
     }
   }
   
   func removeMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
+		let realm = try! Realm()
 
     guard let memberIndex = members.index(where: { (memberID) -> Bool in
       return memberID == id
     }) else { return }
 
-		self.conversation?.chatParticipantsIDs.remove(at: memberIndex)
+		try! realm.safeWrite {
+			self.conversation?.chatParticipantsIDs.remove(at: memberIndex)
+		}
+		
     self.changeUIAfterChildRemovedIfNeeded()
   }
 

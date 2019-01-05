@@ -14,20 +14,25 @@ class ChatsRealmManager {
 	let realm = try! Realm()
 
 	func update(conversation: Conversation) {
-		realm.beginWrite()
-		realm.create(Conversation.self, value: conversation, update: true)
-		try! realm.commitWrite()
+		try! realm.safeWrite {
+			realm.create(Conversation.self, value: conversation, update: true)
+		}
 	}
 
 	func update(conversations: [Conversation], tokens: [NotificationToken]) {
 			autoreleasepool {
 				let realm = try! Realm()
-			///	guard !realm.isInWriteTransaction else {  try! realm.commitWrite(); return }
+				guard !realm.isInWriteTransaction else {
+					print("Update Array operation, realm is in write transaction in \(String(describing: ChatsRealmManager.self))")
+					return
+				}
+
 				realm.beginWrite()
 				for conversation in conversations {
 					conversation.isTyping.value = realm.objects(Conversation.self).filter("chatID = %@", conversation.chatID ?? "").first?.isTyping.value
 					realm.create(Conversation.self, value: conversation, update: true)
 					if let message = conversation.lastMessageRuntime {
+						message.senderName = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
 						realm.create(Message.self, value: message, update: true)
 					}
 
@@ -37,19 +42,17 @@ class ChatsRealmManager {
 	}
 
 	func delete(conversation: Conversation) {
-		realm.beginWrite()
-		let result = realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
-		let messagesResult = realm.objects(Message.self).filter("conversation.chatID = '\(conversation.chatID ?? "")'")
-
-		realm.delete(messagesResult)
-		realm.delete(result)
-
-		try! realm.commitWrite()
+		try! realm.safeWrite {
+			let result = realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
+			let messagesResult = realm.objects(Message.self).filter("conversation.chatID = '\(conversation.chatID ?? "")'")
+			realm.delete(messagesResult)
+			realm.delete(result)
+		}
 	}
 
 	func deleteAll() {
-		realm.beginWrite()
-		realm.deleteAll()
-		try! realm.commitWrite()
+		try! realm.safeWrite {
+			realm.deleteAll()
+		}
 	}
 }

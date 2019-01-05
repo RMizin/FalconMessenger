@@ -70,9 +70,24 @@ class RealmRect: Object {
 	}
 }
 
+//
+//class TailedMessage: Object {
+//
+//	var messages: Results<Message>!
+//
+//	convenience init(messages: Results<Message>) {
+//		self.init()
+//
+//		self.title = title
+//		self.messages = messages
+//	}
+//}
+
 class SectionedMessage: Object {
 
 	@objc var title: String?
+
+	var messages1: [TailedMessage]?
 	var messages: Results<Message>!
 	var notificationToken: NotificationToken?
 
@@ -83,12 +98,12 @@ class SectionedMessage: Object {
 		self.messages = messages
 	}
 
-	deinit {
-		print("deinits section message")
-		if notificationToken != nil {
-			notificationToken?.invalidate()
-		}
-	}
+//	deinit {
+//		print("deinits section message")
+//		if notificationToken != nil {
+//			notificationToken?.invalidate()
+//		}
+//	}
 }
 
 
@@ -209,7 +224,7 @@ class Message: Object {
 
         imageCellHeight.value = dictionary["imageCellHeight"] as? Double
       
-        senderName = dictionary["senderName"] as? String
+      //  senderName = dictionary["senderName"] as? String
 
         isCrooked.value = dictionary["isCrooked"] as? Bool
     }

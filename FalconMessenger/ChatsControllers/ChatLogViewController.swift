@@ -33,7 +33,7 @@ class ChatLogViewController: UIViewController {
   
   weak var deleteAndExitDelegate: DeleteAndExitDelegate?
   
-  var messagesFetcher: MessagesFetcher?
+  weak var messagesFetcher: MessagesFetcher?
   let chatLogHistoryFetcher = ChatLogHistoryFetcher()
   let userBlockingManager = UserBlockingManager()
   let groupMembersManager = GroupMembersManager()
@@ -51,10 +51,12 @@ class ChatLogViewController: UIViewController {
   var companionBanAddedHandle: DatabaseHandle!
   var companionBanChangedHandle: DatabaseHandle!
   
-  var conversation: Conversation?
+  weak var conversation: Conversation?
   //var messages = [Message]()
   var groupedMessages = [SectionedMessage]()
   var typingIndicatorSection: [String] = []
+
+	let realm = try! Realm()
 
   var chatLogAudioPlayer: AVAudioPlayer!
   var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
@@ -127,13 +129,6 @@ class ChatLogViewController: UIViewController {
 		let allMessages = groupedMessages.flatMap { (sectionedMessage) -> [Message] in
 			return Array(sectionedMessage.messages)
 		}
-//
-//		print(allMessages.count)
-
-//	allMessages
-
-
-
 
 
     if let isGroupChat = conversation.isGroupChat.value, isGroupChat {
@@ -170,17 +165,17 @@ class ChatLogViewController: UIViewController {
   }
 
 
-	func getRealmMessages(fromIndex: Int, toIndex: Int) {
-		let pagedMessages = List<Message>()
-
-		let mmm = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
-
-		for index in fromIndex...toIndex where index >= 0 && index < mmm.count {
-			print(index)
-			let pagedItem = mmm[index]
-			pagedMessages.append(pagedItem)
-		}
-	}
+//	func getRealmMessages(fromIndex: Int, toIndex: Int) {
+//		let pagedMessages = List<Message>()
+//
+//		let mmm = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
+//
+//		for index in fromIndex...toIndex where index >= 0 && index < mmm.count {
+//			print(index)
+//			let pagedItem = mmm[index]
+//			pagedMessages.append(pagedItem)
+//		}
+//	}
 	func getMessages(/*fromIndex: Int, toIndex: Int*/) {
 
 //		let realm = try! Realm()
@@ -212,104 +207,86 @@ class ChatLogViewController: UIViewController {
 			let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
 			let section = SectionedMessage(messages: messages, title: date)
 
-			observeChanges(for: section)
+		//	observeChanges(for: section)
 			groupedMessages.append(section)
 		}
 	}
 
 
-	@objc func observeChanges(for section: SectionedMessage) {
-		guard section.messages != nil else { print("no section messages"); return }
-		
-		section.notificationToken = section.messages.observe { [weak self] (changes: RealmCollectionChange) in
-			switch changes {
-			case .initial: self?.collectionView.reloadData(); break
-			case .update(_, let deletions, let insertions, let modifications):
-				//let row = $0
-				print("update", deletions.count, insertions.count, modifications.count)
-
-
-				guard let sectionIndex = self?.groupedMessages.index(where: { (sectionedMessage) -> Bool in
-					return sectionedMessage.title == section.title
-				}) else {
-					print("update failed")
-
-//					guard let dates = self?.conversation!.messages.map({ $0.shortConvertedTimestamp ?? "" }) else { return }
-//					let uniqueDates = Array(Set(dates))
+//	@objc func observeChanges(for section: SectionedMessage) {
+//		guard section.messages != nil else { print("no section messages"); return }
 //
-//					let keys = uniqueDates.sorted { (time1, time2) -> Bool in
-//						return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
-//					}
+//		section.notificationToken = section.messages.observe { [weak self] (changes: RealmCollectionChange) in
+//			switch changes {
+//			case .initial:  break
+//			case .update(_, let deletions, let insertions, let modifications):
+//				//let row = $0
+//				print("update", deletions.count, insertions.count, modifications.count)
+//				print(section.title)
 //
-//					guard let newSectionTitle = keys.last else { return }
-//					guard let messages = self?.conversation!.messages
-//						.sorted(byKeyPath: "timestamp", ascending: true)
-//						.filter("shortConvertedTimestamp == %@", newSectionTitle) else { return }
 //
-//					let newSection = SectionedMessage(messages: messages, title: newSectionTitle)
-//				//	self?.observeChanges(for: newSection)
-//					self?.groupedMessages.append(newSection)
-
-				//	guard let unwrappedSelf = self else { return }
-//					let newSectionIndex = unwrappedSelf.groupedMessages.count - 1
+////				guard let sectionIndex = self?.groupedMessages.index(where: { (sectionedMessage) -> Bool in
+////					return sectionedMessage.title == section.title
+////				}) else {
+////					print("update failed")
+////					return
+////				}
 //
-//					self?.collectionView.performBatchUpdates({
-//						print("trying to inser section")
-//						self?.collectionView.insertSections(IndexSet([newSectionIndex]))
-//					}, completion: { (isCompleted) in
-//						print("insert section completed")
-//					})
-					return
-				}
-
-				print("update passed")
-
-				//	let indexPath = IndexPath(row: $0, section: sectionIndex)
-
-				self?.collectionView.performBatchUpdates({
-					self?.collectionView.reloadItems(at: modifications.map({ IndexPath(row: $0, section: sectionIndex) }))
-					self?.collectionView.deleteItems(at: deletions.map({ IndexPath(row: $0, section: sectionIndex) }))
-					self?.collectionView.insertItems(at: insertions.map({ IndexPath(row: $0, section: sectionIndex) }))
-				}, completion: { (isCompleted) in
-					print("update completed")
-
-					if insertions.count > 0 {
-						self?.collectionView.scrollToBottom(animated: true)
-					}
-
-					if self?.collectionView.numberOfItems(inSection: sectionIndex) == 0 {
-						print("removing section")
-
-						self?.collectionView.performBatchUpdates({
-
-							if let unwrappedSelf = self {
-
-								self?.groupedMessages.remove(at: sectionIndex)
-								self?.collectionView.deleteSections(IndexSet([sectionIndex]))
-
-								if unwrappedSelf.groupedMessages.count > 0, sectionIndex - 1 >= 0 {
-									var rowIndex = 0
-									if let messages = unwrappedSelf.groupedMessages[sectionIndex - 1].messages {
-										rowIndex = messages.count - 1 >= 0 ? messages.count - 1 : 0
-									}
-									self?.collectionView.reloadItems(at: [IndexPath(row: rowIndex,section: sectionIndex - 1)])
-								}
-							}
-
-						}, completion: { (isCompleted) in
-							print("delete section completed")
-							guard self?.groupedMessages.count == 0 else { return }
-							self?.navigationController?.popViewController(animated: true)
-
-						})
-					}
-				})
-
-				break
-			case .error(let err): fatalError("\(err)"); break
-			}
-		}
-	}
+//				print("update passed")
+//
+////				self?.collectionView.performBatchUpdates({
+////					UIView.performWithoutAnimation {
+////					//	self?.collectionView.reloadItems(at: modifications.map({ IndexPath(row: $0, section: sectionIndex) }))
+////					}
+//
+//			//		self?.collectionView.deleteItems(at: deletions.map({ IndexPath(row: $0, section: sectionIndex) }))
+//				//	self?.collectionView.insertItems(at: insertions.map({ IndexPath(row: $0, section: sectionIndex) }))
+//			//	}, completion: { (isCompleted) in
+//				//	print("update completed")
+//
+////					if insertions.count > 0 {
+////						self?.collectionView.scrollToBottom(animated: true)
+////					}
+//
+////					if self?.collectionView.numberOfItems(inSection: sectionIndex) == 0 {
+////						print("removing section")
+////
+////						self?.collectionView.performBatchUpdates({
+////
+////							if let unwrappedSelf = self {
+////
+////								self?.groupedMessages.remove(at: sectionIndex)
+////
+////								UIView.performWithoutAnimation {
+////									self?.collectionView.deleteSections(IndexSet([sectionIndex]))
+////								}
+////
+////								if unwrappedSelf.groupedMessages.count > 0, sectionIndex - 1 >= 0 {
+////									var rowIndex = 0
+////									if let messages = unwrappedSelf.groupedMessages[sectionIndex - 1].messages {
+////										rowIndex = messages.count - 1 >= 0 ? messages.count - 1 : 0
+////									}
+////									UIView.performWithoutAnimation {
+////										self?.collectionView.reloadItems(at: [IndexPath(row: rowIndex,section: sectionIndex - 1)])
+////									}
+////
+////								}
+////							}
+////
+////						}, completion: { (isCompleted) in
+////							print("delete section completed")
+////							guard self?.groupedMessages.count == 0 else { return }
+////							self?.navigationController?.popViewController(animated: true)
+////
+////						})
+////					}
+//			//	})
+//
+//				break
+//			case .error(let err): fatalError("\(err)"); break
+//			}
+//		}
+//	}
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -808,7 +785,7 @@ class ChatLogViewController: UIViewController {
 
  // MARK: - DATABASE MESSAGE STATUS // TO MOVE
   func updateMessageStatus(messageRef: DatabaseReference) {
-
+	print("update message status")
     guard let uid = Auth.auth().currentUser?.uid, currentReachabilityStatus != .notReachable else { return }
 
     var senderID: String?
@@ -834,6 +811,7 @@ class ChatLogViewController: UIViewController {
   }
 
   fileprivate func resetBadgeForSelf() {
+		print("reset badge for self")
     guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
     let badgeRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(messageMetaDataFirebaseFolder).child("badge")
     badgeRef.runTransactionBlock({ (mutableData) -> TransactionResult in
@@ -845,37 +823,42 @@ class ChatLogViewController: UIViewController {
   }
 
   func updateMessageStatusUI(sentMessage: Message) {
-  //  DispatchQueue.global(qos: .default).async {
-//      guard let index = messages.index(where: { (message) -> Bool in
-//        return message.messageUID == sentMessage.messageUID
-//      }) else { return }
-//
-  //    guard index >= 0 else { return }
+		let realm = try! Realm()
+		//guard !realm.isInWriteTransaction else { print("realm iS in write transaction In MESSAGE STATUS UI / CHATLOGCONTROLLERr"); return }
+		guard let messageToUpdate = conversation?.messages.filter("messageUID == %@", sentMessage.messageUID ?? "").first else { return }
+	//	let safeMessageToUpdate = ThreadSafeReference(to: messageObject)
 
-		// MARK: REALM
-			let realm = try! Realm()
-		let messageToUpdate = conversation?.messages.filter("messageUID == %@", sentMessage.messageUID ?? "").first
-			try! realm.write {
-				messageToUpdate?.status = sentMessage.status
-				//messages[index].status = sentMessage.status
+   // DispatchQueue.global(qos: .default).async {
+		//	let realm = try! Realm()
+		//	guard let messageToUpdate = realm.resolve(safeMessageToUpdate) else { return }
+			try! realm.safeWrite {
+				messageToUpdate.status = sentMessage.status
+				let section = self.collectionView.numberOfSections - 1
+				if section >= 0 {
+					let index = self.collectionView.numberOfItems(inSection: section) - 1
+					if index >= 0 {
+					//	self.collectionView.performBatchUpdates({
+						UIView.performWithoutAnimation {
+							self.collectionView.reloadItems(at: [IndexPath(item: index, section: section)] )
+						}
+
+					//	}, completion: { (isCompleted) in
+							//DispatchQueue.main.async { [weak self] in
+
+							//}
+						//})
+					}
+				}
 			}
+		guard self.groupedMessages.last?.messages.last?.status == messageStatusDelivered,
+			self.groupedMessages.last?.messages.last?.messageUID ==
+				self.conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last?.messageUID,
+			userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
+		SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
 
-   //   groupedMessages = Message.groupedMessages(messages)
-//      guard let indexPath = Message.get(indexPathOf: self.messages[index], in: self.groupedMessages) else { return }
-//      DispatchQueue.main.async {
-//        self.collectionView.performBatchUpdates({
-//          self.collectionView.reloadItems(at: [indexPath])
-//        }, completion: nil)
-//      }
-//
-//		conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last?.messageUID
 
-      guard //sentMessage.status == messageStatusDelivered,
-					groupedMessages.last?.messages.last?.status == messageStatusDelivered,
-        	groupedMessages.last?.messages.last?.messageUID == conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last?.messageUID,
-        userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
-      SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
- //   }
+
+    //}
   }
 
   // MARK: - Title view
@@ -1029,6 +1012,7 @@ class ChatLogViewController: UIViewController {
     }
 
     isTyping = false
+
     let text = inputContainerView.inputTextView.text
     let media = inputContainerView.attachedMedia
     inputContainerView.attachButton.reset()

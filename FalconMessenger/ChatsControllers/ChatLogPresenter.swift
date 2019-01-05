@@ -35,33 +35,19 @@ class ChatLogPresenter: NSObject {
     }
   }
   
-  fileprivate func deselectItem() {
-    guard DeviceType.isIPad else { return }
-    guard let controller = controller() as? UITableViewController else { return }
-    
-    if let indexPath = controller.tableView.indexPathForSelectedRow {
-      controller.tableView.deselectRow(at: indexPath, animated: true)
-    }
-  }
-
 	fileprivate var isLoadedFromRealm = false
 	fileprivate var isLoadedFromFirebase = false
+	fileprivate var isMessagesStatusUpdated = false
 
 	public func open(_ conversation: Conversation) {
 	 	isLoadedFromFirebase = false
 		isLoadedFromRealm = false
+		isMessagesStatusUpdated = false
 		chatLogController = ChatLogViewController()
 		messagesFetcher = MessagesFetcher()
 		messagesFetcher?.delegate = self
-		
-		chatLogController?.hidesBottomBarWhenPushed = true
-		chatLogController?.messagesFetcher = messagesFetcher
-
-		chatLogController?.conversation = conversation
-
-
-		loadFromRealm(conversation: conversation)
 		messagesFetcher?.loadMessagesData(for: conversation)
+		loadFromRealm(conversation: conversation)
 	}
 
 	fileprivate func loadFromRealm(conversation: Conversation) {
@@ -74,6 +60,9 @@ class ChatLogPresenter: NSObject {
 	}
 
 	fileprivate func openChatLog(for conversation: Conversation) {
+		chatLogController?.hidesBottomBarWhenPushed = true
+		chatLogController?.messagesFetcher = messagesFetcher
+		chatLogController?.conversation = conversation
 		chatLogController?.getMessages()
 		chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
 
@@ -92,6 +81,7 @@ class ChatLogPresenter: NSObject {
 		} else {
 			controller()?.navigationController?.pushViewController(destination, animated: true)
 
+			guard isMessagesStatusUpdated == true else { return }
 			if isLoadedFromRealm == true {
 				deallocate()
 			}
@@ -103,26 +93,42 @@ class ChatLogPresenter: NSObject {
 		deselectItem()
 	}
 
+	fileprivate func deselectItem() {
+		guard DeviceType.isIPad else { return }
+		guard let controller = controller() as? UITableViewController else { return }
+
+		if let indexPath = controller.tableView.indexPathForSelectedRow {
+			controller.tableView.deselectRow(at: indexPath, animated: true)
+		}
+	}
+
 	public func deallocate() {
+		print("deallocate")
 		chatLogController = nil
-		messagesFetcher?.delegate = nil
-		messagesFetcher = nil
+//		messagesFetcher?.delegate = nil
+//		messagesFetcher = nil
 	}
 }
 
 extension ChatLogPresenter: MessagesDelegate {
   
   func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
+		print("shouldChangeMessageStatusToReadAt ")
+
     chatLogController?.updateMessageStatus(messageRef: reference)
+		isMessagesStatusUpdated = true
+		guard isLoadedFromRealm == true || isLoadedFromFirebase == true else { return }
+		deallocate()
   }
 
 	fileprivate func addMessagesToRealm(messages: [Message]) {
 		guard messages.count > 0 else { return }
 		let realm = try! Realm()
-
+	//	guard !realm.isInWriteTransaction else { return }
 		autoreleasepool {
 			realm.beginWrite()
 			for message in messages {
+			//	message.senderName = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
 				realm.create(Message.self, value: message, update: true)
 			}
 			try! realm.commitWrite()
@@ -131,6 +137,10 @@ extension ChatLogPresenter: MessagesDelegate {
 
   func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
 		// проверить не было ли удалено сообений
+		guard chatLogController != nil else {
+			return
+		}
+		print("shouldBeUpdatedTo in presenter")
 		addMessagesToRealm(messages: messages)
 		guard isLoadedFromRealm == false else { return }
 		print("firebase update")

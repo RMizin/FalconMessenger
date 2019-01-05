@@ -17,9 +17,9 @@ extension ChatLogViewController: MessageSenderDelegate {
   
   func update(with arrayOfvalues: [[String: AnyObject]]) {
 
-
 		autoreleasepool {
 			let realm = try! Realm()
+			guard !realm.isInWriteTransaction else { return }
 
 			realm.beginWrite()
 
@@ -49,8 +49,6 @@ extension ChatLogViewController: MessageSenderDelegate {
 							.sorted(byKeyPath: "timestamp", ascending: true)
 							.filter("shortConvertedTimestamp == %@", newSectionTitle) else { realm.cancelWrite(); return }
 
-						print(messages.count)
-
 						let newSection = SectionedMessage(messages: messages, title: newSectionTitle)
 
 						groupedMessages.append(newSection)
@@ -59,7 +57,7 @@ extension ChatLogViewController: MessageSenderDelegate {
 						self.collectionView.insertSections(IndexSet([sectionIndex]))
 					} else {
 						let sectionIndex = self.groupedMessages.count - 1 >= 0 ? self.groupedMessages.count - 1 : 0
-
+						print("Here")
 						let rowIndex = self.groupedMessages[sectionIndex].messages.count - 1 >= 0 ?
 							self.groupedMessages[sectionIndex].messages.count - 1 : 0
 
@@ -70,27 +68,27 @@ extension ChatLogViewController: MessageSenderDelegate {
 			}, completion: { (isCompleted) in
 			//	guard isCompleted else { return }
 
+				print("completed")
+				self.collectionView.scrollToBottom(animated: true)
+
+			//	let tokens = self.groupedMessages.map({ $0.notificationToken }).compactMap({ $0 })
+
+				try! realm.commitWrite()//withoutNotifying: tokens)
+
+				//typin
 
 
+
+
+				//	self.groupedMessages
+
+//				for message in self.groupedMessages where message.notificationToken == nil {
+//					self.observeChanges(for: message)
+//				}
+
+				NotificationCenter.default.post(name: .messageSent, object: nil)
 			})
 
-			self.collectionView.scrollToBottom(animated: true)
-
-			let tokens = self.groupedMessages.map({ $0.notificationToken }).compactMap({ $0 })
-
-			try! realm.commitWrite(withoutNotifying: tokens)
-
-
-
-
-		//	self.groupedMessages
-
-			for message in self.groupedMessages where message.notificationToken == nil {
-		//		if message.notificationToken == nil {
-					self.observeChanges(for: message)
-				//}
-			}
-			NotificationCenter.default.post(name: .messageSent, object: nil)
 
 //			if let lastSection = self.groupedMessages.last {
 //

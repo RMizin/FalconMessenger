@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import Photos
 import SDWebImage
-import RealmSwift
+//import RealmSwift
 
 protocol MessagesDelegate: class {
   func messages(shouldBeUpdatedTo messages: [Message], conversation:Conversation)
@@ -24,7 +24,9 @@ protocol CollectionDelegate: class {
 }
 
 class MessagesFetcher: NSObject {
-  
+
+	//let realm = try! Realm()
+
   private var messages = [Message]()
   
   var userMessagesReference: DatabaseQuery!
@@ -90,6 +92,7 @@ class MessagesFetcher: NSObject {
         self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
         self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
       })
+
     })
   }
   
@@ -123,26 +126,22 @@ class MessagesFetcher: NSObject {
           guard var dictionary = snapshot.value as? [String: AnyObject] else { return }
           dictionary.updateValue(messageUID as AnyObject, forKey: "messageUID")
           dictionary = self.preloadCellData(to: dictionary, isGroupChat: isGroupChat)
+
+
           
           guard self.isInitialChatMessagesLoad else {
             self.handleMessageInsertionInRuntime(newDictionary: dictionary)
             return
           }
 
-			//		let message = Message(dictionary: dictionary)
-			//	//	message.conversation = conversation
-
 					let message = Message(dictionary: dictionary)
 					message.conversation = conversation
-//to move
-					// add last message to local storage
-//					let realm = try! Realm()
-//					realm.beginWrite()
-//					realm.create(Message.self, value: message, update: true)
-//					try! realm.commitWrite()
 
 
-          loadedMessages.append(message)
+					if message.timestamp.value ?? 0 >= self.messages.first?.timestamp.value ?? 0 {
+						loadedMessages.append(message)
+					}
+
           loadedMessagesGroup.leave()
         })
       })
@@ -152,6 +151,7 @@ class MessagesFetcher: NSObject {
   func handleMessageInsertionInRuntime(newDictionary : [String: AnyObject]) {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     let message = Message(dictionary: newDictionary)
+
     preloadURL(message: message)
     let isOutBoxMessage = message.fromId == currentUserID || message.fromId == message.toId
     
@@ -174,7 +174,7 @@ class MessagesFetcher: NSObject {
     guard let urlString = message.imageUrl, let url = URL(string: urlString) else { return }
     SDWebImagePrefetcher.shared.prefetchURLs([url])
   }
-  
+
   typealias LoadNameCompletionHandler = (_ success: Bool, _ message: Message) -> Void
   func loadUserNameForOneMessage(message: Message, completion: @escaping LoadNameCompletionHandler) {
     
@@ -185,11 +185,18 @@ class MessagesFetcher: NSObject {
       guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
       let user = User(dictionary: dictionary)
       guard let name = user.name else { completion(true, message); return }
-      message.senderName = name
+			message.senderName = name
+		//	let messageObject = self.realm.objects(Message.self).filter("messageUID == %@", message.messageUID ?? "").first
+//			try! self.realm.safeWrite {
+//				realm.create(Message.self, value: message, update: true)
+//			}
       completion(true, message)
     })
   }
-  
+
+
+
+
   func newLoadUserames() {
     let loadedUserNamesGroup = DispatchGroup()
     
@@ -200,18 +207,28 @@ class MessagesFetcher: NSObject {
     loadedUserNamesGroup.notify(queue: .main, execute: {
       self.loadingNamesGroup.leave()
     })
-    
-    for index in 0...messages.count - 1 {
-      guard let senderID = messages[index].fromId else { print("continuing"); continue }
-      let reference = Database.database().reference().child("users").child(senderID)
-      reference.observeSingleEvent(of: .value, with: { (snapshot) in
-        guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
-        let user = User(dictionary: dictionary)
-        guard let name = user.name else {  loadedUserNamesGroup.leave(); return }
-        self.messages[index].senderName = name
-        loadedUserNamesGroup.leave()
-      })
-    }
+
+		//autoreleasepool {
+			for index in 0...messages.count - 1 {
+				guard let senderID = messages[index].fromId else { print("continuing");loadedUserNamesGroup.leave(); continue }
+				let reference = Database.database().reference().child("users").child(senderID)
+				reference.observeSingleEvent(of: .value, with: { (snapshot) in
+					guard let dictionary = snapshot.value as? [String: AnyObject] else { loadedUserNamesGroup.leave(); return }
+					let user = User(dictionary: dictionary)
+					guard let name = user.name else { loadedUserNamesGroup.leave(); return }
+
+
+					self.messages[index].senderName = name
+
+//					let message = self.realm.objects(Message.self).filter("messageUID == %@", self.messages[index].messageUID ?? "").first
+//					try! self.realm.safeWrite {
+//						message?.senderName = name
+//					}
+
+					loadedUserNamesGroup.leave()
+				})
+			}
+		//}
   }
   
   func sortedMessages(unsortedMessages: [Message]) -> [Message] {
@@ -220,7 +237,20 @@ class MessagesFetcher: NSObject {
     })
     return sortedMessages
   }
-  
+
+	func tails(groupedMessages: [SectionedMessage]) {
+
+
+		let isNextMessageSenderDifferent
+
+//		for section in groupedMessages {
+//			for message in section.messages {
+//				let isLastMessage = message == section.messages.last
+//				section.messages.
+//				message.isCrooked == isLastMessage
+//			}
+//		}
+	}
 //	func configureTails(for messages: LinkingObjects<Message>, isGroupChat: Bool?) {
 //	// -> [Message] {
 // //   var messages = messages

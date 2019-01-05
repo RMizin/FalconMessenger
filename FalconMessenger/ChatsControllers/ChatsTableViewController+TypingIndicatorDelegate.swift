@@ -12,9 +12,11 @@ import RealmSwift
 extension ChatsTableViewController: TypingIndicatorDelegate {
   
   func typingIndicator(isActive: Bool, for chatID: String) {
-		realmManager.realm.beginWrite()
-		realmManager.realm.objects(Conversation.self).filter("chatID = %@", chatID).first?.isTyping.value = isActive
-		try! realmManager.realm.commitWrite()
+	//	if self.navigationController?.visibleViewController is ChatsTableViewController {
+			try! realmManager.realm.safeWrite {
+				realmManager.realm.objects(Conversation.self).filter("chatID == %@", chatID).first?.isTyping.value = isActive
+			}
+	//	}
   }
   
   typealias typingUpdateCompletionHandler = (_ isCompleted: Bool, _ updatedConversations: Results<Conversation>, _ row: Int?) -> Void
@@ -29,3 +31,14 @@ extension ChatsTableViewController: TypingIndicatorDelegate {
     completion(true, conversations, index)
   }
 }
+
+extension Realm {
+	public func safeWrite(_ block: (() throws -> Void)) throws {
+		if isInWriteTransaction {
+			try block()
+		} else {
+			try write(block)
+		}
+	}
+}
+

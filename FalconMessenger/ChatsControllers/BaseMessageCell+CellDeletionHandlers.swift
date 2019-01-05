@@ -64,12 +64,10 @@ extension BaseMessageCell {
     guard longPressGesture.state == .began else { return }
     let generator = UIImpactFeedbackGenerator(style: .medium)
     generator.impactOccurred()
-	//	print(message)
 
 		guard let indexPath = self.chatLogController?.collectionView.indexPath(for: self) else { return }
 
 		let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row]
-
 
     let isOutgoing = message?.fromId == Auth.auth().currentUser?.uid
     var contextMenuItems = ContextMenuItems.contextMenuItems(for: .textMessage, !isOutgoing)
@@ -198,19 +196,11 @@ extension BaseMessageCell {
   
   func handleDeletion(indexPath: IndexPath) {
 		guard	let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
+		let realm = try! Realm()
+		guard let realmObjectMessage = realm.objects(Message.self).filter("messageUID == %@", message.messageUID ?? "").first else { return }
 
-	//	let realm = try! Realm()
-	//	let message = realm.objects(Message.self).filter("messageUID == %@", message1.messageUID ?? "" )
-	//	let message1 = self.message
-
-//
-//		try! realm.write {
-//			realm.delete(message)
-//		}
-
-		//print(message)
-    guard let uid = Auth.auth().currentUser?.uid, let partnerID = message.chatPartnerId(),
-      let messageID = message.messageUID, self.currentReachabilityStatus != .notReachable else {
+    guard let uid = Auth.auth().currentUser?.uid, let partnerID = realmObjectMessage.chatPartnerId(),
+      let messageID = realmObjectMessage.messageUID, self.currentReachabilityStatus != .notReachable else {
       self.chatLogController?.collectionView.reloadItems(at: [indexPath])
       guard let controllerToDisplayOn = self.chatLogController else { return }
       basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerToDisplayOn)
@@ -225,25 +215,68 @@ extension BaseMessageCell {
     } else {
       deletionReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(userMessagesFirebaseFolder).child(messageID)
     }
-    
+
+
+
+		if realmObjectMessage.isInvalidated == false {
+			try! realm.safeWrite {
+				realm.delete(realmObjectMessage)
+
+				self.chatLogController?.collectionView.performBatchUpdates({
+					self.chatLogController?.collectionView.deleteItems(at: [indexPath])
+				}, completion: { (isCompleted) in
+					//	self.chatLogController?.collectionView.performBatchUpdates({
+					UIView.performWithoutAnimation {
+						let section = self.chatLogController!.collectionView.numberOfSections - 1
+						if section >= 0 {
+							let index = self.chatLogController!.collectionView.numberOfItems(inSection: section) - 1
+							if index >= 0 {
+								UIView.performWithoutAnimation {
+									self.chatLogController?.collectionView.reloadItems(at: [IndexPath(item: index, section: section)] )
+								}
+							}
+						}
+					}
+					//	}, completion: { (isCompleted) in
+					if self.chatLogController?.collectionView.numberOfItems(inSection: indexPath.section) == 0 {
+						print("removing section")
+
+						self.chatLogController?.collectionView.performBatchUpdates({
+							self.chatLogController?.groupedMessages.remove(at: indexPath.section)
+							UIView.performWithoutAnimation {
+								self.chatLogController?.collectionView.deleteSections(IndexSet([indexPath.section]))
+							}
+							if self.chatLogController!.groupedMessages.count > 0, indexPath.section - 1 >= 0 {
+								var rowIndex = 0
+								if let messages = self.chatLogController?.groupedMessages[indexPath.section - 1].messages {
+									rowIndex = messages.count - 1 >= 0 ? messages.count - 1 : 0
+								}
+								UIView.performWithoutAnimation {
+									self.chatLogController?.collectionView.reloadItems(at: [IndexPath(row: rowIndex, section: indexPath.section - 1)])
+								}
+							}
+						}, completion: { (isCompleted) in
+							print("delete section completed")
+							guard self.chatLogController!.groupedMessages.count == 0 else { return }
+							self.chatLogController?.navigationController?.popViewController(animated: true)
+						})
+					}
+					//})
+				})
+			}
+		}
+
+		
     deletionReference.removeValue(completionBlock: { (error, reference) in
 			guard let controllerToDisplayOn = self.chatLogController else { return }
 
       guard error == nil else {
-				//guard let controllerToDisplayOn = self.chatLogController else { return }
+				print("firebase error")
 				basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: controllerToDisplayOn)
 				return
 			}
 
-			guard !message.isInvalidated else {
-				basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: controllerToDisplayOn)
-				return
-			}
 
-			let realm = try! Realm()
-			try! realm.write {
-				realm.delete(message)
-			}
 
       if let isGroupChat = self.chatLogController?.conversation?.isGroupChat.value, isGroupChat {
         

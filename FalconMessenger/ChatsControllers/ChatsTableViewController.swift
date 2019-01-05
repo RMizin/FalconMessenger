@@ -253,6 +253,10 @@ class ChatsTableViewController: UITableViewController {
   }
 
 	@objc func handleReloadTable() {
+
+		realmPinnedConversations = realmPinnedConversations.sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
+		realmUnpinnedConversations = realmUnpinnedConversations.sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
+
     if !isAppLoaded {
       UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: { (_) in
         self.initAllTabs()
@@ -272,6 +276,8 @@ class ChatsTableViewController: UITableViewController {
       
    //   configureTabBarBadge()
     } else {
+			// check typing indicator
+			
 			tableView.reloadData()
     }
 		configureTabBarBadge()
@@ -438,7 +444,10 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
 		guard let token1 = pinnedConversationsNotificationToken, let token2 = unpinnedConversationsNotificationToken else { return }
 
 	//	if navigationController?.visibleViewController is ChatsTableViewController {
-			realmManager.update(conversations: conversations, tokens: [token1, token2])
+		//	if self.navigationController?.visibleViewController is ChatsTableViewController {
+				realmManager.update(conversations: conversations, tokens: [token1, token2])
+			//}
+
 			self.handleReloadTable()
 	//	}
 
@@ -446,7 +455,11 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
   }
 
   func conversations(update conversation: Conversation, reloadNeeded: Bool) {
-		realmManager.update(conversation: conversation)
+
+	//	if self.navigationController?.visibleViewController is ChatsTableViewController {
+			realmManager.update(conversation: conversation)
+	//	}
+
     notificationsManager.updateConversations(to: Array(realmAllConversations))
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .lowMedium)
   }

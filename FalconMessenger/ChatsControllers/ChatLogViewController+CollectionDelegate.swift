@@ -14,14 +14,26 @@ extension ChatLogViewController: CollectionDelegate {
   
   func collectionView(shouldRemoveMessage id: String) {
 
-		let realm = try! Realm()
-		guard let messageToDelete = conversation?.messages.filter("messageUID == %@", id).first, !messageToDelete.isInvalidated else {
-			print("removing is invalidated"); return }
-		print("in oberve removing")
-		try! realm.write {
-			realm.delete(messageToDelete)
-		//	messagesFetcher?.configureTails(for: conversation!.messages, isGroupChat: nil)
-		}
+//		let realm = try! Realm()
+//		guard let messageToDelete = conversation?.messages.filter("messageUID == %@", id).first, !messageToDelete.isInvalidated else {
+//			print("removing is invalidated"); return }
+//		print("in oberve removing")
+//	//	guard !realm.isInWriteTransaction else { print("realm is in write transaction in \(String(describing: ChatLogViewController.self))"); return }
+//
+//		try! realm.safeWrite {
+//			realm.delete(messageToDelete)
+//		}
+
+	//	realm.beginWrite()
+
+
+
+	//	try! realm.commitWrite()
+		
+//		try! realm.write {
+//			realm.delete(messageToDelete)
+//		//	messagesFetcher?.configureTails(for: conversation!.messages, isGroupChat: nil)
+//		}
 
 
 //    guard let index = self.messages.index(where: { (message) -> Bool in
@@ -80,46 +92,45 @@ extension ChatLogViewController: CollectionDelegate {
 //  }
 
   func collectionView(shouldUpdateOutgoingMessageStatusFrom reference: DatabaseReference, message: Message) {
-    
     guard let messageID = message.messageUID else { return }
     let handle = DatabaseHandle()
     
-    messageChangesHandles.insert((uid:messageID, handle:handle), at: 0)
-    
+    messageChangesHandles.insert((uid: messageID, handle: handle), at: 0)
     messageChangesHandles[0].handle = reference.observe(.childChanged, with: { (snapshot) in
-      guard snapshot.exists(), snapshot.key == "status", let newMessageStatus = snapshot.value  else { return }
-
-			//MARK: REALM
-//			let realm = try! Realm()
-//			try! realm.write {
-				message.status = newMessageStatus as? String
-		//	}
-
+      guard snapshot.exists(), snapshot.key == "status", let newMessageStatus = snapshot.value else { return }
+			message.status = newMessageStatus as? String
       self.updateMessageStatusUI(sentMessage: message)
     })
     
     updateMessageStatus(messageRef: reference)
     updateMessageStatusUI(sentMessage: message)
   }
-  
-//  func sortedMessages(unsortedMessages: [Message]) -> [Message] {
-//    let sortedMessages = unsortedMessages.sorted(by: { (message1, message2) -> Bool in
-//      return message1.timestamp.value! < message2.timestamp.value!
-//    })
-//    return sortedMessages
-//  }
+
+
 
   func collectionView(shouldBeUpdatedWith message: Message, reference: DatabaseReference) {
 
-		let realm = try! Realm()
+	//	let realm = try! Realm()
+		print(message.senderName)
 
-		try! realm.write {
-			message.conversation = conversation
-			realm.create(Message.self, value: message, update: true)
-		//	messagesFetcher?.configureTails(for: conversation!.messages, isGroupChat: nil)
-		}
+		update1(message: message, reference: reference)
+		print("HERE ")
 
-		self.updateMessageStatus(messageRef: reference)
+//		print(message.senderName)
+//
+//		realm.beginWrite()
+//		message.conversation = conversation
+//		realm.create(Message.self, value: message, update: true)
+//		try! realm.commitWrite()
+//		try! realm.write {
+//			message.conversation = conversation
+//			realm.create(Message.self, value: message, update: true)
+//		//	messagesFetcher?.configureTails(for: conversation!.messages, isGroupChat: nil)
+//		}
+
+		//self.updateMessageStatus(messageRef: reference)
+
+		// check if typingIndicator is active
 //		guard self.isScrollViewAtTheBottom() else { return }
 //		self.collectionView.scrollToBottom(animated: true)
 //    let insertionIndex = self.messages.insertionIndexOf(elem: message, isOrderedBefore: { (message1, message2) -> Bool in
@@ -133,6 +144,99 @@ extension ChatLogViewController: CollectionDelegate {
 //      return
 //    }
   }
+
+	func update1(message: Message, reference: DatabaseReference) {
+		
+//		guard !realm.isInWriteTransaction else { print("realm in write transaction , cancelling CollectionDelegate");
+//			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//				self.update1(message: message, reference: reference)
+//			}
+//
+//			//potentially dangerous
+//			return
+//
+//		}
+
+		let lastObject = conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last
+
+		guard message.timestamp.value ?? 0 >= lastObject?.timestamp.value ?? 0 else {
+			print("shitty insert bcz of query")
+			return
+		}
+
+		realm.beginWrite()
+
+	//	collectionView.performBatchUpdates({
+			message.conversation = conversation
+			realm.create(Message.self, value: message, update: true)
+
+			guard let newSectionTitle = message.shortConvertedTimestamp else { realm.cancelWrite(); return }
+			let lastSection = groupedMessages.last?.title ?? ""
+			let isNewSection = newSectionTitle != lastSection
+
+			if isNewSection {
+				guard let messages = conversation?.messages
+					.sorted(byKeyPath: "timestamp", ascending: true)
+					.filter("shortConvertedTimestamp == %@", newSectionTitle) else { realm.cancelWrite(); return }
+
+				let newSection = SectionedMessage(messages: messages, title: newSectionTitle)
+
+//				let insertionIndex = groupedMessages.insertionIndexOf(elem: newSection, isOrderedBefore: { (message1, message2) -> Bool in
+//					return Date.dateFromCustomString(customString: message1.title ?? "") < Date.dateFromCustomString(customString: message2.title ?? "")
+//				})
+
+				groupedMessages.append(newSection)
+				let insertionIndex = groupedMessages.count - 1 >= 0 ?  groupedMessages.count - 1 : 0
+			//	if insertionIndex == groupedMessages.count {
+					//groupedMessages.insert(newSection, at: insertionIndex)
+
+					self.collectionView.insertSections(IndexSet([insertionIndex]))
+			//	}
+			} else {
+
+			let sectionIndex = self.groupedMessages.count - 1 >= 0 ? self.groupedMessages.count - 1 : 0
+			let rowIndex = self.groupedMessages[sectionIndex].messages.count - 1 >= 0 ?
+			self.groupedMessages[sectionIndex].messages.count - 1 : 0
+
+				//message.shortConvertedTimestamp
+//
+//				guard let sectionIndex = groupedMessages.index(where: { (sectionedMessage) -> Bool in
+//					return sectionedMessage.title == message.shortConvertedTimestamp
+//				}) else { print("no section index!!"); return }
+//
+//				let messageIndexInSection = groupedMessages[sectionIndex].messages.insertionIndex(of: message, using: { (message1, message2) -> Bool in
+//					return message1.timestamp.value ?? 0 <  message2.timestamp.value ?? 0
+//				})
+
+				
+
+				self.collectionView.insertItems(at: [IndexPath(row: rowIndex, section: sectionIndex)])
+
+
+
+
+
+			//	let rowIndex = self.groupedMessages[sectionIndex].messages.count - 1 >= 0 ?
+					//self.groupedMessages[sectionIndex].messages.count - 1 : 0
+
+		//		if rowIndex == self.groupedMessages[sectionIndex].messages.count {
+				//	self.collectionView.insertItems(at: [IndexPath(row: rowIndex, section: sectionIndex)])
+		//		}
+			}
+		//}, completion: { (isCompleted) in
+			if self.isScrollViewAtTheBottom() {
+				self.collectionView.scrollToBottom(animated: true)
+			}
+
+			self.updateMessageStatus(messageRef: reference)
+		//	let tokens = self.groupedMessages.map({ $0.notificationToken }).compactMap({ $0 })
+			try! self.realm.commitWrite()//withoutNotifying: tokens)
+//			for message in self.groupedMessages where message.notificationToken == nil {
+//				self.observeChanges(for: message)
+//			}
+			NotificationCenter.default.post(name: .messageSent, object: nil)
+		//})
+	}
   
 //  fileprivate func peformBatchUpdate(for message: Message, at insertionIndex: Int, reference: DatabaseReference) {
 //    messages.insert(message, at: insertionIndex)
