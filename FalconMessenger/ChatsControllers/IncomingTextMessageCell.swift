@@ -60,6 +60,7 @@ class IncomingTextMessageCell: BaseMessageCell {
     
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width,
                                      y: bubbleView.frame.height-timeLabel.frame.height-5)
+		timeLabel.text = message.convertedTimestamp
  
     if let isCrooked = self.message?.isCrooked.value, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().incomingBubble

@@ -33,9 +33,9 @@ class ChatsRealmManager {
 					realm.create(Conversation.self, value: conversation, update: true)
 					if let message = conversation.lastMessageRuntime {
 						message.senderName = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
+						message.isCrooked.value = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.isCrooked.value
 						realm.create(Message.self, value: message, update: true)
 					}
-
 				}
 				try! realm.commitWrite(withoutNotifying: tokens)
 			}

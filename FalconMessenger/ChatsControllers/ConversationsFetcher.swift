@@ -166,13 +166,10 @@ class ConversationsFetcher: NSObject {
 			dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: false)
 
       let message = Message(dictionary: dictionary)
-		//	message = self.messagesFetcher.configureTails(for: [message], isGroupChat: false).first ?? message
-			conversation.lastMessageTimestamp.value = message.timestamp.value
-
-			message.conversation = conversation
-			conversation.lastMessageRuntime = message
-
-      self.loadAddictionalMetadata(for: conversation)
+				conversation.lastMessageTimestamp.value = message.timestamp.value
+				message.conversation = conversation
+				conversation.lastMessageRuntime = message
+				self.loadAddictionalMetadata(for: conversation)
     })
   }
 

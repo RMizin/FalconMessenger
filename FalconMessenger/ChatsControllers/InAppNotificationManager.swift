@@ -11,6 +11,7 @@ import Firebase
 import AudioToolbox
 import SafariServices
 import CropViewController
+import RealmSwift
 
 class InAppNotificationManager: NSObject {
 
@@ -124,7 +125,13 @@ class InAppNotificationManager: NSObject {
   fileprivate func showInAppNotification(conversation: Conversation, title: String, subtitle: String, resource: Any?, placeholder: Data?) {
     let notification: InAppNotification = InAppNotification(resource: resource, title: title, subtitle: subtitle, data: placeholder)
     InAppNotificationDispatcher.shared.show(notification: notification) { (_) in
-      chatLogPresenter.open(conversation)
+
+			let realm = try! Realm()
+			guard let id = conversation.chatID, let realmConversation = realm.objects(Conversation.self).filter("chatID == %@", id).first else {
+				chatLogPresenter.open(conversation)
+				return
+			}
+			chatLogPresenter.open(realmConversation)
     }
   }
   

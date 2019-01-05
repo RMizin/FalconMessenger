@@ -76,8 +76,6 @@ extension BaseMessageCell {
     let defaultMenuWidth: CGFloat = 100
     config.menuWidth = expandedMenuWidth
   
-
-    
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
       if message?.status == messageStatusSending { return }
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
@@ -158,7 +156,7 @@ extension BaseMessageCell {
     let reportAlert = ReportAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     reportAlert.controller = chatLogController
     reportAlert.indexPath = indexPath
-    reportAlert.reportedMessage = message
+    reportAlert.reportedMessage = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row]
     reportAlert.popoverPresentationController?.sourceView = bubbleView
     reportAlert.popoverPresentationController?.sourceRect = CGRect(x: bubbleView.bounds.midX, y: bubbleView.bounds.maxY,
                                                                    width: 0, height: 0)
@@ -197,10 +195,10 @@ extension BaseMessageCell {
   func handleDeletion(indexPath: IndexPath) {
 		guard	let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
 		let realm = try! Realm()
-		guard let realmObjectMessage = realm.objects(Message.self).filter("messageUID == %@", message.messageUID ?? "").first else { return }
+		//guard let realmObjectMessage = realm.objects(Message.self).filter("messageUID == %@", message.messageUID ?? "").first else { return }
 
-    guard let uid = Auth.auth().currentUser?.uid, let partnerID = realmObjectMessage.chatPartnerId(),
-      let messageID = realmObjectMessage.messageUID, self.currentReachabilityStatus != .notReachable else {
+    guard let uid = Auth.auth().currentUser?.uid, let partnerID = message.chatPartnerId(),
+      let messageID = message.messageUID, self.currentReachabilityStatus != .notReachable else {
       self.chatLogController?.collectionView.reloadItems(at: [indexPath])
       guard let controllerToDisplayOn = self.chatLogController else { return }
       basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: controllerToDisplayOn)
@@ -216,72 +214,61 @@ extension BaseMessageCell {
       deletionReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(userMessagesFirebaseFolder).child(messageID)
     }
 
-
-
-		if realmObjectMessage.isInvalidated == false {
+		if message.isInvalidated == false {
 			try! realm.safeWrite {
-				realm.delete(realmObjectMessage)
 
-				self.chatLogController?.collectionView.performBatchUpdates({
-					self.chatLogController?.collectionView.deleteItems(at: [indexPath])
-				}, completion: { (isCompleted) in
-					//	self.chatLogController?.collectionView.performBatchUpdates({
-					UIView.performWithoutAnimation {
-						let section = self.chatLogController!.collectionView.numberOfSections - 1
-						if section >= 0 {
-							let index = self.chatLogController!.collectionView.numberOfItems(inSection: section) - 1
-							if index >= 0 {
-								UIView.performWithoutAnimation {
-									self.chatLogController?.collectionView.reloadItems(at: [IndexPath(item: index, section: section)] )
-								}
+				// to make previous message crooked if needed
+				if message.isCrooked.value == true, indexPath.row > 0 {
+					self.chatLogController!.groupedMessages[indexPath.section].messages[indexPath.row - 1].isCrooked.value = true
+					let lastIndexPath = IndexPath(row: indexPath.row - 1, section: indexPath.section)
+					self.chatLogController?.collectionView.reloadItems(at: [lastIndexPath])
+				}
+				
+				realm.delete(message)
+				chatLogController?.collectionView.deleteItems(at: [indexPath])
+
+				// to show delivery status on last message
+				if indexPath.row - 1 >= 0 {
+					let lastIndexPath = IndexPath(row: indexPath.row - 1, section: indexPath.section)
+					self.chatLogController?.collectionView.reloadItems(at: [lastIndexPath])
+				}
+
+				if self.chatLogController?.collectionView.numberOfItems(inSection: indexPath.section) == 0 {
+					print("removing section")
+
+					self.chatLogController?.collectionView.performBatchUpdates({
+						self.chatLogController?.groupedMessages.remove(at: indexPath.section)
+						UIView.performWithoutAnimation {
+							self.chatLogController?.collectionView.deleteSections(IndexSet([indexPath.section]))
+						}
+						if self.chatLogController!.groupedMessages.count > 0, indexPath.section - 1 >= 0 {
+							var rowIndex = 0
+							if let messages = self.chatLogController?.groupedMessages[indexPath.section - 1].messages {
+								rowIndex = messages.count - 1 >= 0 ? messages.count - 1 : 0
+							}
+							UIView.performWithoutAnimation {
+								self.chatLogController?.collectionView.reloadItems(at: [IndexPath(row: rowIndex, section: indexPath.section - 1)])
 							}
 						}
-					}
-					//	}, completion: { (isCompleted) in
-					if self.chatLogController?.collectionView.numberOfItems(inSection: indexPath.section) == 0 {
-						print("removing section")
-
-						self.chatLogController?.collectionView.performBatchUpdates({
-							self.chatLogController?.groupedMessages.remove(at: indexPath.section)
-							UIView.performWithoutAnimation {
-								self.chatLogController?.collectionView.deleteSections(IndexSet([indexPath.section]))
-							}
-							if self.chatLogController!.groupedMessages.count > 0, indexPath.section - 1 >= 0 {
-								var rowIndex = 0
-								if let messages = self.chatLogController?.groupedMessages[indexPath.section - 1].messages {
-									rowIndex = messages.count - 1 >= 0 ? messages.count - 1 : 0
-								}
-								UIView.performWithoutAnimation {
-									self.chatLogController?.collectionView.reloadItems(at: [IndexPath(row: rowIndex, section: indexPath.section - 1)])
-								}
-							}
-						}, completion: { (isCompleted) in
-							print("delete section completed")
-							guard self.chatLogController!.groupedMessages.count == 0 else { return }
-							self.chatLogController?.navigationController?.popViewController(animated: true)
-						})
-					}
-					//})
-				})
+					}, completion: { (isCompleted) in
+						print("delete section completed")
+						guard self.chatLogController!.groupedMessages.count == 0 else { return }
+						self.chatLogController?.navigationController?.popViewController(animated: true)
+					})
+				}
 			}
 		}
 
-		
     deletionReference.removeValue(completionBlock: { (error, reference) in
 			guard let controllerToDisplayOn = self.chatLogController else { return }
-
       guard error == nil else {
 				print("firebase error")
 				basicErrorAlertWith(title: basicErrorTitleForAlert, message: deletionErrorMessage, controller: controllerToDisplayOn)
 				return
 			}
 
-
-
       if let isGroupChat = self.chatLogController?.conversation?.isGroupChat.value, isGroupChat {
-        
         guard let conversationID = self.chatLogController?.conversation?.chatID else { return }
-        
         var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(conversationID).child(messageMetaDataFirebaseFolder)
         if let lastMessageID = self.chatLogController?.groupedMessages.last?.messages.last?.messageUID {
           lastMessageReference.updateChildValues(["lastMessageID": lastMessageID])
@@ -289,7 +276,6 @@ extension BaseMessageCell {
           lastMessageReference = lastMessageReference.child("lastMessageID")
           lastMessageReference.removeValue()
         }
-        
       } else {
         var lastMessageReference = Database.database().reference().child("user-messages").child(uid).child(partnerID).child(messageMetaDataFirebaseFolder)
         if let lastMessageID = self.chatLogController?.groupedMessages.last?.messages.last?.messageUID {

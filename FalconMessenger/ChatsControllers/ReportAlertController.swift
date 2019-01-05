@@ -12,7 +12,7 @@ class ReportAlertController: UIAlertController {
 
   let reportSender = ReportSender()
   weak var controller: UIViewController?
-  weak var reportedMessage: Message?
+	var reportedMessage: Message?
   var indexPath: IndexPath?
   
     override func viewDidLoad() {
@@ -53,7 +53,7 @@ class ReportAlertController: UIAlertController {
     }
   
   fileprivate func sendReport(_ title: String) {
-    guard let sender = self.controller, let reportedMessage = self.reportedMessage else { return }
+		guard let sender = self.controller, let reportedMessage = self.reportedMessage else { return }
     let isConnected = self.checkInternetConnection()
     guard isConnected else { return }
     if let controller = self.controller as? ChatLogViewController,

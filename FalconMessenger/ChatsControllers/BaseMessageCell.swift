@@ -240,7 +240,7 @@ class BaseMessageCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func configureDeliveryStatus(at indexPath: IndexPath, groupMessages: [SectionedMessage], message: Message) {
+  func configureDeliveryStatus(at indexPath: IndexPath, groupMessages: [MessageSection], message: Message) {
 
     guard let lastItem = groupMessages.last else { return }
     let lastRow = lastItem.messages.count - 1

@@ -123,14 +123,12 @@ class ChatsTableViewController: UITableViewController {
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
-					UIView.performWithoutAnimation {
-						print("xxx in pinned update", deletions.count, insertions.count, modifications.count)
-						self.tableView.beginUpdates()
-						self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 0) }, with: .none)
-						self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 0) }, with: .left)
-						UIView.performWithoutAnimation { self.tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: 0) }, with: .none) }
-						self.tableView.endUpdates()
-					}
+					print("xxx in pinned update", deletions.count, insertions.count, modifications.count)
+					self.tableView.beginUpdates()
+					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 0) }, with: .none)
+					self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 0) }, with: .automatic)
+					UIView.performWithoutAnimation { self.tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: 0) }, with: .none) }
+					self.tableView.endUpdates()
 				}
 
 				break
@@ -146,13 +144,11 @@ class ChatsTableViewController: UITableViewController {
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
 					print("xxx in update", deletions.count, insertions.count, modifications.count)
-					UIView.performWithoutAnimation {
-						self.tableView.beginUpdates()
-						self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 1) }, with: .none)
-						self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 1) }, with: .left)
-						UIView.performWithoutAnimation { self.tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: 1) }, with: .none) }
-						self.tableView.endUpdates()
-					}
+					self.tableView.beginUpdates()
+					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 1) }, with: .none)
+					self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 1) }, with: .automatic)
+					UIView.performWithoutAnimation { self.tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: 1) }, with: .none) }
+					self.tableView.endUpdates()
 				}
 				break
 			case .error(let err): fatalError("\(err)"); break
@@ -273,16 +269,11 @@ class ChatsTableViewController: UITableViewController {
           }
         }
      })
-      
-   //   configureTabBarBadge()
     } else {
-			// check typing indicator
-			
 			tableView.reloadData()
     }
 		configureTabBarBadge()
 
-    
     if realmAllConversations.count == 0 {
       checkIfThereAnyActiveChats(isEmpty: true)
     } else {
@@ -373,9 +364,9 @@ class ChatsTableViewController: UITableViewController {
     let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as? UserCell ?? UserCell()
     
     if indexPath.section == 0 {
-      cell.configureCell(for: indexPath, conversations: Array(realmPinnedConversations))
+      cell.configureCell(for: indexPath, conversations: realmPinnedConversations)
     } else {
-      cell.configureCell(for: indexPath, conversations: Array(realmUnpinnedConversations))
+      cell.configureCell(for: indexPath, conversations: realmUnpinnedConversations)
     }
 
     return cell
@@ -392,7 +383,6 @@ class ChatsTableViewController: UITableViewController {
       conversation = unpinnedConversation
     }
 
-		
     chatLogPresenter.open(conversation)
   }
 }
@@ -442,24 +432,13 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
 		}
 
 		guard let token1 = pinnedConversationsNotificationToken, let token2 = unpinnedConversationsNotificationToken else { return }
-
-	//	if navigationController?.visibleViewController is ChatsTableViewController {
-		//	if self.navigationController?.visibleViewController is ChatsTableViewController {
-				realmManager.update(conversations: conversations, tokens: [token1, token2])
-			//}
-
-			self.handleReloadTable()
-	//	}
-
+		realmManager.update(conversations: conversations, tokens: [token1, token2])
+		self.handleReloadTable()
 		self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
   }
 
   func conversations(update conversation: Conversation, reloadNeeded: Bool) {
-
-	//	if self.navigationController?.visibleViewController is ChatsTableViewController {
-			realmManager.update(conversation: conversation)
-	//	}
-
+		realmManager.update(conversation: conversation)
     notificationsManager.updateConversations(to: Array(realmAllConversations))
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .lowMedium)
   }

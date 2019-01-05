@@ -33,7 +33,7 @@ class ChatLogViewController: UIViewController {
   
   weak var deleteAndExitDelegate: DeleteAndExitDelegate?
   
-  weak var messagesFetcher: MessagesFetcher?
+	var messagesFetcher: MessagesFetcher?
   let chatLogHistoryFetcher = ChatLogHistoryFetcher()
   let userBlockingManager = UserBlockingManager()
   let groupMembersManager = GroupMembersManager()
@@ -51,9 +51,8 @@ class ChatLogViewController: UIViewController {
   var companionBanAddedHandle: DatabaseHandle!
   var companionBanChangedHandle: DatabaseHandle!
   
-  weak var conversation: Conversation?
-  //var messages = [Message]()
-  var groupedMessages = [SectionedMessage]()
+	var conversation: Conversation?
+  var groupedMessages = [MessageSection]()
   var typingIndicatorSection: [String] = []
 
 	let realm = try! Realm()
@@ -147,7 +146,6 @@ class ChatLogViewController: UIViewController {
   }
   
   // MARK: - Lifecycle
-  
   override func loadView() {
     super.loadView()
     loadViews()
@@ -202,91 +200,28 @@ class ChatLogViewController: UIViewController {
 			return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
 		}
 
-		for date in keys {
-		//	let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
-			let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
-			let section = SectionedMessage(messages: messages, title: date)
-
-		//	observeChanges(for: section)
-			groupedMessages.append(section)
+		autoreleasepool {
+			for date in keys {
+				let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
+				configureTails(for: messages)
+				//messagesFetcher.
+				let section = MessageSection(messages: messages, title: date)
+				groupedMessages.append(section)
+			}
 		}
 	}
 
-
-//	@objc func observeChanges(for section: SectionedMessage) {
-//		guard section.messages != nil else { print("no section messages"); return }
-//
-//		section.notificationToken = section.messages.observe { [weak self] (changes: RealmCollectionChange) in
-//			switch changes {
-//			case .initial:  break
-//			case .update(_, let deletions, let insertions, let modifications):
-//				//let row = $0
-//				print("update", deletions.count, insertions.count, modifications.count)
-//				print(section.title)
-//
-//
-////				guard let sectionIndex = self?.groupedMessages.index(where: { (sectionedMessage) -> Bool in
-////					return sectionedMessage.title == section.title
-////				}) else {
-////					print("update failed")
-////					return
-////				}
-//
-//				print("update passed")
-//
-////				self?.collectionView.performBatchUpdates({
-////					UIView.performWithoutAnimation {
-////					//	self?.collectionView.reloadItems(at: modifications.map({ IndexPath(row: $0, section: sectionIndex) }))
-////					}
-//
-//			//		self?.collectionView.deleteItems(at: deletions.map({ IndexPath(row: $0, section: sectionIndex) }))
-//				//	self?.collectionView.insertItems(at: insertions.map({ IndexPath(row: $0, section: sectionIndex) }))
-//			//	}, completion: { (isCompleted) in
-//				//	print("update completed")
-//
-////					if insertions.count > 0 {
-////						self?.collectionView.scrollToBottom(animated: true)
-////					}
-//
-////					if self?.collectionView.numberOfItems(inSection: sectionIndex) == 0 {
-////						print("removing section")
-////
-////						self?.collectionView.performBatchUpdates({
-////
-////							if let unwrappedSelf = self {
-////
-////								self?.groupedMessages.remove(at: sectionIndex)
-////
-////								UIView.performWithoutAnimation {
-////									self?.collectionView.deleteSections(IndexSet([sectionIndex]))
-////								}
-////
-////								if unwrappedSelf.groupedMessages.count > 0, sectionIndex - 1 >= 0 {
-////									var rowIndex = 0
-////									if let messages = unwrappedSelf.groupedMessages[sectionIndex - 1].messages {
-////										rowIndex = messages.count - 1 >= 0 ? messages.count - 1 : 0
-////									}
-////									UIView.performWithoutAnimation {
-////										self?.collectionView.reloadItems(at: [IndexPath(row: rowIndex,section: sectionIndex - 1)])
-////									}
-////
-////								}
-////							}
-////
-////						}, completion: { (isCompleted) in
-////							print("delete section completed")
-////							guard self?.groupedMessages.count == 0 else { return }
-////							self?.navigationController?.popViewController(animated: true)
-////
-////						})
-////					}
-//			//	})
-//
-//				break
-//			case .error(let err): fatalError("\(err)"); break
-//			}
-//		}
-//	}
+	func configureTails(for messages: Results<Message>) {
+		try! realm.safeWrite {
+			for index in (0..<messages.count).reversed() {
+				let isLastMessage = index == messages.count - 1
+				if isLastMessage { messages[index].isCrooked.value = true }
+				guard messages.indices.contains(index - 1) else { return }
+				let isPreviousMessageSenderDifferent = messages[index - 1].fromId != messages[index].fromId
+				messages[index - 1].isCrooked.value = isPreviousMessageSenderDifferent ? true : messages[index].isInformationMessage.value ?? false
+			}
+		}
+	}
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -357,6 +292,9 @@ class ChatLogViewController: UIViewController {
 		for message in groupedMessages {
 			message.notificationToken?.invalidate()
 		}
+		if !DeviceType.isIPad {
+			chatLogPresenter.tryDeallocate()
+		}
 
     if let messagesFetcher = messagesFetcher {
       if messagesFetcher.userMessagesReference != nil {
@@ -371,6 +309,7 @@ class ChatLogViewController: UIViewController {
       messagesFetcher.delegate = nil
     }
      inputContainerView.recordVoiceButton.reset()
+
   }
   
   deinit {
@@ -394,11 +333,8 @@ class ChatLogViewController: UIViewController {
 
   override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
     if let observedObject = object as? ChatCollectionView, observedObject == collectionView {
-
-		//	if conve.count > 5 {
-				collectionViewLoaded = true
-				collectionView.removeObserver(self, forKeyPath: "contentSize")
-			//}
+			collectionViewLoaded = true
+			collectionView.removeObserver(self, forKeyPath: "contentSize")
     }
   }
   
@@ -459,7 +395,7 @@ class ChatLogViewController: UIViewController {
 
   @objc func closeChatLog() {
     splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
-    chatLogPresenter.deallocate()
+		chatLogPresenter.tryDeallocate(force: true)
   }
 
   private func setupBottomScrollButton() {
@@ -823,42 +759,28 @@ class ChatLogViewController: UIViewController {
   }
 
   func updateMessageStatusUI(sentMessage: Message) {
-		let realm = try! Realm()
-		//guard !realm.isInWriteTransaction else { print("realm iS in write transaction In MESSAGE STATUS UI / CHATLOGCONTROLLERr"); return }
+	//	let realm = try! Realm()
+
 		guard let messageToUpdate = conversation?.messages.filter("messageUID == %@", sentMessage.messageUID ?? "").first else { return }
-	//	let safeMessageToUpdate = ThreadSafeReference(to: messageObject)
 
-   // DispatchQueue.global(qos: .default).async {
-		//	let realm = try! Realm()
-		//	guard let messageToUpdate = realm.resolve(safeMessageToUpdate) else { return }
-			try! realm.safeWrite {
-				messageToUpdate.status = sentMessage.status
-				let section = self.collectionView.numberOfSections - 1
-				if section >= 0 {
-					let index = self.collectionView.numberOfItems(inSection: section) - 1
-					if index >= 0 {
-					//	self.collectionView.performBatchUpdates({
-						UIView.performWithoutAnimation {
-							self.collectionView.reloadItems(at: [IndexPath(item: index, section: section)] )
-						}
-
-					//	}, completion: { (isCompleted) in
-							//DispatchQueue.main.async { [weak self] in
-
-							//}
-						//})
+		try! realm.safeWrite {
+			messageToUpdate.status = sentMessage.status
+			let section = collectionView.numberOfSections - 1
+			if section >= 0 {
+				let index = self.collectionView.numberOfItems(inSection: section) - 1
+				if index >= 0 {
+					UIView.performWithoutAnimation {
+						self.collectionView.reloadItems(at: [IndexPath(item: index, section: section)] )
 					}
 				}
 			}
+		}
+
 		guard self.groupedMessages.last?.messages.last?.status == messageStatusDelivered,
 			self.groupedMessages.last?.messages.last?.messageUID ==
-				self.conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last?.messageUID,
+			self.conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last?.messageUID,
 			userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
 		SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
-
-
-
-    //}
   }
 
   // MARK: - Title view
@@ -943,7 +865,6 @@ class ChatLogViewController: UIViewController {
   }
 
   fileprivate func manageNavigationItemTitle(onlineStatusObject: AnyObject) -> String {
-
     guard let title = conversation?.chatName else { return "" }
     if let onlineStatusStringStamp = onlineStatusObject as? String {
       if onlineStatusStringStamp == statusOnline { // user online
@@ -1015,10 +936,22 @@ class ChatLogViewController: UIViewController {
 
     let text = inputContainerView.inputTextView.text
     let media = inputContainerView.attachedMedia
+
     inputContainerView.attachButton.reset()
     inputContainerView.prepareForSend()
-    let messageSender = MessageSender(conversation, text: text, media: media)
+		guard let conversation = self.conversation else { return }
+    let messageSender = MessageSender(realmConversation(from: conversation), text: text, media: media)
     messageSender.delegate = self
     messageSender.sendMessage()
   }
+
+	fileprivate func realmConversation(from conversation: Conversation) -> Conversation {
+		guard realm.objects(Conversation.self).filter("chatID == %@", conversation.chatID ?? "").first == nil else { return conversation }
+		realm.beginWrite()
+		realm.create(Conversation.self, value: conversation, update: true)
+		try! realm.commitWrite()
+		let newConversation = realm.objects(Conversation.self).filter("chatID == %@", conversation.chatID ?? "").first
+		self.conversation = newConversation
+		return newConversation ?? conversation
+	}
 }

@@ -9,14 +9,14 @@
 import UIKit
 import Firebase
 import SDWebImage
+import RealmSwift
 
 extension UserCell {
   
-  func configureCell(for indexPath: IndexPath, conversations: [Conversation]) {
+  func configureCell(for indexPath: IndexPath, conversations: Results<Conversation>) {
     
     let isPersonalStorage = conversations[indexPath.row].chatID == Auth.auth().currentUser?.uid
     let isConversationMuted = conversations[indexPath.row].muted.value != nil && conversations[indexPath.row].muted.value!
-  //  let chatName = isPersonalStorage ? NameConstants.personalStorage : conversations[indexPath.row].chatName
 		let chatName = conversations[indexPath.row].chatName
     let isGroupChat = conversations[indexPath.row].isGroupChat.value ?? false
     
@@ -31,14 +31,6 @@ extension UserCell {
 					self.profileImageView.image = placeHolderImage
 					return
 				}
-
-//				guard image != nil, cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
-//					self.profileImageView.image = image
-//					return
-//				}
-//
-//				UIView.transition(with: self.profileImageView, duration: 0.15, options: .transitionCrossDissolve,
-//													animations: { self.profileImageView.image = image }, completion: nil)
 			}
 		} else {
 			profileImageView.image = placeHolderImage
@@ -55,7 +47,6 @@ extension UserCell {
       typingIndicatorTimer?.invalidate()
       messageLabel.text = conversations[indexPath.row].messageText()
     }
-
 
     if let lastMessage = conversations[indexPath.row].lastMessage {
 			let date = Date(timeIntervalSince1970: TimeInterval(exactly: lastMessage.timestamp.value!)!)

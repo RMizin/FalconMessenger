@@ -34,64 +34,6 @@ class ChatLogPresenter: NSObject {
     default: return nil
     }
   }
-  
-	fileprivate var isLoadedFromRealm = false
-	fileprivate var isLoadedFromFirebase = false
-	fileprivate var isMessagesStatusUpdated = false
-
-	public func open(_ conversation: Conversation) {
-	 	isLoadedFromFirebase = false
-		isLoadedFromRealm = false
-		isMessagesStatusUpdated = false
-		chatLogController = ChatLogViewController()
-		messagesFetcher = MessagesFetcher()
-		messagesFetcher?.delegate = self
-		messagesFetcher?.loadMessagesData(for: conversation)
-		loadFromRealm(conversation: conversation)
-	}
-
-	fileprivate func loadFromRealm(conversation: Conversation) {
-		let isNotEnoughData = conversation.messages.count <= 3
-		if !isNotEnoughData {
-			print("opening from realm")
-			isLoadedFromRealm = true
-			openChatLog(for: conversation)
-		}
-	}
-
-	fileprivate func openChatLog(for conversation: Conversation) {
-		chatLogController?.hidesBottomBarWhenPushed = true
-		chatLogController?.messagesFetcher = messagesFetcher
-		chatLogController?.conversation = conversation
-		chatLogController?.getMessages()
-		chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
-
-		if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
-			chatLogController?.observeTypingIndicator()
-			chatLogController?.configureTitleViewWithOnlineStatus()
-		}
-
-		chatLogController?.observeBlockChanges()
-		chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
-		guard let destination = chatLogController else { return }
-
-		if DeviceType.isIPad {
-			let navigationController = UINavigationController(rootViewController: destination)
-			controller()?.splitViewController?.showDetailViewController(navigationController, sender: self)
-		} else {
-			controller()?.navigationController?.pushViewController(destination, animated: true)
-
-			guard isMessagesStatusUpdated == true else { return }
-			if isLoadedFromRealm == true {
-				deallocate()
-			}
-
-			if isLoadedFromFirebase == true {
-				deallocate()
-			}
-		}
-		deselectItem()
-	}
 
 	fileprivate func deselectItem() {
 		guard DeviceType.isIPad else { return }
@@ -102,11 +44,57 @@ class ChatLogPresenter: NSObject {
 		}
 	}
 
-	public func deallocate() {
-		print("deallocate")
+	public func tryDeallocate(force: Bool = false) {
 		chatLogController = nil
-//		messagesFetcher?.delegate = nil
-//		messagesFetcher = nil
+		messagesFetcher?.delegate = nil
+		messagesFetcher = nil
+		print("deallocate")
+	}
+
+	fileprivate var isChatLogAlreadyOpened = false
+
+	public func open(_ conversation: Conversation) {
+		isChatLogAlreadyOpened = false
+		chatLogController = ChatLogViewController()
+		messagesFetcher = MessagesFetcher()
+		messagesFetcher?.delegate = self
+
+		let newMessagesReceived = (conversation.badge.value ?? 0) > 0
+		let isEnoughData = conversation.messages.count >= 3
+
+		if !newMessagesReceived && isEnoughData {
+			openChatLog(for: conversation)
+			print("loading from realm")
+		}
+
+		messagesFetcher?.loadMessagesData(for: conversation)
+	}
+
+
+	fileprivate func openChatLog(for conversation: Conversation) {
+		guard isChatLogAlreadyOpened == false else { return }
+		isChatLogAlreadyOpened = true
+		chatLogController?.hidesBottomBarWhenPushed = true
+		chatLogController?.messagesFetcher = messagesFetcher
+		chatLogController?.conversation = conversation
+		chatLogController?.getMessages()
+		chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
+		if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
+			chatLogController?.observeTypingIndicator()
+			chatLogController?.configureTitleViewWithOnlineStatus()
+		}
+		chatLogController?.observeBlockChanges()
+		chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
+
+		guard let destination = chatLogController else { return }
+
+		if DeviceType.isIPad {
+			let navigationController = UINavigationController(rootViewController: destination)
+			controller()?.splitViewController?.showDetailViewController(navigationController, sender: self)
+		} else {
+			controller()?.navigationController?.pushViewController(destination, animated: true)
+		}
+		deselectItem()
 	}
 }
 
@@ -114,37 +102,39 @@ extension ChatLogPresenter: MessagesDelegate {
   
   func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
 		print("shouldChangeMessageStatusToReadAt ")
-
     chatLogController?.updateMessageStatus(messageRef: reference)
-		isMessagesStatusUpdated = true
-		guard isLoadedFromRealm == true || isLoadedFromFirebase == true else { return }
-		deallocate()
   }
 
-	fileprivate func addMessagesToRealm(messages: [Message]) {
-		guard messages.count > 0 else { return }
+  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
+		print("shouldBeUpdatedTo in presenter")
+		addMessagesToRealm(messages: messages, conversation: conversation)
+	}
+
+	fileprivate func addMessagesToRealm(messages: [Message], conversation: Conversation) {
+		guard messages.count > 0 else {
+			openChatLog(for: conversation)
+			return
+		}
+
 		let realm = try! Realm()
-	//	guard !realm.isInWriteTransaction else { return }
+
 		autoreleasepool {
 			realm.beginWrite()
 			for message in messages {
-			//	message.senderName = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
+
+				if message.senderName == nil {
+					message.senderName = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
+				}
+
+				if message.isCrooked.value == nil {
+					message.isCrooked.value = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.isCrooked.value
+				}
+
 				realm.create(Message.self, value: message, update: true)
 			}
-			try! realm.commitWrite()
-		}
-	}
 
-  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
-		// проверить не было ли удалено сообений
-		guard chatLogController != nil else {
-			return
+			try! realm.commitWrite()
+			openChatLog(for: conversation)
 		}
-		print("shouldBeUpdatedTo in presenter")
-		addMessagesToRealm(messages: messages)
-		guard isLoadedFromRealm == false else { return }
-		print("firebase update")
-		isLoadedFromFirebase = true
-		openChatLog(for: conversation)
 	}
 }

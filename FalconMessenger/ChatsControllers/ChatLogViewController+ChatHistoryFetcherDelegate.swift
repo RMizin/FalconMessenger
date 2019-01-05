@@ -15,9 +15,6 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
     refreshControl.endRefreshing()
   }
 
-
-
-
 	func gg (messages: [Message]) {
 		let realm = try! Realm()
 
@@ -38,7 +35,7 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 
 					print(messages.count)
 
-					let newSection = SectionedMessage(messages: messages, title: newSectionTitle)
+					let newSection = MessageSection(messages: messages, title: newSectionTitle)
 
 					groupedMessages.insert(newSection, at: 0)
 

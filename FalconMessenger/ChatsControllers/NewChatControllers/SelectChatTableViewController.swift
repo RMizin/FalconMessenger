@@ -11,6 +11,7 @@ import Firebase
 import PhoneNumberKit
 import SDWebImage
 import Contacts
+import RealmSwift
 
 private let falconUsersCellID = "falconUsersCellID"
 private let newGroupCellID = "newGroupCellID"
@@ -229,14 +230,22 @@ class SelectChatTableViewController: UITableViewController {
     } else {
       let falconUser = filteredUsersWithSection[indexPath.section][indexPath.row]
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-      let conversationDictionary = ["chatID": falconUser.id as AnyObject,
-                                    "chatName": falconUser.name as AnyObject,
-                                    "isGroupChat": false  as AnyObject,
-                                    "chatThumbnailPhotoURL": falconUser.thumbnailPhotoURL as AnyObject,
-                                    "chatParticipantsIDs": [falconUser.id, currentUserID] as AnyObject]
 
-      let conversation = Conversation(dictionary: conversationDictionary)
-      chatLogPresenter.open(conversation)
+			let realm = try! Realm()
+
+			guard let id = falconUser.id, let conversation = realm.objects(Conversation.self).filter("chatID == %@", id).first else {
+				let conversationDictionary = ["chatID": falconUser.id as AnyObject,
+																			"chatName": falconUser.name as AnyObject,
+																			"isGroupChat": false  as AnyObject,
+																			"chatOriginalPhotoURL": falconUser.photoURL as AnyObject,
+																			"chatThumbnailPhotoURL": falconUser.thumbnailPhotoURL as AnyObject,
+																			"chatParticipantsIDs": [falconUser.id, currentUserID] as AnyObject]
+				let conversation = Conversation(dictionary: conversationDictionary)
+				chatLogPresenter.open(conversation)
+				return
+			}
+
+			chatLogPresenter.open(conversation)
     }
   }
 }

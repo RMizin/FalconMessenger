@@ -9,26 +9,6 @@
 import UIKit
 import Firebase
 
-//fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-//  switch (lhs, rhs) {
-//  case let (l?, r?):
-//    return l < r
-//  case (nil, _?):
-//    return true
-//  default:
-//    return false
-//  }
-//}
-//
-//fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-//  switch (lhs, rhs) {
-//  case let (l?, r?):
-//    return l > r
-//  default:
-//    return rhs < lhs
-//  }
-//}
-
 private let pinErrorTitle = "Error pinning/unpinning"
 private let pinErrorMessage = "Changes won't be saved across app restarts. Check your internet connection, re-launch the app, and try again."
 private let muteErrorTitle = "Error muting/unmuting"
@@ -168,18 +148,11 @@ extension ChatsTableViewController {
 
 		realmManager.realm.beginWrite()
 		let result = realmManager.realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
-		let messagesResult = conversation.messages//realmManager.realm.objects(Message.self).filter("conversation.chatID = '\(conversation.chatID ?? "")'")
-
-		print("xxx", messagesResult.count)
+		let messagesResult = conversation.messages
 
 		realmManager.realm.delete(messagesResult)
 		realmManager.realm.delete(result)
-
-		tableView.beginUpdates()
-		tableView.deleteRows(at: [indexPath], with: .left)
-		tableView.endUpdates()
-		try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
-
+		try! realmManager.realm.commitWrite()
 
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()

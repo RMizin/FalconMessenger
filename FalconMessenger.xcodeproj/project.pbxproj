@@ -46,6 +46,9 @@
 		4B3DC3BD2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */; };
 		4B424D34213450120071913F /* BottomScrollConainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B424D33213450120071913F /* BottomScrollConainer.swift */; };
 		4B4B30FA21383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B30F921383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift */; };
+		4B4F03CF21E144C000907D39 /* RealmUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03CE21E144BF00907D39 /* RealmUIImage.swift */; };
+		4B4F03D121E144D000907D39 /* MessageSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03D021E144D000907D39 /* MessageSection.swift */; };
+		4B4F03D321E1451800907D39 /* RealmCGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03D221E1451800907D39 /* RealmCGRect.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */; };
 		4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */; };
@@ -309,6 +312,9 @@
 		4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfileDataDatabaseUpdater.swift; path = AuthenticationControllers/UserProfileDataDatabaseUpdater.swift; sourceTree = "<group>"; };
 		4B424D33213450120071913F /* BottomScrollConainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BottomScrollConainer.swift; path = ChatsControllers/BottomScrollConainer.swift; sourceTree = "<group>"; };
 		4B4B30F921383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatLogViewControllerSupplementaryView.swift; path = ChatsControllers/ChatLogViewControllerSupplementaryView.swift; sourceTree = "<group>"; };
+		4B4F03CE21E144BF00907D39 /* RealmUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RealmUIImage.swift; path = Model/RealmUIImage.swift; sourceTree = "<group>"; };
+		4B4F03D021E144D000907D39 /* MessageSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MessageSection.swift; path = Model/MessageSection.swift; sourceTree = "<group>"; };
+		4B4F03D221E1451800907D39 /* RealmCGRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RealmCGRect.swift; path = Model/RealmCGRect.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B4F453C1F32230C00A6FF96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsController.swift; path = ContactsControllers/ContactsController.swift; sourceTree = "<group>"; };
@@ -1311,6 +1317,9 @@
 				4BB6D193206EA62F00FEF72E /* Message.swift */,
 				4BCE1AB91F3714A000C0EBF7 /* User.swift */,
 				4BB6D195206EA62F00FEF72E /* MediaObject.swift */,
+				4B4F03CE21E144BF00907D39 /* RealmUIImage.swift */,
+				4B4F03D021E144D000907D39 /* MessageSection.swift */,
+				4B4F03D221E1451800907D39 /* RealmCGRect.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1806,6 +1815,7 @@
 				4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */,
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
 				4BFAA0D32025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift in Sources */,
+				4B4F03CF21E144C000907D39 /* RealmUIImage.swift in Sources */,
 				4B6BB01D20886C5F00A90F3A /* ARSStatus.swift in Sources */,
 				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */,
@@ -1897,6 +1907,7 @@
 				4BBBCBFB205851E100926800 /* ChatsTableViewController.swift in Sources */,
 				4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */,
 				4B6BB01120886C5F00A90F3A /* TransitionController.swift in Sources */,
+				4B4F03D321E1451800907D39 /* RealmCGRect.swift in Sources */,
 				4BAD975B206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift in Sources */,
 				4B8CA9EC211C49B300E6A66C /* TypingBubble.swift in Sources */,
 				4B6BAFE420886C5F00A90F3A /* ParticipantTableViewCell.swift in Sources */,
@@ -1988,6 +1999,7 @@
 				4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */,
 				4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */,
 				4B6BB00920886C5F00A90F3A /* INSPhoto.swift in Sources */,
+				4B4F03D121E144D000907D39 /* MessageSection.swift in Sources */,
 				4B6BAFE720886C5F00A90F3A /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
 				4BDB294B2126C79000D77600 /* AccountSettingsController.swift in Sources */,
 				4BEDE4292067F54100C52EF4 /* InformationMessageSender.swift in Sources */,

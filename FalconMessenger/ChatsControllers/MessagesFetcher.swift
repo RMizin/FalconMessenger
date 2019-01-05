@@ -238,10 +238,10 @@ class MessagesFetcher: NSObject {
     return sortedMessages
   }
 
-	func tails(groupedMessages: [SectionedMessage]) {
+	func tails(groupedMessages: [MessageSection]) {
 
 
-		let isNextMessageSenderDifferent
+	//	let isNextMessageSenderDifferent
 
 //		for section in groupedMessages {
 //			for message in section.messages {

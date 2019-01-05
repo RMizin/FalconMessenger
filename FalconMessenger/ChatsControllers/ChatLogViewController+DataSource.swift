@@ -60,11 +60,8 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   fileprivate func selectCell(for indexPath: IndexPath, isGroupChat: Bool) -> UICollectionViewCell? {
 
     let message = groupedMessages[indexPath.section].messages[indexPath.row] //sometimes crash
-		//print(message)
-		
     let isTextMessage = message.text != nil
     let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
-	//	print(message.imageUrl, message.localImage)
     let isVoiceMessage = message.voiceEncodedString != nil
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
     let isInformationMessage = message.isInformationMessage.value ?? false
@@ -81,9 +78,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
           cell.chatLogController = self
           cell.setupData(message: message)
-        //  DispatchQueue.global(qos: .default).async { [unowned self] in
-            cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-         // }
+					cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
           
           return cell
         case false:
@@ -102,17 +97,13 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
             cell.setupData(message: message)
             if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
               cell.setupImageFromLocalData(message: message, image: image)
-             // DispatchQueue.global(qos: .default).async { [unowned self] in
-                cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-            //  }
+							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
   
               return cell
             }
             if let messageImageUrl = message.imageUrl {
               cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
-            //  DispatchQueue.global(qos: .default).async { [unowned self] in
-                cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-           //   }
+							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
               
               return cell
             }
@@ -137,10 +128,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
               cell.chatLogController = self
               cell.setupData(message: message)
-              
-           //   DispatchQueue.global(qos: .default).async { [unowned self] in
-                cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-           //   }
+							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
               
               return cell
             case false:
@@ -295,7 +283,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     return CGSize(width: collectionView.frame.width, height: cellHeight)
   }
 
-  fileprivate func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: RealmRect?, indexPath: IndexPath) -> CGFloat {
+  fileprivate func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: RealmCGRect?, indexPath: IndexPath) -> CGFloat {
     guard let frame = frame, let width = frame.width.value, let height = frame.height.value else { return 0 }
 
     var timeHeight: CGFloat!
