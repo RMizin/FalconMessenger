@@ -12,9 +12,12 @@ import SafariServices
 
 class OutgoingTextMessageCell: BaseMessageCell {
   
-  let textView: FalconTextView = {
+  lazy var textView: FalconTextView = {
     let textView = FalconTextView()
-		textView.textContainerInset = UIEdgeInsets(top: textViewTopInset, left: outgoingTextViewLeftInset, bottom: textViewBottomInset, right: outgoingTextViewRightInset)
+		textView.textContainerInset = UIEdgeInsets(top: BaseMessageCell.textViewTopInset,
+																							 left: BaseMessageCell.outgoingTextViewLeftInset,
+																							 bottom: BaseMessageCell.textViewBottomInset,
+																							 right: BaseMessageCell.outgoingTextViewRightInset)
     textView.textColor = ThemeManager.currentTheme().outgoingBubbleTextColor
 
     return textView
@@ -37,15 +40,15 @@ class OutgoingTextMessageCell: BaseMessageCell {
   }
   
   func setupData(message: Message) {
-    self.message = message
+   // self.message = message
     guard let messageText = message.text else { return }
     textView.text = messageText
-    timeLabel.text = self.message?.convertedTimestamp
+    timeLabel.text = message.convertedTimestamp
     bubbleView.frame = setupBubbleViewFrame(message: message)
     textView.frame.size = CGSize(width: bubbleView.frame.width, height: bubbleView.frame.height)
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5, y: bubbleView.frame.height-timeLabel.frame.height-5)
     
-    if let isCrooked = self.message?.isCrooked.value, isCrooked {
+    if let isCrooked = message.isCrooked.value, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().outgoingBubble
     } else {
       bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble

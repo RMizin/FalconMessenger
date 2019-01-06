@@ -122,14 +122,23 @@ class ChatLogViewController: UIViewController {
     refreshControl.beginRefreshing()
     refreshControl.endRefreshing()
   }
-  
+
+
+
+//	var canLoadPreviousMessages = true
+
   @objc func performRefresh() {
     guard let conversation = self.conversation else { return }
-		let allMessages = groupedMessages.flatMap { (sectionedMessage) -> [Message] in
-			return Array(sectionedMessage.messages)
+		let allMessages = groupedMessages.flatMap { (sectionedMessage) -> Results<Message> in
+			return sectionedMessage.messages
 		}
 
 
+//
+//		guard canLoadPreviousMessages == true else {
+//			return
+//		}
+//		canLoadPreviousMessages = false
     if let isGroupChat = conversation.isGroupChat.value, isGroupChat {
       chatLogHistoryFetcher.loadPreviousMessages(allMessages, conversation, messagesToLoad, true)
     } else {
@@ -174,6 +183,49 @@ class ChatLogViewController: UIViewController {
 //			pagedMessages.append(pagedItem)
 //		}
 //	}
+
+
+//	func getRealmMessages(fromIndex: Int, toIndex: Int) {
+//		let pagedMessages = List<Message>()
+//
+//		let mmm = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
+//
+//		for index in fromIndex...toIndex where index >= 0 && index < mmm.count {
+//			print(index)
+//			let pagedItem = mmm[index]
+//			pagedMessages.append(pagedItem)
+//		}
+//	}
+//	func getMessages1() {
+//		let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
+//		//	var firstNOFMessages: Results<Message>!
+//		let pagedMessages = List<Message>()
+//
+//		for index in 0..<50 where index >= 0 && index < messages.count {
+//		 	messages[index]
+//			pagedMessages.append(messages[index])
+//		}
+//
+//		let dates = pagedMessages.map({ $0.shortConvertedTimestamp ?? "" })
+//		let uniqueDates = Array(Set(dates))
+//		let keys = uniqueDates.sorted { (time1, time2) -> Bool in
+//			return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
+//		}
+//
+//		autoreleasepool {
+//			for date in keys {
+//				let grouped = pagedMessages.sorted(byKeyPath: "timestamp", ascending: true)//.filter("shortConvertedTimestamp == %@", date)
+//
+//			//	let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
+//				configureTails(for: grouped)
+//				//messagesFetcher.
+//				let section = MessageSection(messages: grouped, title: date)
+//				groupedMessages.append(section)
+//			}
+//		}
+//
+//	}
+
 	func getMessages(/*fromIndex: Int, toIndex: Int*/) {
 
 //		let realm = try! Realm()
@@ -190,7 +242,8 @@ class ChatLogViewController: UIViewController {
 //			let pagedItem = mmm[index]
 //			pagedMessages.append(pagedItem)
 //		}
-
+		//realm.
+		
 		let dates = conversation!.messages.map({ $0.shortConvertedTimestamp ?? "" })
 		let uniqueDates = Array(Set(dates))
 
@@ -759,8 +812,6 @@ class ChatLogViewController: UIViewController {
   }
 
   func updateMessageStatusUI(sentMessage: Message) {
-	//	let realm = try! Realm()
-
 		guard let messageToUpdate = conversation?.messages.filter("messageUID == %@", sentMessage.messageUID ?? "").first else { return }
 
 		try! realm.safeWrite {
@@ -775,11 +826,9 @@ class ChatLogViewController: UIViewController {
 				}
 			}
 		}
-
-		guard self.groupedMessages.last?.messages.last?.status == messageStatusDelivered,
-			self.groupedMessages.last?.messages.last?.messageUID ==
-			self.conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last?.messageUID,
-			userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
+		guard sentMessage.status == messageStatusDelivered,
+		messageToUpdate.messageUID == self.groupedMessages.last?.messages.last?.messageUID,
+		userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) else { return }
 		SystemSoundID.playFileNamed(fileName: "sent", withExtenstion: "caf")
   }
 

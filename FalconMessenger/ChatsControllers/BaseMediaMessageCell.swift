@@ -33,7 +33,7 @@ class BaseMediaMessageCell: BaseMessageCell {
     return messageImageView
   }()
   
-  var progressView: CircleProgress = {
+  lazy var progressView: CircleProgress = {
     let progressView = CircleProgress()
     progressView.translatesAutoresizingMaskIntoConstraints = false
     

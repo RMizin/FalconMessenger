@@ -31,7 +31,7 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
   }
   
   func setupData(message: Message, isGroupChat: Bool) {
-    self.message = message
+  //  self.message = message
     
     if isGroupChat {
       nameLabel.text = message.senderName ?? ""
@@ -51,14 +51,14 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
     
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-1,
                                      y: bubbleView.frame.height-timeLabel.frame.height-5)
-    timeLabel.text = self.message?.convertedTimestamp
+    timeLabel.text = message.convertedTimestamp
     guard message.voiceEncodedString != nil else { return }
 
     playerView.timerLabel.text = message.voiceDuration
     playerView.startingTime = message.voiceStartTime.value ?? 0
     playerView.seconds = message.voiceStartTime.value ?? 0
     
-    if let isCrooked = self.message?.isCrooked.value, isCrooked {
+    if let isCrooked = message.isCrooked.value, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().incomingBubble
     } else {
       bubbleView.image = ThemeManager.currentTheme().incomingPartialBubble

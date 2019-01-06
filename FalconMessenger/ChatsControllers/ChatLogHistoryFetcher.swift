@@ -21,7 +21,7 @@ class ChatLogHistoryFetcher: NSObject {
   fileprivate var loadingGroup = DispatchGroup()
   fileprivate let messagesFetcher = MessagesFetcher()
   
-  fileprivate var messages = [Message]()
+	fileprivate var messages = [Message]()
   fileprivate var conversation: Conversation?
 
   fileprivate var isGroupChat: Bool!
@@ -115,7 +115,7 @@ class ChatLogHistoryFetcher: NSObject {
   
   fileprivate func notifyWhenGroupFinished(query: DatabaseQuery) {
     loadingGroup.notify(queue: DispatchQueue.main, execute: {
-      let updatedMessages = self.previousMessages + self.messages
+      let updatedMessages = self.previousMessages //+ self.messages
 
 //			//MARK: REALM
 //			let realm = try! Realm()

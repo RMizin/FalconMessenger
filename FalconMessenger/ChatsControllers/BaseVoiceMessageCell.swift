@@ -10,7 +10,7 @@ import UIKit
 
 class BaseVoiceMessageCell: BaseMessageCell {
   
-  var playerView: CellPlayerView = {
+  lazy var playerView: CellPlayerView = {
     var playerView = CellPlayerView()
     playerView.alpha = 1
     playerView.backgroundColor = .clear

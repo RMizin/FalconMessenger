@@ -30,7 +30,7 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
   }
   
   func setupData(message: Message) {
-    self.message = message
+  //  self.message = message
     let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
     bubbleView.frame.origin = CGPoint(x: x, y: 0)
     bubbleView.frame.size.height = frame.size.height.rounded()
@@ -41,10 +41,10 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     playerView.seconds = message.voiceStartTime.value ?? 0
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-5,
                                      y: bubbleView.frame.height-timeLabel.frame.height-5)
-    timeLabel.text = self.message?.convertedTimestamp
+    timeLabel.text = message.convertedTimestamp
     guard message.voiceEncodedString != nil else { return }
   
-    if let isCrooked = self.message?.isCrooked.value, isCrooked {
+    if let isCrooked = message.isCrooked.value, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().outgoingBubble
     } else {
       bubbleView.image = ThemeManager.currentTheme().outgoingPartialBubble

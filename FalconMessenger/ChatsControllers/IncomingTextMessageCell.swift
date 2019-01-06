@@ -12,13 +12,13 @@ import SafariServices
 
 class IncomingTextMessageCell: BaseMessageCell {
   
-  let textView: FalconTextView = {
+  lazy var textView: FalconTextView = {
     let textView = FalconTextView()
     textView.textColor = ThemeManager.currentTheme().incomingBubbleTextColor
-    textView.textContainerInset =  UIEdgeInsets(top: textViewTopInset,
-                                                left: incomingTextViewLeftInset,
-                                                bottom: textViewBottomInset,
-                                                right: incomingTextViewRightInset)
+    textView.textContainerInset =  UIEdgeInsets(top: BaseMessageCell.textViewTopInset,
+                                                left: BaseMessageCell.incomingTextViewLeftInset,
+                                                bottom: BaseMessageCell.textViewBottomInset,
+                                                right: BaseMessageCell.incomingTextViewRightInset)
     return textView
   }()
   
@@ -42,7 +42,7 @@ class IncomingTextMessageCell: BaseMessageCell {
   }
 
   func setupData(message: Message, isGroupChat: Bool) {
-    self.message = message
+ //   self.message = message
     guard let messageText = message.text else { return }
     textView.text = messageText
     
@@ -62,7 +62,7 @@ class IncomingTextMessageCell: BaseMessageCell {
                                      y: bubbleView.frame.height-timeLabel.frame.height-5)
 		timeLabel.text = message.convertedTimestamp
  
-    if let isCrooked = self.message?.isCrooked.value, isCrooked {
+    if let isCrooked = message.isCrooked.value, isCrooked {
       bubbleView.image = ThemeManager.currentTheme().incomingBubble
     } else {
       bubbleView.image = ThemeManager.currentTheme().incomingPartialBubble

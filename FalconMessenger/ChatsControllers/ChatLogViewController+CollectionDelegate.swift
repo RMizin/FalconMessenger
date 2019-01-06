@@ -45,14 +45,14 @@ extension ChatLogViewController: CollectionDelegate {
 
 		realm.create(Message.self, value: message, update: true)
 
-		guard let newSectionTitle = message.shortConvertedTimestamp else { realm.cancelWrite(); return }
+		guard let newSectionTitle = message.shortConvertedTimestamp else { try! realm.commitWrite(); return }
 		let lastSection = groupedMessages.last?.title ?? ""
 		let isNewSection = newSectionTitle != lastSection
 
 		if isNewSection {
 			guard let messages = conversation?.messages
 				.sorted(byKeyPath: "timestamp", ascending: true)
-				.filter("shortConvertedTimestamp == %@", newSectionTitle) else { realm.cancelWrite(); return }
+				.filter("shortConvertedTimestamp == %@", newSectionTitle) else { try! realm.commitWrite(); return }
 
 			let newSection = MessageSection(messages: messages, title: newSectionTitle)
 			groupedMessages.append(newSection)

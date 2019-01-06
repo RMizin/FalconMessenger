@@ -116,7 +116,7 @@ struct MessageFontsAppearance {
 
 class BaseMessageCell: UICollectionViewCell {
   
-	weak var message: Message?
+//	weak var message: Message?
   
   weak var chatLogController: ChatLogViewController?
 
@@ -184,14 +184,14 @@ class BaseMessageCell: UICollectionViewCell {
   
   static let groupIncomingVoiceMessageHeight: CGFloat = defaultVoiceMessageHeight + incomingGroupMessageAuthorNameLabelHeightWithInsets
   
-  let bubbleView: UIImageView = {
+  lazy var bubbleView: UIImageView = {
     let bubbleView = UIImageView()
     bubbleView.isUserInteractionEnabled = true
     
     return bubbleView
   }()
   
-  var deliveryStatus: UILabel = {
+  lazy var deliveryStatus: UILabel = {
     var deliveryStatus = UILabel()
     deliveryStatus.text = "status"
     deliveryStatus.font = MessageFontsAppearance.defaultDeliveryStatusTextFont
@@ -202,19 +202,19 @@ class BaseMessageCell: UICollectionViewCell {
     return deliveryStatus
   }()
   
-  let nameLabel: UILabel = {
-    let nameLabel = UILabel()
+  lazy var nameLabel: UILabel = {
+    var nameLabel = UILabel()
     nameLabel.font = MessageFontsAppearance.defaultMessageAuthorNameFont
     nameLabel.numberOfLines = 1
     nameLabel.backgroundColor = .clear
     nameLabel.textColor = ThemeManager.currentTheme().authorNameTextColor//FalconPalette.defaultBlue
     nameLabel.frame.size.height = BaseMessageCell.incomingGroupMessageAuthorNameLabelHeight
-    nameLabel.frame.origin = CGPoint(x: incomingMessageAuthorNameLeftInset, y: BaseMessageCell.textViewTopInset)
+		nameLabel.frame.origin = CGPoint(x: BaseMessageCell.incomingMessageAuthorNameLeftInset, y: BaseMessageCell.textViewTopInset)
     
     return nameLabel
   }()
 
-  let timeLabel: UILabel = {
+  lazy var timeLabel: UILabel = {
     let timeLabel = UILabel()
     timeLabel.font = MessageFontsAppearance.defaultTimeLabelTextFont
     timeLabel.numberOfLines = 1
@@ -250,19 +250,15 @@ class BaseMessageCell: UICollectionViewCell {
     
     switch indexPath == lastIndexPath {
     case true:
-      DispatchQueue.main.async {
-        self.deliveryStatus.frame = CGRect(x: self.frame.width - 80, y: self.bubbleView.frame.height + 2,
-                                           width: 70, height: 12)//.integral
-        self.deliveryStatus.text = message.status
-        self.deliveryStatus.isHidden = false
-        self.deliveryStatus.layoutIfNeeded()
-      }
+			deliveryStatus.frame = CGRect(x: frame.width - 80, y: bubbleView.frame.height + 2,
+																				 width: 70, height: 12)//.integral
+			deliveryStatus.text = message.status
+			deliveryStatus.isHidden = false
+			deliveryStatus.layoutIfNeeded()
 
     default:
-      DispatchQueue.main.async {
-        self.deliveryStatus.isHidden = true
-        self.deliveryStatus.layoutIfNeeded()
-      }
+			deliveryStatus.isHidden = true
+			deliveryStatus.layoutIfNeeded()
     }
   }
   
