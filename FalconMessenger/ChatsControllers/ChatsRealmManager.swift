@@ -34,6 +34,12 @@ class ChatsRealmManager {
 					if let message = conversation.lastMessageRuntime {
 						message.senderName = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
 						message.isCrooked.value = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.isCrooked.value
+						if message.thumbnailImage == nil {
+							message.thumbnailImage = realm.object(ofType: RealmUIImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
+						}
+						if message.localImage == nil {
+							message.localImage = realm.object(ofType: RealmUIImage.self, forPrimaryKey: message.messageUID ?? "")
+						}
 						realm.create(Message.self, value: message, update: true)
 					}
 				}

@@ -10,6 +10,8 @@ import UIKit
 import AVFoundation
 import AVKit
 import Firebase
+import RealmSwift
+import SDWebImage
 
 private var inputContainerViewWasFirstResponder = false
 
@@ -65,7 +67,7 @@ extension ChatLogViewController {
     return inBubblePlayerViewController
   }
   
-  func configurePhotoToolbarInfo(for messagesWithPhotos: [Message], at photoIndex: Int) -> NSMutableAttributedString? {
+  func configurePhotoToolbarInfo(for messagesWithPhotos: Results<Message>, at photoIndex: Int) -> NSMutableAttributedString? {
     guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = conversation?.chatName  else { return nil }
     var titleString = String()
   
@@ -96,14 +98,14 @@ extension ChatLogViewController {
   func openSelectedPhoto(at indexPath: IndexPath) -> UIViewController? {
     var photos: [INSPhotoViewable] = setupPhotosData()
     var initialPhotoIndex: Int!
-    
-    if groupedMessages[indexPath.section].messages[indexPath.row].localImage != nil {
-      guard let initial = photos.index(where: {$0.image == groupedMessages[indexPath.section].messages[indexPath.row].localImage }) else { return nil }
-      initialPhotoIndex = initial
-    } else {
+//
+//    if groupedMessages[indexPath.section].messages[indexPath.row].localImage != nil {
+//      guard let initial = photos.index(where: {$0.image == groupedMessages[indexPath.section].messages[indexPath.row].localImage }) else { return nil }
+//      initialPhotoIndex = initial
+//    } else {
       guard let initial = photos.index(where: {$0.messageUID == groupedMessages[indexPath.section].messages[indexPath.row].messageUID }) else { return nil }
       initialPhotoIndex = initial
-    }
+  //  }
 
     guard let cell = collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
     let currentPhoto = photos[initialPhotoIndex]
@@ -123,9 +125,17 @@ extension ChatLogViewController {
   func setupPhotosData() -> [INSPhotoViewable] {
     var photos: [INSPhotoViewable] = []
 
-    let messagesWithPhotos = Array(conversation!.messages).filter({ (message) -> Bool in
-      return (message.imageUrl != nil || message.localImage != nil) && (message.localVideoUrl == nil && message.videoUrl == nil)
-    })
+//    let messagesWithPhotos = Array(conversation!.messages).filter({ (message) -> Bool in
+//      return (message.imageUrl != nil || message.localImage != nil) && (message.localVideoUrl == nil && message.videoUrl == nil)
+//    })
+
+		guard let messagesWithPhotos = conversation?.messages
+			.filter("localImage != nil OR imageUrl != nil AND localVideoUrl == nil AND videoUrl == nil")
+			.sorted(byKeyPath: "timestamp", ascending: true) else {
+			print("returning from message with photos")
+			return photos
+		}
+
     
     let numberOfPhotos = messagesWithPhotos.count
     for photoIndex in 0 ..< numberOfPhotos {
@@ -133,18 +143,11 @@ extension ChatLogViewController {
       
       if let downloadURL = messagesWithPhotos[photoIndex].imageUrl,
          let messageID = messagesWithPhotos[photoIndex].messageUID {
-        var imageView: UIImageView? = UIImageView()
-        
-        imageView?.sd_setImage(with: URL(string: downloadURL), completed: { (image, _, _, _) in
-          let newPhoto = INSPhoto(image: image, thumbnailImage: nil, messageUID: messageID)
-          newPhoto.attributedTitle = combination
-          photos.append(newPhoto)
-          imageView = nil
-        })
-
-
+				let thumbnail =  messagesWithPhotos[photoIndex].thumbnailImageUrl ?? ""
+				let newPhoto = INSPhoto(imageURL: URL(string: downloadURL), thumbnailImageURL: URL(string: thumbnail), messageUID: messageID)
+				newPhoto.attributedTitle = combination
+				photos.append(newPhoto)
       } else if let localImageData = messagesWithPhotos[photoIndex].localImage?.image, let localImage = UIImage.init(data: localImageData) {
-
         let newPhoto = INSPhoto(image: localImage, thumbnailImage: nil, messageUID: nil)
         newPhoto.attributedTitle = combination
         photos.append(newPhoto)
@@ -157,20 +160,31 @@ extension ChatLogViewController {
     galleryPreview.didDismissHandler = { viewController in
       self.inputAccessoryView?.isHidden = false
     }
-    galleryPreview.referenceViewForPhotoWhenDismissingHandler = { photo in
-      if photo.messageUID == nil {
-        guard let indexPath = Message.get(indexPathOf: nil,
-                                          localPhoto: photo.image,
-                                          in: self.groupedMessages) else { return nil }
-        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
-        return cellForDismiss.messageImageView
-      } else {
-        guard let indexPath = Message.get(indexPathOf: photo.messageUID,
-                                          localPhoto: nil,
-                                          in: self.groupedMessages) else { return nil}
-        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
-        return cellForDismiss.messageImageView
-      }
+    galleryPreview.referenceViewForPhotoWhenDismissingHandler = { [weak self] photo in
+      //if photo.messageUID == nil {
+
+//				photo.messageUID
+//        guard let indexPath = Message.get(indexPathOf: nil,
+//                                          localPhoto: photo.image,
+//                                          in: self.groupedMessages) else { return nil }
+//        guard let cellForDismiss = self.collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
+//        return cellForDismiss.messageImageView
+     // } else {
+			guard let indexPath = Message.get(indexPathOf: photo.messageUID,
+																				localPhoto: nil,
+																				in: self?.groupedMessages) else { return nil }
+			guard let cellForDismiss = self?.collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
+
+			return cellForDismiss.messageImageView
+     // }
     }
   }
 }
+
+//galleryPreview.referenceViewForPhotoWhenDismissingHandler = { [weak self] photo in
+//	if let index = self?.photos.indexOf({$0 === photo}) {
+//		let indexPath = NSIndexPath(forItem: index, inSection: 0)
+//		return collectionView.cellForItemAtIndexPath(indexPath) as? ExampleCollectionViewCell
+//	}
+//	return nil
+//}

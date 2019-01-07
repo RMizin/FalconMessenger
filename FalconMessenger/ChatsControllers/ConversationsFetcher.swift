@@ -169,6 +169,7 @@ class ConversationsFetcher: NSObject {
 				conversation.lastMessageTimestamp.value = message.timestamp.value
 				message.conversation = conversation
 				conversation.lastMessageRuntime = message
+				prefetchThumbnail(from: message.thumbnailImageUrl)
 				self.loadAddictionalMetadata(for: conversation)
     })
   }
@@ -193,7 +194,7 @@ class ConversationsFetcher: NSObject {
       conversation.chatPhotoURL = user.photoURL
       conversation.chatThumbnailPhotoURL = user.thumbnailPhotoURL
       conversation.chatParticipantsIDs.assign([chatID, currentUserID]) // = [chatID, currentUserID]
-      self.prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
+      prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
       self.updateConversationArrays(with: conversation)
     })
     
@@ -214,15 +215,9 @@ class ConversationsFetcher: NSObject {
       conversation.isGroupChat.value = metaInfo.isGroupChat.value
       conversation.admin = metaInfo.admin
       conversation.chatID = metaInfo.chatID
-      self.prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
+      prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
       self.updateConversationArrays(with: conversation)
     })
-  }
-  
-  fileprivate func prefetchThumbnail(from urlString: String?) {
-    if let thumbnail = urlString, let url = URL(string: thumbnail) {
-      SDWebImagePrefetcher.shared.prefetchURLs([url])
-    }
   }
 
   fileprivate func updateConversationArrays(with conversation: Conversation) {

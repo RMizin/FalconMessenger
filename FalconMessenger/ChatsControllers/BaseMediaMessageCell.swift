@@ -8,6 +8,9 @@
 
 import UIKit
 import SDWebImage
+import RealmSwift
+
+let blurredPlaceholder = blurEffect(image: UIImage(named: "blurPlaceholder")!)
 
 class BaseMediaMessageCell: BaseMessageCell {
   
@@ -21,6 +24,17 @@ class BaseMediaMessageCell: BaseMessageCell {
     
     return button
   }()
+
+	lazy var loadButton: UIButton = {
+		let button = UIButton()
+		button.translatesAutoresizingMaskIntoConstraints = false
+		let image = UIImage(named: "download")
+		button.isHidden = true
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleLoadTap), for: .touchUpInside)
+
+		return button
+	}()
   
   lazy var messageImageView: UIImageView = {
     let messageImageView = UIImageView()
@@ -29,6 +43,7 @@ class BaseMediaMessageCell: BaseMessageCell {
     messageImageView.layer.masksToBounds = true
     messageImageView.isUserInteractionEnabled = true
     messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomTap)))
+		//messageImageView.contentMode = .scaleAspectFill
     
     return messageImageView
   }()
@@ -40,46 +55,184 @@ class BaseMediaMessageCell: BaseMessageCell {
     return progressView
   }()
   
-  func setupImageFromLocalData(message: Message, image: UIImage) {
-    messageImageView.image = image
-    progressView.isHidden = true
-    messageImageView.isUserInteractionEnabled = true
-    playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
+
+	func setupImageFromURL(message: Message, indexPath: IndexPath) {
+
+		if let localImageData = message.localImage?.image {
+			messageImageView.image = UIImage(data: localImageData)
+			print("load from local")
+			return
+		}
+
+		if let chatLogController = chatLogController, chatLogController.imagesDownloadManager.cellsWithActiveDownloads.contains(indexPath) {
+			print("load fullsize 556677")
+			loadFullSize(message: message, messageImageUrlString: message.imageUrl, indexPath: indexPath)
+			return
+		}
+
+		if message.thumbnailImageUrl != nil && message.imageUrl == nil {
+
+			print("loading thumb 334455")
+			loadThumbnail(message: message, messageImageUrlString: message.thumbnailImageUrl)
+
+		} else if message.thumbnailImageUrl == nil && message.imageUrl != nil {
+			print("loading fullsize 334455")
+			loadFullSize(message: message, messageImageUrlString: message.imageUrl, indexPath: indexPath)
+
+		}	else if message.thumbnailImageUrl != nil && message.imageUrl != nil {
+
+
+			if let urlString = message.imageUrl, let url = URL(string: urlString) {
+
+				SDWebImageManager.shared.imageCache.containsImage(
+					forKey: SDWebImageManager.shared.cacheKey(for: url),
+					cacheType: SDImageCacheType.disk) { (cacheType) in
+						guard cacheType == SDImageCacheType.disk || cacheType == SDImageCacheType.memory else {
+							print("load thumbnail here112233")
+
+							if let localImageData = message.localImage?.image {
+								self.messageImageView.image = UIImage(data: localImageData)
+								print("load from local")
+								return
+							}
+							self.loadThumbnail(message: message, messageImageUrlString: message.thumbnailImageUrl)
+							return
+						}
+						print("load fullsize 112233")
+						self.loadFullSize(message: message, messageImageUrlString: message.imageUrl, indexPath: indexPath)
+				}
+			}
+		} else {
+			self.messageImageView.image = blurredPlaceholder
+		}
   }
-  
-  func setupImageFromURL(message: Message, messageImageUrl: URL) {
-    progressView.startLoading()
-    progressView.isHidden = false
-    let options: SDWebImageOptions = [.continueInBackground, .lowPriority, .scaleDownLargeImages]
-    messageImageView.sd_setImage(with: messageImageUrl, placeholderImage: nil, options: options, progress: { (_, _, _) in
-      
-      DispatchQueue.main.async {
-        self.progressView.progress = self.messageImageView.sd_imageProgress.fractionCompleted
-      }
-    }, completed: { (_, error, _, _) in
-      if error != nil {
-        self.progressView.isHidden = false
-        self.messageImageView.isUserInteractionEnabled = false
-        self.playButton.isHidden = true
-        return
-      }
-      self.progressView.isHidden = true
-      self.messageImageView.isUserInteractionEnabled = true
-      self.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
-    })
-  }
+
+	fileprivate func loadThumbnail(message: Message, messageImageUrlString: String?) {
+		guard let urlString = messageImageUrlString, let messageImageUrl = URL(string: urlString) else { return }
+		let options: SDWebImageOptions = [.continueInBackground, .highPriority, .scaleDownLargeImages, .avoidAutoSetImage]
+
+
+
+
+		loadButton.isHidden = false
+
+		if message.thumbnailImage?.image != nil {
+			print("local thumbnail")
+			messageImageView.image = message.thumbnailImage?.uiImage()
+			return
+		}
+
+		messageImageView.sd_setImage(
+			with: messageImageUrl,
+			placeholderImage: blurredPlaceholder,
+			options: options,
+			completed: { (image, error, cacheType, _) in
+
+				guard let image = image else {
+					self.messageImageView.image = blurredPlaceholder
+					return
+				}
+
+				guard cacheType != SDImageCacheType.memory, cacheType != SDImageCacheType.disk else {
+					self.messageImageView.image = blurEffect(image: image)
+					return
+				}
+
+				UIView.transition(with: self.messageImageView,
+													duration: 0.15,
+													options: .transitionCrossDissolve,
+													animations: { self.messageImageView.image = blurEffect(image: image) },
+													completion: nil)
+
+		})
+	}
+
+	fileprivate func loadFullSize(message: Message, messageImageUrlString: String?, indexPath: IndexPath) {
+		guard let urlString = messageImageUrlString, let messageImageUrl = URL(string: urlString) else { return }
+
+		chatLogController?.imagesDownloadManager.addCell(at: indexPath)
+		progressView.startLoading()
+		progressView.isHidden = false
+		loadButton.isHidden = true
+		let options: SDWebImageOptions = [.continueInBackground, .scaleDownLargeImages, .lowPriority]
+
+		messageImageView.sd_setImage(
+			with: messageImageUrl,
+			placeholderImage: message.thumbnailImage?.uiImage(),
+			options: options,
+			progress: { (_, _, _) in
+				DispatchQueue.main.async {
+					self.progressView.progress = self.messageImageView.sd_imageProgress.fractionCompleted
+				}
+		}, completed: { (image, error, _, _) in
+			if error != nil {
+				self.progressView.isHidden = false
+				self.messageImageView.isUserInteractionEnabled = false
+				self.playButton.isHidden = true
+				return
+			}
+
+			self.chatLogController?.imagesDownloadManager.removeCell(at: indexPath)
+			self.progressView.isHidden = true
+			self.messageImageView.isUserInteractionEnabled = true
+			self.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
+		})
+	}
 
   @objc func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
     guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
     self.chatLogController?.handleOpen(madiaAt: indexPath)
   }
-  
+
+	@objc func handleLoadTap() {
+		guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
+		guard let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
+		let realm = try! Realm()
+
+		if !realm.isInWriteTransaction {
+			realm.beginWrite()
+
+			let thumbnailObject = realm.object(ofType: RealmUIImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
+			let messageObject = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")
+
+			if thumbnailObject == nil {
+				let thumbnail = RealmUIImage(image: messageImageView.image ?? blurEffect(image: UIImage(named: "blurPlaceholder")!),
+																		 quality: 1.0,
+																		 messageUID: (message.messageUID ?? "") + "thumbnail")
+				messageObject?.thumbnailImage = thumbnail
+			} else {
+				messageObject?.thumbnailImage = thumbnailObject
+			}
+
+			try! realm.commitWrite()
+		}
+
+		loadFullSize(message: message, messageImageUrlString: message.imageUrl, indexPath: indexPath)
+	}
+
   override func prepareForReuse() {
     super.prepareForReuse()
     playButton.isHidden = true
-    messageImageView.sd_cancelCurrentImageLoad()
+		loadButton.isHidden = true
+		progressView.isHidden = true
+    //messageImageView.sd_cancelCurrentImageLoad()
     messageImageView.image = nil
     timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
     timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
   }
+}
+
+class ImagesDownloadManager: NSObject {
+
+	var cellsWithActiveDownloads: Set<(IndexPath)> = Set()
+
+	func addCell(at indexPath: IndexPath) {
+		if !cellsWithActiveDownloads.contains(indexPath) {
+			cellsWithActiveDownloads.insert(indexPath)
+		}
+	}
+
+	func removeCell(at indexPath: IndexPath) {
+		cellsWithActiveDownloads.remove(indexPath)
+	}
 }

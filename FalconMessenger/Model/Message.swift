@@ -45,6 +45,7 @@ class Message: Object {
 
     @objc dynamic var imageUrl: String?
 	 	@objc dynamic var thumbnailImageUrl: String?
+	 	@objc dynamic var thumbnailImage: RealmUIImage?
     let imageHeight = RealmOptional<Double>()
     let imageWidth = RealmOptional<Double>()
 
@@ -99,10 +100,13 @@ class Message: Object {
         videoUrl = dictionary["videoUrl"] as? String
 
 				if let image = dictionary["localImage"] as? UIImage {
-					localImage = RealmUIImage(image: image, messageUID: dictionary["messageUID"] as? String ?? "")
+					localImage = RealmUIImage(image: image, quality: 0.5, messageUID: dictionary["messageUID"] as? String ?? "")
 				}
 
-        //localImage = dictionary["localImage"] as? UIImage
+				if let thumbnail = realm?.object(ofType: RealmUIImage.self, forPrimaryKey: (dictionary["messageUID"] as? String ?? "") + "thumbnail") {
+					thumbnailImage = thumbnail
+				}
+
         localVideoUrl = dictionary["localVideoUrl"] as? String
         voiceEncodedString = dictionary["voiceEncodedString"] as? String
         voiceData = dictionary["voiceData"] as? Data //unused
@@ -122,7 +126,8 @@ class Message: Object {
     }
 
 
-  static func get(indexPathOf messageUID: String? = nil , localPhoto: UIImage? = nil, in groupedArray: [MessageSection]) -> IndexPath? {
+  static func get(indexPathOf messageUID: String? = nil , localPhoto: UIImage? = nil, in groupedArray: [MessageSection]?) -> IndexPath? {
+		guard let groupedArray = groupedArray else { return nil }
     if messageUID != nil {
       guard let section = groupedArray.index(where: { (messages) -> Bool in
         for message1 in messages.messages where message1.messageUID == messageUID {

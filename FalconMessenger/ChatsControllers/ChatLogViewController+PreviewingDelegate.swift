@@ -13,6 +13,7 @@ extension ChatLogViewController: UIViewControllerPreviewingDelegate {
   func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
     guard let indexPath = collectionView.indexPathForItem(at: location) else { return nil }
     guard let cell = collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }
+		guard cell.loadButton.isHidden == true && cell.progressView.isHidden == true else { return nil}
     let sourcePoint = cell.bubbleView.convert(cell.messageImageView.frame.origin, to: collectionView)
     let sourceRect = CGRect(x: sourcePoint.x, y: sourcePoint.y,
                             width: cell.messageImageView.frame.width, height: cell.messageImageView.frame.height)

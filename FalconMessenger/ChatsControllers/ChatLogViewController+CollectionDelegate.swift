@@ -62,8 +62,13 @@ extension ChatLogViewController: CollectionDelegate {
 		} else {
 
 		let sectionIndex = groupedMessages.count - 1 >= 0 ? groupedMessages.count - 1 : 0
-		let rowIndex = groupedMessages[sectionIndex].messages.count - 1 >= 0 ?
-		groupedMessages[sectionIndex].messages.count - 1 : 0
+		//let rowIndex = groupedMessages[sectionIndex].messages.count - 1 >= 0 ?
+	//	groupedMessages[sectionIndex].messages.count - 1 : 0
+
+			let rowIndex = groupedMessages[sectionIndex].messages.insertionIndex(of: message) { (message1, message2) -> Bool in
+				return message1.timestamp.value ?? 0 < message2.timestamp.value ?? 0
+			}
+
 
 			if groupedMessages[sectionIndex].messages.indices.contains(rowIndex - 1),
 				groupedMessages[sectionIndex].messages[rowIndex - 1].fromId == message.fromId,
@@ -72,11 +77,28 @@ extension ChatLogViewController: CollectionDelegate {
 			}
 
 			collectionView.insertItems(at: [IndexPath(row: rowIndex, section: sectionIndex)])
-			collectionView.reloadItems(at: [IndexPath(row: rowIndex - 1, section: sectionIndex)])
+
+		//	if collectionView.numberOfItems(inSection: sectionIndex) <= 10 {
+
+			// temporary
+			UIView.performWithoutAnimation {
+				collectionView.reloadSections([sectionIndex])
+			}
+
+//			} else {
+//				var indexPaths = [IndexPath]()
+//				for index in collectionView.numberOfItems(inSection: sectionIndex)-9..<collectionView.numberOfItems(inSection: sectionIndex) {
+//					indexPaths.append(IndexPath(row: index, section: 	sectionIndex))
+//					//collectionView.reloadItems(at: [IndexPath])
+//				}
+//				collectionView.reloadItems(at: indexPaths)
+//			}
+
+			//collectionView.reloadItems(at: [IndexPath(row: rowIndex - 1, section: sectionIndex)])
 		}
 
-		updateMessageStatus(messageRef: reference)
 		try! self.realm.commitWrite()
+		updateMessageStatus(messageRef: reference)
 		NotificationCenter.default.post(name: .messageSent, object: nil)
 
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

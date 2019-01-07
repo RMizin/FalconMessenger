@@ -91,32 +91,12 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         scalingImageView.frame = view.bounds
     }
 
-	var context = CIContext(options: nil)
-
-	func blurEffect(image: UIImage) -> UIImage {
-
-		let currentFilter = CIFilter(name: "CIGaussianBlur")
-		let beginImage = CIImage(image: image)
-		currentFilter!.setValue(beginImage, forKey: kCIInputImageKey)
-		currentFilter!.setValue(10, forKey: kCIInputRadiusKey)
-		guard let unwrappedBeginImage = beginImage else { return UIImage(named: "imagePlaceholder")! }
-
-		let cropFilter = CIFilter(name: "CICrop")
-		cropFilter!.setValue(currentFilter!.outputImage, forKey: kCIInputImageKey)
-		cropFilter!.setValue(CIVector(cgRect: unwrappedBeginImage.extent), forKey: "inputRectangle")
-
-		let output = cropFilter!.outputImage
-		let cgimg = context.createCGImage(output!, from: output!.extent)
-		let processedImage = UIImage(cgImage: cgimg!)
-		return processedImage
-	}
-
     private func loadThumbnailImage() {
 				view.bringSubviewToFront(activityIndicator)
         photo.loadThumbnailImageWithCompletionHandler { [weak self] (image, error) -> () in
             
             let completeLoading = {
-							self?.scalingImageView.image = self?.blurEffect(image: image ?? UIImage())
+							self?.scalingImageView.image = blurEffect(image: image ?? UIImage())
 //                if image != nil {
 //                //    self?.activityIndicator.stopAnimating()
 //                }

@@ -22,10 +22,12 @@ struct ContextMenuItems {
       return defaultMenuItems(for: messageType)
     }
     switch messageType {
-    case .textMessage, .photoMessage:
+    case .textMessage:
       return [ContextMenuItems.copyItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+		case .photoMessage:
+			return [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
     case .videoMessage:
-      return [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
+      return [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
     case .voiceMessage:
       return [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
     case .sendingMessage:
@@ -36,9 +38,9 @@ struct ContextMenuItems {
   static func defaultMenuItems(for messageType: MessageType) -> [String] {
     switch messageType {
     case .textMessage, .photoMessage:
-      return [ContextMenuItems.copyItem, ContextMenuItems.deleteItem]
+      return [ContextMenuItems.deleteItem]
     case .videoMessage:
-      return [ContextMenuItems.copyPreviewItem, ContextMenuItems.deleteItem]
+      return [ContextMenuItems.deleteItem]
     case .voiceMessage:
       return [ContextMenuItems.deleteItem]
     case .sendingMessage:
@@ -80,13 +82,11 @@ extension BaseMessageCell {
       if message?.status == messageStatusSending { return }
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       contextMenuItems = ContextMenuItems.contextMenuItems(for: .voiceMessage, !isOutgoing)
-    //  contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
       if message?.status == messageStatusSending { return }
         contextMenuItems = ContextMenuItems.contextMenuItems(for: .voiceMessage, !isOutgoing)
-     // contextMenuItems = [ContextMenuItems.deleteItem, ContextMenuItems.reportItem]
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
     
@@ -95,7 +95,10 @@ extension BaseMessageCell {
       if !cell.playButton.isHidden {
         contextMenuItems = ContextMenuItems.contextMenuItems(for: .videoMessage, !isOutgoing)
         config.menuWidth = expandedMenuWidth
-      }
+			} else {
+				contextMenuItems = ContextMenuItems.contextMenuItems(for: .photoMessage, !isOutgoing)
+				config.menuWidth = expandedMenuWidth
+			}
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingPhotoMessageCell {
@@ -103,7 +106,10 @@ extension BaseMessageCell {
       if !cell.playButton.isHidden {
         contextMenuItems = ContextMenuItems.contextMenuItems(for: .videoMessage, !isOutgoing)
         config.menuWidth = expandedMenuWidth
-      }
+			} else {
+				contextMenuItems = ContextMenuItems.contextMenuItems(for: .photoMessage, !isOutgoing)
+				config.menuWidth = expandedMenuWidth
+			}
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingTextMessageCell {

@@ -22,18 +22,25 @@ class PhotoMessageCell: BaseMediaMessageCell {
     messageImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 0).isActive = true
     messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 0).isActive = true
     messageImageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -5).isActive = true
-    
-    bubbleView.addSubview(playButton)
-    playButton.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
-    playButton.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-    playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-    playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    
+
     bubbleView.addSubview(progressView)
     progressView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
     progressView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
     progressView.widthAnchor.constraint(equalToConstant: 60).isActive = true
     progressView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+
+		bubbleView.addSubview(playButton)
+		playButton.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
+		playButton.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
+		playButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+		playButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+
+		bubbleView.addSubview(loadButton)
+		(loadButton).centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
+		(loadButton).centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
+		(loadButton).widthAnchor.constraint(equalToConstant: 60).isActive = true
+		(loadButton).heightAnchor.constraint(equalToConstant: 60).isActive = true
+
     
     bubbleView.addSubview(timeLabel)
   }

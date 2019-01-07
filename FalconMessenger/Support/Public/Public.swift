@@ -11,6 +11,7 @@ import Firebase
 import SystemConfiguration
 import Photos
 import RealmSwift
+import SDWebImage
 
 struct ScreenSize {
   static let width = UIScreen.main.bounds.size.width
@@ -276,6 +277,26 @@ extension Date {
   func yearNumber() -> Int {
     return Calendar.current.dateComponents([.year], from: self).year!
   }
+}
+
+var context = CIContext(options: nil)
+
+func blurEffect(image: UIImage) -> UIImage {
+
+	let currentFilter = CIFilter(name: "CIGaussianBlur")
+	let beginImage = CIImage(image: image)
+	currentFilter!.setValue(beginImage, forKey: kCIInputImageKey)
+	currentFilter!.setValue(10, forKey: kCIInputRadiusKey)
+	guard let unwrappedBeginImage = beginImage else { return UIImage() }
+
+	let cropFilter = CIFilter(name: "CICrop")
+	cropFilter!.setValue(currentFilter!.outputImage, forKey: kCIInputImageKey)
+	cropFilter!.setValue(CIVector(cgRect: unwrappedBeginImage.extent), forKey: "inputRectangle")
+
+	let output = cropFilter!.outputImage
+	let cgimg = context.createCGImage(output!, from: output!.extent)
+	let processedImage = UIImage(cgImage: cgimg!)
+	return processedImage
 }
 
 func timestampOfLastMessage(_ date: Date) -> String {
@@ -590,6 +611,13 @@ extension UIScrollView {
   }
 }
 
+func prefetchThumbnail(from urlString: String?) {
+	if let thumbnail = urlString, let url = URL(string: thumbnail) {
+		SDWebImagePrefetcher.shared.prefetchURLs([url])
+	}
+}
+
+
 func createImageThumbnail (_ image: UIImage) -> UIImage {
   
   let actualHeight: CGFloat = image.size.height
@@ -597,7 +625,7 @@ func createImageThumbnail (_ image: UIImage) -> UIImage {
   let imgRatio: CGFloat = actualWidth/actualHeight
   let maxWidth: CGFloat = 150.0
   let resizedHeight: CGFloat = maxWidth/imgRatio
-  let compressionQuality: CGFloat = 0.6
+  let compressionQuality: CGFloat = 0.3
   
   let rect: CGRect = CGRect(x: 0, y: 0, width: maxWidth, height: resizedHeight)
   UIGraphicsBeginImageContext(rect.size)

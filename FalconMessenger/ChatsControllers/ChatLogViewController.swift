@@ -37,6 +37,7 @@ class ChatLogViewController: UIViewController {
   let chatLogHistoryFetcher = ChatLogHistoryFetcher()
   let userBlockingManager = UserBlockingManager()
   let groupMembersManager = GroupMembersManager()
+	let imagesDownloadManager = ImagesDownloadManager()
 
   var typingIndicatorReference: DatabaseReference!
   var typingIndicatorHandle: DatabaseHandle!
@@ -991,7 +992,7 @@ class ChatLogViewController: UIViewController {
 		guard let conversation = self.conversation else { return }
     let messageSender = MessageSender(realmConversation(from: conversation), text: text, media: media)
     messageSender.delegate = self
-    messageSender.sendMessage()
+		messageSender.sendMessage()
   }
 
 	fileprivate func realmConversation(from conversation: Conversation) -> Conversation {

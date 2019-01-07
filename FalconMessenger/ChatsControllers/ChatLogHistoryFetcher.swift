@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import RealmSwift
+import SDWebImage
 
 protocol ChatLogHistoryDelegate: class {
   func chatLogHistory(isEmpty: Bool)
@@ -105,6 +106,7 @@ class ChatLogHistoryFetcher: NSObject {
       dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: self.isGroupChat)
       let message = Message(dictionary: dictionary)
 			message.conversation = self.conversation
+			prefetchThumbnail(from: message.thumbnailImageUrl)
 
       self.messagesFetcher.loadUserNameForOneMessage(message: message, completion: { (_, newMessage)  in
         self.previousMessages.append(newMessage)
@@ -112,16 +114,10 @@ class ChatLogHistoryFetcher: NSObject {
       })
     })
   }
-  
+
   fileprivate func notifyWhenGroupFinished(query: DatabaseQuery) {
     loadingGroup.notify(queue: DispatchQueue.main, execute: {
-      let updatedMessages = self.previousMessages //+ self.messages
-
-//			//MARK: REALM
-//			let realm = try! Realm()
-//			try! realm.write {
-//				updatedMessages = self.messagesFetcher.configureTails(for: updatedMessages, isGroupChat: self.isGroupChat)
-//			}
+      let updatedMessages = self.previousMessages
 
       query.removeObserver(withHandle: self.userMessageHande)
       self.delegate?.chatLogHistory(updated: updatedMessages)

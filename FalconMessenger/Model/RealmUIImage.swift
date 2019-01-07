@@ -14,10 +14,20 @@ class RealmUIImage: Object {
 	@objc dynamic var messageUID: String?
 	@objc dynamic var image: Data?
 
-	convenience init(image: UIImage, messageUID: String) {
+	func uiImage() -> UIImage? {
+		guard let data = image else { return blurredPlaceholder }
+		return UIImage(data: data)
+	}
+
+	convenience init(image: UIImage, quality: CGFloat, messageUID: String) {
 		self.init()
 		self.messageUID = messageUID
-		self.image = image.jpegData(compressionQuality: 0.5)
+
+		if quality < 1.0 {
+			self.image = image.jpegData(compressionQuality: quality)
+		} else {
+			self.image = image.pngData()
+		}
 	}
 
 	override static func primaryKey() -> String? {

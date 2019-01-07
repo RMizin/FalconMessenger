@@ -95,30 +95,46 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
             cell.chatLogController = self
             cell.setupData(message: message)
-            if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
-              cell.setupImageFromLocalData(message: message, image: image)
-							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-  
-              return cell
-            }
-            if let messageImageUrl = message.imageUrl {
-              cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
+//            if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
+//              cell.setupImageFromLocalData(message: message, image: image)
+//							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
+//
+//              return cell
+//            }
+           // if let messageImageUrl = message.thumbnailImageUrl {
+						//	DispatchQueue.global(qos: .default).async {
+								cell.setupImageFromURL(message: message, indexPath: indexPath)
+					//		}
+
 							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
               
               return cell
-            }
+//            } else if let messageImageUrl = message.imageUrl {
+//							cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!, isThumbnail: false)
+//							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
+//
+//							return cell
+//						}
           case false:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
             cell.chatLogController = self
             cell.setupData(message: message, isGroupChat: isGroupChat)
-            if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
-              cell.setupImageFromLocalData(message: message, image: image)
-              return cell
-            }
-            if let messageImageUrl = message.imageUrl {
-              cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!)
-              return cell
-            }
+//            if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
+//              cell.setupImageFromLocalData(message: message, image: image)
+//              return cell
+//            }
+           // if let messageImageUrl = message.thumbnailImageUrl {
+
+						//userInteractive
+				//		DispatchQueue.global(qos: .default).async {
+							cell.setupImageFromURL(message: message, indexPath: indexPath)
+					//	}
+
+						return cell
+//						} else if  let messageImageUrl = message.imageUrl {
+//							cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!, isThumbnail: false)
+//							return cell
+//						}
           }
         } else
 

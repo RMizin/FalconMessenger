@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessageSender.swift"
-            timestampString = "568480478.265012"
+            timestampString = "568516107.125545"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "364"
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessageSender.swift"
-            timestampString = "568480478.265563"
+            timestampString = "568516107.126821"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "365"
@@ -42,7 +42,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessageSender.swift"
-                  timestampString = "568427065.925607"
+                  timestampString = "568507827.1391309"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "366"
@@ -57,7 +57,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessageSender.swift"
-                  timestampString = "568427065.928246"
+                  timestampString = "568507827.142064"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "367"
@@ -74,7 +74,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessageSender.swift"
-            timestampString = "568480478.265707"
+            timestampString = "568516107.127036"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "366"
@@ -90,7 +90,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessageSender.swift"
-                  timestampString = "568427065.9345469"
+                  timestampString = "568507827.2659121"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "366"
@@ -105,7 +105,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessageSender.swift"
-                  timestampString = "568427065.936641"
+                  timestampString = "568507827.270367"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "367"
@@ -122,7 +122,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessageSender.swift"
-            timestampString = "568480478.265785"
+            timestampString = "568516107.127216"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "367"
@@ -138,7 +138,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessageSender.swift"
-            timestampString = "568480478.265862"
+            timestampString = "568516107.127401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "368"
@@ -154,7 +154,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessageSender.swift"
-            timestampString = "568480478.265995"
+            timestampString = "568516107.127586"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "369"
@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/BaseMessageCell+CellDeletionHandlers.swift"
-            timestampString = "568480478.26612"
+            timestampString = "568516107.127838"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "264"
-            endingLineNumber = "264"
+            startingLineNumber = "272"
+            endingLineNumber = "272"
             landmarkName = "handleDeletion(indexPath:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/BaseMessageCell+CellDeletionHandlers.swift"
-            timestampString = "568480478.266636"
+            timestampString = "568516107.128879"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "266"
-            endingLineNumber = "266"
+            startingLineNumber = "274"
+            endingLineNumber = "274"
             landmarkName = "handleDeletion(indexPath:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/BaseMessageCell+CellDeletionHandlers.swift"
-            timestampString = "568480478.266764"
+            timestampString = "568516107.129246"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
             landmarkName = "handleDeletion(indexPath:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/BaseMessageCell+CellDeletionHandlers.swift"
-            timestampString = "568480478.266939"
+            timestampString = "568516107.129712"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
+            startingLineNumber = "276"
+            endingLineNumber = "276"
             landmarkName = "handleDeletion(indexPath:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -234,7 +234,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.2671469"
+            timestampString = "568516107.130049"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "18"
@@ -250,7 +250,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.267625"
+            timestampString = "568516107.131355"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "19"
@@ -266,7 +266,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessageSender.swift"
-            timestampString = "568480478.267841"
+            timestampString = "568516107.131924"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "85"
@@ -282,7 +282,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessageSender.swift"
-            timestampString = "568480478.267946"
+            timestampString = "568516107.13205"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "86"
@@ -298,7 +298,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.26805"
+            timestampString = "568516107.132272"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "21"
@@ -314,7 +314,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-                  timestampString = "568427065.9964091"
+                  timestampString = "568507827.352259"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "22"
@@ -329,7 +329,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-                  timestampString = "568427065.9992861"
+                  timestampString = "568507827.355328"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "23"
@@ -346,7 +346,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.2682379"
+            timestampString = "568516107.132785"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "22"
@@ -362,7 +362,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-                  timestampString = "568427066.005965"
+                  timestampString = "568507827.361498"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "22"
@@ -377,7 +377,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-                  timestampString = "568427066.007972"
+                  timestampString = "568507827.363526"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "23"
@@ -394,7 +394,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.268447"
+            timestampString = "568516107.133238"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "24"
@@ -410,7 +410,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.2686369"
+            timestampString = "568516107.1339231"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "29"
@@ -426,7 +426,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.268847"
+            timestampString = "568516107.134541"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "28"
@@ -441,24 +441,8 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogPresenter.swift"
-            timestampString = "568480478.26903"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "messages(shouldChangeMessageStatusToReadAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.269425"
+            timestampString = "568516107.135987"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "117"
@@ -474,7 +458,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.269888"
+            timestampString = "568516107.136863"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "118"
@@ -490,7 +474,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.2700371"
+            timestampString = "568516107.137097"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "116"
@@ -506,11 +490,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.270164"
+            timestampString = "568516107.137334"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -522,7 +506,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.270293"
+            timestampString = "568516107.137625"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "92"
@@ -538,7 +522,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.270432"
+            timestampString = "568516107.138005"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "93"
@@ -554,7 +538,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.270596"
+            timestampString = "568516107.138267"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "121"
@@ -570,7 +554,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-                  timestampString = "568427066.065933"
+                  timestampString = "568507827.420082"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "121"
@@ -585,7 +569,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-                  timestampString = "568427066.06796"
+                  timestampString = "568507827.422357"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "122"
@@ -602,7 +586,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.270725"
+            timestampString = "568516107.138479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "122"
@@ -618,7 +602,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.270846"
+            timestampString = "568516107.138774"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "123"
@@ -634,7 +618,103 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.271027"
+            timestampString = "568516107.139106"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController.swift"
+            timestampString = "568516107.140152"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "808"
+            endingLineNumber = "808"
+            landmarkName = "resetBadgeForSelf()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FalconMessenger.ChatLogViewController.(resetBadgeForSelf in _2D2412DFEFB64B91C61C3DC4F89DC225)() -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController.swift"
+                  timestampString = "568507827.442544"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "808"
+                  endingLineNumber = "808"
+                  offsetFromSymbolStart = "900">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.FIRMutableData) -&gt; __C.FIRTransactionResult in FalconMessenger.ChatLogViewController.(resetBadgeForSelf in _2D2412DFEFB64B91C61C3DC4F89DC225)() -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController.swift"
+                  timestampString = "568507827.4446141"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "809"
+                  endingLineNumber = "809"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController.swift"
+            timestampString = "568516107.14195"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "809"
+            endingLineNumber = "809"
+            landmarkName = "resetBadgeForSelf()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController.swift"
+            timestampString = "568516107.142905"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "810"
+            endingLineNumber = "810"
+            landmarkName = "resetBadgeForSelf()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.143778"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "62"
@@ -649,152 +729,8 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController.swift"
-            timestampString = "568480478.271224"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "806"
-            endingLineNumber = "806"
-            landmarkName = "resetBadgeForSelf()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "FalconMessenger.ChatLogViewController.(resetBadgeForSelf in _2D2412DFEFB64B91C61C3DC4F89DC225)() -&gt; ()"
-                  moduleName = "FalconMessenger"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController.swift"
-                  timestampString = "568427066.090054"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "798"
-                  endingLineNumber = "798"
-                  offsetFromSymbolStart = "900">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.FIRMutableData) -&gt; __C.FIRTransactionResult in FalconMessenger.ChatLogViewController.(resetBadgeForSelf in _2D2412DFEFB64B91C61C3DC4F89DC225)() -&gt; ()"
-                  moduleName = "FalconMessenger"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController.swift"
-                  timestampString = "568427066.092212"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "799"
-                  endingLineNumber = "799"
-                  offsetFromSymbolStart = "20">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController.swift"
-            timestampString = "568480478.271786"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "807"
-            endingLineNumber = "807"
-            landmarkName = "resetBadgeForSelf()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController.swift"
-            timestampString = "568480478.27203"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "808"
-            endingLineNumber = "808"
-            landmarkName = "resetBadgeForSelf()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.272249"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "update(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.272468"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "update(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.272824"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "update(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.2729681"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "update(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.273097"
+            timestampString = "568516107.144317"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "55"
@@ -810,7 +746,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.273285"
+            timestampString = "568516107.145274"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.1456929"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "57"
@@ -826,11 +778,43 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.273423"
+            timestampString = "568516107.146044"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.146518"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.146958"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "update(with:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -842,7 +826,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.273633"
+            timestampString = "568516107.147349"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "119"
@@ -858,7 +842,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.273778"
+            timestampString = "568516107.14755"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "120"
@@ -874,7 +858,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-                  timestampString = "568427066.163937"
+                  timestampString = "568507827.498234"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "121"
@@ -889,7 +873,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-                  timestampString = "568427066.166111"
+                  timestampString = "568507827.500246"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "122"
@@ -906,7 +890,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.273898"
+            timestampString = "568516107.147724"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "124"
@@ -922,7 +906,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-                  timestampString = "568427066.171795"
+                  timestampString = "568507827.506824"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "124"
@@ -937,7 +921,7 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-                  timestampString = "568427066.173957"
+                  timestampString = "568507827.508883"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "126"
@@ -954,7 +938,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.27411"
+            timestampString = "568516107.147882"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "126"
@@ -970,7 +954,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.274236"
+            timestampString = "568516107.1481349"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "128"
@@ -986,23 +970,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.274443"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "131"
-            endingLineNumber = "131"
-            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.274604"
+            timestampString = "568516107.14833"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "127"
@@ -1018,11 +986,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.274713"
+            timestampString = "568516107.1485341"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
             landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1034,23 +1002,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.274837"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
-            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.274945"
+            timestampString = "568516107.1487271"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "132"
@@ -1065,8 +1017,24 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
+            timestampString = "568516107.148919"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
+            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.275081"
+            timestampString = "568516107.1491309"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "60"
@@ -1082,7 +1050,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.275232"
+            timestampString = "568516107.149503"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "59"
@@ -1098,7 +1066,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.275387"
+            timestampString = "568516107.1497819"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "57"
@@ -1114,7 +1082,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.275534"
+            timestampString = "568516107.150068"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "56"
@@ -1130,7 +1098,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.275651"
+            timestampString = "568516107.150362"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "55"
@@ -1146,7 +1114,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.2758"
+            timestampString = "568516107.15064"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "54"
@@ -1162,7 +1130,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.275988"
+            timestampString = "568516107.150964"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "53"
@@ -1178,7 +1146,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.27615"
+            timestampString = "568516107.15128"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "52"
@@ -1194,7 +1162,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.2763571"
+            timestampString = "568516107.15161"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "62"
@@ -1210,7 +1178,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.276504"
+            timestampString = "568516107.1519409"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "61"
@@ -1226,27 +1194,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.276666"
+            timestampString = "568516107.1522681"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "update(message:reference:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+CollectionDelegate.swift"
-            timestampString = "568480478.276843"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
             landmarkName = "update(message:reference:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1258,11 +1210,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.276984"
+            timestampString = "568516107.152535"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
             landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1274,23 +1226,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.277101"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "144"
-            endingLineNumber = "144"
-            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.277204"
+            timestampString = "568516107.152716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "143"
@@ -1306,39 +1242,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.2773041"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
-            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.2774529"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "141"
-            endingLineNumber = "141"
-            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.277575"
+            timestampString = "568516107.1528291"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "142"
@@ -1354,7 +1258,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
-            timestampString = "568480478.277694"
+            timestampString = "568516107.15297"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
+            timestampString = "568516107.153109"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "140"
@@ -1369,8 +1289,40 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
+            timestampString = "568516107.153246"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/MessagesFetcher.swift"
+            timestampString = "568516107.153356"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
+            landmarkName = "newLoadMessages(reference:isGroupChat:conversation:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/NewChatControllers/SelectChatTableViewController.swift"
-            timestampString = "568480478.277805"
+            timestampString = "568516107.153484"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "244"
@@ -1386,7 +1338,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/NewChatControllers/SelectChatTableViewController.swift"
-            timestampString = "568480478.278766"
+            timestampString = "568516107.155697"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "248"
@@ -1402,7 +1354,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/NewChatControllers/SelectChatTableViewController.swift"
-            timestampString = "568480478.2788579"
+            timestampString = "568516107.155974"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "247"
@@ -1418,7 +1370,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/NewChatControllers/SelectChatTableViewController.swift"
-            timestampString = "568480478.278927"
+            timestampString = "568516107.1561511"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "236"
@@ -1434,7 +1386,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/NewChatControllers/SelectChatTableViewController.swift"
-            timestampString = "568480478.279038"
+            timestampString = "568516107.156354"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "237"
@@ -1450,7 +1402,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/NewChatControllers/SelectChatTableViewController.swift"
-            timestampString = "568480478.279147"
+            timestampString = "568516107.1565419"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "239"
@@ -1466,7 +1418,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/NewChatControllers/SelectChatTableViewController.swift"
-            timestampString = "568480478.279258"
+            timestampString = "568516107.15668"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "243"
@@ -1482,55 +1434,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.279361"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "update(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.279556"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "update(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.279695"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "update(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.279879"
+            timestampString = "568516107.156876"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "73"
@@ -1546,7 +1450,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.280009"
+            timestampString = "568516107.157016"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "74"
@@ -1562,45 +1466,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.280121"
+            timestampString = "568516107.15721"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "75"
             endingLineNumber = "75"
             landmarkName = "update(with:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
-                  moduleName = "FalconMessenger"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-                  timestampString = "568427066.362982"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
-                  offsetFromSymbolStart = "440">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
-                  moduleName = "FalconMessenger"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-                  timestampString = "568427066.365042"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
-                  offsetFromSymbolStart = "3476">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1610,7 +1482,39 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.2802221"
+            timestampString = "568516107.1574171"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.157624"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.157802"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "78"
@@ -1626,11 +1530,11 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-                  timestampString = "568427066.370518"
+                  timestampString = "568507827.683908"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
                   offsetFromSymbolStart = "440">
                </Location>
                <Location
@@ -1641,11 +1545,59 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-                  timestampString = "568427066.373184"
+                  timestampString = "568507827.686254"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "3476">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.157957"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+                  timestampString = "568507827.692957"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "440">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+                  timestampString = "568507827.696187"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
                   offsetFromSymbolStart = "3476">
                </Location>
                <Location
@@ -1656,11 +1608,11 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-                  timestampString = "568427066.375245"
+                  timestampString = "568507827.698424"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "79"
-                  endingLineNumber = "79"
+                  startingLineNumber = "82"
+                  endingLineNumber = "82"
                   offsetFromSymbolStart = "176">
                </Location>
             </Locations>
@@ -1673,11 +1625,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.280311"
+            timestampString = "568516107.15815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "update(with:)"
             landmarkType = "7">
             <Locations>
@@ -1689,11 +1641,11 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-                  timestampString = "568427066.3821011"
+                  timestampString = "568507827.705969"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
                   offsetFromSymbolStart = "440">
                </Location>
                <Location
@@ -1704,11 +1656,11 @@
                   moduleName = "FalconMessenger"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-                  timestampString = "568427066.384222"
+                  timestampString = "568507827.708724"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
                   offsetFromSymbolStart = "3476">
                </Location>
             </Locations>
@@ -1721,13 +1673,301 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
-            timestampString = "568480478.2804151"
+            timestampString = "568516107.158312"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
             landmarkName = "update(with:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+ImageZoomHandlers.swift"
+            timestampString = "568516107.1585031"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "openSelectedPhoto(at:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+ImageZoomHandlers.swift"
+            timestampString = "568516107.1591851"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "openSelectedPhoto(at:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+ImageZoomHandlers.swift"
+            timestampString = "568516107.159278"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "openSelectedPhoto(at:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+ImageZoomHandlers.swift"
+            timestampString = "568516107.159362"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "openSelectedPhoto(at:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.159523"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.159598"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.15968"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+                  timestampString = "568507827.881007"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "protocol witness for FalconMessenger.MessageSenderDelegate.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; () in conformance FalconMessenger.ChatLogViewController : FalconMessenger.MessageSenderDelegate in FalconMessenger"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+                  timestampString = "568507827.883124"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "31"
+                  endingLineNumber = "31"
+                  offsetFromSymbolStart = "60">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.159784"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.15988"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.159948"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.16004"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+                  timestampString = "568507847.414928"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "192">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+                  timestampString = "568507847.417685"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "48"
+                  endingLineNumber = "48"
+                  offsetFromSymbolStart = "72">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+            timestampString = "568516107.160094"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "update(with:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+                  timestampString = "568507847.444352"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "192">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 () -&gt; () in FalconMessenger.ChatLogViewController.update(with: Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Swift.AnyObject&gt;&gt;) -&gt; ()"
+                  moduleName = "FalconMessenger"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/romanmizin/Documents/xcode_projects/FalconMessenger/FalconMessenger/ChatsControllers/ChatLogViewController+MessageSenderDelegate.swift"
+                  timestampString = "568507847.446586"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "48"
+                  endingLineNumber = "48"
+                  offsetFromSymbolStart = "72">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
