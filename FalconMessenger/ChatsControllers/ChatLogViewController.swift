@@ -72,7 +72,6 @@ class ChatLogViewController: UIViewController {
   
 	var conversation: Conversation?
   var groupedMessages = [MessageSection]()
-//	var pendingMessages = [(message: Message, reference: DatabaseReference)]()
   var typingIndicatorSection: [String] = []
 
 	let realm = try! Realm()
@@ -82,7 +81,7 @@ class ChatLogViewController: UIViewController {
 
   private var shouldScrollToBottom: Bool = true
   private let keyboardLayoutGuide = KeyboardLayoutGuide()
-  private let messagesToLoad = 50
+	let messagesToLoad = 50
   
   lazy var collectionView: ChatCollectionView = {
     let collectionView = ChatCollectionView()
@@ -143,22 +142,12 @@ class ChatLogViewController: UIViewController {
     refreshControl.endRefreshing()
   }
 
-
-
-//	var canLoadPreviousMessages = true
-
   @objc func performRefresh() {
     guard let conversation = self.conversation else { return }
 		let allMessages = groupedMessages.flatMap { (sectionedMessage) -> Results<Message> in
 			return sectionedMessage.messages
 		}
 
-
-//
-//		guard canLoadPreviousMessages == true else {
-//			return
-//		}
-//		canLoadPreviousMessages = false
     if let isGroupChat = conversation.isGroupChat.value, isGroupChat {
       chatLogHistoryFetcher.loadPreviousMessages(allMessages, conversation, messagesToLoad, true)
     } else {
@@ -191,75 +180,7 @@ class ChatLogViewController: UIViewController {
     setupBottomScrollButton()
   }
 
-
-//	func getRealmMessages(fromIndex: Int, toIndex: Int) {
-//		let pagedMessages = List<Message>()
-//
-//		let mmm = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
-//
-//		for index in fromIndex...toIndex where index >= 0 && index < mmm.count {
-//			print(index)
-//			let pagedItem = mmm[index]
-//			pagedMessages.append(pagedItem)
-//		}
-//	}
-
-
-//	func getRealmMessages(fromIndex: Int, toIndex: Int) {
-//		let pagedMessages = List<Message>()
-//
-//		let mmm = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
-//
-//		for index in fromIndex...toIndex where index >= 0 && index < mmm.count {
-//			print(index)
-//			let pagedItem = mmm[index]
-//			pagedMessages.append(pagedItem)
-//		}
-//	}
-//	func getMessages1() {
-//		let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
-//		//	var firstNOFMessages: Results<Message>!
-//		let pagedMessages = List<Message>()
-//
-//		for index in 0..<50 where index >= 0 && index < messages.count {
-//		 	messages[index]
-//			pagedMessages.append(messages[index])
-//		}
-//
-//		let dates = pagedMessages.map({ $0.shortConvertedTimestamp ?? "" })
-//		let uniqueDates = Array(Set(dates))
-//		let keys = uniqueDates.sorted { (time1, time2) -> Bool in
-//			return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
-//		}
-//
-//		autoreleasepool {
-//			for date in keys {
-//				let grouped = pagedMessages.sorted(byKeyPath: "timestamp", ascending: true)//.filter("shortConvertedTimestamp == %@", date)
-//
-//			//	let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
-//				configureTails(for: grouped)
-//				//messagesFetcher.
-//				let section = MessageSection(messages: grouped, title: date)
-//				groupedMessages.append(section)
-//			}
-//		}
-//
-//	}
-
-
-
-
 	func getMessages() {
-
-//		var results: Results<Message>!//.sorted(byKeyPath: "timestamp", ascending: true)
-//		let list = List<Message>()
-//		for index in conversation!.messages.count-51..<conversation!.messages.count where index >= 0 {
-//			if let message = conversation?.messages[index] {
-//				list.append(message)
-//			}
-//		}
-//		results = list.sorted(byKeyPath: "timestamp", ascending: true)
-		//results = results.sorted(byKeyPath: "timestamp", ascending: true)
 
 		let dates = conversation!.messages.map({ $0.shortConvertedTimestamp ?? "" })
 		let uniqueDates = Array(Set(dates))
@@ -270,14 +191,37 @@ class ChatLogViewController: UIViewController {
 			return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
 		}
 
-	//	prefetchThumbnails()
-
+		var loadedCount = 0
 		autoreleasepool {
-			for date in keys {
-				let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
+			for date in keys.reversed() {
+				var messages = conversation!.messages.filter("shortConvertedTimestamp == %@", date)
+				messages = messages.sorted(byKeyPath: "timestamp", ascending: true)
+
+				if messages.count > messagesToLoad {
+					print("before filted more than 50", messages.count)
+					var numberToLoad = 0
+					if loadedCount < messagesToLoad {
+						numberToLoad = messagesToLoad - loadedCount
+						print("number to load", numberToLoad)
+						
+						messages = messages.filter("timestamp >= %@", messages[messages.count-numberToLoad].timestamp.value ?? "")
+						print("after filter", messages.count)
+					} else {
+						print("breaking this shit", loadedCount)
+						break
+					}
+				}
+
+				if loadedCount >= messagesToLoad {
+					print("breaking ", loadedCount)
+					break
+				} else {
+					loadedCount += messages.count
+				}
+
 				configureTails(for: messages)
 				let section = MessageSection(messages: messages, title: date)
-				groupedMessages.append(section)
+				groupedMessages.insert(section, at: 0)
 			}
 		}
 	}

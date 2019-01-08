@@ -30,7 +30,6 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
   }
   
   func setupData(message: Message) {
-  //  self.message = message
     let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
     bubbleView.frame.origin = CGPoint(x: x, y: 0)
     bubbleView.frame.size.height = frame.size.height.rounded()

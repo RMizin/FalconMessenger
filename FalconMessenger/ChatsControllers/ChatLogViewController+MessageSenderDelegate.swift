@@ -48,8 +48,8 @@ extension ChatLogViewController: MessageSenderDelegate {
 
 					if isNewSection {
 						guard let messages = conversation?.messages
-							.sorted(byKeyPath: "timestamp", ascending: true)
-							.filter("shortConvertedTimestamp == %@", newSectionTitle) else { realm.cancelWrite(); return }
+							.filter("shortConvertedTimestamp == %@", newSectionTitle)
+							.sorted(byKeyPath: "timestamp", ascending: true) else { realm.cancelWrite(); return }
 
 						let newSection = MessageSection(messages: messages, title: newSectionTitle)
 						groupedMessages.append(newSection)

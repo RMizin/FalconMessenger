@@ -98,8 +98,23 @@ extension List where Element == Message {
 	}
 }
 
+extension Realm {
+	public func safeWrite(_ block: (() throws -> Void)) throws {
+		if isInWriteTransaction {
+			try block()
+		} else {
+			try write(block)
+		}
+	}
+}
 
-
+extension Date {
+	static func dateFromCustomString(customString: String) -> Date {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "dd/MM/yyyy"
+		return dateFormatter.date(from: customString) ?? Date()
+	}
+}
 
 extension UICollectionView {
   func deselectAllItems(animated: Bool = false) {

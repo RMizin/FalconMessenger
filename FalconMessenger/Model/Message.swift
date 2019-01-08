@@ -150,7 +150,7 @@ class Message: Object {
 
       guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
         return message1.messageUID == messageUID
-      }) else { return IndexPath(row: -1, section: section) }
+      }) else { return nil }
 
        return IndexPath(row: row, section: section)
 
@@ -164,18 +164,10 @@ class Message: Object {
 
       guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
         return message1.localImage == localPhoto
-      }) else { return IndexPath(row: -1, section: section) }
+      }) else { return nil }
 
 			return IndexPath(row: row, section: section)
     }
      return nil
-  }
-}
-
-extension Date {
-  static func dateFromCustomString(customString: String) -> Date {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd/MM/yyyy"
-    return dateFormatter.date(from: customString) ?? Date()
   }
 }

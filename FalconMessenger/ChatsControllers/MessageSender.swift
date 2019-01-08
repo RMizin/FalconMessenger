@@ -25,9 +25,6 @@ class MessageSender: NSObject {
 
 	fileprivate var dataToUpdate = [[String: AnyObject]]()
 
-
-
-  
   weak var delegate: MessageSenderDelegate?
   
   init(_ conversation: Conversation?, text: String?, media: [MediaObject]) {

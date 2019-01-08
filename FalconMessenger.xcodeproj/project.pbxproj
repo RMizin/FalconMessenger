@@ -49,6 +49,7 @@
 		4B4F03CF21E144C000907D39 /* RealmUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03CE21E144BF00907D39 /* RealmUIImage.swift */; };
 		4B4F03D121E144D000907D39 /* MessageSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03D021E144D000907D39 /* MessageSection.swift */; };
 		4B4F03D321E1451800907D39 /* RealmCGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03D221E1451800907D39 /* RealmCGRect.swift */; };
+		4B4F03D621E554BA00907D39 /* ImagesDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */; };
 		4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */; };
@@ -315,6 +316,7 @@
 		4B4F03CE21E144BF00907D39 /* RealmUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RealmUIImage.swift; path = Model/RealmUIImage.swift; sourceTree = "<group>"; };
 		4B4F03D021E144D000907D39 /* MessageSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MessageSection.swift; path = Model/MessageSection.swift; sourceTree = "<group>"; };
 		4B4F03D221E1451800907D39 /* RealmCGRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RealmCGRect.swift; path = Model/RealmCGRect.swift; sourceTree = "<group>"; };
+		4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesDownloadManager.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B4F453C1F32230C00A6FF96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsController.swift; path = ContactsControllers/ContactsController.swift; sourceTree = "<group>"; };
@@ -631,8 +633,8 @@
 			children = (
 				4B2E59B1214AED3D0081B74E /* ChatLogViewController+MessageSenderDelegate.swift */,
 				4B0FA7DD2065A1D600BEA090 /* ChatLogViewController+CollectionDelegate.swift */,
-				4BDFACAA2147D88D00603963 /* ChatLogViewController+UserBlockDelegate.swift */,
 				4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */,
+				4BDFACAA2147D88D00603963 /* ChatLogViewController+UserBlockDelegate.swift */,
 				4BE5712C1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift */,
 				4BF3ABCE2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift */,
 				4B8CA140215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift */,
@@ -692,6 +694,14 @@
 				4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */,
 			);
 			name = SupplementaryView;
+			sourceTree = "<group>";
+		};
+		4B4F03D421E554A100907D39 /* ImagesDownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */,
+			);
+			path = ImagesDownloadManager;
 			sourceTree = "<group>";
 		};
 		4B4F45221F32230C00A6FF96 = {
@@ -829,6 +839,7 @@
 				4B2733C521C545EB00B3879F /* PresenseManager */,
 				4B08E370208872B800C64EAA /* Public */,
 				4B6BAF8820886B3800A90F3A /* Sounds */,
+				4B4F03D421E554A100907D39 /* ImagesDownloadManager */,
 				4B08E36F208872AF00C64EAA /* ThemeManager */,
 				4BC0E6C92111B6F200720B43 /* GlobalDataStorage */,
 				4B1058F52120977600CD6600 /* UserDefaultsManager */,
@@ -1976,6 +1987,7 @@
 				4B2143081F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift in Sources */,
 				4BCE1ABA1F3714A000C0EBF7 /* User.swift in Sources */,
 				4B8CA141215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift in Sources */,
+				4B4F03D621E554BA00907D39 /* ImagesDownloadManager.swift in Sources */,
 				4B6BB00F20886C5F00A90F3A /* AnimationController.swift in Sources */,
 				4B2733CC21C5483D00B3879F /* FalconTableViewController.swift in Sources */,
 				4B31350621A9F56D00D20583 /* SharedMediaCell.swift in Sources */,

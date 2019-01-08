@@ -43,7 +43,6 @@ class BaseMediaMessageCell: BaseMessageCell {
     messageImageView.layer.masksToBounds = true
     messageImageView.isUserInteractionEnabled = true
     messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomTap)))
-		//messageImageView.contentMode = .scaleAspectFill
     
     return messageImageView
   }()
@@ -57,28 +56,22 @@ class BaseMediaMessageCell: BaseMessageCell {
   
 
 	func setupImageFromURL(message: Message, indexPath: IndexPath) {
-
 		if let localImageData = message.localImage?.image {
 			messageImageView.image = UIImage(data: localImageData)
-			self.messageImageView.isUserInteractionEnabled = true
-			self.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
-			print("load from local")
+			messageImageView.isUserInteractionEnabled = true
+			playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
 			return
 		}
 
 		if let chatLogController = chatLogController, chatLogController.imagesDownloadManager.cellsWithActiveDownloads.contains(indexPath) {
-			print("load fullsize 556677")
 			loadFullSize(message: message, messageImageUrlString: message.imageUrl, indexPath: indexPath)
 			return
 		}
 
 		if message.thumbnailImageUrl != nil && message.imageUrl == nil {
-
-			print("loading thumb 334455")
 			loadThumbnail(message: message, messageImageUrlString: message.thumbnailImageUrl)
 
 		} else if message.thumbnailImageUrl == nil && message.imageUrl != nil {
-			print("loading fullsize 334455")
 			loadFullSize(message: message, messageImageUrlString: message.imageUrl, indexPath: indexPath)
 
 		}	else if message.thumbnailImageUrl != nil && message.imageUrl != nil {
@@ -90,17 +83,14 @@ class BaseMediaMessageCell: BaseMessageCell {
 					forKey: SDWebImageManager.shared.cacheKey(for: url),
 					cacheType: SDImageCacheType.disk) { (cacheType) in
 						guard cacheType == SDImageCacheType.disk || cacheType == SDImageCacheType.memory else {
-							print("load thumbnail here112233")
 
 							if let localImageData = message.localImage?.image {
 								self.messageImageView.image = UIImage(data: localImageData)
-								print("load from local")
 								return
 							}
 							self.loadThumbnail(message: message, messageImageUrlString: message.thumbnailImageUrl)
 							return
 						}
-						print("load fullsize 112233")
 						self.loadFullSize(message: message, messageImageUrlString: message.imageUrl, indexPath: indexPath)
 				}
 			}
@@ -116,7 +106,6 @@ class BaseMediaMessageCell: BaseMessageCell {
 		loadButton.isHidden = false
 
 		if message.thumbnailImage?.image != nil {
-			print("local thumbnail")
 			messageImageView.image = message.thumbnailImage?.uiImage()
 			return
 		}
@@ -179,7 +168,6 @@ class BaseMediaMessageCell: BaseMessageCell {
 	}
 
   @objc func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
-		print("tapped")
     guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
     self.chatLogController?.handleOpen(madiaAt: indexPath)
   }
@@ -220,19 +208,4 @@ class BaseMediaMessageCell: BaseMessageCell {
     timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
     timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor
   }
-}
-
-class ImagesDownloadManager: NSObject {
-
-	var cellsWithActiveDownloads: Set<(IndexPath)> = Set()
-
-	func addCell(at indexPath: IndexPath) {
-		if !cellsWithActiveDownloads.contains(indexPath) {
-			cellsWithActiveDownloads.insert(indexPath)
-		}
-	}
-
-	func removeCell(at indexPath: IndexPath) {
-		cellsWithActiveDownloads.remove(indexPath)
-	}
 }

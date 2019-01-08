@@ -31,8 +31,6 @@ class IncomingVoiceMessageCell: BaseVoiceMessageCell {
   }
   
   func setupData(message: Message, isGroupChat: Bool) {
-  //  self.message = message
-    
     if isGroupChat {
       nameLabel.text = message.senderName ?? ""
       nameLabel.sizeToFit()

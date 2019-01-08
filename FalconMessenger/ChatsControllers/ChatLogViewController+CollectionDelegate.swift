@@ -53,8 +53,8 @@ extension ChatLogViewController: CollectionDelegate {
 		let mustCreateNewSection = newSectionTitle != lastSectionTitle
 
 		if mustCreateNewSection {
-			guard let messages = conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true)
-				.filter("shortConvertedTimestamp == %@", newSectionTitle) else { try! self.realm.commitWrite(); return }
+			guard let messages = conversation?.messages.filter("shortConvertedTimestamp == %@", newSectionTitle)
+				.sorted(byKeyPath: "timestamp", ascending: true) else { try! self.realm.commitWrite(); return }
 
 			let newSection = MessageSection(messages: messages, title: newSectionTitle)
 

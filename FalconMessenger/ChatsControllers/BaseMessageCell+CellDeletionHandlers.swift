@@ -201,7 +201,6 @@ extension BaseMessageCell {
   func handleDeletion(indexPath: IndexPath) {
 		guard	let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
 		let realm = try! Realm()
-		//guard let realmObjectMessage = realm.objects(Message.self).filter("messageUID == %@", message.messageUID ?? "").first else { return }
 
     guard let uid = Auth.auth().currentUser?.uid, let partnerID = message.chatPartnerId(),
       let messageID = message.messageUID, self.currentReachabilityStatus != .notReachable else {

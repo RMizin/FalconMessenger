@@ -42,7 +42,6 @@ class IncomingTextMessageCell: BaseMessageCell {
   }
 
   func setupData(message: Message, isGroupChat: Bool) {
- //   self.message = message
     guard let messageText = message.text else { return }
     textView.text = messageText
     

@@ -40,7 +40,6 @@ class OutgoingTextMessageCell: BaseMessageCell {
   }
   
   func setupData(message: Message) {
-   // self.message = message
     guard let messageText = message.text else { return }
     textView.text = messageText
     timeLabel.text = message.convertedTimestamp

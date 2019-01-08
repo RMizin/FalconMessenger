@@ -70,7 +70,6 @@ class ChatLogPresenter: NSObject {
 		messagesFetcher?.loadMessagesData(for: conversation)
 	}
 
-
 	fileprivate func openChatLog(for conversation: Conversation) {
 		guard isChatLogAlreadyOpened == false else { return }
 		isChatLogAlreadyOpened = true
@@ -119,6 +118,7 @@ extension ChatLogPresenter: MessagesDelegate {
 		let realm = try! Realm()
 
 		autoreleasepool {
+			guard !realm.isInWriteTransaction else { return }
 			realm.beginWrite()
 			for message in messages {
 

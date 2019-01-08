@@ -17,15 +17,19 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 
 	fileprivate func tails(messages: Results<Message>) {
 		for index in (0..<messages.count).reversed() {
-			let isLastMessage = index == messages.count - 1
-			if isLastMessage { messages[index].isCrooked.value = true }
-			guard messages.indices.contains(index - 1) else { return }
-			let isPreviousMessageSenderDifferent = messages[index - 1].fromId != messages[index].fromId
-			messages[index - 1].isCrooked.value = isPreviousMessageSenderDifferent ? true : messages[index].isInformationMessage.value ?? false
+			try! realm.safeWrite {
+				let isLastMessage = index == messages.count - 1
+				if isLastMessage { messages[index].isCrooked.value = true }
+				guard messages.indices.contains(index - 1) else { return }
+				let isPreviousMessageSenderDifferent = messages[index - 1].fromId != messages[index].fromId
+				messages[index - 1].isCrooked.value = isPreviousMessageSenderDifferent ? true : messages[index].isInformationMessage.value ?? false
+			}
 		}
 	}
 
-	func chatLogHistory(updated messages: [Message]) {
+	func chatLogHistory(updated newMessages: [Message]) {
+		print(newMessages.count)
+
 		globalDataStorage.contentSizeWhenInsertingToTop = collectionView.contentSize
 		globalDataStorage.isInsertingCellsToTop = true
 		refreshControl.endRefreshing()
@@ -34,19 +38,63 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 		autoreleasepool {
 			guard !realm.isInWriteTransaction else { return }
 			realm.beginWrite()
-			for message in messages {
+			for message in newMessages {
 				realm.create(Message.self, value: message, update: true)
 			}
+			try! realm.commitWrite()
+
 
 			var sectionsInserted = 0
 			let firstSection = groupedMessages.first?.title ?? ""
-			let dates = messages.map({ $0.shortConvertedTimestamp ?? "" })
-
+			let dates = newMessages.map({ $0.shortConvertedTimestamp ?? "" })
 			var datesSet = Set(dates)
+
+			let allMessages = groupedMessages.flatMap { (sectionedMessage) -> Results<Message> in
+				return sectionedMessage.messages
+			}
+
+
 			if datesSet.contains(firstSection) {
-				let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", firstSection)
-				tails(messages: messages)
-				datesSet.remove(firstSection)
+				var messages = conversation!.messages.filter("shortConvertedTimestamp == %@", firstSection)
+
+				if messages.count > allMessages.count + messagesToLoad {
+					messages = messages.sorted(byKeyPath: "timestamp", ascending: true)
+
+					guard let timestamp = messages[messages.count - (allMessages.count + messagesToLoad)].timestamp.value else { return }
+					messages = messages.filter("timestamp >= %@", timestamp)
+					tails(messages: messages)
+
+					let section = MessageSection(messages: messages, title: firstSection)
+					let oldItemsCount = groupedMessages[0].messages.count
+					groupedMessages[0] = section
+					let newItemsCount = section.messages.count
+					let amount = newItemsCount - oldItemsCount
+
+					var indexPaths = [IndexPath]()
+
+					Array(0..<amount).forEach({ (index) in
+						indexPaths.append(IndexPath(row: index, section: 0))
+					})
+
+					UIView.performWithoutAnimation {
+						collectionView.performBatchUpdates({
+							collectionView.insertItems(at: indexPaths)
+						}, completion: nil)
+					}
+					return
+				} else {
+					messages = messages.sorted(byKeyPath: "timestamp", ascending: true)
+					tails(messages: messages)
+
+					let section = MessageSection(messages: messages, title: firstSection)
+					groupedMessages[0] = section
+
+					UIView.performWithoutAnimation {
+						collectionView.reloadSections([0])
+					}
+
+					datesSet.remove(firstSection)
+				}
 			}
 
 			let uniqueDates = Array(datesSet)
@@ -56,7 +104,7 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 			}
 
 			for date in keys.reversed() {
-				let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
+				let messages = conversation!.messages.filter("shortConvertedTimestamp == %@", date).sorted(byKeyPath: "timestamp", ascending: true)
 				tails(messages: messages)
 				let section = MessageSection(messages: messages, title: date)
 				sectionsInserted += 1
@@ -65,35 +113,19 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 
 			UIView.performWithoutAnimation {
 				collectionView.performBatchUpdates({
+					guard sectionsInserted > 0 else { return }
 
-					guard sectionsInserted > 0 else {
-						UIView.performWithoutAnimation {
-							collectionView.reloadSections([0])
-						}
-
-						try! realm.commitWrite()
-						print("returning from sections inserted 0")
-						return
-					}
-
-					print("inserting coll sections")
 					var indexSet = IndexSet()
 					Array(0..<sectionsInserted).forEach({ (index) in
-						print("inserting...")
 						indexSet.insert(index)
 					})
-					UIView.performWithoutAnimation {
-						collectionView.reloadSections([0])
-						collectionView.insertSections(indexSet)
-					}
+
+					collectionView.insertSections(indexSet)
 				}, completion: { (_) in
 					DispatchQueue.main.async {
 						self.bottomScrollConainer.isHidden = false
 					}
 				})
-			}
-			if realm.isInWriteTransaction {
-				try! realm.commitWrite()
 			}
 		}
 	}

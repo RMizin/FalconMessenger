@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-import RealmSwift
+//import RealmSwift
 import SDWebImage
 
 protocol ChatLogHistoryDelegate: class {
