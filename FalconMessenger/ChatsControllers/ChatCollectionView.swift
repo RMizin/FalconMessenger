@@ -33,6 +33,43 @@ class ChatCollectionView: UICollectionView {
       }
     }
   }
+
+
+//	func removeLast(_ number: Int, in sectionIndex: Int) {
+//		if numberOfItems(inSection: sectionIndex) <= number {
+//			deleteSections([sectionIndex])
+//		} else {
+//
+//			var indexPaths = [IndexPath]()
+//
+//			guard numberOfItems(inSection: sectionIndex) - number - 1 >= 0 else { return }
+//			for index in numberOfItems(inSection: sectionIndex) - number - 1..<numberOfItems(inSection: sectionIndex) {
+//				indexPaths.append(IndexPath(row: index, section: 	sectionIndex))
+//			}
+//			//	UIView.performWithoutAnimation {
+//			deleteItems(at: indexPaths)
+//	//		reloadItems(at: indexPaths)
+//			//	}
+//		}
+//	}
+//
+//	func insertData(indexPaths: [iN])
+
+	
+	func reloadLast(_ number: Int, in sectionIndex: Int) {
+		if numberOfItems(inSection: sectionIndex) <= 11 {
+			reloadSections([sectionIndex])
+		} else {
+			var indexPaths = [IndexPath]()
+			guard numberOfItems(inSection: sectionIndex) - number - 1 >= 0 else { return }
+			for index in numberOfItems(inSection: sectionIndex) - number - 1..<numberOfItems(inSection: sectionIndex) {
+				indexPaths.append(IndexPath(row: index, section: 	sectionIndex))
+			}
+		//	UIView.performWithoutAnimation {
+				reloadItems(at: indexPaths)
+		//	}
+		}
+	}
   
   required public init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -44,11 +81,11 @@ class ChatCollectionView: UICollectionView {
                      animated: animated)
   }
   
-  public func instantMoveToBottom() {
-    guard contentSize.height > bounds.size.height else { return }
-    UIView.performWithoutAnimation {
-      setContentOffset(CGPoint(x: 0, y: (contentSize.height - bounds.size.height) + (contentInset.bottom)),
-                       animated: false)
-    }
-  }
+//  public func instantMoveToBottom() {
+//    guard contentSize.height > bounds.size.height else { return }
+//    UIView.performWithoutAnimation {
+//      setContentOffset(CGPoint(x: 0, y: (contentSize.height - bounds.size.height) + (contentInset.bottom)),
+//                       animated: false)
+//    }
+//  }
 }

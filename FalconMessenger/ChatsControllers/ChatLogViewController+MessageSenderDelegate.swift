@@ -32,16 +32,13 @@ extension ChatLogViewController: MessageSenderDelegate {
 			let realm = try! Realm()
 			guard !realm.isInWriteTransaction else { return }
 
-			realm.beginWrite()
-
-			collectionView.performBatchUpdates({
-
+			collectionView.performBatchUpdates({ 
 				for values in arrayOfvalues {
+					realm.beginWrite()
 					let message = Message(dictionary: preloadedCellData(values: values))
 					message.status = messageStatusSending
 					message.conversation = conversation
 					message.isCrooked.value = false
-
 					realm.create(Message.self, value: message, update: true)
 
 					guard let newSectionTitle = message.shortConvertedTimestamp else { realm.cancelWrite(); return }
@@ -55,7 +52,6 @@ extension ChatLogViewController: MessageSenderDelegate {
 							.filter("shortConvertedTimestamp == %@", newSectionTitle) else { realm.cancelWrite(); return }
 
 						let newSection = MessageSection(messages: messages, title: newSectionTitle)
-
 						groupedMessages.append(newSection)
 
 						let sectionIndex = self.groupedMessages.count - 1 >= 0 ? self.groupedMessages.count - 1 : 0
@@ -63,7 +59,6 @@ extension ChatLogViewController: MessageSenderDelegate {
 					} else {
 
 						let sectionIndex = self.groupedMessages.count - 1 >= 0 ? self.groupedMessages.count - 1 : 0
-
 						let rowIndex = self.groupedMessages[sectionIndex].messages.count - 1 >= 0 ?
 						self.groupedMessages[sectionIndex].messages.count - 1 : 0
 
@@ -73,29 +68,27 @@ extension ChatLogViewController: MessageSenderDelegate {
 						}
 						self.collectionView.insertItems(at: [IndexPath(row: rowIndex, section: sectionIndex)])
 					}
+					self.groupedMessages.last?.messages.last?.isCrooked.value = true
+					try! realm.commitWrite()
 				}
-				
 			}, completion: { (isCompleted) in
-				self.groupedMessages.last?.messages.last?.isCrooked.value = true
 
 				let sectionIndex = self.groupedMessages.count - 1 >= 0 ? self.groupedMessages.count - 1 : 0
 
 				let rowIndex = self.groupedMessages[sectionIndex].messages.count - 1 >= 0 ?
 					self.groupedMessages[sectionIndex].messages.count - 1 : 0
 
-				UIView.performWithoutAnimation {
-					self.collectionView.reloadItems(at: [IndexPath(row: rowIndex, section: sectionIndex)])
-					if rowIndex-arrayOfvalues.count >= 0 {
-						self.collectionView.reloadItems(at: [IndexPath(row: rowIndex-arrayOfvalues.count, section: sectionIndex)])
-					}
-				}
+					self.collectionView.performBatchUpdates({
+						UIView.performWithoutAnimation {
+							self.collectionView.reloadItems(at: [IndexPath(row: rowIndex, section: sectionIndex)])
+							if rowIndex-arrayOfvalues.count >= 0 {
+								self.collectionView.reloadItems(at: [IndexPath(row: rowIndex-arrayOfvalues.count, section: sectionIndex)])
+							}
+						}
+					}, completion: nil)
 				self.collectionView.scrollToBottom(animated: true)
-
-				try! realm.commitWrite()
 				NotificationCenter.default.post(name: .messageSent, object: nil)
 			})
-
-			
 		}
   }
 }

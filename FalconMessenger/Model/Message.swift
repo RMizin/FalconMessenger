@@ -125,6 +125,19 @@ class Message: Object {
         imageCellHeight.value = dictionary["imageCellHeight"] as? Double
     }
 
+	static func get(indexPathOf message: Message, in groupedArray: [MessageSection]) -> IndexPath? {
+		guard let section = groupedArray.index(where: { (messages) -> Bool in
+			for message1 in messages.messages where message1.messageUID == message.messageUID {
+				return true
+			}; return false
+		}) else { return nil }
+
+		guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
+			return message1.messageUID == message.messageUID
+		}) else { return nil }
+
+		return IndexPath(row: row, section: section)
+	}
 
   static func get(indexPathOf messageUID: String? = nil , localPhoto: UIImage? = nil, in groupedArray: [MessageSection]?) -> IndexPath? {
 		guard let groupedArray = groupedArray else { return nil }

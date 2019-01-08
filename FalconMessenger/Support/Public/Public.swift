@@ -89,6 +89,17 @@ extension List where Element == String {
 		insert(contentsOf: array, at: 0)
 	}
 }
+extension List where Element == Message {
+	func assign(_ array: Results<Message>?) {
+		guard let array = array else { return }
+		removeAll()
+
+		insert(contentsOf: array, at: 0)
+	}
+}
+
+
+
 
 extension UICollectionView {
   func deselectAllItems(animated: Bool = false) {
@@ -582,6 +593,13 @@ extension UISearchBar {
   }
 }
 
+func delay(_ delay: Double, closure:@escaping ()->()) {
+	DispatchQueue.main.asyncAfter(
+		deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
+//	DispatchQueue.main.asyncAfter(
+//		deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
+}
+
 extension UITableView {
   
   func indexPathForView(_ view: UIView) -> IndexPath? {
@@ -616,6 +634,14 @@ func prefetchThumbnail(from urlString: String?) {
 		SDWebImagePrefetcher.shared.prefetchURLs([url])
 	}
 }
+
+func prefetchThumbnail(from urls: [URL]?) {
+//	if let thumbnail = urlString, let url = URL(string: thumbnail) {
+		SDWebImagePrefetcher.shared.prefetchURLs(urls)
+	//	SDWebImagePrefetcher.shared.prefetchURLs([url])
+	//}
+}
+
 
 
 func createImageThumbnail (_ image: UIImage) -> UIImage {

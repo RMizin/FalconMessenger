@@ -24,87 +24,80 @@ extension ChatLogViewController: CollectionDelegate {
 			message.status = newMessageStatus as? String
       self.updateMessageStatusUI(sentMessage: message)
     })
-    
-    updateMessageStatus(messageRef: reference)
+		DispatchQueue.global(qos: .background).async {
+    	self.updateMessageStatus(messageRef: reference)
+		}
     updateMessageStatusUI(sentMessage: message)
   }
 
-
   func collectionView(shouldBeUpdatedWith message: Message, reference: DatabaseReference) {
-		update(message: message, reference: reference)
+		self.update(message: message, reference: reference)
   }
 
 	func update(message: Message, reference: DatabaseReference) {
-		let lastObject = conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last
-		guard message.timestamp.value ?? 0 >= lastObject?.timestamp.value ?? 0 else { return }
+		guard isInsertingToTheBottom(message: message) else { print("returning from first shit"); return }
+		batch(message: message, reference: reference)
+	}
+
+	fileprivate func batch(message: Message, reference: DatabaseReference) {
+		guard !realm.isInWriteTransaction else { return }
 
 		realm.beginWrite()
-
+		groupedMessages.last?.messages.last?.isCrooked.value = false
 		message.conversation = conversation
-		message.isCrooked.value = true
-
+		message.isCrooked.value = false
 		realm.create(Message.self, value: message, update: true)
 
-		guard let newSectionTitle = message.shortConvertedTimestamp else { try! realm.commitWrite(); return }
-		let lastSection = groupedMessages.last?.title ?? ""
-		let isNewSection = newSectionTitle != lastSection
+		guard let newSectionTitle = message.shortConvertedTimestamp else { try! self.realm.commitWrite(); return }
+		let lastSectionTitle = groupedMessages.last?.title ?? ""
+		let mustCreateNewSection = newSectionTitle != lastSectionTitle
 
-		if isNewSection {
-			guard let messages = conversation?.messages
-				.sorted(byKeyPath: "timestamp", ascending: true)
-				.filter("shortConvertedTimestamp == %@", newSectionTitle) else { try! realm.commitWrite(); return }
+		if mustCreateNewSection {
+			guard let messages = conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true)
+				.filter("shortConvertedTimestamp == %@", newSectionTitle) else { try! self.realm.commitWrite(); return }
 
 			let newSection = MessageSection(messages: messages, title: newSectionTitle)
-			groupedMessages.append(newSection)
-			let insertionIndex = groupedMessages.count - 1 >= 0 ?  groupedMessages.count - 1 : 0
-			collectionView.insertSections(IndexSet([insertionIndex]))
 
+			let insertionIndex = groupedMessages.insertionIndexOf(elem: newSection) { (section1, section2) -> Bool in
+				return Date.dateFromCustomString(customString: section1.title ?? "") < Date.dateFromCustomString(customString: section2.title ?? "")
+			}
+			groupedMessages.insert(newSection, at: insertionIndex)
+			groupedMessages.last?.messages.last?.isCrooked.value = true
+			collectionView.performBatchUpdates({
+					collectionView.insertSections([insertionIndex])
+			}) { (isCompleted) in
+				self.performAdditionalUpdates(reference: reference)
+			}
 		} else {
+			guard let indexPath = Message.get(indexPathOf: message, in: groupedMessages) else { try! self.realm.commitWrite(); return }
+			groupedMessages.last?.messages.last?.isCrooked.value = true
 
-		let sectionIndex = groupedMessages.count - 1 >= 0 ? groupedMessages.count - 1 : 0
-		//let rowIndex = groupedMessages[sectionIndex].messages.count - 1 >= 0 ?
-	//	groupedMessages[sectionIndex].messages.count - 1 : 0
-
-			let rowIndex = groupedMessages[sectionIndex].messages.insertionIndex(of: message) { (message1, message2) -> Bool in
-				return message1.timestamp.value ?? 0 < message2.timestamp.value ?? 0
-			}
-
-
-			if groupedMessages[sectionIndex].messages.indices.contains(rowIndex - 1),
-				groupedMessages[sectionIndex].messages[rowIndex - 1].fromId == message.fromId,
-				message.isInformationMessage.value != true {
-				groupedMessages[sectionIndex].messages[rowIndex - 1].isCrooked.value = false
-			}
-
-			collectionView.insertItems(at: [IndexPath(row: rowIndex, section: sectionIndex)])
-
-		//	if collectionView.numberOfItems(inSection: sectionIndex) <= 10 {
-
-			// temporary
+			// temporary due to inefficiency
 			UIView.performWithoutAnimation {
-				collectionView.reloadSections([sectionIndex])
+				collectionView.performBatchUpdates({
+						collectionView.reloadSections([indexPath.section])
+				}) { (isCompleted) in
+					self.performAdditionalUpdates(reference: reference)
+				}
 			}
-
-//			} else {
-//				var indexPaths = [IndexPath]()
-//				for index in collectionView.numberOfItems(inSection: sectionIndex)-9..<collectionView.numberOfItems(inSection: sectionIndex) {
-//					indexPaths.append(IndexPath(row: index, section: 	sectionIndex))
-//					//collectionView.reloadItems(at: [IndexPath])
-//				}
-//				collectionView.reloadItems(at: indexPaths)
-//			}
-
-			//collectionView.reloadItems(at: [IndexPath(row: rowIndex - 1, section: sectionIndex)])
 		}
-
 		try! self.realm.commitWrite()
-		updateMessageStatus(messageRef: reference)
-		NotificationCenter.default.post(name: .messageSent, object: nil)
-
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-			if self.isScrollViewAtTheBottom() {
-				self.collectionView.scrollToBottom(animated: true)
-			}
-		}
 	}
+
+	fileprivate func isInsertingToTheBottom(message: Message) -> Bool {
+		let firstObject = groupedMessages.last?.messages.first?.timestamp.value ?? 0
+		guard message.timestamp.value ?? 0 >= firstObject else { return false }
+		return true
+	}
+
+	fileprivate func performAdditionalUpdates(reference: DatabaseReference) {
+		DispatchQueue.global(qos: .background).async {
+			self.updateMessageStatus(messageRef: reference)
+		}
+		if self.isScrollViewAtTheBottom() {
+			self.collectionView.scrollToBottom(animated: true)
+		}
+		NotificationCenter.default.post(name: .messageSent, object: nil)
+	}
+
 }

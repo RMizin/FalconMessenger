@@ -60,6 +60,8 @@ class BaseMediaMessageCell: BaseMessageCell {
 
 		if let localImageData = message.localImage?.image {
 			messageImageView.image = UIImage(data: localImageData)
+			self.messageImageView.isUserInteractionEnabled = true
+			self.playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
 			print("load from local")
 			return
 		}
@@ -110,9 +112,6 @@ class BaseMediaMessageCell: BaseMessageCell {
 	fileprivate func loadThumbnail(message: Message, messageImageUrlString: String?) {
 		guard let urlString = messageImageUrlString, let messageImageUrl = URL(string: urlString) else { return }
 		let options: SDWebImageOptions = [.continueInBackground, .highPriority, .scaleDownLargeImages, .avoidAutoSetImage]
-
-
-
 
 		loadButton.isHidden = false
 
@@ -180,6 +179,7 @@ class BaseMediaMessageCell: BaseMessageCell {
 	}
 
   @objc func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
+		print("tapped")
     guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
     self.chatLogController?.handleOpen(madiaAt: indexPath)
   }

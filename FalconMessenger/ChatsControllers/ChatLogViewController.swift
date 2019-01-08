@@ -13,10 +13,28 @@ import AudioToolbox
 import CropViewController
 import SafariServices
 import RealmSwift
+import SDWebImage
 
 protocol DeleteAndExitDelegate: class {
   func deleteAndExit(from conversationID: String)
 }
+
+
+//extension ChatLogViewController: UICollectionViewDataSourcePrefetching {
+////	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+////		for indexPath in indexPaths {
+////			if let thumbnailStringURL = groupedMessages[indexPath.section].messages[indexPath.row].thumbnailImageUrl {
+////				SDWebImagePrefetcher.shared.prefetchURLs([URL(string: thumbnailStringURL)!])
+////				print("PREFETCHING", thumbnailStringURL)
+////			}
+////		}
+////	}
+//
+//
+////	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+////		SDWebImagePrefetcher.shared.cancelPrefetching()
+////	}
+//}
 
 class ChatLogViewController: UIViewController {
   
@@ -54,6 +72,7 @@ class ChatLogViewController: UIViewController {
   
 	var conversation: Conversation?
   var groupedMessages = [MessageSection]()
+//	var pendingMessages = [(message: Message, reference: DatabaseReference)]()
   var typingIndicatorSection: [String] = []
 
 	let realm = try! Realm()
@@ -227,24 +246,21 @@ class ChatLogViewController: UIViewController {
 //
 //	}
 
-	func getMessages(/*fromIndex: Int, toIndex: Int*/) {
 
-//		let realm = try! Realm()
-//		realm.beginWrite()
-//		messagesFetcher?.configureTails(for: conversation!.messages, isGroupChat: nil)
-//		try! realm.commitWrite()
 
-	//	let pagedMessages = List<Message>()
 
-	//	let mmm = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true)
+	func getMessages() {
 
-//		for index in fromIndex...toIndex where index >= 0 {
-//			print(index)
-//			let pagedItem = mmm[index]
-//			pagedMessages.append(pagedItem)
+//		var results: Results<Message>!//.sorted(byKeyPath: "timestamp", ascending: true)
+//		let list = List<Message>()
+//		for index in conversation!.messages.count-51..<conversation!.messages.count where index >= 0 {
+//			if let message = conversation?.messages[index] {
+//				list.append(message)
+//			}
 //		}
-		//realm.
-		
+//		results = list.sorted(byKeyPath: "timestamp", ascending: true)
+		//results = results.sorted(byKeyPath: "timestamp", ascending: true)
+
 		let dates = conversation!.messages.map({ $0.shortConvertedTimestamp ?? "" })
 		let uniqueDates = Array(Set(dates))
 
@@ -254,11 +270,12 @@ class ChatLogViewController: UIViewController {
 			return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
 		}
 
+	//	prefetchThumbnails()
+
 		autoreleasepool {
 			for date in keys {
 				let messages = conversation!.messages.sorted(byKeyPath: "timestamp", ascending: true).filter("shortConvertedTimestamp == %@", date)
 				configureTails(for: messages)
-				//messagesFetcher.
 				let section = MessageSection(messages: messages, title: date)
 				groupedMessages.append(section)
 			}
@@ -483,6 +500,7 @@ class ChatLogViewController: UIViewController {
 
     collectionView.delegate = self
     collectionView.dataSource = self
+		//collectionView.prefetchDataSource = self
     chatLogHistoryFetcher.delegate = self
     groupMembersManager.delegate = self
     groupMembersManager.observeMembersChanges(conversation)
@@ -802,7 +820,11 @@ class ChatLogViewController: UIViewController {
 
   fileprivate func resetBadgeForSelf() {
 		print("reset badge for self")
-    guard let toId = conversation?.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
+		guard let unwrappedConversation = conversation else { return }
+		let conversationObject = ThreadSafeReference(to: unwrappedConversation)
+		guard let conversation = realm.resolve(conversationObject) else { return }
+
+		guard let toId = conversation.chatID, let fromId = Auth.auth().currentUser?.uid else { return }
     let badgeRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(messageMetaDataFirebaseFolder).child("badge")
     badgeRef.runTransactionBlock({ (mutableData) -> TransactionResult in
       var value = mutableData.value as? Int

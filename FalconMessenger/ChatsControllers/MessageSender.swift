@@ -84,12 +84,11 @@ class MessageSender: NSObject {
 		localUpdateGroup.notify(queue: .main) {
 			self.delegate?.update(with: self.dataToUpdate)
 			self.dataToUpdate.removeAll()
-
 		}
 
-    mediaUploadGroup.notify(queue: .main, execute: {
+    mediaUploadGroup.notify(queue: .global(qos: .default), execute: {
       self.mediaToSend.forEach({ (element) in
-        self.updateDatabase(at: element.reference, with: element.values, toID: toID, fromID: fromID)
+				self.updateDatabase(at: element.reference, with: element.values, toID: toID, fromID: fromID)
       })
     })
   }

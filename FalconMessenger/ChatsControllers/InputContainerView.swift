@@ -310,7 +310,7 @@ extension InputContainerView: UITextViewDelegate {
   func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
     guard text == "\n", let chatLogController = self.chatLogController else { return true }
     if chatLogController.isScrollViewAtTheBottom() {
-      chatLogController.collectionView.instantMoveToBottom()
+			chatLogController.collectionView.scrollToBottom(animated: false)
     }
     return true
   }

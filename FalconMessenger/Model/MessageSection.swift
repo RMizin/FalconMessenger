@@ -17,6 +17,7 @@ class MessageSection: Object {
 
 	convenience init(messages: Results<Message> , title: String) {
 		self.init()
+
 		self.title = title
 		self.messages = messages
 	}
