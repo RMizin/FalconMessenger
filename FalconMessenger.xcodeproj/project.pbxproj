@@ -219,10 +219,6 @@
 		4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BA1FC33223004F8BFF /* MediaPickerControllerNew.swift */; };
 		4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE023BC1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift */; };
 		4BE44DA8212B3A3000E722B8 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE44DA7212B3A3000E722B8 /* ContactsFetcher.swift */; };
-		4BE56EA521D8C7FB0045EABD /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBBB69721D8BD1F00FFFFF8 /* Realm.framework */; };
-		4BE56EA621D8C7FB0045EABD /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBBB69721D8BD1F00FFFFF8 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BE56EA721D8C8040045EABD /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBBB69821D8BD1F00FFFFF8 /* RealmSwift.framework */; };
-		4BE56EA821D8C8040045EABD /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBBB69821D8BD1F00FFFFF8 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BE5712D1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE5712C1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift */; };
 		4BE72A71204E9E2D009A22EA /* SelectChatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE72A70204E9E2D009A22EA /* SelectChatTableViewController.swift */; };
 		4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8BB381FC9F8C100EB35FA /* VoiceRecordingViewController.swift */; };
@@ -255,18 +251,6 @@
 			files = (
 			);
 			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4BE56EA421D8C1340045EABD /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4BE56EA821D8C8040045EABD /* RealmSwift.framework in Embed Frameworks */,
-				4BE56EA621D8C7FB0045EABD /* Realm.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -520,8 +504,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BE56EA721D8C8040045EABD /* RealmSwift.framework in Frameworks */,
-				4BE56EA521D8C7FB0045EABD /* Realm.framework in Frameworks */,
 				E6A8B70EF8A742AD9D5CCF2B /* libPods-FalconMessenger.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1642,8 +1624,6 @@
 				7183EB494791913EB6E040B1 /* [CP] Check Pods Manifest.lock */,
 				4B4F45271F32230C00A6FF96 /* Sources */,
 				4B4F45281F32230C00A6FF96 /* Frameworks */,
-				4BE56EA421D8C1340045EABD /* Embed Frameworks */,
-				4BBBB67421D78CB900FFFFF8 /* ShellScript */,
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
 				53E0DEB341FA758A2EF7CBE0 /* [CP] Copy Pods Resources */,
@@ -1726,23 +1706,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4BBBB67421D78CB900FFFFF8 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nbash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"\n";
-		};
 		53E0DEB341FA758A2EF7CBE0 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2165,10 +2128,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/FalconMessenger/Frameworks/Realm",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -2199,10 +2159,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = A3WPJ33XN8;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/FalconMessenger/Frameworks/Realm",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = "$(SRCROOT)/FalconMessenger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

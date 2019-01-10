@@ -176,10 +176,7 @@ class BaseMediaMessageCell: BaseMessageCell {
 		guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
 		guard let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
 		let realm = try! Realm()
-
-		if !realm.isInWriteTransaction {
-			realm.beginWrite()
-
+		try! realm.safeWrite {
 			let thumbnailObject = realm.object(ofType: RealmUIImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
 			let messageObject = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")
 
@@ -191,10 +188,7 @@ class BaseMediaMessageCell: BaseMessageCell {
 			} else {
 				messageObject?.thumbnailImage = thumbnailObject
 			}
-
-			try! realm.commitWrite()
 		}
-
 		loadFullSize(message: message, messageImageUrlString: message.imageUrl, indexPath: indexPath)
 	}
 
@@ -203,7 +197,7 @@ class BaseMediaMessageCell: BaseMessageCell {
     playButton.isHidden = true
 		loadButton.isHidden = true
 		progressView.isHidden = true
-    //messageImageView.sd_cancelCurrentImageLoad()
+    messageImageView.sd_cancelCurrentImageLoad()
     messageImageView.image = nil
     timeLabel.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
     timeLabel.textColor = ThemeManager.currentTheme().generalTitleColor

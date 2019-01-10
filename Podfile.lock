@@ -1,23 +1,23 @@
 PODS:
   - CropViewController (2.4.0)
-  - Firebase/Auth (5.14.0):
+  - Firebase/Auth (5.15.0):
     - Firebase/CoreOnly
-    - FirebaseAuth (= 5.1.0)
-  - Firebase/Core (5.14.0):
+    - FirebaseAuth (= 5.2.0)
+  - Firebase/Core (5.15.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 5.4.0)
-  - Firebase/CoreOnly (5.14.0):
-    - FirebaseCore (= 5.1.9)
-  - Firebase/Database (5.14.0):
+  - Firebase/CoreOnly (5.15.0):
+    - FirebaseCore (= 5.1.10)
+  - Firebase/Database (5.15.0):
     - Firebase/CoreOnly
     - FirebaseDatabase (= 5.0.4)
-  - Firebase/Functions (5.14.0):
+  - Firebase/Functions (5.15.0):
     - Firebase/CoreOnly
-    - FirebaseFunctions (= 2.1.1)
-  - Firebase/Messaging (5.14.0):
+    - FirebaseFunctions (= 2.1.2)
+  - Firebase/Messaging (5.15.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (= 3.2.2)
-  - Firebase/Storage (5.14.0):
+  - Firebase/Storage (5.15.0):
     - Firebase/CoreOnly
     - FirebaseStorage (= 3.0.3)
   - FirebaseAnalytics (5.4.0):
@@ -30,20 +30,21 @@ PODS:
     - "GoogleUtilities/NSData+zlib (~> 5.2)"
     - nanopb (~> 0.3)
   - FirebaseAnalyticsInterop (1.1.0)
-  - FirebaseAuth (5.1.0):
+  - FirebaseAuth (5.2.0):
     - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 5.1)
     - GoogleUtilities/Environment (~> 5.2)
     - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseAuthInterop (1.0.0)
-  - FirebaseCore (5.1.9):
+  - FirebaseCore (5.1.10):
     - GoogleUtilities/Logger (~> 5.2)
   - FirebaseDatabase (5.0.4):
     - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 5.1)
     - leveldb-library (~> 1.18)
-  - FirebaseFunctions (2.1.1):
-    - FirebaseCore (~> 5.0)
+  - FirebaseFunctions (2.1.2):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.1)
     - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseInstanceID (3.3.0):
     - FirebaseCore (~> 5.1)
@@ -99,6 +100,11 @@ PODS:
   - PhoneNumberKit/UIKit (2.5.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.6.1)
+  - Realm (3.13.1):
+    - Realm/Headers (= 3.13.1)
+  - Realm/Headers (3.13.1)
+  - RealmSwift (3.13.1):
+    - Realm (= 3.13.1)
   - SDWebImage (5.0.0-beta3):
     - SDWebImage/Core (= 5.0.0-beta3)
   - SDWebImage/Core (5.0.0-beta3)
@@ -113,6 +119,8 @@ DEPENDENCIES:
   - Firebase/Storage
   - FTPopOverMenu_Swift
   - PhoneNumberKit
+  - Realm
+  - RealmSwift
   - SDWebImage (from `https://github.com/rs/SDWebImage`, branch `5.x`)
 
 SPEC REPOS:
@@ -137,6 +145,8 @@ SPEC REPOS:
     - nanopb
     - PhoneNumberKit
     - Protobuf
+    - Realm
+    - RealmSwift
 
 EXTERNAL SOURCES:
   SDWebImage:
@@ -145,19 +155,19 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   SDWebImage:
-    :commit: b15abdd7923b5e1059646760e0fa704ef189efcf
+    :commit: 45b4d64bdadf992ae36a62722fb5a4c02e7d09c4
     :git: https://github.com/rs/SDWebImage
 
 SPEC CHECKSUMS:
   CropViewController: a090820b15fc3da68e694d7c192a4708c576828b
-  Firebase: 963d5685fae888a56d6d4d9cfce6b9c976958798
+  Firebase: 8bb9268bff82374f2cbaaabb143e725743c316ae
   FirebaseAnalytics: c06f9d70577d79074214700a71fd5d39de5550fb
   FirebaseAnalyticsInterop: e5f21be9af6548372e2f0815834ff909bff395a2
-  FirebaseAuth: 4a5cc5fc2d1721e509e24699b93ebc3d94b1e195
+  FirebaseAuth: 02e969ff430e156d99d4cb842d77b806b71ad7bb
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
-  FirebaseCore: 8f49b70f57ab5cbb032ef41d64992ded21606459
+  FirebaseCore: 35747502d9e8c6ee217385ad04446c7c2aaf9c5c
   FirebaseDatabase: 0621689f77528d62b47e1c06ca737c4c19275d1a
-  FirebaseFunctions: 6c03d7c5d62520be4678dc3fb7957654aab82b4f
+  FirebaseFunctions: e37c7d4d2dec63972ca4642afeb8dae8ff8ab52e
   FirebaseInstanceID: e2fa4cb35ef5558c200f7f0ad8a53e212215f93e
   FirebaseMessaging: b412996f6a09337d232bb3a6676ce4d1f353d024
   FirebaseStorage: 3d22c041370593e639fba013d1eb698a8dae2881
@@ -169,8 +179,10 @@ SPEC CHECKSUMS:
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   PhoneNumberKit: 32a1cd1e0aa9e950feb01886a22fd7386b8cf903
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  SDWebImage: 9eba9120d2e428dbc92e6e8195e12e23e03ae307
+  Realm: 50071da38fe079e0735e47c9f2eae738c68c5996
+  RealmSwift: 8a1e6a02b7a08cd17a31e3115143fb69fe5f3fb9
+  SDWebImage: 2c1ad8c736031e928ab85ae1099d533474e3d86f
 
-PODFILE CHECKSUM: 156b48c4060b62dbea8bb763786b84de511bad29
+PODFILE CHECKSUM: 75441a20ab7c6025ad19f401efffd3d4ee7e971b
 
 COCOAPODS: 1.5.3

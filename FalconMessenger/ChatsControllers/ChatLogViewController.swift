@@ -13,28 +13,10 @@ import AudioToolbox
 import CropViewController
 import SafariServices
 import RealmSwift
-import SDWebImage
 
 protocol DeleteAndExitDelegate: class {
   func deleteAndExit(from conversationID: String)
 }
-
-
-//extension ChatLogViewController: UICollectionViewDataSourcePrefetching {
-////	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-////		for indexPath in indexPaths {
-////			if let thumbnailStringURL = groupedMessages[indexPath.section].messages[indexPath.row].thumbnailImageUrl {
-////				SDWebImagePrefetcher.shared.prefetchURLs([URL(string: thumbnailStringURL)!])
-////				print("PREFETCHING", thumbnailStringURL)
-////			}
-////		}
-////	}
-//
-//
-////	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-////		SDWebImagePrefetcher.shared.cancelPrefetching()
-////	}
-//}
 
 class ChatLogViewController: UIViewController {
   
@@ -219,14 +201,14 @@ class ChatLogViewController: UIViewController {
 					loadedCount += messages.count
 				}
 
-				configureTails(for: messages)
+				configureBubblesTails(for: messages)
 				let section = MessageSection(messages: messages, title: date)
 				groupedMessages.insert(section, at: 0)
 			}
 		}
 	}
 
-	func configureTails(for messages: Results<Message>) {
+	func configureBubblesTails(for messages: Results<Message>) {
 		try! realm.safeWrite {
 			for index in (0..<messages.count).reversed() {
 				let isLastMessage = index == messages.count - 1
@@ -324,7 +306,6 @@ class ChatLogViewController: UIViewController {
       messagesFetcher.delegate = nil
     }
      inputContainerView.recordVoiceButton.reset()
-
   }
   
   deinit {
@@ -444,7 +425,6 @@ class ChatLogViewController: UIViewController {
 
     collectionView.delegate = self
     collectionView.dataSource = self
-		//collectionView.prefetchDataSource = self
     chatLogHistoryFetcher.delegate = self
     groupMembersManager.delegate = self
     groupMembersManager.observeMembersChanges(conversation)
@@ -535,7 +515,6 @@ class ChatLogViewController: UIViewController {
   }
 
   func setRightBarButtonItem () {
-
     let infoButton = UIButton(type: .infoLight)
     infoButton.addTarget(self, action: #selector(getInfoAction), for: .touchUpInside)
     let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
@@ -567,7 +546,6 @@ class ChatLogViewController: UIViewController {
     inputContainerView.resignAllResponders()
 
     if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
-
       let destination = GroupAdminControlsTableViewController()
       destination.chatID = conversation?.chatID ?? ""
       if conversation?.admin != Auth.auth().currentUser?.uid {
@@ -575,7 +553,6 @@ class ChatLogViewController: UIViewController {
       }
 
       if DeviceType.isIPad {
-
         let navigation = UINavigationController(rootViewController: destination)
          navigation.modalPresentationStyle = .popover
          navigation.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
@@ -607,7 +584,6 @@ class ChatLogViewController: UIViewController {
     } else {
       navigationController?.popViewController(animated: true)
     }
-
     deleteAndExitDelegate?.deleteAndExit(from: chatID)
   }
 
@@ -743,7 +719,6 @@ class ChatLogViewController: UIViewController {
     var senderID: String?
 
     messageRef.child("fromId").observeSingleEvent(of: .value, with: { (snapshot) in
-
       if !snapshot.exists() { return }
 
       senderID = snapshot.value as? String
@@ -963,9 +938,10 @@ class ChatLogViewController: UIViewController {
 
 	fileprivate func realmConversation(from conversation: Conversation) -> Conversation {
 		guard realm.objects(Conversation.self).filter("chatID == %@", conversation.chatID ?? "").first == nil else { return conversation }
-		realm.beginWrite()
-		realm.create(Conversation.self, value: conversation, update: true)
-		try! realm.commitWrite()
+		try! realm.safeWrite {
+			realm.create(Conversation.self, value: conversation, update: true)
+		}
+
 		let newConversation = realm.objects(Conversation.self).filter("chatID == %@", conversation.chatID ?? "").first
 		self.conversation = newConversation
 		return newConversation ?? conversation

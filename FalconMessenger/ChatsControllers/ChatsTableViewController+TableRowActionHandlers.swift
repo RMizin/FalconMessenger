@@ -79,18 +79,21 @@ extension ChatsTableViewController {
     let conversation = realmPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
 
-		realmManager.realm.beginWrite()
-		realmPinnedConversations[indexPath.row].pinned.value = false
+		if !realmManager.realm.isInWriteTransaction {
+			realmManager.realm.beginWrite()
+			realmPinnedConversations[indexPath.row].pinned.value = false
 
-		let indexToInsert = realmUnpinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
-			return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
-		})
+			let indexToInsert = realmUnpinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
+				return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
+			})
 
-		let destinationIndexPath = IndexPath(row: indexToInsert, section: 1)
-		tableView.beginUpdates()
-		tableView.moveRow(at: indexPath, to: destinationIndexPath)
-		tableView.endUpdates()
-		try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
+			let destinationIndexPath = IndexPath(row: indexToInsert, section: 1)
+			tableView.beginUpdates()
+			tableView.moveRow(at: indexPath, to: destinationIndexPath)
+			tableView.endUpdates()
+			try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
+		}
+
 
     let metadataRef = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataRef.updateChildValues(["pinned": false], withCompletionBlock: { (error, reference) in
@@ -105,17 +108,19 @@ extension ChatsTableViewController {
     let conversation = realmUnpinnedConversations[indexPath.row]
    	guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
 
-		realmManager.realm.beginWrite()
-		realmUnpinnedConversations[indexPath.row].pinned.value = true
+		if !realmManager.realm.isInWriteTransaction {
+			realmManager.realm.beginWrite()
+			realmUnpinnedConversations[indexPath.row].pinned.value = true
 
-		let indexToInsert = realmPinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
-			return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
-		})
-		let destinationIndexPath = IndexPath(row: indexToInsert, section: 0)
-		tableView.beginUpdates()
-		tableView.moveRow(at: indexPath, to: destinationIndexPath)
-		tableView.endUpdates()
-		try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
+			let indexToInsert = realmPinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
+				return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
+			})
+			let destinationIndexPath = IndexPath(row: indexToInsert, section: 0)
+			tableView.beginUpdates()
+			tableView.moveRow(at: indexPath, to: destinationIndexPath)
+			tableView.endUpdates()
+			try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
+		}
 
     let metadataReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
     metadataReference.updateChildValues(["pinned": true], withCompletionBlock: { (error, reference) in
@@ -146,13 +151,16 @@ extension ChatsTableViewController {
     let conversation = indexPath.section == 0 ? realmPinnedConversations[indexPath.row] : realmUnpinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
 
-		realmManager.realm.beginWrite()
-		let result = realmManager.realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
-		let messagesResult = conversation.messages
+		if !realmManager.realm.isInWriteTransaction {
+			realmManager.realm.beginWrite()
+			let result = realmManager.realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
+			let messagesResult = conversation.messages
 
-		realmManager.realm.delete(messagesResult)
-		realmManager.realm.delete(result)
-		try! realmManager.realm.commitWrite()
+			realmManager.realm.delete(messagesResult)
+			realmManager.realm.delete(result)
+			try! realmManager.realm.commitWrite()
+		}
+
 
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()

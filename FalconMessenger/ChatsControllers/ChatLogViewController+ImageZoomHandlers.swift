@@ -147,8 +147,12 @@ extension ChatLogViewController {
   }
   
   func setupGalleryDismissHandler(galleryPreview: INSPhotosViewController) {
-    galleryPreview.didDismissHandler = { viewController in
-      self.inputAccessoryView?.isHidden = false
+    galleryPreview.didDismissHandler = { [weak self] viewController in
+			guard let unwrappedSelf = self else { return }
+      unwrappedSelf.inputAccessoryView?.isHidden = false
+			unwrappedSelf.collectionView.performBatchUpdates({
+				unwrappedSelf.collectionView.reloadItems(at: unwrappedSelf.collectionView.indexPathsForVisibleItems)
+			}, completion: nil)
     }
 
     galleryPreview.referenceViewForPhotoWhenDismissingHandler = { [weak self] photo in

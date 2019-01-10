@@ -38,7 +38,7 @@ struct ContextMenuItems {
   static func defaultMenuItems(for messageType: MessageType) -> [String] {
     switch messageType {
     case .textMessage, .photoMessage:
-      return [ContextMenuItems.deleteItem]
+      return [ContextMenuItems.deleteItem, ContextMenuItems.copyItem]
     case .videoMessage:
       return [ContextMenuItems.deleteItem]
     case .voiceMessage:

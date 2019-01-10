@@ -8,8 +8,6 @@
 
 import UIKit
 import Firebase
-//import RealmSwift
-import SDWebImage
 
 protocol ChatLogHistoryDelegate: class {
   func chatLogHistory(isEmpty: Bool)

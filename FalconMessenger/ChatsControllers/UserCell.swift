@@ -14,7 +14,7 @@ import SDWebImage
 
 class UserCell: UITableViewCell {
   
-  var typingIndicatorTimer: Timer? = Timer()
+  lazy var typingIndicatorTimer: Timer? = Timer()
   
   let profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -26,7 +26,7 @@ class UserCell: UITableViewCell {
     return imageView
   }()
 
-  let muteIndicator: UIImageView = {
+  lazy var muteIndicator: UIImageView = {
     let muteIndicator = UIImageView()
     muteIndicator.translatesAutoresizingMaskIntoConstraints = false
     muteIndicator.layer.masksToBounds = true
@@ -74,7 +74,7 @@ class UserCell: UITableViewCell {
   let badgeLabelRightConstant: CGFloat = -10
   let messageLabelRightConstant: CGFloat = -5
   
-  let badgeLabel: UILabel = {
+  lazy var badgeLabel: UILabel = {
     let badgeLabel = UILabel()
     badgeLabel.translatesAutoresizingMaskIntoConstraints = false
     badgeLabel.backgroundColor = FalconPalette.defaultBlue

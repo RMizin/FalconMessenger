@@ -35,7 +35,7 @@ extension ChatLogViewController: CollectionDelegate {
   }
 
 	func update(message: Message, reference: DatabaseReference) {
-		guard isInsertingToTheBottom(message: message) else { print("returning from first shit"); return }
+		guard isInsertingToTheBottom(message: message) else { return }
 		batch(message: message, reference: reference)
 	}
 
@@ -73,13 +73,13 @@ extension ChatLogViewController: CollectionDelegate {
 			groupedMessages.last?.messages.last?.isCrooked.value = true
 
 			// temporary due to inefficiency
-			UIView.performWithoutAnimation {
+		//	UIView.performWithoutAnimation {
 				collectionView.performBatchUpdates({
 						collectionView.reloadSections([indexPath.section])
 				}) { (isCompleted) in
 					self.performAdditionalUpdates(reference: reference)
 				}
-			}
+		//	}
 		}
 		try! self.realm.commitWrite()
 	}

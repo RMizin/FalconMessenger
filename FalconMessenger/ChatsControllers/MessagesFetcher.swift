@@ -9,8 +9,6 @@
 import UIKit
 import Firebase
 import Photos
-import SDWebImage
-//import RealmSwift
 
 protocol MessagesDelegate: class {
   func messages(shouldBeUpdatedTo messages: [Message], conversation:Conversation)
@@ -213,7 +211,7 @@ class MessagesFetcher: NSObject {
     return sortedMessages
   }
 
-  func preloadCellData(to dictionary: [String:AnyObject], isGroupChat: Bool) -> [String: AnyObject] {
+  func preloadCellData(to dictionary: [String: AnyObject], isGroupChat: Bool) -> [String: AnyObject] {
     var dictionary = dictionary
     
     if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */

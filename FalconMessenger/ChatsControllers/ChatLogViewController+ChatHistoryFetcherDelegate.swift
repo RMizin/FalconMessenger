@@ -15,25 +15,41 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
     refreshControl.endRefreshing()
   }
 
-	fileprivate func tails(messages: Results<Message>) {
-		for index in (0..<messages.count).reversed() {
-			try! realm.safeWrite {
-				let isLastMessage = index == messages.count - 1
-				if isLastMessage { messages[index].isCrooked.value = true }
-				guard messages.indices.contains(index - 1) else { return }
-				let isPreviousMessageSenderDifferent = messages[index - 1].fromId != messages[index].fromId
-				messages[index - 1].isCrooked.value = isPreviousMessageSenderDifferent ? true : messages[index].isInformationMessage.value ?? false
-			}
+	func chatLogHistory(updated newMessages: [Message]) {
+		let numberOfMessagesInFirstSectionBeforeUpdate = groupedMessages[0].messages.count
+		let numberOfMessagesInDataSourceBeforeUpdate = groupedMessages.compactMap { (sectionedMessage) -> Int in
+			return sectionedMessage.messages.count
+			}.reduce(0, +)
+
+		updateRealmMessagesData(newMessages: newMessages)
+
+		let firstSectionTitle = groupedMessages.first?.title ?? ""
+		let dates = newMessages.map({ $0.shortConvertedTimestamp ?? "" })
+		var datesSet = Set(dates)
+		let shouldUpdateFirstSection = datesSet.contains(firstSectionTitle)
+		let shouldDoNothing = datesSet.count == 0
+		let shouldInsertNewSectionsOnly = !shouldUpdateFirstSection && datesSet.count > 0
+		let shouldUpdateFirstSectionOnly = shouldUpdateFirstSection && datesSet.count == 1
+		let shouldUpdateFirstSectionAndInsertNewSections = shouldUpdateFirstSection && datesSet.count > 1
+
+		if shouldUpdateFirstSectionOnly {
+			let rowsRange = updateFirstSection(firstSectionTitle, numberOfMessagesInDataSourceBeforeUpdate, numberOfMessagesInFirstSectionBeforeUpdate)
+			batchInsertMessages(at: rowsRange)
+		} else if shouldInsertNewSectionsOnly {
+			let sectionsRange = insertNewSections(datesSet)
+			batchInsertSections(at: sectionsRange)
+		} else if shouldUpdateFirstSectionAndInsertNewSections {
+			let rowsRange = updateFirstSection(firstSectionTitle, numberOfMessagesInDataSourceBeforeUpdate, numberOfMessagesInFirstSectionBeforeUpdate)
+			datesSet.remove(firstSectionTitle)
+			batchInsertMessages(at: rowsRange, saveContentOffset: false)
+			let sectionsRange = insertNewSections(datesSet)
+			batchInsertSections(at: sectionsRange)
+		} else if shouldDoNothing {
+			refreshControl.endRefreshing()
 		}
 	}
 
-	func chatLogHistory(updated newMessages: [Message]) {
-		print(newMessages.count)
-
-		globalDataStorage.contentSizeWhenInsertingToTop = collectionView.contentSize
-		globalDataStorage.isInsertingCellsToTop = true
-		refreshControl.endRefreshing()
-
+	fileprivate func updateRealmMessagesData(newMessages: [Message]) {
 		let realm = try! Realm()
 		autoreleasepool {
 			guard !realm.isInWriteTransaction else { return }
@@ -42,91 +58,121 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 				realm.create(Message.self, value: message, update: true)
 			}
 			try! realm.commitWrite()
+		}
+	}
 
+	fileprivate func batchInsertMessages(at range: Int, saveContentOffset: Bool = true) {
+		if saveContentOffset {
+			globalDataStorage.contentSizeWhenInsertingToTop = collectionView.contentSize
+		}
+		globalDataStorage.isInsertingCellsToTop = true
 
-			var sectionsInserted = 0
-			let firstSection = groupedMessages.first?.title ?? ""
-			let dates = newMessages.map({ $0.shortConvertedTimestamp ?? "" })
-			var datesSet = Set(dates)
+		var indexPaths = [IndexPath]()
+		Array(0..<range).forEach({ (index) in
+			indexPaths.append(IndexPath(row: index, section: 0))
+		})
 
-			let allMessages = groupedMessages.flatMap { (sectionedMessage) -> Results<Message> in
-				return sectionedMessage.messages
-			}
+		UIView.performWithoutAnimation {
+			collectionView.performBatchUpdates({
+				collectionView.insertItems(at: indexPaths)
+			}, completion: { (_) in
+				self.refreshControl.endRefreshing()
+			})
+		}
+	}
 
+	fileprivate func batchInsertSections(at range: Int) {
+		globalDataStorage.contentSizeWhenInsertingToTop = collectionView.contentSize
+		globalDataStorage.isInsertingCellsToTop = true
 
-			if datesSet.contains(firstSection) {
-				var messages = conversation!.messages.filter("shortConvertedTimestamp == %@", firstSection)
+		var indexSet = IndexSet()
+		Array(0..<range).forEach({ (index) in
+			indexSet.insert(index)
+		})
 
-				if messages.count > allMessages.count + messagesToLoad {
-					messages = messages.sorted(byKeyPath: "timestamp", ascending: true)
-
-					guard let timestamp = messages[messages.count - (allMessages.count + messagesToLoad)].timestamp.value else { return }
-					messages = messages.filter("timestamp >= %@", timestamp)
-					tails(messages: messages)
-
-					let section = MessageSection(messages: messages, title: firstSection)
-					let oldItemsCount = groupedMessages[0].messages.count
-					groupedMessages[0] = section
-					let newItemsCount = section.messages.count
-					let amount = newItemsCount - oldItemsCount
-
-					var indexPaths = [IndexPath]()
-
-					Array(0..<amount).forEach({ (index) in
-						indexPaths.append(IndexPath(row: index, section: 0))
-					})
-
-					UIView.performWithoutAnimation {
-						collectionView.performBatchUpdates({
-							collectionView.insertItems(at: indexPaths)
-						}, completion: nil)
-					}
-					return
-				} else {
-					messages = messages.sorted(byKeyPath: "timestamp", ascending: true)
-					tails(messages: messages)
-
-					let section = MessageSection(messages: messages, title: firstSection)
-					groupedMessages[0] = section
-
-					UIView.performWithoutAnimation {
-						collectionView.reloadSections([0])
-					}
-
-					datesSet.remove(firstSection)
+		UIView.performWithoutAnimation {
+			collectionView.performBatchUpdates({
+				collectionView.insertSections(indexSet)
+			}, completion: { (_) in
+				DispatchQueue.main.async {
+					self.bottomScrollConainer.isHidden = false
+					self.refreshControl.endRefreshing()
 				}
+			})
+		}
+	}
+
+	fileprivate func insertNewSections(_ datesSet: Set<String>) -> Int {
+		var sectionsInserted = 0
+		let datesArray = Array(datesSet).sorted { (time1, time2) -> Bool in
+			return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
+		}
+		let numberOfMessagesInDataSourceBeforeInsertNewSections = groupedMessages.compactMap { (sectionedMessage) -> Int in
+			return sectionedMessage.messages.count
+			}.reduce(0, +)
+
+		for date in datesArray.reversed() {
+			guard var messagesInSection = conversation?.messages
+				.filter("shortConvertedTimestamp == %@", date)
+				.sorted(byKeyPath: "timestamp", ascending: true) else {
+					continue
 			}
 
-			let uniqueDates = Array(datesSet)
+			let messagesInSectionCount = messagesInSection.count
+			let maxNumberOfMessagesInChat = numberOfMessagesInDataSourceBeforeInsertNewSections + messagesToLoad
+			let possibleNumberOfMessagesWithInsertedSection = numberOfMessagesInDataSourceBeforeInsertNewSections + messagesInSectionCount
+			let needToLimitSection = possibleNumberOfMessagesWithInsertedSection > maxNumberOfMessagesInChat
 
-			let keys = uniqueDates.sorted { (time1, time2) -> Bool in
-				return Date.dateFromCustomString(customString: time1) <  Date.dateFromCustomString(customString: time2)
-			}
-
-			for date in keys.reversed() {
-				let messages = conversation!.messages.filter("shortConvertedTimestamp == %@", date).sorted(byKeyPath: "timestamp", ascending: true)
-				tails(messages: messages)
-				let section = MessageSection(messages: messages, title: date)
+			if needToLimitSection {
+				let indexOfLastMessageToDisplay = possibleNumberOfMessagesWithInsertedSection - maxNumberOfMessagesInChat
+				guard let timestampOfLastMessageToDisplay = messagesInSection[indexOfLastMessageToDisplay].timestamp.value else { continue }
+				let limitedMessagesForSection = messagesInSection.filter("timestamp >= %@", timestampOfLastMessageToDisplay)
+				messagesInSection = limitedMessagesForSection
+				configureBubblesTails(for: messagesInSection)
+				let newSection = MessageSection(messages: messagesInSection, title: date)
+				groupedMessages.insert(newSection, at: 0)
 				sectionsInserted += 1
-				groupedMessages.insert(section, at: 0)
+				break
+			} else {
+				configureBubblesTails(for: messagesInSection)
+				let newSection = MessageSection(messages: messagesInSection, title: date)
+				groupedMessages.insert(newSection, at: 0)
+				sectionsInserted += 1
 			}
+		}
+		return sectionsInserted
+	}
 
-			UIView.performWithoutAnimation {
-				collectionView.performBatchUpdates({
-					guard sectionsInserted > 0 else { return }
+	fileprivate func updateFirstSection(
+		_ firstSectionTitle: String,
+		_ numberOfMessagesInDataSourceBeforeUpdate: Int,
+		_ numberOfMessagesInFirstSectionBeforeUpdate: Int) -> Int {
 
-					var indexSet = IndexSet()
-					Array(0..<sectionsInserted).forEach({ (index) in
-						indexSet.insert(index)
-					})
+		guard var messagesInFirstSectionAfterUpdate = conversation?.messages
+			.filter("shortConvertedTimestamp == %@", firstSectionTitle)
+			.sorted(byKeyPath: "timestamp", ascending: true) else { return 0 }
 
-					collectionView.insertSections(indexSet)
-				}, completion: { (_) in
-					DispatchQueue.main.async {
-						self.bottomScrollConainer.isHidden = false
-					}
-				})
-			}
+		let numberOfMessagesInFirstSectionAfterUpdate = messagesInFirstSectionAfterUpdate.count
+		let possibleNumberOfMessagesWithUpdatedSection = (numberOfMessagesInDataSourceBeforeUpdate - numberOfMessagesInFirstSectionBeforeUpdate) + numberOfMessagesInFirstSectionAfterUpdate
+		let maxNumberOfMessagesInChat = numberOfMessagesInDataSourceBeforeUpdate + messagesToLoad
+		let needToLimitFirstSection = possibleNumberOfMessagesWithUpdatedSection > maxNumberOfMessagesInChat
+
+		if needToLimitFirstSection {
+			let indexOfLastMessageToDisplay = possibleNumberOfMessagesWithUpdatedSection - maxNumberOfMessagesInChat
+			guard let timestampOfLastMessageToDisplay = messagesInFirstSectionAfterUpdate[indexOfLastMessageToDisplay].timestamp.value else { return 0 }
+			let limitedMessagesForFirstSection = messagesInFirstSectionAfterUpdate.filter("timestamp >= %@", timestampOfLastMessageToDisplay)
+			messagesInFirstSectionAfterUpdate = limitedMessagesForFirstSection
+			configureBubblesTails(for: messagesInFirstSectionAfterUpdate)
+			let updatedFirstSection = MessageSection(messages: messagesInFirstSectionAfterUpdate, title: firstSectionTitle)
+			groupedMessages[0] = updatedFirstSection
+			let numberOfMessagesInFirstSectionAfterLimiting = groupedMessages[0].messages.count
+
+			return numberOfMessagesInFirstSectionAfterLimiting - numberOfMessagesInFirstSectionBeforeUpdate
+		} else {
+			let updatedFirstSection = MessageSection(messages: messagesInFirstSectionAfterUpdate, title: firstSectionTitle)
+			configureBubblesTails(for: messagesInFirstSectionAfterUpdate)
+			groupedMessages[0] = updatedFirstSection
+			return numberOfMessagesInFirstSectionAfterUpdate - numberOfMessagesInFirstSectionBeforeUpdate
 		}
 	}
 }
