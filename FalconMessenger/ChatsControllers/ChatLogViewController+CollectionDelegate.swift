@@ -73,13 +73,13 @@ extension ChatLogViewController: CollectionDelegate {
 			groupedMessages.last?.messages.last?.isCrooked.value = true
 
 			// temporary due to inefficiency
-		//	UIView.performWithoutAnimation {
+			UIView.performWithoutAnimation {
 				collectionView.performBatchUpdates({
 						collectionView.reloadSections([indexPath.section])
 				}) { (isCompleted) in
 					self.performAdditionalUpdates(reference: reference)
 				}
-		//	}
+			}
 		}
 		try! self.realm.commitWrite()
 	}

@@ -180,14 +180,9 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
         safeAreaView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         safeAreaView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         safeAreaView.bottomAnchor.constraint(equalTo: navigationBar.topAnchor).isActive = true
-      
-        if let bundlePath = Bundle(for: type(of: self)).path(forResource: "INSPhotoGallery", ofType: "bundle") {
-            let bundle = Bundle(path: bundlePath)
-            leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose", in: bundle, compatibleWith: nil), landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape", in: bundle, compatibleWith: nil), style: .plain, target: self, action: #selector(INSPhotosOverlayView.closeButtonTapped(_:)))
-        } else {
-            leftBarButtonItem = UIBarButtonItem(title: "CLOSE".uppercased(), style: .plain, target: self, action: #selector(INSPhotosOverlayView.closeButtonTapped(_:)))
-        }
-        
+
+				leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose"), landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape"), style: .plain, target: self, action: #selector(INSPhotosOverlayView.closeButtonTapped(_:)))
+
         rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(INSPhotosOverlayView.actionButtonTapped(_:)))
     }
     

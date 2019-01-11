@@ -104,7 +104,7 @@ class UserCell: UITableViewCell {
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)
   
-    backgroundColor = .clear
+    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     contentView.addSubview(muteIndicator)
     contentView.addSubview(profileImageView)
     contentView.addSubview(nameLabel)
@@ -174,6 +174,7 @@ class UserCell: UITableViewCell {
     badgeLabel.isHidden = true
     muteIndicator.isHidden = true
     nameLabel.textColor = ThemeManager.currentTheme().generalTitleColor
+		backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     typingIndicatorTimer?.invalidate()
   }
 }

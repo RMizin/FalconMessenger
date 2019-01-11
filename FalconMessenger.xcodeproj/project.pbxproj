@@ -23,8 +23,6 @@
 		4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */; };
 		4B2143081F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143071F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift */; };
 		4B2733C721C5461000B3879F /* PresenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2733C621C5461000B3879F /* PresenseManager.swift */; };
-		4B2733CA21C5482F00B3879F /* FalconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2733C921C5482F00B3879F /* FalconViewController.swift */; };
-		4B2733CC21C5483D00B3879F /* FalconTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2733CB21C5483D00B3879F /* FalconTableViewController.swift */; };
 		4B27F6782089C92E0068077E /* TypingIndicatorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */; };
 		4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */; };
 		4B2A9587205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */; };
@@ -54,7 +52,6 @@
 		4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */; };
 		4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */; };
 		4B5693D320CFFAAB005EAE15 /* InAppNotificationDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5693C720CFFAAB005EAE15 /* InAppNotificationDispatcher.swift */; };
-		4B5693D420CFFAAB005EAE15 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B5693C920CFFAAB005EAE15 /* Images.xcassets */; };
 		4B5693D620CFFAAB005EAE15 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5693CD20CFFAAB005EAE15 /* Utils.swift */; };
 		4B5693D720CFFAAB005EAE15 /* InAppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5693CE20CFFAAB005EAE15 /* InAppNotification.swift */; };
 		4B5693D820CFFAAB005EAE15 /* CustomizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5693D020CFFAAB005EAE15 /* CustomizedView.swift */; };
@@ -95,7 +92,6 @@
 		4B6BB00220886C5F00A90F3A /* INSPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFBA20886C5E00A90F3A /* INSPhotosViewController.swift */; };
 		4B6BB00320886C5F00A90F3A /* INSPhotosTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFBB20886C5E00A90F3A /* INSPhotosTransitionAnimator.swift */; };
 		4B6BB00420886C5F00A90F3A /* INSPhotosInteractionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFBC20886C5E00A90F3A /* INSPhotosInteractionAnimator.swift */; };
-		4B6BB00520886C5F00A90F3A /* INSPhotoGallery.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4B6BAFBD20886C5E00A90F3A /* INSPhotoGallery.bundle */; };
 		4B6BB00620886C5F00A90F3A /* INSScalingImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFBE20886C5E00A90F3A /* INSScalingImageView.swift */; };
 		4B6BB00720886C5F00A90F3A /* INSPhotosOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFBF20886C5E00A90F3A /* INSPhotosOverlayView.swift */; };
 		4B6BB00820886C5F00A90F3A /* INSPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC020886C5E00A90F3A /* INSPhotoViewController.swift */; };
@@ -274,8 +270,6 @@
 		4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingPhotoMessageCell.swift; path = ChatsControllers/OutgoingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4B2143071F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+ImageZoomHandlers.swift"; path = "ChatsControllers/ChatLogViewController+ImageZoomHandlers.swift"; sourceTree = "<group>"; };
 		4B2733C621C5461000B3879F /* PresenseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenseManager.swift; sourceTree = "<group>"; };
-		4B2733C921C5482F00B3879F /* FalconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconViewController.swift; sourceTree = "<group>"; };
-		4B2733CB21C5483D00B3879F /* FalconTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconTableViewController.swift; sourceTree = "<group>"; };
 		4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TypingIndicatorManager.swift; path = ChatsControllers/TypingIndicatorManager.swift; sourceTree = "<group>"; };
 		4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B2A9586205FCF5200FE4DF7 /* GroupAdminControlsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminControlsTableViewController.swift; path = ChatsControllers/GroupAdminControlsTableViewController.swift; sourceTree = "<group>"; };
@@ -306,7 +300,6 @@
 		4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsController.swift; path = ContactsControllers/ContactsController.swift; sourceTree = "<group>"; };
 		4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfileAvatarOpenerDelegate.swift; path = AuthenticationControllers/UserProfileAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
 		4B5693C720CFFAAB005EAE15 /* InAppNotificationDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InAppNotificationDispatcher.swift; sourceTree = "<group>"; };
-		4B5693C920CFFAAB005EAE15 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4B5693CD20CFFAAB005EAE15 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		4B5693CE20CFFAAB005EAE15 /* InAppNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InAppNotification.swift; sourceTree = "<group>"; };
 		4B5693D020CFFAAB005EAE15 /* CustomizedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizedView.swift; sourceTree = "<group>"; };
@@ -347,7 +340,6 @@
 		4B6BAFBA20886C5E00A90F3A /* INSPhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INSPhotosViewController.swift; sourceTree = "<group>"; };
 		4B6BAFBB20886C5E00A90F3A /* INSPhotosTransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INSPhotosTransitionAnimator.swift; sourceTree = "<group>"; };
 		4B6BAFBC20886C5E00A90F3A /* INSPhotosInteractionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INSPhotosInteractionAnimator.swift; sourceTree = "<group>"; };
-		4B6BAFBD20886C5E00A90F3A /* INSPhotoGallery.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = INSPhotoGallery.bundle; sourceTree = "<group>"; };
 		4B6BAFBE20886C5E00A90F3A /* INSScalingImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INSScalingImageView.swift; sourceTree = "<group>"; };
 		4B6BAFBF20886C5E00A90F3A /* INSPhotosOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INSPhotosOverlayView.swift; sourceTree = "<group>"; };
 		4B6BAFC020886C5E00A90F3A /* INSPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INSPhotoViewController.swift; sourceTree = "<group>"; };
@@ -414,8 +406,6 @@
 		4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthPhoneNumberController.swift; path = AuthenticationControllers/AuthPhoneNumberController.swift; sourceTree = "<group>"; };
 		4BB74A02206E300C0014837E /* AuthVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthVerificationController.swift; path = AuthenticationControllers/AuthVerificationController.swift; sourceTree = "<group>"; };
 		4BBBB67521D7FD6700FFFFF8 /* ChatsRealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatsRealmManager.swift; path = ChatsControllers/ChatsRealmManager.swift; sourceTree = "<group>"; };
-		4BBBB69721D8BD1F00FFFFF8 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = FalconMessenger/Frameworks/Realm/Realm.framework; sourceTree = "<group>"; };
-		4BBBB69821D8BD1F00FFFFF8 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = FalconMessenger/Frameworks/Realm/RealmSwift.framework; sourceTree = "<group>"; };
 		4BBBCBF22057CF4C00926800 /* GroupProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableViewController.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableViewController.swift; sourceTree = "<group>"; };
 		4BBBCBF42057D01000926800 /* GroupProfileTableHeaderContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupProfileTableHeaderContainer.swift; path = ChatsControllers/NewChatControllers/GroupProfileTableHeaderContainer.swift; sourceTree = "<group>"; };
 		4BBBCBF62057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupPictureAvatarOpenerDelegate.swift; path = ChatsControllers/NewChatControllers/GroupPictureAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
@@ -514,8 +504,6 @@
 		2AF4427B37282913090A248D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4BBBB69721D8BD1F00FFFFF8 /* Realm.framework */,
-				4BBBB69821D8BD1F00FFFFF8 /* RealmSwift.framework */,
 				65B1F802CF6D868348BF7E6D /* libPods-FalconMessenger.a */,
 			);
 			name = Frameworks;
@@ -580,15 +568,6 @@
 				4B2733C621C5461000B3879F /* PresenseManager.swift */,
 			);
 			path = PresenseManager;
-			sourceTree = "<group>";
-		};
-		4B2733C821C5481B00B3879F /* FalconControllers */ = {
-			isa = PBXGroup;
-			children = (
-				4B2733C921C5482F00B3879F /* FalconViewController.swift */,
-				4B2733CB21C5483D00B3879F /* FalconTableViewController.swift */,
-			);
-			path = FalconControllers;
 			sourceTree = "<group>";
 		};
 		4B2E59A9214AB0B70081B74E /* MessageSender */ = {
@@ -747,21 +726,12 @@
 		4B5693C620CFFAAB005EAE15 /* InAppBanner */ = {
 			isa = PBXGroup;
 			children = (
-				4B5693C820CFFAAB005EAE15 /* Resources */,
 				4B5693CA20CFFAAB005EAE15 /* Utils */,
 				4B5693CF20CFFAAB005EAE15 /* Views */,
 				4B5693C720CFFAAB005EAE15 /* InAppNotificationDispatcher.swift */,
 				4B5693CE20CFFAAB005EAE15 /* InAppNotification.swift */,
 			);
 			path = InAppBanner;
-			sourceTree = "<group>";
-		};
-		4B5693C820CFFAAB005EAE15 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				4B5693C920CFFAAB005EAE15 /* Images.xcassets */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		4B5693CA20CFFAAB005EAE15 /* Utils */ = {
@@ -817,7 +787,6 @@
 			isa = PBXGroup;
 			children = (
 				4B01BB6B21D6840D00FF229B /* RespondingButton */,
-				4B2733C821C5481B00B3879F /* FalconControllers */,
 				4B2733C521C545EB00B3879F /* PresenseManager */,
 				4B08E370208872B800C64EAA /* Public */,
 				4B6BAF8820886B3800A90F3A /* Sounds */,
@@ -936,7 +905,6 @@
 				4B6BAFBA20886C5E00A90F3A /* INSPhotosViewController.swift */,
 				4B6BAFBB20886C5E00A90F3A /* INSPhotosTransitionAnimator.swift */,
 				4B6BAFBC20886C5E00A90F3A /* INSPhotosInteractionAnimator.swift */,
-				4B6BAFBD20886C5E00A90F3A /* INSPhotoGallery.bundle */,
 				4B6BAFBE20886C5E00A90F3A /* INSScalingImageView.swift */,
 				4B6BAFBF20886C5E00A90F3A /* INSPhotosOverlayView.swift */,
 				4B6BAFC020886C5E00A90F3A /* INSPhotoViewController.swift */,
@@ -1694,10 +1662,8 @@
 			files = (
 				4B6BAF8D20886B3900A90F3A /* sent.caf in Resources */,
 				4BBF795C2134375800903F56 /* LaunchScreen.storyboard in Resources */,
-				4B5693D420CFFAAB005EAE15 /* Images.xcassets in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
 				4B6BAFFC20886C5F00A90F3A /* CallingCodes.plist in Resources */,
-				4B6BB00520886C5F00A90F3A /* INSPhotoGallery.bundle in Resources */,
 				4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */,
 				4B6BAF8C20886B3900A90F3A /* notification.caf in Resources */,
 			);
@@ -1714,7 +1680,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/CropViewController/TOCropViewControllerBundle.bundle",
 				"${PODS_ROOT}/PhoneNumberKit/PhoneNumberKit/Resources/PhoneNumberMetadata.json",
 			);
@@ -1727,7 +1693,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7183EB494791913EB6E040B1 /* [CP] Check Pods Manifest.lock */ = {
@@ -1817,7 +1783,6 @@
 				4BC3B264212DA93E0012C7BD /* ChatCollectionView.swift in Sources */,
 				4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */,
 				4B8CA9EE211C49B300E6A66C /* BubbleCircle.swift in Sources */,
-				4B2733CA21C5482F00B3879F /* FalconViewController.swift in Sources */,
 				4B62E5FE2077EC7900546294 /* BaseVoiceMessageCell.swift in Sources */,
 				4B2E59AB214AB0F60081B74E /* MessageSender.swift in Sources */,
 				4BE023BB1FC33223004F8BFF /* MediaPickerControllerNew.swift in Sources */,
@@ -1952,7 +1917,6 @@
 				4B8CA141215407B0009F8AA3 /* ChatLogViewController+GroupMembersDelegate.swift in Sources */,
 				4B4F03D621E554BA00907D39 /* ImagesDownloadManager.swift in Sources */,
 				4B6BB00F20886C5F00A90F3A /* AnimationController.swift in Sources */,
-				4B2733CC21C5483D00B3879F /* FalconTableViewController.swift in Sources */,
 				4B31350621A9F56D00D20583 /* SharedMediaCell.swift in Sources */,
 				4B3134F921A9EDED00D20583 /* SharedMedia.swift in Sources */,
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,

@@ -123,7 +123,6 @@ class ChatsTableViewController: UITableViewController {
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
-					print("xxx in pinned update", deletions.count, insertions.count, modifications.count)
 					self.tableView.beginUpdates()
 					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 0) }, with: .none)
 					self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 0) }, with: .automatic)
@@ -143,7 +142,6 @@ class ChatsTableViewController: UITableViewController {
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
-					print("xxx in update", deletions.count, insertions.count, modifications.count)
 					self.tableView.beginUpdates()
 					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 1) }, with: .none)
 					self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 1) }, with: .automatic)

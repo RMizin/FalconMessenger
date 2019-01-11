@@ -82,16 +82,18 @@ extension ChatsTableViewController {
 		if !realmManager.realm.isInWriteTransaction {
 			realmManager.realm.beginWrite()
 			realmPinnedConversations[indexPath.row].pinned.value = false
+					try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
 
 			let indexToInsert = realmUnpinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
 				return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
 			})
 
 			let destinationIndexPath = IndexPath(row: indexToInsert, section: 1)
+
 			tableView.beginUpdates()
+			tableView.setEditing(false, animated: true)
 			tableView.moveRow(at: indexPath, to: destinationIndexPath)
 			tableView.endUpdates()
-			try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
 		}
 
 
@@ -111,15 +113,18 @@ extension ChatsTableViewController {
 		if !realmManager.realm.isInWriteTransaction {
 			realmManager.realm.beginWrite()
 			realmUnpinnedConversations[indexPath.row].pinned.value = true
+			try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
 
 			let indexToInsert = realmPinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
 				return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
 			})
+
 			let destinationIndexPath = IndexPath(row: indexToInsert, section: 0)
+
 			tableView.beginUpdates()
+			tableView.setEditing(false, animated: true)
 			tableView.moveRow(at: indexPath, to: destinationIndexPath)
 			tableView.endUpdates()
-			try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
 		}
 
     let metadataReference = Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder)
