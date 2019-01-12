@@ -79,13 +79,13 @@ extension BaseMessageCell {
     config.menuWidth = expandedMenuWidth
   
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? OutgoingVoiceMessageCell {
-      if message?.status == messageStatusSending { return }
+      if message?.status == messageStatusSending || message?.status == messageStatusNotSent { return }
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
       contextMenuItems = ContextMenuItems.contextMenuItems(for: .voiceMessage, !isOutgoing)
     }
     
     if let cell = self.chatLogController?.collectionView.cellForItem(at: indexPath) as? IncomingVoiceMessageCell {
-      if message?.status == messageStatusSending { return }
+      if message?.status == messageStatusSending || message?.status == messageStatusNotSent { return }
         contextMenuItems = ContextMenuItems.contextMenuItems(for: .voiceMessage, !isOutgoing)
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
@@ -120,7 +120,7 @@ extension BaseMessageCell {
       cell.bubbleView.tintColor = bubbleImage(currentColor: cell.bubbleView.tintColor)
     }
     
-    if message?.messageUID == nil || message?.status == messageStatusSending {
+    if message?.messageUID == nil || message?.status == messageStatusSending || message?.status == messageStatusNotSent {
       config.menuWidth = defaultMenuWidth
       contextMenuItems = ContextMenuItems.contextMenuItems(for: .sendingMessage, !isOutgoing)
     }

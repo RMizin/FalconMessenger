@@ -18,6 +18,8 @@ class MediaObject: NSObject {
   var phAsset: PHAsset?
   var filename: String?
   var fileURL: String?
+	var localVideoURL: String?
+	var localVideoIdentifier: String?
   
   init(dictionary: [String: AnyObject]) {
     super.init()
@@ -30,5 +32,7 @@ class MediaObject: NSObject {
     phAsset = dictionary["phAsset"] as? PHAsset
     filename = dictionary["filename"] as? String
     fileURL = dictionary["fileURL"] as? String
+		localVideoURL = dictionary["localVideoUrl"] as? String
+		localVideoIdentifier = dictionary["localVideoIdentifier"] as? String
   }
 }

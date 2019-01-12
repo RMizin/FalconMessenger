@@ -54,6 +54,7 @@ struct NameConstants {
 
 public let messageStatusRead = "Read"
 public let messageStatusSending = "Sending"
+public let messageStatusNotSent = "Not sent"
 public let messageStatusDelivered = "Delivered"
 
 let cameraAccessDeniedMessage = "Falcon needs access to your camera to take photos and videos.\n\nPlease go to Settings –– Privacy –– Camera –– and set Falcon to ON."

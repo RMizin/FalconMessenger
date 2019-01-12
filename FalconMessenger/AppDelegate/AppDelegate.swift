@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import UserNotifications
+import RealmSwift
 
 func setUserNotificationToken(token: String) {
   guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -100,6 +101,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
 
   func applicationWillTerminate(_ application: UIApplication) {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+		Database.database().purgeOutstandingWrites()
+		let realm = try! Realm()
+		try! realm.safeWrite {
+			for object in realm.objects(Message.self).filter("status == %@", messageStatusSending) {
+				object.status = messageStatusNotSent
+			}
+		}
   }
 }

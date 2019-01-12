@@ -917,24 +917,142 @@ class ChatLogViewController: UIViewController {
 
   // MARK: Messages sending
 
-  @objc func handleSend() {
-    guard currentReachabilityStatus != .notReachable else {
-      basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
-      return
-    }
+	@objc func sendMessage() {
+		guard currentReachabilityStatus != .notReachable else {
+			basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
+			return
+		}
 
-    isTyping = false
+		isTyping = false
+		let text = inputContainerView.inputTextView.text
+		let media = inputContainerView.attachedMedia
 
-    let text = inputContainerView.inputTextView.text
-    let media = inputContainerView.attachedMedia
-
-    inputContainerView.attachButton.reset()
-    inputContainerView.prepareForSend()
+		inputContainerView.attachButton.reset()
+		inputContainerView.prepareForSend()
 		guard let conversation = self.conversation else { return }
-    let messageSender = MessageSender(realmConversation(from: conversation), text: text, media: media)
-    messageSender.delegate = self
+		let messageSender = MessageSender(realmConversation(from: conversation), text: text, media: media)
+		messageSender.delegate = self
 		messageSender.sendMessage()
-  }
+	}
+
+	@objc func presentResendActions(_ sender: UIButton) {
+		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		let resendAction = UIAlertAction(title: "Resend", style: .default) { (action) in
+			self.resendMessage(sender)
+		}
+
+		let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (action) in
+			let point = self.collectionView.convert(CGPoint.zero, from: sender)
+			guard let indexPath = self.collectionView.indexPathForItem(at: point) else { return }
+			self.deleteLocalMessage(at: indexPath)
+		}
+
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(resendAction)
+		controller.addAction(deleteAction)
+		controller.addAction(cancelAction)
+
+		inputContainerView.resignAllResponders()
+		controller.modalPresentationStyle = .overCurrentContext
+		present(controller, animated: true, completion: nil)
+	}
+
+	fileprivate func resendMessage(_ sender: UIButton) {
+		let point = collectionView.convert(CGPoint.zero, from: sender)
+		guard let indexPath = collectionView.indexPathForItem(at: point) else { return }
+		guard let conversation = self.conversation else { return }
+		let message = groupedMessages[indexPath.section].messages[indexPath.row]
+
+		guard currentReachabilityStatus != .notReachable else {
+			basicErrorAlertWith(title: basicErrorTitleForAlert, message: noInternetError, controller: self)
+			return
+		}
+
+		isTyping = false
+		inputContainerView.attachButton.reset()
+		inputContainerView.prepareForSend()
+
+		let isTextMessage = message.text != nil
+		let isPhotoMessage = (message.imageUrl != nil || message.localImage != nil) && message.localVideoUrl == nil
+		let isVideoMessage = message.localVideoUrl != nil
+		let isVoiceMessage = message.voiceEncodedString != nil
+
+		if isTextMessage {
+			resendTextMessage(conversation, message.text, at: indexPath)
+		} else if isPhotoMessage {
+			resendPhotoMessage(message, conversation, at: indexPath)
+		} else if isVideoMessage {
+			resendVideoMessage(message, conversation, at: indexPath)
+		} else if isVoiceMessage {
+			resendVoiceMessage(message, conversation, at: indexPath)
+		}
+	}
+
+	fileprivate func resendTextMessage(_ conversation: Conversation, _ text: String?, at indexPath: IndexPath) {
+		let media = [MediaObject]()
+		handleResend(conversation: conversation, text: text, media: media, indexPath: indexPath)
+	}
+
+	fileprivate func resendPhotoMessage(_ message: Message, _ conversation: Conversation, _ text: String? = nil, at indexPath: IndexPath) {
+		let object = message.localImage?.image as AnyObject
+		let mediaObject = ["object": object] as [String: AnyObject]
+		let media = [MediaObject(dictionary: mediaObject)]
+		handleResend(conversation: conversation, text: text, media: media, indexPath: indexPath)
+	}
+
+	fileprivate func resendVideoMessage(_ message: Message, _ conversation: Conversation, _ text: String? = nil, at indexPath: IndexPath) {
+		let object = message.localImage?.image as AnyObject
+		let localVideoURL = message.localVideoUrl as AnyObject
+		let localVideoIdentifier = message.localVideoIdentifier as AnyObject
+
+		guard let asset = PHAsset.fetchAssets(withLocalIdentifiers: [message.localVideoIdentifier ?? ""],
+																					options: nil).firstObject else { return }
+		let manager = PHImageManager.default()
+		manager.requestAVAsset(forVideo: asset, options: nil, resultHandler: { (avasset, _, _) in
+			
+			if let avassetURL = avasset as? AVURLAsset {
+				guard let videoObject = try? Data(contentsOf: avassetURL.url) else { print("no object"); return }
+				let mediaObject = ["object": object,
+													 "videoObject": videoObject,
+													 "fileURL": localVideoURL,
+													 "localVideoUrl": localVideoURL,
+													 "localVideoIdentifier": localVideoIdentifier] as [String: AnyObject]
+
+				let media = [MediaObject(dictionary: mediaObject)]
+				DispatchQueue.main.async { [weak self] in
+					self?.handleResend(conversation: conversation, text: text, media: media, indexPath: indexPath)
+				}
+			}
+		})
+	}
+
+	fileprivate func resendVoiceMessage(_ message: Message, _ conversation: Conversation, _ text: String? = nil, at indexPath: IndexPath) {
+		guard let base64EncodedString = message.voiceEncodedString else { return }
+		let soundData = Data(base64Encoded: base64EncodedString)
+		let mediaObject = ["audioObject": soundData] as [String: AnyObject]
+		let media = [MediaObject(dictionary: mediaObject)]
+		handleResend(conversation: conversation, text: text, media: media, indexPath: indexPath)
+	}
+
+	fileprivate func handleResend(conversation: Conversation, text: String?, media: [MediaObject], indexPath: IndexPath) {
+		let messageSender = MessageSender(conversation, text: text , media: media)
+		messageSender.delegate = self
+		messageSender.sendMessage()
+
+		deleteLocalMessage(at: indexPath)
+	}
+
+	fileprivate func deleteLocalMessage(at indexPath: IndexPath) {
+		let message = groupedMessages[indexPath.section].messages[indexPath.row]
+		try! realm.safeWrite {
+			guard let object = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "") else { return }
+			realm.delete(object)
+
+			collectionView.performBatchUpdates({
+				collectionView.deleteItems(at: [indexPath])
+			}, completion: nil)
+		}
+	}
 
 	fileprivate func realmConversation(from conversation: Conversation) -> Conversation {
 		guard realm.objects(Conversation.self).filter("chatID == %@", conversation.chatID ?? "").first == nil else { return conversation }

@@ -51,6 +51,7 @@ class Message: Object {
 
 		@objc dynamic var localImage: RealmUIImage?
     @objc dynamic var localVideoUrl: String?
+		@objc dynamic var localVideoIdentifier: String?
     @objc dynamic var voiceData: Data?
     @objc dynamic var voiceDuration: String?
 
@@ -108,6 +109,8 @@ class Message: Object {
 				}
 
         localVideoUrl = dictionary["localVideoUrl"] as? String
+			  localVideoIdentifier = dictionary["localVideoIdentifier"] as? String
+
         voiceEncodedString = dictionary["voiceEncodedString"] as? String
         voiceData = dictionary["voiceData"] as? Data //unused
         voiceDuration = dictionary["voiceDuration"] as? String

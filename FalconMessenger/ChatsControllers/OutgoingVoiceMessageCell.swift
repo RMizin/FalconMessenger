@@ -15,6 +15,7 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
     super.setupViews()
     bubbleView.addSubview(playerView)
     contentView.addSubview(deliveryStatus)
+		addSubview(resendButton)
     bubbleView.addSubview(timeLabel)
     bubbleView.frame.size.width = 150
     playerView.timerLabel.textColor = ThemeManager.currentTheme().outgoingBubbleTextColor
@@ -30,8 +31,9 @@ class OutgoingVoiceMessageCell: BaseVoiceMessageCell {
   }
   
   func setupData(message: Message) {
+		resendButtonFrame(message: message)
     let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
-    bubbleView.frame.origin = CGPoint(x: x, y: 0)
+    bubbleView.frame.origin = CGPoint(x: x - resendButtonWidth(), y: 0)
     bubbleView.frame.size.height = frame.size.height.rounded()
     playerView.frame = CGRect(x: 3, y: 14, width: bubbleView.frame.width-17,
                               height: bubbleView.frame.height-BaseMessageCell.messageTimeHeight-19).integral

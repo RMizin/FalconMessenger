@@ -41,6 +41,7 @@ class PhotoMessageCell: BaseMediaMessageCell {
 		(loadButton).widthAnchor.constraint(equalToConstant: 60).isActive = true
 		(loadButton).heightAnchor.constraint(equalToConstant: 60).isActive = true
 
+		addSubview(resendButton)
     bubbleView.addSubview(timeLabel)
   }
   
@@ -51,8 +52,9 @@ class PhotoMessageCell: BaseMediaMessageCell {
   }
   
   func setupData(message: Message) {
+		resendButtonFrame(message: message)
     let x = (frame.width - bubbleView.frame.size.width - BaseMessageCell.scrollIndicatorInset).rounded()
-    bubbleView.frame.origin = CGPoint(x: x, y: 0)
+    bubbleView.frame.origin = CGPoint(x: x - resendButtonWidth(), y: 0)
     bubbleView.frame.size.height = frame.size.height.rounded()
     timeLabel.frame.origin = CGPoint(x: bubbleView.frame.width-timeLabel.frame.width-10,
                                      y: bubbleView.frame.height-timeLabel.frame.height-5)

@@ -447,7 +447,7 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
     do {
       soundData = try Data(contentsOf: soundFileURL)
         stackOverflowAnswer(data: soundData)
-      let mediaObject = ["audioObject": soundData ,
+      let mediaObject = ["audioObject": soundData,
                          "fileURL": soundFileURL] as [String: AnyObject]
 
       mediaPickerDelegate?.didSelectMedia(mediaObject: MediaObject(dictionary: mediaObject))

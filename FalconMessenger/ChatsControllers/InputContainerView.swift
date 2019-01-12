@@ -22,7 +22,7 @@ final class InputContainerView: UIControl {
 
   weak var chatLogController: ChatLogViewController? {
     didSet {
-      sendButton.addTarget(chatLogController, action: #selector(ChatLogViewController.handleSend), for: .touchUpInside)
+      sendButton.addTarget(chatLogController, action: #selector(ChatLogViewController.sendMessage), for: .touchUpInside)
     }
   }
   

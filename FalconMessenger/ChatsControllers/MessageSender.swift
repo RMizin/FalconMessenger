@@ -38,8 +38,8 @@ class MessageSender: NSObject {
     sendTextMessage()
     attachedMedia.forEach { (mediaObject) in
       let isVoiceMessage = mediaObject.audioObject != nil
-      let isPhotoMessage = (mediaObject.phAsset?.mediaType == PHAssetMediaType.image || mediaObject.phAsset == nil) && mediaObject.audioObject == nil
-      let isVideoMessage = mediaObject.phAsset?.mediaType == PHAssetMediaType.video
+      let isPhotoMessage = (mediaObject.phAsset?.mediaType == PHAssetMediaType.image || mediaObject.phAsset == nil) && mediaObject.audioObject == nil && mediaObject.localVideoURL == nil
+      let isVideoMessage = mediaObject.phAsset?.mediaType == PHAssetMediaType.video || mediaObject.localVideoURL != nil
       
       if isVoiceMessage {
         sendVoiceMessage(object: mediaObject)
@@ -231,7 +231,9 @@ class MessageSender: NSObject {
                                             "imageWidth": object.object!.asUIImage!.size.width as AnyObject,
                                             "imageHeight": object.object!.asUIImage!.size.height as AnyObject]
 
-    var localData: [String: AnyObject] = ["localImage": object.object!.asUIImage!, "localVideoUrl": path as AnyObject]
+		var localData: [String: AnyObject] =  ["localImage": object.object!.asUIImage!,
+																					 "localVideoUrl": path as AnyObject,
+																					 "localVideoIdentifier": object.phAsset?.localIdentifier as AnyObject]
     defaultData.forEach({ localData[$0] = $1 })
 
    // delegate?.update(with: localData)

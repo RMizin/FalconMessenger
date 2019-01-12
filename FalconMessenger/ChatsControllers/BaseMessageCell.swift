@@ -118,7 +118,11 @@ class BaseMessageCell: UICollectionViewCell {
   
 //	weak var message: Message?
   
-  weak var chatLogController: ChatLogViewController?
+	weak var chatLogController: ChatLogViewController? {
+		didSet {
+			resendButton.addTarget(chatLogController, action: #selector(ChatLogViewController.presentResendActions(_:)), for: .touchUpInside)
+		}
+	}
 
   static let textViewTopInset: CGFloat = 6
   
@@ -190,6 +194,14 @@ class BaseMessageCell: UICollectionViewCell {
     
     return bubbleView
   }()
+
+	lazy var resendButton: UIButton = {
+		let resendButton = UIButton(type: .infoDark)
+		resendButton.tintColor = FalconPalette.dismissRed
+		resendButton.isHidden = true
+		
+		return resendButton
+	}()
   
   lazy var deliveryStatus: UILabel = {
     var deliveryStatus = UILabel()
@@ -239,7 +251,26 @@ class BaseMessageCell: UICollectionViewCell {
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
+	func resendButtonFrame(message: Message) {
+		if message.status == messageStatusNotSent {
+			resendButton.sizeToFit()
+			resendButton.frame.origin = CGPoint(x: frame.width - resendButton.frame.width - 10, y: frame.height - resendButton.frame.height)
+			resendButton.isHidden = false
+		} else {
+			resendButton.frame = CGRect.zero
+			resendButton.isHidden = true
+		}
+	}
+
+	func resendButtonWidth() -> CGFloat {
+		if resendButton.frame.width > 0 {
+			return resendButton.frame.width + 10
+		} else {
+			return 0
+		}
+	}
+
   func configureDeliveryStatus(at indexPath: IndexPath, groupMessages: [MessageSection], message: Message) {
 
     guard let lastItem = groupMessages.last else { return }
