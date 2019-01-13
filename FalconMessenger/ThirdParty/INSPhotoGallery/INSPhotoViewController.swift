@@ -44,7 +44,7 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
 			activityIndicator.startAnimating()
 			return activityIndicator
     }()
-    
+
     public init(photo: INSPhotoViewable) {
         self.photo = photo
         super.init(nibName: nil, bundle: nil)
@@ -73,7 +73,21 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         
         view.addGestureRecognizer(doubleTapGestureRecognizer)
         view.addGestureRecognizer(longPressGestureRecognizer)
-        
+
+//				if photo.localVideoURL != nil || photo.videoURL != nil {
+//
+//
+//
+//					if let urlString = photo.localVideoURL, let url = URL(string: urlString) {
+//
+//							player = VGPlayer(URL: url)
+//							view.addSubview(player.displayView)
+//					} else if let urlString = photo.videoURL, let url = URL(string: urlString) {
+//							player = VGPlayer(URL: url)
+//						view.addSubview(player.displayView)
+//					}
+//				}
+
         if let image = photo.image {
             self.scalingImageView.image = image
             self.activityIndicator.stopAnimating()
@@ -89,6 +103,11 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     open override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         scalingImageView.frame = view.bounds
+//			if player != nil {
+//player.displayView.frame = view.bounds
+//			}
+
+	//	controls.frame = view.bounds
     }
 
     private func loadThumbnailImage() {

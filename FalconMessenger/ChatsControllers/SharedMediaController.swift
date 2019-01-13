@@ -95,9 +95,18 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 					})
 				} else {
 					if let thumbnailURLString = element.thumbnailImageUrl {
-						viewableElement = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: thumbnailURLString), messageUID: element.id)
+
+
+
+						viewableElement = 	INSPhoto(imageURL: URL(string: urlString),
+																				 thumbnailImageURL: URL(string: thumbnailURLString),
+																				 messageUID: element.id, videoURL: element.videoURL, localVideoURL: nil)
+
 					} else {
-						viewableElement = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: urlString), messageUID: element.id)
+						viewableElement = 	INSPhoto(imageURL: URL(string: urlString),
+																				 thumbnailImageURL: URL(string: urlString),
+																				 messageUID: element.id, videoURL: element.videoURL, localVideoURL: nil)
+
 					}
 					self.updateViewables(element: element, viewableElement: viewableElement)
 				}

@@ -29,6 +29,9 @@ import SDWebImage
     var thumbnailImage: UIImage? { get }
     var messageUID: String? { get }
     @objc optional var isDeletable: Bool { get }
+
+		var videoURL: String? { get }
+		var localVideoURL: String? { get }
     
     func loadImageWithCompletionHandler(_ completion: @escaping (_ image: UIImage?, _ error: Error?) -> ())
     func loadThumbnailImageWithCompletionHandler(_ completion: @escaping (_ image: UIImage?, _ error: Error?) -> ())
@@ -37,38 +40,51 @@ import SDWebImage
 }
 
 @objc open class INSPhoto: NSObject, INSPhotoViewable {
-    @objc open var image: UIImage?
-    @objc open var thumbnailImage: UIImage?
-    @objc open var messageUID: String?
-    @objc open var isDeletable: Bool
-  
-    
-    var imageURL: URL?
-    var thumbnailImageURL: URL?
-   // var messageUID: String?
-    
+
+	@objc public var videoURL: String?
+	@objc public var localVideoURL: String?
+
+	@objc open var image: UIImage?
+	@objc open var thumbnailImage: UIImage?
+	@objc open var messageUID: String?
+	@objc open var isDeletable: Bool
+
+//	  @objc open var videoURL: String?
+//	  @objc open var localVideoURL: String?
+
+
+	var imageURL: URL?
+	var thumbnailImageURL: URL?
+ // var messageUID: String?
+
     @objc open var attributedTitle: NSAttributedString?
 
     
-    public init(image: UIImage?, thumbnailImage: UIImage?, messageUID: String?) {
+    public init(image: UIImage?, thumbnailImage: UIImage?, messageUID: String?, videoURL: String? = nil, localVideoURL: String? = nil) {
         self.image = image
         self.thumbnailImage = thumbnailImage
         self.messageUID = messageUID
         self.isDeletable = false
+				self.videoURL = videoURL
+				self.localVideoURL = localVideoURL
     }
     
-    public init(imageURL: URL?, thumbnailImageURL: URL?, messageUID: String?) {
+	public init(imageURL: URL?, thumbnailImageURL: URL?, messageUID: String?, videoURL: String? = nil, localVideoURL: String? = nil) {
         self.imageURL = imageURL
         self.thumbnailImageURL = thumbnailImageURL
         self.messageUID = messageUID
         self.isDeletable = false
+				self.videoURL = videoURL
+				self.localVideoURL = localVideoURL
     }
     
-    public init (imageURL: URL?, thumbnailImage: UIImage?, messageUID: String?)  {
+    public init (imageURL: URL?, thumbnailImage: UIImage?, messageUID: String?, videoURL: String? = nil, localVideoURL: String? = nil)  {
         self.imageURL = imageURL
         self.thumbnailImage = thumbnailImage
         self.messageUID = messageUID
         self.isDeletable = false
+				self.videoURL = videoURL
+				self.localVideoURL = localVideoURL
     }
     
     @objc open func loadImageWithCompletionHandler(_ completion: @escaping (_ image: UIImage?, _ error: Error?) -> ()) {
@@ -83,6 +99,7 @@ import SDWebImage
 				completion(image, error)
 			}
     }
+	
     @objc open func loadThumbnailImageWithCompletionHandler(_ completion: @escaping (_ image: UIImage?, _ error: Error?) -> ()) {
         if let thumbnailImage = thumbnailImage {
             completion(thumbnailImage, nil)

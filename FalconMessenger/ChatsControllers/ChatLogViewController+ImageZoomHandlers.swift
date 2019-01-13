@@ -121,7 +121,7 @@ extension ChatLogViewController {
     var photos: [INSPhotoViewable] = []
 
 		guard let messagesWithPhotos = conversation?.messages
-			.filter("localImage != nil OR imageUrl != nil AND localVideoUrl == nil AND videoUrl == nil")
+			.filter("localImage != nil OR imageUrl != nil")
 			.sorted(byKeyPath: "timestamp", ascending: true) else {
 			print("returning from message with photos")
 			return photos
@@ -132,13 +132,24 @@ extension ChatLogViewController {
       let combination = configurePhotoToolbarInfo(for: messagesWithPhotos, at: photoIndex)
       
     	if let localImage = messagesWithPhotos[photoIndex].localImage?.uiImage(), let messageID = messagesWithPhotos[photoIndex].messageUID {
-        let newPhoto = INSPhoto(image: localImage, thumbnailImage: nil, messageUID: messageID)
+				let videoURL = messagesWithPhotos[photoIndex].videoUrl// ?? ""
+				let localVideoURL = messagesWithPhotos[photoIndex].localVideoUrl// ?? ""
+
+        let newPhoto = INSPhoto(image: localImage, thumbnailImage: nil, messageUID: messageID, videoURL: videoURL, localVideoURL: localVideoURL)
         newPhoto.attributedTitle = combination
         photos.append(newPhoto)
 			} else if let downloadURL = messagesWithPhotos[photoIndex].imageUrl,
 				let messageID = messagesWithPhotos[photoIndex].messageUID {
 				let thumbnail = messagesWithPhotos[photoIndex].thumbnailImageUrl ?? ""
-				let newPhoto = INSPhoto(imageURL: URL(string: downloadURL), thumbnailImageURL: URL(string: thumbnail), messageUID: messageID)
+				let videoURL = messagesWithPhotos[photoIndex].videoUrl// ?? ""
+				let localVideoURL = messagesWithPhotos[photoIndex].localVideoUrl// ?? ""
+
+
+
+
+				let newPhoto = 	INSPhoto(imageURL: URL(string: downloadURL),
+																	thumbnailImageURL: URL(string: thumbnail),
+																	messageUID: messageID, videoURL: videoURL, localVideoURL: localVideoURL)
 				newPhoto.attributedTitle = combination
 				photos.append(newPhoto)
 			}
