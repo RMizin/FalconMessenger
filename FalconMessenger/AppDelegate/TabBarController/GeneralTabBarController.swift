@@ -31,9 +31,7 @@ class GeneralTabBarController: UITabBarController {
     
     chatsController.delegate = self
     configureTabBar()
-		DispatchQueue.global(qos: .background).async {
-			setOnlineStatus()
-		}
+		setOnlineStatus()
   }
   
   fileprivate func configureTabBar() {
