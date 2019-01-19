@@ -120,14 +120,14 @@ Any unexpected errors? falconmessenger.help@gmail.com
 <br>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/CompatibilityTitle.png?token=ASVYwhrOwi60a631WfFgfodfY-J0JNyDks5cL0cQwA%3D%3D" />
-<img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Compatibility.png?token=ASVYwhZaj4Qy2pifJ5nc_kxLi6lAI2oiks5cL0cUwA%3D%3D" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/CompatibilityTitle.png" />
+<img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Compatibility.png" />
 </p> 
 
 <br>
 <br>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/LicenseTitle.png?token=ASVYwndXHjWYb578DXiMgfuyO4xEQgVKks5cL0cswA%3D%3D" />
-<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/License.png?token=ASVYwmVSy_ogS4wYYhzs5OjIt5btLSh6ks5cL0cqwA%3D%3D" alt="LICENSE.md" /></a>
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/LicenseTitle.png" />
+<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/License.png" alt="LICENSE.md" /></a>
 </p> 
