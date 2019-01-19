@@ -1,49 +1,49 @@
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Title.png?token=ASVYwnRnfMFJiXEBdpwj0039RvI5x5T5ks5cL0FXwA%3D%3D" />
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/TitleDesc.png?token=ASVYwjn3bpxTi0bVUorBhkdFmVp8YMUSks5cL0F-wA%3D%3D" />
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/DOnAppStore.png?token=ASVYwm02WeVAXy0c0YBVOQ6vBXJxk2kTks5cL0GtwA%3D%3D" alt="App Store" /></a>
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Title.png" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/TitleDesc.png" />
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/DOnAppStore.png" alt="App Store" /></a>
 </p> 
 
 <br>
 <br>
 
 <p align="center"> 
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/FeaturesTitle.png?token=ASVYwg-PUYSChmbL2cCHccg5Ct6aofSIks5cL0ILwA%3D%3D" />
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Features1.png?token=ASVYwmy0HRhGQ6EFobEi5nv-JUAI2U0pks5cL0K0wA%3D%3D"  width="288"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Features2.png?token=ASVYwsn1m04j42LDpMZTKSEoaEmzhVZUks5cL0LRwA%3D%3D" width="288" />
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Features3.png?token=ASVYwsGVVlne2s8SXXOySPmYK6FkApW4ks5cL0LZwA%3D%3D" width="288" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="288"/>
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="288" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="288" />
 </p> 
 
 <br>
 <br>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/UITitle.png?token=ASVYwkoI5uQfblXJp2iaPuXO09Le9Gshks5cL0OQwA%3D%3D" />
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/IPhoneScreensUI.png?token=ASVYwpdYcvUxoPGR9yVWVyDzGWMZNEm6ks5cL0PYwA%3D%3D" />
-<img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/IPadScreensUI.png?token=ASVYwtwgyYkC_N42DM9R6XOOygl8pcSbks5cL0PlwA%3D%3D" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/UITitle.png" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/IPhoneScreensUI.png" />
+<img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/IPadScreensUI.png" />
 </p> 
 
 <br>
 <br>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/SomeFeaturesInAction.png?token=ASVYwmPY0ukxXopVJIEvgWCFoUROIgTWks5cL0WowA%3D%3D" />
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/BlackList.png?token=ASVYwlHGtzy6hV7Bh2r9sgQ3leVqLhclks5cL0ZFwA%3D%3D"  width="288"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/TypingIndicator.png?token=ASVYwhUHgZStuTpokL72DYsPhHQt9pgnks5cL0Y5wA%3D%3D" width="288" />
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Themes.png?token=ASVYwiGb3J_i8i18Znru5yPatbRi5PToks5cL0YuwA%3D%3D" width="288" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/SomeFeaturesInAction.png" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/BlackList.png"  width="288"/>
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/TypingIndicator.png" width="288" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Themes.png" width="288" />
 </p>
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/Shared.png?token=ASVYwpY_QxlJ3JGiuKwQDuT1TrIBJ52Cks5cL0ZzwA%3D%3D"  width="288"/>
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/ChatLog.png?token=ASVYwk68p2h73zLOH1zi1xtEDx5KilIIks5cL0aGwA%3D%3D" width="288" />
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/GroupChats.png?token=ASVYwpxjnXSsPUK3MwcP9jtGbr44-3hQks5cL0adwA%3D%3D" width="288" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Shared.png"  width="288"/>
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/ChatLog.png" width="288" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/GroupChats.png" width="288" />
 </p>
 	
 <br>
 <br>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/Falcon/master/Screenshots/HowTouRunTitle.png?token=ASVYwlzQH1rXZfIGx09f9uGYMSbx8ziFks5cL0SFwA%3D%3D" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/HowTouRunTitle.png" />
 </p> 
 
 1. Open the FalconMessenger.xcworkspace in Xcode.
