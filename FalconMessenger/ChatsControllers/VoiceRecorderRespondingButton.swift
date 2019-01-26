@@ -26,7 +26,7 @@ class VoiceRecorderRespondingButton: RespondingButton {
 		super.setupAppearance()
 
 		setImage(UIImage(named: "microphone"), for: .normal)
-		setImage(UIImage(named: "microphoneSelected"), for: .selected)
+		setImage(UIImage(named: "microphoneSelected")?.withRenderingMode(.alwaysTemplate), for: .selected)
 	}
 
 	required init?(coder aDecoder: NSCoder) {

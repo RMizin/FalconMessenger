@@ -67,7 +67,7 @@ class AboutTableViewController: UITableViewController {
       svc = SFSafariViewController(url: url, configuration: configuration)
     }
     
-    svc.preferredControlTintColor = FalconPalette.defaultBlue
+    svc.preferredControlTintColor = view.tintColor
     svc.preferredBarTintColor = ThemeManager.currentTheme().generalBackgroundColor
     present(svc, animated: true, completion: nil)
     

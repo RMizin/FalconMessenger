@@ -43,7 +43,6 @@ class ChatsTableViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-		setupDataSource()
     configureTableView()
     setupSearchController()
     addObservers()
@@ -63,6 +62,7 @@ class ChatsTableViewController: UITableViewController {
     super.viewWillAppear(animated)
     
     if !isAppLoaded {
+			setupDataSource()
       managePresense()
       conversationsFetcher.fetchConversations()
     }
@@ -98,11 +98,17 @@ class ChatsTableViewController: UITableViewController {
   }
   
   @objc public func cleanUpController() {
+		notificationsManager.removeAllObservers()
+		conversationsFetcher.removeAllObservers()
 		realmManager.deleteAll()
-    tableView.reloadData()
+		tableView.reloadData()
+//		realmPinnedConversations = nil
+//		realmUnpinnedConversations = nil
+//		realmAllConversations = nil
+
+
     isAppLoaded = false
-    notificationsManager.removeAllObservers()
-    conversationsFetcher.removeAllObservers()
+
   }
   
   override var preferredStatusBarStyle: UIStatusBarStyle {

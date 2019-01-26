@@ -14,7 +14,6 @@ class GroupAdminControlsTableViewCell: UITableViewCell {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
     title.font = UIFont.systemFont(ofSize: 18)
-    title.textColor = FalconPalette.defaultBlue
     title.text = "Title here"
     title.textAlignment = .center
 
@@ -26,6 +25,7 @@ class GroupAdminControlsTableViewCell: UITableViewCell {
 
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     selectionColor = ThemeManager.currentTheme().cellSelectionColor
+		title.textColor = tintColor
     contentView.layer.cornerRadius = 25
     contentView.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
     contentView.translatesAutoresizingMaskIntoConstraints = false

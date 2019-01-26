@@ -14,7 +14,6 @@ class VoiceRecordingContainerView: UIView {
     var recordButton = UIButton()
      recordButton.translatesAutoresizingMaskIntoConstraints = false
      recordButton.setTitle("Record", for: .normal)
-    recordButton.setTitleColor(FalconPalette.defaultBlue, for: .normal)
     
     return recordButton
   }()
@@ -22,7 +21,7 @@ class VoiceRecordingContainerView: UIView {
   var stopButton: UIButton = {
     var stopButton = UIButton()
      stopButton.translatesAutoresizingMaskIntoConstraints = false
-    stopButton.setTitleColor(UIColor.red, for: .normal)
+		 stopButton.setTitleColor(UIColor.red, for: .normal)
      stopButton.setTitle("Stop", for: .normal)
     
     return stopButton
@@ -48,7 +47,9 @@ class VoiceRecordingContainerView: UIView {
 
   override init(frame: CGRect) {
     super.init(frame: frame)
-  
+
+		recordButton.setTitleColor(ThemeManager.generalTintColor, for: .normal)
+
     addSubview(recordButton)
     addSubview(stopButton)
     addSubview(statusLabel)

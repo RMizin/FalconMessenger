@@ -194,7 +194,7 @@ class SelectNewAdminTableViewController: UITableViewController {
     
     if let statusString = filteredUsersWithSection[indexPath.section][indexPath.row].onlineStatus as? String {
       if statusString == statusOnline {
-        cell.subtitle.textColor = FalconPalette.defaultBlue
+        cell.subtitle.textColor = view.tintColor
         cell.subtitle.text = statusString
       } else {
         cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor

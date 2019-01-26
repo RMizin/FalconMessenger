@@ -224,7 +224,7 @@ class UserInfoTableViewController: UITableViewController {
 
       cell.selectionStyle = .none
       cell.title.text = adminControls[indexPath.row]
-			cell.title.textColor = cell.title.text == adminControls.last ? FalconPalette.dismissRed : FalconPalette.defaultBlue
+			cell.title.textColor = cell.title.text == adminControls.last ? FalconPalette.dismissRed : view.tintColor
     
       return cell
     }
@@ -232,11 +232,11 @@ class UserInfoTableViewController: UITableViewController {
   
   func setAttributedText(title: String, body: String) -> NSAttributedString {
     let mutableAttributedString = NSMutableAttributedString()
-		let titleAttributes = [NSAttributedString.Key.foregroundColor: FalconPalette.defaultBlue,
+		let titleAttributes = [NSAttributedString.Key.foregroundColor: view.tintColor,
 													 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)]
 		let bodyAttributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalTitleColor,
 													NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)]
-    let titleAttributedString = NSAttributedString(string: title, attributes: titleAttributes)
+		let titleAttributedString = NSAttributedString(string: title, attributes: titleAttributes as [NSAttributedString.Key : Any])
     let bodyAttributedString = NSAttributedString(string: body, attributes: bodyAttributes)
     mutableAttributedString.append(titleAttributedString)
     mutableAttributedString.append(bodyAttributedString)

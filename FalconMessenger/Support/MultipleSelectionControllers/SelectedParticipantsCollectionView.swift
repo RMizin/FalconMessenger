@@ -20,7 +20,7 @@ extension SelectParticipantsViewController: UICollectionViewDelegate, UICollecti
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = selectedParticipantsCollectionView.dequeueReusableCell(withReuseIdentifier: selectedParticipantsCollectionViewCellID, for: indexPath) as! SelectedParticipantsCollectionViewCell
-    
+    cell.contentView.backgroundColor = view.tintColor
     cell.title.text = selectedFalconUsers[indexPath.item].name
     
     return cell

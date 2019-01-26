@@ -41,6 +41,7 @@ class ConversationsFetcher: NSObject {
   @objc public func removeAllObservers() {
     conversations.removeAll()
     isGroupAlreadyFinished = false
+		group = nil
     
     if groupChatReference != nil {
       for handle in groupConversationsChangesHandle {

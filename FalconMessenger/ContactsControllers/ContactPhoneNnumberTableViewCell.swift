@@ -15,7 +15,6 @@ class ContactPhoneNnumberTableViewCell: UITableViewCell {
     var title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
     title.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
-    title.textColor = FalconPalette.defaultBlue
 
     return title
   }()
@@ -35,6 +34,7 @@ class ContactPhoneNnumberTableViewCell: UITableViewCell {
     backgroundColor = .clear
     selectionStyle = .none
     title.backgroundColor = backgroundColor
+		title.textColor = ThemeManager.generalTintColor
 
     contentView.addSubview(title)
     title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
@@ -57,7 +57,7 @@ class ContactPhoneNnumberTableViewCell: UITableViewCell {
     super.prepareForReuse()
     title.text = ""
     subtitle.text = ""
-    title.textColor = FalconPalette.defaultBlue
+    title.textColor = tintColor
     subtitle.textColor = ThemeManager.currentTheme().generalTitleColor
   }
   

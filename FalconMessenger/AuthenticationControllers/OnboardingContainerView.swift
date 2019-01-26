@@ -34,7 +34,6 @@ class OnboardingContainerView: UIView {
     let startMessaging = UIButton()
     startMessaging.translatesAutoresizingMaskIntoConstraints = false
     startMessaging.setTitle("Start messaging", for: .normal)
-    startMessaging.setTitleColor(FalconPalette.defaultBlue, for: .normal)
     startMessaging.titleLabel?.backgroundColor = .clear
     startMessaging.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
     startMessaging.addTarget(self, action: #selector(OnboardingController.startMessagingDidTap), for: .touchUpInside)
@@ -46,6 +45,7 @@ class OnboardingContainerView: UIView {
     super.init(frame: frame)
 
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+		startMessaging.setTitleColor(tintColor, for: .normal)
     addSubview(logoImageView)
     addSubview(welcomeTitle)
     addSubview(startMessaging)

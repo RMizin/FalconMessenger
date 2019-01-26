@@ -69,6 +69,7 @@ final class InputContainerView: UIControl {
     sendButton.setImage(UIImage(named: "send"), for: .normal)
     sendButton.translatesAutoresizingMaskIntoConstraints = false
     sendButton.isEnabled = false
+	 	sendButton.backgroundColor = .white
     
     return sendButton
   }()
@@ -110,12 +111,15 @@ final class InputContainerView: UIControl {
                                            name: .inputViewResponded, object: nil)
     addHeightConstraints()
     backgroundColor = ThemeManager.currentTheme().barBackgroundColor
+	//	sendButton.tintColor = ThemeManager.generalTintColor
     addSubview(attachButton)
     addSubview(recordVoiceButton)
     addSubview(inputTextView)
     addSubview(sendButton)
     addSubview(placeholderLabel)
     inputTextView.addSubview(attachCollectionView)
+		sendButton.layer.cornerRadius = 15
+		sendButton.clipsToBounds = true
 
     tap = UITapGestureRecognizer(target: self, action: #selector(toggleTextView))
     tap.delegate = self

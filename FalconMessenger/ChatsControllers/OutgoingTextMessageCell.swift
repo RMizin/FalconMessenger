@@ -92,7 +92,7 @@ extension OutgoingTextMessageCell: UITextViewDelegate {
       svc = SFSafariViewController(url: URL as URL, configuration: configuration)
     }
     
-    svc.preferredControlTintColor = FalconPalette.defaultBlue
+    svc.preferredControlTintColor = tintColor
     svc.preferredBarTintColor = ThemeManager.currentTheme().generalBackgroundColor
     chatLogController?.inputContainerView.resignAllResponders()
     chatLogController?.present(svc, animated: true, completion: nil)

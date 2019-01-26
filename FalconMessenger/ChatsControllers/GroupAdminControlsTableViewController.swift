@@ -471,7 +471,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       if cell.title.text == adminControls.last {
         cell.title.textColor = FalconPalette.dismissRed
       } else {
-        cell.title.textColor = FalconPalette.defaultBlue
+        cell.title.textColor = view.tintColor
       }
       return cell
     
@@ -500,7 +500,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
       } else {
         if let statusString = members[indexPath.row].onlineStatus as? String {
           if statusString == statusOnline {
-            cell.subtitle.textColor = FalconPalette.defaultBlue
+            cell.subtitle.textColor = view.tintColor
             cell.subtitle.text = statusString
           } else {
             cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor

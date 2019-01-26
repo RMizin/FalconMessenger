@@ -24,7 +24,6 @@ class RespondingButton: UIButton, UIKeyInput {
 	}
 
 	func setupAppearance() {
-		tintColor = FalconPalette.defaultBlue
 		translatesAutoresizingMaskIntoConstraints = false
 	}
 
@@ -45,6 +44,7 @@ class RespondingButton: UIButton, UIKeyInput {
 	}
 
 	func changeTheme() {
+		tintColor = ThemeManager.generalTintColor
 		inputView?.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
 	}
 }

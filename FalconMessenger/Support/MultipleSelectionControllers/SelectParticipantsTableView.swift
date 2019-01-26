@@ -69,7 +69,7 @@ extension SelectParticipantsViewController: UITableViewDelegate, UITableViewData
     
     if let statusString = user.onlineStatus as? String {
       if statusString == statusOnline {
-        cell.subtitle.textColor = FalconPalette.defaultBlue
+        cell.subtitle.textColor = view.tintColor
         cell.subtitle.text = statusString
       } else {
         cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor

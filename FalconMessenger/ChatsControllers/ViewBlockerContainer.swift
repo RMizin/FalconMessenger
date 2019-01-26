@@ -28,7 +28,6 @@ class ViewBlockerContainer: UIView {
     let show = UIButton()
     show.translatesAutoresizingMaskIntoConstraints = false
     show.setTitle("Show", for: .normal)
-    show.setTitleColor(FalconPalette.defaultBlue, for: .normal)
     show.contentHorizontalAlignment = .center
     show.contentVerticalAlignment = .center
     show.titleLabel?.sizeToFit()
@@ -62,6 +61,7 @@ class ViewBlockerContainer: UIView {
     super.init(frame: frame)
 
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+		show.setTitleColor(ThemeManager.generalTintColor, for: .normal)
 
     addSubview(label)
     label.topAnchor.constraint(equalTo: topAnchor, constant: 40).isActive = true

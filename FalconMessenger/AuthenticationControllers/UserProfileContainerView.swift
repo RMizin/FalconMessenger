@@ -46,7 +46,6 @@ class UserProfileContainerView: UIView {
     addPhotoLabel.translatesAutoresizingMaskIntoConstraints = false
     addPhotoLabel.text = "Add\nphoto"
     addPhotoLabel.numberOfLines = 2
-    addPhotoLabel.textColor = FalconPalette.defaultBlue
     addPhotoLabel.textAlignment = .center
 
     return addPhotoLabel
@@ -144,6 +143,12 @@ class UserProfileContainerView: UIView {
 
   let bioMaxCharactersCount = 70
 
+
+	fileprivate func configureColors() {
+		backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+		addPhotoLabel.textColor = tintColor
+	}
+
   override init(frame: CGRect) {
     super.init(frame: frame)
 
@@ -156,7 +161,7 @@ class UserProfileContainerView: UIView {
     userData.addSubview(phone)
     bio.addSubview(bioPlaceholderLabel)
 
-    backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+		configureColors()
 
       NSLayoutConstraint.activate([
         profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 30),

@@ -97,7 +97,7 @@ class FalconUsersTableViewCell: UITableViewCell {
 
     if let statusString = user.onlineStatus as? String {
       if statusString == statusOnline {
-        subtitle.textColor = FalconPalette.defaultBlue
+        subtitle.textColor = tintColor
         subtitle.text = statusString
       }
     }

@@ -15,6 +15,17 @@ extension NSNotification.Name {
 }
 
 struct ThemeManager {
+
+	static var generalTintColor = TintPalette.blue {
+		didSet {
+			UIView.appearance().tintColor = generalTintColor
+		}
+	}
+
+	mutating func setGeneralTintColor(color: UIColor) {
+		ThemeManager.generalTintColor = color
+	}
+
   
   static func applyTheme(theme: Theme) {
     userDefaults.updateObject(for: userDefaults.selectedTheme, with: theme.rawValue)
@@ -26,6 +37,7 @@ struct ThemeManager {
     UITabBar.appearance().barTintColor = theme.barBackgroundColor
     UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
 		UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: theme.generalTitleColor]
+		UIView.appearance().tintColor = generalTintColor
     NotificationCenter.default.post(name: .themeUpdated, object: nil)
   }
   
@@ -42,12 +54,18 @@ struct ThemeManager {
   }
 }
 
+//enum Tint: Int {
+//	case Blue, Grey, Red
+//}
+
 enum Theme: Int {
   case Default, Dark
-  
+
+
   var generalBackgroundColor: UIColor {
     switch self {
     case .Default:
+
       return UIColor.white
     case .Dark:
       return .black
@@ -76,18 +94,18 @@ enum Theme: Int {
   var generalSubtitleColor: UIColor {
     switch self {
     case .Default:
-      return UIColor(red:0.67, green:0.67, blue:0.67, alpha:1.0)
+      return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
     case .Dark:
-      return UIColor(red:0.67, green:0.67, blue:0.67, alpha:1.0)
+      return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
     }
   }
   
   var cellSelectionColor: UIColor {
     switch self {
     case .Default:
-      return  UIColor(red:0.95, green:0.95, blue:0.95, alpha:1.0) //F1F1F1
+      return  UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0) //F1F1F1
     case .Dark:
-      return UIColor(red:0.10, green:0.10, blue:0.10, alpha:1.0) //191919
+      return UIColor(red: 0.10, green: 0.10, blue: 0.10, alpha: 1.0) //191919
     }
   }
   
@@ -226,11 +244,12 @@ enum Theme: Int {
       return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     }
   }
-  
+
+
   var outgoingBubbleTintColor: UIColor {
     switch self {
     case .Default:
-      return FalconPalette.defaultBlue
+      return ThemeManager.generalTintColor//UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)//UIColor(red: 0.00, green: 0.50, blue: 1.00, alpha: 1.0)// FalconPalette.defaultBlue
     case .Dark:
       return UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0)
     }
@@ -288,11 +307,13 @@ enum Theme: Int {
   var authorNameTextColor: UIColor {
     switch self {
     case .Default:
-      return FalconPalette.defaultBlue
+      return ThemeManager.generalTintColor//FalconPalette.defaultBlue
     case .Dark:
-      return UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)
+      return UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)//ThemeManager.generalTintColor//UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)
     }
   }
+
+	// tint blue UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)
   
   var outgoingProgressStrokeColor: UIColor {
     switch self {
@@ -348,27 +369,33 @@ enum Theme: Int {
     }
   }
   
-  var backgroundColor: UIColor {
-    switch self {
-    case .Default:
-      return UIColor.white
-    case .Dark:
-      return UIColor.black
-    }
-  }
-  
-  var secondaryColor: UIColor {
-    switch self {
-    case .Default:
-      return UIColor(red: 242.0/255.0, green: 101.0/255.0, blue: 34.0/255.0, alpha: 1.0)
-    case .Dark:
-      return UIColor(red: 34.0/255.0, green: 128.0/255.0, blue: 66.0/255.0, alpha: 1.0)
-    }
-  }
+//  var backgroundColor: UIColor {
+//    switch self {
+//    case .Default:
+//      return UIColor.white
+//    case .Dark:
+//      return UIColor.black
+//    }
+//  }
+
+//  var secondaryColor: UIColor {
+//    switch self {
+//    case .Default:
+//      return UIColor(red: 242.0/255.0, green: 101.0/255.0, blue: 34.0/255.0, alpha: 1.0)
+//    case .Dark:
+//      return UIColor(red: 34.0/255.0, green: 128.0/255.0, blue: 66.0/255.0, alpha: 1.0)
+//    }
+//  }
+}
+
+struct TintPalette {
+	static let blue = UIColor(red: 0.00, green: 0.55, blue: 1.00, alpha: 1.0)//UIColor(red: 0.00, green: 0.50, blue: 1.00, alpha: 1.0)
+	static let grey = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0)
+	static let red = UIColor.red
 }
 
 struct FalconPalette {
-  static let defaultBlue = UIColor(red:0.00, green:0.50, blue:1.00, alpha: 1.0)
-  static let dismissRed = UIColor(red:1.00, green:0.23, blue:0.19, alpha:1.0)
-  static let appStoreGrey = UIColor(red:0.94, green:0.94, blue:0.96, alpha:1.0)
+  //static let defaultBlue = UIColor(red:0.00, green:0.50, blue:1.00, alpha: 1.0)
+  static let dismissRed = UIColor(red: 1.00, green: 0.23, blue: 0.19, alpha: 1.0)
+  static let appStoreGrey = UIColor(red: 0.94, green: 0.94, blue: 0.96, alpha: 1.0)
 }

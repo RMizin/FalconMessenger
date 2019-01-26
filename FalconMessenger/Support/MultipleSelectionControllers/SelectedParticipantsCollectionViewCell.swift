@@ -9,8 +9,6 @@
 import UIKit
 
 class SelectedParticipantsCollectionViewCell: UICollectionViewCell {
-    
-  weak var selectParticipantsViewController: SelectParticipantsViewController!
   
   var title: UILabel = {
     var title = UILabel()
@@ -27,8 +25,6 @@ class SelectedParticipantsCollectionViewCell: UICollectionViewCell {
     super.init(frame: frame)
 
     contentView.layer.cornerRadius = 10
-    contentView.backgroundColor = FalconPalette.defaultBlue
-    
     backgroundColor = .clear
     title.backgroundColor = backgroundColor
 

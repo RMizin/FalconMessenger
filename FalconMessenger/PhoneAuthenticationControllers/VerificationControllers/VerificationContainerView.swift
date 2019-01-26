@@ -62,7 +62,6 @@ class VerificationContainerView: UIView {
     resend.setTitle("Resend", for: .normal)
     resend.contentVerticalAlignment = .center
     resend.contentHorizontalAlignment = .center
-    resend.setTitleColor(FalconPalette.defaultBlue, for: .normal)
     resend.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .highlighted)
     resend.setTitleColor(ThemeManager.currentTheme().generalSubtitleColor, for: .disabled)
 
@@ -89,6 +88,8 @@ class VerificationContainerView: UIView {
 
   override init(frame: CGRect) {
     super.init(frame: frame)
+
+		resend.setTitleColor(ThemeManager.generalTintColor, for: .normal)
 
     addSubview(titleNumber)
     addSubview(subtitleText)

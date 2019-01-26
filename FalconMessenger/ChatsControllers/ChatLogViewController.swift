@@ -59,7 +59,12 @@ class ChatLogViewController: UIViewController {
 	let realm = try! Realm()
 
   var chatLogAudioPlayer: AVAudioPlayer!
-  var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
+
+	var uploadProgressBar: UIProgressView = {
+	 var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
+		uploadProgressBar.tintColor = ThemeManager.generalTintColor
+		return uploadProgressBar
+	}()
 
   private var shouldScrollToBottom: Bool = true
   private let keyboardLayoutGuide = KeyboardLayoutGuide()

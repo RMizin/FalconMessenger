@@ -39,6 +39,6 @@ class MediaPickerRespondingButton: RespondingButton {
 	override func setupAppearance() {
 		super.setupAppearance()
 		setImage(UIImage(named: "ConversationAttach"), for: .normal)
-		setImage(UIImage(named: "SelectedModernConversationAttach"), for: .selected)
+		setImage(UIImage(named: "SelectedModernConversationAttach")?.withRenderingMode(.alwaysTemplate), for: .selected)
 	}
 }

@@ -131,7 +131,7 @@ class BlockedUsersTableViewController: UITableViewController {
                                                for: indexPath) as? GroupAdminControlsTableViewCell ?? GroupAdminControlsTableViewCell()
       cell.selectionStyle = .none
       cell.title.text = adminControls[indexPath.row]
-      cell.title.textColor = FalconPalette.defaultBlue
+      cell.title.textColor = view.tintColor
       
       return cell
     } else {

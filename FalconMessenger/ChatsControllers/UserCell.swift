@@ -77,7 +77,6 @@ class UserCell: UITableViewCell {
   lazy var badgeLabel: UILabel = {
     let badgeLabel = UILabel()
     badgeLabel.translatesAutoresizingMaskIntoConstraints = false
-    badgeLabel.backgroundColor = FalconPalette.defaultBlue
     badgeLabel.layer.cornerRadius = 10
     badgeLabel.text = "1"
     badgeLabel.isHidden = true
@@ -105,6 +104,8 @@ class UserCell: UITableViewCell {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)
   
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+		badgeLabel.backgroundColor = tintColor
+		
     contentView.addSubview(muteIndicator)
     contentView.addSubview(profileImageView)
     contentView.addSubview(nameLabel)

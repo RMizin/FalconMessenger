@@ -69,7 +69,7 @@ class ContactsDetailController: UITableViewController {
           let contact = contactPhoneNumbers[indexPath.row]
           cell.configureCell(contact: contact)
         } else {
-          cell.textLabel?.textColor = FalconPalette.defaultBlue
+          cell.textLabel?.textColor = view.tintColor
           cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
           cell.textLabel?.text = "Invite to Falcon"
         }

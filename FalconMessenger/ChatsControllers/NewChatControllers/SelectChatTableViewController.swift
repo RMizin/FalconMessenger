@@ -197,7 +197,8 @@ class SelectChatTableViewController: UITableViewController {
       cell.imageView?.contentMode = .scaleAspectFit
       cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
       cell.textLabel?.text = actions[indexPath.row]
-      cell.textLabel?.textColor = FalconPalette.defaultBlue
+      cell.textLabel?.textColor = view.tintColor
+
       return cell
     }
     let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID,
