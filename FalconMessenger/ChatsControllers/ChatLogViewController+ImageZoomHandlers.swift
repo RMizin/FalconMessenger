@@ -18,55 +18,10 @@ private var inputContainerViewWasFirstResponder = false
 extension ChatLogViewController {
 
   func handleOpen(madiaAt indexPath: IndexPath) {
-    let message = groupedMessages[indexPath.section].messages[indexPath.item]
-    if message.videoUrl != nil || message.localVideoUrl != nil {
-      guard let url = urlForVideo(at: indexPath) else {
-        basicErrorAlertWith(title: "Error",
-                            message: "This video is no longer exists",
-                            controller: self)
-        return
-      }
-      let viewController = viewControllerForVideo(with: url)
-      present(viewController, animated: true, completion: nil)
-      return
-    }
-    
     guard let viewController = openSelectedPhoto(at: indexPath) else { return }
     present(viewController, animated: true, completion: nil)
   }
-  
-  func urlForVideo(at indexPath: IndexPath) -> URL? {
-    let message = groupedMessages[indexPath.section].messages[indexPath.item]
-    
-    if message.localVideoUrl != nil {
-      let videoUrlString = message.localVideoUrl
-      return URL(string: videoUrlString!)
-    }
-    
-    if message.videoUrl != nil {
-      let videoUrlString = message.videoUrl
-      return URL(string: videoUrlString!)
-    }
-    
-    return nil
-  }
-  
-  func viewControllerForVideo(with url: URL) -> UIViewController {
-    let player = AVPlayer(url: url)
-    
-    let inBubblePlayerViewController = AVPlayerViewController()
-    inBubblePlayerViewController.player = player
-    inBubblePlayerViewController.modalTransitionStyle = .crossDissolve
-    if DeviceType.isIPad {
-      inBubblePlayerViewController.modalPresentationStyle = .overFullScreen
-    } else {
-      inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
-    }
-    self.inputContainerView.resignAllResponders()
-    player.play()
-    return inBubblePlayerViewController
-  }
-  
+
   func configurePhotoToolbarInfo(for messagesWithPhotos: Results<Message>, at photoIndex: Int) -> NSMutableAttributedString? {
     guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = conversation?.chatName  else { return nil }
     var titleString = String()

@@ -90,7 +90,11 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 																						 options: [.scaleDownLargeImages, .continueInBackground],
 																						 progress: nil, completed:
 						{ (image, _, _, _, _, _) in
-							viewableElement = INSPhoto(image: image, thumbnailImage: image, messageUID: element.id)
+							viewableElement = INSPhoto(image: image,
+																				 thumbnailImage: image,
+																				 messageUID: element.id,
+																				 videoURL: element.videoURL,
+																				 localVideoURL: element.videoURL)
 							self.updateViewables(element: element, viewableElement: viewableElement)
 					})
 				} else {
@@ -98,14 +102,14 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 
 
-						viewableElement = 	INSPhoto(imageURL: URL(string: urlString),
-																				 thumbnailImageURL: URL(string: thumbnailURLString),
-																				 messageUID: element.id, videoURL: element.videoURL, localVideoURL: nil)
+						viewableElement = INSPhoto(imageURL: URL(string: urlString),
+																			 thumbnailImageURL: URL(string: thumbnailURLString),
+																			 messageUID: element.id, videoURL: element.videoURL, localVideoURL: element.videoURL)
 
 					} else {
-						viewableElement = 	INSPhoto(imageURL: URL(string: urlString),
-																				 thumbnailImageURL: URL(string: urlString),
-																				 messageUID: element.id, videoURL: element.videoURL, localVideoURL: nil)
+						viewableElement = INSPhoto(imageURL: URL(string: urlString),
+																			 thumbnailImageURL: URL(string: urlString),
+																			 messageUID: element.id, videoURL: element.videoURL, localVideoURL: element.videoURL)
 
 					}
 					self.updateViewables(element: element, viewableElement: viewableElement)
@@ -117,7 +121,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 	fileprivate func updateViewables(element: SharedMedia, viewableElement: INSPhotoViewable) {
 		if !self.viewable.contains(where: { (viewable) -> Bool in
 			return viewable.messageUID == viewableElement.messageUID
-		}), element.videoURL == nil {
+		}) {
 			let index = self.viewable.insertionIndexOf(elem: viewableElement, isOrderedBefore: { (viewable1, viewable2) -> Bool in
 				return viewable1.messageUID! > viewable2.messageUID!
 			})
@@ -165,12 +169,6 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		guard let cell = collectionView.cellForItem(at: indexPath) as? SharedMediaCell else { return }
 		guard cell.sharedPhotoImageView.image != UIImage(named: "imagePlaceholder") else { return }
 		let currentElement = sharedMedia[indexPath.section][indexPath.row]
-		if let videoURL = currentElement.videoURL, let url = URL(string: videoURL) {
-			let viewController = viewControllerForVideo(with: url)
-			present(viewController, animated: true, completion: nil)
-			return
-		}
-
 		guard let initialPhotoIndex = viewable.index(where: {$0.messageUID == currentElement.id }) else { return }
 		let currentPhoto = viewable[initialPhotoIndex]
 		let overlay = INSPhotosOverlayView()
@@ -179,6 +177,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 																								 initialPhoto: currentPhoto,
 																								 referenceView: cell)
 		galleryPreview.overlayView = overlay
+		galleryPreview.overlayView.setHidden(true, animated: false)
 		galleryPreview.referenceViewForPhotoWhenDismissingHandler = { [weak self] photo in
 			guard let indexPath = SharedMedia.get(indexPathOf: photo,
 																						in: self?.sharedMedia ?? [[SharedMedia]]()) else { return nil }
@@ -192,21 +191,6 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 											layout collectionViewLayout: UICollectionViewLayout,
 											referenceSizeForHeaderInSection section: Int) -> CGSize {
 		return CGSize(width: collectionView.bounds.width, height: 40)
-	}
-
-	fileprivate func viewControllerForVideo(with url: URL) -> UIViewController {
-		let player = AVPlayer(url: url)
-
-		let inBubblePlayerViewController = AVPlayerViewController()
-		inBubblePlayerViewController.player = player
-		inBubblePlayerViewController.modalTransitionStyle = .crossDissolve
-		if DeviceType.isIPad {
-			inBubblePlayerViewController.modalPresentationStyle = .overFullScreen
-		} else {
-			inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
-		}
-		player.play()
-		return inBubblePlayerViewController
 	}
 }
 

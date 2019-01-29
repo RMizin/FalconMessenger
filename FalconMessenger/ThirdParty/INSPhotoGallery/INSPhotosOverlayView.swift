@@ -47,90 +47,90 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
     
     var leftBarButtonItem: UIBarButtonItem? {
         didSet {
-            navigationItem.leftBarButtonItem = leftBarButtonItem
+					navigationItem.leftBarButtonItem = leftBarButtonItem
         }
     }
     var rightBarButtonItem: UIBarButtonItem? {
         didSet {
-            navigationItem.rightBarButtonItem = rightBarButtonItem
+					navigationItem.rightBarButtonItem = rightBarButtonItem
         }
     }
     
     #if swift(>=4.0)
 	var titleTextAttributes: [NSAttributedString.Key : AnyObject] = [:] {
         didSet {
-            navigationBar.titleTextAttributes = titleTextAttributes
+					navigationBar.titleTextAttributes = titleTextAttributes
         }
     }
     #else
     var titleTextAttributes: [String : AnyObject] = [:] {
         didSet {
-            navigationBar.titleTextAttributes = titleTextAttributes
+					navigationBar.titleTextAttributes = titleTextAttributes
         }
     }
     #endif
     
     override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupShadows()
-        setupNavigationBar()
-        setupCaptionLabel()
-      //  setupDeleteButton()
+			super.init(frame: frame)
+			setupShadows()
+			setupNavigationBar()
+			setupCaptionLabel()
+		//  setupDeleteButton()
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+			fatalError("init(coder:) has not been implemented")
     }
     
     // Pass the touches down to other views
     open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if let hitView = super.hitTest(point, with: event) , hitView != self {
-            return hitView
-        }
-        return nil
+			if let hitView = super.hitTest(point, with: event) , hitView != self {
+					return hitView
+			}
+			return nil
     }
     
     open override func layoutSubviews() {
-        // The navigation bar has a different intrinsic content size upon rotation, so we must update to that new size.
-        // Do it without animation to more closely match the behavior in `UINavigationController`
-        UIView.performWithoutAnimation { () -> Void in
-            self.navigationBar.invalidateIntrinsicContentSize()
-            self.navigationBar.layoutIfNeeded()
-        }
-        super.layoutSubviews()
-        self.updateShadowFrames()
+			// The navigation bar has a different intrinsic content size upon rotation, so we must update to that new size.
+			// Do it without animation to more closely match the behavior in `UINavigationController`
+			UIView.performWithoutAnimation { () -> Void in
+					self.navigationBar.invalidateIntrinsicContentSize()
+					self.navigationBar.layoutIfNeeded()
+			}
+			super.layoutSubviews()
+			self.updateShadowFrames()
     }
     
     open func setHidden(_ hidden: Bool, animated: Bool) {
-        if self.isHidden == hidden {
-            return
-        }
-        
-        if animated {
-            self.isHidden = false
-            self.alpha = hidden ? 1.0 : 0.0
-            
-            UIView.animate(withDuration: 0.2, delay: 0.0, options: [.allowAnimatedContent, .allowUserInteraction], animations: { () -> Void in
-                self.alpha = hidden ? 0.0 : 1.0
-                }, completion: { result in
-                    self.alpha = 1.0
-                    self.isHidden = hidden
-            })
-        } else {
-            self.isHidden = hidden
-        }
+			if self.isHidden == hidden {
+				return
+			}
+
+			if animated {
+				self.isHidden = false
+				self.alpha = hidden ? 1.0 : 0.0
+
+				UIView.animate(withDuration: 0.2, delay: 0.0, options: [.allowAnimatedContent, .allowUserInteraction], animations: { () -> Void in
+					self.alpha = hidden ? 0.0 : 1.0
+					}, completion: { result in
+							self.alpha = 1.0
+							self.isHidden = hidden
+				})
+			} else {
+				self.isHidden = hidden
+			}
     }
     
     open func populateWithPhoto(_ photo: INSPhotoViewable) {
-        self.currentPhoto = photo
+			self.currentPhoto = photo
 
-        if let photosViewController = photosViewController {
-            if let index = photosViewController.dataSource.indexOfPhoto(photo) {
-                navigationItem.title = String(format:NSLocalizedString("%d of %d",comment:""), index+1, photosViewController.dataSource.numberOfPhotos)
-            }
-            captionLabel.attributedText = photo.attributedTitle
-        }
-     //   self.deleteToolbar.isHidden = photo.isDeletable != true
+			if let photosViewController = photosViewController {
+				if let index = photosViewController.dataSource.indexOfPhoto(photo) {
+						navigationItem.title = String(format:NSLocalizedString("%d of %d",comment:""), index+1, photosViewController.dataSource.numberOfPhotos)
+				}
+				captionLabel.attributedText = photo.attributedTitle
+			}
+	 //   self.deleteToolbar.isHidden = photo.isDeletable != true
     }
     
     @objc private func closeButtonTapped(_ sender: UIBarButtonItem) {
@@ -152,73 +152,73 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
 //    }
     
     private func setupNavigationBar() {
-        navigationBar = UINavigationBar()
-        navigationBar.translatesAutoresizingMaskIntoConstraints = false
-        navigationBar.alpha = 0.8
-        navigationBar.barTintColor = .black
-        navigationBar.barStyle = .blackTranslucent
-        navigationBar.clipsToBounds = true
-        navigationItem = UINavigationItem(title: "")
-        navigationBar.items = [navigationItem]
-        addSubview(navigationBar)
-        if #available(iOS 11.0, *) {
-          navigationBar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-        } else {
-          navigationBar.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        }
-        navigationBar.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        navigationBar.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-      
-        let safeAreaView = UINavigationBar()
-        safeAreaView.translatesAutoresizingMaskIntoConstraints = false
-        safeAreaView.alpha = navigationBar.alpha
-        safeAreaView.barTintColor = navigationBar.barTintColor
-        safeAreaView.barStyle = navigationBar.barStyle
-        safeAreaView.clipsToBounds = navigationBar.clipsToBounds
-        addSubview(safeAreaView)
-        safeAreaView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        safeAreaView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        safeAreaView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        safeAreaView.bottomAnchor.constraint(equalTo: navigationBar.topAnchor).isActive = true
+			navigationBar = UINavigationBar()
+			navigationBar.translatesAutoresizingMaskIntoConstraints = false
+			navigationBar.alpha = 0.8
+			navigationBar.barTintColor = .black
+			navigationBar.barStyle = .blackTranslucent
+			navigationBar.clipsToBounds = true
+			navigationItem = UINavigationItem(title: "")
+			navigationBar.items = [navigationItem]
+			addSubview(navigationBar)
+			if #available(iOS 11.0, *) {
+				navigationBar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+			} else {
+				navigationBar.topAnchor.constraint(equalTo: topAnchor).isActive = true
+			}
+			navigationBar.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+			navigationBar.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
 
-				leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose"), landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape"), style: .plain, target: self, action: #selector(INSPhotosOverlayView.closeButtonTapped(_:)))
+			let safeAreaView = UINavigationBar()
+			safeAreaView.translatesAutoresizingMaskIntoConstraints = false
+			safeAreaView.alpha = navigationBar.alpha
+			safeAreaView.barTintColor = navigationBar.barTintColor
+			safeAreaView.barStyle = navigationBar.barStyle
+			safeAreaView.clipsToBounds = navigationBar.clipsToBounds
+			addSubview(safeAreaView)
+			safeAreaView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+			safeAreaView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+			safeAreaView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+			safeAreaView.bottomAnchor.constraint(equalTo: navigationBar.topAnchor).isActive = true
 
-        rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(INSPhotosOverlayView.actionButtonTapped(_:)))
+			leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose"), landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape"), style: .plain, target: self, action: #selector(INSPhotosOverlayView.closeButtonTapped(_:)))
+
+			rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(INSPhotosOverlayView.actionButtonTapped(_:)))
     }
     
     private func setupCaptionLabel() {
-        captionLabel = UILabel()
-        captionLabel.translatesAutoresizingMaskIntoConstraints = false
-        captionLabel.backgroundColor = UIColor.clear
-        captionLabel.numberOfLines = 0
-        addSubview(captionLabel)
-      
-      var bottomSafeArea: CGFloat = 0.0
-      
-      if #available(iOS 11.0, *) {
-        let window = UIApplication.shared.keyWindow
-        bottomSafeArea = window?.safeAreaInsets.bottom ?? 0.0
-      }
-        
-        let bottomConstraint = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: captionLabel, attribute: .bottom, multiplier: 1.0, constant: 12.0 + bottomSafeArea)
-        let leadingConstraint = NSLayoutConstraint(item: captionLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 15.0)
-        let trailingConstraint = NSLayoutConstraint(item: captionLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 8.0 + bottomSafeArea)
-        self.addConstraints([bottomConstraint,leadingConstraint,trailingConstraint])
+			captionLabel = UILabel()
+			captionLabel.translatesAutoresizingMaskIntoConstraints = false
+			captionLabel.backgroundColor = UIColor.clear
+			captionLabel.numberOfLines = 0
+			addSubview(captionLabel)
+
+			var bottomSafeArea: CGFloat = 0.0
+
+			if #available(iOS 11.0, *) {
+				let window = UIApplication.shared.keyWindow
+				bottomSafeArea = window?.safeAreaInsets.bottom ?? 0.0
+			}
+
+			let bottomConstraint = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: captionLabel, attribute: .bottom, multiplier: 1.0, constant: 12.0 + bottomSafeArea)
+			let leadingConstraint = NSLayoutConstraint(item: captionLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 15.0)
+			let trailingConstraint = NSLayoutConstraint(item: captionLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 8.0 + bottomSafeArea)
+			self.addConstraints([bottomConstraint,leadingConstraint,trailingConstraint])
     }
     
     private func setupShadows() {
-        let startColor = UIColor.black.withAlphaComponent(0.8)
-        let endColor = UIColor.black.withAlphaComponent(0.8)
-        
+			let startColor = UIColor.black.withAlphaComponent(0.8)
+			let endColor = UIColor.black.withAlphaComponent(0.8)
+			
 //        self.topShadow = CAGradientLayer()
 //        topShadow.colors = [startColor.cgColor, endColor.cgColor]
 //        self.layer.insertSublayer(topShadow, at: 0)
-      
-        self.bottomShadow = CAGradientLayer()
-        bottomShadow.colors = [endColor.cgColor, startColor.cgColor]
-        self.layer.insertSublayer(bottomShadow, at: 0)
-        
-        self.updateShadowFrames()
+		
+			self.bottomShadow = CAGradientLayer()
+			bottomShadow.colors = [endColor.cgColor, startColor.cgColor]
+			self.layer.insertSublayer(bottomShadow, at: 0)
+			
+			self.updateShadowFrames()
     }
     
     private func updateShadowFrames() {

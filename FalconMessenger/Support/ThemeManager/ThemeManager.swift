@@ -8,7 +8,7 @@
 
 import UIKit
 import SDWebImage
-
+import AVKit
 
 extension NSNotification.Name {
   static let themeUpdated = NSNotification.Name(Bundle.main.bundleIdentifier! + ".themeUpdated")
@@ -21,11 +21,6 @@ struct ThemeManager {
 			UIView.appearance().tintColor = generalTintColor
 		}
 	}
-
-	mutating func setGeneralTintColor(color: UIColor) {
-		ThemeManager.generalTintColor = color
-	}
-
   
   static func applyTheme(theme: Theme) {
     userDefaults.updateObject(for: userDefaults.selectedTheme, with: theme.rawValue)
@@ -37,7 +32,10 @@ struct ThemeManager {
     UITabBar.appearance().barTintColor = theme.barBackgroundColor
     UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
 		UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: theme.generalTitleColor]
+
 		UIView.appearance().tintColor = generalTintColor
+		UIView.appearance(whenContainedInInstancesOf: [AVPlayerViewController.self]).tintColor = .white
+
     NotificationCenter.default.post(name: .themeUpdated, object: nil)
   }
   

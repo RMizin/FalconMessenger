@@ -208,7 +208,7 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
   }
   
   private func setupOverlayView() {
-    
+		guard currentPhoto?.localVideoURL == nil && currentPhoto?.videoURL == nil else { return }
     overlayView.view().autoresizingMask = [.flexibleWidth, .flexibleHeight]
     overlayView.view().frame = view.bounds
     view.addSubview(overlayView.view())
@@ -232,6 +232,12 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
     if let currentPhoto = currentPhoto {
       overlayView.populateWithPhoto(currentPhoto)
     }
+		if currentPhoto?.localVideoURL == nil && currentPhoto?.videoURL == nil {
+			setupOverlayView()
+		} else {
+			overlayView.setHidden(true, animated: true)
+			overlayView.view().removeFromSuperview()
+		}
   }
   
   // MARK: - Public

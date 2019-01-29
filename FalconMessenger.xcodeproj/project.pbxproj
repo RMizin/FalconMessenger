@@ -128,6 +128,7 @@
 		4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */; };
 		4B80BE26212EF02200A32E01 /* AttachCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE25212EF02200A32E01 /* AttachCollectionViewLayout.swift */; };
 		4B80BE372130217100A32E01 /* ChatLogViewControllerTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */; };
+		4B82D10222007FD100C13761 /* INSVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */; };
 		4B86C0C620513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B86C0C520513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift */; };
 		4B88F2DA206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B88F2D9206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift */; };
 		4B8CA13D2153C6EC009F8AA3 /* ChatLogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA13C2153C6EC009F8AA3 /* ChatLogPresenter.swift */; };
@@ -377,6 +378,7 @@
 		4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoSizingCollectionViewFlowLayout.swift; path = ChatsControllers/AutoSizingCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4B80BE25212EF02200A32E01 /* AttachCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AttachCollectionViewLayout.swift; path = ChatsControllers/AttachCollectionViewLayout.swift; sourceTree = "<group>"; };
 		4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogViewControllerTitleView.swift; path = ChatsControllers/ChatLogViewControllerTitleView.swift; sourceTree = "<group>"; };
+		4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INSVideoPlayerViewController.swift; sourceTree = "<group>"; };
 		4B86C0C520513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SelectChatTableViewController+SearchHandlers.swift"; path = "ChatsControllers/NewChatControllers/SelectChatTableViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
 		4B88F2D9206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "GroupAdminControlsTableViewController+NameEditing.swift"; path = "ChatsControllers/GroupAdminControlsTableViewController+NameEditing.swift"; sourceTree = "<group>"; };
 		4B8CA13C2153C6EC009F8AA3 /* ChatLogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogPresenter.swift; path = ChatsControllers/ChatLogPresenter.swift; sourceTree = "<group>"; };
@@ -910,6 +912,7 @@
 				4B6BAFC020886C5E00A90F3A /* INSPhotoViewController.swift */,
 				4B6BAFC120886C5E00A90F3A /* INSPhoto.swift */,
 				4B6BAFC220886C5E00A90F3A /* UIVIew+INSPhotoViewer.swift */,
+				4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */,
 			);
 			path = INSPhotoGallery;
 			sourceTree = "<group>";
@@ -1895,6 +1898,7 @@
 				4B8CA13F215405B5009F8AA3 /* GroupMembersManager.swift in Sources */,
 				4B6BB00020886C5F00A90F3A /* AvatarOpenerOverlay.swift in Sources */,
 				4B7ACCB91F3A3CA9000606E1 /* BaseMessageCell.swift in Sources */,
+				4B82D10222007FD100C13761 /* INSVideoPlayerViewController.swift in Sources */,
 				4BBF79402133727100903F56 /* CountriesFetcher.swift in Sources */,
 				4B6BAFFD20886C5F00A90F3A /* Public.swift in Sources */,
 				4B6BB00620886C5F00A90F3A /* INSScalingImageView.swift in Sources */,

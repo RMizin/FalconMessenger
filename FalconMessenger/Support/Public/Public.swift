@@ -736,8 +736,8 @@ func uiImageFromAsset(phAsset: PHAsset) -> UIImage? {
   options.deliveryMode = .fastFormat
   options.resizeMode = .exact
   options.isSynchronous = true
+	options.isNetworkAccessAllowed = true
   manager.requestImageData(for: phAsset, options: options) { data, _, _, _ in
-    
     if let data = data {
       img = UIImage(data: data)
     }
@@ -754,6 +754,7 @@ func dataFromAsset(asset: PHAsset) -> Data? {
   options.deliveryMode = .fastFormat
   options.isSynchronous = true
   options.resizeMode = .exact
+	options.isNetworkAccessAllowed = true
   options.normalizedCropRect = CGRect(x: 0, y: 0, width: 1000, height: 1000)
   manager.requestImageData(for: asset, options: options) { data, _, _, _ in
     finalData = data

@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 import UIKit
+import AVKit
 
 open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     var photo: INSPhotoViewable
@@ -57,7 +58,9 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     deinit {
         scalingImageView.delegate = nil
     }
-    
+
+		let playerController = INSVideoPlayerViewController()
+
     open override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -70,23 +73,22 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         activityIndicator.center = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
         activityIndicator.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
         activityIndicator.sizeToFit()
-        
-        view.addGestureRecognizer(doubleTapGestureRecognizer)
-        view.addGestureRecognizer(longPressGestureRecognizer)
 
-//				if photo.localVideoURL != nil || photo.videoURL != nil {
-//
-//
-//
-//					if let urlString = photo.localVideoURL, let url = URL(string: urlString) {
-//
-//							player = VGPlayer(URL: url)
-//							view.addSubview(player.displayView)
-//					} else if let urlString = photo.videoURL, let url = URL(string: urlString) {
-//							player = VGPlayer(URL: url)
-//						view.addSubview(player.displayView)
-//					}
-//				}
+				if photo.localVideoURL != nil || photo.videoURL != nil {
+					view.tintColor = .white
+					playerController.view.addSubview(scalingImageView)
+					playerController.view.frame = view.bounds
+					if let urlString = photo.localVideoURL, let url = URL(string: urlString) {
+						playerController.player = AVPlayer(url: url)
+						view.addSubview(playerController.view)
+					} else if let urlString = photo.videoURL, let url = URL(string: urlString) {
+						playerController.player = AVPlayer(url: url)
+						view.addSubview(playerController.view)
+					}
+				} else {
+					view.addGestureRecognizer(doubleTapGestureRecognizer)
+					view.addGestureRecognizer(longPressGestureRecognizer)
+				}
 
         if let image = photo.image {
             self.scalingImageView.image = image
@@ -97,17 +99,12 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
         } else {
 					loadThumbnailImage()
         }
-
     }
     
     open override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        scalingImageView.frame = view.bounds
-//			if player != nil {
-//player.displayView.frame = view.bounds
-//			}
-
-	//	controls.frame = view.bounds
+			super.viewWillLayoutSubviews()
+			scalingImageView.frame = view.bounds
+			playerController.view.frame = view.bounds
     }
 
     private func loadThumbnailImage() {

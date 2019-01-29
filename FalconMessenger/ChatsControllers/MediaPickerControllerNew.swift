@@ -129,7 +129,10 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
   func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath?) {
     let image = uiImageFromAsset(phAsset: asset)
     let filename = asset.originalFilename!
-    let imageData = compressImage(image: image!)
+		var imageData = Data()
+		if let assetImage = image {
+			imageData = compressImage(image: assetImage)
+		}
     
     if asset.mediaType == .image {
       guard let unwrappedIndexPath = indexPath else {

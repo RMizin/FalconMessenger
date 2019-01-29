@@ -20,17 +20,14 @@ extension ChatLogViewController: UIViewControllerPreviewingDelegate {
     previewingContext.sourceRect = sourceRect
     if let viewController = openSelectedPhoto(at: indexPath) as? INSPhotosViewController {
       viewController.view.backgroundColor = .clear
+			viewController.currentPhotoViewController?.playerController.player?.play()
       let imageView = viewController.currentPhotoViewController?.scalingImageView.imageView
       let radius = (imageView?.image?.size.width ?? 20) * 0.05
       viewController.currentPhotoViewController?.scalingImageView.imageView.layer.cornerRadius = radius
       viewController.currentPhotoViewController?.scalingImageView.imageView.layer.masksToBounds = true
       return viewController
-    } else if let url = urlForVideo(at: indexPath) {
-      let viewController = viewControllerForVideo(with: url)
-      return viewController
-    } else {
-      return nil
     }
+		return nil
   }
   
   func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
