@@ -43,7 +43,9 @@ class ChatsRealmManager {
 						realm.create(Message.self, value: message, update: true)
 					}
 				}
-				try! realm.commitWrite(withoutNotifying: tokens)
+				do {
+					try realm.commitWrite(withoutNotifying: tokens)
+				} catch {}
 			}
 	}
 
@@ -57,8 +59,10 @@ class ChatsRealmManager {
 	}
 
 	func deleteAll() {
-		try! realm.safeWrite {
-			realm.deleteAll()
-		}
+		do {
+			try realm.safeWrite {
+				realm.deleteAll()
+			}
+		} catch {}
 	}
 }

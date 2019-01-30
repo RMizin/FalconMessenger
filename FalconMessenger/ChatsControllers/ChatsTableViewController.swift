@@ -101,14 +101,7 @@ class ChatsTableViewController: UITableViewController {
 		notificationsManager.removeAllObservers()
 		conversationsFetcher.removeAllObservers()
 		realmManager.deleteAll()
-		tableView.reloadData()
-//		realmPinnedConversations = nil
-//		realmUnpinnedConversations = nil
-//		realmAllConversations = nil
-
-
     isAppLoaded = false
-
   }
   
   override var preferredStatusBarStyle: UIStatusBarStyle {
