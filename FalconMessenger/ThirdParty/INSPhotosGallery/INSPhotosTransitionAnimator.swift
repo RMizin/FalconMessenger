@@ -117,11 +117,9 @@ class INSPhotosTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
     }
     
     func performZoomingAnimationWithTransitionContext(_ transitionContext: UIViewControllerContextTransitioning) {
-        
         let containerView = transitionContext.containerView
-        guard let startingView = startingView, let endingView = endingView else {
-            return
-        }
+        guard let startingView = startingView, let endingView = endingView else { return }
+
         guard let startingViewForAnimation = self.startingViewForAnimation ?? self.startingView?.ins_snapshotView(),
             let endingViewForAnimation = self.endingViewForAnimation ?? self.endingView?.ins_snapshotView() else {
                 return
@@ -138,8 +136,20 @@ class INSPhotosTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
         endingViewForAnimation.alpha = 0.0
         
         containerView.addSubview(startingViewForAnimation)
-        containerView.addSubview(endingViewForAnimation)
-        
+
+			if !dismissing {
+				for subview in containerView.subviews where subview.backgroundColor == .black {
+					subview.backgroundColor = .clear
+				}
+				containerView.insertSubview(endingViewForAnimation, at: containerView.subviews.count - 2)
+				let transitionBackgrounView = TransitionBackgrounView()
+				transitionBackgrounView.frame = containerView.bounds
+				transitionBackgrounView.alpha = 0
+				containerView.insertSubview(transitionBackgrounView, belowSubview: endingViewForAnimation)
+			} else {
+				containerView.addSubview(endingViewForAnimation)
+			}
+
         // Hide the original ending view and starting view until the completion of the animation.
         endingView.alpha = 0.0
         startingView.alpha = 0.0
@@ -151,37 +161,48 @@ class INSPhotosTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
         UIView.animate(withDuration: fadeInDuration, delay: 0.0, options: [.allowAnimatedContent,.beginFromCurrentState], animations: { () -> Void in
             endingViewForAnimation.alpha = 1.0
         }) { result in
-            UIView.animate(withDuration: fadeOutDuration, delay: 0.0, options: [.allowAnimatedContent,.beginFromCurrentState], animations: { () -> Void in
-                startingViewForAnimation.alpha = 0.0
-            }, completion: { result in
-                startingViewForAnimation.removeFromSuperview()
-            })
+					UIView.animate(withDuration: fadeOutDuration, delay: 0.0, options: [.allowAnimatedContent,.beginFromCurrentState], animations: { () -> Void in
+							startingViewForAnimation.alpha = 0.0
+					}, completion: { result in
+							startingViewForAnimation.removeFromSuperview()
+					})
         }
         
         let startingViewFinalTransform = 1.0 / endingViewInitialTransform
         let translatedEndingViewFinalCenter = endingView.ins_translatedCenterPointToContainerView(containerView)
         
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping:CGFloat(zoomingAnimationSpringDamping), initialSpringVelocity:0, options: [.allowAnimatedContent,.beginFromCurrentState], animations: { () -> Void in
-            endingViewForAnimation.transform = finalEndingViewTransform
-            endingViewForAnimation.center = translatedEndingViewFinalCenter
-            startingViewForAnimation.transform = startingViewForAnimation.transform.scaledBy(x: startingViewFinalTransform, y: startingViewFinalTransform)
-            startingViewForAnimation.center = translatedEndingViewFinalCenter
-            
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: CGFloat(zoomingAnimationSpringDamping), initialSpringVelocity: 0, options: [.allowAnimatedContent,.beginFromCurrentState], animations: { () -> Void in
+
+					for subview in containerView.subviews where subview is TransitionBackgrounView {
+						subview.alpha = 1.0
+					}
+					endingViewForAnimation.transform = finalEndingViewTransform
+					endingViewForAnimation.center = translatedEndingViewFinalCenter
+					startingViewForAnimation.transform = startingViewForAnimation.transform.scaledBy(x: startingViewFinalTransform, y: startingViewFinalTransform)
+					startingViewForAnimation.center = translatedEndingViewFinalCenter
         }) { result in
-            endingViewForAnimation.removeFromSuperview()
-            endingView.alpha = 1.0
-            startingView.alpha = 1.0
-            self.completeTransitionWithTransitionContext(transitionContext)
+					endingViewForAnimation.removeFromSuperview()
+					for subview in containerView.subviews where subview.backgroundColor == .clear {
+						subview.backgroundColor = .black
+					}
+
+					for subview in containerView.subviews where subview is TransitionBackgrounView {
+						subview.removeFromSuperview()
+					}
+
+					endingView.alpha = 1.0
+					startingView.alpha = 1.0
+					self.completeTransitionWithTransitionContext(transitionContext)
         }
     }
     
     func completeTransitionWithTransitionContext(_ transitionContext: UIViewControllerContextTransitioning) {
         if transitionContext.isInteractive {
-            if transitionContext.transitionWasCancelled {
-                transitionContext.cancelInteractiveTransition()
-            } else {
-                transitionContext.finishInteractiveTransition()
-            }
+					if transitionContext.transitionWasCancelled {
+						transitionContext.cancelInteractiveTransition()
+					} else {
+						transitionContext.finishInteractiveTransition()
+					}
         }
         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
     }

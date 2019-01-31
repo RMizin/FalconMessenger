@@ -62,11 +62,9 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
 
 		guard let urlString = urlString else { return }
 		let overlay = INSPhotosOverlayView()
-		overlay.bottomShadow.isHidden = true
+		overlay.bottomView.isHidden = true
 
-	//	guard let urlString = conversation.chatPhotoURL else { return }
 		var photo: INSPhoto!
-
 		let cacheKey = SDWebImageManager.shared.cacheKey(for: URL(string: urlString))
 
 		SDImageCache.shared.containsImage(forKey: cacheKey, cacheType: .disk) { (cacheType) in

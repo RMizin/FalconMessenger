@@ -118,7 +118,10 @@ class AvatarOpenerOverlay: UIView {
 }
 
 extension AvatarOpenerOverlay: INSPhotosOverlayViewable {
-  
+	var bottomView: OverlayDefaultBottomView {
+		return OverlayDefaultBottomView()
+	}
+
   func populateWithPhoto(_ photo: INSPhotoViewable) {}
   
   func setHidden(_ hidden: Bool, animated: Bool) {

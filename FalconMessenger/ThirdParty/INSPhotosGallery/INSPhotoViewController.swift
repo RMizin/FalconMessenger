@@ -63,20 +63,18 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-        
         scalingImageView.delegate = self
         scalingImageView.frame = view.bounds
         scalingImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(scalingImageView)
-        
         view.addSubview(activityIndicator)
         activityIndicator.center = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
         activityIndicator.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
         activityIndicator.sizeToFit()
 
 				if photo.localVideoURL != nil || photo.videoURL != nil {
-					view.tintColor = .white
-					playerController.view.addSubview(scalingImageView)
+				 playerController.view.addSubview(scalingImageView)
+
 					playerController.view.frame = view.bounds
 					if let urlString = photo.localVideoURL, let url = URL(string: urlString) {
 						playerController.player = AVPlayer(url: url)
@@ -85,7 +83,9 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
 						playerController.player = AVPlayer(url: url)
 						view.addSubview(playerController.view)
 					}
-				} else {
+					playerController.view.addGestureRecognizer(doubleTapGestureRecognizer)
+				}
+				else {
 					view.addGestureRecognizer(doubleTapGestureRecognizer)
 					view.addGestureRecognizer(longPressGestureRecognizer)
 				}
@@ -155,6 +155,15 @@ open class INSPhotoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc private func handleDoubleTapWithGestureRecognizer(_ recognizer: UITapGestureRecognizer) {
+				if photo.videoURL != nil || photo.localVideoURL != nil {
+					if playerController.videoGravity != .resizeAspectFill {
+						playerController.videoGravity = .resizeAspectFill
+					} else {
+						playerController.videoGravity = .resizeAspect
+					}
+					return
+				}
+
         let pointInView = recognizer.location(in: scalingImageView.imageView)
         var newZoomScale = scalingImageView.maximumZoomScale
         

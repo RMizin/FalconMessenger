@@ -171,12 +171,9 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		let currentElement = sharedMedia[indexPath.section][indexPath.row]
 		guard let initialPhotoIndex = viewable.index(where: {$0.messageUID == currentElement.id }) else { return }
 		let currentPhoto = viewable[initialPhotoIndex]
-		let overlay = INSPhotosOverlayView()
-		overlay.bottomShadow.isHidden = true
 		let galleryPreview = INSPhotosViewController(photos: viewable,
 																								 initialPhoto: currentPhoto,
 																								 referenceView: cell)
-		galleryPreview.overlayView = overlay
 		galleryPreview.overlayView.setHidden(true, animated: false)
 		galleryPreview.referenceViewForPhotoWhenDismissingHandler = { [weak self] photo in
 			guard let indexPath = SharedMedia.get(indexPathOf: photo,

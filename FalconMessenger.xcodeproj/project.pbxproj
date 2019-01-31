@@ -126,6 +126,12 @@
 		4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */; };
 		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
 		4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */; };
+		4B7EA2D82203066B00002F0E /* OverlayNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2D72203066B00002F0E /* OverlayNavigationBar.swift */; };
+		4B7EA2DA2203067A00002F0E /* FalconUISlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2D92203067A00002F0E /* FalconUISlider.swift */; };
+		4B7EA2DC2203068800002F0E /* OverlayDefaultBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2DB2203068800002F0E /* OverlayDefaultBottomView.swift */; };
+		4B7EA2DE2203069500002F0E /* OverlayPhotoBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2DD2203069400002F0E /* OverlayPhotoBottomView.swift */; };
+		4B7EA2E0220306BB00002F0E /* OverlayVideoBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2DF220306BB00002F0E /* OverlayVideoBottomView.swift */; };
+		4B7EA2E22203076F00002F0E /* TransitionBackgrounView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2E12203076F00002F0E /* TransitionBackgrounView.swift */; };
 		4B80BE26212EF02200A32E01 /* AttachCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE25212EF02200A32E01 /* AttachCollectionViewLayout.swift */; };
 		4B80BE372130217100A32E01 /* ChatLogViewControllerTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */; };
 		4B82D10222007FD100C13761 /* INSVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */; };
@@ -376,6 +382,12 @@
 		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoSizingCollectionViewFlowLayout.swift; path = ChatsControllers/AutoSizingCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		4B7EA2D72203066B00002F0E /* OverlayNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayNavigationBar.swift; sourceTree = "<group>"; };
+		4B7EA2D92203067A00002F0E /* FalconUISlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconUISlider.swift; sourceTree = "<group>"; };
+		4B7EA2DB2203068800002F0E /* OverlayDefaultBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayDefaultBottomView.swift; sourceTree = "<group>"; };
+		4B7EA2DD2203069400002F0E /* OverlayPhotoBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPhotoBottomView.swift; sourceTree = "<group>"; };
+		4B7EA2DF220306BB00002F0E /* OverlayVideoBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayVideoBottomView.swift; sourceTree = "<group>"; };
+		4B7EA2E12203076F00002F0E /* TransitionBackgrounView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionBackgrounView.swift; sourceTree = "<group>"; };
 		4B80BE25212EF02200A32E01 /* AttachCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AttachCollectionViewLayout.swift; path = ChatsControllers/AttachCollectionViewLayout.swift; sourceTree = "<group>"; };
 		4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogViewControllerTitleView.swift; path = ChatsControllers/ChatLogViewControllerTitleView.swift; sourceTree = "<group>"; };
 		4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INSVideoPlayerViewController.swift; sourceTree = "<group>"; };
@@ -798,6 +810,7 @@
 				4B1058F52120977600CD6600 /* UserDefaultsManager */,
 				4BC3B258212DA10A0012C7BD /* Keyboard Utility */,
 				4B6BAFB520886C5E00A90F3A /* UserProfilePictureOpener */,
+				4B7EA2E3220307AC00002F0E /* FalconUISlider */,
 				4B6BAFD120886C5E00A90F3A /* FlaconTextView */,
 				4B6BAFA020886C5E00A90F3A /* SingleSelectionTableAdminControllers */,
 				4B6BAF8E20886C5D00A90F3A /* MultipleSelectionControllers */,
@@ -900,21 +913,26 @@
 			path = UserProfilePictureOpener;
 			sourceTree = "<group>";
 		};
-		4B6BAFB820886C5E00A90F3A /* INSPhotoGallery */ = {
+		4B6BAFB820886C5E00A90F3A /* INSPhotosGallery */ = {
 			isa = PBXGroup;
 			children = (
 				4B6BAFB920886C5E00A90F3A /* INSPhotosDataSource.swift */,
 				4B6BAFBA20886C5E00A90F3A /* INSPhotosViewController.swift */,
 				4B6BAFBB20886C5E00A90F3A /* INSPhotosTransitionAnimator.swift */,
+				4B7EA2E12203076F00002F0E /* TransitionBackgrounView.swift */,
 				4B6BAFBC20886C5E00A90F3A /* INSPhotosInteractionAnimator.swift */,
 				4B6BAFBE20886C5E00A90F3A /* INSScalingImageView.swift */,
-				4B6BAFBF20886C5E00A90F3A /* INSPhotosOverlayView.swift */,
 				4B6BAFC020886C5E00A90F3A /* INSPhotoViewController.swift */,
 				4B6BAFC120886C5E00A90F3A /* INSPhoto.swift */,
 				4B6BAFC220886C5E00A90F3A /* UIVIew+INSPhotoViewer.swift */,
 				4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */,
+				4B6BAFBF20886C5E00A90F3A /* INSPhotosOverlayView.swift */,
+				4B7EA2D72203066B00002F0E /* OverlayNavigationBar.swift */,
+				4B7EA2DB2203068800002F0E /* OverlayDefaultBottomView.swift */,
+				4B7EA2DD2203069400002F0E /* OverlayPhotoBottomView.swift */,
+				4B7EA2DF220306BB00002F0E /* OverlayVideoBottomView.swift */,
 			);
-			path = INSPhotoGallery;
+			path = INSPhotosGallery;
 			sourceTree = "<group>";
 		};
 		4B6BAFC320886C5E00A90F3A /* PickerTrayController */ = {
@@ -994,6 +1012,14 @@
 				4BEDE4252067C73500C52EF4 /* InformationCell */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		4B7EA2E3220307AC00002F0E /* FalconUISlider */ = {
+			isa = PBXGroup;
+			children = (
+				4B7EA2D92203067A00002F0E /* FalconUISlider.swift */,
+			);
+			path = FalconUISlider;
 			sourceTree = "<group>";
 		};
 		4B7EC60D21A9D39900878560 /* SharedMediaControllers */ = {
@@ -1206,7 +1232,7 @@
 			children = (
 				4B8CA9E6211C49B200E6A66C /* TypingIndicator */,
 				4B5693C620CFFAAB005EAE15 /* InAppBanner */,
-				4B6BAFB820886C5E00A90F3A /* INSPhotoGallery */,
+				4B6BAFB820886C5E00A90F3A /* INSPhotosGallery */,
 				4B6BAFC320886C5E00A90F3A /* PickerTrayController */,
 				4B6BAFD320886C5E00A90F3A /* ProgressIndicator */,
 				4B6BAFA420886C5E00A90F3A /* NavigationControllerActivityIndicator */,
@@ -1807,6 +1833,7 @@
 				4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */,
 				4B6BB00820886C5F00A90F3A /* INSPhotoViewController.swift in Sources */,
 				4BCA3EB121AA801300E586AB /* RefreshContentView.swift in Sources */,
+				4B7EA2DE2203069500002F0E /* OverlayPhotoBottomView.swift in Sources */,
 				4B6BB01920886C5F00A90F3A /* ARSLineProgressConstants.swift in Sources */,
 				4B5693D620CFFAAB005EAE15 /* Utils.swift in Sources */,
 				4BDB294E2126C79000D77600 /* ChangeNumberVerificationController.swift in Sources */,
@@ -1880,6 +1907,7 @@
 				4B3B7BB32146FF620060F41F /* OtherReportController.swift in Sources */,
 				4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */,
 				4BEB13F31F39CE3E0048A984 /* FalconUsersTableViewCell.swift in Sources */,
+				4B7EA2E0220306BB00002F0E /* OverlayVideoBottomView.swift in Sources */,
 				4BBF7942213412BD00903F56 /* CountriesTableViewController+Search.swift in Sources */,
 				4BE5712D1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift in Sources */,
 				4B6BB01220886C5F00A90F3A /* UIEdgeInsetsExtensions.swift in Sources */,
@@ -1887,6 +1915,8 @@
 				4B6BB00D20886C5F00A90F3A /* CameraCell.swift in Sources */,
 				4B6BB01820886C5F00A90F3A /* ARSInfiniteLoader.swift in Sources */,
 				4B88F2DA206386BA00BED797 /* GroupAdminControlsTableViewController+NameEditing.swift in Sources */,
+				4B7EA2E22203076F00002F0E /* TransitionBackgrounView.swift in Sources */,
+				4B7EA2DC2203068800002F0E /* OverlayDefaultBottomView.swift in Sources */,
 				4B6BB00C20886C5F00A90F3A /* ActionCell.swift in Sources */,
 				4B6BB00A20886C5F00A90F3A /* UIVIew+INSPhotoViewer.swift in Sources */,
 				4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */,
@@ -1914,6 +1944,7 @@
 				4B2E59B2214AED3D0081B74E /* ChatLogViewController+MessageSenderDelegate.swift in Sources */,
 				4BDB294D2126C79000D77600 /* ChangePhoneNumberController.swift in Sources */,
 				4B6BAFFA20886C5F00A90F3A /* PhoneNumberContainerView.swift in Sources */,
+				4B7EA2DA2203067A00002F0E /* FalconUISlider.swift in Sources */,
 				4BC3B26C212EA7D00012C7BD /* AttachCollectionView.swift in Sources */,
 				4BF07B2F2053429F00A68023 /* FalconUsersFetcher.swift in Sources */,
 				4B2143081F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift in Sources */,
@@ -1927,6 +1958,7 @@
 				4BC3B25D212DA10A0012C7BD /* KeyboardFrameObserver.swift in Sources */,
 				4BB554A62135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */,
 				4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */,
+				4B7EA2D82203066B00002F0E /* OverlayNavigationBar.swift in Sources */,
 				4BDB294C2126C79000D77600 /* PrivacyTableViewController.swift in Sources */,
 				4B6BAFE620886C5F00A90F3A /* SelectParticipantsViewController+SearchHandlers.swift in Sources */,
 				4B5693D320CFFAAB005EAE15 /* InAppNotificationDispatcher.swift in Sources */,

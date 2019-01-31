@@ -62,9 +62,7 @@ extension ChatLogViewController {
     let referenceView = cell.messageImageView
     let galleryPreview = INSPhotosViewController(photos: photos,
                                                  initialPhoto: currentPhoto,
-                                                 referenceView: referenceView)
-    galleryPreview.overlayView.setHidden(true, animated: false)
-    
+                                                 referenceView: referenceView)    
     setupGalleryDismissHandler(galleryPreview: galleryPreview)
     self.inputContainerView.resignAllResponders()
     galleryPreview.modalPresentationStyle = .overFullScreen

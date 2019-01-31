@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 import UIKit
+import AVFoundation
 
 public typealias INSPhotosViewControllerReferenceViewHandler = (_ photo: INSPhotoViewable) -> (UIView?)
 public typealias INSPhotosViewControllerNavigateToPhotoHandler = (_ photo: INSPhotoViewable) -> ()
@@ -123,6 +124,7 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
   deinit {
     pageViewController.delegate = nil
     pageViewController.dataSource = nil
+		NotificationCenter.default.removeObserver(self)
   }
   
   required public init?(coder aDecoder: NSCoder) {
@@ -169,14 +171,10 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
     let textColor = view.tintColor ?? UIColor.white
     if let overlayView = overlayView as? INSPhotosOverlayView {
       overlayView.photosViewController = self
-      #if swift(>=4.0)
 			overlayView.titleTextAttributes = [NSAttributedString.Key.foregroundColor: textColor]
-      #else
-      overlayView.titleTextAttributes = [NSForegroundColorAttributeName: textColor]
-      #endif
     }
   }
-  
+
   // MARK: - View Life Cycle
   override open func viewDidLoad() {
     super.viewDidLoad()
@@ -191,10 +189,11 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
     view.addSubview(pageViewController.view)
     pageViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		pageViewController.didMove(toParent: self)
-    
+		overlayView.bottomView.insVideoBottomView.playButton.addTarget(self, action: #selector(playPauseAction), for: .touchUpInside)
     setupOverlayView()
+
   }
-  
+
   open override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
@@ -204,15 +203,17 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
     UIView.animate(withDuration: 0.25) { () -> Void in
       self.setNeedsStatusBarAppearanceUpdate()
     }
-    updateCurrentPhotosInformation()
+		if currentPhotoViewController?.playerController.player?.timeControlStatus != .playing {
+			 updateCurrentPhotosInformation()
+		}
+		setCurrentVideoPlayerPlayButtonState()
   }
   
   private func setupOverlayView() {
-		guard currentPhoto?.localVideoURL == nil && currentPhoto?.videoURL == nil else { return }
     overlayView.view().autoresizingMask = [.flexibleWidth, .flexibleHeight]
     overlayView.view().frame = view.bounds
     view.addSubview(overlayView.view())
-    overlayView.setHidden(true, animated: false)
+		overlayView.setHidden(false, animated: false)
   }
   
   private func setupPageViewControllerWithInitialPhoto(_ initialPhoto: INSPhotoViewable? = nil) {
@@ -227,19 +228,148 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
       changeToPhoto(photo, animated: false)
     }
   }
-  
-  private func updateCurrentPhotosInformation() {
-    if let currentPhoto = currentPhoto {
-      overlayView.populateWithPhoto(currentPhoto)
-    }
-		if currentPhoto?.localVideoURL == nil && currentPhoto?.videoURL == nil {
-			setupOverlayView()
+
+	//MARK: Video player time labels
+	fileprivate func setupPlaybackTime(time: Float64) {
+		overlayView.bottomView.insVideoBottomView.minimumRate.text = getDurations(from: time)
+	}
+
+	fileprivate func setupPlayerTime() {
+		let timeInSeconds	= CMTimeGetSeconds(currentPhotoViewController?.playerController.player?.currentItem?.duration ?? CMTime.zero)
+		overlayView.bottomView.insVideoBottomView.minimumRate.text = "00:00"
+		overlayView.bottomView.insVideoBottomView.maximumRate.text = getDurations(from: timeInSeconds)
+	}
+
+	fileprivate func resetPlayerTime() {
+		overlayView.bottomView.insVideoBottomView.maximumRate.text = "--:--"
+		overlayView.bottomView.insVideoBottomView.minimumRate.text = "--:--"
+	}
+
+	fileprivate func getDurations(from seconds: Float64) -> String {
+		guard !seconds.isNaN else { return "--:--" }
+		let secs = Int(seconds)
+		let hours = secs / 3600
+		let minutes = (secs % 3600) / 60
+		let seconds = (secs % 3600) % 60
+
+		let hoursString = hours < 10 ? "0\(hours)": "\(hours)"
+		let minutesString = minutes < 10 ? "0\(minutes)": "\(minutes)"
+		let secondsString = seconds < 10 ? "0\(seconds)" : "\(seconds)"
+
+		if hours > 0 {
+			return hoursString + ":" + minutesString + ":" + secondsString
 		} else {
-			overlayView.setHidden(true, animated: true)
-			overlayView.view().removeFromSuperview()
+			return minutesString + ":" + secondsString
 		}
-  }
-  
+	}
+
+	//MARK: Video player play button
+
+	fileprivate func setCurrentVideoPlayerPlayButtonState() {
+		overlayView.bottomView.insVideoBottomView.playButton.isSelected = currentPhotoViewController?.playerController.player?.timeControlStatus == .playing
+	}
+	@objc fileprivate func playPauseAction() {
+		overlayView.bottomView.insVideoBottomView.playButton.isSelected = !overlayView.bottomView.insVideoBottomView.playButton.isSelected
+
+		if !overlayView.bottomView.insVideoBottomView.playButton.isSelected {
+			currentPhotoViewController?.playerController.player?.pause()
+		} else {
+			currentPhotoViewController?.playerController.player?.play()
+		}
+	}
+
+	//MARK: General video player actions
+	@objc fileprivate func playerDidFinishPlaying() {
+		overlayView.bottomView.insVideoBottomView.playButton.isSelected = false
+		currentPhotoViewController?.playerController.player?.seek(to: .zero)
+	}
+
+
+	//MARK: Video player slider
+
+	fileprivate var readyToPlayObserver: NSKeyValueObservation?
+	fileprivate var playbackObserver: NSKeyValueObservation?
+	fileprivate var isPlayingObserver: NSKeyValueObservation?
+
+	fileprivate func configureVideoPlayerSlider() {
+		let timeInSeconds	= CMTimeGetSeconds(currentPhotoViewController?.playerController.player?.currentItem?.duration ?? CMTime.zero)
+		overlayView.bottomView.insVideoBottomView.seekSlider.minimumValue = 0
+
+		overlayView.bottomView.insVideoBottomView.seekSlider.maximumValue = Float(timeInSeconds).isNaN ? 0 : Float(timeInSeconds)
+		overlayView.bottomView.insVideoBottomView.seekSlider.isUserInteractionEnabled = true
+		overlayView.bottomView.insVideoBottomView.seekSlider.addTarget(self, action: #selector(onSliderValueChanged(slider:event:)), for: .valueChanged)
+	}
+
+	fileprivate func updateVideoPlayerSliderCurrentValue(with time: CMTime) {
+		setupPlaybackTime(time: CMTimeGetSeconds(time))
+		if CMTimeGetSeconds(time) > 0 {
+			UIView.animate(withDuration: 0.1, animations: { [weak self] in
+				self?.overlayView.bottomView.insVideoBottomView.seekSlider.setValue(Float(CMTimeGetSeconds(time)), animated: true)
+			})
+		} else {
+			overlayView.bottomView.insVideoBottomView.seekSlider.setValue(Float(CMTimeGetSeconds(time)), animated: false)
+		}
+	}
+
+	@objc fileprivate func onSliderValueChanged(slider: UISlider, event: UIEvent) {
+		if let touchEvent = event.allTouches?.first {
+			switch touchEvent.phase {
+			case .began: break
+			case .moved:
+				currentPhotoViewController?.playerController.player?.seek(to: CMTime(seconds: Double(slider.value),
+																																						 preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+				break
+			case .ended: break
+			default: break
+			}
+		}
+	}
+
+	//MARK: Video player observers
+	fileprivate func setupVideoPlayerObservers() {
+		readyToPlayObserver = currentPhotoViewController?.playerController.player?.currentItem?.observe(\.status, options: NSKeyValueObservingOptions.new, changeHandler: { [weak self] (item, change) in
+			if item.status == .readyToPlay {
+				self?.setupPlayerTime()
+				self?.configureVideoPlayerSlider()
+			}
+		})
+
+		isPlayingObserver = currentPhotoViewController?.playerController.player?.observe(\.timeControlStatus, options:  [.old, .new], changeHandler: { [weak self] (item, change) in
+			guard let unwrappedSelf = self else { return }
+			if unwrappedSelf.currentPhotoViewController?.playerController.player?.timeControlStatus == .playing {
+				unwrappedSelf.overlayView.bottomView.insVideoBottomView.playButton.isSelected = true
+				for subview in unwrappedSelf.view.subviews where subview is INSScalingImageView {
+					DispatchQueue.main.async {
+						subview.removeFromSuperview()
+					}
+				}
+			} else {
+				unwrappedSelf.overlayView.bottomView.insVideoBottomView.playButton.isSelected = false
+			}
+		})
+
+		playbackObserver = currentPhotoViewController?.playerController.player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: .main, using: { [weak self] (time) in
+			self?.updateVideoPlayerSliderCurrentValue(with: time)
+		}) as? NSKeyValueObservation
+
+		NotificationCenter.default.addObserver(self,
+																					 selector: #selector(playerDidFinishPlaying),
+																					 name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+																					 object: currentPhotoViewController?.playerController.player?.currentItem)
+	}
+
+	fileprivate func invalidateVideoPlayerObservers() {
+		playerDidFinishPlaying()
+		resetPlayerTime()
+		NotificationCenter.default.removeObserver(self)
+		readyToPlayObserver?.invalidate()
+		isPlayingObserver?.invalidate()
+		if let observer = playbackObserver {
+			currentPhotoViewController?.playerController.player?.removeTimeObserver(observer)
+			playbackObserver?.invalidate()
+		}
+	}
+
   // MARK: - Public
   
   /**
@@ -252,10 +382,26 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
     if !dataSource.containsPhoto(photo) {
       return
     }
+
     let photoViewController = initializePhotoViewControllerForPhoto(photo)
     pageViewController.setViewControllers([photoViewController], direction: direction, animated: animated, completion: nil)
     updateCurrentPhotosInformation()
   }
+
+	fileprivate func updateCurrentPhotosInformation() {
+		if let currentPhoto = currentPhoto {
+			overlayView.populateWithPhoto(currentPhoto)
+		}
+
+		invalidateVideoPlayerObservers()
+
+		if currentPhotoViewController?.playerController.player?.status == .readyToPlay {
+			setupPlayerTime()
+			configureVideoPlayerSlider()
+		}
+
+		setupVideoPlayerObservers()
+	}
   
   // MARK: - Gesture Recognizers
   
@@ -283,7 +429,7 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
   
   // MARK: - Target Actions
   
-  open func handleDeleteButtonTapped(){
+  open func handleDeleteButtonTapped() {
     if let currentPhoto = self.currentPhoto {
       if let currentPhotoIndex = self.dataSource.indexOfPhoto(currentPhoto) {
         self.dataSource.deletePhoto(currentPhoto)
@@ -291,10 +437,10 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
         if let photo = newCurrentPhotoAfterDeletion(currentPhotoIndex: currentPhotoIndex) {
           if currentPhotoIndex == self.dataSource.numberOfPhotos {
             self.changeToPhoto(photo, animated: true, direction: .reverse)
-          }else{
+          } else {
             self.changeToPhoto(photo, animated: true)
           }
-        }else{
+        } else {
           self.dismiss(animated: true, completion: nil)
         }
       }

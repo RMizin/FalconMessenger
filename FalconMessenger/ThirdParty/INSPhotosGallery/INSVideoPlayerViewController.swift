@@ -13,6 +13,8 @@ class INSVideoPlayerViewController: AVPlayerViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		showsPlaybackControls = false
+		view.backgroundColor = .clear
 	}
 
 	override func viewDidDisappear(_ animated: Bool) {

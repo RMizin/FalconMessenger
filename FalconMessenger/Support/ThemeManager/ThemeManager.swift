@@ -34,7 +34,7 @@ struct ThemeManager {
 		UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: theme.generalTitleColor]
 
 		UIView.appearance().tintColor = generalTintColor
-		UIView.appearance(whenContainedInInstancesOf: [AVPlayerViewController.self]).tintColor = .white
+		UIView.appearance(whenContainedInInstancesOf: [INSPhotosViewController.self]).tintColor = .white
 
     NotificationCenter.default.post(name: .themeUpdated, object: nil)
   }

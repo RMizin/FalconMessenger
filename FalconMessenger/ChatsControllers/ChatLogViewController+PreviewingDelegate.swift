@@ -20,6 +20,7 @@ extension ChatLogViewController: UIViewControllerPreviewingDelegate {
     previewingContext.sourceRect = sourceRect
     if let viewController = openSelectedPhoto(at: indexPath) as? INSPhotosViewController {
       viewController.view.backgroundColor = .clear
+			viewController.overlayView.setHidden(true, animated: false)
 			viewController.currentPhotoViewController?.playerController.player?.play()
       let imageView = viewController.currentPhotoViewController?.scalingImageView.imageView
       let radius = (imageView?.image?.size.width ?? 20) * 0.05
@@ -35,6 +36,7 @@ extension ChatLogViewController: UIViewControllerPreviewingDelegate {
       viewController.view.backgroundColor = .black
       viewController.currentPhotoViewController?.scalingImageView.imageView.layer.cornerRadius = 0
       viewController.currentPhotoViewController?.scalingImageView.imageView.layer.masksToBounds = false
+			viewController.overlayView.setHidden(false, animated: false)
       present(viewController, animated: true)
     } else if let viewController = viewControllerToCommit as? AVPlayerViewController {
       present(viewController, animated: true)

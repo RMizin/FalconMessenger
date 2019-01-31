@@ -12,10 +12,8 @@ import SDWebImage
 extension UserInfoTableViewController {
 	
  @objc func openPhoto() {
-
 		let overlay = INSPhotosOverlayView()
-		overlay.bottomShadow.isHidden = true
-
+		overlay.bottomView.isHidden = true
 		guard let urlString = user?.photoURL else { return }
 		var photo: INSPhoto!
 
