@@ -378,10 +378,25 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
    - parameter photo:    The photo to make the currently displayed photo.
    - parameter animated: Whether to animate the transition to the new photo.
    */
+
+	fileprivate func prefetchNearbyPhotos(photo: INSPhotoViewable) {
+		if let index = dataSource.indexOfPhoto(photo) {
+			let nextPhoto = dataSource.photoAtIndex(index - 1)
+			let photoAfterNext = dataSource.photoAtIndex(index - 2)
+			let previousPhoto = dataSource.photoAtIndex(index + 1)
+			let photoAfterPrevious = dataSource.photoAtIndex(index + 2)
+			let urls = [previousPhoto?.imageURL, nextPhoto?.imageURL , photoAfterPrevious?.imageURL, photoAfterNext?.imageURL].compactMap({$0})
+			prefetchThumbnail(from: urls)
+		}
+	}
+	
 	open func changeToPhoto(_ photo: INSPhotoViewable, animated: Bool, direction: UIPageViewController.NavigationDirection = .forward) {
     if !dataSource.containsPhoto(photo) {
       return
     }
+
+
+
 
     let photoViewController = initializePhotoViewControllerForPhoto(photo)
     pageViewController.setViewControllers([photoViewController], direction: direction, animated: animated, completion: nil)
@@ -486,6 +501,7 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
   // MARK: - UIPageViewControllerDataSource / UIPageViewControllerDelegate
   public func initializePhotoViewControllerForPhoto(_ photo: INSPhotoViewable) -> INSPhotoViewController {
     let photoViewController = INSPhotoViewController(photo: photo)
+		prefetchNearbyPhotos(photo: photo)
     singleTapGestureRecognizer.require(toFail: photoViewController.doubleTapGestureRecognizer)
     photoViewController.longPressGestureHandler = { [weak self] gesture in
       guard let weakSelf = self else {

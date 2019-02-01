@@ -101,7 +101,7 @@ class BaseMediaMessageCell: BaseMessageCell {
 
 	fileprivate func loadThumbnail(message: Message, messageImageUrlString: String?) {
 		guard let urlString = messageImageUrlString, let messageImageUrl = URL(string: urlString) else { return }
-		let options: SDWebImageOptions = [.continueInBackground, .highPriority, .scaleDownLargeImages, .avoidAutoSetImage]
+		let options: SDWebImageOptions = [.continueInBackground, .scaleDownLargeImages, .avoidAutoSetImage, .highPriority]
 
 		loadButton.isHidden = false
 
@@ -127,7 +127,7 @@ class BaseMediaMessageCell: BaseMessageCell {
 				}
 
 				UIView.transition(with: self.messageImageView,
-													duration: 0.15,
+													duration: 0.1,
 													options: .transitionCrossDissolve,
 													animations: { self.messageImageView.image = blurEffect(image: image) },
 													completion: nil)

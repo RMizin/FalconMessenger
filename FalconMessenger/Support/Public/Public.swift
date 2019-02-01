@@ -651,17 +651,30 @@ extension UIScrollView {
 
 func prefetchThumbnail(from urlString: String?) {
 	if let thumbnail = urlString, let url = URL(string: thumbnail) {
-		SDWebImagePrefetcher.shared.prefetchURLs([url])
+		SDWebImagePrefetcher.shared.prefetchURLs([url], progress: nil) { (finished, skipped) in
+			print("finished", finished, "skipped", skipped)
+		}
 	}
 }
 
 func prefetchThumbnail(from urls: [URL]?) {
-//	if let thumbnail = urlString, let url = URL(string: thumbnail) {
-		SDWebImagePrefetcher.shared.prefetchURLs(urls)
-	//	SDWebImagePrefetcher.shared.prefetchURLs([url])
-	//}
+	SDWebImagePrefetcher.shared.prefetchURLs(urls, progress: nil) { (finished, skipped) in
+		print("finished", finished, "skipped", skipped)
+	}
 }
 
+func prefetchThumbnail(from urlStrings: [String]) {
+	let urls = urlStrings.compactMap({ URL(string: $0) })
+	SDWebImagePrefetcher.shared.prefetchURLs(urls, progress: nil) { (finished, skipped) in
+		print("finished", finished, "skipped", skipped)
+	}
+}
+
+extension UITableView {
+	func hasRow(at indexPath: IndexPath) -> Bool {
+		return indexPath.section < self.numberOfSections && indexPath.row < self.numberOfRows(inSection: indexPath.section)
+	}
+}
 
 
 func createImageThumbnail (_ image: UIImage) -> UIImage {

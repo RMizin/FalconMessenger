@@ -174,7 +174,6 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		let galleryPreview = INSPhotosViewController(photos: viewable,
 																								 initialPhoto: currentPhoto,
 																								 referenceView: cell)
-		galleryPreview.overlayView.setHidden(true, animated: false)
 		galleryPreview.referenceViewForPhotoWhenDismissingHandler = { [weak self] photo in
 			guard let indexPath = SharedMedia.get(indexPathOf: photo,
 																						in: self?.sharedMedia ?? [[SharedMedia]]()) else { return nil }

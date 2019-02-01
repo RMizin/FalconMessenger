@@ -32,6 +32,7 @@ import SDWebImage
 
 		var videoURL: String? { get }
 		var localVideoURL: String? { get }
+		var imageURL: URL? { get }
     
     func loadImageWithCompletionHandler(_ completion: @escaping (_ image: UIImage?, _ error: Error?) -> ())
     func loadThumbnailImageWithCompletionHandler(_ completion: @escaping (_ image: UIImage?, _ error: Error?) -> ())
@@ -53,7 +54,7 @@ import SDWebImage
 //	  @objc open var localVideoURL: String?
 
 
-	var imageURL: URL?
+	public var imageURL: URL?
 	var thumbnailImageURL: URL?
  // var messageUID: String?
 

@@ -214,13 +214,14 @@ class SelectChatTableViewController: UITableViewController {
     guard let index = users.index(where: { (user) -> Bool in
         return user.id == blockedUID
     }) else { return }
-      
       users.remove(at: index)
     }
     return users
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		searchBar?.resignFirstResponder()
+
     if indexPath.section == 0 {
       let destination = SelectGroupMembersController()
       let users = removeBannedUsers(users: self.users)

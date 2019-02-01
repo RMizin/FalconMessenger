@@ -115,6 +115,16 @@ class ChatsTableViewController: UITableViewController {
     tableView.reloadData()
   }
 
+	fileprivate func indexPathsToUpdate(updates: [Int], section: Int) -> [IndexPath] {
+		return updates.compactMap({ (index) -> IndexPath? in
+			if self.tableView.hasRow(at: IndexPath(row: index, section: section)) {
+				return IndexPath(row: index, section: section)
+			} else {
+				return nil
+			}
+		})
+	}
+
 	fileprivate func observeDataSourceChanges() {
 		pinnedConversationsNotificationToken = realmPinnedConversations.observe { (changes: RealmCollectionChange) in
 			switch changes {
@@ -123,9 +133,9 @@ class ChatsTableViewController: UITableViewController {
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
 					self.tableView.beginUpdates()
-					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 0) }, with: .none)
-					self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 0) }, with: .automatic)
-					UIView.performWithoutAnimation { self.tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: 0) }, with: .none) }
+					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 0), with: .none)
+					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 0), with: .automatic)
+					UIView.performWithoutAnimation { self.tableView.reloadRows(at: self.indexPathsToUpdate(updates: modifications, section: 0), with: .none) }
 					self.tableView.endUpdates()
 				}
 
@@ -141,10 +151,11 @@ class ChatsTableViewController: UITableViewController {
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
+					print(deletions.count, insertions.count, modifications.count)
 					self.tableView.beginUpdates()
-					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 1) }, with: .none)
-					self.tableView.deleteRows(at: deletions.map { IndexPath(row: $0, section: 1) }, with: .automatic)
-					UIView.performWithoutAnimation { self.tableView.reloadRows(at: modifications.map { IndexPath(row: $0, section: 1) }, with: .none) }
+					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 1), with: .none)
+					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 1), with: .automatic)
+					UIView.performWithoutAnimation { self.tableView.reloadRows(at: self.indexPathsToUpdate(updates: modifications, section: 1), with: .none) }
 					self.tableView.endUpdates()
 				}
 				break
@@ -372,10 +383,14 @@ class ChatsTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     var conversation: Conversation!
 
+		searchBar?.resignFirstResponder()
+		searchChatsController?.searchBar.resignFirstResponder()
+
     if indexPath.section == 0 {
       let pinnedConversation = realmPinnedConversations[indexPath.row]
       conversation = pinnedConversation
     } else {
+			print(indexPath.section, indexPath.row)
       let unpinnedConversation = realmUnpinnedConversations[indexPath.row]
       conversation = unpinnedConversation
     }

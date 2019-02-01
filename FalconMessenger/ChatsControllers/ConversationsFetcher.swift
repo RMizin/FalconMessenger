@@ -194,8 +194,8 @@ class ConversationsFetcher: NSObject {
 
       conversation.chatPhotoURL = user.photoURL
       conversation.chatThumbnailPhotoURL = user.thumbnailPhotoURL
-      conversation.chatParticipantsIDs.assign([chatID, currentUserID]) // = [chatID, currentUserID]
-      prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
+      conversation.chatParticipantsIDs.assign([chatID, currentUserID])
+			prefetchThumbnail(from: conversation.chatThumbnailPhotoURL == nil ? conversation.chatPhotoURL : conversation.chatThumbnailPhotoURL)
       self.updateConversationArrays(with: conversation)
     })
     
@@ -216,7 +216,7 @@ class ConversationsFetcher: NSObject {
       conversation.isGroupChat.value = metaInfo.isGroupChat.value
       conversation.admin = metaInfo.admin
       conversation.chatID = metaInfo.chatID
-      prefetchThumbnail(from: conversation.chatThumbnailPhotoURL)
+			prefetchThumbnail(from: conversation.chatThumbnailPhotoURL == nil ? conversation.chatPhotoURL : conversation.chatThumbnailPhotoURL)
       self.updateConversationArrays(with: conversation)
     })
   }

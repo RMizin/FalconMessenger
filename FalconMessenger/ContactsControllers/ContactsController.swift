@@ -241,6 +241,10 @@ class ContactsController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+
+			searchBar?.resignFirstResponder()
+			searchContactsController?.searchBar.resignFirstResponder()
+
       if indexPath.section == 0 {
 				let realm = try! Realm()
 				guard let conversation = realm.objects(Conversation.self).filter("chatID == %@", currentUserID).first else {
