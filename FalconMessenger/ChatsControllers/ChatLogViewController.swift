@@ -11,6 +11,7 @@ import Firebase
 import Photos
 import AudioToolbox
 import CropViewController
+import FTPopOverMenu_Swift
 import SafariServices
 import RealmSwift
 
@@ -264,7 +265,7 @@ class ChatLogViewController: UIViewController {
 
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
     if self.navigationController?.visibleViewController is UserInfoTableViewController ||
-      self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
+      self.navigationController?.visibleViewController is GroupAdminPanelTableViewController ||
       self.navigationController?.visibleViewController is OtherReportController ||
 			self.navigationController?.visibleViewController is SharedMediaController ||
       UIApplication.topViewController() is CropViewController ||
@@ -458,6 +459,17 @@ class ChatLogViewController: UIViewController {
     addBlockerView()
   }
 
+	func configureCellContextMenuView() {
+		let config = FTConfiguration.shared
+		config.backgoundTintColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0)
+		config.borderColor = UIColor(red: 80/255, green: 80/255, blue: 80/255, alpha: 0.0)
+		config.menuWidth = 100
+		config.menuSeparatorColor = .clear
+		config.menuRowHeight = 40
+		config.cornerRadius = 25
+	}
+
+
   fileprivate let blocker = ViewBlockerContainer()
 
   fileprivate func addBlockerView() {
@@ -551,7 +563,7 @@ class ChatLogViewController: UIViewController {
     inputContainerView.resignAllResponders()
 
     if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
-      let destination = GroupAdminControlsTableViewController()
+      let destination = GroupAdminPanelTableViewController()
       destination.chatID = conversation?.chatID ?? ""
       if conversation?.admin != Auth.auth().currentUser?.uid {
         destination.adminControls = destination.defaultAdminControlls
@@ -730,7 +742,7 @@ class ChatLogViewController: UIViewController {
       guard uid != senderID,
         (self.navigationController?.visibleViewController is UserInfoTableViewController ||
           self.navigationController?.visibleViewController is ChatLogViewController ||
-          self.navigationController?.visibleViewController is GroupAdminControlsTableViewController ||
+          self.navigationController?.visibleViewController is GroupAdminPanelTableViewController ||
           self.navigationController?.visibleViewController is OtherReportController ||
 					self.navigationController?.visibleViewController is SharedMediaController ||
           UIApplication.topViewController() is CropViewController ||

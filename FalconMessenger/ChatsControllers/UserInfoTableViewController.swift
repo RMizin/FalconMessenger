@@ -90,7 +90,7 @@ class UserInfoTableViewController: UITableViewController {
     tableView.separatorStyle = .none
     tableView.register(UserinfoHeaderTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
     tableView.register(UserInfoPhoneNumberTableViewCell.self, forCellReuseIdentifier: phoneNumberCellIdentifier)
-    tableView.register(GroupAdminControlsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
+    tableView.register(GroupAdminPanelTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
   }
   
   fileprivate func getUserInfo() {
@@ -219,13 +219,12 @@ class UserInfoTableViewController: UITableViewController {
       return phoneNumberCell
     } else {
       let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID,
-                                               for: indexPath) as? GroupAdminControlsTableViewCell ?? GroupAdminControlsTableViewCell()
-
-
+                                               for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
       cell.selectionStyle = .none
-      cell.title.text = adminControls[indexPath.row]
-			cell.title.textColor = cell.title.text == adminControls.last ? FalconPalette.dismissRed : view.tintColor
-    
+			cell.button.setTitle(adminControls[indexPath.row], for: .normal)
+			cell.button.setTitleColor(cell.button.title(for: .normal) == adminControls.last ? FalconPalette.dismissRed : view.tintColor, for: .normal)
+			cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
+
       return cell
     }
   }
@@ -242,17 +241,21 @@ class UserInfoTableViewController: UITableViewController {
     mutableAttributedString.append(bodyAttributedString)
     return mutableAttributedString
   }
-  
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-    if indexPath.section == 1 {
-			if indexPath.row == 0 {
-				let destination = SharedMediaController(collectionViewLayout: UICollectionViewFlowLayout())
-				destination.fetchingData = (userID: Auth.auth().currentUser!.uid, chatID: conversationID)
-				navigationController?.pushViewController(destination, animated: true)
-			} else {
-				delegate?.blockUser(with: conversationID)
-			}
-    }
-  }
+
+	@objc fileprivate func controlButtonClicked(_ sender: UIButton) {
+		guard let superview = sender.superview, let currentUserID = Auth.auth().currentUser?.uid else { return }
+		let point = tableView.convert(sender.center, from: superview)
+		guard let indexPath = tableView.indexPathForRow(at: point),
+		indexPath.section == 1 else {
+				return
+		}
+
+		if indexPath.row == 0 {
+			let destination = SharedMediaController(collectionViewLayout: UICollectionViewFlowLayout())
+			destination.fetchingData = (userID: currentUserID, chatID: conversationID)
+			navigationController?.pushViewController(destination, animated: true)
+		} else {
+			delegate?.blockUser(with: conversationID)
+		}
+	}
 }

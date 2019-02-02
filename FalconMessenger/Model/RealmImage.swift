@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class RealmUIImage: Object {
+class RealmImage: Object {
 
 	@objc dynamic var messageUID: String?
 	@objc dynamic var image: Data?

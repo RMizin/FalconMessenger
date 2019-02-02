@@ -11,7 +11,7 @@ import SDWebImage
 import Firebase
 
 
-class GroupAdminControlsTableViewController: UITableViewController {
+class GroupAdminPanelTableViewController: UITableViewController {
   
   fileprivate let membersCellID = "membersCellID"
   fileprivate let adminControlsCellID = "adminControlsCellID"
@@ -126,7 +126,7 @@ class GroupAdminControlsTableViewController: UITableViewController {
     tableView.sectionIndexBackgroundColor = view.backgroundColor
     tableView.backgroundColor = view.backgroundColor
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: membersCellID)
-    tableView.register(GroupAdminControlsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
+    tableView.register(GroupAdminPanelTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
     tableView.separatorStyle = .none
     tableView.allowsSelection = true
   }
@@ -344,32 +344,35 @@ class GroupAdminControlsTableViewController: UITableViewController {
       reference.removeValue()
     }
   }
-  
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-    if indexPath.section == 0 {
-      if adminControls == defaultAdminControlls {
-				if indexPath.row == 0 {
-					openSharedMedia()
-				} else {
-					groupLeaveAlert()
-				}
+	@objc fileprivate func controlButtonClicked(_ sender: UIButton) {
+		guard let superview = sender.superview else { return }
 
-      } else {
-				if indexPath.row == 0 {
-					openSharedMedia()
-				} else if indexPath.row == 1 {
-          addMembers()
-        } else if indexPath.row == 2 {
-          self.changeAdministrator(shouldLeaveTheGroup: false)
-        } else {
-          groupLeaveAlert()
-        }
-      }
-    }
+		let point = tableView.convert(sender.center, from: superview)
+		guard let indexPath = tableView.indexPathForRow(at: point),
+			indexPath.section == 0 else {
+				return
+		}
 
-    tableView.deselectRow(at: indexPath, animated: true)
-  }
+		if adminControls == defaultAdminControlls {
+			if indexPath.row == 0 {
+				openSharedMedia()
+			} else {
+				groupLeaveAlert()
+			}
+
+		} else {
+			if indexPath.row == 0 {
+				openSharedMedia()
+			} else if indexPath.row == 1 {
+				addMembers()
+			} else if indexPath.row == 2 {
+				self.changeAdministrator(shouldLeaveTheGroup: false)
+			} else {
+				groupLeaveAlert()
+			}
+		}
+	}
 
 	fileprivate func openSharedMedia() {
 		let destination = SharedMediaController(collectionViewLayout: UICollectionViewFlowLayout())
@@ -464,14 +467,15 @@ class GroupAdminControlsTableViewController: UITableViewController {
  
     if indexPath.section == 0 {
       let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID,
-                                               for: indexPath) as? GroupAdminControlsTableViewCell ?? GroupAdminControlsTableViewCell()
+                                               for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
       cell.selectionStyle = .none
-      cell.title.text = adminControls[indexPath.row]
-
-      if cell.title.text == adminControls.last {
-        cell.title.textColor = FalconPalette.dismissRed
+			cell.button.setTitle(adminControls[indexPath.row], for: .normal)
+			cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
+			
+      if cell.button.title(for: .normal) == adminControls.last {
+				cell.button.setTitleColor(FalconPalette.dismissRed, for: .normal)
       } else {
-        cell.title.textColor = view.tintColor
+				cell.button.setTitleColor(view.tintColor, for: .normal)
       }
       return cell
     

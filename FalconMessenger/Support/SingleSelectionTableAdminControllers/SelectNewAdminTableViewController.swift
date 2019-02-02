@@ -15,7 +15,7 @@ class SelectNewAdminTableViewController: UITableViewController {
   
   let falconUsersCellID = "falconUsersCellID"
   
-  weak var adminControlsController: GroupAdminControlsTableViewController?
+  weak var adminControlsController: GroupAdminPanelTableViewController?
   
   var filteredUsers = [User]()
 

@@ -131,11 +131,11 @@ extension ChatLogPresenter: MessagesDelegate {
 				}
 				
 				if message.thumbnailImage == nil {
-					message.thumbnailImage = realm.object(ofType: RealmUIImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
+					message.thumbnailImage = realm.object(ofType: RealmImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
 				}
 
 				if message.localImage == nil {
-					message.localImage = realm.object(ofType: RealmUIImage.self, forPrimaryKey: message.messageUID ?? "")
+					message.localImage = realm.object(ofType: RealmImage.self, forPrimaryKey: message.messageUID ?? "")
 				}
 
 				realm.create(Message.self, value: message, update: true)

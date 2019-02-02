@@ -45,11 +45,11 @@ class Message: Object {
 
     @objc dynamic var imageUrl: String?
 	 	@objc dynamic var thumbnailImageUrl: String?
-	 	@objc dynamic var thumbnailImage: RealmUIImage?
+	 	@objc dynamic var thumbnailImage: RealmImage?
     let imageHeight = RealmOptional<Double>()
     let imageWidth = RealmOptional<Double>()
 
-		@objc dynamic var localImage: RealmUIImage?
+		@objc dynamic var localImage: RealmImage?
     @objc dynamic var localVideoUrl: String?
 		@objc dynamic var localVideoIdentifier: String?
     @objc dynamic var voiceData: Data?
@@ -101,10 +101,10 @@ class Message: Object {
         videoUrl = dictionary["videoUrl"] as? String
 
 				if let image = dictionary["localImage"] as? UIImage {
-					localImage = RealmUIImage(image: image, quality: 0.5, messageUID: dictionary["messageUID"] as? String ?? "")
+					localImage = RealmImage(image: image, quality: 0.5, messageUID: dictionary["messageUID"] as? String ?? "")
 				}
 
-				if let thumbnail = realm?.object(ofType: RealmUIImage.self, forPrimaryKey: (dictionary["messageUID"] as? String ?? "") + "thumbnail") {
+				if let thumbnail = realm?.object(ofType: RealmImage.self, forPrimaryKey: (dictionary["messageUID"] as? String ?? "") + "thumbnail") {
 					thumbnailImage = thumbnail
 				}
 

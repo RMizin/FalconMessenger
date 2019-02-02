@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import UserNotifications
 import RealmSwift
+import FirebaseAnalytics
 
 func setUserNotificationToken(token: String) {
   guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -20,6 +21,7 @@ func setUserNotificationToken(token: String) {
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
+
   var window: UIWindow?
   var tabBarController: GeneralTabBarController?
 	fileprivate let snapshotLockerView = SnapshotLockerView()
@@ -27,7 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
   
     ThemeManager.applyTheme(theme: ThemeManager.currentTheme())
-    
+
+		FirebaseConfiguration.shared.setLoggerLevel(.min)
     FirebaseApp.configure()
 		Database.database().isPersistenceEnabled = true
   

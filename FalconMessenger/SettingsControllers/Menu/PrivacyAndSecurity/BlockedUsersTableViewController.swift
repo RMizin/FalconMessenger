@@ -67,7 +67,7 @@ class BlockedUsersTableViewController: UITableViewController {
     tableView.sectionIndexBackgroundColor = view.backgroundColor
     tableView.backgroundColor = view.backgroundColor
     tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
-    tableView.register(GroupAdminControlsTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
+    tableView.register(GroupAdminPanelTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
     tableView.separatorStyle = .none
     navigationItem.rightBarButtonItem = editButtonItem
   }
@@ -128,10 +128,11 @@ class BlockedUsersTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     if indexPath.section == 0 {
       let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID,
-                                               for: indexPath) as? GroupAdminControlsTableViewCell ?? GroupAdminControlsTableViewCell()
+                                               for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
       cell.selectionStyle = .none
-      cell.title.text = adminControls[indexPath.row]
-      cell.title.textColor = view.tintColor
+			cell.button.setTitleColor(view.tintColor, for: .normal)
+			cell.button.setTitle(adminControls[indexPath.row], for: .normal)
+			cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
       
       return cell
     } else {
@@ -142,15 +143,18 @@ class BlockedUsersTableViewController: UITableViewController {
       return cell
     }
   }
-  
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    if indexPath.section == 0 {
-      newChat()
-		} else {
-			tableView.deselectRow(at: indexPath, animated: true)
+
+	@objc fileprivate func controlButtonClicked(_ sender: UIButton) {
+		guard let superview = sender.superview else { return }
+		let point = tableView.convert(sender.center, from: superview)
+		guard let indexPath = tableView.indexPathForRow(at: point),
+			indexPath.section == 0 else {
+				return
 		}
-  }
-  
+		newChat()
+	}
+
+
   @objc fileprivate func newChat() {
     let destination = BlockUserTableViewController()
     destination.hidesBottomBarWhenPushed = true

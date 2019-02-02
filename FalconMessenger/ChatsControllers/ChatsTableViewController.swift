@@ -151,7 +151,6 @@ class ChatsTableViewController: UITableViewController {
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
-					print(deletions.count, insertions.count, modifications.count)
 					self.tableView.beginUpdates()
 					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 1), with: .none)
 					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 1), with: .automatic)

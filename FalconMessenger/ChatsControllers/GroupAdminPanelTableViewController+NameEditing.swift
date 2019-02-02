@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-extension GroupAdminControlsTableViewController: UITextFieldDelegate { /* user name editing */
+extension GroupAdminPanelTableViewController: UITextFieldDelegate { /* user name editing */
 
   func setEditingBarButtons() {
     navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel",

@@ -652,21 +652,21 @@ extension UIScrollView {
 func prefetchThumbnail(from urlString: String?) {
 	if let thumbnail = urlString, let url = URL(string: thumbnail) {
 		SDWebImagePrefetcher.shared.prefetchURLs([url], progress: nil) { (finished, skipped) in
-			print("finished", finished, "skipped", skipped)
+//			print("finished", finished, "skipped", skipped)
 		}
 	}
 }
 
 func prefetchThumbnail(from urls: [URL]?) {
 	SDWebImagePrefetcher.shared.prefetchURLs(urls, progress: nil) { (finished, skipped) in
-		print("finished", finished, "skipped", skipped)
+//		print("finished", finished, "skipped", skipped)
 	}
 }
 
 func prefetchThumbnail(from urlStrings: [String]) {
 	let urls = urlStrings.compactMap({ URL(string: $0) })
 	SDWebImagePrefetcher.shared.prefetchURLs(urls, progress: nil) { (finished, skipped) in
-		print("finished", finished, "skipped", skipped)
+//		print("finished", finished, "skipped", skipped)
 	}
 }
 

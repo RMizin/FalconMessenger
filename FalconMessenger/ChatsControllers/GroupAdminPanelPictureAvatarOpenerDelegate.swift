@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-extension GroupAdminControlsTableViewController: AvatarOpenerDelegate {
+extension GroupAdminPanelTableViewController: AvatarOpenerDelegate {
   func avatarOpener(avatarPickerDidPick image: UIImage) {
 		navigationController?.view.isUserInteractionEnabled = false
     groupProfileTableHeaderContainer.profileImageView.showActivityIndicator()
@@ -41,7 +41,7 @@ extension GroupAdminControlsTableViewController: AvatarOpenerDelegate {
   }
 }
 
-extension GroupAdminControlsTableViewController { // delete
+extension GroupAdminPanelTableViewController { // delete
   
   typealias CurrentPictureDeletionCompletionHandler = (_ success: Bool) -> Void
   func deleteCurrentPhoto(completion: @escaping CurrentPictureDeletionCompletionHandler) {
@@ -60,7 +60,7 @@ extension GroupAdminControlsTableViewController { // delete
   }
 }
 
-extension GroupAdminControlsTableViewController { // update
+extension GroupAdminPanelTableViewController { // update
   
   typealias UpdateUserProfileCompletionHandler = (_ success: Bool) -> Void
   func updateUserProfile(with image: UIImage, completion: @escaping UpdateUserProfileCompletionHandler) {

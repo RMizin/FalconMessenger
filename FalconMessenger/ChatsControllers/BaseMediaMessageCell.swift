@@ -177,11 +177,11 @@ class BaseMediaMessageCell: BaseMessageCell {
 		guard let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
 		let realm = try! Realm()
 		try! realm.safeWrite {
-			let thumbnailObject = realm.object(ofType: RealmUIImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
+			let thumbnailObject = realm.object(ofType: RealmImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
 			let messageObject = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")
 
 			if thumbnailObject == nil {
-				let thumbnail = RealmUIImage(image: messageImageView.image ?? blurEffect(image: UIImage(named: "blurPlaceholder")!),
+				let thumbnail = RealmImage(image: messageImageView.image ?? blurEffect(image: UIImage(named: "blurPlaceholder")!),
 																		 quality: 1.0,
 																		 messageUID: (message.messageUID ?? "") + "thumbnail")
 				messageObject?.thumbnailImage = thumbnail
