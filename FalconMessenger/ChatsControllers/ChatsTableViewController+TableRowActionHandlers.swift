@@ -24,23 +24,28 @@ extension ChatsTableViewController {
           self.tableView.setEditing(false, animated: true)
         }
         self.delayWithSeconds(1, completion: {
-          self.handleMuteConversation(section: indexPath.section, for: self.realmPinnedConversations[indexPath.row])
+					guard let realmPinnedConversations = self.realmPinnedConversations else { return }
+          self.handleMuteConversation(section: indexPath.section, for: realmPinnedConversations[indexPath.row])
         })
       } else if indexPath.section == 1 {
         if #available(iOS 11.0, *) {} else {
           self.tableView.setEditing(false, animated: true)
         }
         self.delayWithSeconds(1, completion: {
-          self.handleMuteConversation(section: indexPath.section, for: self.realmUnpinnedConversations[indexPath.row])
+					guard let realmUnpinnedConversations = self.realmUnpinnedConversations else { return }
+          self.handleMuteConversation(section: indexPath.section, for: realmUnpinnedConversations[indexPath.row])
         })
       }
     }
     
     if indexPath.section == 0 {
+			guard let realmPinnedConversations = self.realmPinnedConversations else { return mute }
+
       let isPinnedConversationMuted = realmPinnedConversations[indexPath.row].muted.value == true
       let muteTitle = isPinnedConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
     } else if indexPath.section == 1 {
+			guard let realmUnpinnedConversations = realmUnpinnedConversations else { return mute }
       let isConversationMuted = realmUnpinnedConversations[indexPath.row].muted.value == true
       let muteTitle = isConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
@@ -76,6 +81,9 @@ extension ChatsTableViewController {
   }
 
   func unpinConversation(at indexPath: IndexPath) {
+		guard let realmPinnedConversations = realmPinnedConversations else { return }
+		guard let realmUnpinnedConversations = realmUnpinnedConversations else { return }
+
     let conversation = realmPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
 
@@ -107,6 +115,8 @@ extension ChatsTableViewController {
   }
 
   func pinConversation(at indexPath: IndexPath) {
+		guard let realmPinnedConversations = realmPinnedConversations else { return }
+		guard let realmUnpinnedConversations = realmUnpinnedConversations else { return }
     let conversation = realmUnpinnedConversations[indexPath.row]
    	guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
 
@@ -153,6 +163,9 @@ extension ChatsTableViewController {
       return
     }
 
+		guard let realmPinnedConversations = realmPinnedConversations else { return }
+		guard let realmUnpinnedConversations = realmUnpinnedConversations else { return }
+		
     let conversation = indexPath.section == 0 ? realmPinnedConversations[indexPath.row] : realmUnpinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
 
@@ -164,13 +177,15 @@ extension ChatsTableViewController {
 			realmManager.realm.delete(messagesResult)
 			realmManager.realm.delete(result)
 			try! realmManager.realm.commitWrite()
+			if realmPinnedConversations.count == 0 && realmUnpinnedConversations.count == 0 {
+				conversationsFetcher.cleanFetcherConversations()
+			}
 		}
-
 
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).child(messageMetaDataFirebaseFolder).removeAllObservers()
     Database.database().reference().child("user-messages").child(currentUserID).child(conversationID).removeValue()
     configureTabBarBadge()
-    if realmAllConversations.count <= 0 {
+    if let realmAllConversations = realmAllConversations, realmAllConversations.count <= 0 {
       checkIfThereAnyActiveChats(isEmpty: true)
     }
   }

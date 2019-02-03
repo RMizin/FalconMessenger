@@ -64,7 +64,6 @@
 		4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */; };
 		4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */; };
 		4B67E22F21B52143005EB981 /* SnapshotLockerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B67E22E21B52143005EB981 /* SnapshotLockerView.swift */; };
-		4B6BAF8C20886B3900A90F3A /* notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B6BAF8920886B3800A90F3A /* notification.caf */; };
 		4B6BAF8D20886B3900A90F3A /* sent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B6BAF8A20886B3800A90F3A /* sent.caf */; };
 		4B6BAFE420886C5F00A90F3A /* ParticipantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9020886C5D00A90F3A /* ParticipantTableViewCell.swift */; };
 		4B6BAFE520886C5F00A90F3A /* SelectParticipantsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9120886C5D00A90F3A /* SelectParticipantsTableView.swift */; };
@@ -135,6 +134,7 @@
 		4B80BE26212EF02200A32E01 /* AttachCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE25212EF02200A32E01 /* AttachCollectionViewLayout.swift */; };
 		4B80BE372130217100A32E01 /* ChatLogViewControllerTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */; };
 		4B82D10222007FD100C13761 /* INSVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */; };
+		4B8482A92205EE540018397A /* notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8482A82205ECE30018397A /* notification.caf */; };
 		4B86C0C620513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B86C0C520513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift */; };
 		4B88F2DA206386BA00BED797 /* GroupAdminPanelTableViewController+NameEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B88F2D9206386BA00BED797 /* GroupAdminPanelTableViewController+NameEditing.swift */; };
 		4B8CA13D2153C6EC009F8AA3 /* ChatLogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA13C2153C6EC009F8AA3 /* ChatLogPresenter.swift */; };
@@ -318,7 +318,6 @@
 		4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserinfoHeaderTableViewCell.swift; path = ChatsControllers/UserinfoHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UserInfoTableViewController+handlers.swift"; path = "ChatsControllers/UserInfoTableViewController+handlers.swift"; sourceTree = "<group>"; };
 		4B67E22E21B52143005EB981 /* SnapshotLockerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLockerView.swift; sourceTree = "<group>"; };
-		4B6BAF8920886B3800A90F3A /* notification.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notification.caf; sourceTree = "<group>"; };
 		4B6BAF8A20886B3800A90F3A /* sent.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sent.caf; sourceTree = "<group>"; };
 		4B6BAF9020886C5D00A90F3A /* ParticipantTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantTableViewCell.swift; sourceTree = "<group>"; };
 		4B6BAF9120886C5D00A90F3A /* SelectParticipantsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectParticipantsTableView.swift; sourceTree = "<group>"; };
@@ -390,6 +389,7 @@
 		4B80BE25212EF02200A32E01 /* AttachCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AttachCollectionViewLayout.swift; path = ChatsControllers/AttachCollectionViewLayout.swift; sourceTree = "<group>"; };
 		4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogViewControllerTitleView.swift; path = ChatsControllers/ChatLogViewControllerTitleView.swift; sourceTree = "<group>"; };
 		4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INSVideoPlayerViewController.swift; sourceTree = "<group>"; };
+		4B8482A82205ECE30018397A /* notification.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notification.caf; sourceTree = "<group>"; };
 		4B86C0C520513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SelectChatTableViewController+SearchHandlers.swift"; path = "ChatsControllers/NewChatControllers/SelectChatTableViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
 		4B88F2D9206386BA00BED797 /* GroupAdminPanelTableViewController+NameEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "GroupAdminPanelTableViewController+NameEditing.swift"; path = "ChatsControllers/GroupAdminPanelTableViewController+NameEditing.swift"; sourceTree = "<group>"; };
 		4B8CA13C2153C6EC009F8AA3 /* ChatLogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogPresenter.swift; path = ChatsControllers/ChatLogPresenter.swift; sourceTree = "<group>"; };
@@ -766,7 +766,7 @@
 		4B6BAF8820886B3800A90F3A /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				4B6BAF8920886B3800A90F3A /* notification.caf */,
+				4B8482A82205ECE30018397A /* notification.caf */,
 				4B6BAF8A20886B3800A90F3A /* sent.caf */,
 			);
 			path = Sounds;
@@ -1710,12 +1710,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B8482A92205EE540018397A /* notification.caf in Resources */,
 				4B6BAF8D20886B3900A90F3A /* sent.caf in Resources */,
 				4BBF795C2134375800903F56 /* LaunchScreen.storyboard in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
 				4B6BAFFC20886C5F00A90F3A /* CallingCodes.plist in Resources */,
 				4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */,
-				4B6BAF8C20886B3900A90F3A /* notification.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

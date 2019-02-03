@@ -37,7 +37,10 @@ class ConversationsFetcher: NSObject {
   fileprivate var inAppNotificationsObserverHandler: DatabaseHandle!
   fileprivate var currentUserConversationsRemovingHandle = DatabaseHandle()
   fileprivate var currentUserConversationsAddingHandle = DatabaseHandle()
-  
+
+	func cleanFetcherConversations() {
+		conversations.removeAll()
+	}
   @objc public func removeAllObservers() {
     conversations.removeAll()
     isGroupAlreadyFinished = false

@@ -239,6 +239,13 @@ class ChatLogViewController: UIViewController {
     super.viewDidAppear(animated)
     configureProgressBar()
     unblockInputViewConstraints()
+
+		if let uid = Auth.auth().currentUser?.uid, let conversation = conversation, conversation.chatParticipantsIDs.contains(uid) {
+			if typingIndicatorHandle == nil  {
+				observeTypingIndicator()
+			}
+		}
+
     if savedContentOffset != nil {
       UIView.performWithoutAnimation {
         self.view.layoutIfNeeded()
@@ -652,7 +659,7 @@ class ChatLogViewController: UIViewController {
     }
   }
 
-  func observeTypingIndicator () {
+  func observeTypingIndicator() {
     guard let currentUserID = Auth.auth().currentUser?.uid,
       let conversationID = conversation?.chatID, currentUserID != conversationID else { return }
 
@@ -691,12 +698,11 @@ class ChatLogViewController: UIViewController {
 
   func handleTypingIndicatorAppearance(isEnabled: Bool) {
     if isEnabled {
-      guard collectionView.numberOfSections < groupedMessages.count + 1 else { return }
+			guard collectionView.numberOfSections == groupedMessages.count else { return }
+			self.typingIndicatorSection = ["TypingIndicator"]
       self.collectionView.performBatchUpdates ({
-        self.typingIndicatorSection = ["TypingIndicator"]
         print("inserting")
         self.collectionView.insertSections([groupedMessages.count])
-
       }, completion: { (isCompleted) in
         print(isCompleted)
         if self.isScrollViewAtTheBottom() {

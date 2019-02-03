@@ -19,7 +19,9 @@ class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
         let newContentSize = collectionViewContentSize
         let contentOffsetY = collectionView.contentOffset.y + (newContentSize.height - oldContentSize.height)
         let newOffset = CGPoint(x: collectionView.contentOffset.x, y: contentOffsetY)
-        collectionView.setContentOffset(newOffset, animated: false)
+				UIView.performWithoutAnimation {
+					collectionView.setContentOffset(newOffset, animated: false)
+				}
       }
       globalDataStorage.contentSizeWhenInsertingToTop = nil
       globalDataStorage.isInsertingCellsToTop = false

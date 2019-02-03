@@ -99,5 +99,4 @@ extension ChatLogViewController: CollectionDelegate {
 		}
 		NotificationCenter.default.post(name: .messageSent, object: nil)
 	}
-
 }

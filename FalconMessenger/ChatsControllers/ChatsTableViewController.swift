@@ -35,9 +35,9 @@ class ChatsTableViewController: UITableViewController {
 	var pinnedConversationsNotificationToken: NotificationToken?
 	var unpinnedConversationsNotificationToken: NotificationToken?
 
-	var realmPinnedConversations: Results<Conversation>!
-	var realmUnpinnedConversations: Results<Conversation>!
-	var realmAllConversations: Results<Conversation>!
+	var realmPinnedConversations: Results<Conversation>?
+	var realmUnpinnedConversations: Results<Conversation>?
+	var realmAllConversations: Results<Conversation>?
 
 
   override func viewDidLoad() {
@@ -62,6 +62,7 @@ class ChatsTableViewController: UITableViewController {
     super.viewWillAppear(animated)
     
     if !isAppLoaded {
+			tableView.isUserInteractionEnabled = true //hotfix
 			setupDataSource()
       managePresense()
       conversationsFetcher.fetchConversations()
@@ -98,6 +99,7 @@ class ChatsTableViewController: UITableViewController {
   }
   
   @objc public func cleanUpController() {
+		tableView.isUserInteractionEnabled = false //hotfix
 		notificationsManager.removeAllObservers()
 		conversationsFetcher.removeAllObservers()
 		realmManager.deleteAll()
@@ -126,12 +128,13 @@ class ChatsTableViewController: UITableViewController {
 	}
 
 	fileprivate func observeDataSourceChanges() {
-		pinnedConversationsNotificationToken = realmPinnedConversations.observe { (changes: RealmCollectionChange) in
+		pinnedConversationsNotificationToken = realmPinnedConversations?.observe { (changes: RealmCollectionChange) in
 			switch changes {
 			case .initial:
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
+						print("here")
 					self.tableView.beginUpdates()
 					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 0), with: .none)
 					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 0), with: .automatic)
@@ -144,13 +147,14 @@ class ChatsTableViewController: UITableViewController {
 			}
 		}
 
-		unpinnedConversationsNotificationToken = realmUnpinnedConversations.observe { (changes: RealmCollectionChange) in
+		unpinnedConversationsNotificationToken = realmUnpinnedConversations?.observe { (changes: RealmCollectionChange) in
 			switch changes {
 			case .initial:
 				UIView.performWithoutAnimation { self.tableView.reloadData() }
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
+					print("here 1")
 					self.tableView.beginUpdates()
 					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 1), with: .none)
 					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 1), with: .automatic)
@@ -240,8 +244,8 @@ class ChatsTableViewController: UITableViewController {
   func configureTabBarBadge() {
     guard let tabItems = tabBarController?.tabBar.items as NSArray? else { return }
     guard let tabItem = tabItems[Tabs.chats.rawValue] as? UITabBarItem else { return }
-
-		let badge = realmAllConversations.map({ (conversation) -> Int in
+		guard let realmAllConversations = realmAllConversations else { return }
+		let badge = realmAllConversations.compactMap({ (conversation) -> Int in
 			return conversation.badge.value ?? 0
 		}).reduce(0, +)
 
@@ -257,14 +261,16 @@ class ChatsTableViewController: UITableViewController {
 
 	@objc func handleReloadTable() {
 
-		realmPinnedConversations = realmPinnedConversations.sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
-		realmUnpinnedConversations = realmUnpinnedConversations.sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
+		realmPinnedConversations = realmPinnedConversations?.sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
+		realmUnpinnedConversations = realmUnpinnedConversations?.sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
+
+		guard let realmAllConversations = realmAllConversations else { return }
 
     if !isAppLoaded {
       UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: { (_) in
         self.initAllTabs()
-        
-				for conversation in self.realmAllConversations {
+
+				for conversation in realmAllConversations {
           guard let chatID = conversation.chatID else { return }
 
           if let isGroupChat = conversation.isGroupChat.value, isGroupChat {
@@ -277,7 +283,12 @@ class ChatsTableViewController: UITableViewController {
         }
      })
     } else {
-			tableView.reloadData()
+			DispatchQueue.main.async {
+				UIView.performWithoutAnimation {
+					self.tableView.reloadData()
+				}
+			}
+
     }
 		configureTabBarBadge()
 
@@ -298,6 +309,7 @@ class ChatsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		guard let realmPinnedConversations = realmPinnedConversations else { return "" }
     if section == 0 {
       if realmPinnedConversations.count == 0 {
         return ""
@@ -309,10 +321,11 @@ class ChatsTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		guard let realmPinnedConversations = realmPinnedConversations else { return 0 }
     if section == 0 {
       return 20
     } else {
-      if self.realmPinnedConversations.count == 0 {
+      if realmPinnedConversations.count == 0 {
         return 0
       }
       return 8
@@ -361,8 +374,10 @@ class ChatsTableViewController: UITableViewController {
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if section == 0 {
+			guard let realmPinnedConversations = realmPinnedConversations else { return 0 }
       return realmPinnedConversations.count
     } else {
+			guard let realmUnpinnedConversations = realmUnpinnedConversations else { return 0 }
       return realmUnpinnedConversations.count
     }
   }
@@ -371,8 +386,10 @@ class ChatsTableViewController: UITableViewController {
     let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as? UserCell ?? UserCell()
     
     if indexPath.section == 0 {
+			guard let realmPinnedConversations = realmPinnedConversations else { return cell }
       cell.configureCell(for: indexPath, conversations: realmPinnedConversations)
     } else {
+			guard let realmUnpinnedConversations = realmUnpinnedConversations else { return cell }
       cell.configureCell(for: indexPath, conversations: realmUnpinnedConversations)
     }
 
@@ -386,10 +403,11 @@ class ChatsTableViewController: UITableViewController {
 		searchChatsController?.searchBar.resignFirstResponder()
 
     if indexPath.section == 0 {
+			guard let realmPinnedConversations = realmPinnedConversations else { return }
       let pinnedConversation = realmPinnedConversations[indexPath.row]
       conversation = pinnedConversation
     } else {
-			print(indexPath.section, indexPath.row)
+			guard let realmUnpinnedConversations = realmUnpinnedConversations else { return }
       let unpinnedConversation = realmUnpinnedConversations[indexPath.row]
       conversation = unpinnedConversation
     }
@@ -400,7 +418,7 @@ class ChatsTableViewController: UITableViewController {
 
 extension ChatsTableViewController: DeleteAndExitDelegate {
   func deleteAndExit(from conversationID: String) {
-    
+		guard let realmPinnedConversations = realmPinnedConversations else { return }
     let pinnedIDs = realmPinnedConversations.map({$0.chatID ?? ""})
     let section = pinnedIDs.contains(conversationID) ? 0 : 1
     guard let row = conversationIndex(for: conversationID, at: section) else { return }
@@ -450,7 +468,11 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
 
   func conversations(update conversation: Conversation, reloadNeeded: Bool) {
 		realmManager.update(conversation: conversation)
-    notificationsManager.updateConversations(to: Array(realmAllConversations))
+
+		if let realmAllConversations = realmAllConversations {
+			notificationsManager.updateConversations(to: Array(realmAllConversations))
+		}
+
     navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .lowMedium)
   }
   

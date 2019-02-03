@@ -12,7 +12,9 @@ class ControlButton: UIButton {
 
 	override var isHighlighted: Bool {
 		didSet {
-			backgroundColor = isHighlighted ? UIColor.lightGray : ThemeManager.currentTheme().controlButtonsColor
+			UIView.animate(withDuration: 0.15) {
+				self.backgroundColor = self.isHighlighted ? ThemeManager.currentTheme().controlButtonHighlightingColor : ThemeManager.currentTheme().controlButtonsColor
+			}
 		}
 	}
 

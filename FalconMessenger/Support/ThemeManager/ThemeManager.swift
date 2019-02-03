@@ -142,6 +142,15 @@ enum Theme: Int {
       return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
     }
   }
+
+	var controlButtonHighlightingColor: UIColor {
+		switch self {
+		case .Default:
+			return  UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0) //F1F1F1
+		case .Dark:
+			return UIColor(red: 0.07, green: 0.07, blue: 0.07, alpha: 1.0) //191919
+		}
+	}
   
   var searchBarColor: UIColor {
     switch self {

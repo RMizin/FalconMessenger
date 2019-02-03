@@ -79,7 +79,6 @@ class ChatLogPresenter: NSObject {
 		chatLogController?.getMessages()
 		chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
 		if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
-			chatLogController?.observeTypingIndicator()
 			chatLogController?.configureTitleViewWithOnlineStatus()
 		}
 		chatLogController?.observeBlockChanges()
