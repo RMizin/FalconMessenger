@@ -86,7 +86,7 @@ Note before last step:<i> if you don't have cocoapods installed on your computer
 
 
 ## Compatibility
-Falcon Messenger is written in Swift 4 and requires iOS 10.0 or later.
+Falcon Messenger is written in Swift 4.2 and requires iOS 10.0 or later.
 
 
 ## License
