@@ -90,8 +90,5 @@ Note before last step:<i> if you don't have cocoapods installed on your computer
 ## Compatibility
 Falcon Messenger is written in Swift 4.2 and requires iOS 10.0 or later.
 
-
 ## License
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
-
-Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
+This project is licensed under the Apache 2.0 license - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
