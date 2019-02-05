@@ -8,15 +8,8 @@ Pigeon-project.xcworkspace/xcuserdata/romanmizin.xcuserdatad/UserInterfaceState.
 Pigeon-project.xcodeproj/project.xcworkspace/xcuserdata/romanmizin.xcuserdatad/UserInterfaceState.xcuserstate
 .swiftlint.yml
 
-
-# Xcode
-#
-# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
-
-## Build generated
 build/
 DerivedData/
-
 ## Various settings
 *.pbxuser
 !default.pbxuser
