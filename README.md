@@ -1,9 +1,9 @@
 
-<p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitle.png" />
+<p align="center"> 
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/Title.png" alt="App Store" /></a>	
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/TitleDesc.png" alt="App Store" /></a>	
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DOnAppStore.png" alt="App Store" /></a>
 </p> 
-
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://perfectradiousa.files.wordpress.com/2016/09/itunes-app-store-logo.png"  width="350" alt="App Store" /></a>
 
 ## Features
 
@@ -88,8 +88,5 @@ Note before last step:<i> if you don't have cocoapods installed on your computer
 ## Compatibility
 Falcon Messenger is written in Swift 4.2 and requires iOS 10.0 or later.
 
-
 ## License
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
-
-Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
+This project is licensed under the Apache 2.0 license - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
