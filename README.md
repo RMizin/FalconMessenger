@@ -1,9 +1,10 @@
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/gitTitle.png" />
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/Title.png" />
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/TitleDesc.png" />
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DOnAppStore.png" alt="App Store" /></a>
 </p> 
-
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://perfectradiousa.files.wordpress.com/2016/09/itunes-app-store-logo.png"  width="350" alt="App Store" /></a>
+<br>
 
 ## Features
 
