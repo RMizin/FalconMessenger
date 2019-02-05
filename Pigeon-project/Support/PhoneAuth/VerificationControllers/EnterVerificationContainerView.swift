@@ -42,7 +42,7 @@ class EnterVerificationContainerView: UIView {
     verificationCode.backgroundColor = .clear
     verificationCode.layer.cornerRadius = 25
     verificationCode.layer.borderWidth = 1
-    verificationCode.attributedPlaceholder = NSAttributedString(string: "Code", attributes: [NSAttributedStringKey.foregroundColor:
+		verificationCode.attributedPlaceholder = NSAttributedString(string: "Code", attributes: [NSAttributedString.Key.foregroundColor:
       ThemeManager.currentTheme().generalSubtitleColor])
     verificationCode.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
     

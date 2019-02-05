@@ -15,7 +15,9 @@ extension UserInfoTableViewController {
 
     let imageView = UIImageView()
     
-    let attributedCaptionSummary = NSMutableAttributedString(string: user?.name ?? "" + "\n", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
+	let attributedCaptionSummary = NSMutableAttributedString(string: user?.name ?? "" + "\n",
+																													 attributes: [NSAttributedString.Key.foregroundColor: UIColor.white,
+																																				NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)])
   
   imageView.sd_setImage(with: URL(string: user!.photoURL!)) { (image, _, _, _) in
       let photo = INSPhoto(image: image, thumbnailImage: nil, messageUID: nil)

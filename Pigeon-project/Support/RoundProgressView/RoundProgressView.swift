@@ -208,7 +208,7 @@ public class CircleProgress: UIView, CAAnimationDelegate {
     
     shapeLayer.strokeEnd = 1.0
     shapeLayer.strokeStart = strokeStart
-    let timeFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+		let timeFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
     
     let headStartAnimation = CABasicAnimation(keyPath: "strokeStart")
     headStartAnimation.fromValue = 0.0
@@ -284,13 +284,13 @@ public class CircleProgress: UIView, CAAnimationDelegate {
     shapeLayer.strokeColor = UIColor.gray.cgColor//strokeColor.cgColor
     shapeLayer.fillColor = nil
     shapeLayer.lineWidth = lineWidth
-    shapeLayer.lineCap = kCALineCapRound
-    shapeLayer.lineJoin = kCALineJoinRound
+		shapeLayer.lineCap = CAShapeLayerLineCap.round
+		shapeLayer.lineJoin = CAShapeLayerLineJoin.round
     shapeLayer.strokeStart = 0.0
     shapeLayer.strokeEnd = 0.0
     self.layer.addSublayer(shapeLayer)
     
-    NotificationCenter.default.addObserver(self, selector:#selector(resetAnimations), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+		NotificationCenter.default.addObserver(self, selector:#selector(resetAnimations), name: UIApplication.didBecomeActiveNotification, object: nil)
   }
   
   private func setProgressLayerPath() {

@@ -91,8 +91,8 @@ extension SelectCountryCodeController {
     let countryName = filteredCountries[indexPath.row]["name"]!
     let countryDial = " " + filteredCountries[indexPath.row]["dial_code"]!
     
-    let countryNameAttribute = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
-    let countryDialAttribute = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
+		let countryNameAttribute = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
+		let countryDialAttribute = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
     let countryNameAString = NSAttributedString(string: countryName, attributes: countryNameAttribute)
     let countryDialAString = NSAttributedString(string: countryDial, attributes: countryDialAttribute)
     

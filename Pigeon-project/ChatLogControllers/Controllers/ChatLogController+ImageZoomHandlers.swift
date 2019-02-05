@@ -11,30 +11,25 @@ import AVFoundation
 import AVKit
 import FirebaseAuth
 
-
 private var inputContainerViewWasFirstResponder = false
 
 extension ChatLogController {
 
   func performZoomInForVideo( url: URL) {
-  
     let player = AVPlayer(url: url)
     let inBubblePlayerViewController = AVPlayerViewController()
-  
     inBubblePlayerViewController.player = player
     inBubblePlayerViewController.modalTransitionStyle = .crossDissolve
     inBubblePlayerViewController.modalPresentationStyle = .overCurrentContext
     
-    if self.inputContainerView.inputTextView.isFirstResponder {
-      self.inputContainerView.inputTextView.resignFirstResponder()
+    if inputContainerView.inputTextView.isFirstResponder {
+      inputContainerView.inputTextView.resignFirstResponder()
     }
     present(inBubblePlayerViewController, animated: true, completion: nil)
   }
   
   func configurePhotoToolbarInfo(for messagesWithPhotos: [Message], at photoIndex: Int) -> NSMutableAttributedString? {
-    
     guard let uid = Auth.auth().currentUser?.uid, let chatPartnerName = conversation?.chatName  else { return nil }
-  
     var titleString = String()
   
     if let isGroupChat = conversation?.isGroupChat, isGroupChat, let senderName = messagesWithPhotos[photoIndex].senderName {
@@ -45,12 +40,13 @@ extension ChatLogController {
     
     let isChattingWithSelf = messagesWithPhotos[photoIndex].fromId == uid ?  true : false
     if isChattingWithSelf { titleString = "You\n" }
-    let titleAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)]
+		let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white,
+													 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
     let title = NSMutableAttributedString(string: titleString , attributes: titleAttributes)
-    let date = Date(timeIntervalSince1970:  messagesWithPhotos[photoIndex].timestamp!.doubleValue )
+    let date = Date(timeIntervalSince1970:  messagesWithPhotos[photoIndex].timestamp!.doubleValue)
     let timestamp = timeAgoSinceDate(date)
-    let summaryAttributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor,
-                      NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)]
+		let summaryAttributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor,
+														 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
     let attributedCaptionSummary = NSMutableAttributedString(string: timestamp, attributes: summaryAttributes)
     
     let combination = NSMutableAttributedString()
@@ -59,8 +55,7 @@ extension ChatLogController {
     return combination
   }
   
-  func openSelectedPhoto(at indexPath : IndexPath) {
-    
+  func openSelectedPhoto(at indexPath: IndexPath) {
     var photos: [INSPhotoViewable] = setupPhotosData()
     var initialPhotoIndex: Int!
     
@@ -115,7 +110,6 @@ extension ChatLogController {
   }
   
   func setupGalleryDismissHandler(galleryPreview: INSPhotosViewController) {
-    
     galleryPreview.didDismissHandler = { viewController in
       self.inputAccessoryView?.isHidden = false
     }

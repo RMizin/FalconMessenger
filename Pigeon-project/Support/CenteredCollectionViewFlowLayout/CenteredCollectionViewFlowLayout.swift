@@ -16,7 +16,7 @@ public extension UICollectionView {
 	///   - centeredCollectionViewFlowLayout: The `CenteredCollectionViewFlowLayout` for the `UICollectionView` to be configured with.
 	public convenience init(frame: CGRect = .zero, centeredCollectionViewFlowLayout: CenteredCollectionViewFlowLayout) {
 		self.init(frame: frame, collectionViewLayout: centeredCollectionViewFlowLayout)
-		decelerationRate = UIScrollViewDecelerationRateFast
+		decelerationRate = UIScrollView.DecelerationRate.fast
 	}
 }
 
@@ -24,7 +24,7 @@ public extension UICollectionView {
 open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 	
 	private var lastCollectionViewSize: CGSize = CGSize.zero
-	private var lastScrollDirection: UICollectionViewScrollDirection!
+	private var lastScrollDirection: UICollectionView.ScrollDirection!
   
   open override func shouldInvalidateLayout(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
     return true
@@ -104,11 +104,11 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 			
 			switch scrollDirection {
 			case .horizontal:
-				if fabs(attributes.center.x - proposedCenterOffset) < fabs(candidateAttributes!.center.x - proposedCenterOffset) {
+				if abs(attributes.center.x - proposedCenterOffset) < abs(candidateAttributes!.center.x - proposedCenterOffset) {
 					candidateAttributes = attributes
 				}
 			case .vertical:
-				if fabs(attributes.center.y - proposedCenterOffset) < fabs(candidateAttributes!.center.y - proposedCenterOffset) {
+				if abs(attributes.center.y - proposedCenterOffset) < abs(candidateAttributes!.center.y - proposedCenterOffset) {
 					candidateAttributes = attributes
 				}
 			}
@@ -178,11 +178,11 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 		case .horizontal:
 			pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.left
 			proposedContentOffset = CGPoint(x: pageOffset, y: 0)
-			shouldAnimate = fabs(collectionView.contentOffset.x - pageOffset) > 1 ? animated : false
+			shouldAnimate = abs(collectionView.contentOffset.x - pageOffset) > 1 ? animated : false
 		case .vertical:
 			pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.top
 			proposedContentOffset = CGPoint(x: 0, y: pageOffset)
-			shouldAnimate = fabs(collectionView.contentOffset.y - pageOffset) > 1 ? animated : false
+			shouldAnimate = abs(collectionView.contentOffset.y - pageOffset) > 1 ? animated : false
 		}
 		collectionView.setContentOffset(proposedContentOffset, animated: shouldAnimate)
 	}

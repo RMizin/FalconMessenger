@@ -16,10 +16,10 @@ class OutgoingTextMessageCell: BaseMessageCell {
     textView.backgroundColor = .clear
     textView.isEditable = false
     textView.isScrollEnabled = false
-    textView.textContainerInset = UIEdgeInsetsMake(10, 7, 10, 7)
+		textView.textContainerInset = UIEdgeInsets(top: 10, left: 7, bottom: 10, right: 7)
     textView.dataDetectorTypes = .all
     textView.textColor = .white
-    textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
+		textView.linkTextAttributes = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single]
 
     return textView
   }()

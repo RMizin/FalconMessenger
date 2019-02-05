@@ -14,16 +14,14 @@ class IncomingTextMessageCell: BaseMessageCell {
   let textView: FalconTextView = {
     let textView = FalconTextView()
     textView.font = UIFont.systemFont(ofSize: 13)
-    textView.backgroundColor = .clear
-    textView.isEditable = false
-    textView.isScrollEnabled = false
-    textView.textContainerInset = UIEdgeInsetsMake(incomingTextViewTopInset, incomingTextViewLeftInset, incomingTextViewBottomInset, incomingTextViewRightInset)
-    textView.dataDetectorTypes = .all
-    textView.textColor = .darkText
-    textView.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
-    
+		textView.textColor = .darkText
+		textView.textContainerInset = UIEdgeInsets(top: incomingTextViewTopInset,
+																							 left: incomingTextViewLeftInset,
+																							 bottom: incomingTextViewBottomInset,
+																							 right: incomingTextViewRightInset)
     return textView
   }()
+
   
   func setupData(message: Message, isGroupChat: Bool) {
     
@@ -70,6 +68,6 @@ class IncomingTextMessageCell: BaseMessageCell {
   override func prepareViewsForReuse() {
     bubbleView.image = grayBubbleImage
     nameLabel.text = ""
-    textView.textContainerInset = UIEdgeInsetsMake(10, 12, 10, 7)
+		textView.textContainerInset = UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 7)
   }
 }

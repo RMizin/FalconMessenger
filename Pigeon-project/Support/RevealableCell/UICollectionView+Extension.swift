@@ -97,7 +97,7 @@ extension UICollectionView: UIGestureRecognizerDelegate {
     open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let gesture = gestureRecognizer as? UIPanGestureRecognizer, gesture == revealPanGesture {
             let translation = gesture.translation(in: gesture.view);
-            return (fabs(translation.x) > fabs(translation.y)) && (gesture == revealPanGesture)
+					return (abs(translation.x) > abs(translation.y)) && (gesture == revealPanGesture)
         }
         
         return true

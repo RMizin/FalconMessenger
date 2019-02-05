@@ -85,7 +85,7 @@ class ChatLogController: UICollectionViewController {
     deleteAndExitDelegate?.deleteAndExit(from: chatID)
   }
   
-  func scrollToBottom(at position: UICollectionViewScrollPosition) {
+	func scrollToBottom(at position: UICollectionView.ScrollPosition) {
     if self.messages.count - 1 <= 0 {
       return
     }

@@ -15,7 +15,7 @@ class AuthPhoneNumberController: EnterPhoneNumberController {
     super.configurePhoneNumberContainerView()
     
     phoneNumberContainerView.instructions.text = "Please confirm your country code\nand enter your phone number."
-    let attributes = [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
+		let attributes = [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor]
     phoneNumberContainerView.phoneNumber.attributedPlaceholder = NSAttributedString(string: "Phone number", attributes: attributes)
   }
   

@@ -45,7 +45,7 @@ class EnterPhoneNumberContainerView: UIView {
     selectCountry.titleLabel?.sizeToFit()
     selectCountry.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
     selectCountry.layer.cornerRadius = 25
-    selectCountry.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0.0, 10.0)
+		selectCountry.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10.0, bottom: 0.0, right: 10.0)
     selectCountry.titleLabel?.font = UIFont.systemFont(ofSize: 18)
     selectCountry.addTarget(self, action: #selector(EnterPhoneNumberController.openCountryCodesList), for: .touchUpInside)
     

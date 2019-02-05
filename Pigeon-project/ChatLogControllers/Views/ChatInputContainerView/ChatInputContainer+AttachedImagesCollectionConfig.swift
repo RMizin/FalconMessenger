@@ -39,7 +39,7 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
     
     attachedImages.autoresizesSubviews = false
     
-    attachedImages.decelerationRate = UIScrollViewDecelerationRateFast
+		attachedImages.decelerationRate = UIScrollView.DecelerationRate.fast
   }
   
  @objc func removeButtonDidTap(sender: UIButton) {

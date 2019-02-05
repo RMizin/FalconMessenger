@@ -27,7 +27,7 @@ extension ChatLogController: CropViewControllerDelegate {
 
   func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
     guard selectedPhotoIndexPath != nil else { return }
-    self.inputContainerView.selectedMedia[selectedPhotoIndexPath.row].object = UIImageJPEGRepresentation(image, 1)
+    self.inputContainerView.selectedMedia[selectedPhotoIndexPath.row].object = image.jpegData(compressionQuality: 1)
     self.inputContainerView.attachedImages.reloadItems(at: [selectedPhotoIndexPath])
     dismissCropController(cropViewController: cropViewController)
   }

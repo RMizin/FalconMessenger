@@ -55,8 +55,8 @@ open class RevealableCollectionViewCell: UICollectionViewCell {
     let bottomConstraint = NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal,
                                               toItem: self, attribute: .bottom, multiplier: 1, constant: 0)
   
-    let viewAttribute: NSLayoutAttribute = direction == .left ? .left : .right
-    let parentAttribute: NSLayoutAttribute = direction == .left ? .right : .left
+		let viewAttribute: NSLayoutConstraint.Attribute = direction == .left ? .left : .right
+		let parentAttribute: NSLayoutConstraint.Attribute = direction == .left ? .right : .left
     let horizontalConstraint = NSLayoutConstraint(item: view, attribute: viewAttribute, relatedBy: .equal,
                                                   toItem: self, attribute: parentAttribute, multiplier: 1, constant: 0)
     self.horizontalConstraint = horizontalConstraint

@@ -15,8 +15,14 @@ class BaseMessageCell: RevealableCollectionViewCell {
   
   let grayBubbleImage = ThemeManager.currentTheme().incomingBubble
   let blueBubbleImage = ThemeManager.currentTheme().outgoingBubble
-  static let selectedOutgoingBubble = UIImage(named: "OutgoingSelected")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 14, 17, 28))
-  static let selectedIncomingBubble = UIImage(named: "IncomingSelected")!.resizableImage(withCapInsets: UIEdgeInsetsMake(14, 22, 17, 20))
+	static let selectedOutgoingBubble = UIImage(named: "OutgoingSelected")!.resizableImage(withCapInsets: UIEdgeInsets(top: 14,
+																																																										 left: 14,
+																																																										 bottom: 17,
+																																																										 right: 28))
+	static let selectedIncomingBubble = UIImage(named: "IncomingSelected")!.resizableImage(withCapInsets: UIEdgeInsets(top: 14,
+																																																										 left: 22,
+																																																										 bottom: 17,
+																																																										 right: 20))
   
   static let incomingTextViewTopInset: CGFloat = 10
   static let incomingTextViewBottomInset: CGFloat = 10

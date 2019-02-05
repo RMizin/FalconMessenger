@@ -153,7 +153,7 @@ class ChatInputContainerView: UIView {
     
     attachedImages = UICollectionView(centeredCollectionViewFlowLayout: centeredCollectionViewFlowLayout)
     backgroundColor = ThemeManager.currentTheme().barBackgroundColor
-    self.autoresizingMask = UIViewAutoresizing.flexibleHeight
+		self.autoresizingMask = UIView.AutoresizingMask.flexibleHeight
     
     addSubview(attachButton)
     addSubview(recordVoiceButton)
@@ -212,7 +212,7 @@ class ChatInputContainerView: UIView {
     super.didMoveToWindow()
     if #available(iOS 11.0, *) {
       if let window = window {
-        self.bottomAnchor.constraintLessThanOrEqualToSystemSpacingBelow(window.safeAreaLayoutGuide.bottomAnchor, multiplier: 1.0).isActive = true
+				self.bottomAnchor.constraint(lessThanOrEqualToSystemSpacingBelow: window.safeAreaLayoutGuide.bottomAnchor, multiplier: 1.0).isActive = true
       }
     }
   }

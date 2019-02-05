@@ -90,20 +90,20 @@ class CreateContactTableViewController: UITableViewController {
       if indexPath.row == 0 {
           cell.textField.keyboardType = .default
         cell.textField.attributedPlaceholder = NSAttributedString(string:"First name",
-                                                                  attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
+																																	attributes: [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
         cell.textField.text = contact?.givenName
        
       } else if indexPath.row == 1 {
           cell.textField.keyboardType = .default
         cell.textField.attributedPlaceholder = NSAttributedString(string: "Last name",
-                                                                  attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
+																																	attributes: [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
      
         cell.textField.text = contact?.familyName
         
       } else {
         cell.textField.keyboardType = .phonePad
         cell.textField.attributedPlaceholder = NSAttributedString(string:"Phone number",
-                                                                  attributes: [NSAttributedStringKey.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
+																																	attributes: [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
         
         cell.textField.text = contact?.phoneNumbers[0].value.stringValue
       }
