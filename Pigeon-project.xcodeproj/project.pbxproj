@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FAA5290B818B51BB8CD0A55 /* libPods-Pigeon-project.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2897810158A4718FAC892931 /* libPods-Pigeon-project.a */; };
 		4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */; };
@@ -128,16 +129,6 @@
 		4BAEE5BF212735E50045AB10 /* notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4BAEE564212735E50045AB10 /* notification.caf */; };
 		4BAEE5C0212735E50045AB10 /* sent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4BAEE565212735E50045AB10 /* sent.caf */; };
 		4BAEE5C1212735E50045AB10 /* FalconTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE567212735E50045AB10 /* FalconTextView.swift */; };
-		4BAEE5C2212735E50045AB10 /* ARSLineProgressHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE569212735E50045AB10 /* ARSLineProgressHelpers.swift */; };
-		4BAEE5C3212735E50045AB10 /* ARSLineProgressTypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE56A212735E50045AB10 /* ARSLineProgressTypeAliases.swift */; };
-		4BAEE5C4212735E50045AB10 /* ARSInfiniteLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE56B212735E50045AB10 /* ARSInfiniteLoader.swift */; };
-		4BAEE5C5212735E50045AB10 /* ARSLineProgressConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE56C212735E50045AB10 /* ARSLineProgressConstants.swift */; };
-		4BAEE5C6212735E50045AB10 /* ARSLineProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE56D212735E50045AB10 /* ARSLineProgress.swift */; };
-		4BAEE5C7212735E50045AB10 /* ARSLineProgressExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE56E212735E50045AB10 /* ARSLineProgressExtensions.swift */; };
-		4BAEE5C8212735E50045AB10 /* ARSLineProgressCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE56F212735E50045AB10 /* ARSLineProgressCustomization.swift */; };
-		4BAEE5C9212735E50045AB10 /* ARSStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE570212735E50045AB10 /* ARSStatus.swift */; };
-		4BAEE5CA212735E50045AB10 /* ARSProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE571212735E50045AB10 /* ARSProgressLoader.swift */; };
-		4BAEE5CB212735E50045AB10 /* ARSLineProgressProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE572212735E50045AB10 /* ARSLineProgressProtocols.swift */; };
 		4BAEE5CC212735E50045AB10 /* ParticipantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE575212735E50045AB10 /* ParticipantTableViewCell.swift */; };
 		4BAEE5CD212735E50045AB10 /* SelectParticipantsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE576212735E50045AB10 /* SelectParticipantsTableView.swift */; };
 		4BAEE5CE212735E50045AB10 /* SelectParticipantsViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE577212735E50045AB10 /* SelectParticipantsViewController+SearchHandlers.swift */; };
@@ -186,7 +177,6 @@
 		4BB46C6C2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */; };
 		4BE44DAA212B5CC600E722B8 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */; };
 		4BE9F1DD219B43B800C6768F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9F1DC219B43B800C6768F /* GoogleService-Info.plist */; };
-		518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -203,6 +193,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2897810158A4718FAC892931 /* libPods-Pigeon-project.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pigeon-project.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4F452B1F32230C00A6FF96 /* Pigeon-project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pigeon-project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -326,16 +317,6 @@
 		4BAEE564212735E50045AB10 /* notification.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notification.caf; sourceTree = "<group>"; };
 		4BAEE565212735E50045AB10 /* sent.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sent.caf; sourceTree = "<group>"; };
 		4BAEE567212735E50045AB10 /* FalconTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FalconTextView.swift; sourceTree = "<group>"; };
-		4BAEE569212735E50045AB10 /* ARSLineProgressHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressHelpers.swift; sourceTree = "<group>"; };
-		4BAEE56A212735E50045AB10 /* ARSLineProgressTypeAliases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressTypeAliases.swift; sourceTree = "<group>"; };
-		4BAEE56B212735E50045AB10 /* ARSInfiniteLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSInfiniteLoader.swift; sourceTree = "<group>"; };
-		4BAEE56C212735E50045AB10 /* ARSLineProgressConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressConstants.swift; sourceTree = "<group>"; };
-		4BAEE56D212735E50045AB10 /* ARSLineProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgress.swift; sourceTree = "<group>"; };
-		4BAEE56E212735E50045AB10 /* ARSLineProgressExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressExtensions.swift; sourceTree = "<group>"; };
-		4BAEE56F212735E50045AB10 /* ARSLineProgressCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressCustomization.swift; sourceTree = "<group>"; };
-		4BAEE570212735E50045AB10 /* ARSStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSStatus.swift; sourceTree = "<group>"; };
-		4BAEE571212735E50045AB10 /* ARSProgressLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSProgressLoader.swift; sourceTree = "<group>"; };
-		4BAEE572212735E50045AB10 /* ARSLineProgressProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressProtocols.swift; sourceTree = "<group>"; };
 		4BAEE575212735E50045AB10 /* ParticipantTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantTableViewCell.swift; sourceTree = "<group>"; };
 		4BAEE576212735E50045AB10 /* SelectParticipantsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectParticipantsTableView.swift; sourceTree = "<group>"; };
 		4BAEE577212735E50045AB10 /* SelectParticipantsViewController+SearchHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SelectParticipantsViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
@@ -388,7 +369,6 @@
 		4BE9F1DE219B457C00C6768F /* Pigeon-project.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pigeon-project.entitlements"; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
 		9B9CAF682523EA718F4C503C /* Pods-Pigeon-project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.debug.xcconfig"; sourceTree = "<group>"; };
-		A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pigeon_project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -396,7 +376,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				518012F3142C561CD883F45C /* Pods_Pigeon_project.framework in Frameworks */,
+				0FAA5290B818B51BB8CD0A55 /* libPods-Pigeon-project.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,7 +386,7 @@
 		2AF4427B37282913090A248D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A1013EB8FD33C6256426A4BF /* Pods_Pigeon_project.framework */,
+				2897810158A4718FAC892931 /* libPods-Pigeon-project.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -913,7 +893,6 @@
 				4BAEE563212735E50045AB10 /* AudioResources */,
 				4BAEE558212735E50045AB10 /* INSPhotoGallery */,
 				4BAEE566212735E50045AB10 /* FlaconTextView */,
-				4BAEE568212735E50045AB10 /* progressIndicator */,
 				4BAEE573212735E50045AB10 /* MultipleSelectionControllers */,
 				4BAEE57D212735E50045AB10 /* RoundProgressView */,
 				4BAEE57F212735E50045AB10 /* In-AppNotificationBanner */,
@@ -964,23 +943,6 @@
 				4BAEE567212735E50045AB10 /* FalconTextView.swift */,
 			);
 			path = FlaconTextView;
-			sourceTree = "<group>";
-		};
-		4BAEE568212735E50045AB10 /* progressIndicator */ = {
-			isa = PBXGroup;
-			children = (
-				4BAEE569212735E50045AB10 /* ARSLineProgressHelpers.swift */,
-				4BAEE56A212735E50045AB10 /* ARSLineProgressTypeAliases.swift */,
-				4BAEE56B212735E50045AB10 /* ARSInfiniteLoader.swift */,
-				4BAEE56C212735E50045AB10 /* ARSLineProgressConstants.swift */,
-				4BAEE56D212735E50045AB10 /* ARSLineProgress.swift */,
-				4BAEE56E212735E50045AB10 /* ARSLineProgressExtensions.swift */,
-				4BAEE56F212735E50045AB10 /* ARSLineProgressCustomization.swift */,
-				4BAEE570212735E50045AB10 /* ARSStatus.swift */,
-				4BAEE571212735E50045AB10 /* ARSProgressLoader.swift */,
-				4BAEE572212735E50045AB10 /* ARSLineProgressProtocols.swift */,
-			);
-			path = progressIndicator;
 			sourceTree = "<group>";
 		};
 		4BAEE573212735E50045AB10 /* MultipleSelectionControllers */ = {
@@ -1223,7 +1185,7 @@
 				4B4F45281F32230C00A6FF96 /* Frameworks */,
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
-				AED3F67074E3E6AFFB950ABD /* [CP] Embed Pods Frameworks */,
+				F12AFB3F9F7ACA543353B20B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1317,38 +1279,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AED3F67074E3E6AFFB950ABD /* [CP] Embed Pods Frameworks */ = {
+		F12AFB3F9F7ACA543353B20B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CropViewController/CropViewController.framework",
-				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
-				"${BUILT_PRODUCTS_DIR}/FTPopOverMenu_Swift/FTPopOverMenu_Swift.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			inputFileListPaths = (
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/CropViewController/TOCropViewControllerBundle.bundle",
+				"${PODS_ROOT}/PhoneNumberKit/PhoneNumberKit/Resources/PhoneNumberMetadata.json",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CropViewController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FTPopOverMenu_Swift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TOCropViewControllerBundle.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PhoneNumberMetadata.json",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1369,9 +1321,7 @@
 				4BAEE4F421272D890045AB10 /* SelectGroupMembersController.swift in Sources */,
 				4BAEE54D212735880045AB10 /* Conversation.swift in Sources */,
 				4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */,
-				4BAEE5C5212735E50045AB10 /* ARSLineProgressConstants.swift in Sources */,
 				4BAEE46E21272B380045AB10 /* Biometrics.swift in Sources */,
-				4BAEE5CA212735E50045AB10 /* ARSProgressLoader.swift in Sources */,
 				4BAEE4F221272D890045AB10 /* SelectChatTableViewController.swift in Sources */,
 				4BAEE50521272D890045AB10 /* MediaPicerControllerNew+ImagePicker.swift in Sources */,
 				4BAEE50821272D890045AB10 /* UserCell.swift in Sources */,
@@ -1379,8 +1329,6 @@
 				4BAEE5B5212735E50045AB10 /* INSPhotosDataSource.swift in Sources */,
 				4BAEE4FA21272D890045AB10 /* ChatLogController+MediaPickerHandlers.swift in Sources */,
 				4BAEE50621272D890045AB10 /* SelectedMediaCollectionCell.swift in Sources */,
-				4BAEE5C2212735E50045AB10 /* ARSLineProgressHelpers.swift in Sources */,
-				4BAEE5C6212735E50045AB10 /* ARSLineProgress.swift in Sources */,
 				4BAEE50121272D890045AB10 /* OutgoingPhotoMessageCell.swift in Sources */,
 				4BAEE50F21272D890045AB10 /* PlayerCellView.swift in Sources */,
 				4BB46C6C2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift in Sources */,
@@ -1391,7 +1339,6 @@
 				4BAEE5EF212735E50045AB10 /* RevealableCollectionViewCell.swift in Sources */,
 				4BAEE4F621272D890045AB10 /* GroupPictureAvatarOpenerDelegate.swift in Sources */,
 				4BAEE4FB21272D890045AB10 /* InputBlockerContainerView.swift in Sources */,
-				4BAEE5C9212735E50045AB10 /* ARSStatus.swift in Sources */,
 				4BAEE4F321272D890045AB10 /* GroupProfileTableHeaderContainer.swift in Sources */,
 				4BAEE46421272B380045AB10 /* AccountSettingsTableViewCell.swift in Sources */,
 				4BAEE49721272C5E0045AB10 /* FalconUsersFetcher.swift in Sources */,
@@ -1405,7 +1352,6 @@
 				4BA1E77A215250F900391BCB /* StorageMediaUploader.swift in Sources */,
 				4BAEE48721272C4F0045AB10 /* OnboardingContainerView.swift in Sources */,
 				4BAEE5CE212735E50045AB10 /* SelectParticipantsViewController+SearchHandlers.swift in Sources */,
-				4BAEE5C8212735E50045AB10 /* ARSLineProgressCustomization.swift in Sources */,
 				4BAEE4EA21272D890045AB10 /* InformationMessageSender.swift in Sources */,
 				4BAEE5F3212735E50045AB10 /* SwiftSiriWaveformView.swift in Sources */,
 				4BAEE4FF21272D890045AB10 /* VoiceRecordingContainerView.swift in Sources */,
@@ -1418,7 +1364,6 @@
 				4BAEE46821272B380045AB10 /* ChangeNumberVerificationController.swift in Sources */,
 				4BAEE46721272B380045AB10 /* ChangePhoneNumberController.swift in Sources */,
 				4BAEE52221272D890045AB10 /* InformationMessageCell.swift in Sources */,
-				4BAEE5C4212735E50045AB10 /* ARSInfiniteLoader.swift in Sources */,
 				4BAEE48121272C4F0045AB10 /* UserProfileController+keyboardHandlers.swift in Sources */,
 				4BAEE4E921272D890045AB10 /* MediaPickerControllerNew.swift in Sources */,
 				4BAEE52121272D890045AB10 /* ChatLogController+CollectionDelegate.swift in Sources */,
@@ -1426,7 +1371,6 @@
 				4BAEE5F6212735E50045AB10 /* AvatarOpener.swift in Sources */,
 				4BAEE49421272C5E0045AB10 /* FalconUsersTableViewCell.swift in Sources */,
 				4BAEE4F521272D890045AB10 /* GroupProfileTableViewController.swift in Sources */,
-				4BAEE5CB212735E50045AB10 /* ARSLineProgressProtocols.swift in Sources */,
 				4BAEE5E6212735E50045AB10 /* EnterVerificationContainerView.swift in Sources */,
 				4BAEE52021272D890045AB10 /* GroupAdminControlsPictureAvatarOpenerDelegate.swift in Sources */,
 				4BAEE5F2212735E50045AB10 /* UserDefaultsManager.swift in Sources */,
@@ -1468,7 +1412,6 @@
 				4BAEE4F021272D890045AB10 /* AddGroupMembersController.swift in Sources */,
 				4BAEE51D21272D890045AB10 /* BaseMessageCell.swift in Sources */,
 				4BAEE5D4212735E50045AB10 /* UIView+Extensions.swift in Sources */,
-				4BAEE5C7212735E50045AB10 /* ARSLineProgressExtensions.swift in Sources */,
 				4BAEE47121272B380045AB10 /* AccountSettingsAvatarOpenerDelegate.swift in Sources */,
 				4BAEE5F0212735E50045AB10 /* RevealableView.swift in Sources */,
 				4BAEE50021272D890045AB10 /* UserInfoTableViewController.swift in Sources */,
@@ -1514,7 +1457,6 @@
 				4BAEE547212735200045AB10 /* SplashScreenContainer.swift in Sources */,
 				4BAEE50321272D890045AB10 /* ChatInputContainerView.swift in Sources */,
 				4BAEE5E9212735E50045AB10 /* EnterPhoneNumberContainerView.swift in Sources */,
-				4BAEE5C3212735E50045AB10 /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BAEE4F821272D890045AB10 /* MessagesFetcher.swift in Sources */,
 				4BAEE48321272C4F0045AB10 /* UserProfileAvatarOpenerDelegate.swift in Sources */,
 				4BAEE46C21272B380045AB10 /* SwitchTableViewCell.swift in Sources */,

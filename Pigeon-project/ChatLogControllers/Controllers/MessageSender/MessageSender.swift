@@ -9,8 +9,6 @@
 import UIKit
 import Firebase
 import Photos
-import FirebaseDatabase
-import FirebaseAuth
 
 protocol MessageSenderDelegate: class {
   func update(with values: [String: AnyObject])

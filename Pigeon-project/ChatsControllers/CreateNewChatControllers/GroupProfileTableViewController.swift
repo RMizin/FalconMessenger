@@ -9,9 +9,7 @@
 import UIKit
 import Firebase
 import SDWebImage
-import FirebaseDatabase
-import FirebaseAuth
-
+import ARSLineProgress
 
 class GroupProfileTableViewController: UITableViewController {
   

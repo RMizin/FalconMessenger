@@ -7,10 +7,8 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
 import SafariServices
-
-
 
 class EnterPhoneNumberController: UIViewController {
   

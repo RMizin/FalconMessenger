@@ -8,10 +8,9 @@
 
 import UIKit
 import ContactsUI
+import ARSLineProgress
 
 extension UIViewController: CNContactViewControllerDelegate {
-  
-  
   fileprivate func checkContactsAuthorizationStatus() -> Bool {
     let contactsAuthorityCheck = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
     
