@@ -26,12 +26,17 @@
 
 <b>BIOMETRICS SUPPORT:</b> Keep your conversations away from unwanted eyes by using your Touch ID, Face ID or Passcode to unlock Falcon Messenger.
 
+<br>
+<br>
+
 <p align="center">
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/UITitle.png" />
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DarkUI.png" />
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LightUI.png" />
 </p> 
 
+<br>
+<br>
 
 <p align="center">
  <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/HowTouRunTitle.png" />
