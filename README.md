@@ -5,59 +5,54 @@
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DOnAppStore.png" alt="App Store" /></a>
 </p> 
 
-## Features
+<br>
+<br>
 
-CLOUD-BASED: You won't lose any of your data when you change your mobile phone or reinstall the app. All you need is to re-authenticate with your phone number.
+<p align="center"> 
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/FeaturesTitle.png" />
+</p> 
 
-SYNCED: Your messages sync seamlessly across any number of your devices.
+<b>CLOUD-BASED:</b> You won't lose any of your data when you change your mobile phone or reinstall the app. All you need is to re-authenticate with your phone number.
 
-GROUP CHATS: Create group chats, and have fun together with your friends, family or even enemies.
+<b>SYNCED:</b> Your messages sync seamlessly across any number of your devices.
 
-NIGHT MODE: Falcon messenger has a beautiful pure black night mode, which looks especially amazing on iPhone X.
+<b>GROUP CHATS:</b> Create group chats, and have fun together with your friends, family or even enemies.
 
-PERSONAL CLOUD STORAGE: You can store text, photos, videos and voice messages in the cloud, by sending them to your personal storage.
+<b>NIGHT MODE:</b> Falcon messenger has a beautiful pure black night mode, which looks especially amazing on iPhone X.
 
-SIMPLE AUTHENTICATION PROCESS: No emails and passwords anymore. Authenticate with your phone number and start using Falcon Messenger within a minute.
+<b>PERSONAL CLOUD STORAGE:</b> You can store text, photos, videos and voice messages in the cloud, by sending them to your personal storage.
 
-BIOMETRICS SUPPORT: Keep your conversations away from unwanted eyes by using your Touch ID, Face ID or Passcode to unlock Falcon Messenger.
+<b>SIMPLE AUTHENTICATION PROCESS:</b> No emails and passwords anymore. Authenticate with your phone number and start using Falcon Messenger within a minute.
 
-## User Interface
-### Day color theme
+<b>BIOMETRICS SUPPORT:</b> Keep your conversations away from unwanted eyes by using your Touch ID, Face ID or Passcode to unlock Falcon Messenger.
+
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightWelcome.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightContacts.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightChats.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightGroupChat.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8LightSettings.png" width="171"/>
-</p>
-
-### Night color theme
-<p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkWelcome.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkContacts.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkChats.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkGroupChat.png" width="171"/>
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/5.8DarkSettings.png" width="171"/>
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/UITitle.png" />
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DarkUI.png" />
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LightUI.png" />
 </p> 
 
 
-## How to run the app
-Follow these simple steps:
+<p align="center">
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/HowTouRunTitle.png" />
+</p> 
 
-1. Open the Pigeon-project.xcworkspace in Xcode.
-2. Change the Bundle Identifier to match your domain.
-3. Go to Firebase and create new project.
-4. Select "Add Firebase to your iOS app" option, type the bundle Identifier & click continue.
-5. Download "GoogleService-Info.plist" file and add to the project. Make sure file name is "GoogleService-Info.plist".
-6. Enable reCaptcha:<br>
-	6.1. Go to your GoogleService-Info.plist;<br>
-	6.2. Find the key “REVERSED_CLIENT_ID” and copy its value;<br>
-	6.3. Go to Project/targets/info/URLTypes;<br>
-	6.4. Paste the Value to URL schemes field;<br>
-	6.5. Select “Editor” in the “Role“ field. <br>
-7. Go to Firebase Console, select your project, choose "Authentication" from left menu
-8. Select "SIGN-IN METHOD" and enable "Phone" option.
-9. Add Firebase storage rules: 
+<b>Follow these simple steps:</b><br>
+
+<b>1.</b> Open the Pigeon-project.xcworkspace in Xcode.<br>
+<b>2.</b> Change the Bundle Identifier to match your domain.<br>
+<b>3.</b> Go to Firebase and create new project.<br>
+<b>4.</b> Select "Add Firebase to your iOS app" option, type the bundle Identifier & click continue.<br>
+<b>5.</b> Download "GoogleService-Info.plist" file and add to the project. Make sure file name is "GoogleService-Info.plist".<br>
+<b>6.</b> Enable reCaptcha:<br>
+	<pre><b>6.1.</b> Go to your GoogleService-Info.plist;<br>
+	<b>6.2.</b> Find the key “REVERSED_CLIENT_ID” and copy its value;<br>
+	<b>6.3.</b> Go to Project/targets/info/URLTypes;<br>
+	<b>6.4.</b> Paste the Value to URL schemes field;<br>
+	<b>6.5.</b> Select “Editor” in the “Role“ field. <br></pre>
+<b>7.</b> Go to Firebase Console, select your project, choose "Authentication" from left menu.<br>
+<b>8.</b> Select "SIGN-IN METHOD" and enable "Phone" option.<br>
+<b>9.</b> Add Firebase storage rules: 
 
 		service firebase.storage {
 		  match /b/{bucket}/o {
@@ -67,7 +62,7 @@ Follow these simple steps:
 		  }
 		}
 		
-10. Add Firebase Realtime Database Rules:
+<b>10.</b> Add Firebase Realtime Database Rules:
 
 		{ 
 		  "rules": {
@@ -82,11 +77,20 @@ Follow these simple steps:
 
 Note before last step:<i> if you don't have cocoapods installed on your computer, you have to install it first. You can do it by opening the terminal and running "sudo gem install cocoapods" (without quotation marks), then do the step №8. If you already have cocoapods installed, ignore this note.</i>
 
-11. Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
+<b>11.</b> Open the terminal, navigate to project folder and run "pod update" (without quotation marks).
 
+<br>
+<br>
 
-## Compatibility
-Falcon Messenger is written in Swift 4.2 and requires iOS 10.0 or later.
+<p align="center">
+<img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/CompatibilityTitle.png" />
+<img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/Compatibility.png" />
+</p> 
 
-## License
-This project is licensed under the Apache 2.0 license - see the [LICENSE.md](https://github.com/RMizin/FalconMessenger/blob/master/LICENSE) file for details
+<br>
+<br>
+
+<p align="center">
+ <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LicenseTitle.png" />
+<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/License.png" alt="LICENSE.md" /></a>
+</p> 
