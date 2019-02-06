@@ -1,15 +1,15 @@
 
 <p align="center"> 
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/Title.png" alt="App Store" /></a>	
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/TitleDesc.png" alt="App Store" /></a>	
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DOnAppStore.png" alt="App Store" /></a>
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/Title.png" alt="App Store"/></a>	
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/TitleDesc.png" alt="App Store"/></a>	
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DOnAppStore.png" alt="App Store"/></a>
 </p> 
 
 <br>
 <br>
 
 <p align="center"> 
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/FeaturesTitle.png" />
+ <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/FeaturesTitle.png" alt="App Store"/></a>
 </p> 
 
 <b>CLOUD-BASED:</b> You won't lose any of your data when you change your mobile phone or reinstall the app. All you need is to re-authenticate with your phone number.
@@ -30,16 +30,16 @@
 <br>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/UITitle.png" />
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DarkUI.png" />
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LightUI.png" />
+ <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/UITitle.png" alt="App Store"/></a>
+ <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/DarkUI.png" alt="App Store"/></a>
+ <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LightUI.png" alt="App Store"/></a>
 </p> 
 
 <br>
 <br>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/HowTouRunTitle.png" />
+ <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/HowTouRunTitle.png" alt="App Store"/></a>
 </p> 
 
 <b>Follow these simple steps:</b><br>
@@ -88,14 +88,14 @@ Note before last step:<i> if you don't have cocoapods installed on your computer
 <br>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/CompatibilityTitle.png" />
-<img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/Compatibility.png" />
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/CompatibilityTitle.png" alt="App Store"/></a>
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/Compatibility.png" alt="App Store"/></a>
 </p> 
 
 <br>
 <br>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LicenseTitle.png" />
-<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/License.png" alt="LICENSE.md" /></a>
+ <a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LicenseTitle.png" alt="LICENSE.md"/></a>
+<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/License.png" alt="LICENSE.md"/></a>
 </p> 
