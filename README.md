@@ -7,7 +7,8 @@
 
 <br>
 <br>
-		![Example](https://github.com/RMizin/Falcon/blob/master/Screenshots/send.gif "ff")
+![teamwork-flip](https://github.com/davidtheclark/gifs/blob/master/teamwork-flip.gif)
+		
 
 <p align="center"> 
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
