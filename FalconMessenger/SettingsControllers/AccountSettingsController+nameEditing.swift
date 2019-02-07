@@ -8,10 +8,9 @@
 
 import UIKit
 import Firebase
-
+import ARSLineProgress
 
 extension AccountSettingsController: UITextFieldDelegate {
-  
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     doneBarButtonPressed()
     textField.resignFirstResponder()
@@ -20,7 +19,6 @@ extension AccountSettingsController: UITextFieldDelegate {
 }
 
 extension AccountSettingsController: UITextViewDelegate {
-  
   func estimateFrameForText(_ text: String, width: CGFloat) -> CGRect {
     let size = CGSize(width: width, height: 10000)
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)

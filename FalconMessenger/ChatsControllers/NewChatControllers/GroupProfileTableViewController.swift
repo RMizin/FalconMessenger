@@ -8,6 +8,7 @@
 
 import UIKit
 import SDWebImage
+import ARSLineProgress
 import Firebase
 
 private let selectedFlaconUsersCellID = "selectedFlaconUsersCellID"

@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import ARSLineProgress
 
 class ChangePhoneNumberController: PhoneNumberController, VerificationDelegate {
   
   func verificationFinished(with success: Bool, error: String?) {
+		ARSLineProgress.hide()
     guard success, error == nil else {
       basicErrorAlertWith(title: "Error", message: error ?? "", controller: self)
       return

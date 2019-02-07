@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import ARSLineProgress
 
 private let falconUsersCellID = "falconUsersCellID"
 private let adminControlsCellID = "adminControlsCellID"

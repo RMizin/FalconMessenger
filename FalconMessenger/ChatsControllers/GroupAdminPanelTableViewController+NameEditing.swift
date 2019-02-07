@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import ARSLineProgress
 
 extension GroupAdminPanelTableViewController: UITextFieldDelegate { /* user name editing */
 
@@ -52,7 +53,6 @@ extension GroupAdminPanelTableViewController: UITextFieldDelegate { /* user name
   }
 
   @objc func doneBarButtonPressed() {
-
     if currentReachabilityStatus == .notReachable {
       basicErrorAlertWith(title: "No internet", message: noInternetError, controller: self)
       return

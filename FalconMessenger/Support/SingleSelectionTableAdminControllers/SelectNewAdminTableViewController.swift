@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 import SDWebImage
-
+import ARSLineProgress
 
 class SelectNewAdminTableViewController: UITableViewController {
   

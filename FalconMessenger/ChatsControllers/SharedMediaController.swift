@@ -8,7 +8,7 @@
 
 import UIKit
 import SDWebImage
-import AVFoundation
+import ARSLineProgress
 import AVKit
 
 private let sharedMediaCellID = "sharedMediaCellID"

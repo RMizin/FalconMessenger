@@ -1,4 +1,5 @@
 PODS:
+  - ARSLineProgress (3.1.0)
   - CropViewController (2.4.0)
   - Firebase/Auth (5.16.0):
     - Firebase/CoreOnly
@@ -93,11 +94,11 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - PhoneNumberKit (2.5.0):
-    - PhoneNumberKit/PhoneNumberKitCore (= 2.5.0)
-    - PhoneNumberKit/UIKit (= 2.5.0)
-  - PhoneNumberKit/PhoneNumberKitCore (2.5.0)
-  - PhoneNumberKit/UIKit (2.5.0):
+  - PhoneNumberKit (2.5.1):
+    - PhoneNumberKit/PhoneNumberKitCore (= 2.5.1)
+    - PhoneNumberKit/UIKit (= 2.5.1)
+  - PhoneNumberKit/PhoneNumberKitCore (2.5.1)
+  - PhoneNumberKit/UIKit (2.5.1):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.6.1)
   - Realm (3.13.1):
@@ -110,6 +111,7 @@ PODS:
   - SDWebImage/Core (5.0.0-beta5)
 
 DEPENDENCIES:
+  - ARSLineProgress
   - CropViewController
   - Firebase/Auth
   - Firebase/Core
@@ -125,6 +127,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - ARSLineProgress
     - CropViewController
     - Firebase
     - FirebaseAnalytics
@@ -159,6 +162,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rs/SDWebImage
 
 SPEC CHECKSUMS:
+  ARSLineProgress: 60778657c69491796c3faf5b834c72924c405833
   CropViewController: a090820b15fc3da68e694d7c192a4708c576828b
   Firebase: 749a8ff4962f9d8c79dda1966de20f6f77583d67
   FirebaseAnalytics: d35d47c03c50c73c14a7fd31463c5775843e78a9
@@ -177,12 +181,12 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  PhoneNumberKit: 32a1cd1e0aa9e950feb01886a22fd7386b8cf903
+  PhoneNumberKit: 87f03605453ca0f8b8e76083228ab729395f9004
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   Realm: 50071da38fe079e0735e47c9f2eae738c68c5996
   RealmSwift: 8a1e6a02b7a08cd17a31e3115143fb69fe5f3fb9
   SDWebImage: fd609df53c0f55fdcd4705bd14c01c9d5c348d0c
 
-PODFILE CHECKSUM: d992fdb41dfc85d1f3034c0da2f9b379f7661441
+PODFILE CHECKSUM: e510b5dac380375c83452c72acd6e28cad1d1c4d
 
 COCOAPODS: 1.6.0.beta.2

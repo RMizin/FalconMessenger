@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 import SafariServices
-
+import ARSLineProgress
 protocol VerificationDelegate: class {
   func verificationFinished(with success: Bool, error: String?)
 }
@@ -83,6 +83,7 @@ class PhoneNumberController: UIViewController {
   var isVerificationSent = false
 
   @objc func rightBarButtonDidTap () {
+		ARSLineProgress.show()
     if currentReachabilityStatus == .notReachable {
       verificationDelegate?.verificationFinished(with: false, error: noInternetError)
       return

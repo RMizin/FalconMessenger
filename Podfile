@@ -17,5 +17,6 @@ target 'FalconMessenger' do
   pod 'PhoneNumberKit'
   pod 'FTPopOverMenu_Swift'
   pod 'CropViewController'
+	pod 'ARSLineProgress'
 
 end

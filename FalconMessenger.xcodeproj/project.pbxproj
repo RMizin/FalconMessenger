@@ -106,16 +106,6 @@
 		4B6BB01320886C5F00A90F3A /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFCF20886C5E00A90F3A /* UIImageExtensions.swift */; };
 		4B6BB01420886C5F00A90F3A /* ImagePickerTrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD020886C5E00A90F3A /* ImagePickerTrayController.swift */; };
 		4B6BB01520886C5F00A90F3A /* FalconTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD220886C5E00A90F3A /* FalconTextView.swift */; };
-		4B6BB01620886C5F00A90F3A /* ARSLineProgressHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD420886C5E00A90F3A /* ARSLineProgressHelpers.swift */; };
-		4B6BB01720886C5F00A90F3A /* ARSLineProgressTypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD520886C5E00A90F3A /* ARSLineProgressTypeAliases.swift */; };
-		4B6BB01820886C5F00A90F3A /* ARSInfiniteLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD620886C5E00A90F3A /* ARSInfiniteLoader.swift */; };
-		4B6BB01920886C5F00A90F3A /* ARSLineProgressConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD720886C5E00A90F3A /* ARSLineProgressConstants.swift */; };
-		4B6BB01A20886C5F00A90F3A /* ARSLineProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD820886C5E00A90F3A /* ARSLineProgress.swift */; };
-		4B6BB01B20886C5F00A90F3A /* ARSLineProgressExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD920886C5E00A90F3A /* ARSLineProgressExtensions.swift */; };
-		4B6BB01C20886C5F00A90F3A /* ARSLineProgressCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFDA20886C5E00A90F3A /* ARSLineProgressCustomization.swift */; };
-		4B6BB01D20886C5F00A90F3A /* ARSStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFDB20886C5E00A90F3A /* ARSStatus.swift */; };
-		4B6BB01E20886C5F00A90F3A /* ARSProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFDC20886C5E00A90F3A /* ARSProgressLoader.swift */; };
-		4B6BB01F20886C5F00A90F3A /* ARSLineProgressProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFDD20886C5E00A90F3A /* ARSLineProgressProtocols.swift */; };
 		4B6BB02320886C5F00A90F3A /* RoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */; };
 		4B75F35C2205B41B008FDA25 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B75F35B2205B41B008FDA25 /* ControlButton.swift */; };
 		4B78663421D536AD00CC739F /* UserExistenceChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B78663321D536AD00CC739F /* UserExistenceChecker.swift */; };
@@ -360,16 +350,6 @@
 		4B6BAFCF20886C5E00A90F3A /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		4B6BAFD020886C5E00A90F3A /* ImagePickerTrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerTrayController.swift; sourceTree = "<group>"; };
 		4B6BAFD220886C5E00A90F3A /* FalconTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FalconTextView.swift; sourceTree = "<group>"; };
-		4B6BAFD420886C5E00A90F3A /* ARSLineProgressHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressHelpers.swift; sourceTree = "<group>"; };
-		4B6BAFD520886C5E00A90F3A /* ARSLineProgressTypeAliases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressTypeAliases.swift; sourceTree = "<group>"; };
-		4B6BAFD620886C5E00A90F3A /* ARSInfiniteLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSInfiniteLoader.swift; sourceTree = "<group>"; };
-		4B6BAFD720886C5E00A90F3A /* ARSLineProgressConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressConstants.swift; sourceTree = "<group>"; };
-		4B6BAFD820886C5E00A90F3A /* ARSLineProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgress.swift; sourceTree = "<group>"; };
-		4B6BAFD920886C5E00A90F3A /* ARSLineProgressExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressExtensions.swift; sourceTree = "<group>"; };
-		4B6BAFDA20886C5E00A90F3A /* ARSLineProgressCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressCustomization.swift; sourceTree = "<group>"; };
-		4B6BAFDB20886C5E00A90F3A /* ARSStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSStatus.swift; sourceTree = "<group>"; };
-		4B6BAFDC20886C5E00A90F3A /* ARSProgressLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSProgressLoader.swift; sourceTree = "<group>"; };
-		4B6BAFDD20886C5E00A90F3A /* ARSLineProgressProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSLineProgressProtocols.swift; sourceTree = "<group>"; };
 		4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundProgressView.swift; sourceTree = "<group>"; };
 		4B75F35B2205B41B008FDA25 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
 		4B78663321D536AD00CC739F /* UserExistenceChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserExistenceChecker.swift; path = AuthenticationControllers/UserExistenceChecker.swift; sourceTree = "<group>"; };
@@ -787,6 +767,7 @@
 				4B4F03D421E554A100907D39 /* ImagesDownloadManager */,
 				4BC3B258212DA10A0012C7BD /* Keyboard Utility */,
 				4B6BAFB520886C5E00A90F3A /* UserProfilePictureOpener */,
+				4B6BAFA420886C5E00A90F3A /* NavigationControllerActivityIndicator */,
 				4B6BAFA020886C5E00A90F3A /* SingleSelectionTableAdminControllers */,
 				4B6BAF8E20886C5D00A90F3A /* MultipleSelectionControllers */,
 			);
@@ -948,23 +929,6 @@
 				4B6BAFD220886C5E00A90F3A /* FalconTextView.swift */,
 			);
 			path = FlaconTextView;
-			sourceTree = "<group>";
-		};
-		4B6BAFD320886C5E00A90F3A /* ProgressIndicator */ = {
-			isa = PBXGroup;
-			children = (
-				4B6BAFD420886C5E00A90F3A /* ARSLineProgressHelpers.swift */,
-				4B6BAFD520886C5E00A90F3A /* ARSLineProgressTypeAliases.swift */,
-				4B6BAFD620886C5E00A90F3A /* ARSInfiniteLoader.swift */,
-				4B6BAFD720886C5E00A90F3A /* ARSLineProgressConstants.swift */,
-				4B6BAFD820886C5E00A90F3A /* ARSLineProgress.swift */,
-				4B6BAFD920886C5E00A90F3A /* ARSLineProgressExtensions.swift */,
-				4B6BAFDA20886C5E00A90F3A /* ARSLineProgressCustomization.swift */,
-				4B6BAFDB20886C5E00A90F3A /* ARSStatus.swift */,
-				4B6BAFDC20886C5E00A90F3A /* ARSProgressLoader.swift */,
-				4B6BAFDD20886C5E00A90F3A /* ARSLineProgressProtocols.swift */,
-			);
-			path = ProgressIndicator;
 			sourceTree = "<group>";
 		};
 		4B6BAFE220886C5F00A90F3A /* RoundProgressView */ = {
@@ -1259,8 +1223,6 @@
 				4B5693C620CFFAAB005EAE15 /* InAppBanner */,
 				4B6BAFB820886C5E00A90F3A /* INSPhotosGallery */,
 				4B6BAFC320886C5E00A90F3A /* PickerTrayController */,
-				4B6BAFD320886C5E00A90F3A /* ProgressIndicator */,
-				4B6BAFA420886C5E00A90F3A /* NavigationControllerActivityIndicator */,
 				4B6BAFE220886C5F00A90F3A /* RoundProgressView */,
 				4B6BAF9E20886C5E00A90F3A /* WaveFormView */,
 			);
@@ -1803,15 +1765,12 @@
 				4B32F8501F38759F00807FFB /* ContactsDetailController.swift in Sources */,
 				4BFAA0D32025F97100DFC9E5 /* UserInfoCreateContactTableViewController.swift in Sources */,
 				4B4F03CF21E144C000907D39 /* RealmImage.swift in Sources */,
-				4B6BB01D20886C5F00A90F3A /* ARSStatus.swift in Sources */,
 				4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */,
 				4B2A9587205FCF5200FE4DF7 /* GroupAdminPanelTableViewController.swift in Sources */,
 				4B8CA13D2153C6EC009F8AA3 /* ChatLogPresenter.swift in Sources */,
-				4B6BB01A20886C5F00A90F3A /* ARSLineProgress.swift in Sources */,
 				4BA60EB621AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift in Sources */,
 				4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */,
 				4BBBCBF32057CF4C00926800 /* GroupProfileTableViewController.swift in Sources */,
-				4B6BB01F20886C5F00A90F3A /* ARSLineProgressProtocols.swift in Sources */,
 				4BCA3EB021AA801300E586AB /* UIScrollView+PullRefresh.swift in Sources */,
 				4BE8BB421FCA836A00EB35FA /* AttachCollectionViewCell+TimerHandlers.swift in Sources */,
 				4B6BB00720886C5F00A90F3A /* INSPhotosOverlayView.swift in Sources */,
@@ -1836,8 +1795,6 @@
 				4BC3B26A212EA6D60012C7BD /* InputTextView.swift in Sources */,
 				4B1FEC1D213336DE0022421C /* CountriesTableViewCell.swift in Sources */,
 				4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */,
-				4B6BB01620886C5F00A90F3A /* ARSLineProgressHelpers.swift in Sources */,
-				4B6BB01720886C5F00A90F3A /* ARSLineProgressTypeAliases.swift in Sources */,
 				4BC3B260212DA2EA0012C7BD /* ChatLogContainerView.swift in Sources */,
 				4BB6D197206EA62F00FEF72E /* Conversation.swift in Sources */,
 				4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */,
@@ -1851,7 +1808,6 @@
 				4B6BB00820886C5F00A90F3A /* INSPhotoViewController.swift in Sources */,
 				4BCA3EB121AA801300E586AB /* RefreshContentView.swift in Sources */,
 				4B7EA2DE2203069500002F0E /* OverlayPhotoBottomView.swift in Sources */,
-				4B6BB01920886C5F00A90F3A /* ARSLineProgressConstants.swift in Sources */,
 				4B5693D620CFFAAB005EAE15 /* Utils.swift in Sources */,
 				4BDB294E2126C79000D77600 /* ChangeNumberVerificationController.swift in Sources */,
 				4BDB29502126C79000D77600 /* SwitchTableViewCell.swift in Sources */,
@@ -1865,7 +1821,6 @@
 				4B6BB00220886C5F00A90F3A /* INSPhotosViewController.swift in Sources */,
 				4B3134FE21A9EE4500D20583 /* SharedMediaDelegate.swift in Sources */,
 				4B6BAFF320886C5F00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift in Sources */,
-				4B6BB01E20886C5F00A90F3A /* ARSProgressLoader.swift in Sources */,
 				4B31350421A9EED500D20583 /* SharedVoiceMessagesFetcher.swift in Sources */,
 				4BDB29552126C79000D77600 /* AboutTableViewController.swift in Sources */,
 				4BBF795D2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift in Sources */,
@@ -1912,10 +1867,8 @@
 				4B6BAFEF20886C5F00A90F3A /* ThemeManager.swift in Sources */,
 				4BE8BB3B1FC9FD0800EB35FA /* VoiceRecordingContainerView.swift in Sources */,
 				4B3DC3BD2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift in Sources */,
-				4B6BB01C20886C5F00A90F3A /* ARSLineProgressCustomization.swift in Sources */,
 				4B0FA7DE2065A1D600BEA090 /* ChatLogViewController+CollectionDelegate.swift in Sources */,
 				4B67E22F21B52143005EB981 /* SnapshotLockerView.swift in Sources */,
-				4B6BB01B20886C5F00A90F3A /* ARSLineProgressExtensions.swift in Sources */,
 				4BDB29512126C79000D77600 /* SwitchObject.swift in Sources */,
 				4BAD9752206E3532008ADF6B /* SelectGroupMembersController.swift in Sources */,
 				4B5693D720CFFAAB005EAE15 /* InAppNotification.swift in Sources */,
@@ -1930,7 +1883,6 @@
 				4B6BB01220886C5F00A90F3A /* UIEdgeInsetsExtensions.swift in Sources */,
 				4B6BAFF620886C5F00A90F3A /* VerificationCodeController.swift in Sources */,
 				4B6BB00D20886C5F00A90F3A /* CameraCell.swift in Sources */,
-				4B6BB01820886C5F00A90F3A /* ARSInfiniteLoader.swift in Sources */,
 				4B88F2DA206386BA00BED797 /* GroupAdminPanelTableViewController+NameEditing.swift in Sources */,
 				4B7EA2E22203076F00002F0E /* TransitionBackgrounView.swift in Sources */,
 				4B7EA2DC2203068800002F0E /* OverlayDefaultBottomView.swift in Sources */,
