@@ -7,7 +7,8 @@
 
 <br>
 <br>
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+		![Example](https://github.com/RMizin/Falcon/blob/master/Screenshots/send.gif "ff")
+
 <p align="center"> 
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="288"/>
