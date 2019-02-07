@@ -7,8 +7,12 @@
 
 <br>
 <br>
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![teamwork-flip](https://github.com/davidtheclark/gifs/blob/master/teamwork-flip.gif)
+
+		
+
 <p align="center"> 
+![teamwork-flip](https://github.com/davidtheclark/gifs/blob/master/teamwork-flip.gif)
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="288"/>
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="288" />
