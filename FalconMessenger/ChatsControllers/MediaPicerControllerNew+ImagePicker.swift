@@ -158,7 +158,9 @@ extension MediaPickerControllerNew {
   
   func presentImagePicker() {
     imagePicker.modalPresentationStyle = .overCurrentContext
-    present(imagePicker, animated: true, completion: nil)
+		present(imagePicker, animated: true) {
+			self.imagePicker.navigationBar.layoutSubviews()
+		}
   }
   
   func dismissImagePicker () {

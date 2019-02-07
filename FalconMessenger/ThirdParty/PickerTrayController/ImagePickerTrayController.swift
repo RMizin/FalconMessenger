@@ -86,7 +86,7 @@ public class ImagePickerTrayController: UIViewController {
     var assets = [PHAsset]()
     fileprivate lazy var requestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .highQualityFormat
+        options.deliveryMode = .opportunistic
         options.resizeMode = .fast
         
         return options
@@ -95,7 +95,7 @@ public class ImagePickerTrayController: UIViewController {
     public var allowsMultipleSelection = true {
         didSet {
             if isViewLoaded {
-                collectionView.allowsMultipleSelection = allowsMultipleSelection
+							collectionView.allowsMultipleSelection = allowsMultipleSelection
             }
         }
     }
@@ -183,7 +183,8 @@ public class ImagePickerTrayController: UIViewController {
   
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-     fetchAssets()
+
+    fetchAssets()
   }
 
   
@@ -202,58 +203,50 @@ public class ImagePickerTrayController: UIViewController {
     super.willTransition(to: newCollection, with: coordinator)
   }
   
-    public func add(action: ImagePickerAction) {
-        actions.append(action)
-    }
+	public func add(action: ImagePickerAction) {
+		actions.append(action)
+	}
    
   typealias CompletionHandler = (_ success: Bool) -> Void
   
   func reFetchAssets(completionHandler: @escaping CompletionHandler) {
-    self.assets.removeAll()
+    assets.removeAll()
     let options = PHFetchOptions()
     options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
     options.fetchLimit = 100
-    
+
     let result = PHAsset.fetchAssets(with: options)
     result.enumerateObjects({ asset, index, stop in
       self.assets.append(asset)
     })
     
    let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems
-    
-  var newSelectedIndexPaths = [IndexPath]()
+	 var newSelectedIndexPaths = [IndexPath]()
     
     for newIndexPath in selectedIndexPaths! {
-      
       let indexPath = IndexPath(item: newIndexPath.item + 1 , section: newIndexPath.section)
-      
       newSelectedIndexPaths.append(indexPath)
     }
     
-    self.collectionView.reloadData()
-    
+    collectionView.reloadData()
     for indexPathForSelection in newSelectedIndexPaths {
       UIView.performWithoutAnimation {
-				self.collectionView.selectItem(at: indexPathForSelection, animated: false, scrollPosition: UICollectionView.ScrollPosition.bottom )
+				collectionView.selectItem(at: indexPathForSelection, animated: false, scrollPosition: .bottom)
       }
-     
     }
-    self.collectionView.selectItem(at: IndexPath(item: 0, section: 2), animated: false, scrollPosition: .bottom)
-   
+    collectionView.selectItem(at: IndexPath(item: 0, section: 2), animated: false, scrollPosition: .bottom)
     completionHandler(true)
   }
-  
-  
+
     func fetchAssets() {
-      
-        let options = PHFetchOptions()
-        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        options.fetchLimit = 100
-        
-        let result = PHAsset.fetchAssets(with: options)
-        result.enumerateObjects({ asset, index, stop in
-            self.assets.append(asset)
-        })
+			let options = PHFetchOptions()
+			options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+			options.fetchLimit = 100
+
+			let result = PHAsset.fetchAssets(with: options)
+			result.enumerateObjects({ asset, index, stop in
+					self.assets.append(asset)
+			})
     }
     
     fileprivate func requestImage(for asset: PHAsset, completion: @escaping (_ image: UIImage?) -> ()) {
@@ -315,12 +308,14 @@ public class ImagePickerTrayController: UIViewController {
 extension ImagePickerTrayController: UICollectionViewDataSource {
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return sections.count
+			return sections.count
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sections[section]
+			return sections[section]
     }
+
+
   
 //  public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
   //  if let cell = cell as? CameraCell {
@@ -336,28 +331,30 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ActionCell.self), for: indexPath) as! ActionCell
-            cell.imagePickerTrayController = self
-            cell.actions = actions
-            
-            return cell
+					let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ActionCell.self), for: indexPath) as! ActionCell
+					cell.imagePickerTrayController = self
+					cell.actions = actions
+
+					return cell
           
         case 1:
-           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(CameraCell.self), for: indexPath) as! CameraCell
-
-            return cell
+					let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(CameraCell.self), for: indexPath) as! CameraCell
+					return cell
           
         case 2:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ImageCell.self), for: indexPath) as! ImageCell
-            
-              let asset = assets[indexPath.item]
-              if assets.count > indexPath.item {
-                cell.isVideo = (asset.mediaType == .video)
-                cell.isRemote = (asset.sourceType != .typeUserLibrary)
-                self.requestImage(for: asset) { cell.imageView.image = $0 }
-              }
-          
-            return cell
+
+					let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ImageCell.self), for: indexPath) as! ImageCell
+					let asset = assets[indexPath.item]
+					if assets.count > indexPath.item {
+						cell.isVideo = (asset.mediaType == .video)
+						cell.isRemote = (asset.sourceType != .typeUserLibrary)
+						DispatchQueue.main.async {
+							self.requestImage(for: asset) { cell.imageView.image = $0 }
+						}
+
+					}
+
+					return cell
           
         default:
             fatalError("More than 3 sections is invalid.")
@@ -370,8 +367,12 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
 extension ImagePickerTrayController: UICollectionViewDelegate {
     
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+//			guard collectionView.indexPathsForSelectedItems?.count ?? 0 <= 9 else {
+//				print("10 IS MAXIMUM")
+//				return false
+//			}
         guard indexPath.section == sections.count - 1 else {
-            return false
+					return false
         }
       
         if assets.count > indexPath.item {
@@ -382,9 +383,8 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-      
       if assets.count > indexPath.item {
-         delegate?.controller?(self, didSelectAsset: assets[indexPath.item], at: indexPath)
+				delegate?.controller?(self, didSelectAsset: assets[indexPath.item], at: indexPath)
       }
     }
     
@@ -393,7 +393,7 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
         delegate?.controller?(self, willDeselectAsset: assets[indexPath.item], at: indexPath)
       }
       
-        return true
+			return true
     }
   
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -408,13 +408,11 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
 extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
  
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-      //  let maxItemHeight = ((view.frame.height * 0.8) - collectionView.contentInset.vertical)
-      
         switch indexPath.section {
         case 0:
-          return CGSize(width: actionCellWidth, height: collectionView.frame.height-1)
+          return CGSize(width: actionCellWidth, height: collectionView.frame.height - 1)
         case 1:
-          return CGSize(width: 0, height: 0)//CGSize(width: 197, height: collectionView.frame.height-1)
+          return CGSize(width: 0, height: 0)
         case 2:
           return CGSize(width: collectionView.frame.height/2.045, height: collectionView.frame.height/2.045)
         default:
@@ -424,7 +422,7 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard section == 1 else {
-            return UIEdgeInsets()
+					return UIEdgeInsets()
         }
         
         return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 1)
@@ -436,13 +434,9 @@ extension ImagePickerTrayController: UIImagePickerControllerDelegate, UINavigati
 
 	public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 		if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
-			//  delegate?.controller?(self, didTakeImage: image, with: assets.last!)
 			delegate?.controller?(self, didTakeImage: image)
 		}
 	}
-//    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-//
-//    }
 }
 
 extension ImagePickerTrayController: TransitionControllerDelegate {

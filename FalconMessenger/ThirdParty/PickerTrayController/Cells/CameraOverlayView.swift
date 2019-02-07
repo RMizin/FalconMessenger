@@ -13,16 +13,15 @@ class CameraOverlayView: UIButton {
     let flipCameraButton: UIButton = {
         let button = FlipCameraButton()
         button.setImage(UIImage(bundledName: "CameraOverlayView-CameraFlip"), for: .normal)
-        
         return button
     }()
     
     fileprivate let shutterButtonView = ShutterButtonView()
     
     override var isHighlighted: Bool {
-        didSet {
-            shutterButtonView.isHighlighted = isHighlighted
-        }
+			didSet {
+				shutterButtonView.isHighlighted = isHighlighted
+			}
     }
     
     // MARK: - Initialization
@@ -40,8 +39,8 @@ class CameraOverlayView: UIButton {
     }
     
     fileprivate func initialize() {
-        addSubview(flipCameraButton)
-        addSubview(shutterButtonView)
+			addSubview(flipCameraButton)
+			addSubview(shutterButtonView)
       
       flipCameraButton.translatesAutoresizingMaskIntoConstraints = false
       shutterButtonView.translatesAutoresizingMaskIntoConstraints = false

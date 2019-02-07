@@ -355,7 +355,6 @@
 		4B6BAFC820886C5E00A90F3A /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		4B6BAFC920886C5E00A90F3A /* AnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
 		4B6BAFCA20886C5E00A90F3A /* ImagePickerAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerAction.swift; sourceTree = "<group>"; };
-		4B6BAFCB20886C5E00A90F3A /* ImagePickerTrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerTrayController.h; sourceTree = "<group>"; };
 		4B6BAFCC20886C5E00A90F3A /* TransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionController.swift; sourceTree = "<group>"; };
 		4B6BAFCE20886C5E00A90F3A /* UIEdgeInsetsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEdgeInsetsExtensions.swift; sourceTree = "<group>"; };
 		4B6BAFCF20886C5E00A90F3A /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
@@ -917,7 +916,6 @@
 				4B6BAFCD20886C5E00A90F3A /* Helpers */,
 				4B6BAFC920886C5E00A90F3A /* AnimationController.swift */,
 				4B6BAFCA20886C5E00A90F3A /* ImagePickerAction.swift */,
-				4B6BAFCB20886C5E00A90F3A /* ImagePickerTrayController.h */,
 				4B6BAFCC20886C5E00A90F3A /* TransitionController.swift */,
 				4B6BAFD020886C5E00A90F3A /* ImagePickerTrayController.swift */,
 			);

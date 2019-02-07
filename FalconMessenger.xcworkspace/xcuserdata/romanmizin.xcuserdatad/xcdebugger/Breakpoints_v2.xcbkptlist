@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "570828729.657059"
+            timestampString = "571245632.5216171"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "470"
-            endingLineNumber = "470"
+            startingLineNumber = "466"
+            endingLineNumber = "466"
             landmarkName = "conversations(update:reloadNeeded:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "570828729.657169"
+            timestampString = "571245632.522537"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "475"
-            endingLineNumber = "475"
+            startingLineNumber = "471"
+            endingLineNumber = "471"
             landmarkName = "conversations(update:reloadNeeded:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "570828729.657228"
+            timestampString = "571245632.5226181"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "476"
-            endingLineNumber = "476"
+            startingLineNumber = "472"
+            endingLineNumber = "472"
             landmarkName = "conversations(update:reloadNeeded:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "570828729.657282"
+            timestampString = "571245632.5226949"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "465"
-            endingLineNumber = "465"
+            startingLineNumber = "461"
+            endingLineNumber = "461"
             landmarkName = "conversations(didFinishFetching:conversations:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FalconMessenger/ChatsControllers/ChatsTableViewController.swift"
-            timestampString = "570828729.657355"
+            timestampString = "571245632.5227391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "466"
-            endingLineNumber = "466"
+            startingLineNumber = "462"
+            endingLineNumber = "462"
             landmarkName = "conversations(didFinishFetching:conversations:)"
             landmarkType = "7">
          </BreakpointContent>

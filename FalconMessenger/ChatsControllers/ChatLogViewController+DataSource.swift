@@ -14,7 +14,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   
    func numberOfSections(in collectionView: UICollectionView) -> Int {
     return groupedMessages.count + typingIndicatorSection.count
-  }
+   }
   
    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
       if section == groupedMessages.count {
@@ -27,10 +27,9 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
   
    if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "lol",
-                                                                   for: indexPath) as? ChatLogViewControllerSupplementaryView {
+																																	for: indexPath) as? ChatLogViewControllerSupplementaryView {
       guard groupedMessages.indices.contains(indexPath.section),
       groupedMessages[indexPath.section].messages.indices.contains(indexPath.row) else { header.label.text = ""; return header }
-    
       header.label.text = groupedMessages[indexPath.section].messages[indexPath.row].shortConvertedTimestamp
       return header
     }
@@ -44,22 +43,20 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard indexPath.section != groupedMessages.count else { return showTypingIndicator(indexPath: indexPath)! as! TypingIndicatorCell }
     if let isGroupChat = conversation?.isGroupChat.value, isGroupChat {
-      return selectCell(for: indexPath, isGroupChat: true)! //?? UICollectionViewCell()
+      return selectCell(for: indexPath, isGroupChat: true)!
     } else {
-      return selectCell(for: indexPath, isGroupChat: false)!// ?? UICollectionViewCell()
+      return selectCell(for: indexPath, isGroupChat: false)!
     }
   }
   
   fileprivate func showTypingIndicator(indexPath: IndexPath) -> UICollectionViewCell? {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: typingIndicatorCellID, for: indexPath) as! TypingIndicatorCell
     cell.restart()
-    
     return cell
   }
   
   fileprivate func selectCell(for indexPath: IndexPath, isGroupChat: Bool) -> UICollectionViewCell? {
-
-    let message = groupedMessages[indexPath.section].messages[indexPath.row] //sometimes crash
+    let message = groupedMessages[indexPath.section].messages[indexPath.row]
     let isTextMessage = message.text != nil
     let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
     let isVoiceMessage = message.voiceEncodedString != nil
@@ -70,95 +67,55 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: informationMessageCellID, for: indexPath) as! InformationMessageCell
       cell.setupData(message: message)
       return cell
-    } else
-      
-      if isTextMessage {
-        switch isOutgoingMessage {
-        case true:
-          let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
-          cell.chatLogController = self
-          cell.setupData(message: message)
-					cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-          
-          return cell
-        case false:
-          let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
-          cell.chatLogController = self
-					cell.setupData(message: message, isGroupChat: isGroupChat)
-          return cell
-        }
-      } else
-        
-        if isPhotoVideoMessage {
-          switch isOutgoingMessage {
-          case true:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
-            cell.chatLogController = self
-            cell.setupData(message: message)
-//            if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
-//              cell.setupImageFromLocalData(message: message, image: image)
-//							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-//
-//              return cell
-//            }
-           // if let messageImageUrl = message.thumbnailImageUrl {
-						//	DispatchQueue.global(qos: .default).async {
-								cell.setupImageFromURL(message: message, indexPath: indexPath)
-					//		}
-
-							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-              
-              return cell
-//            } else if let messageImageUrl = message.imageUrl {
-//							cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!, isThumbnail: false)
-//							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-//
-//							return cell
-//						}
-          case false:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
-            cell.chatLogController = self
-            cell.setupData(message: message, isGroupChat: isGroupChat)
-//            if let imageData = message.localImage?.image, let image = UIImage(data: imageData) {
-//              cell.setupImageFromLocalData(message: message, image: image)
-//              return cell
-//            }
-           // if let messageImageUrl = message.thumbnailImageUrl {
-
-						//userInteractive
-				//		DispatchQueue.global(qos: .default).async {
-							cell.setupImageFromURL(message: message, indexPath: indexPath)
-					//	}
-
-						return cell
-//						} else if  let messageImageUrl = message.imageUrl {
-//							cell.setupImageFromURL(message: message, messageImageUrl: URL(string: messageImageUrl)!, isThumbnail: false)
-//							return cell
-//						}
-          }
-        } else
-
-          if isVoiceMessage {
-            switch isOutgoingMessage {
-            case true:
-              let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
-              cell.chatLogController = self
-              cell.setupData(message: message)
-							cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
-              
-              return cell
-            case false:
-              let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
-              cell.chatLogController = self
-              cell.setupData(message: message, isGroupChat: isGroupChat)
-              return cell
-            }
-    }
+    } else if isTextMessage {
+			switch isOutgoingMessage {
+			case true:
+				let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outgoingTextMessageCellID, for: indexPath) as! OutgoingTextMessageCell
+				cell.chatLogController = self
+				cell.setupData(message: message)
+				cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
+				return cell
+			case false:
+				let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingTextMessageCellID, for: indexPath) as! IncomingTextMessageCell
+				cell.chatLogController = self
+				cell.setupData(message: message, isGroupChat: isGroupChat)
+				return cell
+			}
+		} else if isPhotoVideoMessage {
+			switch isOutgoingMessage {
+			case true:
+				let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoMessageCellID, for: indexPath) as! PhotoMessageCell
+				cell.chatLogController = self
+				cell.setupData(message: message)
+				cell.setupImageFromURL(message: message, indexPath: indexPath)
+				cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
+				return cell
+			case false:
+				let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingPhotoMessageCellID, for: indexPath) as! IncomingPhotoMessageCell
+				cell.chatLogController = self
+				cell.setupData(message: message, isGroupChat: isGroupChat)
+				cell.setupImageFromURL(message: message, indexPath: indexPath)
+				return cell
+			}
+		} else if isVoiceMessage {
+			switch isOutgoingMessage {
+			case true:
+				let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outgoingVoiceMessageCellID, for: indexPath) as! OutgoingVoiceMessageCell
+				cell.chatLogController = self
+				cell.setupData(message: message)
+				cell.configureDeliveryStatus(at: indexPath, groupMessages: self.groupedMessages, message: message)
+				return cell
+			case false:
+				let cell = collectionView.dequeueReusableCell(withReuseIdentifier: incomingVoiceMessageCellID, for: indexPath) as! IncomingVoiceMessageCell
+				cell.chatLogController = self
+				cell.setupData(message: message, isGroupChat: isGroupChat)
+				return cell
+			}
+		}
     return nil
   }
   
    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-
     if let cell = cell as? OutgoingVoiceMessageCell {
       guard cell.isSelected, chatLogAudioPlayer != nil else { return }
       chatLogAudioPlayer.stop()
@@ -178,7 +135,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     }
   }
 
-   func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+	func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
     guard let cell = collectionView.cellForItem(at: indexPath) as? BaseVoiceMessageCell, chatLogAudioPlayer != nil else { return }
     chatLogAudioPlayer.stop()
     cell.playerView.resetTimer()
@@ -188,7 +145,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     } catch {}
   }
   
-   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard groupedMessages.indices.contains(indexPath.section) else { return }
     let message = groupedMessages[indexPath.section].messages[indexPath.item]
     guard let voiceEncodedString = message.voiceEncodedString else { return }
@@ -248,7 +205,6 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     }
 
     guard !isTextMessage else {
-
       let portraitHeight = setupCellHeight(isGroupChat: isGroupChat,
                                            isOutgoingMessage: isOutgoingMessage,
                                            frame: message.estimatedFrameForText,
@@ -270,7 +226,6 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     }
 
     guard !isPhotoVideoMessage else {
-
       if CGFloat(message.imageCellHeight.value!) < BaseMessageCell.minimumMediaCellHeight {
         if isGroupChat, !isOutgoingMessage {
           cellHeight = BaseMessageCell.incomingGroupMinimumMediaCellHeight
@@ -312,7 +267,6 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     }
 
     if isGroupChat, !isOutgoingMessage {
-
       return CGFloat(height) + BaseMessageCell.groupTextMessageInsets + timeHeight
     } else {
       return CGFloat(height) + BaseMessageCell.defaultTextMessageInsets + timeHeight

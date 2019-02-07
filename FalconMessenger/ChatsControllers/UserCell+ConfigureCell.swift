@@ -14,7 +14,6 @@ import RealmSwift
 extension UserCell {
   
   func configureCell(for indexPath: IndexPath, conversations: Results<Conversation>) {
-    
     let isPersonalStorage = conversations[indexPath.row].chatID == Auth.auth().currentUser?.uid
     let isConversationMuted = conversations[indexPath.row].muted.value != nil && conversations[indexPath.row].muted.value!
 		let chatName = conversations[indexPath.row].chatName

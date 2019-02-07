@@ -11,30 +11,29 @@ import UIKit
 class CameraCell: UICollectionViewCell {
     
     var cameraView: UIView? {
-        willSet {
-            cameraView?.removeFromSuperview()
-        }
-        didSet {
-            if let cameraView = cameraView {
-                contentView.addSubview(cameraView)
-              setNeedsLayout()
-            }
-        }
+			willSet {
+				cameraView?.removeFromSuperview()
+			}
+			didSet {
+				if let cameraView = cameraView {
+					contentView.addSubview(cameraView)
+					setNeedsLayout()
+				}
+			}
     }
     
     var cameraOverlayView: UIView? {
-        didSet {
-            setNeedsLayout()
-        }
+			didSet {
+				setNeedsLayout()
+			}
     }
     
     // MARK: - Layout
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        cameraView?.frame = bounds
-        cameraOverlayView?.frame = bounds
+			super.layoutSubviews()
+			cameraView?.frame = bounds
+			cameraOverlayView?.frame = bounds
     }
     
 }

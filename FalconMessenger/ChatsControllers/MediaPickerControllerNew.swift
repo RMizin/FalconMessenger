@@ -18,7 +18,7 @@ protocol MediaPickerDelegate: class {
 
 class MediaPickerControllerNew: ImagePickerTrayController {
 
-  var imagePicker: UIImagePickerController! = UIImagePickerController()
+  var imagePicker = UIImagePickerController()
   fileprivate let imageSourceCamera = globalDataStorage.imageSourceCamera
   fileprivate let imageSourcePhotoLibrary = globalDataStorage.imageSourcePhotoLibrary
   

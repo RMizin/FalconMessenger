@@ -78,8 +78,6 @@ class ChatsTableViewController: UITableViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handleReloadTable), name: .messageSent, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(cleanUpController), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
   }
-
-
   
   @objc fileprivate func changeTheme() {
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
@@ -134,7 +132,6 @@ class ChatsTableViewController: UITableViewController {
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
-						print("here")
 					self.tableView.beginUpdates()
 					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 0), with: .none)
 					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 0), with: .automatic)
@@ -154,7 +151,6 @@ class ChatsTableViewController: UITableViewController {
 				break
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
-					print("here 1")
 					self.tableView.beginUpdates()
 					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 1), with: .none)
 					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 1), with: .automatic)
