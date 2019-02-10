@@ -16,6 +16,11 @@ private let sharedMediaSupplementaryID = "sharedMediaSupplementaryID"
 
 class SharedMediaController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
+	fileprivate var isLoading = false
+	fileprivate var viewable = [INSPhotoViewable]()
+	fileprivate var sharedMediaHistoryFetcher: SharedMediaHistoryFetcher? = SharedMediaHistoryFetcher()
+	fileprivate let viewPlaceholder = ViewPlaceholder()
+
 	fileprivate var sharedMedia = [[SharedMedia]]() {
 		didSet {
 			DispatchQueue.global(qos: .utility).async { [unowned self] in
@@ -24,14 +29,12 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		}
 	}
 
-	fileprivate var isLoading = false
-	fileprivate var viewable = [INSPhotoViewable]()
-	fileprivate let sharedMediaHistoryFetcher = SharedMediaHistoryFetcher()
-	fileprivate let viewPlaceholder = ViewPlaceholder()
-
 	var fetchingData: (userID: String, chatID: String)? {
 		didSet {
-			fetchPhotos()
+			ARSLineProgress.ars_showOnView(view)
+			DispatchQueue.global(qos: .background).async {
+				self.fetchPhotos()
+			}
 		}
 	}
 
@@ -43,6 +46,10 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 														 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
 														 withReuseIdentifier: sharedMediaSupplementaryID)
 		configureController()
+	}
+
+	deinit {
+		sharedMediaHistoryFetcher = nil
 	}
 
 	fileprivate func configureController() {
@@ -68,20 +75,12 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		if #available(iOS 11.0, *) {
 			collectionView?.contentInsetAdjustmentBehavior = .always
 		}
-
-		collectionView?.addRefreshFooter { [weak self] (footer) in
-			guard self?.isLoading == false else { return }
-			self?.isLoading = true
-			self?.sharedMediaHistoryFetcher.loadPreviousMedia(self?.fetchingData)
-		}
 	}
 
 	fileprivate func configureViewable() {
 		_ = sharedMedia.map({$0.map({ (element) in
 			guard let urlString = element.imageURL else { return }
-
 			var viewableElement: INSPhotoViewable!
-
 			let cacheKey = SDWebImageManager.shared.cacheKey(for: URL(string: urlString))
 
 			SDImageCache.shared.containsImage(forKey: cacheKey, cacheType: .disk) { (cacheType) in
@@ -99,18 +98,13 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 					})
 				} else {
 					if let thumbnailURLString = element.thumbnailImageUrl {
-
-
-
 						viewableElement = INSPhoto(imageURL: URL(string: urlString),
 																			 thumbnailImageURL: URL(string: thumbnailURLString),
 																			 messageUID: element.id, videoURL: element.videoURL, localVideoURL: element.videoURL)
-
 					} else {
 						viewableElement = INSPhoto(imageURL: URL(string: urlString),
 																			 thumbnailImageURL: URL(string: urlString),
 																			 messageUID: element.id, videoURL: element.videoURL, localVideoURL: element.videoURL)
-
 					}
 					self.updateViewables(element: element, viewableElement: viewableElement)
 				}
@@ -129,10 +123,37 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		}
 	}
 
+	override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		let isScrollViewAtBottom = (((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height))
+		guard isScrollViewAtBottom && !isLoading else { return }
+		isLoading = true
+		sharedMediaHistoryFetcher?.loadPreviousMedia(fetchingData)
+	}
+
+	// MARK: Helpers
 	fileprivate func fetchPhotos() {
-		sharedMediaHistoryFetcher.delegate = self
-		ARSLineProgress.ars_showOnView(view)
-		sharedMediaHistoryFetcher.loadPreviousMedia(fetchingData)
+		sharedMediaHistoryFetcher?.delegate = self
+		sharedMediaHistoryFetcher?.loadPreviousMedia(fetchingData)
+	}
+
+	fileprivate func setViewPlaceholder(enabled: Bool) {
+		if enabled {
+			guard !view.subviews.contains(viewPlaceholder) else { return }
+			viewPlaceholder.add(for: view, title: .emptySharedMedia, subtitle: .emptyString, priority: .medium, position: .center)
+			ARSLineProgress.hide()
+			return
+		} else {
+			guard view.subviews.contains(viewPlaceholder) else { return }
+			viewPlaceholder.remove(from: view, priority: .medium)
+		}
+	}
+
+	fileprivate func updated(_ media: [[SharedMedia]], with data: [SharedMedia]) -> [[SharedMedia]] {
+		var flattenMedia = Array(media.joined())
+		for data in data where !flattenMedia.contains(data) {
+			flattenMedia.append(data)
+		}
+		return SharedMedia.groupedSharedMedia(flattenMedia)
 	}
 
 	// MARK: UICollectionViewDataSource
@@ -191,48 +212,41 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 }
 
 extension SharedMediaController: SharedMediaHistoryDelegate {
-
-	func sharedMediaHistory(allLoaded: Bool) {
-		DispatchQueue.main.async {
-			self.collectionView?.removeRefreshFooter()
+	func sharedMediaHistory(allLoaded: Bool, allMedia: [SharedMedia]) {
+		if allMedia.count > sharedMedia.joined().count {
+			sharedMedia = SharedMedia.groupedSharedMedia(allMedia)
+			setViewPlaceholder(enabled: sharedMedia.count == 0)
+			DispatchQueue.main.async { [weak self] in
+				self?.collectionView.reloadData()
+			}
+		} else if allMedia.count == 0 {
+			setViewPlaceholder(enabled: allMedia.count == 0)
 		}
+
 		isLoading = false
 		ARSLineProgress.hide()
 	}
 
 	func sharedMediaHistory(isEmpty: Bool) {
-		if isEmpty {
-			viewPlaceholder.add(for: view, title: .emptySharedMedia, subtitle: .emptyString, priority: .medium, position: .center)
-			ARSLineProgress.hide()
-			return
-		} else {
-			viewPlaceholder.remove(from: view, priority: .medium)
-		}
+		setViewPlaceholder(enabled: isEmpty)
 	}
 
-	func sharedMediaHistory(updated sharedMedia: [SharedMedia]) {
-		let numberOfSectionsBeforeUpdate = self.sharedMedia.count
-		let lastSectionIndexBeforeUpdate = self.sharedMedia.count - 1 >= 0 ? self.sharedMedia.count - 1 : 0
-		var flattenArray = Array(self.sharedMedia.joined())
-		flattenArray.append(contentsOf: sharedMedia)
-		let newSharedMedia = SharedMedia.groupedSharedMedia(flattenArray)
-
-		self.sharedMedia = newSharedMedia
-		let numberOfSectionsAfterUpdate = self.sharedMedia.count
-
-		self.collectionView?.refreshFooter?.stopLoading()
+	func sharedMediaHistory(updated olderMedia: [SharedMedia]) {
+		guard olderMedia.count > 0 else { isLoading = false; return }
+		let numberOfSectionsBeforeUpdate = collectionView.numberOfSections
+		sharedMedia = updated(sharedMedia, with: olderMedia)
+		let numberOfSectionsAfterUpdate = sharedMedia.count
 		isLoading = false
+		setViewPlaceholder(enabled: sharedMedia.count == 0)
 
 		UIView.performWithoutAnimation {
 			collectionView?.performBatchUpdates({
 				var indexSet = IndexSet()
-				for index in numberOfSectionsBeforeUpdate..<numberOfSectionsAfterUpdate {
-					indexSet.insert(index)
-				}
+				for index in numberOfSectionsBeforeUpdate..<numberOfSectionsAfterUpdate { indexSet.insert(index) }
 				if collectionView.numberOfSections > 0 {
-					collectionView?.reloadSections([lastSectionIndexBeforeUpdate])
+					let lastSection = collectionView.numberOfSections - 1
+					collectionView?.reloadSections([lastSection])
 				}
-
 				collectionView?.insertSections(indexSet)
 			}, completion: { (_) in
 				ARSLineProgress.hide()

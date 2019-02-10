@@ -380,7 +380,6 @@ public class CircleProgress: UIView, CAAnimationDelegate {
       status = .Unknown
       progressLayer.removeAnimation(forKey: dhRingRotationAnimationKey)
       progressLayer.removeAnimation(forKey: dhRingStorkeAnimationKey)
-      
       startLoading()
     }
   }
