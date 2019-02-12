@@ -32,7 +32,7 @@ class SharedMedia: NSObject {
 	static func groupedSharedMedia(_ sharedMedia: [SharedMedia]) -> [[SharedMedia]] {
 
 		let sorted = sharedMedia.sorted { (media1, media2) -> Bool in
-			return (media1.id ?? "") > (media2.id ?? "")
+			return (media1.timestamp ?? 0) > (media2.timestamp ?? 0)
 		}
 
 		let grouped = Dictionary.init(grouping: sorted) { (sharedElement) -> String in

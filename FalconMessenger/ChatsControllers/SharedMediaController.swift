@@ -150,7 +150,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 	fileprivate func updated(_ media: [[SharedMedia]], with data: [SharedMedia]) -> [[SharedMedia]] {
 		var flattenMedia = Array(media.joined())
-		for data in data where !flattenMedia.contains(data) {
+		for data in data {
 			flattenMedia.append(data)
 		}
 		return SharedMedia.groupedSharedMedia(flattenMedia)
@@ -244,7 +244,7 @@ extension SharedMediaController: SharedMediaHistoryDelegate {
 				var indexSet = IndexSet()
 				for index in numberOfSectionsBeforeUpdate..<numberOfSectionsAfterUpdate { indexSet.insert(index) }
 				if collectionView.numberOfSections > 0 {
-					let lastSection = collectionView.numberOfSections - 1
+				let lastSection = collectionView.numberOfSections - 1
 					collectionView?.reloadSections([lastSection])
 				}
 				collectionView?.insertSections(indexSet)
