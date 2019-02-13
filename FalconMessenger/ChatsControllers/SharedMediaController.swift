@@ -117,7 +117,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 			return viewable.messageUID == viewableElement.messageUID
 		}) {
 			let index = self.viewable.insertionIndexOf(elem: viewableElement, isOrderedBefore: { (viewable1, viewable2) -> Bool in
-				return viewable1.messageUID! > viewable2.messageUID!
+				return viewable1.messageUID ?? "" > viewable2.messageUID ?? ""
 			})
 			self.viewable.insert(viewableElement, at: index)
 		}
@@ -150,7 +150,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 	fileprivate func updated(_ media: [[SharedMedia]], with data: [SharedMedia]) -> [[SharedMedia]] {
 		var flattenMedia = Array(media.joined())
-		for data in data {
+		for data in data where !flattenMedia.contains(data) {
 			flattenMedia.append(data)
 		}
 		return SharedMedia.groupedSharedMedia(flattenMedia)
@@ -214,17 +214,12 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 extension SharedMediaController: SharedMediaHistoryDelegate {
 	func sharedMediaHistory(allLoaded: Bool, allMedia: [SharedMedia]) {
 		if allMedia.count > sharedMedia.joined().count {
-			sharedMedia = SharedMedia.groupedSharedMedia(allMedia)
-			setViewPlaceholder(enabled: sharedMedia.count == 0)
-			DispatchQueue.main.async { [weak self] in
-				self?.collectionView.reloadData()
-			}
+			sharedMediaHistory(updated: allMedia)
 		} else if allMedia.count == 0 {
 			setViewPlaceholder(enabled: allMedia.count == 0)
+			isLoading = false
+			ARSLineProgress.hide()
 		}
-
-		isLoading = false
-		ARSLineProgress.hide()
 	}
 
 	func sharedMediaHistory(isEmpty: Bool) {

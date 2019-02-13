@@ -147,9 +147,7 @@ class SharedMediaHistoryFetcher: NSObject {
 	fileprivate func notifyWhenGroupFinished(query: DatabaseQuery) {
 		loadingGroup.notify(queue: DispatchQueue.main, execute: {
 			query.removeObserver(withHandle: self.userMessageHande)
-			let media = self.previousMedia
-			self.sharedMediaToSend.append(contentsOf: media)
-
+			self.sharedMediaToSend.append(contentsOf: self.previousMedia)
 			self.currentPage += 1
 			if self.sharedMediaToSend.count < self.messagesToLoad * self.currentMediaPage {
 				self.isLoading = false
@@ -157,7 +155,7 @@ class SharedMediaHistoryFetcher: NSObject {
 			} else {
 				self.isLoading = false
 				self.currentMediaPage += 1
-				self.delegate?.sharedMediaHistory(updated: media)
+				self.delegate?.sharedMediaHistory(updated: self.sharedMediaToSend)
 			}
 		})
 	}
