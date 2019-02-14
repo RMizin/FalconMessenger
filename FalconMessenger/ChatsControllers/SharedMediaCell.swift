@@ -64,8 +64,8 @@ class SharedMediaCell: UICollectionViewCell {
 		if let thumbnailURL = sharedElement.thumbnailImageUrl {
 			url = thumbnailURL
 		}
-
-		sharedPhotoImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground]) { (image, error, _, _) in
+		
+		sharedPhotoImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground, .highPriority]) { (image, error, _, _) in
 			if error != nil {
 				self.playButton.isHidden = true
 				return
@@ -78,7 +78,8 @@ class SharedMediaCell: UICollectionViewCell {
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		playButton.isHidden = true
 		sharedPhotoImageView.image = nil
+		sharedPhotoImageView.sd_cancelCurrentImageLoad()
+		playButton.isHidden = true
 	}
 }

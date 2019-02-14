@@ -62,7 +62,7 @@ class ChatsTableViewController: UITableViewController {
     super.viewWillAppear(animated)
     
     if !isAppLoaded {
-			tableView.isUserInteractionEnabled = true //hotfix
+			guard Auth.auth().currentUser != nil else { return }
 			setupDataSource()
       managePresense()
       conversationsFetcher.fetchConversations()
@@ -97,7 +97,6 @@ class ChatsTableViewController: UITableViewController {
   }
   
   @objc public func cleanUpController() {
-		tableView.isUserInteractionEnabled = false //hotfix
 		notificationsManager.removeAllObservers()
 		conversationsFetcher.removeAllObservers()
 		realmManager.deleteAll()
