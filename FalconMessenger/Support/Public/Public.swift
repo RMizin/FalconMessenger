@@ -563,19 +563,44 @@ extension Data {
 }
 
 extension FileManager {
-  func clearTemp() {
-    do {
-      let tmpDirectory = try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory())
-      try tmpDirectory.forEach { file in
-        let path = String.init(format: "%@%@", NSTemporaryDirectory(), file)
-        try FileManager.default.removeItem(atPath: path)
-      }
-    } catch {
-      print(error)
-    }
-  }
+
+	func getTempSize(completion: (_ size: Double) -> Void) {
+	 var size = 0.0
+		do {
+			let tmpDirectory = try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory())
+			try tmpDirectory.forEach { file in
+				let path = String.init(format: "%@%@", NSTemporaryDirectory(), file)
+				let attributes = try FileManager.default.attributesOfItem(atPath: path)
+				if let fileSize = attributes[FileAttributeKey.size] as? Double {
+					size += fileSize
+				} else {
+					size += 0
+				}
+			}
+			completion(size)
+		} catch {
+			size += 0
+			completion(size)
+		}
+	}
+
+	func clearTemp() {
+		do {
+			let tmpDirectory = try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory())
+			try tmpDirectory.forEach { file in
+				let path = String.init(format: "%@%@", NSTemporaryDirectory(), file)
+				try FileManager.default.removeItem(atPath: path)
+			}
+		} catch {}
+	}
 }
 
+extension Double {
+	func round(to places: Int) -> Double {
+		let divisor = pow(10.0, Double(places))
+		return Darwin.round(self * divisor) / divisor
+	}
+}
 //public func rearrange<T>(array: Array<T>, fromIndex: Int, toIndex: Int) -> Array<T>{
 //  var arr = array
 //  let element = arr.remove(at: fromIndex)
