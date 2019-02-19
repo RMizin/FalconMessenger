@@ -49,6 +49,11 @@ class ChatLogViewControllerTitleView: UIView {
    super.init(frame: .zero)
     self.title.text = title
     self.subtitle.text = subtitle
+		if subtitle == statusOnline {
+			self.subtitle.textColor = tintColor
+		} else {
+			self.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+		}
     stackView.addArrangedSubview(self.title)
     stackView.addArrangedSubview(self.subtitle)
     self.title.sizeToFit()

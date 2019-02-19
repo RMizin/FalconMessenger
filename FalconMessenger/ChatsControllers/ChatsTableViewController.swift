@@ -369,17 +369,15 @@ class ChatsTableViewController: UITableViewController {
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if section == 0 {
-			guard let realmPinnedConversations = realmPinnedConversations else { return 0 }
-      return realmPinnedConversations.count
+			return realmPinnedConversations?.count ?? 0
     } else {
-			guard let realmUnpinnedConversations = realmUnpinnedConversations else { return 0 }
-      return realmUnpinnedConversations.count
+			return realmUnpinnedConversations?.count ?? 0
     }
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: userCellID, for: indexPath) as? UserCell ?? UserCell()
-    
+
     if indexPath.section == 0 {
 			guard let realmPinnedConversations = realmPinnedConversations else { return cell }
       cell.configureCell(for: indexPath, conversations: realmPinnedConversations)

@@ -502,22 +502,12 @@ class GroupAdminPanelTableViewController: UITableViewController {
         cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
         cell.subtitle.text = "You"
       } else {
-        if let statusString = members[indexPath.row].onlineStatus as? String {
-          if statusString == statusOnline {
-            cell.subtitle.textColor = view.tintColor
-            cell.subtitle.text = statusString
-          } else {
-            cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-            let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-            let subtitle = "Last seen " + timeAgoSinceDate(date)
-            cell.subtitle.text = subtitle
-          }
-        } else if let statusTimeinterval = members[indexPath.row].onlineStatus as? TimeInterval {
-          cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-          let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
-          let subtitle = "Last seen " + timeAgoSinceDate(date)
-          cell.subtitle.text = subtitle
-        }
+				cell.subtitle.text = members[indexPath.row].onlineStatusString
+				if members[indexPath.row].onlineStatusString == statusOnline {
+					cell.subtitle.textColor = view.tintColor
+				} else {
+					cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+				}
       }
 
       guard let url = members[indexPath.row].thumbnailPhotoURL else { return cell }

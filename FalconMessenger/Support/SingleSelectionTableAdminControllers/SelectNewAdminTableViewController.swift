@@ -191,25 +191,14 @@ class SelectNewAdminTableViewController: UITableViewController {
     if let name = filteredUsersWithSection[indexPath.section][indexPath.row].name {
       cell.title.text = name
     }
-    
-    if let statusString = filteredUsersWithSection[indexPath.section][indexPath.row].onlineStatus as? String {
-      if statusString == statusOnline {
-        cell.subtitle.textColor = view.tintColor
-        cell.subtitle.text = statusString
-      } else {
-        cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-        let subtitle = "Last seen " + timeAgoSinceDate(date)
-        cell.subtitle.text = subtitle
-      }
-      
-    } else if let statusTimeinterval = filteredUsersWithSection[indexPath.section][indexPath.row].onlineStatus as? TimeInterval {
-      cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
-      let subtitle = "Last seen " + timeAgoSinceDate(date)
-      cell.subtitle.text = subtitle
-    }
-    
+
+			cell.subtitle.text = filteredUsersWithSection[indexPath.section][indexPath.row].onlineStatusString
+		if filteredUsersWithSection[indexPath.section][indexPath.row].onlineStatusString == statusOnline {
+			cell.subtitle.textColor = view.tintColor
+		} else {
+			cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+		}
+
     guard let url = filteredUsersWithSection[indexPath.section][indexPath.row].thumbnailPhotoURL else { return cell }
     cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.continueInBackground], completed: { (image, error, cacheType, url) in
       guard image != nil else { return }

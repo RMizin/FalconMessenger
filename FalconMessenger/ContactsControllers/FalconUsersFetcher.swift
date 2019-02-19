@@ -155,10 +155,7 @@ class FalconUsersFetcher: NSObject {
 
   fileprivate func updateDataSource(newUsers: [User]?) {
     guard isFalconUsersLoadingGroupFinished == true else { falconUsersLoadingGroup.leave(); return }
-    guard var newUsers = newUsers else { return }
-
-    newUsers = self.sortUsers(users: newUsers)
-    newUsers = self.rearrangeUsers(users: newUsers)
+    guard let newUsers = newUsers else { return }
     self.delegate?.falconUsers(shouldBeUpdatedTo: newUsers)
   }
 
@@ -176,23 +173,5 @@ class FalconUsersFetcher: NSObject {
       guard falconUsersHandle.indices.contains(index) else { return }
       falconUsersHandle.remove(at: index)
     }
-  }
-
-  fileprivate func rearrangeUsers(users: [User]) -> [User] { /* Moves Online users to the top  */
-    var users = users
-    for user in users where user.onlineStatus as? String == statusOnline {
-      users.move(user, to: 0)
-    }
-    return users
-  }
-
-  fileprivate func sortUsers(users: [User]) -> [User] { /* Sort users by last online date  */
-    let sortedUsers = users.sorted(by: { (user1, user2) -> Bool in
-      let timestamp1 = user1.onlineStatus as? TimeInterval
-      let timestamp2 = user2.onlineStatus as? TimeInterval
-
-      return timestamp1 ?? 0.0  > timestamp2 ?? 0.0
-    })
-    return sortedUsers
   }
 }

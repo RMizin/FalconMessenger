@@ -22,8 +22,7 @@ class ContactsController: UITableViewController {
 
   var contacts = [CNContact]()
   var filteredContacts = [CNContact]()
-  var users = [User]()
-  var filteredUsers = [User]()
+  var users: Results<User>?
 
   var searchBar: UISearchBar?
   var searchContactsController: UISearchController?
@@ -34,6 +33,8 @@ class ContactsController: UITableViewController {
   let contactsFetcher = ContactsFetcher()
   let navigationItemActivityIndicator = NavigationItemActivityIndicator()
 
+	let realm = try! Realm(configuration: realmConfiguration())
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -41,6 +42,7 @@ class ContactsController: UITableViewController {
       setupSearchController()
       addContactsObserver()
       addObservers()
+			setupDataSource()
       DispatchQueue.global(qos: .default).async { [unowned self] in
         self.falconUsersFetcher.loadFalconUsers()
         self.contactsFetcher.fetchContacts()
@@ -48,8 +50,13 @@ class ContactsController: UITableViewController {
     }
 
     deinit {
+			stopContiniousUpdate()
       NotificationCenter.default.removeObserver(self)
     }
+
+		func setupDataSource() {
+			users = realm.objects(User.self).sorted(byKeyPath: "onlineStatusSortDescriptor", ascending: false)
+		}
 
     fileprivate var shouldReSyncUsers = false
 
@@ -111,6 +118,7 @@ class ContactsController: UITableViewController {
                                              name: .CNContactStoreDidChange,
                                              object: nil)
     }
+
     fileprivate func removeContactsObserver() {
       NotificationCenter.default.removeObserver(self, name: .CNContactStoreDidChange, object: nil)
     }
@@ -145,47 +153,75 @@ class ContactsController: UITableViewController {
     }
 
     @objc func cleanUpController() {
-      filteredUsers.removeAll()
-      users.removeAll()
-      tableView.reloadData()
+			stopContiniousUpdate()
+			func deleteAll() {
+				do {
+					try realm.safeWrite {
+						realm.deleteAll()
+					}
+				} catch {}
+			}
+
+			deleteAll()
       shouldReSyncUsers = true
       userDefaults.removeObject(for: userDefaults.contactsCount)
       userDefaults.removeObject(for: userDefaults.contactsSyncronizationStatus)
     }
 
-    fileprivate var isAppLoaded = false
-    fileprivate func reloadTableView(updatedUsers: [User]) {
+	static fileprivate func realmConfiguration() -> Realm.Configuration {
+		var config = Realm.Configuration()
+		config.fileURL = config.fileURL!.deletingLastPathComponent().appendingPathComponent("users.realm")
+		return config
+	}
 
-      let searchBar = correctSearchBarForCurrentIOSVersion()
-      let isSearchInactive = searchBar.text?.isEmpty ?? true
-    //  let isSearchControllerEmpty = filteredUsers.count == 0
-      guard isSearchInactive else { return }
-   //   if isSearchInProgress && !isSearchControllerEmpty { return } else {
-        users = updatedUsers
-        filteredUsers = users
+	fileprivate var isAppLoaded = false
 
-        guard isAppLoaded == false else {
-          DispatchQueue.main.async {
-            self.tableView.reloadData()
-          }; return
-        }
-        isAppLoaded = true
-        UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {
-          self.tableView.reloadData()
-        }, completion: nil)
-     // }
-    }
+	fileprivate func reloadTableView(updatedUsers: [User]) {
+		continiousUIUpdate(users: updatedUsers)
+	}
 
-    fileprivate func correctSearchBarForCurrentIOSVersion() -> UISearchBar {
-      var searchBar = UISearchBar()
-      if #available(iOS 11.0, *) {
-        searchBar = searchContactsController?.searchBar ?? searchBar
-      } else {
-        searchBar = self.searchBar ?? searchBar
-      }
-      return searchBar
-    }
+	fileprivate var updateUITimer: DispatchSourceTimer?
 
+	fileprivate func continiousUIUpdate(users: [User]) {
+		guard users.count > 0 else { return }
+		updateUITimer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
+		updateUITimer?.schedule(deadline: .now(), repeating: .seconds(60))
+		updateUITimer?.setEventHandler { [weak self] in
+			guard let unwrappedSelf = self else { return }
+			unwrappedSelf.performUIUpdate(users: users)
+		}
+		updateUITimer?.resume()
+	}
+
+	fileprivate func performUIUpdate(users: [User]) {
+		autoreleasepool {
+			if !realm.isInWriteTransaction {
+				realm.beginWrite()
+				for user in users {
+					user.onlineStatusString = user.stringStatus(onlineStatus: user.onlineStatus)
+					realm.create(User.self, value: user, update: true)
+				}
+				try! realm.commitWrite()
+			}
+		}
+
+		guard isAppLoaded == false else {
+			DispatchQueue.main.async { [weak self] in
+				self?.tableView.reloadData()
+			}
+			return
+		}
+
+		isAppLoaded = true
+		UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { [weak self] in
+			self?.tableView.reloadData()
+		}, completion: nil)
+	}
+
+	fileprivate func stopContiniousUpdate() {
+		updateUITimer?.cancel()
+		updateUITimer = nil
+	}
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -196,7 +232,7 @@ class ContactsController: UITableViewController {
       if section == 0 {
         return 1
       } else if section == 1 {
-        return filteredUsers.count
+				return users?.count ?? 0
       } else {
         return filteredContacts.count
       }
@@ -233,7 +269,7 @@ class ContactsController: UITableViewController {
       } else {
         let cell = tableView.dequeueReusableCell(withIdentifier: falconUsersCellID,
                                                  for: indexPath) as? FalconUsersTableViewCell ?? FalconUsersTableViewCell()
-        let parameter = indexPath.section == 1 ? filteredUsers[indexPath.row] : filteredContacts[indexPath.row]
+				let parameter = indexPath.section == 1 ? users?[indexPath.row] : filteredContacts[indexPath.row]
         cell.configureCell(for: parameter)
         return cell
       }
@@ -267,13 +303,13 @@ class ContactsController: UITableViewController {
 
       } else if indexPath.section == 1 {
 					let realm = try! Realm()
-					guard let id = filteredUsers[indexPath.row].id, let conversation = realm.objects(Conversation.self).filter("chatID == %@", id).first else {
-					let conversationDictionary = ["chatID": filteredUsers[indexPath.row].id as AnyObject,
-																				"chatName": filteredUsers[indexPath.row].name as AnyObject,
-																				"isGroupChat": false  as AnyObject,
-																				"chatOriginalPhotoURL": filteredUsers[indexPath.row].photoURL as AnyObject,
-																				"chatThumbnailPhotoURL": filteredUsers[indexPath.row].thumbnailPhotoURL as AnyObject,
-																				"chatParticipantsIDs": [filteredUsers[indexPath.row].id, currentUserID] as AnyObject]
+					guard let id = users?[indexPath.row].id, let conversation = realm.objects(Conversation.self).filter("chatID == %@", id).first else {
+						let conversationDictionary = ["chatID": users?[indexPath.row].id as AnyObject,
+																					"chatName": users?[indexPath.row].name as AnyObject,
+																				"isGroupChat": false as AnyObject,
+																				"chatOriginalPhotoURL": users?[indexPath.row].photoURL as AnyObject,
+																				"chatThumbnailPhotoURL": users?[indexPath.row].thumbnailPhotoURL as AnyObject,
+																				"chatParticipantsIDs": [users?[indexPath.row].id, currentUserID] as AnyObject]
 					let conversation = Conversation(dictionary: conversationDictionary)
 					chatLogPresenter.open(conversation)
 

@@ -14,7 +14,7 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
 
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     searchBar.text = nil
-    filteredUsers = users
+		setupDataSource()
     filteredContacts = contacts
     UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {
       self.tableView.reloadData()
@@ -36,9 +36,8 @@ extension ContactsController: UISearchBarDelegate, UISearchControllerDelegate, U
   }
 
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    filteredUsers = searchText.isEmpty ? users : users.filter({ (user) -> Bool in
-      return user.name!.lowercased().contains(searchText.lowercased())
-    })
+		let userObjects = realm.objects(User.self).sorted(byKeyPath: "onlineStatusSortDescriptor", ascending: false)
+		users = searchText.isEmpty ? userObjects : userObjects.filter("name contains[cd] %@", searchText)
 
     filteredContacts = searchText.isEmpty ? contacts : contacts.filter({ (CNContact) -> Bool in
       let contactFullName = CNContact.givenName.lowercased() + " " + CNContact.familyName.lowercased()

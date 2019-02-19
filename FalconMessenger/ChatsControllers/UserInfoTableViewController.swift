@@ -144,17 +144,6 @@ class UserInfoTableViewController: UITableViewController {
       phoneNumberCell.contactStatusHeightConstraint.constant = 40
     }
   }
-  
-  fileprivate func stringTimestamp(onlineStatusObject: AnyObject) -> String {
-    if let onlineStatusStringStamp = onlineStatusObject as? String, onlineStatusStringStamp == statusOnline {
-      return statusOnline
-    } else if let onlineStatusTimeIntervalStamp = onlineStatusObject as? TimeInterval { //user got server timestamp in miliseconds
-      let date = Date(timeIntervalSince1970: onlineStatusTimeIntervalStamp/1000)
-      let subtitle = "Last seen " + timeAgoSinceDate(date)
-      return subtitle
-    }
-    return ""
-  }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -162,14 +151,16 @@ class UserInfoTableViewController: UITableViewController {
 
       let headerCell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier,
                                                      for: indexPath) as? UserinfoHeaderTableViewCell ?? UserinfoHeaderTableViewCell()
-      
       headerCell.title.text = user?.name ?? ""
       headerCell.title.font = UIFont.boldSystemFont(ofSize: 20)
-      
-      if let timestamp = user?.onlineStatus {
-        headerCell.subtitle.text = stringTimestamp(onlineStatusObject: timestamp)
-      }
-    
+			headerCell.subtitle.text = user?.onlineStatusString
+
+			if user?.onlineStatusString == statusOnline {
+				headerCell.subtitle.textColor = view.tintColor
+			} else {
+				headerCell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+			}
+
       headerCell.selectionStyle = .none
       
       guard let photoURL = user?.thumbnailPhotoURL else {

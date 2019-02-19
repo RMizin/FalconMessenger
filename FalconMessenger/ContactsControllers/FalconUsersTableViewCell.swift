@@ -84,7 +84,8 @@ class FalconUsersTableViewCell: UITableViewCell {
     subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
   }
 
-  func configureCell(for parameter: NSObject) {
+  func configureCell(for parameter: NSObject?) {
+		guard let parameter = parameter else { return }
     if let contact = parameter as? CNContact {
       configureContact(contact)
     } else if let user = parameter as? User {
@@ -94,20 +95,12 @@ class FalconUsersTableViewCell: UITableViewCell {
 
   fileprivate func configureUser(_ user: User) {
     title.text = user.name ?? ""
-
-    if let statusString = user.onlineStatus as? String {
-      if statusString == statusOnline {
-        subtitle.textColor = tintColor
-        subtitle.text = statusString
-      }
-    }
-
-    if let lastSeen = user.onlineStatus as? TimeInterval {
-      let date = Date(timeIntervalSince1970: lastSeen/1000)
-      let lastSeenTime = "Last seen " + timeAgoSinceDate(date)
-      subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      subtitle.text = lastSeenTime
-    }
+		subtitle.text = user.onlineStatusString
+		if user.onlineStatusString == statusOnline {
+			subtitle.textColor = tintColor
+		} else {
+			subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+		}
 
     guard let urlString = user.thumbnailPhotoURL else { return }
     let options: SDWebImageOptions = [.scaleDownLargeImages, .continueInBackground, .avoidAutoSetImage]

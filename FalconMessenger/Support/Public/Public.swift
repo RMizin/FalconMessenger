@@ -609,6 +609,13 @@ extension Double {
 //  return arr
 //}
 
+extension Double {
+	private static let arc4randomMax = Double(UInt32.max)
+	static func random0to1() -> Double {
+		return Double(arc4random()) / arc4randomMax
+	}
+}
+
 extension Array where Element: Equatable {
   mutating func move(_ element: Element, to newIndex: Index) {
     if let oldIndex: Int = self.index(of: element) { self.move(from: oldIndex, to: newIndex) }

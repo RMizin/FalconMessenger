@@ -66,24 +66,14 @@ extension SelectParticipantsViewController: UITableViewDelegate, UITableViewData
     if let name = user.name {
       cell.title.text = name
     }
-    
-    if let statusString = user.onlineStatus as? String {
-      if statusString == statusOnline {
-        cell.subtitle.textColor = view.tintColor
-        cell.subtitle.text = statusString
-      } else {
-        cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        let date = Date(timeIntervalSince1970: TimeInterval(statusString)!)
-        let subtitle = "Last seen " + timeAgoSinceDate(date)
-        cell.subtitle.text = subtitle
-      }
-    } else if let statusTimeinterval = user.onlineStatus as? TimeInterval {
-      cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      let date = Date(timeIntervalSince1970: statusTimeinterval/1000)
-      let subtitle = "Last seen " + timeAgoSinceDate(date)
-      cell.subtitle.text = subtitle
-    }
-    
+
+		cell.subtitle.text =  user.onlineStatusString
+		if user.onlineStatusString == statusOnline {
+			cell.subtitle.textColor = view.tintColor
+		} else {
+			cell.subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
+		}
+
     guard let url = user.thumbnailPhotoURL else { return cell }
     cell.icon.sd_setImage(with: URL(string: url), placeholderImage:  UIImage(named: "UserpicIcon"), options: [.continueInBackground], completed: { (image, error, cacheType, url) in
       guard image != nil else { return }

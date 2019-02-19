@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-//import SDWebImage
 import RealmSwift
 
 extension UserCell {
@@ -40,7 +39,11 @@ extension UserCell {
     
     if let isTyping = conversations[indexPath.row].isTyping.value, isTyping {
       messageLabel.text = "typing"
-      typingIndicatorTimer = Timer.scheduledTimer(timeInterval: 0.15, target: self, selector: #selector(updateTypingIndicatorTimer), userInfo: nil, repeats: true)
+      typingIndicatorTimer = Timer.scheduledTimer(timeInterval: 0.15,
+																									target: self,
+																									selector: #selector(updateTypingIndicatorTimer),
+																									userInfo: nil,
+																									repeats: true)
 			RunLoop.main.add(self.typingIndicatorTimer!, forMode: RunLoop.Mode.common)
     } else {
       typingIndicatorTimer?.invalidate()
