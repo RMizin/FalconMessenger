@@ -12,14 +12,14 @@ import RealmSwift
 extension ChatsTableViewController: TypingIndicatorDelegate {
   
   func typingIndicator(isActive: Bool, for chatID: String) {
-		try! realmManager.realm.safeWrite {
-			realmManager.realm.objects(Conversation.self).filter("chatID == %@", chatID).first?.isTyping.value = isActive
+		try! RealmKeychain.defaultRealm.safeWrite {
+			RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", chatID).first?.isTyping.value = isActive
 		}
   }
   
   typealias typingUpdateCompletionHandler = (_ isCompleted: Bool, _ updatedConversations: Results<Conversation>, _ row: Int?) -> Void
   
-  func update(_ conversations: Results<Conversation>, at chatID: String, with typingStatus: Bool , completion: typingUpdateCompletionHandler ) {
+  func update(_ conversations: Results<Conversation>, at chatID: String, with typingStatus: Bool, completion: typingUpdateCompletionHandler) {
     guard let index = conversations.index(where: { (conversation) -> Bool in
       return conversation.chatID == chatID
     }) else {

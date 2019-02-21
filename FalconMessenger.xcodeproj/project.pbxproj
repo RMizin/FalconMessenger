@@ -48,6 +48,7 @@
 		4B4F03D621E554BA00907D39 /* ImagesDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F454B1F3225DE00A6FF96 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */; };
+		4B520D16221F0B1000C7F6C6 /* RealmKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B520D15221F0B1000C7F6C6 /* RealmKeychain.swift */; };
 		4B5419481FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */; };
 		4B5693D320CFFAAB005EAE15 /* InAppNotificationDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5693C720CFFAAB005EAE15 /* InAppNotificationDispatcher.swift */; };
 		4B5693D620CFFAAB005EAE15 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5693CD20CFFAAB005EAE15 /* Utils.swift */; };
@@ -288,6 +289,7 @@
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B4F453C1F32230C00A6FF96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4F454A1F3225DE00A6FF96 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsController.swift; path = ContactsControllers/ContactsController.swift; sourceTree = "<group>"; };
+		4B520D15221F0B1000C7F6C6 /* RealmKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmKeychain.swift; sourceTree = "<group>"; };
 		4B5419471FB30F920014C4FB /* UserProfileAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserProfileAvatarOpenerDelegate.swift; path = AuthenticationControllers/UserProfileAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
 		4B5693C720CFFAAB005EAE15 /* InAppNotificationDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InAppNotificationDispatcher.swift; sourceTree = "<group>"; };
 		4B5693CD20CFFAAB005EAE15 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -682,6 +684,14 @@
 			name = Contacts;
 			sourceTree = "<group>";
 		};
+		4B520D14221F0B1000C7F6C6 /* RealmKeychain */ = {
+			isa = PBXGroup;
+			children = (
+				4B520D15221F0B1000C7F6C6 /* RealmKeychain.swift */,
+			);
+			path = RealmKeychain;
+			sourceTree = "<group>";
+		};
 		4B5693C620CFFAAB005EAE15 /* InAppBanner */ = {
 			isa = PBXGroup;
 			children = (
@@ -745,6 +755,7 @@
 		4B6BAF8B20886B3800A90F3A /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4B520D14221F0B1000C7F6C6 /* RealmKeychain */,
 				4B08E370208872B800C64EAA /* Public */,
 				4B6BAF8820886B3800A90F3A /* Sounds */,
 				4B08E36F208872AF00C64EAA /* ThemeManager */,
@@ -1888,6 +1899,7 @@
 				4B6BAFE820886C5F00A90F3A /* SelectParticipantsViewController.swift in Sources */,
 				4BDFACB12147E4BB00603963 /* UnblockContainerView.swift in Sources */,
 				4B2E59B2214AED3D0081B74E /* ChatLogViewController+MessageSenderDelegate.swift in Sources */,
+				4B520D16221F0B1000C7F6C6 /* RealmKeychain.swift in Sources */,
 				4BDB294D2126C79000D77600 /* ChangePhoneNumberController.swift in Sources */,
 				4B6BAFFA20886C5F00A90F3A /* PhoneNumberContainerView.swift in Sources */,
 				4B7EA2DA2203067A00002F0E /* FalconUISlider.swift in Sources */,

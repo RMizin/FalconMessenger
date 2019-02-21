@@ -11,58 +11,61 @@ import RealmSwift
 
 class ChatsRealmManager {
 
-	let realm = try! Realm()
-
 	func update(conversation: Conversation) {
-		try! realm.safeWrite {
-			realm.create(Conversation.self, value: conversation, update: true)
+		autoreleasepool {
+			try! RealmKeychain.defaultRealm.safeWrite {
+				RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: true)
+			}
 		}
 	}
 
 	func update(conversations: [Conversation], tokens: [NotificationToken]) {
 			autoreleasepool {
-				let realm = try! Realm()
-				guard !realm.isInWriteTransaction else {
+				guard !RealmKeychain.defaultRealm.isInWriteTransaction else {
 					print("Update Array operation, realm is in write transaction in \(String(describing: ChatsRealmManager.self))")
 					return
 				}
 
-				realm.beginWrite()
+				RealmKeychain.defaultRealm.beginWrite()
 				for conversation in conversations {
-					conversation.isTyping.value = realm.objects(Conversation.self).filter("chatID = %@", conversation.chatID ?? "").first?.isTyping.value
-					realm.create(Conversation.self, value: conversation, update: true)
+					conversation.isTyping.value = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID = %@", conversation.chatID ?? "").first?.isTyping.value
+					RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: true)
 					if let message = conversation.lastMessageRuntime {
-						message.senderName = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
-						message.isCrooked.value = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.isCrooked.value
+						message.senderName = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
+						message.isCrooked.value = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.isCrooked.value
 						if message.thumbnailImage == nil {
-							message.thumbnailImage = realm.object(ofType: RealmImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
+							message.thumbnailImage = RealmKeychain.defaultRealm.object(ofType: RealmImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
 						}
 						if message.localImage == nil {
-							message.localImage = realm.object(ofType: RealmImage.self, forPrimaryKey: message.messageUID ?? "")
+							message.localImage = RealmKeychain.defaultRealm.object(ofType: RealmImage.self, forPrimaryKey: message.messageUID ?? "")
 						}
-						realm.create(Message.self, value: message, update: true)
+						RealmKeychain.defaultRealm.create(Message.self, value: message, update: true)
 					}
 				}
 				do {
-					try realm.commitWrite(withoutNotifying: tokens)
+					try RealmKeychain.defaultRealm.commitWrite(withoutNotifying: tokens)
 				} catch {}
 			}
 	}
 
 	func delete(conversation: Conversation) {
-		try! realm.safeWrite {
-			let result = realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
-			let messagesResult = realm.objects(Message.self).filter("conversation.chatID = '\(conversation.chatID ?? "")'")
-			realm.delete(messagesResult)
-			realm.delete(result)
+		autoreleasepool {
+			try! RealmKeychain.defaultRealm.safeWrite {
+				let result = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
+				let messagesResult = RealmKeychain.defaultRealm.objects(Message.self).filter("conversation.chatID = '\(conversation.chatID ?? "")'")
+				RealmKeychain.defaultRealm.delete(messagesResult)
+				RealmKeychain.defaultRealm.delete(result)
+			}
 		}
 	}
 
 	func deleteAll() {
-		do {
-			try realm.safeWrite {
-				realm.deleteAll()
-			}
-		} catch {}
+		autoreleasepool {
+			do {
+				try RealmKeychain.defaultRealm.safeWrite {
+					RealmKeychain.defaultRealm.deleteAll()
+				}
+			} catch {}
+		}
 	}
 }

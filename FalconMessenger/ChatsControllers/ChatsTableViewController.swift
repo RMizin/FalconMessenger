@@ -11,7 +11,6 @@ import Firebase
 import SDWebImage
 import RealmSwift
 
-
 protocol ManageAppearance: class {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool )
 }
@@ -49,7 +48,7 @@ class ChatsTableViewController: UITableViewController {
   }
 
 	func setupDataSource() {
-		let objects = realmManager.realm.objects(Conversation.self)
+		let objects = RealmKeychain.defaultRealm.objects(Conversation.self)
 		let pinnedObjects = objects.filter("pinned == true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
 		let unpinnedObjects = objects.filter("pinned != true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
 

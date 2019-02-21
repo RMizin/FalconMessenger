@@ -87,10 +87,10 @@ extension ChatsTableViewController {
     let conversation = realmPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
 
-		if !realmManager.realm.isInWriteTransaction {
-			realmManager.realm.beginWrite()
+		if !RealmKeychain.defaultRealm.isInWriteTransaction {
+			RealmKeychain.defaultRealm.beginWrite()
 			realmPinnedConversations[indexPath.row].pinned.value = false
-					try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
+					try! RealmKeychain.defaultRealm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
 
 			let indexToInsert = realmUnpinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
 				return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
@@ -120,10 +120,10 @@ extension ChatsTableViewController {
     let conversation = realmUnpinnedConversations[indexPath.row]
    	guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
 
-		if !realmManager.realm.isInWriteTransaction {
-			realmManager.realm.beginWrite()
+		if !RealmKeychain.defaultRealm.isInWriteTransaction {
+			RealmKeychain.defaultRealm.beginWrite()
 			realmUnpinnedConversations[indexPath.row].pinned.value = true
-			try! realmManager.realm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
+			try! RealmKeychain.defaultRealm.commitWrite(withoutNotifying: [unpinnedConversationsNotificationToken!, pinnedConversationsNotificationToken!])
 
 			let indexToInsert = realmPinnedConversations.insertionIndex(of: conversation, using: { (conversation1, conversation2) -> Bool in
 				return conversation1.lastMessage?.timestamp.value ?? 0 > conversation2.lastMessage?.timestamp.value ?? 0
@@ -169,14 +169,14 @@ extension ChatsTableViewController {
     let conversation = indexPath.section == 0 ? realmPinnedConversations[indexPath.row] : realmUnpinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
 
-		if !realmManager.realm.isInWriteTransaction {
-			realmManager.realm.beginWrite()
-			let result = realmManager.realm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
+		if !RealmKeychain.defaultRealm.isInWriteTransaction {
+			RealmKeychain.defaultRealm.beginWrite()
+			let result = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID = '\(conversation.chatID!)'")
 			let messagesResult = conversation.messages
 
-			realmManager.realm.delete(messagesResult)
-			realmManager.realm.delete(result)
-			try! realmManager.realm.commitWrite()
+			RealmKeychain.defaultRealm.delete(messagesResult)
+			RealmKeychain.defaultRealm.delete(result)
+			try! RealmKeychain.defaultRealm.commitWrite()
 			if realmPinnedConversations.count == 0 && realmUnpinnedConversations.count == 0 {
 				conversationsFetcher.cleanFetcherConversations()
 			}

@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 import UserNotifications
-import RealmSwift
 import FirebaseAnalytics
 
 func setUserNotificationToken(token: String) {
@@ -106,10 +105,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   func applicationWillTerminate(_ application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 		Database.database().purgeOutstandingWrites()
-		let realm = try! Realm()
-		try! realm.safeWrite {
-			for object in realm.objects(Message.self).filter("status == %@", messageStatusSending) {
-				object.status = messageStatusNotSent
+		autoreleasepool {
+			try! RealmKeychain.defaultRealm.safeWrite {
+				for object in RealmKeychain.defaultRealm.objects(Message.self).filter("status == %@", messageStatusSending) {
+					object.status = messageStatusNotSent
+				}
 			}
 		}
   }

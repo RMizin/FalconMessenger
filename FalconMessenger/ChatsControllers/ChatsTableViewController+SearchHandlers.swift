@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 extension ChatsTableViewController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
   
   func updateSearchResults(for searchController: UISearchController) {}
@@ -31,7 +30,7 @@ extension ChatsTableViewController: UISearchBarDelegate, UISearchControllerDeleg
   }
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-		let objects = realmManager.realm.objects(Conversation.self)
+		let objects = RealmKeychain.defaultRealm.objects(Conversation.self)
 		let pinnedObjects = objects.filter("pinned == true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
 		let unpinnedObjects = objects.filter("pinned != true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
 

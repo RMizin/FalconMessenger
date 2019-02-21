@@ -8,12 +8,10 @@
 
 import UIKit
 import Firebase
-import RealmSwift
 
 extension ChatLogViewController: GroupMembersManagerDelegate {
   
   func updateName(name: String) {
-		let realm = try! Realm()
 		try! realm.safeWrite {
     	self.conversation?.chatName = name
 		}
@@ -23,8 +21,6 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
   }
   
   func updateAdmin(admin: String) {
-		let realm = try! Realm()
-
 		try! realm.safeWrite {
 			 self.conversation?.admin = admin
 		}
@@ -33,8 +29,6 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
   
   func addMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
-		let realm = try! Realm()
-    
     if let _ = members.index(where: { (memberID) -> Bool in
       return memberID == id }) {
     } else {
@@ -49,8 +43,6 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
   
   func removeMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
-		let realm = try! Realm()
-
     guard let memberIndex = members.index(where: { (memberID) -> Bool in
       return memberID == id
     }) else { return }

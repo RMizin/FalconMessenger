@@ -8,7 +8,6 @@
 
 import UIKit
 import SDWebImage
-import RealmSwift
 
 let blurredPlaceholder = blurEffect(image: UIImage(named: "blurPlaceholder")!)
 
@@ -175,10 +174,9 @@ class BaseMediaMessageCell: BaseMessageCell {
 	@objc func handleLoadTap() {
 		guard let indexPath = chatLogController?.collectionView.indexPath(for: self) else { return }
 		guard let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
-		let realm = try! Realm()
-		try! realm.safeWrite {
-			let thumbnailObject = realm.object(ofType: RealmImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
-			let messageObject = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")
+		try! RealmKeychain.defaultRealm.safeWrite {
+			let thumbnailObject = RealmKeychain.defaultRealm.object(ofType: RealmImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
+			let messageObject = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")
 
 			if thumbnailObject == nil {
 				let thumbnail = RealmImage(image: messageImageView.image ?? blurEffect(image: UIImage(named: "blurPlaceholder")!),

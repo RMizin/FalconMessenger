@@ -46,11 +46,11 @@ class MessagesFetcher: NSObject {
   
   
   func cleanAllObservers() {
-    if userMessagesReference != nil {
+    if userMessagesReference != nil, userMessagesHandle != nil {
       userMessagesReference.removeObserver(withHandle: userMessagesHandle)
     }
     
-    if manualRemovingReference != nil {
+    if manualRemovingReference != nil, userMessagesHandle != nil {
       manualRemovingReference.removeObserver(withHandle: manualRemovingHandle)
     }
   }

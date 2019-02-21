@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import RealmSwift
 
 let chatLogPresenter = ChatLogPresenter()
 
@@ -114,33 +113,31 @@ extension ChatLogPresenter: MessagesDelegate {
 			return
 		}
 
-		let realm = try! Realm()
-
 		autoreleasepool {
-			guard !realm.isInWriteTransaction else { return }
-			realm.beginWrite()
+			guard !RealmKeychain.defaultRealm.isInWriteTransaction else { return }
+			RealmKeychain.defaultRealm.beginWrite()
 			for message in messages {
 
 				if message.senderName == nil {
-					message.senderName = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
+					message.senderName = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
 				}
 
 				if message.isCrooked.value == nil {
-					message.isCrooked.value = realm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.isCrooked.value
+					message.isCrooked.value = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.isCrooked.value
 				}
 				
 				if message.thumbnailImage == nil {
-					message.thumbnailImage = realm.object(ofType: RealmImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
+					message.thumbnailImage = RealmKeychain.defaultRealm.object(ofType: RealmImage.self, forPrimaryKey: (message.messageUID ?? "") + "thumbnail")
 				}
 
 				if message.localImage == nil {
-					message.localImage = realm.object(ofType: RealmImage.self, forPrimaryKey: message.messageUID ?? "")
+					message.localImage = RealmKeychain.defaultRealm.object(ofType: RealmImage.self, forPrimaryKey: message.messageUID ?? "")
 				}
 
-				realm.create(Message.self, value: message, update: true)
+				RealmKeychain.defaultRealm.create(Message.self, value: message, update: true)
 			}
 
-			try! realm.commitWrite()
+			try! RealmKeychain.defaultRealm.commitWrite()
 			openChatLog(for: conversation)
 		}
 	}

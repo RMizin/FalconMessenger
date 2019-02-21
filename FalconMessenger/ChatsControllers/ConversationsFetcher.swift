@@ -173,7 +173,6 @@ class ConversationsFetcher: NSObject {
 				conversation.lastMessageTimestamp.value = message.timestamp.value
 				message.conversation = conversation
 				conversation.lastMessageRuntime = message
-				prefetchThumbnail(from: message.thumbnailImageUrl)
 				self.loadAddictionalMetadata(for: conversation)
     })
   }

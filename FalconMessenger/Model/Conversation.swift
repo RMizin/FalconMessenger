@@ -18,12 +18,9 @@ class Conversation: Object {
   @objc dynamic var lastMessageID: String?
 	@objc dynamic var admin: String?
 	@objc dynamic var lastMessage: Message? {
-		let realm = try! Realm()
-		let results = realm.objects(Message.self).filter("conversation.chatID = '\(chatID ?? "")'")
-
+		let results = RealmKeychain.defaultRealm.objects(Message.self).filter("conversation.chatID = '\(chatID ?? "")'")
 		let currentConvers = results.first
 		let lastMessage = currentConvers?.conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last
-
 		return lastMessage
 	}
 
@@ -37,10 +34,10 @@ class Conversation: Object {
 	let permitted = RealmOptional<Bool>()
 
 	var lastMessageRuntime: Message?
-	let messages = LinkingObjects(fromType: Message.self, property: "conversation")//.sorted(byKeyPath: "timestamp", ascending: true)
+	let messages = LinkingObjects(fromType: Message.self, property: "conversation")
 
 	func getTyping() -> Bool {
-		return try! Realm().objects(Conversation.self).filter("chatID = %@", chatID ?? "").first?.isTyping.value ?? false
+		return RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID = %@", chatID ?? "").first?.isTyping.value ?? false
 	}
 
 	override class func ignoredProperties() -> [String] {

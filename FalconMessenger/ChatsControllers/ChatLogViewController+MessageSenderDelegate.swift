@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 extension ChatLogViewController: MessageSenderDelegate {
   
@@ -29,7 +28,6 @@ extension ChatLogViewController: MessageSenderDelegate {
   func update(with arrayOfvalues: [[String: AnyObject]]) {
 
 		autoreleasepool {
-			let realm = try! Realm()
 			guard !realm.isInWriteTransaction else { return }
 
 			collectionView.performBatchUpdates({ 

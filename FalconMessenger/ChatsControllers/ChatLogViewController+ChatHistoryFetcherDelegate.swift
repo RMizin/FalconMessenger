@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 extension ChatLogViewController: ChatLogHistoryDelegate {
   
@@ -50,7 +49,6 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 	}
 
 	fileprivate func updateRealmMessagesData(newMessages: [Message]) {
-		let realm = try! Realm()
 		autoreleasepool {
 			guard !realm.isInWriteTransaction else { return }
 			realm.beginWrite()

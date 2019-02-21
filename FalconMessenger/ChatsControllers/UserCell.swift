@@ -9,8 +9,6 @@
 
 import UIKit
 import Firebase
-import SDWebImage
-
 
 class UserCell: UITableViewCell {
   

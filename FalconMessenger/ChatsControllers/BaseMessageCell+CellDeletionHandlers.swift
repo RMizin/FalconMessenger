@@ -9,7 +9,6 @@
 import UIKit
 import FTPopOverMenu_Swift
 import Firebase
-import RealmSwift
 
 struct ContextMenuItems {
   static let copyItem = "Copy"
@@ -200,8 +199,6 @@ extension BaseMessageCell {
   
   func handleDeletion(indexPath: IndexPath) {
 		guard	let message = chatLogController?.groupedMessages[indexPath.section].messages[indexPath.row] else { return }
-		let realm = try! Realm()
-
     guard let uid = Auth.auth().currentUser?.uid, let partnerID = message.chatPartnerId(),
       let messageID = message.messageUID, self.currentReachabilityStatus != .notReachable else {
       self.chatLogController?.collectionView.reloadItems(at: [indexPath])
@@ -220,7 +217,7 @@ extension BaseMessageCell {
     }
 
 		if message.isInvalidated == false {
-			try! realm.safeWrite {
+			try! RealmKeychain.defaultRealm.safeWrite {
 
 				// to make previous message crooked if needed
 				if message.isCrooked.value == true, indexPath.row > 0 {
@@ -229,7 +226,7 @@ extension BaseMessageCell {
 					self.chatLogController?.collectionView.reloadItems(at: [lastIndexPath])
 				}
 				
-				realm.delete(message)
+				RealmKeychain.defaultRealm.delete(message)
 				chatLogController?.collectionView.deleteItems(at: [indexPath])
 
 				// to show delivery status on last message

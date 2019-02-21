@@ -57,7 +57,7 @@ class ChatLogViewController: UIViewController {
   var groupedMessages = [MessageSection]()
   var typingIndicatorSection: [String] = []
 
-	let realm = try! Realm()
+	let realm = try! Realm(configuration: RealmKeychain.realmDefaultConfiguration())
 
   var chatLogAudioPlayer: AVAudioPlayer!
 

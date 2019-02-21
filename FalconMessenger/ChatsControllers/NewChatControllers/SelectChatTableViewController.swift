@@ -11,7 +11,6 @@ import Firebase
 import PhoneNumberKit
 import SDWebImage
 import Contacts
-import RealmSwift
 
 private let falconUsersCellID = "falconUsersCellID"
 private let newGroupCellID = "newGroupCellID"
@@ -232,10 +231,7 @@ class SelectChatTableViewController: UITableViewController {
     } else {
       let falconUser = filteredUsersWithSection[indexPath.section][indexPath.row]
       guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-
-			let realm = try! Realm()
-
-			guard let id = falconUser.id, let conversation = realm.objects(Conversation.self).filter("chatID == %@", id).first else {
+			guard let id = falconUser.id, let conversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", id).first else {
 				let conversationDictionary = ["chatID": falconUser.id as AnyObject,
 																			"chatName": falconUser.name as AnyObject,
 																			"isGroupChat": false  as AnyObject,

@@ -33,7 +33,7 @@ class ContactsController: UITableViewController {
   let contactsFetcher = ContactsFetcher()
   let navigationItemActivityIndicator = NavigationItemActivityIndicator()
 
-	let realm = try! Realm(configuration: realmConfiguration())
+	let realm = try! Realm(configuration: RealmKeychain.realmUsersConfiguration())
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -168,12 +168,6 @@ class ContactsController: UITableViewController {
       userDefaults.removeObject(for: userDefaults.contactsSyncronizationStatus)
     }
 
-	static fileprivate func realmConfiguration() -> Realm.Configuration {
-		var config = Realm.Configuration()
-		config.fileURL = config.fileURL!.deletingLastPathComponent().appendingPathComponent("users.realm")
-		return config
-	}
-
 	fileprivate var isAppLoaded = false
 
 	fileprivate func reloadTableView(updatedUsers: [User]) {
@@ -282,19 +276,18 @@ class ContactsController: UITableViewController {
 			searchContactsController?.searchBar.resignFirstResponder()
 
       if indexPath.section == 0 {
-				let realm = try! Realm()
-				guard let conversation = realm.objects(Conversation.self).filter("chatID == %@", currentUserID).first else {
+				guard let conversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", currentUserID).first else {
 					let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
 																														 "chatName": NameConstants.personalStorage as AnyObject,
 																														 "isGroupChat": false  as AnyObject,
 																														 "chatParticipantsIDs": [currentUserID] as AnyObject]
 					let conversation = Conversation(dictionary: conversationDictionary)
 
-					try! realm.write {
-						realm.create(Conversation.self, value: conversation, update: true)
+					try! RealmKeychain.defaultRealm.write {
+						RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: true)
 					}
 
-					if let realmConversation = realm.objects(Conversation.self).filter("chatID == %@", currentUserID).first {
+					if let realmConversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", currentUserID).first {
 						chatLogPresenter.open(realmConversation)
 					}
 					return
@@ -302,8 +295,7 @@ class ContactsController: UITableViewController {
         chatLogPresenter.open(conversation)
 
       } else if indexPath.section == 1 {
-					let realm = try! Realm()
-					guard let id = users?[indexPath.row].id, let conversation = realm.objects(Conversation.self).filter("chatID == %@", id).first else {
+					guard let id = users?[indexPath.row].id, let conversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", id).first else {
 						let conversationDictionary = ["chatID": users?[indexPath.row].id as AnyObject,
 																					"chatName": users?[indexPath.row].name as AnyObject,
 																				"isGroupChat": false as AnyObject,
