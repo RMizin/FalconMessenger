@@ -22,6 +22,9 @@
 		4B1FEC1D213336DE0022421C /* CountriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1FEC1C213336DE0022421C /* CountriesTableViewCell.swift */; };
 		4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */; };
 		4B2143081F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143071F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift */; };
+		4B2743CB2220396200495B4C /* FalconTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2743CA2220396200495B4C /* FalconTableViewController.swift */; };
+		4B2743CD2220397300495B4C /* FalconNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2743CC2220397300495B4C /* FalconNavigationItem.swift */; };
+		4B2743CF2220398900495B4C /* FalconActivityTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2743CE2220398900495B4C /* FalconActivityTitleView.swift */; };
 		4B27F6782089C92E0068077E /* TypingIndicatorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */; };
 		4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */; };
 		4B2A9587205FCF5200FE4DF7 /* GroupAdminPanelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A9586205FCF5200FE4DF7 /* GroupAdminPanelTableViewController.swift */; };
@@ -64,7 +67,6 @@
 		4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646C1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift */; };
 		4B63646F1F97927C00A5D3BF /* UserInfoTableViewController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B63646E1F97927B00A5D3BF /* UserInfoTableViewController+handlers.swift */; };
 		4B67E22F21B52143005EB981 /* SnapshotLockerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B67E22E21B52143005EB981 /* SnapshotLockerView.swift */; };
-		4B6BAF8D20886B3900A90F3A /* sent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B6BAF8A20886B3800A90F3A /* sent.caf */; };
 		4B6BAFE420886C5F00A90F3A /* ParticipantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9020886C5D00A90F3A /* ParticipantTableViewCell.swift */; };
 		4B6BAFE520886C5F00A90F3A /* SelectParticipantsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9120886C5D00A90F3A /* SelectParticipantsTableView.swift */; };
 		4B6BAFE620886C5F00A90F3A /* SelectParticipantsViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9220886C5D00A90F3A /* SelectParticipantsViewController+SearchHandlers.swift */; };
@@ -73,7 +75,7 @@
 		4B6BAFE920886C5F00A90F3A /* SelectedParticipantsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9620886C5D00A90F3A /* SelectedParticipantsCollectionView.swift */; };
 		4B6BAFEA20886C5F00A90F3A /* SelectedParticipantsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9720886C5D00A90F3A /* SelectedParticipantsCollectionViewCell.swift */; };
 		4B6BAFEF20886C5F00A90F3A /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9D20886C5D00A90F3A /* ThemeManager.swift */; };
-		4B6BAFF020886C5F00A90F3A /* SwiftSiriWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9F20886C5E00A90F3A /* SwiftSiriWaveformView.swift */; };
+		4B6BAFF020886C5F00A90F3A /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAF9F20886C5E00A90F3A /* WaveformView.swift */; };
 		4B6BAFF120886C5F00A90F3A /* SelectNewAdminTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA120886C5E00A90F3A /* SelectNewAdminTableViewController.swift */; };
 		4B6BAFF220886C5F00A90F3A /* NewAdminTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA220886C5E00A90F3A /* NewAdminTableViewCell.swift */; };
 		4B6BAFF320886C5F00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFA320886C5E00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift */; };
@@ -121,10 +123,11 @@
 		4B7EA2DE2203069500002F0E /* OverlayPhotoBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2DD2203069400002F0E /* OverlayPhotoBottomView.swift */; };
 		4B7EA2E0220306BB00002F0E /* OverlayVideoBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2DF220306BB00002F0E /* OverlayVideoBottomView.swift */; };
 		4B7EA2E22203076F00002F0E /* TransitionBackgrounView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2E12203076F00002F0E /* TransitionBackgrounView.swift */; };
+		4B7F31E222203D5600B2CF37 /* notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8482A82205ECE30018397A /* notification.caf */; };
+		4B7F31E322203D5600B2CF37 /* sent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B6BAF8A20886B3800A90F3A /* sent.caf */; };
 		4B80BE26212EF02200A32E01 /* AttachCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE25212EF02200A32E01 /* AttachCollectionViewLayout.swift */; };
 		4B80BE372130217100A32E01 /* ChatLogViewControllerTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B80BE362130217100A32E01 /* ChatLogViewControllerTitleView.swift */; };
 		4B82D10222007FD100C13761 /* INSVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B82D10122007FD100C13761 /* INSVideoPlayerViewController.swift */; };
-		4B8482A92205EE540018397A /* notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8482A82205ECE30018397A /* notification.caf */; };
 		4B86C0C620513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B86C0C520513CF9004ABC54 /* SelectChatTableViewController+SearchHandlers.swift */; };
 		4B88F2DA206386BA00BED797 /* GroupAdminPanelTableViewController+NameEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B88F2D9206386BA00BED797 /* GroupAdminPanelTableViewController+NameEditing.swift */; };
 		4B8CA13D2153C6EC009F8AA3 /* ChatLogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8CA13C2153C6EC009F8AA3 /* ChatLogPresenter.swift */; };
@@ -169,7 +172,6 @@
 		4BBF795C2134375800903F56 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BBF79592134375800903F56 /* LaunchScreen.storyboard */; };
 		4BBF795D2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF795A2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift */; };
 		4BBF795E2134375800903F56 /* SplashScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF795B2134375800903F56 /* SplashScreenContainer.swift */; };
-		4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E6C521105E0900720B43 /* NavigationItemActivityIndicator.swift */; };
 		4BC0E6CB2111B71700720B43 /* GlobalDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */; };
 		4BC26B191F3A21EE0093A9D2 /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* InputContainerView.swift */; };
 		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
@@ -262,6 +264,9 @@
 		4B1FEC1C213336DE0022421C /* CountriesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesTableViewCell.swift; sourceTree = "<group>"; };
 		4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingPhotoMessageCell.swift; path = ChatsControllers/OutgoingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4B2143071F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+ImageZoomHandlers.swift"; path = "ChatsControllers/ChatLogViewController+ImageZoomHandlers.swift"; sourceTree = "<group>"; };
+		4B2743CA2220396200495B4C /* FalconTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconTableViewController.swift; sourceTree = "<group>"; };
+		4B2743CC2220397300495B4C /* FalconNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconNavigationItem.swift; sourceTree = "<group>"; };
+		4B2743CE2220398900495B4C /* FalconActivityTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconActivityTitleView.swift; sourceTree = "<group>"; };
 		4B27F6772089C92E0068077E /* TypingIndicatorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TypingIndicatorManager.swift; path = ChatsControllers/TypingIndicatorManager.swift; sourceTree = "<group>"; };
 		4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4B2A9586205FCF5200FE4DF7 /* GroupAdminPanelTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GroupAdminPanelTableViewController.swift; path = ChatsControllers/GroupAdminPanelTableViewController.swift; sourceTree = "<group>"; };
@@ -314,7 +319,7 @@
 		4B6BAF9620886C5D00A90F3A /* SelectedParticipantsCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedParticipantsCollectionView.swift; sourceTree = "<group>"; };
 		4B6BAF9720886C5D00A90F3A /* SelectedParticipantsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedParticipantsCollectionViewCell.swift; sourceTree = "<group>"; };
 		4B6BAF9D20886C5D00A90F3A /* ThemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
-		4B6BAF9F20886C5E00A90F3A /* SwiftSiriWaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSiriWaveformView.swift; sourceTree = "<group>"; };
+		4B6BAF9F20886C5E00A90F3A /* WaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		4B6BAFA120886C5E00A90F3A /* SelectNewAdminTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectNewAdminTableViewController.swift; sourceTree = "<group>"; };
 		4B6BAFA220886C5E00A90F3A /* NewAdminTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewAdminTableViewCell.swift; sourceTree = "<group>"; };
 		4B6BAFA320886C5E00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SelectNewAdminTableViewController+SearchHandlers.swift"; sourceTree = "<group>"; };
@@ -411,7 +416,6 @@
 		4BBF79592134375800903F56 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4BBF795A2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SplashScreenContainer+BiometricalControl.swift"; sourceTree = "<group>"; };
 		4BBF795B2134375800903F56 /* SplashScreenContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenContainer.swift; sourceTree = "<group>"; };
-		4BC0E6C521105E0900720B43 /* NavigationItemActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItemActivityIndicator.swift; sourceTree = "<group>"; };
 		4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalDataStorage.swift; sourceTree = "<group>"; };
 		4BC26B0F1F3A21EE0093A9D2 /* InputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputContainerView.swift; path = ChatsControllers/InputContainerView.swift; sourceTree = "<group>"; };
 		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
@@ -494,30 +498,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4B01BB6B21D6840D00FF229B /* RespondingButton */ = {
-			isa = PBXGroup;
-			children = (
-				4B01BB6C21D6842D00FF229B /* RespondingButton.swift */,
-			);
-			path = RespondingButton;
-			sourceTree = "<group>";
-		};
-		4B08E36F208872AF00C64EAA /* ThemeManager */ = {
-			isa = PBXGroup;
-			children = (
-				4B6BAF9D20886C5D00A90F3A /* ThemeManager.swift */,
-			);
-			path = ThemeManager;
-			sourceTree = "<group>";
-		};
-		4B08E370208872B800C64EAA /* Public */ = {
-			isa = PBXGroup;
-			children = (
-				4B6BAFB220886C5E00A90F3A /* Public.swift */,
-			);
-			path = Public;
-			sourceTree = "<group>";
-		};
 		4B0E76E039E2F5E741A90AE5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -525,14 +505,6 @@
 				12A07DB84FCB2E680BA20EDF /* Pods-FalconMessenger.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		4B1058F52120977600CD6600 /* UserDefaultsManager */ = {
-			isa = PBXGroup;
-			children = (
-				4B1058F62120979200CD6600 /* UserDefaultsManager.swift */,
-			);
-			path = UserDefaultsManager;
 			sourceTree = "<group>";
 		};
 		4B1A36991F49990D00B4AA0A /* InputContainerView */ = {
@@ -545,6 +517,28 @@
 				4B1A369E1F49A0BB00B4AA0A /* InputContainerView+AttachDataSource.swift */,
 			);
 			name = InputContainerView;
+			sourceTree = "<group>";
+		};
+		4B2743C92220391D00495B4C /* UIComponents */ = {
+			isa = PBXGroup;
+			children = (
+				4B6BAFA020886C5E00A90F3A /* SingleSelectionTableController */,
+				4B6BAF8E20886C5D00A90F3A /* MultipleSelectionControllers */,
+				4B8CA9E6211C49B200E6A66C /* TypingIndicator */,
+				4B5693C620CFFAAB005EAE15 /* InAppBanner */,
+				4B6BAFB820886C5E00A90F3A /* INSPhotosGallery */,
+				4B6BAFC320886C5E00A90F3A /* PickerTrayController */,
+				4B75F35B2205B41B008FDA25 /* ControlButton.swift */,
+				4B6BAF9F20886C5E00A90F3A /* WaveformView.swift */,
+				4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */,
+				4B01BB6C21D6842D00FF229B /* RespondingButton.swift */,
+				4B7EA2D92203067A00002F0E /* FalconUISlider.swift */,
+				4B6BAFD220886C5E00A90F3A /* FalconTextView.swift */,
+				4B2743CA2220396200495B4C /* FalconTableViewController.swift */,
+				4B2743CC2220397300495B4C /* FalconNavigationItem.swift */,
+				4B2743CE2220398900495B4C /* FalconActivityTitleView.swift */,
+			);
+			path = UIComponents;
 			sourceTree = "<group>";
 		};
 		4B2E59A9214AB0B70081B74E /* MessageSender */ = {
@@ -631,14 +625,6 @@
 			name = SupplementaryView;
 			sourceTree = "<group>";
 		};
-		4B4F03D421E554A100907D39 /* ImagesDownloadManager */ = {
-			isa = PBXGroup;
-			children = (
-				4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */,
-			);
-			path = ImagesDownloadManager;
-			sourceTree = "<group>";
-		};
 		4B4F45221F32230C00A6FF96 = {
 			isa = PBXGroup;
 			children = (
@@ -657,15 +643,14 @@
 				4B4F45521F32260100A6FF96 /* Contacts */,
 				4BE72A6E204E9DC4009A22EA /* Chats */,
 				4BE72A6D204E9DB1009A22EA /* ChatLog */,
-				4BDB29332126C79000D77600 /* SettingsControllers */,
+				4BDB29332126C79000D77600 /* Settings */,
 				4BBF79582134375800903F56 /* SplashScreen */,
 				4BBF794D2134370C00903F56 /* AppDelegate */,
 				4B2882311FBDDE3400B25397 /* GoogleService-Info.plist */,
 				4B4F453C1F32230C00A6FF96 /* Info.plist */,
 				4B94986E1F323B76008DA07F /* FalconMessenger.entitlements */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
-				4BBF79482134354E00903F56 /* ThirdParty */,
-				4B6BAF8B20886B3800A90F3A /* Support */,
+				4B6BAF8B20886B3800A90F3A /* Supporting Files */,
 			);
 			path = FalconMessenger;
 			sourceTree = "<group>";
@@ -743,36 +728,15 @@
 			name = DefaultAdminPanel;
 			sourceTree = "<group>";
 		};
-		4B6BAF8820886B3800A90F3A /* Sounds */ = {
+		4B6BAF8B20886B3800A90F3A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				4B8482A82205ECE30018397A /* notification.caf */,
-				4B6BAF8A20886B3800A90F3A /* sent.caf */,
+				4B7F31E122203BF000B2CF37 /* Resources */,
+				4B7F31E022203BAD00B2CF37 /* CoreManagers */,
+				4B7F31DF22203AC800B2CF37 /* UIManagers */,
+				4B2743C92220391D00495B4C /* UIComponents */,
 			);
-			path = Sounds;
-			sourceTree = "<group>";
-		};
-		4B6BAF8B20886B3800A90F3A /* Support */ = {
-			isa = PBXGroup;
-			children = (
-				4B520D14221F0B1000C7F6C6 /* RealmKeychain */,
-				4B08E370208872B800C64EAA /* Public */,
-				4B6BAF8820886B3800A90F3A /* Sounds */,
-				4B08E36F208872AF00C64EAA /* ThemeManager */,
-				4BC0E6C92111B6F200720B43 /* GlobalDataStorage */,
-				4B1058F52120977600CD6600 /* UserDefaultsManager */,
-				4B75F35A2205B409008FDA25 /* ControlButton */,
-				4B01BB6B21D6840D00FF229B /* RespondingButton */,
-				4B7EA2E3220307AC00002F0E /* FalconUISlider */,
-				4B6BAFD120886C5E00A90F3A /* FlaconTextView */,
-				4B4F03D421E554A100907D39 /* ImagesDownloadManager */,
-				4BC3B258212DA10A0012C7BD /* Keyboard Utility */,
-				4B6BAFB520886C5E00A90F3A /* UserProfilePictureOpener */,
-				4B6BAFA420886C5E00A90F3A /* NavigationControllerActivityIndicator */,
-				4B6BAFA020886C5E00A90F3A /* SingleSelectionTableAdminControllers */,
-				4B6BAF8E20886C5D00A90F3A /* MultipleSelectionControllers */,
-			);
-			path = Support;
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		4B6BAF8E20886C5D00A90F3A /* MultipleSelectionControllers */ = {
@@ -805,30 +769,14 @@
 			path = FlowLayout;
 			sourceTree = "<group>";
 		};
-		4B6BAF9E20886C5E00A90F3A /* WaveFormView */ = {
-			isa = PBXGroup;
-			children = (
-				4B6BAF9F20886C5E00A90F3A /* SwiftSiriWaveformView.swift */,
-			);
-			path = WaveFormView;
-			sourceTree = "<group>";
-		};
-		4B6BAFA020886C5E00A90F3A /* SingleSelectionTableAdminControllers */ = {
+		4B6BAFA020886C5E00A90F3A /* SingleSelectionTableController */ = {
 			isa = PBXGroup;
 			children = (
 				4B6BAFA120886C5E00A90F3A /* SelectNewAdminTableViewController.swift */,
 				4B6BAFA320886C5E00A90F3A /* SelectNewAdminTableViewController+SearchHandlers.swift */,
 				4B6BAFA220886C5E00A90F3A /* NewAdminTableViewCell.swift */,
 			);
-			path = SingleSelectionTableAdminControllers;
-			sourceTree = "<group>";
-		};
-		4B6BAFA420886C5E00A90F3A /* NavigationControllerActivityIndicator */ = {
-			isa = PBXGroup;
-			children = (
-				4BC0E6C521105E0900720B43 /* NavigationItemActivityIndicator.swift */,
-			);
-			path = NavigationControllerActivityIndicator;
+			path = SingleSelectionTableController;
 			sourceTree = "<group>";
 		};
 		4B6BAFA620886C5E00A90F3A /* PhoneAuthenticationControllers */ = {
@@ -924,30 +872,6 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		4B6BAFD120886C5E00A90F3A /* FlaconTextView */ = {
-			isa = PBXGroup;
-			children = (
-				4B6BAFD220886C5E00A90F3A /* FalconTextView.swift */,
-			);
-			path = FlaconTextView;
-			sourceTree = "<group>";
-		};
-		4B6BAFE220886C5F00A90F3A /* RoundProgressView */ = {
-			isa = PBXGroup;
-			children = (
-				4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */,
-			);
-			path = RoundProgressView;
-			sourceTree = "<group>";
-		};
-		4B75F35A2205B409008FDA25 /* ControlButton */ = {
-			isa = PBXGroup;
-			children = (
-				4B75F35B2205B41B008FDA25 /* ControlButton.swift */,
-			);
-			path = ControlButton;
-			sourceTree = "<group>";
-		};
 		4B75F35D2205B5E7008FDA25 /* CollectionViewContainers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1004,14 +928,6 @@
 			name = Cells;
 			sourceTree = "<group>";
 		};
-		4B7EA2E3220307AC00002F0E /* FalconUISlider */ = {
-			isa = PBXGroup;
-			children = (
-				4B7EA2D92203067A00002F0E /* FalconUISlider.swift */,
-			);
-			path = FalconUISlider;
-			sourceTree = "<group>";
-		};
 		4B7EC60D21A9D39900878560 /* SharedMedia */ = {
 			isa = PBXGroup;
 			children = (
@@ -1021,6 +937,37 @@
 				4B31350521A9F56D00D20583 /* SharedMediaCell.swift */,
 			);
 			name = SharedMedia;
+			sourceTree = "<group>";
+		};
+		4B7F31DF22203AC800B2CF37 /* UIManagers */ = {
+			isa = PBXGroup;
+			children = (
+				4B6BAFB520886C5E00A90F3A /* UserProfilePictureOpener */,
+				4BC3B258212DA10A0012C7BD /* Keyboard Utility */,
+			);
+			path = UIManagers;
+			sourceTree = "<group>";
+		};
+		4B7F31E022203BAD00B2CF37 /* CoreManagers */ = {
+			isa = PBXGroup;
+			children = (
+				4B520D14221F0B1000C7F6C6 /* RealmKeychain */,
+				4B6BAFB220886C5E00A90F3A /* Public.swift */,
+				4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */,
+				4B6BAF9D20886C5D00A90F3A /* ThemeManager.swift */,
+				4B1058F62120979200CD6600 /* UserDefaultsManager.swift */,
+				4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */,
+			);
+			path = CoreManagers;
+			sourceTree = "<group>";
+		};
+		4B7F31E122203BF000B2CF37 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4B8482A82205ECE30018397A /* notification.caf */,
+				4B6BAF8A20886B3800A90F3A /* sent.caf */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		4B80BE27212F046700A32E01 /* Subviews */ = {
@@ -1217,19 +1164,6 @@
 			path = Support;
 			sourceTree = "<group>";
 		};
-		4BBF79482134354E00903F56 /* ThirdParty */ = {
-			isa = PBXGroup;
-			children = (
-				4B8CA9E6211C49B200E6A66C /* TypingIndicator */,
-				4B5693C620CFFAAB005EAE15 /* InAppBanner */,
-				4B6BAFB820886C5E00A90F3A /* INSPhotosGallery */,
-				4B6BAFC320886C5E00A90F3A /* PickerTrayController */,
-				4B6BAFE220886C5F00A90F3A /* RoundProgressView */,
-				4B6BAF9E20886C5E00A90F3A /* WaveFormView */,
-			);
-			path = ThirdParty;
-			sourceTree = "<group>";
-		};
 		4BBF794D2134370C00903F56 /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1266,14 +1200,6 @@
 				4BBF795A2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift */,
 			);
 			path = SplashScreen;
-			sourceTree = "<group>";
-		};
-		4BC0E6C92111B6F200720B43 /* GlobalDataStorage */ = {
-			isa = PBXGroup;
-			children = (
-				4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */,
-			);
-			path = GlobalDataStorage;
 			sourceTree = "<group>";
 		};
 		4BC26B251F3A22B80093A9D2 /* InputContainers */ = {
@@ -1341,7 +1267,7 @@
 			name = ViewBlocker;
 			sourceTree = "<group>";
 		};
-		4BDB29332126C79000D77600 /* SettingsControllers */ = {
+		4BDB29332126C79000D77600 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				4BDB29352126C79000D77600 /* AccountSettingsController.swift */,
@@ -1350,7 +1276,7 @@
 				4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */,
 				4BDB29362126C79000D77600 /* Menu */,
 			);
-			path = SettingsControllers;
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		4BDB29362126C79000D77600 /* Menu */ = {
@@ -1661,8 +1587,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B8482A92205EE540018397A /* notification.caf in Resources */,
-				4B6BAF8D20886B3900A90F3A /* sent.caf in Resources */,
+				4B7F31E222203D5600B2CF37 /* notification.caf in Resources */,
+				4B7F31E322203D5600B2CF37 /* sent.caf in Resources */,
 				4BBF795C2134375800903F56 /* LaunchScreen.storyboard in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
 				4B6BAFFC20886C5F00A90F3A /* CallingCodes.plist in Resources */,
@@ -1775,7 +1701,7 @@
 				4B5693D920CFFAAB005EAE15 /* CustomizedImageView.swift in Sources */,
 				4BF3ABCF2152DED300CDA3FD /* ChatLogViewController+PreviewingDelegate.swift in Sources */,
 				4BC3B264212DA93E0012C7BD /* ChatCollectionView.swift in Sources */,
-				4BC0E6C621105E0A00720B43 /* NavigationItemActivityIndicator.swift in Sources */,
+				4B2743CD2220397300495B4C /* FalconNavigationItem.swift in Sources */,
 				4B8CA9EE211C49B300E6A66C /* BubbleCircle.swift in Sources */,
 				4B62E5FE2077EC7900546294 /* BaseVoiceMessageCell.swift in Sources */,
 				4B2E59AB214AB0F60081B74E /* MessageSender.swift in Sources */,
@@ -1828,10 +1754,11 @@
 				4BE8BB441FCA83D200EB35FA /* PlayerView.swift in Sources */,
 				4BDB29532126C79000D77600 /* NotificationsTableViewController.swift in Sources */,
 				4BBBB67621D7FD6700FFFFF8 /* ChatsRealmManager.swift in Sources */,
+				4B2743CF2220398900495B4C /* FalconActivityTitleView.swift in Sources */,
 				4B6BAFEA20886C5F00A90F3A /* SelectedParticipantsCollectionViewCell.swift in Sources */,
 				4BBF79542134370C00903F56 /* SplitViewController.swift in Sources */,
 				4B6BB00B20886C5F00A90F3A /* CameraOverlayView.swift in Sources */,
-				4B6BAFF020886C5F00A90F3A /* SwiftSiriWaveformView.swift in Sources */,
+				4B6BAFF020886C5F00A90F3A /* WaveformView.swift in Sources */,
 				4BBBCBFB205851E100926800 /* ChatsTableViewController.swift in Sources */,
 				4BB6D198206EA62F00FEF72E /* MediaObject.swift in Sources */,
 				4B6BB01120886C5F00A90F3A /* TransitionController.swift in Sources */,
@@ -1914,6 +1841,7 @@
 				4B3134F921A9EDED00D20583 /* SharedMedia.swift in Sources */,
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,
 				4BC3B25D212DA10A0012C7BD /* KeyboardFrameObserver.swift in Sources */,
+				4B2743CB2220396200495B4C /* FalconTableViewController.swift in Sources */,
 				4BB554A62135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */,
 				4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */,
 				4B7EA2D82203066B00002F0E /* OverlayNavigationBar.swift in Sources */,

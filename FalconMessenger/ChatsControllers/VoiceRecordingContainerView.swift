@@ -36,8 +36,8 @@ class VoiceRecordingContainerView: UIView {
     return statusLabel
   }()
   
-  var waveForm: SwiftSiriWaveformView = {
-    var waveForm = SwiftSiriWaveformView()
+  var waveForm: WaveformView = {
+    var waveForm = WaveformView()
     waveForm.translatesAutoresizingMaskIntoConstraints = false
     waveForm.amplitude = 0.0
     waveForm.backgroundColor = .clear

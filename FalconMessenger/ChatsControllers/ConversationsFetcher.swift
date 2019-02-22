@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import SDWebImage
 
 protocol ConversationUpdatesDelegate: class {
   func conversations(didStartFetching: Bool)
@@ -79,24 +78,26 @@ class ConversationsFetcher: NSObject {
   func fetchConversations() {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     delegate?.conversations(didStartFetching: true)
-  
-    currentUserConversationsReference = Database.database().reference().child("user-messages").child(currentUserID)
-    currentUserConversationsReference.observeSingleEvent(of: .value) { (snapshot) in
-      self.group = DispatchGroup()
-      for _ in 0 ..< snapshot.childrenCount { self.group.enter() }
-      
-      self.group.notify(queue: .main, execute: {
-        self.isGroupAlreadyFinished = true
-        self.delegate?.conversations(didFinishFetching: true, conversations: self.conversations)
-      })
-      
-      if !snapshot.exists() {
-        self.delegate?.conversations(didFinishFetching: true, conversations: self.conversations)
-        return
-      }
-    }
-    observeConversationRemoved()
-    observeConversationAdded()
+
+		currentUserConversationsReference = Database.database().reference().child("user-messages").child(currentUserID)
+		observeConversationAdded()
+		observeConversationRemoved()
+		DispatchQueue.global(qos: .default).async {
+			self.currentUserConversationsReference.observeSingleEvent(of: .value) { (snapshot) in
+				self.group = DispatchGroup()
+				for _ in 0 ..< snapshot.childrenCount { self.group.enter() }
+
+				self.group.notify(queue: .main, execute: {
+					self.isGroupAlreadyFinished = true
+					self.delegate?.conversations(didFinishFetching: true, conversations: self.conversations)
+				})
+
+				if !snapshot.exists() {
+					self.delegate?.conversations(didFinishFetching: true, conversations: self.conversations)
+					return
+				}
+			}
+		}
   }
   
   func observeConversationRemoved() {
@@ -147,8 +148,11 @@ class ConversationsFetcher: NSObject {
       
       guard var dictionary = snapshot.value as? [String: AnyObject], snapshot.exists() else { return }
       dictionary.updateValue(chatID as AnyObject, forKey: "chatID")
-      
-      self.delegate?.conversations(didStartUpdatingData: true)
+
+			if self.isGroupAlreadyFinished {
+				self.delegate?.conversations(didStartUpdatingData: true)
+			}
+
       let conversation = Conversation(dictionary: dictionary)
 			conversation.isTyping.value = conversation.getTyping()
 

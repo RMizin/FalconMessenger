@@ -100,6 +100,5 @@ extension NSNotification.Name {
   static let authenticationSucceeded = NSNotification.Name(Bundle.main.bundleIdentifier! + ".authenticationSucceeded")
   static let inputViewResigned = NSNotification.Name(Bundle.main.bundleIdentifier! + ".inputViewResigned")
   static let inputViewResponded = NSNotification.Name(Bundle.main.bundleIdentifier! + ".inputViewResponded")
-
 	static let messageSent = NSNotification.Name(Bundle.main.bundleIdentifier! + ".messageSent")
 }

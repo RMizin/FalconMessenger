@@ -15,7 +15,7 @@ protocol ManageAppearance: class {
   func manageAppearance(_ chatsController: ChatsTableViewController, didFinishLoadingWith state: Bool )
 }
  
-class ChatsTableViewController: UITableViewController {
+class ChatsTableViewController: FalconTableViewController {
   
   fileprivate let userCellID = "userCellID"
   fileprivate var isAppLoaded = false
@@ -25,7 +25,6 @@ class ChatsTableViewController: UITableViewController {
   var searchBar: UISearchBar?
   var searchChatsController: UISearchController?
 	let viewPlaceholder = ViewPlaceholder()
-	let navigationItemActivityIndicator = NavigationItemActivityIndicator()
 
   let conversationsFetcher = ConversationsFetcher()
   let notificationsManager = InAppNotificationManager()
@@ -38,6 +37,7 @@ class ChatsTableViewController: UITableViewController {
 	var realmUnpinnedConversations: Results<Conversation>?
 	var realmAllConversations: Results<Conversation>?
 
+	let fnavigationItem = FalconNavigationItem()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -59,15 +59,16 @@ class ChatsTableViewController: UITableViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
+
     if !isAppLoaded {
 			guard Auth.auth().currentUser != nil else { return }
+			conversationsFetcher.fetchConversations()
 			setupDataSource()
       managePresense()
-      conversationsFetcher.fetchConversations()
+
     }
   }
-  
+
   deinit {
     NotificationCenter.default.removeObserver(self)
   }
@@ -85,8 +86,6 @@ class ChatsTableViewController: UITableViewController {
     tableView.backgroundColor = view.backgroundColor
     tableView.isOpaque = true
     tableView.reloadData()
-    navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
-    navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
   }
 
   fileprivate func initAllTabs() {
@@ -208,21 +207,27 @@ class ChatsTableViewController: UITableViewController {
       tableView.tableHeaderView = searchBar
     }
   }
+
+	fileprivate func showActivityTitle(title: UINavigationItemTitle) {
+		navigationItem.showActivityView(with: title)
+	}
+
+	fileprivate func hideActivityTitle(title: UINavigationItemTitle) {
+		navigationItem.hideActivityView(with: title)
+	}
   
   fileprivate func managePresense() {
     if currentReachabilityStatus == .notReachable {
-      navigationItemActivityIndicator.showActivityIndicator(for: navigationItem, with: .connecting,
-                                                            activityPriority: .high,
-                                                            color: ThemeManager.currentTheme().generalTitleColor)
+			showActivityTitle(title: .connecting)
     }
     
     let connectedReference = Database.database().reference(withPath: ".info/connected")
     connectedReference.observe(.value, with: { (snapshot) in
       
       if self.currentReachabilityStatus != .notReachable {
-       self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .crazy)
+				self.hideActivityTitle(title: .noInternet)
       } else {
-        self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem, with: .noInternet, activityPriority: .crazy, color: ThemeManager.currentTheme().generalTitleColor)
+				self.showActivityTitle(title: .noInternet)
       }
     })
   }
@@ -261,7 +266,7 @@ class ChatsTableViewController: UITableViewController {
 		guard let realmAllConversations = realmAllConversations else { return }
 
     if !isAppLoaded {
-      UIView.transition(with: tableView, duration: 0.15, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: { (_) in
+      UIView.transition(with: tableView, duration: 0.1, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: { (_) in
         self.initAllTabs()
 
 				for conversation in realmAllConversations {
@@ -282,8 +287,8 @@ class ChatsTableViewController: UITableViewController {
 					self.tableView.reloadData()
 				}
 			}
-
     }
+
 		configureTabBarBadge()
 
     if realmAllConversations.count == 0 {
@@ -427,35 +432,32 @@ extension ChatsTableViewController: DeleteAndExitDelegate {
     }) else { return nil }
     return index
   }
+
+
+
 }
 
 extension ChatsTableViewController: ConversationUpdatesDelegate {
   
   func conversations(didStartFetching: Bool) {
     guard !isAppLoaded else { return }
-    navigationItemActivityIndicator.showActivityIndicator(for: navigationItem,
-																													with: .updating,
-                                                          activityPriority: .mediumHigh,
-																													color: ThemeManager.currentTheme().generalTitleColor)
+		showActivityTitle(title: .updating)
   }
   
   func conversations(didStartUpdatingData: Bool) {
-    navigationItemActivityIndicator.showActivityIndicator(for: navigationItem,
-																													with: .updating,
-                                                          activityPriority: .lowMedium,
-																													color: ThemeManager.currentTheme().generalTitleColor)
+			showActivityTitle(title: .updating)
   }
   
   func conversations(didFinishFetching: Bool, conversations: [Conversation]) {
     notificationsManager.observersForNotifications(conversations: conversations)
 		if !isAppLoaded {
-			self.observeDataSourceChanges()
+			observeDataSourceChanges()
 		}
 
 		guard let token1 = pinnedConversationsNotificationToken, let token2 = unpinnedConversationsNotificationToken else { return }
 		realmManager.update(conversations: conversations, tokens: [token1, token2])
-		self.handleReloadTable()
-		self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .mediumHigh)
+		handleReloadTable()
+		hideActivityTitle(title: .updating)
   }
 
   func conversations(update conversation: Conversation, reloadNeeded: Bool) {
@@ -465,7 +467,7 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
 			notificationsManager.updateConversations(to: Array(realmAllConversations))
 		}
 
-    navigationItemActivityIndicator.hideActivityIndicator(for: navigationItem, activityPriority: .lowMedium)
+		hideActivityTitle(title: .updating)
   }
   
   func conversations(didRemove: Bool, chatID: String) {

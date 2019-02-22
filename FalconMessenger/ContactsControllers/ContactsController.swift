@@ -16,7 +16,7 @@ import RealmSwift
 private let falconUsersCellID = "falconUsersCellID"
 private let currentUserCellID = "currentUserCellID"
 
-class ContactsController: UITableViewController {
+class ContactsController: FalconTableViewController {
 
 	let chatLogPresenter = ChatLogPresenter()
 
@@ -31,7 +31,6 @@ class ContactsController: UITableViewController {
   let viewPlaceholder = ViewPlaceholder()
   let falconUsersFetcher = FalconUsersFetcher()
   let contactsFetcher = ContactsFetcher()
-  let navigationItemActivityIndicator = NavigationItemActivityIndicator()
 
 	let realm = try! Realm(configuration: RealmKeychain.realmUsersConfiguration())
 
@@ -43,9 +42,9 @@ class ContactsController: UITableViewController {
       addContactsObserver()
       addObservers()
 			setupDataSource()
-      DispatchQueue.global(qos: .default).async { [unowned self] in
-        self.falconUsersFetcher.loadFalconUsers()
-        self.contactsFetcher.fetchContacts()
+      DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+        self?.falconUsersFetcher.loadFalconUsers()
+        self?.contactsFetcher.fetchContacts()
       }
     }
 
@@ -134,10 +133,10 @@ class ContactsController: UITableViewController {
     @objc func contactStoreDidChange(notification: NSNotification) {
       guard Auth.auth().currentUser != nil else { return }
       removeContactsObserver()
-      DispatchQueue.global(qos: .default).async { [unowned self] in
+      DispatchQueue.global(qos: .userInteractive).async { [weak self] in
         print("start fetch")
-        self.falconUsersFetcher.loadFalconUsers()
-        self.contactsFetcher.fetchContacts()
+        self?.falconUsersFetcher.loadFalconUsers()
+        self?.contactsFetcher.fetchContacts()
       }
     }
 
@@ -148,8 +147,8 @@ class ContactsController: UITableViewController {
       tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
       tableView.reloadData()
 
-      navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
-      navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
+     // navigationItemActivityIndicator.activityIndicatorView.color = ThemeManager.currentTheme().generalTitleColor
+     // navigationItemActivityIndicator.titleLabel.textColor = ThemeManager.currentTheme().generalTitleColor
     }
 
     @objc func cleanUpController() {
@@ -330,33 +329,28 @@ extension ContactsController: FalconUsersUpdatesDelegate {
     let syncronizationStatus = userDefaults.currentBoolObjectState(for: userDefaults.contactsSyncronizationStatus)
     guard syncronizationStatus == true else { return }
     addContactsObserver()
-    DispatchQueue.main.async {
-      self.navigationItemActivityIndicator.hideActivityIndicator(for: self.navigationItem, activityPriority: .medium)
-    }
+		DispatchQueue.main.async { [weak self] in
+			self?.navigationItem.hideActivityView(with: .updatingUsers)
+		}
   }
 }
 
 extension ContactsController: ContactsUpdatesDelegate {
   func contacts(shouldPerformSyncronization: Bool) {
-    guard shouldPerformSyncronization else { return }
-
-    DispatchQueue.main.async { [unowned self] in
-      self.navigationItemActivityIndicator.showActivityIndicator(for: self.navigationItem,
-                                                                 with: .updatingUsers,
-                                                                 activityPriority: .medium,
-                                                                 color: ThemeManager.currentTheme().generalTitleColor)
-    }
-
-    DispatchQueue.global(qos: .default).async { [unowned self] in
-      self.falconUsersFetcher.loadAndSyncFalconUsers()
+		guard shouldPerformSyncronization else { return }
+		DispatchQueue.main.async { [weak self] in
+			self?.navigationItem.showActivityView(with: .updatingUsers)
+		}
+    DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+      self?.falconUsersFetcher.loadAndSyncFalconUsers()
     }
   }
 
   func contacts(updateDatasource contacts: [CNContact]) {
     self.contacts = contacts
     self.filteredContacts = contacts
-    DispatchQueue.main.async { [unowned self] in
-      self.tableView.reloadData()
+    DispatchQueue.main.async { [weak self] in
+      self?.tableView.reloadData()
     }
   }
 

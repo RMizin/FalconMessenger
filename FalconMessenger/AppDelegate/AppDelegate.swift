@@ -20,7 +20,6 @@ func setUserNotificationToken(token: String) {
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
-
   var window: UIWindow?
   var tabBarController: GeneralTabBarController?
 	fileprivate let snapshotLockerView = SnapshotLockerView()

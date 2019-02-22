@@ -76,9 +76,9 @@ class GeneralTabBarController: UITabBarController {
   
   fileprivate func setTabs() {
     
-    contactsController.title = "Contacts"
-    chatsController.title = "Chats"
-    settingsController.title = "Settings"
+    contactsController.navigationItem.title = "Contacts"
+    chatsController.navigationItem.title = "Chats"
+    settingsController.navigationItem.title = "Settings"
     
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)
@@ -94,9 +94,9 @@ class GeneralTabBarController: UITabBarController {
     let chatsImage = UIImage(named: "chat")
     let settingsImage = UIImage(named: "settings")
     
-    let contactsTabItem = UITabBarItem(title: contactsController.title, image: contactsImage, selectedImage: nil)
-    let chatsTabItem = UITabBarItem(title: chatsController.title, image: chatsImage, selectedImage: nil)
-    let settingsTabItem = UITabBarItem(title: settingsController.title, image: settingsImage, selectedImage: nil)
+    let contactsTabItem = UITabBarItem(title: contactsController.navigationItem.title, image: contactsImage, selectedImage: nil)
+    let chatsTabItem = UITabBarItem(title: chatsController.navigationItem.title, image: chatsImage, selectedImage: nil)
+    let settingsTabItem = UITabBarItem(title: settingsController.navigationItem.title, image: settingsImage, selectedImage: nil)
     
     contactsController.tabBarItem = contactsTabItem
     chatsController.tabBarItem = chatsTabItem
