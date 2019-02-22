@@ -35,6 +35,7 @@ class Conversation: Object {
 
 	var lastMessageRuntime: Message?
 	let messages = LinkingObjects(fromType: Message.self, property: "conversation")
+	//let sharedMedia = LinkingObjects(fromType: SharedMedia.self, property: "conversation")
 
 	func getTyping() -> Bool {
 		return RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID = %@", chatID ?? "").first?.isTyping.value ?? false

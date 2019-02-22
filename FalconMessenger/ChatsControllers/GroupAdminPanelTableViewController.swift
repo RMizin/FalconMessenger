@@ -376,6 +376,7 @@ class GroupAdminPanelTableViewController: UITableViewController {
 
 	fileprivate func openSharedMedia() {
 		let destination = SharedMediaController(collectionViewLayout: UICollectionViewFlowLayout())
+		destination.conversation = RealmKeychain.defaultRealm.object(ofType: Conversation.self, forPrimaryKey: chatID)
 		destination.fetchingData = (userID: Auth.auth().currentUser!.uid, chatID: chatID)
 		navigationController?.pushViewController(destination, animated: true)
 	}

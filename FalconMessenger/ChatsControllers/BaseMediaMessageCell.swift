@@ -130,7 +130,6 @@ class BaseMediaMessageCell: BaseMessageCell {
 													options: .transitionCrossDissolve,
 													animations: { self.messageImageView.image = blurEffect(image: image) },
 													completion: nil)
-
 		})
 	}
 
@@ -141,7 +140,7 @@ class BaseMediaMessageCell: BaseMessageCell {
 		progressView.startLoading()
 		progressView.isHidden = false
 		loadButton.isHidden = true
-		let options: SDWebImageOptions = [.continueInBackground, .scaleDownLargeImages, .lowPriority]
+		let options: SDWebImageOptions = [.continueInBackground, .scaleDownLargeImages]
 
 		messageImageView.sd_setImage(
 			with: messageImageUrl,

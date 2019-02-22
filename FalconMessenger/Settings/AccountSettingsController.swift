@@ -35,7 +35,6 @@ class AccountSettingsController: UITableViewController {
   override func viewDidLoad() {
      super.viewDidLoad()
     
-    title = "Settings"
     extendedLayoutIncludesOpaqueBars = true
     edgesForExtendedLayout = UIRectEdge.top
     tableView = UITableView(frame: tableView.frame, style: .grouped)

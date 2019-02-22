@@ -20,6 +20,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 	fileprivate var viewable = [INSPhotoViewable]()
 	fileprivate var sharedMediaHistoryFetcher: SharedMediaHistoryFetcher? = SharedMediaHistoryFetcher()
 	fileprivate let viewPlaceholder = ViewPlaceholder()
+	var conversation: Conversation?
 
 	fileprivate var sharedMedia = [[SharedMedia]]() {
 		didSet {
@@ -32,7 +33,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 	var fetchingData: (userID: String, chatID: String)? {
 		didSet {
 			ARSLineProgress.ars_showOnView(view)
-			DispatchQueue.global(qos: .background).async {
+			DispatchQueue.global(qos: .userInteractive).async {
 				self.fetchPhotos()
 			}
 		}

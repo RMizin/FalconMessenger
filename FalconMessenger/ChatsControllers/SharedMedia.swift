@@ -7,30 +7,35 @@
 //
 
 import UIKit
+import RealmSwift
 
-class SharedMedia: NSObject {
+class SharedMedia: Object {
 
-	var id: String?
-	var imageURL: String?
-	var thumbnailImageUrl: String?
-	var videoURL: String?
-	var timestamp: Int64?
-	var shortConvertedTimestamp: String? //local only
-	var image: UIImage? //local only
-	var thumbnailImage: UIImage? //local only
+	@objc dynamic var id: String?
+	@objc dynamic var imageURL: String?
+	@objc dynamic var thumbnailImageUrl: String?
+	@objc dynamic var videoURL: String?
+	@objc dynamic var shortConvertedTimestamp: String? //local only
+	@objc dynamic var conversation: Conversation?// = nil
+	let timestamp = RealmOptional<Int64>()
+	var image: UIImage?
+	var thumbnailImage: UIImage?
 
-	init(id: String, imageURL: String, timestamp: Int64, convertedTimestamp: String, videoURL: String?, thumbnailImageUrl: String?) {
-		super.init()
+	override static func primaryKey() -> String? {
+		return "id"
+	}
+
+	convenience init(id: String, imageURL: String, timestamp: Int64, convertedTimestamp: String, videoURL: String?, thumbnailImageUrl: String?) {
+		self.init()
 		self.id = id
 		self.imageURL = imageURL
-		self.timestamp = timestamp
+		self.timestamp.value = timestamp
 		self.shortConvertedTimestamp = convertedTimestamp
 		self.videoURL = videoURL
 		self.thumbnailImageUrl = thumbnailImageUrl
 	}
 
 	static func groupedSharedMedia(_ sharedMedia: [SharedMedia]) -> [[SharedMedia]] {
-
 		let sorted = sharedMedia.sorted { (media1, media2) -> Bool in
 			return media1.id ?? "" > media2.id ?? ""
 		}
@@ -64,4 +69,18 @@ class SharedMedia: NSObject {
 
 		return IndexPath(row: row, section: section)
 	}
+
+//	static func get(indexPathOf message: INSPhotoViewable, in groupedArray: [SharedMediaSection]) -> IndexPath? {
+//		guard let section = groupedArray.index(where: { (messages) -> Bool in
+//			for message1 in messages.sharedMedia where message1.id == message.messageUID {
+//				return true
+//			}; return false
+//		}) else { return nil }
+//
+//		guard let row = groupedArray[section].sharedMedia.index(where: { (message1) -> Bool in
+//			return message1.id == message.messageUID
+//		}) else { return IndexPath(row: -1, section: section) }
+//
+//		return IndexPath(row: row, section: section)
+//	}
 }

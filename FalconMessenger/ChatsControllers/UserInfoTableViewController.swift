@@ -243,6 +243,7 @@ class UserInfoTableViewController: UITableViewController {
 
 		if indexPath.row == 0 {
 			let destination = SharedMediaController(collectionViewLayout: UICollectionViewFlowLayout())
+			destination.conversation = RealmKeychain.defaultRealm.object(ofType: Conversation.self, forPrimaryKey: conversationID)
 			destination.fetchingData = (userID: currentUserID, chatID: conversationID)
 			navigationController?.pushViewController(destination, animated: true)
 		} else {
