@@ -12,27 +12,19 @@ import Firebase
 let globalDataStorage = GlobalDataStorage()
 
 final class GlobalDataStorage: NSObject {
-  
+
+	static let reportDatabaseURL = "https://pigeon-project-79c81-d6fdd.firebaseio.com/"
+
   var localPhones: [String] = [] {
     didSet {
       NotificationCenter.default.post(name: .localPhonesUpdated, object: nil)
     }
   }
-  
-  var falconUsers: [User] = [] {
-    didSet {
-      NotificationCenter.default.post(name: .falconUsersUpdated, object: nil)
-    }
-  }
-  
+
   let imageSourcePhotoLibrary = "imageSourcePhotoLibrary"
-  
   let imageSourceCamera = "imageSourceCamera"
   
-  static let reportDatabaseURL = "https://pigeon-project-79c81-d6fdd.firebaseio.com/"
-  
   var isInsertingCellsToTop: Bool = false
-  
   var contentSizeWhenInsertingToTop: CGSize?
   
   override init() {
@@ -47,8 +39,8 @@ final class GlobalDataStorage: NSObject {
     NotificationCenter.default.removeObserver(self)
   }
   
-  var blockedUsers = [String]()
-  var blockedUsersByCurrentUser = [String]()
+  fileprivate var blockedUsers = [String]()
+  fileprivate(set) var blockedUsersByCurrentUser = [String]()
   
   @objc fileprivate func removeBanObservers() {
     blockedUsers.removeAll()
@@ -92,10 +84,21 @@ final class GlobalDataStorage: NSObject {
       })
     })
   }
+
+	func removeBannedUsers(users: [User]) -> [User] {
+		var users = users
+		globalDataStorage.blockedUsersByCurrentUser.forEach { (blockedUID) in
+			guard let index = users.index(where: { (user) -> Bool in
+				return user.id == blockedUID
+			}) else { return }
+
+			users.remove(at: index)
+		}
+		return users
+	}
 }
 
 extension NSNotification.Name {
-  static let falconUsersUpdated = NSNotification.Name(Bundle.main.bundleIdentifier! + ".falconUsers")
   static let localPhonesUpdated = NSNotification.Name(Bundle.main.bundleIdentifier! + ".localPhones")
   static let authenticationSucceeded = NSNotification.Name(Bundle.main.bundleIdentifier! + ".authenticationSucceeded")
   static let inputViewResigned = NSNotification.Name(Bundle.main.bundleIdentifier! + ".inputViewResigned")

@@ -155,33 +155,21 @@ class BlockedUsersTableViewController: UITableViewController {
 		newChat()
 	}
 
-
   @objc fileprivate func newChat() {
     let destination = BlockUserTableViewController()
     destination.hidesBottomBarWhenPushed = true
     let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
     if isContactsAccessGranted {
-      let users = removeBannedUsers(users: globalDataStorage.falconUsers)
+
+      let users = globalDataStorage.removeBannedUsers(users: RealmKeychain.realmUsersArray())
       destination.users = users
-      destination.filteredUsers = users//globalDataStorage.falconUsers
+      destination.filteredUsers = users
       destination.setUpCollation()
       destination.checkNumberOfContacts()
       destination.delegate = self
     //  destination.actions.removeAll()
     }
     navigationController?.pushViewController(destination, animated: true)
-  }
-  
-  fileprivate func removeBannedUsers(users: [User]) -> [User] {
-    var users = users
-    globalDataStorage.blockedUsersByCurrentUser.forEach { (blockedUID) in
-      guard let index = users.index(where: { (user) -> Bool in
-        return user.id == blockedUID
-      }) else { return }
-      
-      users.remove(at: index)
-    }
-    return users
   }
   
   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

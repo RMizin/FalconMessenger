@@ -323,7 +323,6 @@ class ContactsController: FalconTableViewController {
 
 extension ContactsController: FalconUsersUpdatesDelegate {
   func falconUsers(shouldBeUpdatedTo users: [User]) {
-    globalDataStorage.falconUsers = users
     reloadTableView(updatedUsers: users)
 
     let syncronizationStatus = userDefaults.currentBoolObjectState(for: userDefaults.contactsSyncronizationStatus)

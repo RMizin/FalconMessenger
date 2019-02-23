@@ -482,7 +482,7 @@ class ChatLogViewController: UIViewController {
   fileprivate func addBlockerView() {
     guard let chatID = conversation?.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
     guard chatID != currentUserID else { return }
-    let contains = globalDataStorage.falconUsers.contains { (user) -> Bool in
+    let contains = RealmKeychain.realmUsersArray().contains { (user) -> Bool in
       return user.id == chatID
     }
 
@@ -811,7 +811,6 @@ class ChatLogViewController: UIViewController {
   }
 
   fileprivate var userHandler: UInt = 01
-  fileprivate var onlineStatusInString: String?
 
   func setupTitleName() {
     guard let currentUserID = Auth.auth().currentUser?.uid, let toId = conversation?.chatID else { return }
@@ -822,7 +821,7 @@ class ChatLogViewController: UIViewController {
     }
   }
 
-  func configurePlaceholderTitleView() {
+  fileprivate func configurePlaceholderTitleView() {
 
     if let isGroupChat = conversation?.isGroupChat.value, isGroupChat,
       let title = conversation?.chatName,
@@ -840,11 +839,12 @@ class ChatLogViewController: UIViewController {
       return
     }
 
-    guard let index = globalDataStorage.falconUsers.index(where: { (user) -> Bool in
+    guard let index = RealmKeychain.realmUsersArray().index(where: { (user) -> Bool in
       return user.id == conversation?.chatID
     }) else { return }
-    let status = globalDataStorage.falconUsers[index].onlineStatus as AnyObject
-    onlineStatusInString = manageNavigationItemTitle(onlineStatusObject: status)
+
+    let status = RealmKeychain.realmUsersArray()[index].onlineStatusString as AnyObject
+		manageNavigationItemTitle(onlineStatusObject: status)
   }
 
 	// MARK: - DATABASE ONLINE STATUS // TO MOVE
@@ -874,21 +874,22 @@ class ChatLogViewController: UIViewController {
 
       let value = snapshot.value as? NSDictionary
       let status = value?["OnlineStatus"] as AnyObject
-      self.onlineStatusInString = self.manageNavigationItemTitle(onlineStatusObject: status)
+			self.manageNavigationItemTitle(onlineStatusObject: status)
     })
   }
 
-  fileprivate func manageNavigationItemTitle(onlineStatusObject: AnyObject) -> String {
-    guard let title = conversation?.chatName else { return "" }
+  fileprivate func manageNavigationItemTitle(onlineStatusObject: AnyObject?) {
+		guard let onlineStatusObject = onlineStatusObject else { return }
+    guard let title = conversation?.chatName else { return }
     if let onlineStatusStringStamp = onlineStatusObject as? String {
       if onlineStatusStringStamp == statusOnline { // user online
         self.navigationItem.setTitle(title: title, subtitle: statusOnline)
-        return statusOnline
-      } else { // user got a timstamp converted to string (was in earlier versions of app)
+			} else if onlineStatusStringStamp.contains("Last seen") {
+				self.navigationItem.setTitle(title: title, subtitle: onlineStatusStringStamp)
+			} else { // user got a timstamp converted to string (was in earlier versions of app)
         let date = Date(timeIntervalSince1970: TimeInterval(onlineStatusStringStamp)!)
         let subtitle = "Last seen " + timeAgoSinceDate(date)
         self.navigationItem.setTitle(title: title, subtitle: subtitle)
-        return subtitle
       }
 
       //user got server timestamp in miliseconds
@@ -896,9 +897,7 @@ class ChatLogViewController: UIViewController {
       let date = Date(timeIntervalSince1970: onlineStatusTimeIntervalStamp/1000)
       let subtitle = "Last seen " + timeAgoSinceDate(date)
       self.navigationItem.setTitle(title: title, subtitle: subtitle)
-      return subtitle
     }
-    return ""
   }
 
   // MARK: Scroll view
@@ -1017,14 +1016,14 @@ class ChatLogViewController: UIViewController {
 	}
 
 	fileprivate func resendPhotoMessage(_ message: Message, _ conversation: Conversation, _ text: String? = nil, at indexPath: IndexPath) {
-		let object = message.localImage?.image as AnyObject
+		let object = message.localImage?.imageData as AnyObject
 		let mediaObject = ["object": object] as [String: AnyObject]
 		let media = [MediaObject(dictionary: mediaObject)]
 		handleResend(conversation: conversation, text: text, media: media, indexPath: indexPath)
 	}
 
 	fileprivate func resendVideoMessage(_ message: Message, _ conversation: Conversation, _ text: String? = nil, at indexPath: IndexPath) {
-		let object = message.localImage?.image as AnyObject
+		let object = message.localImage?.imageData as AnyObject
 		let localVideoURL = message.localVideoUrl as AnyObject
 		let localVideoIdentifier = message.localVideoIdentifier as AnyObject
 

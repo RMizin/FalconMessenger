@@ -6,31 +6,29 @@
 //  Copyright © 2019 Roman Mizin. All rights reserved.
 //
 
-import UIKit
 import RealmSwift
 
 class RealmImage: Object {
-
-	@objc dynamic var messageUID: String?
-	@objc dynamic var image: Data?
+	@objc dynamic var id: String?
+	@objc dynamic var imageData: Data?
 
 	func uiImage() -> UIImage? {
-		guard let data = image else { return blurredPlaceholder }
+		guard let data = imageData else { return blurredPlaceholder }
 		return UIImage(data: data)
 	}
 
-	convenience init(image: UIImage, quality: CGFloat, messageUID: String) {
-		self.init()
-		self.messageUID = messageUID
-
-		if quality < 1.0 {
-			self.image = image.jpegData(compressionQuality: quality)
-		} else {
-			self.image = image.pngData()
-		}
+	override static func primaryKey() -> String? {
+		return "id"
 	}
 
-	override static func primaryKey() -> String? {
-		return "messageUID"
+	convenience init(_ image: UIImage, quality: CGFloat, id: String) {
+		self.init()
+		self.id = id
+
+		if quality < 1.0 {
+			imageData = image.jpegData(compressionQuality: quality)
+		} else {
+			imageData = image.pngData()
+		}
 	}
 }

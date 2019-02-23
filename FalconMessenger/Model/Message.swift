@@ -101,7 +101,7 @@ class Message: Object {
         videoUrl = dictionary["videoUrl"] as? String
 
 				if let image = dictionary["localImage"] as? UIImage {
-					localImage = RealmImage(image: image, quality: 0.5, messageUID: dictionary["messageUID"] as? String ?? "")
+					localImage = RealmImage(image, quality: 0.5, id: dictionary["messageUID"] as? String ?? "")
 				}
 
 				if let thumbnail = realm?.object(ofType: RealmImage.self, forPrimaryKey: (dictionary["messageUID"] as? String ?? "") + "thumbnail") {
@@ -117,12 +117,12 @@ class Message: Object {
         voiceStartTime.value = dictionary["voiceStartTime"] as? Int
 
 				if let cgrect = dictionary["estimatedFrameForText"] as? CGRect {
-					estimatedFrameForText = RealmCGRect(cgrect: cgrect, messageUID: dictionary["messageUID"] as? String ?? "")
+					estimatedFrameForText = RealmCGRect(cgrect, id: dictionary["messageUID"] as? String ?? "")
 				}
 
 				if let cgrect = dictionary["landscapeEstimatedFrameForText"] as? CGRect {
-					landscapeEstimatedFrameForText = RealmCGRect(cgrect: cgrect,
-																											 messageUID: (dictionary["messageUID"] as? String ?? "") + "landscape")	
+					landscapeEstimatedFrameForText = RealmCGRect(cgrect,
+																											 id: (dictionary["messageUID"] as? String ?? "") + "landscape")
 				}
 
         imageCellHeight.value = dictionary["imageCellHeight"] as? Double

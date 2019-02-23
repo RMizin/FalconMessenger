@@ -405,11 +405,12 @@ class GroupAdminPanelTableViewController: UITableViewController {
   }
 
   func addMembers() {
-    let filteredMemebrs = globalDataStorage.falconUsers.filter { user in
+    var filteredMemebrs = RealmKeychain.realmUsersArray().filter { user in
       return !members.contains { member in
         user.id == member.id
       }
     }
+		filteredMemebrs = globalDataStorage.removeBannedUsers(users: filteredMemebrs)
     
     let destination = AddGroupMembersController()
     destination.filteredUsers = filteredMemebrs

@@ -182,8 +182,8 @@ class ChatsTableViewController: FalconTableViewController {
     destination.hidesBottomBarWhenPushed = true
     let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
     if isContactsAccessGranted {
-      destination.users = globalDataStorage.falconUsers
-      destination.filteredUsers = globalDataStorage.falconUsers
+      destination.users = RealmKeychain.realmUsersArray()
+      destination.filteredUsers = RealmKeychain.realmUsersArray()
       destination.setUpCollation()
       destination.checkNumberOfContacts()
     }

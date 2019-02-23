@@ -55,7 +55,7 @@ class BaseMediaMessageCell: BaseMessageCell {
   
 
 	func setupImageFromURL(message: Message, indexPath: IndexPath) {
-		if let localImageData = message.localImage?.image {
+		if let localImageData = message.localImage?.imageData {
 			messageImageView.image = UIImage(data: localImageData)
 			messageImageView.isUserInteractionEnabled = true
 			playButton.isHidden = message.videoUrl == nil && message.localVideoUrl == nil
@@ -83,7 +83,7 @@ class BaseMediaMessageCell: BaseMessageCell {
 					cacheType: SDImageCacheType.disk) { (cacheType) in
 						guard cacheType == SDImageCacheType.disk || cacheType == SDImageCacheType.memory else {
 
-							if let localImageData = message.localImage?.image {
+							if let localImageData = message.localImage?.imageData {
 								self.messageImageView.image = UIImage(data: localImageData)
 								return
 							}
@@ -104,7 +104,7 @@ class BaseMediaMessageCell: BaseMessageCell {
 
 		loadButton.isHidden = false
 
-		if message.thumbnailImage?.image != nil {
+		if message.thumbnailImage?.imageData != nil {
 			messageImageView.image = message.thumbnailImage?.uiImage()
 			return
 		}
@@ -178,9 +178,9 @@ class BaseMediaMessageCell: BaseMessageCell {
 			let messageObject = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")
 
 			if thumbnailObject == nil {
-				let thumbnail = RealmImage(image: messageImageView.image ?? blurEffect(image: UIImage(named: "blurPlaceholder")!),
+				let thumbnail = RealmImage(messageImageView.image ?? blurEffect(image: UIImage(named: "blurPlaceholder")!),
 																		 quality: 1.0,
-																		 messageUID: (message.messageUID ?? "") + "thumbnail")
+																		 id: (message.messageUID ?? "") + "thumbnail")
 				messageObject?.thumbnailImage = thumbnail
 			} else {
 				messageObject?.thumbnailImage = thumbnailObject

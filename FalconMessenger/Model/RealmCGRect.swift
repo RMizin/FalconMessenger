@@ -6,26 +6,25 @@
 //  Copyright © 2019 Roman Mizin. All rights reserved.
 //
 
-import UIKit
 import RealmSwift
 
 class RealmCGRect: Object {
-	@objc dynamic var messageUID: String?
+	@objc dynamic var id: String?
 	let x =  RealmOptional<Double>()
 	let y = RealmOptional<Double>()
 	let width = RealmOptional<Double>()
 	let height = RealmOptional<Double>()
 
 	override static func primaryKey() -> String? {
-		return "messageUID"
+		return "id"
 	}
 
-	convenience init(cgrect: CGRect, messageUID: String) {
+	convenience init(_ cgRect: CGRect, id: String) {
 		self.init()
-		self.messageUID = messageUID
-		x.value = Double(cgrect.origin.x)
-		y.value = Double(cgrect.origin.y)
-		width.value = Double(cgrect.size.width)
-		height.value = Double(cgrect.size.height)
+		self.id = id
+		x.value = Double(cgRect.origin.x)
+		y.value = Double(cgRect.origin.y)
+		width.value = Double(cgRect.size.width)
+		height.value = Double(cgRect.size.height)
 	}
 }

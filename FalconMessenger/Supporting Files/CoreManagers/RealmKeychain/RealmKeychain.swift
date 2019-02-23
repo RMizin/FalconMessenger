@@ -11,9 +11,13 @@ import Security
 import RealmSwift
 
 final class RealmKeychain {
- 
+
 	static let defaultRealm = try! Realm(configuration: RealmKeychain.realmDefaultConfiguration())
 	static let usersRealm = try! Realm(configuration: RealmKeychain.realmUsersConfiguration())
+
+	static func realmUsersArray() -> [User] {
+		return Array(RealmKeychain.usersRealm.objects(User.self))
+	}
 
 	static func realmUsersConfiguration() -> Realm.Configuration {
 		var config = Realm.Configuration()
@@ -28,7 +32,7 @@ final class RealmKeychain {
 		return config
 	}
 
-	static func getKey() -> NSData {
+	static fileprivate func getKey() -> NSData {
 		// Identifier for our keychain entry - should be unique for your application
 		let keychainIdentifier = "falconMessenger.Realm.EncryptionKey"
 		let keychainIdentifierData = keychainIdentifier.data(using: String.Encoding.utf8, allowLossyConversion: false)!

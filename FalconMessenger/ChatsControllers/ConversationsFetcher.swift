@@ -174,10 +174,13 @@ class ConversationsFetcher: NSObject {
 			dictionary = self.messagesFetcher.preloadCellData(to: dictionary, isGroupChat: false)
 
       let message = Message(dictionary: dictionary)
-				conversation.lastMessageTimestamp.value = message.timestamp.value
-				message.conversation = conversation
-				conversation.lastMessageRuntime = message
-				self.loadAddictionalMetadata(for: conversation)
+			if let thumbnail = message.thumbnailImageUrl {
+				prefetchThumbnail(from: thumbnail)
+			}
+			conversation.lastMessageTimestamp.value = message.timestamp.value
+			message.conversation = conversation
+			conversation.lastMessageRuntime = message
+			self.loadAddictionalMetadata(for: conversation)
     })
   }
 

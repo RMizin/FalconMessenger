@@ -32,21 +32,13 @@ class SelectChatTableViewController: UITableViewController {
     super.viewDidLoad()
     configureController()
     setupSearchController()
-    addObservers()
   }
-  
-  fileprivate func addObservers() {
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(updateUsers),
-                                           name: .falconUsersUpdated,
-                                           object: nil)
-  }
-  
+
   @objc fileprivate func updateUsers() {
-    self.users = globalDataStorage.falconUsers
-    self.filteredUsers = globalDataStorage.falconUsers
+    self.users = RealmKeychain.realmUsersArray()
+    self.filteredUsers = RealmKeychain.realmUsersArray()
     
-    if !globalDataStorage.falconUsers.isEmpty {
+    if !(RealmKeychain.realmUsersArray().count == 0) {
       self.viewPlaceholder.remove(from: self.view, priority: .high)
     }
     
@@ -207,23 +199,12 @@ class SelectChatTableViewController: UITableViewController {
     return cell
   }
 
- fileprivate func removeBannedUsers(users: [User]) -> [User] {
-    var users = users
-    globalDataStorage.blockedUsers.forEach { (blockedUID) in
-    guard let index = users.index(where: { (user) -> Bool in
-        return user.id == blockedUID
-    }) else { return }
-      users.remove(at: index)
-    }
-    return users
-  }
-
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		searchBar?.resignFirstResponder()
 
     if indexPath.section == 0 {
       let destination = SelectGroupMembersController()
-      let users = removeBannedUsers(users: self.users)
+      let users = globalDataStorage.removeBannedUsers(users: RealmKeychain.realmUsersArray())
       destination.users = users
       destination.filteredUsers = users
       destination.setUpCollation()

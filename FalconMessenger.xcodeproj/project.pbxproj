@@ -953,13 +953,13 @@
 		4B7F31E62220466700B2CF37 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4B7F31E72220466700B2CF37 /* Conversation.swift */,
-				4B7F31E82220466700B2CF37 /* MessageSection.swift */,
-				4B7F31E92220466700B2CF37 /* RealmCGRect.swift */,
-				4B7F31EA2220466700B2CF37 /* Message.swift */,
 				4B7F31EB2220466700B2CF37 /* User.swift */,
-				4B7F31EC2220466700B2CF37 /* RealmImage.swift */,
+				4B7F31E72220466700B2CF37 /* Conversation.swift */,
+				4B7F31EA2220466700B2CF37 /* Message.swift */,
+				4B7F31E82220466700B2CF37 /* MessageSection.swift */,
 				4B7F31ED2220466700B2CF37 /* MediaObject.swift */,
+				4B7F31E92220466700B2CF37 /* RealmCGRect.swift */,
+				4B7F31EC2220466700B2CF37 /* RealmImage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
