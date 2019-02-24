@@ -43,7 +43,7 @@ extension ChatLogViewController: UserBlockDelegate {
     var isYouHasBeenBlocked = false
     var isYouBlockedSomebody = false
 
-    let reference = Database.database(url: GlobalDataStorage.reportDatabaseURL).reference()
+    let reference = Database.database(url: globalVariables.reportDatabaseURL).reference()
     currentUserBanReference = reference.child("blacklists").child(currentUserID).child("banned")
     companionBanReference = reference.child("blacklists").child(currentUserID).child("bannedBy")
   

@@ -45,7 +45,7 @@ class FalconUsersFetcher: NSObject {
   fileprivate func requestFalconUsers() {
 
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-    let numbers = prepareNumbers(from: globalDataStorage.localPhones)
+    let numbers = prepareNumbers(from: globalVariables.localPhones)
     print("https reqest called")
     functions.httpsCallable("fetchContacts").call(["preparedNumbers": numbers]) { (result, _) in
       guard let response = result?.data as? [[String: AnyObject]] else { return }

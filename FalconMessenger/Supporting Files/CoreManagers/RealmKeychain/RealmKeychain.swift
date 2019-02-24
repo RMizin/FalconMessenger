@@ -6,7 +6,6 @@
 //  Copyright © 2019 Roman Mizin. All rights reserved.
 //
 
-import Foundation
 import Security
 import RealmSwift
 

@@ -6,7 +6,6 @@
 //  Copyright © 2017 Roman Mizin. All rights reserved.
 //
 
-import UIKit
 import Firebase
 import RealmSwift
 

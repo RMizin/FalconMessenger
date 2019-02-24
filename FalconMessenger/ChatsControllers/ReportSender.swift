@@ -17,7 +17,7 @@ class ReportSender: NSObject {
     guard let controller = controller else { return }
     ARSLineProgress.show()
     var reportsDatabaseReference: DatabaseReference!
-    reportsDatabaseReference = Database.database(url: GlobalDataStorage.reportDatabaseURL).reference().child("reports").childByAutoId()
+    reportsDatabaseReference = Database.database(url: globalVariables.reportDatabaseURL).reference().child("reports").childByAutoId()
     
     let reportedMessageID = message?.messageUID ?? "empty"
     let reportedUserID = message?.fromId ?? "empty"

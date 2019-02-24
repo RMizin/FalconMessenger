@@ -6,7 +6,6 @@
 //  Copyright © 2019 Roman Mizin. All rights reserved.
 //
 
-import UIKit
 import RealmSwift
 
 class MessageSection: Object {

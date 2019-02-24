@@ -174,7 +174,7 @@
 		4BBF795C2134375800903F56 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BBF79592134375800903F56 /* LaunchScreen.storyboard */; };
 		4BBF795D2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF795A2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift */; };
 		4BBF795E2134375800903F56 /* SplashScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF795B2134375800903F56 /* SplashScreenContainer.swift */; };
-		4BC0E6CB2111B71700720B43 /* GlobalDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */; };
+		4BC0E6CB2111B71700720B43 /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E6CA2111B71700720B43 /* GlobalVariables.swift */; };
 		4BC26B191F3A21EE0093A9D2 /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B0F1F3A21EE0093A9D2 /* InputContainerView.swift */; };
 		4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */; };
 		4BC2C58D1F40545200B5C825 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC2C58C1F40545200B5C825 /* UserCell.swift */; };
@@ -190,6 +190,7 @@
 		4BC9220E21394F0C0057100C /* CellPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9220D21394F0B0057100C /* CellPlayerView.swift */; };
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
+		4BD33B142221FEF7006A8C3B /* BlacklistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD33B132221FEF7006A8C3B /* BlacklistManager.swift */; };
 		4BDB21C42150F72600609054 /* ViewBlockerContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB21C32150F72600609054 /* ViewBlockerContainer.swift */; };
 		4BDB294A2126C79000D77600 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */; };
 		4BDB294B2126C79000D77600 /* AccountSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29352126C79000D77600 /* AccountSettingsController.swift */; };
@@ -419,7 +420,7 @@
 		4BBF79592134375800903F56 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4BBF795A2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SplashScreenContainer+BiometricalControl.swift"; sourceTree = "<group>"; };
 		4BBF795B2134375800903F56 /* SplashScreenContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenContainer.swift; sourceTree = "<group>"; };
-		4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalDataStorage.swift; sourceTree = "<group>"; };
+		4BC0E6CA2111B71700720B43 /* GlobalVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
 		4BC26B0F1F3A21EE0093A9D2 /* InputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputContainerView.swift; path = ChatsControllers/InputContainerView.swift; sourceTree = "<group>"; };
 		4BC26B141F3A21EE0093A9D2 /* TypingIndicatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TypingIndicatorCell.swift; path = ChatsControllers/TypingIndicatorCell.swift; sourceTree = "<group>"; };
 		4BC2C58C1F40545200B5C825 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = ChatsControllers/UserCell.swift; sourceTree = "<group>"; };
@@ -435,6 +436,7 @@
 		4BC9220D21394F0B0057100C /* CellPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CellPlayerView.swift; path = ChatsControllers/CellPlayerView.swift; sourceTree = "<group>"; };
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
+		4BD33B132221FEF7006A8C3B /* BlacklistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlacklistManager.swift; sourceTree = "<group>"; };
 		4BDB21C32150F72600609054 /* ViewBlockerContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewBlockerContainer.swift; path = ChatsControllers/ViewBlockerContainer.swift; sourceTree = "<group>"; };
 		4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		4BDB29352126C79000D77600 /* AccountSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsController.swift; sourceTree = "<group>"; };
@@ -933,7 +935,8 @@
 			children = (
 				4B520D14221F0B1000C7F6C6 /* RealmKeychain */,
 				4B6BAFB220886C5E00A90F3A /* Public.swift */,
-				4BC0E6CA2111B71700720B43 /* GlobalDataStorage.swift */,
+				4BC0E6CA2111B71700720B43 /* GlobalVariables.swift */,
+				4BD33B132221FEF7006A8C3B /* BlacklistManager.swift */,
 				4B6BAF9D20886C5D00A90F3A /* ThemeManager.swift */,
 				4B1058F62120979200CD6600 /* UserDefaultsManager.swift */,
 				4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */,
@@ -1707,7 +1710,7 @@
 				4BE8BB4B1FCAE9EF00EB35FA /* IncomingVoiceMessageCell.swift in Sources */,
 				4BC3B260212DA2EA0012C7BD /* ChatLogContainerView.swift in Sources */,
 				4B0FA7DC2065422600BEA090 /* MessagesFetcher.swift in Sources */,
-				4BC0E6CB2111B71700720B43 /* GlobalDataStorage.swift in Sources */,
+				4BC0E6CB2111B71700720B43 /* GlobalVariables.swift in Sources */,
 				4B1FEC19213325CE0022421C /* Country.swift in Sources */,
 				4B7F31EF2220466700B2CF37 /* MessageSection.swift in Sources */,
 				4B6BAFFF20886C5F00A90F3A /* AvatarOpener.swift in Sources */,
@@ -1844,6 +1847,7 @@
 				4BDB294C2126C79000D77600 /* PrivacyTableViewController.swift in Sources */,
 				4B6BAFE620886C5F00A90F3A /* SelectParticipantsViewController+SearchHandlers.swift in Sources */,
 				4B5693D320CFFAAB005EAE15 /* InAppNotificationDispatcher.swift in Sources */,
+				4BD33B142221FEF7006A8C3B /* BlacklistManager.swift in Sources */,
 				4B6BAFE520886C5F00A90F3A /* SelectParticipantsTableView.swift in Sources */,
 				4B80BE372130217100A32E01 /* ChatLogViewControllerTitleView.swift in Sources */,
 				4BBBCBFF205883CC00926800 /* UserCell+ConfigureCell.swift in Sources */,

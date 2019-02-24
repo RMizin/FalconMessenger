@@ -24,7 +24,7 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
     guard let cell = sender.superview as? AttachCollectionViewCell,
       let indexPath = attachCollectionView.indexPath(for: cell) else { return }
     let row = indexPath.row
-    let imageSourcePhotoLibrary = globalDataStorage.imageSourcePhotoLibrary
+    let imageSourcePhotoLibrary = globalVariables.imageSourcePhotoLibrary
   
     if attachedMedia[row].imageSource == imageSourcePhotoLibrary {
       

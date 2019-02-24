@@ -61,9 +61,9 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 
 	fileprivate func batchInsertMessages(at range: Int, saveContentOffset: Bool = true) {
 		if saveContentOffset {
-			globalDataStorage.contentSizeWhenInsertingToTop = collectionView.contentSize
+			globalVariables.contentSizeWhenInsertingToTop = collectionView.contentSize
 		}
-		globalDataStorage.isInsertingCellsToTop = true
+		globalVariables.isInsertingCellsToTop = true
 
 		var indexPaths = [IndexPath]()
 		Array(0..<range).forEach({ (index) in
@@ -80,8 +80,8 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 	}
 
 	fileprivate func batchInsertSections(at range: Int) {
-		globalDataStorage.contentSizeWhenInsertingToTop = collectionView.contentSize
-		globalDataStorage.isInsertingCellsToTop = true
+		globalVariables.contentSizeWhenInsertingToTop = collectionView.contentSize
+		globalVariables.isInsertingCellsToTop = true
 
 		var indexSet = IndexSet()
 		Array(0..<range).forEach({ (index) in

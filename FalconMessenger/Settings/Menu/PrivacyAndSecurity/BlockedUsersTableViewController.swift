@@ -32,7 +32,7 @@ class BlockedUsersTableViewController: UITableViewController {
   fileprivate func fetchBlockedUsers() {
     ARSLineProgress.ars_showOnView(view)
     let bannedUsersLoadingGroup = DispatchGroup()
-    let bannedIDs = globalDataStorage.blockedUsersByCurrentUser
+    let bannedIDs = blacklistManager.blockedUsersByCurrentUser
     
     bannedIDs.forEach { (_) in
       bannedUsersLoadingGroup.enter()
@@ -161,7 +161,7 @@ class BlockedUsersTableViewController: UITableViewController {
     let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
     if isContactsAccessGranted {
 
-      let users = globalDataStorage.removeBannedUsers(users: RealmKeychain.realmUsersArray())
+      let users = blacklistManager.removeBannedUsers(users: RealmKeychain.realmUsersArray())
       destination.users = users
       destination.filteredUsers = users
       destination.setUpCollation()

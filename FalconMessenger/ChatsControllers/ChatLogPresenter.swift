@@ -76,11 +76,12 @@ class ChatLogPresenter: NSObject {
 		chatLogController?.messagesFetcher = messagesFetcher
 		chatLogController?.conversation = conversation
 		chatLogController?.getMessages()
+		chatLogController?.observeBlockChanges()
 		chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
 		if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
 			chatLogController?.configureTitleViewWithOnlineStatus()
 		}
-		chatLogController?.observeBlockChanges()
+
 		chatLogController?.messagesFetcher?.collectionDelegate = chatLogController
 
 		guard let destination = chatLogController else { return }

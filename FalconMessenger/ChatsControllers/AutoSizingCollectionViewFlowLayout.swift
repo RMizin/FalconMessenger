@@ -14,8 +14,8 @@ class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
     super.prepare()
     minimumLineSpacing = 2
     sectionHeadersPinToVisibleBounds = true
-    if globalDataStorage.isInsertingCellsToTop == true {
-      if let collectionView = collectionView, let oldContentSize = globalDataStorage.contentSizeWhenInsertingToTop {
+    if globalVariables.isInsertingCellsToTop == true {
+      if let collectionView = collectionView, let oldContentSize = globalVariables.contentSizeWhenInsertingToTop {
         let newContentSize = collectionViewContentSize
         let contentOffsetY = collectionView.contentOffset.y + (newContentSize.height - oldContentSize.height)
         let newOffset = CGPoint(x: collectionView.contentOffset.x, y: contentOffsetY)
@@ -23,8 +23,8 @@ class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
 					collectionView.setContentOffset(newOffset, animated: false)
 				}
       }
-      globalDataStorage.contentSizeWhenInsertingToTop = nil
-      globalDataStorage.isInsertingCellsToTop = false
+      globalVariables.contentSizeWhenInsertingToTop = nil
+      globalVariables.isInsertingCellsToTop = false
     }
   }
 }

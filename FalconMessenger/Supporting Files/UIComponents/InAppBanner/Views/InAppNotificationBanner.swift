@@ -112,7 +112,7 @@ class InAppNotificationBanner: CustomizedView {
         } else if let data = notification?.resource as? Data, let image = UIImage(data: data) {
           self.pictureImageView.image = image
         } else {
-          self.pictureImageView.image = UIImage(named: "notification_placeholder")
+          self.pictureImageView.image = UIImage(named: "NotificationPlaceholder")
         }
     }
     

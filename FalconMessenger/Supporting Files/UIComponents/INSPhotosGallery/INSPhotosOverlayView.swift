@@ -75,8 +75,14 @@ open class INSPhotosOverlayView: UIView, INSPhotosOverlayViewable {
     }
 
 		fileprivate func setupNavigationItemActions() {
-			navigationView.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose"), landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape"), style: .plain, target: self, action: #selector(closeButtonTapped(_:)))
-			navigationView.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButtonTapped(_:)))
+			navigationView.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose"),
+																																				landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape"),
+																																				style: .plain,
+																																				target: self,
+																																				action: #selector(closeButtonTapped(_:)))
+			navigationView.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action,
+																																				 target: self,
+																																				 action: #selector(actionButtonTapped(_:)))
 			navigationView.navigationBar.items = [navigationView.navigationItem]
 		}
 

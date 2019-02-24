@@ -67,7 +67,11 @@ class AvatarOpenerOverlay: UIView {
   }
   
   private func configureNavigationBar() {
-    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "BackButton"), style: .done, target: self, action: #selector(backButtonTapped))
+		navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose"),
+																											 landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape"),
+																											 style: .plain,
+																											 target: self,
+																											 action: #selector(backButtonTapped))
     navigationBar.setItems([navigationItem], animated: true)
   }
   

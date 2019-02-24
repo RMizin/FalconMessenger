@@ -132,7 +132,7 @@ class UserInfoTableViewController: UITableViewController {
    
     let phoneNumberCell = tableView.cellForRow(at: IndexPath(row: 0, section: 2)) as? UserInfoPhoneNumberTableViewCell ?? UserInfoPhoneNumberTableViewCell()
     
-    if globalDataStorage.localPhones.contains(contactPhoneNumber.digits) {
+    if globalVariables.localPhones.contains(contactPhoneNumber.digits) {
       phoneNumberCell.add.isHidden = true
       phoneNumberCell.contactStatus.isHidden = true
       phoneNumberCell.addHeightConstraint.constant = 0
@@ -185,7 +185,7 @@ class UserInfoTableViewController: UITableViewController {
       phoneNumberCell.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
       phoneNumberCell.userInfoTableViewController = self
       
-      if globalDataStorage.localPhones.contains(contactPhoneNumber.digits) {
+      if globalVariables.localPhones.contains(contactPhoneNumber.digits) {
         phoneNumberCell.add.isHidden = true
         phoneNumberCell.contactStatus.isHidden = true
         phoneNumberCell.addHeightConstraint.constant = 0

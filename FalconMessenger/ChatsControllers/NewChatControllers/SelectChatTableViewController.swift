@@ -204,7 +204,7 @@ class SelectChatTableViewController: UITableViewController {
 
     if indexPath.section == 0 {
       let destination = SelectGroupMembersController()
-      let users = globalDataStorage.removeBannedUsers(users: RealmKeychain.realmUsersArray())
+      let users = blacklistManager.removeBannedUsers(users: RealmKeychain.realmUsersArray())
       destination.users = users
       destination.filteredUsers = users
       destination.setUpCollation()

@@ -47,7 +47,7 @@ class ContactsFetcher: NSObject {
       } catch {}
 
       let phoneNumbers = contacts.flatMap({$0.phoneNumbers.map({$0.value.stringValue.digits})})
-      globalDataStorage.localPhones = phoneNumbers
+      globalVariables.localPhones = phoneNumbers
       self.delegate?.contacts(updateDatasource: contacts)
       self.syncronizeContacts(contacts: contacts)
     }

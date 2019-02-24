@@ -410,7 +410,7 @@ class GroupAdminPanelTableViewController: UITableViewController {
         user.id == member.id
       }
     }
-		filteredMemebrs = globalDataStorage.removeBannedUsers(users: filteredMemebrs)
+		filteredMemebrs = blacklistManager.removeBannedUsers(users: filteredMemebrs)
     
     let destination = AddGroupMembersController()
     destination.filteredUsers = filteredMemebrs

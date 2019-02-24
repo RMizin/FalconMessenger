@@ -33,6 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 		Database.database().isPersistenceEnabled = true
   
     userDefaults.configureInitialLaunch()
+		
+		_ = blacklistManager.initialize
     
     tabBarController = GeneralTabBarController()
     let detailViewController = SplitPlaceholderViewController()
