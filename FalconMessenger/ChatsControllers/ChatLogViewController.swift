@@ -159,10 +159,10 @@ class ChatLogViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+
+		setRightBarButtonItem()
     setupCollectionView()
     setupInputView()
-    setRightBarButtonItem()
     setupTitleName()
     configurePlaceholderTitleView()
     setupBottomScrollButton()
@@ -490,6 +490,7 @@ class ChatLogViewController: UIViewController {
     guard contains == false, permitted != true else { return }
 
     if let isGroupChat = conversation?.isGroupChat.value, !isGroupChat {
+			navigationItem.rightBarButtonItem?.isEnabled = false
       view.addSubview(blocker)
       blocker.translatesAutoresizingMaskIntoConstraints = false
       blocker.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -501,6 +502,7 @@ class ChatLogViewController: UIViewController {
 // MARK: - DATABASE REMOVE BLOCKER VIEW // TO MOVE
   @objc func removeBlockerView() {
     blocker.remove(from: view)
+		navigationItem.rightBarButtonItem?.isEnabled = true
     guard let chatID = conversation?.chatID, let currentUserID = Auth.auth().currentUser?.uid else { return }
     Database.database().reference()
     .child("user-messages").child(currentUserID).child(chatID).child(messageMetaDataFirebaseFolder)

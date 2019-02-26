@@ -11,22 +11,19 @@ import Firebase
 import ARSLineProgress
 
 private let falconUsersCellID = "falconUsersCellID"
-private let adminControlsCellID = "adminControlsCellID"
 
-class BlockedUsersTableViewController: UITableViewController {
+class BlockedUsersTableViewController: MenuControlsTableViewController {
 
-  var users = [User]()
-  let adminControls = ["Add Users"]
-  let userBlockingManager = UserBlockingManager()
+  fileprivate var users = [User]()
+  fileprivate let adminControls = ["Add Users"]
+  fileprivate let userBlockingManager = UserBlockingManager()
   
   override func viewDidLoad() {
-      super.viewDidLoad()
-    configureViewController()
+		super.viewDidLoad()
+		tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
+		navigationItem.title = "Blacklist"
+		navigationItem.rightBarButtonItem = editButtonItem
     fetchBlockedUsers()
-  }
-  
-  deinit {
-    print("blocked users deinig")
   }
   
   fileprivate func fetchBlockedUsers() {
@@ -58,21 +55,6 @@ class BlockedUsersTableViewController: UITableViewController {
     }
   }
   
-  fileprivate func configureViewController() {
-    extendedLayoutIncludesOpaqueBars = true
-    definesPresentationContext = true
-    edgesForExtendedLayout = UIRectEdge.top
-    navigationItem.title = "Blacklist"
-    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-    tableView.sectionIndexBackgroundColor = view.backgroundColor
-    tableView.backgroundColor = view.backgroundColor
-    tableView.register(FalconUsersTableViewCell.self, forCellReuseIdentifier: falconUsersCellID)
-    tableView.register(GroupAdminPanelTableViewCell.self, forCellReuseIdentifier: adminControlsCellID)
-    tableView.separatorStyle = .none
-    navigationItem.rightBarButtonItem = editButtonItem
-  }
-
   // MARK: - Table view data source
 
   override func numberOfSections(in tableView: UITableView) -> Int {
@@ -87,51 +69,11 @@ class BlockedUsersTableViewController: UITableViewController {
     }
   }
 
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    if indexPath.section == 0 {
-      return 60
-    }
-    return 65
-  }
-  
-  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    if section == 0 { return " " }
-    guard section == 1, users.count != 0 else { return "" }
-    return " "
-  }
-  
-  override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-    if section == 0 { return " " }
-    return ""
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-    if section == 0 { return 20 }
-    return 0
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    if section == 0 { return 20 }
-    guard section == 1, users.count != 0 else { return 0 }
-    return 8
-  }
- 
-  override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-    view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
-    guard section == 1 else { return }
-    view.tintColor = ThemeManager.currentTheme().inputTextViewColor
-  }
-  
-  override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-    view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
-  }
-  
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     if indexPath.section == 0 {
-      let cell = tableView.dequeueReusableCell(withIdentifier: adminControlsCellID,
+      let cell = tableView.dequeueReusableCell(withIdentifier: controlButtonCellID,
                                                for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
       cell.selectionStyle = .none
-			cell.button.setTitleColor(view.tintColor, for: .normal)
 			cell.button.setTitle(adminControls[indexPath.row], for: .normal)
 			cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
       
@@ -145,58 +87,52 @@ class BlockedUsersTableViewController: UITableViewController {
     }
   }
 
+	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		guard indexPath.section == 1 else { return false }
+		return true
+	}
+
+	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+		guard indexPath.section == 1 else { return .none }
+		return .delete
+	}
+
+	override  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			guard let userID = users[indexPath.row].id else { return }
+			userBlockingManager.unblockUser(userID: userID)
+
+			tableView.beginUpdates()
+			users.remove(at: indexPath.row)
+			tableView.deleteRows(at: [indexPath], with: .left)
+			tableView.endUpdates()
+
+			if users.count == 0 {
+				tableView.setEditing(false, animated: true)
+			}
+		}
+	}
+
 	@objc fileprivate func controlButtonClicked(_ sender: UIButton) {
 		guard let superview = sender.superview else { return }
 		let point = tableView.convert(sender.center, from: superview)
-		guard let indexPath = tableView.indexPathForRow(at: point),
-			indexPath.section == 0 else {
-				return
-		}
-		newChat()
+		guard let indexPath = tableView.indexPathForRow(at: point), indexPath.section == 0 else { return }
+		showAvailibleUsersToBlock()
 	}
 
-  @objc fileprivate func newChat() {
+  @objc fileprivate func showAvailibleUsersToBlock() {
     let destination = BlockUserTableViewController()
     destination.hidesBottomBarWhenPushed = true
     let isContactsAccessGranted = destination.checkContactsAuthorizationStatus()
     if isContactsAccessGranted {
-
       let users = blacklistManager.removeBannedUsers(users: RealmKeychain.realmUsersArray())
       destination.users = users
       destination.filteredUsers = users
       destination.setUpCollation()
       destination.checkNumberOfContacts()
       destination.delegate = self
-    //  destination.actions.removeAll()
     }
     navigationController?.pushViewController(destination, animated: true)
-  }
-  
-  override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-    guard indexPath.section == 1 else { return false }
-    return true
-  }
-  
-	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-    guard indexPath.section == 1 else { return .none }
-    return .delete
-  }
-  
-	override  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-    if editingStyle == .delete {
-      guard let userID = users[indexPath.row].id else { return }
-      
-      userBlockingManager.unblockUser(userID: userID)
-      
-      tableView.beginUpdates()
-      users.remove(at: indexPath.row)
-      tableView.deleteRows(at: [indexPath], with: .left)
-      tableView.endUpdates()
-      
-      if users.count == 0 {
-        tableView.setEditing(false, animated: true)
-      }
-    }
   }
 }
 

@@ -10,98 +10,89 @@ import UIKit
 import SDWebImage
 import ARSLineProgress
 
-class StorageTableViewController: UITableViewController {
+class StorageTableViewController: MenuControlsTableViewController {
 
-    override func viewDidLoad() {
-			super.viewDidLoad()
-			title = "Data and Storage"
-			tableView = UITableView(frame: self.tableView.frame, style: .grouped)
-			view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-			tableView.backgroundColor = view.backgroundColor
-			tableView.separatorStyle = .none
-			extendedLayoutIncludesOpaqueBars = true
-    }
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		navigationItem.title = "Data and Storage"
+	}
 
-		deinit {
-			print("STORAGE DID DEINIT")
+	override func numberOfSections(in tableView: UITableView) -> Int {
+		return 1
+	}
+
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 2
+	}
+
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: controlButtonCellID,
+																						 for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
+		cell.selectionStyle = .none
+		cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
+
+		if indexPath.row == 0 {
+			let cachedSize = SDImageCache.shared.totalDiskSize()
+
+			if cachedSize > 0 {
+				cell.button.setTitle("Clear Cache", for: .normal)
+				cell.button.isEnabled = true
+			} else {
+				cell.button.setTitle("Cache is Empty", for: .normal)
+				cell.button.isEnabled = false
+			}
 		}
-  
-    override func numberOfSections(in tableView: UITableView) -> Int {
-      return 1
-    }
-  
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return 2
-    }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      let identifier = "cell"
+		if indexPath.row == 1 {
+			FileManager.default.getTempSize(completion: { (size) in
+				if size <= 0 {
+					cell.button.setTitle("Temp is Empty", for: .normal)
+					cell.button.isEnabled = false
+				} else {
+					cell.button.setTitle("Clear App's Temporary Data", for: .normal)
+					cell.button.isEnabled = true
+				}
+			})
+		}
+		return cell
+	}
 
-      let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
-      cell.accessoryType = .disclosureIndicator
-      cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
-      cell.backgroundColor = view.backgroundColor
-      
-      if indexPath.row == 0 {
-        let cachedSize = SDImageCache.shared.totalDiskSize()
+	@objc fileprivate func controlButtonClicked(_ sender: UIButton) {
+		guard let superview = sender.superview else { return }
+		let point = tableView.convert(sender.center, from: superview)
+		guard let indexPath = tableView.indexPathForRow(at: point) else {
+			return
+		}
 
-        if cachedSize > 0 {
-          cell.textLabel?.text = "Clear Cache"
-          cell.isUserInteractionEnabled = true
-          cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-        } else {
-          cell.textLabel?.text = "Cache is Empty"
-          cell.isUserInteractionEnabled = false
-          cell.textLabel?.textColor = ThemeManager.currentTheme().generalSubtitleColor
-        }
-      }
-      
-      if indexPath.row == 1 {
-				FileManager.default.getTempSize(completion: { (size) in
-					if size <= 0 {
-						cell.textLabel?.text = "Temp is Empty"
-						cell.isUserInteractionEnabled = false
-						cell.textLabel?.textColor = ThemeManager.currentTheme().generalSubtitleColor
-					} else {
-						cell.textLabel?.text = "Clear App's Temporary Data"
-						cell.isUserInteractionEnabled = true
-						cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-					}
+		if indexPath.row == 0 {
+			let oversizeAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+			oversizeAlert.popoverPresentationController?.sourceView = self.view
+			oversizeAlert.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y:  view.bounds.maxY, width: 0, height: 0)
+
+			let cachedSize = SDImageCache.shared.totalDiskSize()
+			let cachedSizeInMegabyes = (Double(cachedSize) * 0.000001).round(to: 1)
+			let okAction = UIAlertAction(title: "Clear \(cachedSizeInMegabyes) MB", style: .default) { [weak self] (action) in
+				SDImageCache.shared.clearDisk(onCompletion: {
+					SDImageCache.shared.clearMemory()
+					self?.tableView.reloadData()
 				})
-      }
-      return cell
-    }
-  
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    if indexPath.row == 0 {
-      let oversizeAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-      oversizeAlert.popoverPresentationController?.sourceView = self.view
-      oversizeAlert.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y:  view.bounds.maxY, width: 0, height: 0)
-      
-      let cachedSize = SDImageCache.shared.totalDiskSize()
-      let cachedSizeInMegabyes = (Double(cachedSize) * 0.000001).round(to: 1)
-      let okAction = UIAlertAction(title: "Clear \(cachedSizeInMegabyes) MB", style: .default) { (action) in
-        SDImageCache.shared.clearDisk(onCompletion: {
-          SDImageCache.shared.clearMemory()
-          tableView.reloadData()
-        })
-      }
-      
-      oversizeAlert.addAction(okAction)
-      oversizeAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-      self.present(oversizeAlert, animated: true, completion: nil)
-      tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    if indexPath.row == 1 {
-      let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-      alert.popoverPresentationController?.sourceView = self.view
-      alert.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y:  view.bounds.maxY, width: 0, height: 0)
+			}
+
+			oversizeAlert.addAction(okAction)
+			oversizeAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+			self.present(oversizeAlert, animated: true, completion: nil)
+			tableView.deselectRow(at: indexPath, animated: true)
+		}
+
+		if indexPath.row == 1 {
+			let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+			alert.popoverPresentationController?.sourceView = self.view
+			alert.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y:  view.bounds.maxY, width: 0, height: 0)
 			FileManager.default.getTempSize(completion: { (size) in
 				let cachedSizeInMegabyes = (Double(size) * 0.000001).round(to: 1)
-				let okAction = UIAlertAction(title: "Clear \(cachedSizeInMegabyes) MB", style: .default) { (action) in
+				let okAction = UIAlertAction(title: "Clear \(cachedSizeInMegabyes) MB", style: .default) { [weak self] (action) in
 					FileManager.default.clearTemp()
-					tableView.reloadData()
+					self?.tableView.reloadData()
 					ARSLineProgress.showSuccess()
 				}
 
@@ -110,14 +101,6 @@ class StorageTableViewController: UITableViewController {
 				self.present(alert, animated: true, completion: nil)
 				tableView.deselectRow(at: indexPath, animated: true)
 			})
-    }
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 55
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return 65
-  }
+		}
+	}
 }

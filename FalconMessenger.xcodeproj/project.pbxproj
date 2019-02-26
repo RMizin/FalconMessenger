@@ -153,6 +153,7 @@
 		4BAD9755206E35FE008ADF6B /* AddGroupMembersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9754206E35FE008ADF6B /* AddGroupMembersController.swift */; };
 		4BAD9758206E36AD008ADF6B /* ChangeGroupAdminController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9757206E36AD008ADF6B /* ChangeGroupAdminController.swift */; };
 		4BAD975B206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD975A206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift */; };
+		4BB125D02225102100647725 /* MenuControlsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB125CF2225102100647725 /* MenuControlsTableViewController.swift */; };
 		4BB554A42135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */; };
 		4BB554A62135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */; };
 		4BB74A01206E2FFB0014837E /* AuthPhoneNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */; };
@@ -205,7 +206,6 @@
 		4BDB29552126C79000D77600 /* AboutTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29472126C79000D77600 /* AboutTableViewController.swift */; };
 		4BDB29562126C79000D77600 /* AccountSettingsController+nameEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29482126C79000D77600 /* AccountSettingsController+nameEditing.swift */; };
 		4BDB29572126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29492126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift */; };
-		4BDB29592126CA8B00D77600 /* SwitchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29582126CA8B00D77600 /* SwitchTableViewController.swift */; };
 		4BDFACAB2147D88D00603963 /* ChatLogViewController+UserBlockDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDFACAA2147D88D00603963 /* ChatLogViewController+UserBlockDelegate.swift */; };
 		4BDFACAD2147DA2900603963 /* UserBlockingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDFACAC2147DA2900603963 /* UserBlockingManager.swift */; };
 		4BDFACB12147E4BB00603963 /* UnblockContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDFACB02147E4BB00603963 /* UnblockContainerView.swift */; };
@@ -399,6 +399,7 @@
 		4BAD9754206E35FE008ADF6B /* AddGroupMembersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddGroupMembersController.swift; path = ChatsControllers/AddGroupMembersController.swift; sourceTree = "<group>"; };
 		4BAD9757206E36AD008ADF6B /* ChangeGroupAdminController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangeGroupAdminController.swift; path = ChatsControllers/ChangeGroupAdminController.swift; sourceTree = "<group>"; };
 		4BAD975A206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LeaveGroupAndChangeAdminController.swift; path = ChatsControllers/LeaveGroupAndChangeAdminController.swift; sourceTree = "<group>"; };
+		4BB125CF2225102100647725 /* MenuControlsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuControlsTableViewController.swift; sourceTree = "<group>"; };
 		4BB554A32135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatLogHistoryFetcher.swift; path = ChatsControllers/ChatLogHistoryFetcher.swift; sourceTree = "<group>"; };
 		4BB554A52135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+ChatHistoryFetcherDelegate.swift"; path = "ChatsControllers/ChatLogViewController+ChatHistoryFetcherDelegate.swift"; sourceTree = "<group>"; };
 		4BB74A00206E2FFB0014837E /* AuthPhoneNumberController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPhoneNumberController.swift; sourceTree = "<group>"; };
@@ -451,7 +452,6 @@
 		4BDB29472126C79000D77600 /* AboutTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutTableViewController.swift; sourceTree = "<group>"; };
 		4BDB29482126C79000D77600 /* AccountSettingsController+nameEditing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AccountSettingsController+nameEditing.swift"; sourceTree = "<group>"; };
 		4BDB29492126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsAvatarOpenerDelegate.swift; sourceTree = "<group>"; };
-		4BDB29582126CA8B00D77600 /* SwitchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewController.swift; sourceTree = "<group>"; };
 		4BDFACAA2147D88D00603963 /* ChatLogViewController+UserBlockDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+UserBlockDelegate.swift"; path = "ChatsControllers/ChatLogViewController+UserBlockDelegate.swift"; sourceTree = "<group>"; };
 		4BDFACAC2147DA2900603963 /* UserBlockingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserBlockingManager.swift; path = ChatsControllers/UserBlockingManager.swift; sourceTree = "<group>"; };
 		4BDFACB02147E4BB00603963 /* UnblockContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UnblockContainerView.swift; path = ChatsControllers/UnblockContainerView.swift; sourceTree = "<group>"; };
@@ -1344,7 +1344,7 @@
 		4BDB293E2126C79000D77600 /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				4BDB29582126CA8B00D77600 /* SwitchTableViewController.swift */,
+				4BB125CF2225102100647725 /* MenuControlsTableViewController.swift */,
 				4BDB293F2126C79000D77600 /* SwitchTableViewCell.swift */,
 			);
 			path = Support;
@@ -1666,6 +1666,7 @@
 				4BBF795E2134375800903F56 /* SplashScreenContainer.swift in Sources */,
 				4BBF79562134370C00903F56 /* AppDelegate.swift in Sources */,
 				4BE8BB491FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift in Sources */,
+				4BB125D02225102100647725 /* MenuControlsTableViewController.swift in Sources */,
 				4B1A369F1F49A0BB00B4AA0A /* InputContainerView+AttachDataSource.swift in Sources */,
 				4BB554A42135B12E00ABDAD4 /* ChatLogHistoryFetcher.swift in Sources */,
 				4BBBCBF72057DCD800926800 /* GroupPictureAvatarOpenerDelegate.swift in Sources */,
@@ -1746,7 +1747,6 @@
 				4B6BB00420886C5F00A90F3A /* INSPhotosInteractionAnimator.swift in Sources */,
 				4B6BAFF720886C5F00A90F3A /* VerificationContainerView.swift in Sources */,
 				4BEDE42C2068172C00C52EF4 /* InputBlockerContainerView.swift in Sources */,
-				4BDB29592126CA8B00D77600 /* SwitchTableViewController.swift in Sources */,
 				4B18BACA2097104600EA1B04 /* ContactPhoneNnumberTableViewCell.swift in Sources */,
 				4BE44DA8212B3A3000E722B8 /* ContactsFetcher.swift in Sources */,
 				4BDB21C42150F72600609054 /* ViewBlockerContainer.swift in Sources */,

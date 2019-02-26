@@ -14,25 +14,19 @@ protocol UpdateBlocklistDelegate: class {
 
 class BlockUserTableViewController: SelectChatTableViewController {
 
-   weak var delegate: UpdateBlocklistDelegate?
-  
-    override func viewDidLoad() {
-        super.viewDidLoad()
-      actions.removeAll()
-      navigationItem.title = "Block User"
- 
-    }
-  deinit {
-    print("block! users deinig")
-  }
+ weak var delegate: UpdateBlocklistDelegate?
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		actions.removeAll()
+		navigationItem.title = "Block User"
+	}
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    print("did select")
     let falconUser = filteredUsersWithSection[indexPath.section][indexPath.row]
     delegate?.updateBlocklist(user: falconUser)
     navigationController?.popViewController(animated: true)
   }
-  
   
   override func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     searchBar.text = nil

@@ -276,19 +276,12 @@ class ContactsController: FalconTableViewController {
 
       if indexPath.section == 0 {
 				guard let conversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", currentUserID).first else {
-					let conversationDictionary: [String: AnyObject] = ["chatID": currentUserID as AnyObject,
-																														 "chatName": NameConstants.personalStorage as AnyObject,
-																														 "isGroupChat": false  as AnyObject,
-																														 "chatParticipantsIDs": [currentUserID] as AnyObject]
+					let conversationDictionary = ["chatID": currentUserID as AnyObject,
+																				"chatName": NameConstants.personalStorage as AnyObject,
+																			  "isGroupChat": false  as AnyObject,
+																				"chatParticipantsIDs": [currentUserID] as AnyObject]
 					let conversation = Conversation(dictionary: conversationDictionary)
-
-					try! RealmKeychain.defaultRealm.write {
-						RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: true)
-					}
-
-					if let realmConversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", currentUserID).first {
-						chatLogPresenter.open(realmConversation)
-					}
+					chatLogPresenter.open(conversation)
 					return
 				}
         chatLogPresenter.open(conversation)
@@ -297,10 +290,10 @@ class ContactsController: FalconTableViewController {
 					guard let id = users?[indexPath.row].id, let conversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", id).first else {
 						let conversationDictionary = ["chatID": users?[indexPath.row].id as AnyObject,
 																					"chatName": users?[indexPath.row].name as AnyObject,
-																				"isGroupChat": false as AnyObject,
-																				"chatOriginalPhotoURL": users?[indexPath.row].photoURL as AnyObject,
-																				"chatThumbnailPhotoURL": users?[indexPath.row].thumbnailPhotoURL as AnyObject,
-																				"chatParticipantsIDs": [users?[indexPath.row].id, currentUserID] as AnyObject]
+																			   	"isGroupChat": false as AnyObject,
+																				  "chatOriginalPhotoURL": users?[indexPath.row].photoURL as AnyObject,
+																				  "chatThumbnailPhotoURL": users?[indexPath.row].thumbnailPhotoURL as AnyObject,
+																			  	"chatParticipantsIDs": [users?[indexPath.row].id, currentUserID] as AnyObject]
 					let conversation = Conversation(dictionary: conversationDictionary)
 					chatLogPresenter.open(conversation)
 

@@ -213,23 +213,24 @@ class GroupAdminPanelTableViewController: UITableViewController {
         dictionary.updateValue(snapshot.key as AnyObject, forKey: "id")
       
         let user = User(dictionary: dictionary)
-        
-        if let userIndex = self.members.index(where: { (member) -> Bool in
-          return member.id == snapshot.key }) {
-           self.tableView.beginUpdates()
-          self.members[userIndex] = user
-          self.tableView.reloadRows(at: [IndexPath(row: userIndex, section: 1)], with: .none)
-        } else {
-          self.tableView.beginUpdates()
-          self.members.append(user)
+				UIView.performWithoutAnimation {
+					if let userIndex = self.members.index(where: { (member) -> Bool in
+						return member.id == snapshot.key }) {
+						 self.tableView.beginUpdates()
+						self.members[userIndex] = user
+						self.tableView.reloadRows(at: [IndexPath(row: userIndex, section: 1)], with: .none)
+					} else {
+						self.tableView.beginUpdates()
+						self.members.append(user)
 
-          self.tableView.headerView(forSection: 1)?.textLabel?.text = "\(self.members.count) members"
-           self.tableView.headerView(forSection: 1)?.textLabel?.sizeToFit()
-          var index = 0
-          if self.members.count-1 >= 0 { index = self.members.count - 1 }
-          self.tableView.insertRows(at: [IndexPath(row: index, section: 1)], with: .fade)
-        }
-        self.tableView.endUpdates()
+						self.tableView.headerView(forSection: 1)?.textLabel?.text = "\(self.members.count) members"
+						 self.tableView.headerView(forSection: 1)?.textLabel?.sizeToFit()
+						var index = 0
+						if self.members.count-1 >= 0 { index = self.members.count - 1 }
+						self.tableView.insertRows(at: [IndexPath(row: index, section: 1)], with: .fade)
+					}
+					self.tableView.endUpdates()
+				}
       })
     }
     
@@ -476,9 +477,10 @@ class GroupAdminPanelTableViewController: UITableViewController {
 			
       if cell.button.title(for: .normal) == adminControls.last {
 				cell.button.setTitleColor(FalconPalette.dismissRed, for: .normal)
-      } else {
-				cell.button.setTitleColor(view.tintColor, for: .normal)
       }
+//			else {
+//				cell.button.setTitleColor(view.tintColor, for: .normal)
+//      }
       return cell
     
     } else {

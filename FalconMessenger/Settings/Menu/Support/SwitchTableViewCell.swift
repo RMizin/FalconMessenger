@@ -31,7 +31,7 @@ class SwitchTableViewCell: UITableViewCell {
     return switchAccessory
   }()
   
-  var switchTapAction: ((Bool)->Void)?
+  var switchTapAction: ((Bool) -> Void)?
   
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)

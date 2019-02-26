@@ -130,7 +130,7 @@ class ChatsTableViewController: FalconTableViewController {
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
 					self.tableView.beginUpdates()
-					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 0), with: .none)
+					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 0) }, with: .none)
 					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 0), with: .automatic)
 					UIView.performWithoutAnimation { self.tableView.reloadRows(at: self.indexPathsToUpdate(updates: modifications, section: 0), with: .none) }
 					self.tableView.endUpdates()
@@ -149,7 +149,7 @@ class ChatsTableViewController: FalconTableViewController {
 			case .update(_, let deletions, let insertions, let modifications):
 				if self.isAppLoaded {
 					self.tableView.beginUpdates()
-					self.tableView.insertRows(at: self.indexPathsToUpdate(updates: insertions, section: 1), with: .none)
+					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 1) }, with: .none)
 					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 1), with: .automatic)
 					UIView.performWithoutAnimation { self.tableView.reloadRows(at: self.indexPathsToUpdate(updates: modifications, section: 1), with: .none) }
 					self.tableView.endUpdates()

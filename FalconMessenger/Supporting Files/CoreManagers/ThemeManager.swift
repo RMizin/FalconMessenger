@@ -32,7 +32,6 @@ struct ThemeManager {
     UITabBar.appearance().barTintColor = theme.barBackgroundColor
     UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
 		UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: theme.generalTitleColor]
-
 		UIView.appearance().tintColor = generalTintColor
 		UIView.appearance(whenContainedInInstancesOf: [INSPhotosViewController.self]).tintColor = .white
 

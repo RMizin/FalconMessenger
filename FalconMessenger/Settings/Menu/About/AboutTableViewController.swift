@@ -9,27 +9,18 @@
 import UIKit
 import SafariServices
 
-class AboutTableViewController: UITableViewController {
+class AboutTableViewController: MenuControlsTableViewController {
 
-  let cellData = ["Privacy Policy", "Terms And Conditions", "Open Source Libraries"]
-  let legalData = ["https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing", /*PRIVACY POLICY*/
+  fileprivate let cellData = ["Privacy Policy", "Terms And Conditions", "Open Source Libraries"]
+  fileprivate let legalData = ["https://docs.google.com/document/d/1r365Yan3Ng4l0T4o7UXqLid8BKm4N4Z3cSGTnzzA7Fg/edit?usp=sharing", /*PRIVACY POLICY*/
     "https://docs.google.com/document/d/19PQFh9LzXz1HO2Zq6U7ysCESIbGoodY6rBJbOeCyjkc/edit?usp=sharing", /*TERMS AND CONDITIONS*/
     "https://docs.google.com/document/d/12u1ZmTDV79NwcOqLXHnPVPFfmAHZzibEoJNKyWEKHME/edit?usp=sharing" /*OPEN SOURCE LIBRARIES*/]
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    configureController()
+		navigationItem.title = "About"
   }
-  
-  fileprivate func configureController() {
-    title = "About"
-    tableView = UITableView(frame: self.tableView.frame, style: .grouped)
-    tableView.separatorStyle = .none
-    extendedLayoutIncludesOpaqueBars = true
-    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    tableView.backgroundColor = view.backgroundColor
-  }
-  
+
   deinit {
     print("About DID DEINIT")
   }
@@ -43,42 +34,31 @@ class AboutTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    
-    let identifier = "cell"
-    
-    let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .default, reuseIdentifier: identifier)
-    cell.backgroundColor = view.backgroundColor
-    cell.accessoryType = .disclosureIndicator
-    cell.textLabel?.text = cellData[indexPath.row]
-    cell.textLabel?.font = UIFont.systemFont(ofSize: 18)
-    cell.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-    
+		let cell = tableView.dequeueReusableCell(withIdentifier: controlButtonCellID,
+																						 for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
+		cell.selectionStyle = .none
+		cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
+		cell.button.setTitle(cellData[indexPath.row], for: .normal)
+
     return cell
   }
-  
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard let url = URL(string: legalData[indexPath.row]) else { return }
-    
-    var svc = SFSafariViewController(url: url)
-    
-    if #available(iOS 11.0, *) {
-      let configuration = SFSafariViewController.Configuration()
-      configuration.entersReaderIfAvailable = true
-      svc = SFSafariViewController(url: url, configuration: configuration)
-    }
-    
-    svc.preferredControlTintColor = view.tintColor
-    svc.preferredBarTintColor = ThemeManager.currentTheme().generalBackgroundColor
-    present(svc, animated: true, completion: nil)
-    
-    tableView.deselectRow(at: indexPath, animated: true)
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 55
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return 65
-  }
+
+	@objc fileprivate func controlButtonClicked(_ sender: UIButton) {
+		guard let superview = sender.superview else { return }
+		let point = tableView.convert(sender.center, from: superview)
+		guard let indexPath = tableView.indexPathForRow(at: point) else { return }
+		
+		guard let url = URL(string: legalData[indexPath.row]) else { return }
+		var safariViewController = SFSafariViewController(url: url)
+
+		if #available(iOS 11.0, *) {
+			let configuration = SFSafariViewController.Configuration()
+			configuration.entersReaderIfAvailable = true
+			safariViewController = SFSafariViewController(url: url, configuration: configuration)
+		}
+
+		safariViewController.preferredControlTintColor = view.tintColor
+		safariViewController.preferredBarTintColor = ThemeManager.currentTheme().generalBackgroundColor
+		present(safariViewController, animated: true, completion: nil)
+	}
 }

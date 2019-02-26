@@ -115,7 +115,6 @@ class VoiceRecordingViewController: UIViewController {
       recorder.pause()
       voiceRecordingContainerView.waveForm.amplitude = 0
       voiceRecordingContainerView.recordButton.setTitle("Continue", for: .normal)
-      
     } else {
     //  print("recording")
      // recorder.record()

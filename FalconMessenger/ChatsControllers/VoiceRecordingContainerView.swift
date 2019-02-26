@@ -12,9 +12,9 @@ class VoiceRecordingContainerView: UIView {
   
   var recordButton: UIButton = {
     var recordButton = UIButton()
-     recordButton.translatesAutoresizingMaskIntoConstraints = false
-     recordButton.setTitle("Record", for: .normal)
-    
+		recordButton.translatesAutoresizingMaskIntoConstraints = false
+		recordButton.setTitle("Record", for: .normal)
+
     return recordButton
   }()
   

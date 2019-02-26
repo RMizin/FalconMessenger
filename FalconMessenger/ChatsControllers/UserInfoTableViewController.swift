@@ -213,7 +213,7 @@ class UserInfoTableViewController: UITableViewController {
                                                for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
       cell.selectionStyle = .none
 			cell.button.setTitle(adminControls[indexPath.row], for: .normal)
-			cell.button.setTitleColor(cell.button.title(for: .normal) == adminControls.last ? FalconPalette.dismissRed : view.tintColor, for: .normal)
+			cell.button.setTitleColor(cell.button.title(for: .normal) == adminControls.last ? FalconPalette.dismissRed : cell.button.currentTitleColor, for: .normal)
 			cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
 
       return cell

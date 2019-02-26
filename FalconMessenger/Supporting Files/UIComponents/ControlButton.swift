@@ -10,6 +10,8 @@ import UIKit
 
 class ControlButton: UIButton {
 
+	static let cellHeight: CGFloat = 60
+
 	override var isHighlighted: Bool {
 		didSet {
 			UIView.animate(withDuration: 0.15) {
@@ -18,10 +20,21 @@ class ControlButton: UIButton {
 		}
 	}
 
+	override var isEnabled: Bool {
+		didSet {
+			UIView.animate(withDuration: 0.15) {
+				self.setTitleColor(self.isEnabled ? ThemeManager.generalTintColor : ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
+			}
+		}
+	}
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		layer.cornerRadius = 25
-		setTitleColor(tintColor, for: .normal)
+		titleLabel?.sizeToFit()
+		setTitleColor(ThemeManager.generalTintColor, for: .normal)
+	//	titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+		titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
 		backgroundColor = ThemeManager.currentTheme().controlButtonsColor
 	}
 

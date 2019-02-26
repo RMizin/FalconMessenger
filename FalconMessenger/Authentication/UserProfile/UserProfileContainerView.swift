@@ -26,10 +26,18 @@ class PasteRestrictedTextField: UITextField {
   }
 }
 
+class FalconProfileImageView: UIImageView {
+	override var image: UIImage? {
+		didSet {
+			NotificationCenter.default.post(name: .profilePictureDidSet, object: nil)
+		}
+	}
+}
+
 class UserProfileContainerView: UIView {
   
-  lazy var profileImageView: UIImageView = {
-    let profileImageView = UIImageView()
+  lazy var profileImageView: FalconProfileImageView = {
+    let profileImageView = FalconProfileImageView()
     profileImageView.translatesAutoresizingMaskIntoConstraints = false
     profileImageView.contentMode = .scaleAspectFill
     profileImageView.layer.masksToBounds = true
@@ -163,6 +171,8 @@ class UserProfileContainerView: UIView {
 
 		configureColors()
 
+		NotificationCenter.default.addObserver(self, selector: #selector(profilePictureDidSet), name: .profilePictureDidSet, object: nil)
+
       NSLayoutConstraint.activate([
         profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 30),
         profileImageView.widthAnchor.constraint(equalToConstant: 100),
@@ -218,7 +228,19 @@ class UserProfileContainerView: UIView {
     }
   }
 
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
   }
+
+	@objc func profilePictureDidSet() {
+		if profileImageView.image == nil {
+			addPhotoLabel.isHidden = false
+		} else {
+			addPhotoLabel.isHidden = true
+		}
+	}
 }

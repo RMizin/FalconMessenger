@@ -24,6 +24,7 @@ final class GlobalVariables: NSObject {
 }
 
 extension NSNotification.Name {
+	static let profilePictureDidSet = NSNotification.Name(Bundle.main.bundleIdentifier! + ".profilePictureDidSet")
 	static let blacklistUpdated = NSNotification.Name(Bundle.main.bundleIdentifier! + ".blacklistUpdated")
   static let localPhonesUpdated = NSNotification.Name(Bundle.main.bundleIdentifier! + ".localPhones")
   static let authenticationSucceeded = NSNotification.Name(Bundle.main.bundleIdentifier! + ".authenticationSucceeded")

@@ -36,18 +36,10 @@ class PhoneNumberContainerView: UIView {
     return instructions
   }()
 
-  let selectCountry: UIButton = {
-    let selectCountry = UIButton()
+  let selectCountry: ControlButton = {
+    let selectCountry = ControlButton()
     selectCountry.translatesAutoresizingMaskIntoConstraints = false
     selectCountry.setTitle("Canada", for: .normal)
-    selectCountry.setTitleColor(ThemeManager.currentTheme().generalTitleColor, for: .normal)
-    selectCountry.contentHorizontalAlignment = .center
-    selectCountry.contentVerticalAlignment = .center
-    selectCountry.titleLabel?.sizeToFit()
-    selectCountry.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
-    selectCountry.layer.cornerRadius = 25
-    selectCountry.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-    selectCountry.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
     selectCountry.addTarget(self, action: #selector(PhoneNumberController.openCountryCodesList), for: .touchUpInside)
 
     return selectCountry
