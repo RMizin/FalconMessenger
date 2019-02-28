@@ -184,12 +184,12 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
   }
 
   func selectSize(indexPath: IndexPath) -> CGSize {
-    guard indexPath.section != groupedMessages.count else {return CGSize(width: collectionView.frame.width, height: 30) }
+    guard indexPath.section != groupedMessages.count else { return CGSize(width: collectionView.frame.width, height: 30) }
     var cellHeight: CGFloat = 80
     let message = groupedMessages[indexPath.section].messages[indexPath.item]
-    let isTextMessage = message.text != nil
-    let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
-    let isVoiceMessage = message.voiceEncodedString != nil
+		let isTextMessage = message.text != nil
+		let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
+		let isVoiceMessage = message.voiceEncodedString != nil
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
     let isInformationMessage = message.isInformationMessage.value ?? false
     let isGroupChat = conversation!.isGroupChat.value ?? false
@@ -214,14 +214,12 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
                                             isOutgoingMessage: isOutgoingMessage,
                                             frame: message.landscapeEstimatedFrameForText,
                                             indexPath: indexPath)
-      
-      switch UIDevice.current.orientation {
-      case .landscapeRight, .landscapeLeft:
-        cellHeight = landscapeHeight
-      default:
-        cellHeight = portraitHeight
-      }
-      
+			if UIDevice.current.orientation.isLandscape {
+				cellHeight = landscapeHeight
+			} else {
+				cellHeight = portraitHeight
+			}
+
       return CGSize(width: collectionView.frame.width, height: cellHeight)
     }
 
@@ -243,14 +241,16 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
       return CGSize(width: collectionView.frame.width, height: cellHeight)
     }
   
-    guard !isVoiceMessage else {
-      if isGroupChat, !isOutgoingMessage {
-        cellHeight = BaseMessageCell.groupIncomingVoiceMessageHeight + BaseMessageCell.messageTimeHeight
-      } else {
-        cellHeight = BaseMessageCell.defaultVoiceMessageHeight + BaseMessageCell.messageTimeHeight
-      }
-      return CGSize(width: collectionView.frame.width, height: cellHeight)
-    }
+		guard !isVoiceMessage else {
+			if isGroupChat, !isOutgoingMessage {
+				cellHeight = BaseMessageCell.groupIncomingVoiceMessageHeight + BaseMessageCell.messageTimeHeight
+			} else {
+				cellHeight = BaseMessageCell.defaultVoiceMessageHeight + BaseMessageCell.messageTimeHeight
+			}
+
+			return CGSize(width: collectionView.frame.width, height: cellHeight)
+		}
+
     return CGSize(width: collectionView.frame.width, height: cellHeight)
   }
 

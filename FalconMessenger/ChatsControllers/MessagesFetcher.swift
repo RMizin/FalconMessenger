@@ -213,11 +213,15 @@ class MessagesFetcher: NSObject {
 
   func preloadCellData(to dictionary: [String: AnyObject], isGroupChat: Bool) -> [String: AnyObject] {
     var dictionary = dictionary
-    
-    if let messageText = Message(dictionary: dictionary).text { /* pre-calculateCellSizes */
-      dictionary.updateValue(estimateFrameForText(messageText, orientation: .portrait) as AnyObject, forKey: "estimatedFrameForText")
-      dictionary.updateValue(estimateFrameForText(messageText, orientation: .landscapeLeft) as AnyObject, forKey: "landscapeEstimatedFrameForText")
-		} else if let imageWidth = Message(dictionary: dictionary).imageWidth.value, let imageHeight = Message(dictionary: dictionary).imageHeight.value {
+
+    if let messageText = dictionary["text"] as? String { /* pre-calculateCellSizes */
+
+			let rect = RealmCGRect(estimateFrameForText(messageText, orientation: .portrait), id: dictionary["messageUID"] as? String ?? "")
+			let lrect = RealmCGRect(estimateFrameForText(messageText, orientation: .landscapeLeft),
+															id: (dictionary["messageUID"] as? String ?? "") + "landscape")
+      dictionary.updateValue(rect as AnyObject, forKey: "estimatedFrameForText")
+      dictionary.updateValue(lrect as AnyObject, forKey: "landscapeEstimatedFrameForText")
+		} else if let imageWidth = dictionary["imageWidth"] as? Double, let imageHeight = dictionary["imageHeight"] as? Double {
 
       let aspect = CGFloat(imageHeight / imageWidth)
       let maxWidth = BaseMessageCell.mediaMaxWidth
@@ -225,7 +229,7 @@ class MessagesFetcher: NSObject {
       dictionary.updateValue(cellHeight as AnyObject, forKey: "imageCellHeight")
     }
 
-    if let voiceEncodedString = Message(dictionary: dictionary).voiceEncodedString { /* pre-encoding voice messages */
+    if let voiceEncodedString = dictionary["voiceEncodedString"] as? String { /* pre-encoding voice messages */
       let decoded = Data(base64Encoded: voiceEncodedString) as AnyObject
       let duration = self.getAudioDurationInHours(from: decoded as! Data) as AnyObject
       let startTime = self.getAudioDurationInSeconds(from: decoded as! Data) as AnyObject
@@ -233,8 +237,8 @@ class MessagesFetcher: NSObject {
       dictionary.updateValue(duration, forKey: "voiceDuration")
       dictionary.updateValue(startTime, forKey: "voiceStartTime")
     }
-    
-    if let messageTimestamp = Message(dictionary: dictionary).timestamp.value {  /* pre-converting timeintervals into dates */
+
+    if let messageTimestamp = dictionary["timestamp"] as? Int64 {  /* pre-converting timeintervals into dates */
 			let date = Date(timeIntervalSince1970: TimeInterval(messageTimestamp))
       let convertedTimestamp = timestampOfChatLogMessage(date) as AnyObject
       let shortConvertedTimestamp = date.getShortDateStringFromUTC() as AnyObject

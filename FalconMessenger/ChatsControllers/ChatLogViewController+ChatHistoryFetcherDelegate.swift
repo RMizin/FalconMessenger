@@ -20,77 +20,45 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 			return sectionedMessage.messages.count
 			}.reduce(0, +)
 
-		updateRealmMessagesData(newMessages: newMessages)
+		updateRealmMessagesData(newMessages: newMessages) //saved: {
+			let firstSectionTitle = groupedMessages.first?.title ?? ""
+			let dates = newMessages.map({ $0.shortConvertedTimestamp ?? "" })
+			var datesSet = Set(dates)
 
-		let firstSectionTitle = groupedMessages.first?.title ?? ""
-		let dates = newMessages.map({ $0.shortConvertedTimestamp ?? "" })
-		var datesSet = Set(dates)
-		let shouldUpdateFirstSection = datesSet.contains(firstSectionTitle)
-		let shouldDoNothing = datesSet.count == 0
-		let shouldInsertNewSectionsOnly = !shouldUpdateFirstSection && datesSet.count > 0
-		let shouldUpdateFirstSectionOnly = shouldUpdateFirstSection && datesSet.count == 1
-		let shouldUpdateFirstSectionAndInsertNewSections = shouldUpdateFirstSection && datesSet.count > 1
-
-		if shouldUpdateFirstSectionOnly {
-			let rowsRange = updateFirstSection(firstSectionTitle, numberOfMessagesInDataSourceBeforeUpdate, numberOfMessagesInFirstSectionBeforeUpdate)
-			batchInsertMessages(at: rowsRange)
-		} else if shouldInsertNewSectionsOnly {
-			let sectionsRange = insertNewSections(datesSet)
-			batchInsertSections(at: sectionsRange)
-		} else if shouldUpdateFirstSectionAndInsertNewSections {
 			let rowsRange = updateFirstSection(firstSectionTitle, numberOfMessagesInDataSourceBeforeUpdate, numberOfMessagesInFirstSectionBeforeUpdate)
 			datesSet.remove(firstSectionTitle)
-			batchInsertMessages(at: rowsRange, saveContentOffset: false)
 			let sectionsRange = insertNewSections(datesSet)
-			batchInsertSections(at: sectionsRange)
-		} else if shouldDoNothing {
-			refreshControl.endRefreshing()
-		}
+			batchInsertMS(rowsRange: rowsRange, sectionsRange: sectionsRange)
 	}
 
 	fileprivate func updateRealmMessagesData(newMessages: [Message]) {
 		autoreleasepool {
-			guard !realm.isInWriteTransaction else { return }
-			realm.beginWrite()
-			for message in newMessages {
-				realm.create(Message.self, value: message, update: true)
+			try! realm.safeWrite {
+				for message in newMessages {
+					realm.create(Message.self, value: message, update: true)
+				}
 			}
-			try! realm.commitWrite()
 		}
 	}
 
-	fileprivate func batchInsertMessages(at range: Int, saveContentOffset: Bool = true) {
-		if saveContentOffset {
-			globalVariables.contentSizeWhenInsertingToTop = collectionView.contentSize
-		}
-		globalVariables.isInsertingCellsToTop = true
-
-		var indexPaths = [IndexPath]()
-		Array(0..<range).forEach({ (index) in
-			indexPaths.append(IndexPath(row: index, section: 0))
-		})
-
+	fileprivate func batchInsertMS(rowsRange: Int, sectionsRange: Int) {
 		UIView.performWithoutAnimation {
 			collectionView.performBatchUpdates({
-				collectionView.insertItems(at: indexPaths)
-			}, completion: { (_) in
-				self.refreshControl.endRefreshing()
-			})
-		}
-	}
+				var indexSet = IndexSet()
+				Array(0..<sectionsRange).forEach({ (index) in
+					indexSet.insert(index)
+				})
 
-	fileprivate func batchInsertSections(at range: Int) {
-		globalVariables.contentSizeWhenInsertingToTop = collectionView.contentSize
-		globalVariables.isInsertingCellsToTop = true
+				var indexPaths = [IndexPath]()
+				Array(0..<rowsRange).forEach({ (index) in
+					indexPaths.append(IndexPath(row: index, section: indexSet.count))
+				})
 
-		var indexSet = IndexSet()
-		Array(0..<range).forEach({ (index) in
-			indexSet.insert(index)
-		})
-
-		UIView.performWithoutAnimation {
-			collectionView.performBatchUpdates({
+				globalVariables.contentSizeWhenInsertingToTop = collectionView.contentSize
+				globalVariables.isInsertingCellsToTop = true
+				
 				collectionView.insertSections(indexSet)
+				collectionView.insertItems(at: indexPaths)
 			}, completion: { (_) in
 				DispatchQueue.main.async {
 					self.bottomScrollConainer.isHidden = false
@@ -126,14 +94,14 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 				guard let timestampOfLastMessageToDisplay = messagesInSection[indexOfLastMessageToDisplay].timestamp.value else { continue }
 				let limitedMessagesForSection = messagesInSection.filter("timestamp >= %@", timestampOfLastMessageToDisplay)
 				messagesInSection = limitedMessagesForSection
-				configureBubblesTails(for: messagesInSection)
 				let newSection = MessageSection(messages: messagesInSection, title: date)
+				configureBubblesTails(for: newSection.messages)
 				groupedMessages.insert(newSection, at: 0)
 				sectionsInserted += 1
 				break
 			} else {
-				configureBubblesTails(for: messagesInSection)
 				let newSection = MessageSection(messages: messagesInSection, title: date)
+				configureBubblesTails(for: newSection.messages)
 				groupedMessages.insert(newSection, at: 0)
 				sectionsInserted += 1
 			}
@@ -160,15 +128,15 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 			guard let timestampOfLastMessageToDisplay = messagesInFirstSectionAfterUpdate[indexOfLastMessageToDisplay].timestamp.value else { return 0 }
 			let limitedMessagesForFirstSection = messagesInFirstSectionAfterUpdate.filter("timestamp >= %@", timestampOfLastMessageToDisplay)
 			messagesInFirstSectionAfterUpdate = limitedMessagesForFirstSection
-			configureBubblesTails(for: messagesInFirstSectionAfterUpdate)
 			let updatedFirstSection = MessageSection(messages: messagesInFirstSectionAfterUpdate, title: firstSectionTitle)
+			configureBubblesTails(for: updatedFirstSection.messages)
 			groupedMessages[0] = updatedFirstSection
 			let numberOfMessagesInFirstSectionAfterLimiting = groupedMessages[0].messages.count
 
 			return numberOfMessagesInFirstSectionAfterLimiting - numberOfMessagesInFirstSectionBeforeUpdate
 		} else {
 			let updatedFirstSection = MessageSection(messages: messagesInFirstSectionAfterUpdate, title: firstSectionTitle)
-			configureBubblesTails(for: messagesInFirstSectionAfterUpdate)
+			configureBubblesTails(for: updatedFirstSection.messages)
 			groupedMessages[0] = updatedFirstSection
 			return numberOfMessagesInFirstSectionAfterUpdate - numberOfMessagesInFirstSectionBeforeUpdate
 		}

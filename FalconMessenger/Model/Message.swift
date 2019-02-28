@@ -115,15 +115,8 @@ class Message: Object {
         voiceDuration = dictionary["voiceDuration"] as? String
         voiceStartTime.value = dictionary["voiceStartTime"] as? Int
 
-				if let cgrect = dictionary["estimatedFrameForText"] as? CGRect {
-					estimatedFrameForText = RealmCGRect(cgrect, id: dictionary["messageUID"] as? String ?? "")
-				}
-
-				if let cgrect = dictionary["landscapeEstimatedFrameForText"] as? CGRect {
-					landscapeEstimatedFrameForText = RealmCGRect(cgrect,
-																											 id: (dictionary["messageUID"] as? String ?? "") + "landscape")
-				}
-
+				estimatedFrameForText = dictionary["estimatedFrameForText"] as? RealmCGRect
+				landscapeEstimatedFrameForText = dictionary["landscapeEstimatedFrameForText"] as? RealmCGRect
         imageCellHeight.value = dictionary["imageCellHeight"] as? Double
     }
 

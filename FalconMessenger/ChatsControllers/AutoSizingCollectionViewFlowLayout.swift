@@ -9,7 +9,7 @@
 import UIKit
 
 class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
-    
+
   override func prepare() {
     super.prepare()
     minimumLineSpacing = 2
@@ -23,8 +23,8 @@ class AutoSizingCollectionViewFlowLayout: UICollectionViewFlowLayout {
 					collectionView.setContentOffset(newOffset, animated: false)
 				}
       }
-      globalVariables.contentSizeWhenInsertingToTop = nil
-      globalVariables.isInsertingCellsToTop = false
+			globalVariables.contentSizeWhenInsertingToTop = nil
+			globalVariables.isInsertingCellsToTop = false
     }
   }
 }
