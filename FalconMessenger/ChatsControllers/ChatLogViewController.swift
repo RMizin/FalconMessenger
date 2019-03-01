@@ -63,7 +63,7 @@ class ChatLogViewController: UIViewController {
 
 	var uploadProgressBar: UIProgressView = {
 	 var uploadProgressBar = UIProgressView(progressViewStyle: .bar)
-		uploadProgressBar.tintColor = ThemeManager.generalTintColor
+		uploadProgressBar.tintColor = ThemeManager.currentTheme().tintColor
 		return uploadProgressBar
 	}()
 
@@ -525,7 +525,7 @@ class ChatLogViewController: UIViewController {
     func updateTitleColor() {
       if let stack = navigationItem.titleView as? UIStackView, stack.arrangedSubviews.indices.contains(0) {
         guard let title = stack.arrangedSubviews[0] as? UILabel  else { return }
-        title.textColor = ThemeManager.currentTheme().generalTitleColor
+        title.textColor = ThemeManager.currentTheme().chatLogTitleColor
       }
     }
 

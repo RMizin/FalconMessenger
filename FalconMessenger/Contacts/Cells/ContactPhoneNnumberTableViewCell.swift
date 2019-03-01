@@ -34,7 +34,7 @@ class ContactPhoneNnumberTableViewCell: UITableViewCell {
     backgroundColor = .clear
     selectionStyle = .none
     title.backgroundColor = backgroundColor
-		title.textColor = ThemeManager.generalTintColor
+		title.textColor = ThemeManager.currentTheme().tintColor
 
     contentView.addSubview(title)
     title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true

@@ -25,8 +25,15 @@ class VoiceRecorderRespondingButton: RespondingButton {
 	override func setupAppearance() {
 		super.setupAppearance()
 
-		setImage(UIImage(named: "microphone"), for: .normal)
-		setImage(UIImage(named: "microphoneSelected")?.withRenderingMode(.alwaysTemplate), for: .selected)
+		setImage(UIImage(named: "microphone")?
+			.withRenderingMode(.alwaysTemplate)
+			.sd_tintedImage(with: ThemeManager.currentTheme().unselectedButtonTintColor)?
+			.sd_tintedImage(with: ThemeManager.currentTheme().unselectedButtonTintColor), for: .normal)
+		
+		setImage(UIImage(named: "microphoneSelected")?
+			.withRenderingMode(.alwaysTemplate)
+			.sd_tintedImage(with: ThemeManager.currentTheme().selectedButtonTintColor)?
+			.sd_tintedImage(with: ThemeManager.currentTheme().selectedButtonTintColor), for: .selected)
 	}
 
 	required init?(coder aDecoder: NSCoder) {

@@ -38,7 +38,14 @@ class MediaPickerRespondingButton: RespondingButton {
 
 	override func setupAppearance() {
 		super.setupAppearance()
-		setImage(UIImage(named: "ConversationAttach"), for: .normal)
-		setImage(UIImage(named: "SelectedModernConversationAttach")?.withRenderingMode(.alwaysTemplate), for: .selected)
+
+		setImage(UIImage(named: "ConversationAttach")?
+			.withRenderingMode(.alwaysTemplate)
+			.sd_tintedImage(with: ThemeManager.currentTheme().unselectedButtonTintColor)?
+			.sd_tintedImage(with: ThemeManager.currentTheme().unselectedButtonTintColor), for: .normal)
+		setImage(UIImage(named: "SelectedModernConversationAttach")?
+			.withRenderingMode(.alwaysTemplate)
+			.sd_tintedImage(with: ThemeManager.currentTheme().selectedButtonTintColor)?
+			.sd_tintedImage(with: ThemeManager.currentTheme().selectedButtonTintColor), for: .selected)
 	}
 }

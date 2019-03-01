@@ -61,7 +61,7 @@ class ViewBlockerContainer: UIView {
     super.init(frame: frame)
 
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-		show.setTitleColor(ThemeManager.generalTintColor, for: .normal)
+		show.setTitleColor(ThemeManager.currentTheme().tintColor, for: .normal)
 
     addSubview(label)
     label.topAnchor.constraint(equalTo: topAnchor, constant: 40).isActive = true

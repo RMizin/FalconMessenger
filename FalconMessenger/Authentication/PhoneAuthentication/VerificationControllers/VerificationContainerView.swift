@@ -89,7 +89,7 @@ class VerificationContainerView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
 
-		resend.setTitleColor(ThemeManager.generalTintColor, for: .normal)
+		resend.setTitleColor(ThemeManager.currentTheme().tintColor, for: .normal)
 
     addSubview(titleNumber)
     addSubview(subtitleText)

@@ -44,7 +44,7 @@ class RespondingButton: UIButton, UIKeyInput {
 	}
 
 	func changeTheme() {
-		tintColor = ThemeManager.generalTintColor
+		tintColor = ThemeManager.currentTheme().tintColor
 		inputView?.backgroundColor = ThemeManager.currentTheme().inputTextViewColor
 	}
 }

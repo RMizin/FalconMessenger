@@ -188,7 +188,7 @@ class SelectChatTableViewController: UITableViewController {
       cell.imageView?.contentMode = .scaleAspectFit
       cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
       cell.textLabel?.text = actions[indexPath.row]
-      cell.textLabel?.textColor = view.tintColor
+      cell.textLabel?.textColor = ThemeManager.currentTheme().controlButtonTintColor
 
       return cell
     }

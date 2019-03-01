@@ -23,7 +23,7 @@ class ChatLogViewControllerTitleView: UIView {
 
   var title: UILabel = {
     let title = UILabel()
-    title.textColor = ThemeManager.currentTheme().generalTitleColor
+    title.textColor = ThemeManager.currentTheme().chatLogTitleColor
     title.font = UIFont.systemFont(ofSize: 17)
     
     return title
@@ -67,7 +67,7 @@ class ChatLogViewControllerTitleView: UIView {
   
   func updateColors() {
     subtitle.textColor = ThemeManager.currentTheme().generalSubtitleColor
-    title.textColor = ThemeManager.currentTheme().generalTitleColor
+    title.textColor = ThemeManager.currentTheme().chatLogTitleColor
   }
   
   required init?(coder aDecoder: NSCoder) {

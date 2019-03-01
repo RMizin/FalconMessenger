@@ -48,7 +48,7 @@ class VoiceRecordingContainerView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
 
-		recordButton.setTitleColor(ThemeManager.generalTintColor, for: .normal)
+		recordButton.setTitleColor(ThemeManager.currentTheme().tintColor, for: .normal)
 
     addSubview(recordButton)
     addSubview(stopButton)

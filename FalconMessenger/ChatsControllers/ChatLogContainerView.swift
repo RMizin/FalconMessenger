@@ -16,6 +16,14 @@ class ChatLogContainerView: UIView {
 
     return backgroundView
   }()
+
+	let inputContainerSafeAreaView: UIView = {
+		let inputContainerSafeAreaView = UIView()
+		inputContainerSafeAreaView.translatesAutoresizingMaskIntoConstraints = false
+		inputContainerSafeAreaView.backgroundColor = ThemeManager.currentTheme().barBackgroundColor
+
+		return inputContainerSafeAreaView
+	}()
   
   let collectionViewContainer: UIView = {
     let collectionViewContainer = UIView()
@@ -37,8 +45,9 @@ class ChatLogContainerView: UIView {
     super.init(frame: frame)
     addSubview(backgroundView)
     addSubview(collectionViewContainer)
+		addSubview(inputContainerSafeAreaView)
     addSubview(inputViewContainer)
-    
+
     backgroundView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
     backgroundView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -63,12 +72,18 @@ class ChatLogContainerView: UIView {
     inputViewContainer.topAnchor.constraint(equalTo: collectionViewContainer.bottomAnchor).isActive = true
     
     bottomConstraint = inputViewContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+
+		inputContainerSafeAreaView.topAnchor.constraint(equalTo: inputViewContainer.topAnchor).isActive = true
+		inputContainerSafeAreaView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+		inputContainerSafeAreaView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+		inputContainerSafeAreaView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+
   }
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   func blockBottomConstraint(constant: CGFloat) {
     bottomConstraint.constant = constant
     bottomConstraint.isActive = true

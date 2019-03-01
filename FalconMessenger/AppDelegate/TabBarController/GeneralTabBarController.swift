@@ -35,9 +35,9 @@ class GeneralTabBarController: UITabBarController {
   }
   
   fileprivate func configureTabBar() {
-		UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor],
+		UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().barTextColor],
 																										 for: .normal)
-    tabBar.unselectedItemTintColor = ThemeManager.currentTheme().generalSubtitleColor
+    tabBar.unselectedItemTintColor = ThemeManager.currentTheme().unselectedButtonTintColor
     tabBar.isTranslucent = false
     tabBar.clipsToBounds = true
     setTabs()
@@ -83,7 +83,12 @@ class GeneralTabBarController: UITabBarController {
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)
     let settingsNavigationController = UINavigationController(rootViewController: settingsController)
-    
+
+		// move to change theme
+//		contactsNavigationController.navigationController?.navigationBar.tintColor = ThemeManager.currentTheme().barTintColor
+//		chatsNavigationController.navigationController?.navigationBar.tintColor = ThemeManager.currentTheme().barTintColor
+//		settingsNavigationController.navigationBar.tintColor = ThemeManager.currentTheme().barTintColor
+//
     if #available(iOS 11.0, *) {
       settingsNavigationController.navigationBar.prefersLargeTitles = true
       chatsNavigationController.navigationBar.prefersLargeTitles = true

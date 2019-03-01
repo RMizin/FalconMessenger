@@ -73,7 +73,7 @@ class GroupProfileTableHeaderContainer: UIView {
    
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     addPhotoLabel.text = addPhotoLabelAdminText
-		addPhotoLabel.textColor = ThemeManager.generalTintColor
+		addPhotoLabel.textColor = ThemeManager.currentTheme().tintColor
 
 		NotificationCenter.default.addObserver(self, selector: #selector(profilePictureDidSet), name: .profilePictureDidSet, object: nil)
     

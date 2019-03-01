@@ -16,12 +16,6 @@ extension NSNotification.Name {
 
 struct ThemeManager {
 
-	static var generalTintColor = TintPalette.blue {
-		didSet {
-			UIView.appearance().tintColor = generalTintColor
-		}
-	}
-  
   static func applyTheme(theme: Theme) {
     userDefaults.updateObject(for: userDefaults.selectedTheme, with: theme.rawValue)
    
@@ -29,18 +23,23 @@ struct ThemeManager {
     UINavigationBar.appearance().isTranslucent = false
     UINavigationBar.appearance().barStyle = theme.barStyle
     UINavigationBar.appearance().barTintColor = theme.barBackgroundColor
+		UITabBar.appearance().tintColor = theme.tabBarTintColor
     UITabBar.appearance().barTintColor = theme.barBackgroundColor
     UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor
 		UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: theme.generalTitleColor]
-		UIView.appearance().tintColor = generalTintColor
+		UIView.appearance().tintColor = theme.tintColor
+
 		UIView.appearance(whenContainedInInstancesOf: [INSPhotosViewController.self]).tintColor = .white
+		UIView.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).tintColor = theme.barTintColor
+
+//		UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
+//			.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: theme.barTintColor], for: .normal)
 
     NotificationCenter.default.post(name: .themeUpdated, object: nil)
   }
   
   static func currentTheme() -> Theme {
     if UserDefaults.standard.object(forKey: userDefaults.selectedTheme) == nil {
-     // guard DeviceType.iPhoneX else { return .Default }
        return .Dark
     }
     if let storedTheme = userDefaults.currentIntObjectState(for: userDefaults.selectedTheme) {
@@ -51,23 +50,75 @@ struct ThemeManager {
   }
 }
 
-//enum Tint: Int {
-//	case Blue, Grey, Red
-//}
 
 enum Theme: Int {
-  case Default, Dark
+  case Default, Dark, LivingCoral
 
+	var tintColor: UIColor {
+		switch self {
+		case .Default:
+			return TintPalette.blue
+		case .Dark:
+			return TintPalette.blue
+		case .LivingCoral:
+			return TintPalette.livingCoral
+		}
+	}
 
   var generalBackgroundColor: UIColor {
     switch self {
     case .Default:
-
-      return UIColor.white
+      return .white
     case .Dark:
       return .black
-    }
+		case .LivingCoral:
+			return .white
+		}
   }
+
+	var barTintColor: UIColor {
+		switch self {
+		case .Default:
+			return tintColor
+		case .Dark:
+			return tintColor
+		case .LivingCoral:
+			return tintColor
+		}
+	}
+
+	var tabBarTintColor: UIColor {
+		switch self {
+		case .Default:
+			return tintColor
+		case .Dark:
+			return tintColor
+		case .LivingCoral:
+			return tintColor
+		}
+	}
+
+	var unselectedButtonTintColor: UIColor {
+		switch self {
+		case .Default:
+			return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
+		case .Dark:
+			return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
+		case .LivingCoral:
+			return TintPalette.livingCoralExtraLight
+		}
+	}
+
+	var selectedButtonTintColor: UIColor {
+		switch self {
+		case .Default:
+			return tintColor
+		case .Dark:
+			return tintColor
+		case .LivingCoral:
+			return tintColor
+		}
+	}
   
   var barBackgroundColor: UIColor {
     switch self {
@@ -75,8 +126,32 @@ enum Theme: Int {
       return .white
     case .Dark:
       return .black
-    }
+		case .LivingCoral:
+			return .white
+		}
   }
+
+	var barTextColor: UIColor {
+		switch self {
+		case .Default:
+			return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
+		case .Dark:
+			return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
+		case .LivingCoral:
+			return tintColor
+		}
+	}
+
+	var controlButtonTintColor: UIColor {
+		switch self {
+		case .Default:
+			return tintColor
+		case .Dark:
+			return tintColor
+		case .LivingCoral:
+			return tintColor
+		}
+	}
   
   
   var generalTitleColor: UIColor {
@@ -85,8 +160,21 @@ enum Theme: Int {
       return UIColor.black
     case .Dark:
       return UIColor.white
-    }
+		case .LivingCoral:
+			return UIColor.black
+		}
   }
+
+	var chatLogTitleColor: UIColor {
+		switch self {
+		case .Default:
+			return .black
+		case .Dark:
+			return .white
+		case .LivingCoral:
+			return .black
+		}
+	}
   
   var generalSubtitleColor: UIColor {
     switch self {
@@ -94,16 +182,20 @@ enum Theme: Int {
       return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
     case .Dark:
       return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
-    }
+		case .LivingCoral:
+			return UIColor(red: 0.67, green: 0.67, blue: 0.67, alpha: 1.0)
+		}
   }
   
   var cellSelectionColor: UIColor {
     switch self {
     case .Default:
-      return  UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0) //F1F1F1
+      return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0) //F1F1F1
     case .Dark:
       return UIColor(red: 0.10, green: 0.10, blue: 0.10, alpha: 1.0) //191919
-    }
+		case .LivingCoral:
+			return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0) //F1F1F1
+		}
   }
   
   var inputTextViewColor: UIColor {
@@ -112,7 +204,9 @@ enum Theme: Int {
       return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
     case .Dark:
       return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
-    }
+		case .LivingCoral:
+			return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
+		}
   }
   
   var supplementaryViewTextColor: UIColor {
@@ -121,7 +215,9 @@ enum Theme: Int {
       return .gray
     case .Dark:
       return .lightGray
-    }
+		case .LivingCoral:
+			return .gray
+		}
   }
 
 	var sdWebImageActivityIndicator: SDWebImageActivityIndicator {
@@ -130,6 +226,8 @@ enum Theme: Int {
 			return SDWebImageActivityIndicator.gray
 		case .Dark:
 			return SDWebImageActivityIndicator.white
+		case .LivingCoral:
+			return SDWebImageActivityIndicator.gray
 		}
 	}
   
@@ -139,15 +237,19 @@ enum Theme: Int {
       return UIColor(red: 0.94, green: 0.94, blue: 0.96, alpha: 1.0)
     case .Dark:
       return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
-    }
+		case .LivingCoral:
+			return UIColor(red: 0.94, green: 0.94, blue: 0.96, alpha: 1.0)
+		}
   }
 
 	var controlButtonHighlightingColor: UIColor {
 		switch self {
 		case .Default:
-			return  UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0) //F1F1F1
+			return UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0) //F1F1F1
 		case .Dark:
 			return UIColor(red: 0.07, green: 0.07, blue: 0.07, alpha: 1.0) //191919
+		case .LivingCoral:
+			return UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0) //F1F1F1
 		}
 	}
   
@@ -157,61 +259,75 @@ enum Theme: Int {
       return UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 0.5)
     case .Dark:
       return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 0.8)
-    }
+		case .LivingCoral:
+			return UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 0.5)
+		}
   }
-  
+
   var mediaPickerControllerBackgroundColor: UIColor {
     switch self {
     case .Default:
       return UIColor(red: 209.0/255.0, green: 213.0/255.0, blue: 218.0/255.0, alpha: 1.0)
     case .Dark:
       return UIColor(red: 0.10, green: 0.10, blue: 0.10, alpha: 1.0)
-    }
+		case .LivingCoral:
+			return UIColor(red: 209.0/255.0, green: 213.0/255.0, blue: 218.0/255.0, alpha: 1.0)
+		}
   }
   
-  var splashImage: UIImage {
-    switch self {
-    case .Default:
-      return UIImage(named: "whiteSplash")!
-    case .Dark:
-      return UIImage(named: "blackSplash")!
-    }
-  }
-  
+//  var splashImage: UIImage {
+//    switch self {
+//    case .Default:
+//      return UIImage(named: "whiteSplash")!
+//    case .Dark:
+//      return UIImage(named: "blackSplash")!
+//		case .LivingCoral:
+//			return UIImage(named: "whiteSplash")!
+//		}
+//  }
+//
   var scrollDownImage: UIImage {
     switch self {
     case .Default:
       return UIImage(named: "arrowDownBlack")!
     case .Dark:
       return UIImage(named: "arrowDownWhite")!
-    }
+		case .LivingCoral:
+			return UIImage(named: "arrowDownBlack")!
+		}
   }
   
-  var enterPhoneNumberBackground: UIImage {
-    switch self {
-    case .Default:
-      return  UIImage(named: "LightAuthCountryButtonNormal")!
-    case .Dark:
-      return UIImage(named: "DarkAuthCountryButtonNormal")!
-    }
-  }
-  
-  var enterPhoneNumberBackgroundSelected: UIImage {
-    switch self {
-    case .Default:
-      return UIImage(named:"LightAuthCountryButtonHighlighted")!
-    case .Dark:
-      return UIImage(named:"DarkAuthCountryButtonHighlighted")!
-    }
-  }
-  
+//  var enterPhoneNumberBackground: UIImage {
+//    switch self {
+//    case .Default:
+//      return  UIImage(named: "LightAuthCountryButtonNormal")!
+//    case .Dark:
+//      return UIImage(named: "DarkAuthCountryButtonNormal")!
+//		case .LivingCoral:
+//			<#code#>
+//		}
+//  }
+
+//  var enterPhoneNumberBackgroundSelected: UIImage {
+//    switch self {
+//    case .Default:
+//      return UIImage(named:"LightAuthCountryButtonHighlighted")!
+//    case .Dark:
+//      return UIImage(named:"DarkAuthCountryButtonHighlighted")!
+//		case .LivingCoral:
+//			<#code#>
+//		}
+//  }
+
   var personalStorageImage: UIImage {
     switch self {
     case .Default:
       return  UIImage(named: "PersonalStorage")!
     case .Dark:
       return UIImage(named: "PersonalStorage")!
-    }
+		case .LivingCoral:
+			return UIImage(named: "PersonalStorage")!
+		}
   }
   
   var incomingBubble: UIImage {
@@ -220,7 +336,9 @@ enum Theme: Int {
       return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     case .Dark:
       return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
-    }
+		case .LivingCoral:
+			 return UIImage(named: "FMIncomingFull")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
+		}
   }
   
   var incomingPartialBubble: UIImage {
@@ -230,7 +348,9 @@ enum Theme: Int {
       return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     case .Dark:
       return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
-    }
+		case .LivingCoral:
+			 return UIImage(named: "partialDefaultIncoming")!.stretchableImage(withLeftCapWidth: 23, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
+		}
   }
   
   var outgoingBubble: UIImage {
@@ -239,7 +359,9 @@ enum Theme: Int {
       return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     case .Dark:
       return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
-    }
+		case .LivingCoral:
+			return UIImage(named: "FMOutgoingFull")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
+		}
   }
   
   var outgoingPartialBubble: UIImage {
@@ -248,17 +370,22 @@ enum Theme: Int {
       return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
     case .Dark:
       return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
-    }
+		case .LivingCoral:
+			return UIImage(named: "partialDefaultOutgoing")!.stretchableImage(withLeftCapWidth: 17, topCapHeight: 16).withRenderingMode(.alwaysTemplate)
+		}
   }
 
 
   var outgoingBubbleTintColor: UIColor {
     switch self {
     case .Default:
-      return ThemeManager.generalTintColor//UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)//UIColor(red: 0.00, green: 0.50, blue: 1.00, alpha: 1.0)// FalconPalette.defaultBlue
+      return tintColor//ThemeManager.generalTintColor//UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)//UIColor(red: 0.00, green: 0.50, blue: 1.00, alpha: 1.0)// FalconPalette.defaultBlue
     case .Dark:
       return UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0)
-    }
+		case .LivingCoral:
+			 return tintColor
+			//return TintPalette.livingCoral//ThemeManager.generalTintColor
+		}
   }
   
   var incomingBubbleTintColor: UIColor {
@@ -267,17 +394,21 @@ enum Theme: Int {
       return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
     case .Dark:
       return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
-    }
+		case .LivingCoral:
+			return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
+		}
   }
   
   
   var selectedOutgoingBubbleTintColor: UIColor {
     switch self {
     case .Default:
-      return  UIColor(red:0.00, green:0.50, blue:0.80, alpha: 1.0)
+      return UIColor(red: 0.00, green: 0.50, blue: 0.80, alpha: 1.0)
     case .Dark:
       return UIColor(red: 0.30, green: 0.30, blue: 0.30, alpha: 1.0)
-    }
+		case .LivingCoral:
+			return TintPalette.livingCoralExtraLight//UIColor(red: 0.00, green: 0.50, blue: 0.80, alpha: 1.0)
+		}
   }
   
   var selectedIncomingBubbleTintColor: UIColor {
@@ -286,7 +417,9 @@ enum Theme: Int {
       return UIColor(red: 0.70, green: 0.70, blue: 0.70, alpha: 1.0)
     case .Dark:
       return UIColor(red: 0.20, green: 0.20, blue: 0.20, alpha: 1.0)
-    }
+		case .LivingCoral:
+			return UIColor(red: 0.70, green: 0.70, blue: 0.70, alpha: 1.0)
+		}
   }
   
   
@@ -298,7 +431,9 @@ enum Theme: Int {
       return .black
     case .Dark:
       return .white
-    }
+		case .LivingCoral:
+			return .black
+		}
   }
   
   var outgoingBubbleTextColor: UIColor {
@@ -307,16 +442,20 @@ enum Theme: Int {
       return .white
     case .Dark:
       return .white
-    }
+		case .LivingCoral:
+			return .white
+		}
   }
   
   var authorNameTextColor: UIColor {
     switch self {
     case .Default:
-      return ThemeManager.generalTintColor//FalconPalette.defaultBlue
+      return tintColor//ThemeManager.generalTintColor//FalconPalette.defaultBlue
     case .Dark:
       return UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)//ThemeManager.generalTintColor//UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)
-    }
+		case .LivingCoral:
+			return tintColor//TintPalette.livingCoral//ThemeManager.generalTintColor//FalconPalette.defaultBlue
+		}
   }
 
 	// tint blue UIColor(red: 0.55, green: 0.77, blue: 1.0, alpha: 1.0)
@@ -327,7 +466,9 @@ enum Theme: Int {
       return .white
     case .Dark:
       return .white
-    }
+		case .LivingCoral:
+			return .white
+		}
   }
   
   var incomingProgressStrokeColor: UIColor {
@@ -336,16 +477,20 @@ enum Theme: Int {
       return .black
     case .Dark:
       return .white
-    }
+		case .LivingCoral:
+			return .black
+		}
   }
   
   var keyboardAppearance: UIKeyboardAppearance {
     switch self {
     case .Default:
-      return  .default
+      return .default
     case .Dark:
       return .dark
-    }
+		case .LivingCoral:
+			return .default
+		}
   }
 
   var barStyle: UIBarStyle {
@@ -354,7 +499,9 @@ enum Theme: Int {
       return .default
     case .Dark:
       return .black
-    }
+		case .LivingCoral:
+			return .default
+		}
   }
   
   var statusBarStyle: UIStatusBarStyle {
@@ -363,7 +510,9 @@ enum Theme: Int {
       return .default
     case .Dark:
       return .lightContent
-    }
+		case .LivingCoral:
+			return .default
+		}
   }
   
 	var scrollBarStyle: UIScrollView.IndicatorStyle {
@@ -372,7 +521,9 @@ enum Theme: Int {
       return .default
     case .Dark:
       return .white
-    }
+		case .LivingCoral:
+			return .default
+		}
   }
   
 //  var backgroundColor: UIColor {
@@ -398,6 +549,9 @@ struct TintPalette {
 	static let blue = UIColor(red: 0.00, green: 0.55, blue: 1.00, alpha: 1.0)//UIColor(red: 0.00, green: 0.50, blue: 1.00, alpha: 1.0)
 	static let grey = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0)
 	static let red = UIColor.red
+	static let livingCoral = UIColor(red: 0.98, green: 0.45, blue: 0.41, alpha: 1.0)
+	static let livingCoralLight = UIColor(red: 0.99, green: 0.69, blue: 0.67, alpha: 1.0)
+	static let livingCoralExtraLight = UIColor(red: 0.99, green: 0.81, blue: 0.80, alpha: 1.0)
 }
 
 struct FalconPalette {

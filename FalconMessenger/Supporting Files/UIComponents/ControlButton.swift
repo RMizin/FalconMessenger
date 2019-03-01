@@ -23,7 +23,7 @@ class ControlButton: UIButton {
 	override var isEnabled: Bool {
 		didSet {
 			UIView.animate(withDuration: 0.15) {
-				self.setTitleColor(self.isEnabled ? ThemeManager.generalTintColor : ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
+				self.setTitleColor(self.isEnabled ? ThemeManager.currentTheme().controlButtonTintColor : ThemeManager.currentTheme().generalSubtitleColor, for: .normal)
 			}
 		}
 	}
@@ -32,7 +32,7 @@ class ControlButton: UIButton {
 		super.init(frame: frame)
 		layer.cornerRadius = 25
 		titleLabel?.sizeToFit()
-		setTitleColor(ThemeManager.generalTintColor, for: .normal)
+		setTitleColor(ThemeManager.currentTheme().controlButtonTintColor, for: .normal)
 	//	titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
 		titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
 		backgroundColor = ThemeManager.currentTheme().controlButtonsColor

@@ -22,6 +22,7 @@
 		4B1FEC1D213336DE0022421C /* CountriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1FEC1C213336DE0022421C /* CountriesTableViewCell.swift */; };
 		4B2143061F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */; };
 		4B2143081F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2143071F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift */; };
+		4B254A622229C29800A15A03 /* AppearanceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B254A612229C29800A15A03 /* AppearanceTableViewController.swift */; };
 		4B2743CB2220396200495B4C /* FalconTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2743CA2220396200495B4C /* FalconTableViewController.swift */; };
 		4B2743CD2220397300495B4C /* FalconNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2743CC2220397300495B4C /* FalconNavigationItem.swift */; };
 		4B2743CF2220398900495B4C /* FalconActivityTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2743CE2220398900495B4C /* FalconActivityTitleView.swift */; };
@@ -266,6 +267,7 @@
 		4B1FEC1C213336DE0022421C /* CountriesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesTableViewCell.swift; sourceTree = "<group>"; };
 		4B2143051F51FD8300F7A4B8 /* OutgoingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingPhotoMessageCell.swift; path = ChatsControllers/OutgoingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4B2143071F5200F700F7A4B8 /* ChatLogViewController+ImageZoomHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ChatLogViewController+ImageZoomHandlers.swift"; path = "ChatsControllers/ChatLogViewController+ImageZoomHandlers.swift"; sourceTree = "<group>"; };
+		4B254A612229C29800A15A03 /* AppearanceTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceTableViewController.swift; sourceTree = "<group>"; };
 		4B2743CA2220396200495B4C /* FalconTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconTableViewController.swift; sourceTree = "<group>"; };
 		4B2743CC2220397300495B4C /* FalconNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconNavigationItem.swift; sourceTree = "<group>"; };
 		4B2743CE2220398900495B4C /* FalconActivityTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconActivityTitleView.swift; sourceTree = "<group>"; };
@@ -521,6 +523,14 @@
 				4B1A369E1F49A0BB00B4AA0A /* InputContainerView+AttachDataSource.swift */,
 			);
 			name = InputContainerView;
+			sourceTree = "<group>";
+		};
+		4B254A602229C26300A15A03 /* Appearance */ = {
+			isa = PBXGroup;
+			children = (
+				4B254A612229C29800A15A03 /* AppearanceTableViewController.swift */,
+			);
+			path = Appearance;
 			sourceTree = "<group>";
 		};
 		4B2743C92220391D00495B4C /* UIComponents */ = {
@@ -1308,6 +1318,7 @@
 				4BDB29432126C79000D77600 /* NotificationsAndSounds */,
 				4BDB29372126C79000D77600 /* PrivacyAndSecurity */,
 				4BDB29392126C79000D77600 /* ChangeNumber */,
+				4B254A602229C26300A15A03 /* Appearance */,
 				4BDB293C2126C79000D77600 /* Storage */,
 				4BDB29462126C79000D77600 /* About */,
 			);
@@ -1867,6 +1878,7 @@
 				4B424D34213450120071913F /* BottomScrollConainer.swift in Sources */,
 				4B01BB6A21D683BA00FF229B /* MediaPickerRespondingButton.swift in Sources */,
 				4BC26B191F3A21EE0093A9D2 /* InputContainerView.swift in Sources */,
+				4B254A622229C29800A15A03 /* AppearanceTableViewController.swift in Sources */,
 				4B6BAFF120886C5F00A90F3A /* SelectNewAdminTableViewController.swift in Sources */,
 				4BB74A01206E2FFB0014837E /* AuthPhoneNumberController.swift in Sources */,
 			);
