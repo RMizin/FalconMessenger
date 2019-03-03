@@ -32,9 +32,22 @@ class GeneralTabBarController: UITabBarController {
     chatsController.delegate = self
     configureTabBar()
 		setOnlineStatus()
+		NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
   }
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	@objc fileprivate func changeTheme() {
+		tabBar.unselectedItemTintColor = ThemeManager.currentTheme().unselectedButtonTintColor
+		UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().barTextColor],
+																										 for: .normal)
+	}
+
   
   fileprivate func configureTabBar() {
+
 		UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().barTextColor],
 																										 for: .normal)
     tabBar.unselectedItemTintColor = ThemeManager.currentTheme().unselectedButtonTintColor

@@ -154,7 +154,7 @@ class UserProfileContainerView: UIView {
 
 	fileprivate func configureColors() {
 		backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-		addPhotoLabel.textColor = tintColor
+		addPhotoLabel.textColor = ThemeManager.currentTheme().tintColor
 	}
 
   override init(frame: CGRect) {

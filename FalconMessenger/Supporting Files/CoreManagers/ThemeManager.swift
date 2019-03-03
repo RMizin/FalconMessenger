@@ -152,8 +152,7 @@ enum Theme: Int {
 			return tintColor
 		}
 	}
-  
-  
+
   var generalTitleColor: UIColor {
     switch self {
     case .Default:
@@ -375,7 +374,6 @@ enum Theme: Int {
 		}
   }
 
-
   var outgoingBubbleTintColor: UIColor {
     switch self {
     case .Default:
@@ -398,7 +396,6 @@ enum Theme: Int {
 			return UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
 		}
   }
-  
   
   var selectedOutgoingBubbleTintColor: UIColor {
     switch self {

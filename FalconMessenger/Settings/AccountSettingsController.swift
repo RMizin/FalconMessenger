@@ -21,6 +21,7 @@ class AccountSettingsController: UITableViewController {
   var firstSection = [( icon: UIImage(named: "Notification"), title: "Notifications and Sounds"),
                       ( icon: UIImage(named: "Privacy"), title: "Privacy and Security"),
                       ( icon: UIImage(named: "ChangeNumber"), title: "Change Number"),
+											(	icon: UIImage(named: "Appearance"), title: "Appearance"),
                       ( icon: UIImage(named: "Storage"), title: "Data and Storage")]
   
   var secondSection = [( icon: UIImage(named: "Legal"), title: "About"),
@@ -41,7 +42,6 @@ class AccountSettingsController: UITableViewController {
     configureTableView()
     configureContainerView()
     listenChanges()
-    configureNavigationBarDefaultRightBarButton()
     addObservers()
   }
   
@@ -85,7 +85,7 @@ class AccountSettingsController: UITableViewController {
     tabBarController?.tabBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
     tabBarController?.tabBar.barStyle = ThemeManager.currentTheme().barStyle
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
-    
+    userProfileContainerView.addPhotoLabel.textColor = ThemeManager.currentTheme().tintColor
     userProfileContainerView.backgroundColor = view.backgroundColor
     userProfileContainerView.profileImageView.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
     userProfileContainerView.userData.layer.borderColor = ThemeManager.currentTheme().inputTextViewColor.cgColor
@@ -115,38 +115,7 @@ class AccountSettingsController: UITableViewController {
 																		 thumbnailURLString: nil)
     cancelBarButtonPressed()
   }
-  
-  func configureNavigationBarDefaultRightBarButton () {
-    
-    let nightMode = UIButton()
-    nightMode.setImage(UIImage(named: "defaultTheme"), for: .normal)
-    nightMode.setImage(UIImage(named: "darkTheme"), for: .selected)
-    nightMode.imageView?.contentMode = .scaleAspectFit
-		nightMode.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-    nightMode.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-    nightMode.addTarget(self, action: #selector(rightBarButtonDidTap(sender:)), for: .touchUpInside)
-    nightMode.isSelected = Bool(ThemeManager.currentTheme().rawValue)
-    
-    let rightBarButton = UIBarButtonItem(customView: nightMode)
-    self.navigationItem.setRightBarButton(rightBarButton, animated: false)
-  }
-  
-  @objc fileprivate func rightBarButtonDidTap(sender: UIButton) {
-  
-    sender.isSelected = !sender.isSelected
-    
-    let generator = UIImpactFeedbackGenerator(style: .medium)
-    generator.impactOccurred()
-    
-    if sender.isSelected {
-      let theme = Theme.Dark
-      ThemeManager.applyTheme(theme: theme)
-    } else {
-      let theme = Theme.Default
-      ThemeManager.applyTheme(theme: theme)
-    }
-  }
-  
+
   @objc func clearUserData() {
     userProfileContainerView.name.text = ""
     userProfileContainerView.phone.text = ""
@@ -154,9 +123,7 @@ class AccountSettingsController: UITableViewController {
   }
   
   func listenChanges() {
-    
     if let currentUser = Auth.auth().currentUser?.uid {
-      
       let photoURLReference = Database.database().reference().child("users").child(currentUser).child("photoURL")
       photoURLReference.observe(.value, with: { (snapshot) in
         if let url = snapshot.value as? String {
@@ -201,7 +168,6 @@ class AccountSettingsController: UITableViewController {
   }
   
   fileprivate func configureContainerView() {
-    
     userProfileContainerView.name.addTarget(self, action: #selector(nameDidBeginEditing), for: .editingDidBegin)
     userProfileContainerView.name.addTarget(self, action: #selector(nameEditingChanged), for: .editingChanged)
     userProfileContainerView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openUserProfilePicture)))
@@ -210,7 +176,6 @@ class AccountSettingsController: UITableViewController {
   }
   
   func logoutButtonTapped () {
-    
     if DeviceType.isIPad {
       self.splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
     }
@@ -326,8 +291,14 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
         }
 
       }
-      
-      if indexPath.row == 3 {
+
+			if indexPath.row == 3  {
+				let destination = AppearanceTableViewController()
+				destination.hidesBottomBarWhenPushed = true
+				navigationController?.pushViewController(destination, animated: true)
+			}
+
+      if indexPath.row == 4  {
         let destination = StorageTableViewController()
         destination.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(destination, animated: true)

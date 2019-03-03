@@ -61,7 +61,7 @@ class MenuControlsTableViewController: UITableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
+		view.tintColor = .clear
 		guard section == 1 else { return }
 		view.tintColor = ThemeManager.currentTheme().inputTextViewColor
 	}
