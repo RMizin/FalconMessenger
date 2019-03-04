@@ -62,7 +62,17 @@ class ChatLogPresenter: NSObject {
 		let isEnoughData = conversation.messages.count >= 3
 
 		if !newMessagesReceived && isEnoughData {
-			openChatLog(for: conversation)
+			let needUpdate = RealmKeychain.defaultRealm.object(ofType: Conversation.self,
+																											forPrimaryKey: conversation.chatID ?? "")?.shouldUpdateRealmRemotelyBeforeDisplaying.value
+			if let needUpdate = needUpdate, needUpdate {
+				try! RealmKeychain.defaultRealm.safeWrite {
+					RealmKeychain.defaultRealm.object(ofType: Conversation.self,
+																						forPrimaryKey: conversation.chatID ?? "")?.shouldUpdateRealmRemotelyBeforeDisplaying.value = false
+				}
+				messagesFetcher?.loadMessagesData(for: conversation)
+			} else {
+				openChatLog(for: conversation)
+			}
 			print("loading from realm")
 		}
 

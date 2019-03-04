@@ -15,7 +15,8 @@ let userDefaults = UserDefaultsManager()
 class UserDefaultsManager: NSObject {
   
   fileprivate let defaults = UserDefaults.standard
-  
+
+	let chatLogDefaultFontSizeID = "chatLogDefaultFontSizeID"
   let authVerificationID = "authVerificationID"
   let changeNumberAuthVerificationID = "ChangeNumberAuthVerificationID"
   let selectedTheme = "SelectedTheme"
@@ -54,6 +55,10 @@ class UserDefaultsManager: NSObject {
   func currentBoolObjectState(for key: String) -> Bool {
     return defaults.bool(forKey: key)
   }
+
+	func currentFloatObjectState(for key: String) -> Float {
+		return defaults.float(forKey: key)
+	}
   //
   
   //existence
@@ -93,5 +98,15 @@ class UserDefaultsManager: NSObject {
     if defaults.object(forKey: contactsContiniousSync) == nil {
       updateObject(for: contactsContiniousSync, with: true)
     }
+
+		if defaults.object(forKey: chatLogDefaultFontSizeID) == nil {
+			if DeviceType.IS_IPAD_PRO {
+				updateObject(for: chatLogDefaultFontSizeID, with: 19)
+			} else if DeviceType.isIPad {
+				updateObject(for: chatLogDefaultFontSizeID, with: 17)
+			} else {
+				updateObject(for: chatLogDefaultFontSizeID, with: 17)
+			}
+		}
   }
 }

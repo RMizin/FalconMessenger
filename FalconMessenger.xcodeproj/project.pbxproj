@@ -192,6 +192,9 @@
 		4BC9220E21394F0C0057100C /* CellPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9220D21394F0B0057100C /* CellPlayerView.swift */; };
 		4BC9D4911F5DA4E400883942 /* IncomingPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */; };
 		4BC9D4931F5DAD9F00883942 /* BaseMediaMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */; };
+		4BCBCA42222C4DF000275845 /* UIIncrementSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCBCA41222C4DF000275845 /* UIIncrementSlider.swift */; };
+		4BCBCA45222C8D1D00275845 /* UIIncrementSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCBCA44222C8D1D00275845 /* UIIncrementSliderView.swift */; };
+		4BCBCA47222C8E0900275845 /* UIIncrementSliderDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCBCA46222C8E0900275845 /* UIIncrementSliderDotView.swift */; };
 		4BD33B142221FEF7006A8C3B /* BlacklistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD33B132221FEF7006A8C3B /* BlacklistManager.swift */; };
 		4BDB21C42150F72600609054 /* ViewBlockerContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB21C32150F72600609054 /* ViewBlockerContainer.swift */; };
 		4BDB294A2126C79000D77600 /* AccountSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */; };
@@ -439,6 +442,9 @@
 		4BC9220D21394F0B0057100C /* CellPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CellPlayerView.swift; path = ChatsControllers/CellPlayerView.swift; sourceTree = "<group>"; };
 		4BC9D4901F5DA4E400883942 /* IncomingPhotoMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingPhotoMessageCell.swift; path = ChatsControllers/IncomingPhotoMessageCell.swift; sourceTree = "<group>"; };
 		4BC9D4921F5DAD9F00883942 /* BaseMediaMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMediaMessageCell.swift; path = ChatsControllers/BaseMediaMessageCell.swift; sourceTree = "<group>"; };
+		4BCBCA41222C4DF000275845 /* UIIncrementSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIIncrementSlider.swift; sourceTree = "<group>"; };
+		4BCBCA44222C8D1D00275845 /* UIIncrementSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIIncrementSliderView.swift; sourceTree = "<group>"; };
+		4BCBCA46222C8E0900275845 /* UIIncrementSliderDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIIncrementSliderDotView.swift; sourceTree = "<group>"; };
 		4BD33B132221FEF7006A8C3B /* BlacklistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlacklistManager.swift; sourceTree = "<group>"; };
 		4BDB21C32150F72600609054 /* ViewBlockerContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewBlockerContainer.swift; path = ChatsControllers/ViewBlockerContainer.swift; sourceTree = "<group>"; };
 		4BDB29342126C79000D77600 /* AccountSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsTableViewCell.swift; sourceTree = "<group>"; };
@@ -536,6 +542,7 @@
 		4B2743C92220391D00495B4C /* UIComponents */ = {
 			isa = PBXGroup;
 			children = (
+				4BCBCA43222C8C9600275845 /* UIIncrementSlider */,
 				4B6BAFA020886C5E00A90F3A /* SingleSelectionTableController */,
 				4B6BAF8E20886C5D00A90F3A /* MultipleSelectionControllers */,
 				4B8CA9E6211C49B200E6A66C /* TypingIndicator */,
@@ -1290,6 +1297,16 @@
 			name = Support;
 			sourceTree = "<group>";
 		};
+		4BCBCA43222C8C9600275845 /* UIIncrementSlider */ = {
+			isa = PBXGroup;
+			children = (
+				4BCBCA41222C4DF000275845 /* UIIncrementSlider.swift */,
+				4BCBCA44222C8D1D00275845 /* UIIncrementSliderView.swift */,
+				4BCBCA46222C8E0900275845 /* UIIncrementSliderDotView.swift */,
+			);
+			path = UIIncrementSlider;
+			sourceTree = "<group>";
+		};
 		4BDB21C22150F6C900609054 /* ViewBlocker */ = {
 			isa = PBXGroup;
 			children = (
@@ -1662,6 +1679,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BC26B1E1F3A21EE0093A9D2 /* TypingIndicatorCell.swift in Sources */,
+				4BCBCA45222C8D1D00275845 /* UIIncrementSliderView.swift in Sources */,
 				4B78663421D536AD00CC739F /* UserExistenceChecker.swift in Sources */,
 				4B8D07711FDFF16700A75B6F /* BaseMessageCell+CellDeletionHandlers.swift in Sources */,
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
@@ -1675,6 +1693,7 @@
 				4B5693D820CFFAAB005EAE15 /* CustomizedView.swift in Sources */,
 				4BE023BD1FC334CB004F8BFF /* MediaPicerControllerNew+ImagePicker.swift in Sources */,
 				4BBF795E2134375800903F56 /* SplashScreenContainer.swift in Sources */,
+				4BCBCA47222C8E0900275845 /* UIIncrementSliderDotView.swift in Sources */,
 				4BBF79562134370C00903F56 /* AppDelegate.swift in Sources */,
 				4BE8BB491FCAE9D900EB35FA /* OutgoingVoiceMessageCell.swift in Sources */,
 				4BB125D02225102100647725 /* MenuControlsTableViewController.swift in Sources */,
@@ -1813,6 +1832,7 @@
 				4B7EA2E22203076F00002F0E /* TransitionBackgrounView.swift in Sources */,
 				4B7EA2DC2203068800002F0E /* OverlayDefaultBottomView.swift in Sources */,
 				4B6BB00C20886C5F00A90F3A /* ActionCell.swift in Sources */,
+				4BCBCA42222C4DF000275845 /* UIIncrementSlider.swift in Sources */,
 				4B6BB00A20886C5F00A90F3A /* UIVIew+INSPhotoViewer.swift in Sources */,
 				4BE8BB391FC9F8C100EB35FA /* VoiceRecordingViewController.swift in Sources */,
 				4B2E59B0214ADC9B0081B74E /* UploadProgress.swift in Sources */,

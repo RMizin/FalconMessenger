@@ -52,15 +52,9 @@ struct CellSizes {
 }
 
 struct MessageFontsAppearance {
-  
+
   static var defaultMessageTextFont: UIFont {
-    if DeviceType.IS_IPAD_PRO {
-      return .systemFont(ofSize: 19)
-    } else if DeviceType.isIPad {
-      return .systemFont(ofSize: 17)
-    } else {
-      return .systemFont(ofSize: 16)
-    }
+		return .systemFont(ofSize: CGFloat(UserDefaultsManager().currentFloatObjectState(for: UserDefaultsManager().chatLogDefaultFontSizeID)))
   }
   
   static var defaultVoiceMessageTextFont: UIFont {

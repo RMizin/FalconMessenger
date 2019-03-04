@@ -31,10 +31,10 @@ class Conversation: Object {
   let muted = RealmOptional<Bool>()
 	let isTyping = RealmOptional<Bool>()
 	let permitted = RealmOptional<Bool>()
+	let shouldUpdateRealmRemotelyBeforeDisplaying = RealmOptional<Bool>()
 
 	var lastMessageRuntime: Message?
 	let messages = LinkingObjects(fromType: Message.self, property: "conversation")
-	//let sharedMedia = LinkingObjects(fromType: SharedMedia.self, property: "conversation")
 
 	func getTyping() -> Bool {
 		return RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID = %@", chatID ?? "").first?.isTyping.value ?? false
@@ -77,6 +77,8 @@ class Conversation: Object {
     pinned.value = dictionary?["pinned"] as? Bool
     muted.value = dictionary?["muted"] as? Bool
     permitted.value = dictionary?["permitted"] as? Bool
+		shouldUpdateRealmRemotelyBeforeDisplaying.value = RealmKeychain.defaultRealm.object(ofType: Conversation.self,
+																																												forPrimaryKey: dictionary?["chatID"] as? String ?? "")?.shouldUpdateRealmRemotelyBeforeDisplaying.value
   }
 
 	static func convertIntoDict(conversation: Conversation) -> [String:AnyObject] {

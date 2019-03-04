@@ -8,15 +8,43 @@
 
 import UIKit
 
+enum DefaultMessageTextFontSize: Float {
+	case extraSmall = 14
+	case small = 15
+	case medium = 16
+	case regular = 17
+	case large = 19
+	case extraLarge = 23
+	case extraLargeX2 = 26
+
+	static func allFontSizes() -> [Float] {
+		return [DefaultMessageTextFontSize.extraSmall.rawValue,
+						DefaultMessageTextFontSize.small.rawValue,
+						DefaultMessageTextFontSize.medium.rawValue,
+						DefaultMessageTextFontSize.regular.rawValue,
+						DefaultMessageTextFontSize.large.rawValue,
+						DefaultMessageTextFontSize.extraLarge.rawValue,
+						DefaultMessageTextFontSize.extraLargeX2.rawValue]
+	}
+}
+
 class AppearanceTableViewController: MenuControlsTableViewController {
 
 	let themesTitles = ["Default", "Dark", "Living Coral"]
 	let themes = [Theme.Default, Theme.Dark, Theme.LivingCoral]
+	let userDefaultsManager = UserDefaultsManager()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationItem.title = "Appearance"
 		NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
+
+		let currentValue = userDefaultsManager.currentFloatObjectState(for: userDefaultsManager.chatLogDefaultFontSizeID)
+		let sliderView = UIIncrementSliderView(values: DefaultMessageTextFontSize.allFontSizes(),
+																			 currentValue: currentValue)
+		sliderView.slider.delegate = self
+		sliderView.frame.size.height = 100
+		tableView.tableHeaderView = sliderView
 	}
 
 	deinit {
@@ -63,5 +91,20 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 		let point = tableView.convert(sender.center, from: superview)
 		guard let indexPath = tableView.indexPathForRow(at: point) else { return }
 		ThemeManager.applyTheme(theme: themes[indexPath.row])
+	}
+}
+
+extension AppearanceTableViewController: UIIncrementSliderUpdateDelegate {
+	func incrementSliderDidUpdate(to value: CGFloat) {
+
+		autoreleasepool {
+			try! RealmKeychain.defaultRealm.safeWrite {
+				for object in RealmKeychain.defaultRealm.objects(Conversation.self) {
+					object.shouldUpdateRealmRemotelyBeforeDisplaying.value = true
+				}
+			}
+		}
+
+		userDefaultsManager.updateObject(for: userDefaultsManager.chatLogDefaultFontSizeID, with: Float(value))
 	}
 }
