@@ -8,19 +8,17 @@
 
 import UIKit
 
-protocol UIIncrementSliderUpdateDelegate: class {
-	func incrementSliderDidUpdate(to value: CGFloat)
-}
 
 class UIIncrementSlider: UISlider {
 
-	weak var delegate: UIIncrementSliderUpdateDelegate?
 	fileprivate var values = [Float]()
 	fileprivate var lastIndex: Int? = nil
 	fileprivate var dotAnchors = [NSLayoutConstraint]()
+	fileprivate var callback: ((_ actualValue: Float) -> ())? = nil
 
-	func initializeSlider(with values: [Float], currentValue: Float) {
+	func initializeSlider(with values: [Float], currentValue: Float,  callback: @escaping (_ actualValue: Float) -> Void) {
 		self.values = values
+		self.callback = callback
 		minimumValue = 0
 		maximumValue = Float(values.count - 1)
 		maximumTrackTintColor = ThemeManager.currentTheme().unselectedButtonTintColor
@@ -86,7 +84,8 @@ class UIIncrementSlider: UISlider {
 		generator.impactOccurred()
 		updateColors()
 		let actualValue = values[newIndex]
-		delegate?.incrementSliderDidUpdate(to: CGFloat(actualValue))
+		guard let callback = callback else { return }
+		callback(actualValue)
 	}
 
 	override func layoutSubviews() {

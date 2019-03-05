@@ -42,7 +42,7 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 		let currentValue = userDefaultsManager.currentFloatObjectState(for: userDefaultsManager.chatLogDefaultFontSizeID)
 		let sliderView = UIIncrementSliderView(values: DefaultMessageTextFontSize.allFontSizes(),
 																			 currentValue: currentValue)
-		sliderView.slider.delegate = self
+		sliderView.delegate = self
 		sliderView.frame.size.height = 100
 		tableView.tableHeaderView = sliderView
 	}

@@ -8,9 +8,13 @@
 
 import UIKit
 
+protocol UIIncrementSliderUpdateDelegate: class {
+	func incrementSliderDidUpdate(to value: CGFloat)
+}
+
 class UIIncrementSliderView: UIView {
 
-	let slider: UIIncrementSlider = {
+	fileprivate let slider: UIIncrementSlider = {
 		let slider = UIIncrementSlider()
 		slider.translatesAutoresizingMaskIntoConstraints = false
 		return slider
@@ -40,6 +44,8 @@ class UIIncrementSliderView: UIView {
 		maximumValueImage.translatesAutoresizingMaskIntoConstraints = false
 		return maximumValueImage
 	}()
+
+	weak var delegate: UIIncrementSliderUpdateDelegate?
 
 
 	init(values: [Float], currentValue: Float? = 0) {
@@ -79,7 +85,11 @@ class UIIncrementSliderView: UIView {
 			maximumValueImage.widthAnchor.constraint(equalToConstant: (maximumValueImage.image?.size.width ?? 0)),
 			maximumValueImage.heightAnchor.constraint(equalToConstant: (maximumValueImage.image?.size.height ?? 0))
 		])
-		slider.initializeSlider(with: values, currentValue: currentValue ?? 0)
+
+		slider.initializeSlider(with: values, currentValue: currentValue ?? 0) { [weak self] actualValue in
+			self?.delegate?.incrementSliderDidUpdate(to: CGFloat(actualValue))
+		}
+		//slider.initializeSlider(with: values, currentValue: currentValue ?? 0)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
