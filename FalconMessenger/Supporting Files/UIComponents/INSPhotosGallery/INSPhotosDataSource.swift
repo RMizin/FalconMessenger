@@ -28,7 +28,7 @@ public struct INSPhotosDataSource {
     
     public func photoAtIndex(_ index: Int) -> INSPhotoViewable? {
         if (index < photos.count && index >= 0) {
-            return photos[index];
+            return photos[index]
         }
         return nil
     }

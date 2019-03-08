@@ -187,68 +187,64 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
     guard indexPath.section != groupedMessages.count else { return CGSize(width: collectionView.frame.width, height: 30) }
     var cellHeight: CGFloat = 80
     let message = groupedMessages[indexPath.section].messages[indexPath.item]
-		let isTextMessage = message.text != nil
+		let isInformationMessage = message.isInformationMessage.value ?? false
+		let isTextMessage = message.text != nil && !isInformationMessage
 		let isPhotoVideoMessage = message.imageUrl != nil || message.localImage != nil
 		let isVoiceMessage = message.voiceEncodedString != nil
     let isOutgoingMessage = message.fromId == Auth.auth().currentUser?.uid
-    let isInformationMessage = message.isInformationMessage.value ?? false
+
     let isGroupChat = conversation!.isGroupChat.value ?? false
 
-    guard !isInformationMessage else {
-        guard let messagesFetcher = messagesFetcher else { return CGSize(width: 0, height: 0) }
-      let infoMessageWidth = collectionView.frame.width
-        guard let messageText = message.text else { return CGSize(width: 0, height: 0 ) }
-      let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth,
-                                                                   text: messageText,
-                                                                   font: MessageFontsAppearance.defaultInformationMessageTextFont).height + 25
-      return CGSize(width: infoMessageWidth, height: infoMessageHeight)
-    }
-
-    guard !isTextMessage else {
-      let portraitHeight = setupCellHeight(isGroupChat: isGroupChat,
-                                           isOutgoingMessage: isOutgoingMessage,
-                                           frame: message.estimatedFrameForText,
-                                           indexPath: indexPath)
-
-      let landscapeHeight = setupCellHeight(isGroupChat: isGroupChat,
-                                            isOutgoingMessage: isOutgoingMessage,
-                                            frame: message.landscapeEstimatedFrameForText,
-                                            indexPath: indexPath)
+		guard !isTextMessage else {
 			if UIDevice.current.orientation.isLandscape {
-				cellHeight = landscapeHeight
+				return CGSize(width: collectionView.frame.width,
+											height: setupCellHeight(isGroupChat: isGroupChat,
+																							isOutgoingMessage: isOutgoingMessage,
+																							frame: message.landscapeEstimatedFrameForText,
+																							indexPath: indexPath))
 			} else {
-				cellHeight = portraitHeight
+				return CGSize(width: collectionView.frame.width,
+											height: setupCellHeight(isGroupChat: isGroupChat,
+																							isOutgoingMessage: isOutgoingMessage,
+																							frame: message.estimatedFrameForText,
+																							indexPath: indexPath))
 			}
+		}
 
-      return CGSize(width: collectionView.frame.width, height: cellHeight)
-    }
+		guard !isPhotoVideoMessage else {
+			if CGFloat(message.imageCellHeight.value!) < BaseMessageCell.minimumMediaCellHeight {
+				if isGroupChat, !isOutgoingMessage {
+					cellHeight = BaseMessageCell.incomingGroupMinimumMediaCellHeight
+				} else {
+					cellHeight = BaseMessageCell.minimumMediaCellHeight
+				}
+			} else {
+				if isGroupChat, !isOutgoingMessage {
+					cellHeight = CGFloat(message.imageCellHeight.value!) + BaseMessageCell.incomingGroupMessageAuthorNameLabelHeightWithInsets
+				} else {
+					cellHeight = CGFloat(message.imageCellHeight.value!)
+				}
+			}
+			return CGSize(width: collectionView.frame.width, height: cellHeight)
+		}
 
-    guard !isPhotoVideoMessage else {
-      if CGFloat(message.imageCellHeight.value!) < BaseMessageCell.minimumMediaCellHeight {
-        if isGroupChat, !isOutgoingMessage {
-          cellHeight = BaseMessageCell.incomingGroupMinimumMediaCellHeight
-        } else {
-          cellHeight = BaseMessageCell.minimumMediaCellHeight
-        }
-      } else {
-        if isGroupChat, !isOutgoingMessage {
-          cellHeight = CGFloat(message.imageCellHeight.value!) + BaseMessageCell.incomingGroupMessageAuthorNameLabelHeightWithInsets
-        } else {
-          cellHeight = CGFloat(message.imageCellHeight.value!)
-        }
-      }
-
-      return CGSize(width: collectionView.frame.width, height: cellHeight)
-    }
-  
 		guard !isVoiceMessage else {
 			if isGroupChat, !isOutgoingMessage {
 				cellHeight = BaseMessageCell.groupIncomingVoiceMessageHeight + BaseMessageCell.messageTimeHeight
 			} else {
 				cellHeight = BaseMessageCell.defaultVoiceMessageHeight + BaseMessageCell.messageTimeHeight
 			}
-
 			return CGSize(width: collectionView.frame.width, height: cellHeight)
+		}
+		
+		guard !isInformationMessage else {
+			guard let messagesFetcher = messagesFetcher else { return CGSize(width: 0, height: 0) }
+			let infoMessageWidth = collectionView.frame.width
+			guard let messageText = message.text else { return CGSize(width: 0, height: 0 ) }
+			let infoMessageHeight = messagesFetcher.estimateFrameForText(width: infoMessageWidth,
+																																	 text: messageText,
+																																	 font: MessageFontsAppearance.defaultInformationMessageTextFont).height + 25
+			return CGSize(width: infoMessageWidth, height: infoMessageHeight)
 		}
 
     return CGSize(width: collectionView.frame.width, height: cellHeight)
@@ -259,7 +255,7 @@ extension ChatLogViewController: UICollectionViewDataSource, UICollectionViewDel
 
     var timeHeight: CGFloat!
     let bubbleMaxWidth = UIDevice.current.orientation.isLandscape ? BaseMessageCell.landscapeBubbleViewMaxWidth : BaseMessageCell.bubbleViewMaxWidth
-    if (CGFloat(width) + BaseMessageCell.messageTimeWidth <=  bubbleMaxWidth) ||
+    if (CGFloat(width) + BaseMessageCell.messageTimeWidth <= bubbleMaxWidth) ||
 			CGFloat(width) < BaseMessageCell.messageTimeWidth {
       timeHeight = 0
     } else {

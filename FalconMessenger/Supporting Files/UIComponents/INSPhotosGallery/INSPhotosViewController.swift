@@ -109,7 +109,7 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
     let previousPhotoIndex = currentPhotoIndex - 1
     if let newCurrentPhoto = self.dataSource.photoAtIndex(currentPhotoIndex) {
       return newCurrentPhoto
-    }else if let previousPhoto = self.dataSource.photoAtIndex(previousPhotoIndex) {
+    } else if let previousPhoto = self.dataSource.photoAtIndex(previousPhotoIndex) {
       return previousPhoto
     }
     return nil

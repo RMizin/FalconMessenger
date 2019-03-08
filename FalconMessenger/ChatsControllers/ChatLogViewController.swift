@@ -330,6 +330,7 @@ class ChatLogViewController: UIViewController {
 
 		//TODO content offset fix
 		//TODO inputContainerView height fix
+		super.traitCollectionDidChange(previousTraitCollection)
 
 		DispatchQueue.main.async { [weak self] in
 			self?.collectionView.reloadData()
@@ -337,7 +338,6 @@ class ChatLogViewController: UIViewController {
 		
 		inputContainerView.handleRotation()
 		collectionView.collectionViewLayout.invalidateLayout()
-		super.traitCollectionDidChange(previousTraitCollection)
 	}
 
   override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
