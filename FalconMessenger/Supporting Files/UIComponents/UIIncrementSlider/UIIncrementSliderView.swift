@@ -25,6 +25,7 @@ class UIIncrementSliderView: UIView {
 		title.text = "Text size"
 		title.sizeToFit()
 		title.textColor = ThemeManager.currentTheme().generalTitleColor
+		title.font = UIFont.boldSystemFont(ofSize: title.font.pointSize)
 		title.translatesAutoresizingMaskIntoConstraints = false
 		return title
 	}()
@@ -58,7 +59,7 @@ class UIIncrementSliderView: UIView {
 
 		if #available(iOS 11.0, *) {
 			NSLayoutConstraint.activate([
-				title.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 25),
+				title.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 30),
 				title.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 15),
 				minimumValueImage.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 15),
 				maximumValueImage.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -15)

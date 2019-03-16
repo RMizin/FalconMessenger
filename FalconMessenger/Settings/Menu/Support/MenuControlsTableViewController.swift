@@ -29,7 +29,7 @@ class MenuControlsTableViewController: UITableViewController {
 		tableView.sectionIndexBackgroundColor = view.backgroundColor
 		tableView.backgroundColor = view.backgroundColor
 		tableView.separatorStyle = .none
-
+		tableView.showsVerticalScrollIndicator = false
 		tableView.register(SwitchTableViewCell.self, forCellReuseIdentifier: switchCellID)
 		tableView.register(GroupAdminPanelTableViewCell.self, forCellReuseIdentifier: controlButtonCellID)
 		tableView.register(AppearanceExampleTableViewCell.self, forCellReuseIdentifier: appearanceExampleTableViewCellID)
@@ -65,6 +65,7 @@ class MenuControlsTableViewController: UITableViewController {
 
 	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
 		view.tintColor = .clear
+
 		if section == 0, tableView.tableHeaderView != nil {
 			view.tintColor = ThemeManager.currentTheme().inputTextViewColor
 		} else if section == 1 {

@@ -17,7 +17,8 @@ class AppearanceExampleCollectionView: ChatCollectionView, UICollectionViewDeleg
 		delegate = self
 		dataSource = self
 		backgroundColor = .clear
-		//isScrollEnabled = false
+		isScrollEnabled = false
+		isUserInteractionEnabled = false
 	}
 
 	required public init?(coder aDecoder: NSCoder) {
@@ -31,7 +32,20 @@ class AppearanceExampleCollectionView: ChatCollectionView, UICollectionViewDeleg
 
 	func updateTheme() {
 		messages = AppearanceExampleMessagesFactory.messages()
-		reloadData()
+		DispatchQueue.main.async { [weak self] in
+			self?.reloadData()
+		}
+	}
+
+	func fullContentSize() -> CGSize {
+		let indexPaths = [IndexPath(row: 0, section: 0), IndexPath(row: 1, section: 0)]
+		var fullSize = CGSize(width: 0, height: 0)
+		for indexPath in indexPaths {
+			let itemSize = selectSize(indexPath: indexPath)
+			fullSize.width += itemSize.width
+			fullSize.height += itemSize.height
+		}
+		return fullSize
 	}
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -62,6 +76,10 @@ class AppearanceExampleCollectionView: ChatCollectionView, UICollectionViewDeleg
 			cell.setupData(message: message, isGroupChat: false)
 			return cell
 		}
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+		return CGSize(width: frame.width, height: 30)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

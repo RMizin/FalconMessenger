@@ -42,14 +42,21 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 		let currentValue = userDefaultsManager.currentFloatObjectState(for: userDefaultsManager.chatLogDefaultFontSizeID)
 		let sliderView = UIIncrementSliderView(values: DefaultMessageTextFontSize.allFontSizes(), currentValue: currentValue)
 		sliderView.delegate = self
-		sliderView.frame.size.height = 100
+		sliderView.frame.size.height = 120
 		tableView.tableHeaderView = sliderView
+		tableView.rowHeight = UITableView.automaticDimension
+		tableView.estimatedRowHeight = 10.0
 	}
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		updateAppearanceExampleTheme()
+	}
+	
 	@objc fileprivate func changeTheme() {
 		view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
 		tableView.backgroundColor = view.backgroundColor
@@ -57,12 +64,14 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 		navigationItem.hidesBackButton = true
 		navigationItem.hidesBackButton = false
 		updateAppearanceExampleTheme()
-		tableView.reloadData()
 	}
 
 	fileprivate func updateAppearanceExampleTheme() {
 		if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? AppearanceExampleTableViewCell {
 			cell.appearanceExampleCollectionView.updateTheme()
+		}
+		DispatchQueue.main.async { [weak self] in
+			self?.tableView.reloadData()
 		}
 	}
 
@@ -75,9 +84,34 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return indexPath.section == 0 ? 250 : ControlButton.cellHeight
+		if indexPath.section == 0 {
+			return UITableView.automaticDimension
+		} else {
+			return ControlButton.cellHeight
+		}
 	}
-	
+
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if section == 0 { return "Preview" }
+		return "Theme"
+	}
+
+	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if section == 0 { return 20 }
+		return 50
+	}
+
+	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		return 0
+	}
+
+	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+		view.tintColor = .clear
+
+		if let headerView = view as? UITableViewHeaderFooterView {
+			headerView.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+		}
+	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 

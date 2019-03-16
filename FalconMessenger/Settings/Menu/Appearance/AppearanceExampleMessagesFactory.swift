@@ -20,7 +20,7 @@ final class AppearanceExampleMessagesFactory {
 		let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
 		let convertedTimestamp = timestampOfChatLogMessage(date) as AnyObject
 		let shortConvertedTimestamp = date.getShortDateStringFromUTC() as AnyObject
-		let outgoingMessageText = "You can store text, photos, videos and voice messages in the cloud, by sending them to your personal storage."
+		let outgoingMessageText = "You can store text, photos, videos and voice messages at your personal storage."
 		let outgoingRect = RealmCGRect(messagesFetcher.estimateFrameForText(outgoingMessageText, orientation: .portrait), id: messageUID)
 		let outgoingLRect = RealmCGRect(messagesFetcher.estimateFrameForText(outgoingMessageText, orientation: .landscapeLeft),
 																		id: messageUID + "landscape")
@@ -35,9 +35,9 @@ final class AppearanceExampleMessagesFactory {
 																													"estimatedFrameForText": outgoingRect,
 																													"landscapeEstimatedFrameForText": outgoingLRect]
 
-		let incomingMessageText = "Falcon Messenger is a fast and beautiful cloud-based messaging app. App based on this repository is available on the App Store."
-		let incomingRect = RealmCGRect(messagesFetcher.estimateFrameForText(outgoingMessageText, orientation: .portrait), id: messageUID + "1")
-		let incomingLRect = RealmCGRect(messagesFetcher.estimateFrameForText(outgoingMessageText, orientation: .landscapeLeft),
+		let incomingMessageText = "Falcon Messenger is a fast cloud-based messaging app."
+		let incomingRect = RealmCGRect(messagesFetcher.estimateFrameForText(incomingMessageText, orientation: .portrait), id: messageUID + "1")
+		let incomingLRect = RealmCGRect(messagesFetcher.estimateFrameForText(incomingMessageText, orientation: .landscapeLeft),
 																		id: messageUID + "1" + "landscape")
 
 		let incomingMessageDictionary: [String: AnyObject] = ["messageUID": messageUID + "1" as AnyObject,

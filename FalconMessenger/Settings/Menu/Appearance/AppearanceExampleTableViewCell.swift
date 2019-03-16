@@ -12,36 +12,37 @@ class AppearanceExampleTableViewCell: UITableViewCell {
 
 	let appearanceExampleCollectionView: AppearanceExampleCollectionView = {
 		let appearanceExampleCollectionView = AppearanceExampleCollectionView()
-		appearanceExampleCollectionView.translatesAutoresizingMaskIntoConstraints = false
-
 		return appearanceExampleCollectionView
 	}()
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: .default, reuseIdentifier: reuseIdentifier)
 		backgroundColor = .clear
+		selectionStyle = .none
 
+		guard let flow = appearanceExampleCollectionView.collectionViewLayout as? AutoSizingCollectionViewFlowLayout else { return }
+		flow.estimatedItemSize = CGSize(width: 1, height: 1)
 		contentView.addSubview(appearanceExampleCollectionView)
-
-		if #available(iOS 11.0, *) {
-			appearanceExampleCollectionView.leftAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leftAnchor).isActive = true
-			appearanceExampleCollectionView.rightAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.rightAnchor).isActive = true
-		} else {
-			appearanceExampleCollectionView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
-			appearanceExampleCollectionView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
-		}
-
-		appearanceExampleCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-		appearanceExampleCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-
-	override func prepareForReuse() {
-		super.prepareForReuse()
-
+	override func systemLayoutSizeFitting(_ targetSize: CGSize,
+																				withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+																				verticalFittingPriority: UILayoutPriority) -> CGSize {
+		if #available(iOS 11.0, *) {
+			appearanceExampleCollectionView.frame = CGRect(x: 0,
+																										 y: 0,
+																										 width: targetSize.width - safeAreaInsets.left - safeAreaInsets.right,
+																										 height: appearanceExampleCollectionView.fullContentSize().height + 50)
+		} else {
+			appearanceExampleCollectionView.frame = CGRect(x: 0,
+																										 y: 0,
+																										 width: targetSize.width,
+																										 height: appearanceExampleCollectionView.fullContentSize().height + 50)
+		}
+		return appearanceExampleCollectionView.collectionViewLayout.collectionViewContentSize
 	}
 }

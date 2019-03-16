@@ -161,6 +161,7 @@ class AccountSettingsController: UITableViewController {
     tableView.backgroundColor = view.backgroundColor
     tableView.separatorStyle = .none
     tableView.sectionHeaderHeight = 0
+		tableView.showsVerticalScrollIndicator = false
     tableView.indicatorStyle = ThemeManager.currentTheme().scrollBarStyle
     tableView.tableHeaderView = userProfileContainerView
     tableView.register(AccountSettingsTableViewCell.self, forCellReuseIdentifier: accountSettingsCellId)
