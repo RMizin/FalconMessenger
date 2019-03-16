@@ -40,8 +40,7 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
 
 		let currentValue = userDefaultsManager.currentFloatObjectState(for: userDefaultsManager.chatLogDefaultFontSizeID)
-		let sliderView = UIIncrementSliderView(values: DefaultMessageTextFontSize.allFontSizes(),
-																			 currentValue: currentValue)
+		let sliderView = UIIncrementSliderView(values: DefaultMessageTextFontSize.allFontSizes(), currentValue: currentValue)
 		sliderView.delegate = self
 		sliderView.frame.size.height = 100
 		tableView.tableHeaderView = sliderView
@@ -54,20 +53,40 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 	@objc fileprivate func changeTheme() {
 		view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
 		tableView.backgroundColor = view.backgroundColor
-		tableView.reloadData()
+
 		navigationItem.hidesBackButton = true
 		navigationItem.hidesBackButton = false
+		updateAppearanceExampleTheme()
+		tableView.reloadData()
+	}
+
+	fileprivate func updateAppearanceExampleTheme() {
+		if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? AppearanceExampleTableViewCell {
+			cell.appearanceExampleCollectionView.updateTheme()
+		}
 	}
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+		return 2
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return themes.count
+		return section == 0 ? 1 : themes.count
 	}
 
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		return indexPath.section == 0 ? 250 : ControlButton.cellHeight
+	}
+	
+
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+		guard indexPath.section == 1 else {
+			let cell = tableView.dequeueReusableCell(withIdentifier: appearanceExampleTableViewCellID,
+																							 for: indexPath) as? AppearanceExampleTableViewCell ?? AppearanceExampleTableViewCell()
+			return cell
+		}
+
 		let cell = tableView.dequeueReusableCell(withIdentifier: controlButtonCellID,
 																						 for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
 		cell.selectionStyle = .none
@@ -96,7 +115,6 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 
 extension AppearanceTableViewController: UIIncrementSliderUpdateDelegate {
 	func incrementSliderDidUpdate(to value: CGFloat) {
-
 		autoreleasepool {
 			try! RealmKeychain.defaultRealm.safeWrite {
 				for object in RealmKeychain.defaultRealm.objects(Conversation.self) {
@@ -106,5 +124,6 @@ extension AppearanceTableViewController: UIIncrementSliderUpdateDelegate {
 		}
 
 		userDefaultsManager.updateObject(for: userDefaultsManager.chatLogDefaultFontSizeID, with: Float(value))
+		updateAppearanceExampleTheme()
 	}
 }

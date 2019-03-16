@@ -13,6 +13,7 @@ class MenuControlsTableViewController: UITableViewController {
 
 	let switchCellID = "switchCellID"
 	let controlButtonCellID = "controlButtonCellID"
+	let appearanceExampleTableViewCellID = "appearanceExampleTableViewCellID"
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -31,6 +32,7 @@ class MenuControlsTableViewController: UITableViewController {
 
 		tableView.register(SwitchTableViewCell.self, forCellReuseIdentifier: switchCellID)
 		tableView.register(GroupAdminPanelTableViewCell.self, forCellReuseIdentifier: controlButtonCellID)
+		tableView.register(AppearanceExampleTableViewCell.self, forCellReuseIdentifier: appearanceExampleTableViewCellID)
 	}
 
 
@@ -55,6 +57,7 @@ class MenuControlsTableViewController: UITableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if section == 0, tableView.tableHeaderView != nil { return 8 }
 		if section == 0 { return 20 }
 		guard section == 1 else { return 0 }
 		return 8
@@ -62,8 +65,11 @@ class MenuControlsTableViewController: UITableViewController {
 
 	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
 		view.tintColor = .clear
-		guard section == 1 else { return }
-		view.tintColor = ThemeManager.currentTheme().inputTextViewColor
+		if section == 0, tableView.tableHeaderView != nil {
+			view.tintColor = ThemeManager.currentTheme().inputTextViewColor
+		} else if section == 1 {
+			view.tintColor = ThemeManager.currentTheme().inputTextViewColor
+		}
 	}
 
 	override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {

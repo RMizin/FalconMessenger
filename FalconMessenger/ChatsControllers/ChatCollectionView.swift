@@ -12,6 +12,17 @@ import Photos
 
 class ChatCollectionView: UICollectionView {
 
+	let incomingTextMessageCellID = "incomingTextMessageCellID"
+	let outgoingTextMessageCellID = "outgoingTextMessageCellID"
+	let typingIndicatorCellID = "typingIndicatorCellID"
+	let photoMessageCellID = "photoMessageCellID"
+	let outgoingVoiceMessageCellID = "outgoingVoiceMessageCellID"
+	let incomingVoiceMessageCellID = "incomingVoiceMessageCellID"
+
+	let incomingPhotoMessageCellID = "incomingPhotoMessageCellID"
+	let informationMessageCellID = "informationMessageCellID"
+
+
   required public init() {
     super.init(frame: .zero, collectionViewLayout: AutoSizingCollectionViewFlowLayout())
     
@@ -21,7 +32,23 @@ class ChatCollectionView: UICollectionView {
     isPrefetchingEnabled = true
     keyboardDismissMode = .interactive
     updateColors()
+		registerCells()
   }
+
+
+	fileprivate func registerCells() {
+		register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
+		register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)
+		register(TypingIndicatorCell.self, forCellWithReuseIdentifier: typingIndicatorCellID)
+		register(PhotoMessageCell.self, forCellWithReuseIdentifier: photoMessageCellID)
+		register(IncomingPhotoMessageCell.self, forCellWithReuseIdentifier: incomingPhotoMessageCellID)
+		register(OutgoingVoiceMessageCell.self, forCellWithReuseIdentifier: outgoingVoiceMessageCellID)
+		register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
+		register(InformationMessageCell.self, forCellWithReuseIdentifier: informationMessageCellID)
+		register(ChatLogViewControllerSupplementaryView.self,
+						 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+						 withReuseIdentifier: "lol")
+	}
   
   func updateColors() {
     backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
@@ -43,4 +70,26 @@ class ChatCollectionView: UICollectionView {
     setContentOffset(CGPoint(x: 0, y: (contentSize.height - bounds.size.height) + (contentInset.bottom)),
                      animated: animated)
   }
+
+	public func setupCellHeight(isGroupChat: Bool, isOutgoingMessage: Bool, frame: RealmCGRect?, indexPath: IndexPath) -> CGFloat {
+		guard let frame = frame, let width = frame.width.value, let height = frame.height.value else { return 0 }
+
+		var timeHeight: CGFloat!
+		let bubbleMaxWidth = UIDevice.current.orientation.isLandscape ? BaseMessageCell.landscapeBubbleViewMaxWidth : BaseMessageCell.bubbleViewMaxWidth
+		if (CGFloat(width) + BaseMessageCell.messageTimeWidth <= bubbleMaxWidth) ||
+			CGFloat(width) < BaseMessageCell.messageTimeWidth {
+			timeHeight = 0
+		} else {
+			timeHeight = BaseMessageCell.messageTimeHeight
+		}
+
+		if isGroupChat, !isOutgoingMessage {
+			return CGFloat(height) + BaseMessageCell.groupTextMessageInsets + timeHeight
+		} else {
+			return CGFloat(height) + BaseMessageCell.defaultTextMessageInsets + timeHeight
+		}
+	}
 }
+
+
+

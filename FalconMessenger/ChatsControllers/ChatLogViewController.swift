@@ -21,16 +21,8 @@ protocol DeleteAndExitDelegate: class {
 
 class ChatLogViewController: UIViewController {
   
-  let incomingTextMessageCellID = "incomingTextMessageCellID"
-  let outgoingTextMessageCellID = "outgoingTextMessageCellID"
-  let typingIndicatorCellID = "typingIndicatorCellID"
-  let photoMessageCellID = "photoMessageCellID"
-  let outgoingVoiceMessageCellID = "outgoingVoiceMessageCellID"
-  let incomingVoiceMessageCellID = "incomingVoiceMessageCellID"
-  let typingIndicatorDatabaseID = "typingIndicator"
-  let incomingPhotoMessageCellID = "incomingPhotoMessageCellID"
-  let informationMessageCellID = "informationMessageCellID"
-  let typingIndicatorStateDatabaseKeyID = "Is typing"
+	let typingIndicatorDatabaseID = "typingIndicator"
+	let typingIndicatorStateDatabaseKeyID = "Is typing"
   
   weak var deleteAndExitDelegate: DeleteAndExitDelegate?
   
@@ -446,21 +438,10 @@ class ChatLogViewController: UIViewController {
       addIPadCloseButton()
     }
 
+		NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
     collectionView.addObserver(self, forKeyPath: "contentSize", options: .old, context: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
-    collectionView.addSubview(refreshControl)
-    collectionView.register(IncomingTextMessageCell.self, forCellWithReuseIdentifier: incomingTextMessageCellID)
-    collectionView.register(OutgoingTextMessageCell.self, forCellWithReuseIdentifier: outgoingTextMessageCellID)
-    collectionView.register(TypingIndicatorCell.self, forCellWithReuseIdentifier: typingIndicatorCellID)
-    collectionView.register(PhotoMessageCell.self, forCellWithReuseIdentifier: photoMessageCellID)
-    collectionView.register(IncomingPhotoMessageCell.self, forCellWithReuseIdentifier: incomingPhotoMessageCellID)
-    collectionView.register(OutgoingVoiceMessageCell.self, forCellWithReuseIdentifier: outgoingVoiceMessageCellID)
-    collectionView.register(IncomingVoiceMessageCell.self, forCellWithReuseIdentifier: incomingVoiceMessageCellID)
-    collectionView.register(InformationMessageCell.self, forCellWithReuseIdentifier: informationMessageCellID)
-    collectionView.register(ChatLogViewControllerSupplementaryView.self,
-														forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                            withReuseIdentifier: "lol")
 
+    collectionView.addSubview(refreshControl)
     configureRefreshControlInitialTintColor()
     configureCellContextMenuView()
     addBlockerView()

@@ -46,6 +46,9 @@
 		4B3B7BB32146FF620060F41F /* OtherReportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B7BB22146FF620060F41F /* OtherReportController.swift */; };
 		4B3DC3BD2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */; };
 		4B424D34213450120071913F /* BottomScrollConainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B424D33213450120071913F /* BottomScrollConainer.swift */; };
+		4B43D8F5223C5B8300F45C21 /* AppearanceExampleCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B43D8F4223C5B8300F45C21 /* AppearanceExampleCollectionView.swift */; };
+		4B43D8F7223C60CF00F45C21 /* AppearanceExampleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B43D8F6223C60CF00F45C21 /* AppearanceExampleTableViewCell.swift */; };
+		4B43D8F9223C6C5700F45C21 /* AppearanceExampleMessagesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B43D8F8223C6C5700F45C21 /* AppearanceExampleMessagesFactory.swift */; };
 		4B4B30FA21383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B30F921383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift */; };
 		4B4F03D621E554BA00907D39 /* ImagesDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
@@ -294,6 +297,9 @@
 		4B3B7BB22146FF620060F41F /* OtherReportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OtherReportController.swift; path = ChatsControllers/OtherReportController.swift; sourceTree = "<group>"; };
 		4B3DC3BC2074D9F800106EF7 /* UserProfileDataDatabaseUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileDataDatabaseUpdater.swift; sourceTree = "<group>"; };
 		4B424D33213450120071913F /* BottomScrollConainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BottomScrollConainer.swift; path = ChatsControllers/BottomScrollConainer.swift; sourceTree = "<group>"; };
+		4B43D8F4223C5B8300F45C21 /* AppearanceExampleCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceExampleCollectionView.swift; sourceTree = "<group>"; };
+		4B43D8F6223C60CF00F45C21 /* AppearanceExampleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceExampleTableViewCell.swift; sourceTree = "<group>"; };
+		4B43D8F8223C6C5700F45C21 /* AppearanceExampleMessagesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceExampleMessagesFactory.swift; sourceTree = "<group>"; };
 		4B4B30F921383B2200BAFC66 /* ChatLogViewControllerSupplementaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatLogViewControllerSupplementaryView.swift; path = ChatsControllers/ChatLogViewControllerSupplementaryView.swift; sourceTree = "<group>"; };
 		4B4F03D521E554B900907D39 /* ImagesDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesDownloadManager.swift; sourceTree = "<group>"; };
 		4B4F45371F32230C00A6FF96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -535,6 +541,9 @@
 			isa = PBXGroup;
 			children = (
 				4B254A612229C29800A15A03 /* AppearanceTableViewController.swift */,
+				4B43D8F4223C5B8300F45C21 /* AppearanceExampleCollectionView.swift */,
+				4B43D8F6223C60CF00F45C21 /* AppearanceExampleTableViewCell.swift */,
+				4B43D8F8223C6C5700F45C21 /* AppearanceExampleMessagesFactory.swift */,
 			);
 			path = Appearance;
 			sourceTree = "<group>";
@@ -1745,6 +1754,7 @@
 				4B1FEC19213325CE0022421C /* Country.swift in Sources */,
 				4B7F31EF2220466700B2CF37 /* MessageSection.swift in Sources */,
 				4B6BAFFF20886C5F00A90F3A /* AvatarOpener.swift in Sources */,
+				4B43D8F5223C5B8300F45C21 /* AppearanceExampleCollectionView.swift in Sources */,
 				4B6BB01020886C5F00A90F3A /* ImagePickerAction.swift in Sources */,
 				4BDB29572126C79000D77600 /* AccountSettingsAvatarOpenerDelegate.swift in Sources */,
 				4B3134F221A9DEEC00D20583 /* SharedMediaController.swift in Sources */,
@@ -1801,6 +1811,7 @@
 				4B6BAFE920886C5F00A90F3A /* SelectedParticipantsCollectionView.swift in Sources */,
 				4B29121D2220803D0002B3C7 /* SharedMediaSection.swift in Sources */,
 				4B6BB00E20886C5F00A90F3A /* ImageCell.swift in Sources */,
+				4B43D8F7223C60CF00F45C21 /* AppearanceExampleTableViewCell.swift in Sources */,
 				4BDB294A2126C79000D77600 /* AccountSettingsTableViewCell.swift in Sources */,
 				4BFD07761FB08005003791D7 /* ViewPlaceholder.swift in Sources */,
 				4B790B4D214919AD00427C92 /* BlockedUsersTableViewController.swift in Sources */,
@@ -1871,6 +1882,7 @@
 				4B3134F921A9EDED00D20583 /* SharedMedia.swift in Sources */,
 				4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */,
 				4BC3B25D212DA10A0012C7BD /* KeyboardFrameObserver.swift in Sources */,
+				4B43D8F9223C6C5700F45C21 /* AppearanceExampleMessagesFactory.swift in Sources */,
 				4B2743CB2220396200495B4C /* FalconTableViewController.swift in Sources */,
 				4BB554A62135C77800ABDAD4 /* ChatLogViewController+ChatHistoryFetcherDelegate.swift in Sources */,
 				4BBBCC0120588CAA00926800 /* ChatsTableViewController+TableRowActionHandlers.swift in Sources */,

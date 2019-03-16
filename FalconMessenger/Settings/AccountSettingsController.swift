@@ -79,7 +79,6 @@ class AccountSettingsController: UITableViewController {
   @objc fileprivate func changeTheme() {
     view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     tableView.backgroundColor = view.backgroundColor
-
     navigationController?.navigationBar.barStyle = ThemeManager.currentTheme().barStyle
     navigationController?.navigationBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
     tabBarController?.tabBar.barTintColor = ThemeManager.currentTheme().barBackgroundColor
