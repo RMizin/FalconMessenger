@@ -57,17 +57,14 @@ class SplashScreenContainer: UIView {
   func configureSplashForBiometrics() {
 
     var title = ""
-    var image = UIImage()
     let biometricType = SplashScreenContainer.biometricType()
 
     switch biometricType {
     case .touch:
       title = "Unlock with Touch ID"
-      image = UIImage(named: "TouchID")!
       break
     case .face:
       title = "Unlock with Face ID"
-      image = UIImage(named: "FaceID")!
       break
     default:
       title = "Unlock with Passcode"
@@ -75,32 +72,17 @@ class SplashScreenContainer: UIView {
     }
 
     let biometricsButton = UIButton()
-    let biometricsImageView = UIImageView()
-
     biometricsButton.setTitle(title, for: .normal)
     biometricsButton.setTitleColor(ThemeManager.currentTheme().generalTitleColor, for: .normal)
     biometricsButton.addTarget(self, action: #selector(authenticationWithTouchID), for: .touchUpInside)
-    biometricsImageView.contentMode = .scaleAspectFit
-    biometricsImageView.image = image
     biometricsButton.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
     biometricsButton.layer.cornerRadius = 20
-    
     biometricsButton.translatesAutoresizingMaskIntoConstraints = false
-    biometricsImageView.translatesAutoresizingMaskIntoConstraints = false
 
     addSubview(biometricsButton)
-    addSubview(biometricsImageView)
-    
     biometricsButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
     biometricsButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
-    
-    biometricsImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-    biometricsImageView.widthAnchor.constraint(equalToConstant: 200).isActive = true
-    
-    biometricsImageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-    biometricsImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -25).isActive = true
-
-    biometricsButton.topAnchor.constraint(equalTo: biometricsImageView.bottomAnchor, constant: 10).isActive = true
     biometricsButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+		biometricsButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
   }
 }
