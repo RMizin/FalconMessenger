@@ -54,23 +54,28 @@ class AccountSettingsController: UITableViewController {
   
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    if let headerView = tableView.tableHeaderView {
-      
-      let height = tableHeaderHeight()
-      var headerFrame = headerView.frame
-      
-      if height != headerFrame.size.height {
-        headerFrame.size.height = height
-        headerView.frame = headerFrame
-        tableView.tableHeaderView = headerView
-      }
-    }
+		layoutTableHeaderView()
   }
   
   deinit {
     NotificationCenter.default.removeObserver(self)
   }
-  
+
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		layoutTableHeaderView()
+	}
+
+	fileprivate func layoutTableHeaderView() {
+		guard let headerView = tableView.tableHeaderView else { return }
+		let height = tableHeaderHeight()
+		var headerFrame = headerView.frame
+		guard height != headerFrame.size.height else { return }
+		headerFrame.size.height = height
+		headerView.frame = headerFrame
+		tableView.tableHeaderView = headerView
+	}
+
   fileprivate func addObservers() {
     NotificationCenter.default.addObserver(self, selector: #selector(clearUserData), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)

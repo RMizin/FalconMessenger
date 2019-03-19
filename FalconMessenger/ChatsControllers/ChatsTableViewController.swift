@@ -249,7 +249,7 @@ class ChatsTableViewController: FalconTableViewController {
 		}).reduce(0, +)
 
     guard badge > 0 else {
-      tabItem.badgeValue = nil
+			tabItem.badgeValue = nil
       UIApplication.shared.applicationIconBadgeNumber = 0
       return
     }

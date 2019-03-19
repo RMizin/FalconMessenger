@@ -58,20 +58,18 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		collectionView?.alwaysBounceVertical = true
 		view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
 		collectionView?.backgroundColor = view.backgroundColor
+		collectionView.contentInset = UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1)
 		extendedLayoutIncludesOpaqueBars = true
 		if #available(iOS 11.0, *) {
 			navigationItem.largeTitleDisplayMode = .never
 		}
+		configureCollectionViewLayout()
+	}
 
-		let layout = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
+	fileprivate func configureCollectionViewLayout() {
+		guard let layout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout else { return }
 		layout.minimumLineSpacing = 1
 		layout.minimumInteritemSpacing = 1
-
-		let collectionViewSize = collectionView!.frame.size
-		let nrOfCellsPerRow: CGFloat = 4
-		
-		let itemWidth = UIDevice.current.orientation.isLandscape ? collectionViewSize.height/nrOfCellsPerRow : collectionViewSize.width/nrOfCellsPerRow
-		layout.itemSize = CGSize(width: itemWidth - 2, height: itemWidth - 2)
 
 		if #available(iOS 11.0, *) {
 			collectionView?.contentInsetAdjustmentBehavior = .always
@@ -167,6 +165,15 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 			return header
 		}
 		return UICollectionReusableView()
+	}
+
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return CGSize(width: 0, height: 0) }
+		let screenSize: CGFloat = UIDevice.current.orientation.isLandscape ? ScreenSize.maxLength : ScreenSize.minLength
+		let numberOfItemsInARow: CGFloat = UIDevice.current.orientation.isLandscape ? 8 : 4
+		let sideLength = UIDevice.current.orientation.isLandscape ? screenSize / numberOfItemsInARow : (screenSize / numberOfItemsInARow) - ((numberOfItemsInARow - 2.5) * layout.minimumLineSpacing)
+
+		return CGSize(width: sideLength, height: sideLength)
 	}
 
 	override func numberOfSections(in collectionView: UICollectionView) -> Int {

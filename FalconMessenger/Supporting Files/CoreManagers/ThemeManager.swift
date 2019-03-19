@@ -9,6 +9,7 @@
 import UIKit
 import SDWebImage
 import AVKit
+import ARSLineProgress
 
 extension NSNotification.Name {
   static let themeUpdated = NSNotification.Name(Bundle.main.bundleIdentifier! + ".themeUpdated")
@@ -18,7 +19,12 @@ struct ThemeManager {
 
   static func applyTheme(theme: Theme) {
     userDefaults.updateObject(for: userDefaults.selectedTheme, with: theme.rawValue)
-   
+
+		ARSLineProgressConfiguration.backgroundViewColor = ThemeManager.currentTheme().inputTextViewColor.withAlphaComponent(0.5).cgColor
+		ARSLineProgressConfiguration.blurStyle = ThemeManager.currentTheme().arsLineProgressBlurStyle
+		ARSLineProgressConfiguration.circleColorMiddle = ThemeManager.currentTheme().tintColor.cgColor
+		ARSLineProgressConfiguration.circleColorInner = ThemeManager.currentTheme().tintColor.cgColor
+
     UITabBar.appearance().barStyle = theme.barStyle
     UINavigationBar.appearance().isTranslucent = false
     UINavigationBar.appearance().barStyle = theme.barStyle
@@ -478,6 +484,17 @@ enum Theme: Int {
 			return .default
 		}
   }
+
+	var arsLineProgressBlurStyle: UIBlurEffect.Style {
+		switch self {
+		case .Default:
+			return .light
+		case .Dark:
+			return .dark
+		case .LivingCoral:
+			return .light
+		}
+	}
 }
 
 struct TintPalette {
