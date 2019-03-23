@@ -27,8 +27,8 @@ class AccountSettingsController: UITableViewController {
   var secondSection = [( icon: UIImage(named: "Legal"), title: "About"),
                        ( icon: UIImage(named: "Logout"), title: "Log Out")]
   
-  let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelBarButtonPressed))
-  let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action:  #selector(doneBarButtonPressed))
+  let cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
+  let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneBarButtonPressed))
   
   var currentName = String()
   var currentBio = String()
@@ -129,33 +129,34 @@ class AccountSettingsController: UITableViewController {
   func listenChanges() {
     if let currentUser = Auth.auth().currentUser?.uid {
       let photoURLReference = Database.database().reference().child("users").child(currentUser).child("photoURL")
-      photoURLReference.observe(.value, with: { (snapshot) in
+      photoURLReference.observe(.value, with: { [weak self] (snapshot) in
         if let url = snapshot.value as? String {
-          self.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url) , placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground], completed: nil)
+          self?.userProfileContainerView.profileImageView.sd_setImage(with: URL(string: url), placeholderImage: nil, options: [.scaleDownLargeImages, .continueInBackground], completed: nil)
         }
       })
       
       let nameReference = Database.database().reference().child("users").child(currentUser).child("name")
-      nameReference.observe(.value, with: { (snapshot) in
+      nameReference.observe(.value, with: { [weak self] (snapshot) in
         if let name = snapshot.value as? String {
-          self.userProfileContainerView.name.text = name
-          self.currentName = name
+          self?.userProfileContainerView.name.text = name
+          self?.currentName = name
         }
       })
       
       let bioReference = Database.database().reference().child("users").child(currentUser).child("bio")
-      bioReference.observe(.value, with: { (snapshot) in
+      bioReference.observe(.value, with: { [weak self] (snapshot) in
+				guard let unwrappedSelf = self else { return }
         if let bio = snapshot.value as? String {
-          self.userProfileContainerView.bio.text = bio
-          self.userProfileContainerView.bioPlaceholderLabel.isHidden = !self.userProfileContainerView.bio.text.isEmpty
-          self.currentBio = bio
+          unwrappedSelf.userProfileContainerView.bio.text = bio
+          unwrappedSelf.userProfileContainerView.bioPlaceholderLabel.isHidden = !unwrappedSelf.userProfileContainerView.bio.text.isEmpty
+          unwrappedSelf.currentBio = bio
         }
       })
       
       let phoneNumberReference = Database.database().reference().child("users").child(currentUser).child("phoneNumber")
-      phoneNumberReference.observe(.value, with: { (snapshot) in
+      phoneNumberReference.observe(.value, with: { [weak self] (snapshot) in
         if let phoneNumber = snapshot.value as? String {
-          self.userProfileContainerView.phone.text = phoneNumber
+          self?.userProfileContainerView.phone.text = phoneNumber
         }
       })
     }
@@ -182,7 +183,7 @@ class AccountSettingsController: UITableViewController {
   
   func logoutButtonTapped () {
     if DeviceType.isIPad {
-      self.splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
+      splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
     }
     
     let firebaseAuth = Auth.auth()
@@ -191,10 +192,10 @@ class AccountSettingsController: UITableViewController {
       basicErrorAlertWith(title: "Error signing out", message: noInternetError, controller: self)
       return
     }
-    ARSLineProgress.ars_showOnView(self.tableView)
+    ARSLineProgress.ars_showOnView(tableView)
   
     let userReference = Database.database().reference().child("users").child(uid).child("notificationTokens")
-    userReference.removeValue { (error, reference) in
+    userReference.removeValue { [weak self] (error, reference) in
 
     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
 
@@ -230,10 +231,10 @@ class AccountSettingsController: UITableViewController {
       navigationController.modalTransitionStyle = .crossDissolve
       ARSLineProgress.hide()
       if DeviceType.isIPad {
-        self.splitViewController?.show(navigationController, sender: self)
+        self?.splitViewController?.show(navigationController, sender: self)
       } else {
-        self.present(navigationController, animated: true, completion: {
-          self.tabBarController?.selectedIndex = Tabs.chats.rawValue
+        self?.present(navigationController, animated: true, completion: {
+          self?.tabBarController?.selectedIndex = Tabs.chats.rawValue
         })
       }
     }
@@ -285,14 +286,14 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
         
         if DeviceType.isIPad {
          controller.hidesBottomBarWhenPushed = true
-         self.navigationController?.pushViewController(controller, animated: true)
+         navigationController?.pushViewController(controller, animated: true)
         } else {
           let destination = UINavigationController(rootViewController: controller)
        //   destination.navigationBar.shadowImage = UIImage()
          // destination.navigationBar.setBackgroundImage(UIImage(), for: .default)
           destination.hidesBottomBarWhenPushed = true
           destination.navigationBar.isTranslucent = false
-          self.present(destination, animated: true, completion: nil)
+          present(destination, animated: true, completion: nil)
         }
 
       }

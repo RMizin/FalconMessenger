@@ -14,7 +14,7 @@ class MessageSection: Object {
 	var messages: Results<Message>!
 	var notificationToken: NotificationToken?
 
-	convenience init(messages: Results<Message> , title: String) {
+	convenience init(messages: Results<Message>, title: String) {
 		self.init()
 
 		self.title = title

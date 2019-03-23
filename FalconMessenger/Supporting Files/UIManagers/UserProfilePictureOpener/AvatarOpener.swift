@@ -67,14 +67,14 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
 		var photo: INSPhoto!
 		let cacheKey = SDWebImageManager.shared.cacheKey(for: URL(string: urlString))
 
-		SDImageCache.shared.containsImage(forKey: cacheKey, cacheType: .disk) { (cacheType) in
+		SDImageCache.shared.containsImage(forKey: cacheKey, cacheType: .disk) { [weak self] (cacheType) in
 			if cacheType == SDImageCacheType.disk {
 				SDWebImageManager.shared.loadImage(with: URL(string: urlString),
 																					 options: [.scaleDownLargeImages, .continueInBackground],
 																					 progress: nil, completed:
 					{ (image, _, _, _, _, _) in
 						photo = INSPhoto(image: image, thumbnailImage: image, messageUID: nil)
-						self.openAvatar(avatarView: avatarView, controller: controller, photo: photo)
+						self?.openAvatar(avatarView: avatarView, controller: controller, photo: photo)
 						//self.presentPhoto(photo: photo, overlay: overlay)
 				})
 			} else {
@@ -83,7 +83,7 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
 				} else {
 					photo = INSPhoto(imageURL: URL(string: urlString), thumbnailImageURL: URL(string: urlString), messageUID: nil)
 				}
-				self.openAvatar(avatarView: avatarView, controller: controller, photo: photo)
+				self?.openAvatar(avatarView: avatarView, controller: controller, photo: photo)
 			}
 		}
 	}
@@ -107,11 +107,12 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
     overlay.setOverlayTitle(title: title)
     overlay.navigationBar.barStyle = .blackTranslucent
     overlay.navigationBar.barTintColor = .black
-    let item = UIBarButtonItem(image: UIImage(named: "ShareExternalIcon"), style: .plain, target: self, action: #selector(toolbarTouchHandler))
+
+    let item = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(toolbarTouchHandler))
     overlay.toolbar.setItems([item], animated: true)
     
     guard isEditButonEnabled else { return }
-    overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(openPhotoManager(empty:)))
+    overlay.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(openPhotoManager(empty:)))
   }
   
   @objc private func toolbarTouchHandler() {
@@ -132,17 +133,17 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
     } else {
       alert.popoverPresentationController?.sourceView = overlay.navigationBar
       alert.popoverPresentationController?.permittedArrowDirections = .up
-      alert.popoverPresentationController?.sourceRect = CGRect(x: overlay.navigationBar.bounds.maxX, y:  overlay.navigationBar.bounds.maxY, width: 0, height: 0)
+      alert.popoverPresentationController?.sourceRect = CGRect(x: overlay.navigationBar.bounds.maxX, y: overlay.navigationBar.bounds.maxY, width: 0, height: 0)
     }
    
-    alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { _ in
-      self.galleryPreview?.dismiss(animated: true, completion: nil)
-      self.openCamera()
+    alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { [weak self] _ in
+      self?.galleryPreview?.dismiss(animated: true, completion: nil)
+      self?.openCamera()
     }))
     
-    alert.addAction(UIAlertAction(title: "Choose photo", style: .default, handler: { _ in
-      self.galleryPreview?.dismiss(animated: true, completion: nil)
-      self.openGallery()
+    alert.addAction(UIAlertAction(title: "Choose photo", style: .default, handler: { [weak self] _ in
+      self?.galleryPreview?.dismiss(animated: true, completion: nil)
+      self?.openGallery()
     }))
     
     alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
@@ -152,8 +153,8 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
       parentController?.present(alert, animated: true, completion: nil)
     } else {
          print("image not nil")
-      alert.addAction(UIAlertAction(title: "Delete photo", style: .destructive, handler: { _ in
-        self.dismissAndDelete()
+      alert.addAction(UIAlertAction(title: "Delete photo", style: .destructive, handler: { [weak self] _ in
+        self?.dismissAndDelete()
       }))
       
       galleryPreview?.present(alert, animated: true, completion: nil)
@@ -161,8 +162,8 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
   }
   
   private func dismissAndDelete() {
-    self.overlay.photosViewController?.dismiss(animated: true, completion: {
-      self.delegate?.avatarOpener(didPerformDeletionAction: true)
+    self.overlay.photosViewController?.dismiss(animated: true, completion: { [weak self] in
+      self?.delegate?.avatarOpener(didPerformDeletionAction: true)
     })
   }
   
@@ -183,10 +184,10 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
         basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessageProfilePicture, controller: controller)
         return
       case .notDetermined:
-        PHPhotoLibrary.requestAuthorization() { status in
+        PHPhotoLibrary.requestAuthorization() { [weak self] status in
           switch status {
             case .authorized:
-              self.presentGallery()
+              self?.presentGallery()
               break
             case .denied, .restricted, .notDetermined:
               basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessageProfilePicture, controller: controller)
@@ -214,10 +215,10 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
         basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessageProfilePicture, controller: controller)
         return
       case .notDetermined:
-        AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
+        AVCaptureDevice.requestAccess(for: AVMediaType.video) { [weak self] granted in
           switch granted {
             case true:
-              self.presentCamera()
+              self?.presentCamera()
               break
             case false:
               basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessageProfilePicture, controller: controller)
@@ -276,8 +277,9 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
   
   func cropViewController(_ cropViewController: CropViewController, didFinishCancelled cancelled: Bool) {
     if picker.sourceType == .camera {
-      parentController?.dismiss(animated: true, completion: {
-        self.parentController?.present(self.picker, animated: true, completion: nil)
+      parentController?.dismiss(animated: true, completion: { [weak self] in
+				guard let unwrappedSelf = self else { return }
+        unwrappedSelf.parentController?.present(unwrappedSelf.picker, animated: true, completion: nil)
       })
     } else {
       picker.popViewController(animated: true)

@@ -99,9 +99,7 @@
 		4B6BB00820886C5F00A90F3A /* INSPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC020886C5E00A90F3A /* INSPhotoViewController.swift */; };
 		4B6BB00920886C5F00A90F3A /* INSPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC120886C5E00A90F3A /* INSPhoto.swift */; };
 		4B6BB00A20886C5F00A90F3A /* UIVIew+INSPhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC220886C5E00A90F3A /* UIVIew+INSPhotoViewer.swift */; };
-		4B6BB00B20886C5F00A90F3A /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC520886C5E00A90F3A /* CameraOverlayView.swift */; };
 		4B6BB00C20886C5F00A90F3A /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC620886C5E00A90F3A /* ActionCell.swift */; };
-		4B6BB00D20886C5F00A90F3A /* CameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC720886C5E00A90F3A /* CameraCell.swift */; };
 		4B6BB00E20886C5F00A90F3A /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC820886C5E00A90F3A /* ImageCell.swift */; };
 		4B6BB00F20886C5F00A90F3A /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC920886C5E00A90F3A /* AnimationController.swift */; };
 		4B6BB01020886C5F00A90F3A /* ImagePickerAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFCA20886C5E00A90F3A /* ImagePickerAction.swift */; };
@@ -352,9 +350,7 @@
 		4B6BAFC020886C5E00A90F3A /* INSPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INSPhotoViewController.swift; sourceTree = "<group>"; };
 		4B6BAFC120886C5E00A90F3A /* INSPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INSPhoto.swift; sourceTree = "<group>"; };
 		4B6BAFC220886C5E00A90F3A /* UIVIew+INSPhotoViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIVIew+INSPhotoViewer.swift"; sourceTree = "<group>"; };
-		4B6BAFC520886C5E00A90F3A /* CameraOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraOverlayView.swift; sourceTree = "<group>"; };
 		4B6BAFC620886C5E00A90F3A /* ActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
-		4B6BAFC720886C5E00A90F3A /* CameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraCell.swift; sourceTree = "<group>"; };
 		4B6BAFC820886C5E00A90F3A /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		4B6BAFC920886C5E00A90F3A /* AnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
 		4B6BAFCA20886C5E00A90F3A /* ImagePickerAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerAction.swift; sourceTree = "<group>"; };
@@ -863,9 +859,7 @@
 		4B6BAFC420886C5E00A90F3A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				4B6BAFC520886C5E00A90F3A /* CameraOverlayView.swift */,
 				4B6BAFC620886C5E00A90F3A /* ActionCell.swift */,
-				4B6BAFC720886C5E00A90F3A /* CameraCell.swift */,
 				4B6BAFC820886C5E00A90F3A /* ImageCell.swift */,
 			);
 			path = Cells;
@@ -1796,7 +1790,6 @@
 				4B2743CF2220398900495B4C /* FalconActivityTitleView.swift in Sources */,
 				4B6BAFEA20886C5F00A90F3A /* SelectedParticipantsCollectionViewCell.swift in Sources */,
 				4BBF79542134370C00903F56 /* SplitViewController.swift in Sources */,
-				4B6BB00B20886C5F00A90F3A /* CameraOverlayView.swift in Sources */,
 				4B6BAFF020886C5F00A90F3A /* WaveformView.swift in Sources */,
 				4BBBCBFB205851E100926800 /* ChatsTableViewController.swift in Sources */,
 				4B6BB01120886C5F00A90F3A /* TransitionController.swift in Sources */,
@@ -1838,7 +1831,6 @@
 				4BE5712D1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift in Sources */,
 				4B6BB01220886C5F00A90F3A /* UIEdgeInsetsExtensions.swift in Sources */,
 				4B6BAFF620886C5F00A90F3A /* VerificationCodeController.swift in Sources */,
-				4B6BB00D20886C5F00A90F3A /* CameraCell.swift in Sources */,
 				4B88F2DA206386BA00BED797 /* GroupAdminPanelTableViewController+NameEditing.swift in Sources */,
 				4B7EA2E22203076F00002F0E /* TransitionBackgrounView.swift in Sources */,
 				4B7EA2DC2203068800002F0E /* OverlayDefaultBottomView.swift in Sources */,

@@ -9,8 +9,8 @@
 import UIKit
 
 enum AvatarOverlayTitle: String {
-  case user = "Profile photo"
-  case group = "Group avatar"
+  case user = "Profile Picture"
+  case group = "Group Photo"
 }
 
 class AvatarOpenerOverlay: UIView {
@@ -67,11 +67,7 @@ class AvatarOpenerOverlay: UIView {
   }
   
   private func configureNavigationBar() {
-		navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose"),
-																											 landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape"),
-																											 style: .plain,
-																											 target: self,
-																											 action: #selector(backButtonTapped))
+		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backButtonTapped))
     navigationBar.setItems([navigationItem], animated: true)
   }
   
@@ -129,22 +125,22 @@ extension AvatarOpenerOverlay: INSPhotosOverlayViewable {
   func populateWithPhoto(_ photo: INSPhotoViewable) {}
   
   func setHidden(_ hidden: Bool, animated: Bool) {
-    if self.isHidden == hidden {
+    if isHidden == hidden {
       return
     }
     
     if animated {
-      self.isHidden = false
-      self.alpha = hidden ? 1.0 : 0.0
+      isHidden = false
+      alpha = hidden ? 1.0 : 0.0
       
-      UIView.animate(withDuration: 0.2, delay: 0.0, options: [.allowAnimatedContent, .allowUserInteraction], animations: { () -> Void in
-        self.alpha = hidden ? 0.0 : 1.0
-      }, completion: { result in
-        self.alpha = 1.0
-        self.isHidden = hidden
+      UIView.animate(withDuration: 0.2, delay: 0.0, options: [.allowAnimatedContent, .allowUserInteraction], animations: { [weak self] () -> Void in
+        self?.alpha = hidden ? 0.0 : 1.0
+      }, completion: { [weak self] result in
+        self?.alpha = 1.0
+        self?.isHidden = hidden
       })
     } else {
-      self.isHidden = hidden
+      isHidden = hidden
     }
   }
   

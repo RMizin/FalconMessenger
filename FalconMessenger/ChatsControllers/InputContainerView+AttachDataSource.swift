@@ -22,23 +22,23 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
  @objc func removeButtonDidTap(sender: UIButton) {
     
     guard let cell = sender.superview as? AttachCollectionViewCell,
-      let indexPath = attachCollectionView.indexPath(for: cell) else { return }
-    let row = indexPath.row
+      let indexPath = attachCollectionView.indexPath(for: cell),
+			let picker = mediaPickerController else { return }
+		let row = indexPath.row
+		guard let asset = attachedMedia[row].phAsset else { return }
+
     let imageSourcePhotoLibrary = globalVariables.imageSourcePhotoLibrary
   
     if attachedMedia[row].imageSource == imageSourcePhotoLibrary {
-      
-      if mediaPickerController!.assets.contains(attachedMedia[row].phAsset!) {
+      if picker.assets.contains(asset) {
         deselectAsset(row: row)
       } else {
         attachedMedia.remove(at: row)
         attachCollectionView.deleteItems(at: [indexPath])
         resetChatInputConntainerViewSettings()
       }
-      
     } else {
-    
-      if attachedMedia[row].phAsset != nil && mediaPickerController!.assets.contains(attachedMedia[row].phAsset!) {
+      if picker.assets.contains(asset) {
         deselectAsset(row: row)
       } else {
         attachedMedia.remove(at: row)
@@ -49,16 +49,13 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
   }
   
   func deselectAsset(row: Int) {
-    
-      let index = mediaPickerController!.assets.index(of: attachedMedia[row].phAsset!)
-    
-      let indexPath = IndexPath(item: index!, section: 2)
-    
-      self.mediaPickerController?.collectionView.deselectItem(at: indexPath, animated: true)
-    
-      self.mediaPickerController?.delegate?.controller?(self.mediaPickerController!,
-                                                                              didDeselectAsset: self.attachedMedia[row].phAsset!,
-                                                                              at: indexPath)
+		guard let picker = mediaPickerController,
+			let asset = attachedMedia[row].phAsset,
+			let index = picker.assets.index(of: asset) else { return }
+
+		let indexPath = IndexPath(item: index, section: ImagePickerTrayController.librarySectionIndex)
+		picker.collectionView.deselectItem(at: indexPath, animated: true)
+		picker.delegate?.controller?(picker, didDeselectAsset: asset, at: indexPath)
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

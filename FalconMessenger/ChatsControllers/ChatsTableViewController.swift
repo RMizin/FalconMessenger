@@ -113,7 +113,7 @@ class ChatsTableViewController: FalconTableViewController {
   }
 
 	fileprivate func indexPathsToUpdate(updates: [Int], section: Int) -> [IndexPath] {
-		return updates.compactMap({ (index) -> IndexPath? in
+		return updates.compactMap({ [unowned self] (index) -> IndexPath? in
 			if self.tableView.hasRow(at: IndexPath(row: index, section: section)) {
 				return IndexPath(row: index, section: section)
 			} else {
@@ -123,17 +123,18 @@ class ChatsTableViewController: FalconTableViewController {
 	}
 
 	fileprivate func observeDataSourceChanges() {
-		pinnedConversationsNotificationToken = realmPinnedConversations?.observe { (changes: RealmCollectionChange) in
+		pinnedConversationsNotificationToken = realmPinnedConversations?.observe { [weak self] (changes: RealmCollectionChange) in
+			guard let unwrappedSelf = self else { return }
 			switch changes {
 			case .initial:
 				break
 			case .update(_, let deletions, let insertions, let modifications):
-				if self.isAppLoaded {
-					self.tableView.beginUpdates()
-					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 0) }, with: .none)
-					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 0), with: .automatic)
-					UIView.performWithoutAnimation { self.tableView.reloadRows(at: self.indexPathsToUpdate(updates: modifications, section: 0), with: .none) }
-					self.tableView.endUpdates()
+				if unwrappedSelf.isAppLoaded {
+					unwrappedSelf.tableView.beginUpdates()
+					unwrappedSelf.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 0) }, with: .none)
+					unwrappedSelf.tableView.deleteRows(at: unwrappedSelf.indexPathsToUpdate(updates: deletions, section: 0), with: .automatic)
+					UIView.performWithoutAnimation { unwrappedSelf.tableView.reloadRows(at: unwrappedSelf.indexPathsToUpdate(updates: modifications, section: 0), with: .none) }
+					unwrappedSelf.tableView.endUpdates()
 				}
 
 				break
@@ -141,18 +142,19 @@ class ChatsTableViewController: FalconTableViewController {
 			}
 		}
 
-		unpinnedConversationsNotificationToken = realmUnpinnedConversations?.observe { (changes: RealmCollectionChange) in
+		unpinnedConversationsNotificationToken = realmUnpinnedConversations?.observe { [weak self] (changes: RealmCollectionChange) in
+			guard let unwrappedSelf = self else { return }
 			switch changes {
 			case .initial:
-				UIView.performWithoutAnimation { self.tableView.reloadData() }
+				UIView.performWithoutAnimation { unwrappedSelf.tableView.reloadData() }
 				break
 			case .update(_, let deletions, let insertions, let modifications):
-				if self.isAppLoaded {
-					self.tableView.beginUpdates()
-					self.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 1) }, with: .none)
-					self.tableView.deleteRows(at: self.indexPathsToUpdate(updates: deletions, section: 1), with: .automatic)
-					UIView.performWithoutAnimation { self.tableView.reloadRows(at: self.indexPathsToUpdate(updates: modifications, section: 1), with: .none) }
-					self.tableView.endUpdates()
+				if unwrappedSelf.isAppLoaded {
+					unwrappedSelf.tableView.beginUpdates()
+					unwrappedSelf.tableView.insertRows(at: insertions.map { IndexPath(row: $0, section: 1) }, with: .none)
+					unwrappedSelf.tableView.deleteRows(at: unwrappedSelf.indexPathsToUpdate(updates: deletions, section: 1), with: .automatic)
+					UIView.performWithoutAnimation { unwrappedSelf.tableView.reloadRows(at: unwrappedSelf.indexPathsToUpdate(updates: modifications, section: 1), with: .none) }
+					unwrappedSelf.tableView.endUpdates()
 				}
 				break
 			case .error(let err): fatalError("\(err)"); break
@@ -222,12 +224,12 @@ class ChatsTableViewController: FalconTableViewController {
     }
     
     let connectedReference = Database.database().reference(withPath: ".info/connected")
-    connectedReference.observe(.value, with: { (snapshot) in
+    connectedReference.observe(.value, with: { [weak self] (snapshot) in
       
-      if self.currentReachabilityStatus != .notReachable {
-				self.hideActivityTitle(title: .noInternet)
+      if self?.currentReachabilityStatus != .notReachable {
+				self?.hideActivityTitle(title: .noInternet)
       } else {
-				self.showActivityTitle(title: .noInternet)
+				self?.showActivityTitle(title: .noInternet)
       }
     })
   }
@@ -266,8 +268,11 @@ class ChatsTableViewController: FalconTableViewController {
 		guard let realmAllConversations = realmAllConversations else { return }
 
     if !isAppLoaded {
-      UIView.transition(with: tableView, duration: 0.1, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: { (_) in
-        self.initAllTabs()
+      UIView.transition(with: tableView,
+												duration: 0.1,
+												options: .transitionCrossDissolve,
+												animations: { [weak self] in self?.tableView.reloadData() }, completion: { [weak self] (_) in
+        self?.initAllTabs()
 
 				for conversation in realmAllConversations {
           guard let chatID = conversation.chatID else { return }
@@ -282,9 +287,9 @@ class ChatsTableViewController: FalconTableViewController {
         }
      })
     } else {
-			DispatchQueue.main.async {
+			DispatchQueue.main.async { [weak self] in
 				UIView.performWithoutAnimation {
-					self.tableView.reloadData()
+					self?.tableView.reloadData()
 				}
 			}
     }
@@ -432,9 +437,6 @@ extension ChatsTableViewController: DeleteAndExitDelegate {
     }) else { return nil }
     return index
   }
-
-
-
 }
 
 extension ChatsTableViewController: ConversationUpdatesDelegate {
@@ -445,7 +447,7 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
   }
   
   func conversations(didStartUpdatingData: Bool) {
-			showActivityTitle(title: .updating)
+		showActivityTitle(title: .updating)
   }
   
   func conversations(didFinishFetching: Bool, conversations: [Conversation]) {

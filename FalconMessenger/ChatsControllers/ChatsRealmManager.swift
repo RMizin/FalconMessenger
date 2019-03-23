@@ -28,7 +28,7 @@ class ChatsRealmManager {
 
 				RealmKeychain.defaultRealm.beginWrite()
 				for conversation in conversations {
-					conversation.isTyping.value = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID = %@", conversation.chatID ?? "").first?.isTyping.value
+					conversation.isTyping.value = RealmKeychain.defaultRealm.object(ofType: Conversation.self, forPrimaryKey: conversation.chatID ?? "")?.isTyping.value
 					RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: true)
 					if let message = conversation.lastMessageRuntime {
 						message.senderName = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName

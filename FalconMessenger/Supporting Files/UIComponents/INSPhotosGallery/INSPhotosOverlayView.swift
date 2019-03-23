@@ -75,9 +75,7 @@ open class INSPhotosOverlayView: UIView, INSPhotosOverlayViewable {
     }
 
 		fileprivate func setupNavigationItemActions() {
-			navigationView.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "INSPhotoGalleryClose"),
-																																				landscapeImagePhone: UIImage(named: "INSPhotoGalleryCloseLandscape"),
-																																				style: .plain,
+			navigationView.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop,
 																																				target: self,
 																																				action: #selector(closeButtonTapped(_:)))
 			navigationView.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action,
@@ -97,11 +95,11 @@ open class INSPhotosOverlayView: UIView, INSPhotosOverlayViewable {
 			guard animated else { isHidden = hidden; return }
 			isHidden = false
 			alpha = hidden ? 1.0 : 0.0
-			UIView.animate(withDuration: 0.2, delay: 0.0, options: [.allowAnimatedContent, .allowUserInteraction], animations: { () -> Void in
-				self.alpha = hidden ? 0.0 : 1.0
-				}, completion: { result in
-					self.alpha = 1.0
-					self.isHidden = hidden
+			UIView.animate(withDuration: 0.2, delay: 0.0, options: [.allowAnimatedContent, .allowUserInteraction], animations: { [weak self] () -> Void in
+				self?.alpha = hidden ? 0.0 : 1.0
+				}, completion: { [weak self] result in
+					self?.alpha = 1.0
+					self?.isHidden = hidden
 			})
     }
     

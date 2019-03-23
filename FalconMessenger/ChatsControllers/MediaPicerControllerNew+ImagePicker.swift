@@ -30,20 +30,9 @@ extension MediaPickerControllerNew {
       let alert = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
       alert.modalPresentationStyle = .overCurrentContext
-      self.present(alert, animated: true, completion: nil)
+      present(alert, animated: true, completion: nil)
     }
   }
-  
-//  func indexPathIsValid(indexPath: IndexPath) -> Bool {
-//    if indexPath.section >= self.numberOfSections(in: self.collectionView) {
-//      return false
-//    }
-//    if indexPath.row >=  self.collectionView.numberOfItems(inSection: indexPath.section) {
-//      return false
-//    }
-//    return true
-//  }
-
 
   override func imagePickerController(_ picker: UIImagePickerController,
 																			didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -144,7 +133,7 @@ extension MediaPickerControllerNew {
         }
         
         print("you selected not selected image, selecting...")
-        let indexPathForSelection = IndexPath(item: indexForSelection, section: 2)
+        let indexPathForSelection = IndexPath(item: indexForSelection, section: ImagePickerTrayController.librarySectionIndex)
         self.collectionView.selectItem(at: indexPathForSelection, animated: false, scrollPosition: .left)
         self.delegate?.controller?(self, didSelectAsset: asset!, at: indexPathForSelection)
         dismissImagePicker()

@@ -11,7 +11,6 @@ import UIKit
 class ImageCell: UICollectionViewCell {
 
 	fileprivate let videoIndicatorView = UIImageView(image: UIImage(bundledName: "ImageCell-Video"))
-	fileprivate let cloudIndicatorView = UIImageView(image: UIImage(bundledName: "ImageCell-Cloud"))
 	fileprivate let checkmarkView = UIImageView(image: UIImage(bundledName: "ImageCell-Selected"))
 
 	let imageView: UIImageView = {
@@ -28,13 +27,7 @@ class ImageCell: UICollectionViewCell {
 				reloadAccessoryViews()
 			}
     }
-    
-    var isRemote = false {
-			didSet {
-				reloadAccessoryViews()
-			}
-    }
-    
+
     override var isSelected: Bool {
 			didSet {
 				reloadCheckmarkView()
@@ -55,11 +48,9 @@ class ImageCell: UICollectionViewCell {
     fileprivate func initialize() {
 			contentView.addSubview(imageView)
 			contentView.addSubview(videoIndicatorView)
-			contentView.addSubview(cloudIndicatorView)
 			contentView.addSubview(checkmarkView)
 
 			videoIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-			cloudIndicatorView.translatesAutoresizingMaskIntoConstraints = false
 			checkmarkView.translatesAutoresizingMaskIntoConstraints = false
 
 			let inset: CGFloat = 4
@@ -73,11 +64,6 @@ class ImageCell: UICollectionViewCell {
 				videoIndicatorView.heightAnchor.constraint(equalToConstant: videoIndicatorView.image?.size.height ?? 0),
 				videoIndicatorView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: inset),
 				videoIndicatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -inset),
-
-				cloudIndicatorView.widthAnchor.constraint(equalToConstant: cloudIndicatorView.image?.size.width ?? 0),
-				cloudIndicatorView.heightAnchor.constraint(equalToConstant: cloudIndicatorView.image?.size.height ?? 0),
-				cloudIndicatorView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: inset),
-				cloudIndicatorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: inset),
 
 				checkmarkView.widthAnchor.constraint(equalToConstant: checkmarkView.image?.size.width ?? 0),
 				checkmarkView.heightAnchor.constraint(equalToConstant: checkmarkView.image?.size.height ?? 0),
@@ -93,7 +79,6 @@ class ImageCell: UICollectionViewCell {
     
     fileprivate func reloadAccessoryViews() {
 			videoIndicatorView.isHidden = !isVideo
-			cloudIndicatorView.isHidden = !isRemote
     }
     
     fileprivate func reloadCheckmarkView() {
@@ -104,6 +89,5 @@ class ImageCell: UICollectionViewCell {
 			super.prepareForReuse()
 			imageView.image = nil
 			isVideo = false
-			isRemote = false
     }
 }

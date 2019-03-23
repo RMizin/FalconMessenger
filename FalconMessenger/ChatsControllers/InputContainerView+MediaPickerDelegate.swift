@@ -99,7 +99,10 @@ extension InputContainerView: MediaPickerDelegate {
         case .authorized:
           self.mediaPickerController?.imageManager = PHCachingImageManager()
           self.mediaPickerController?.fetchAssets()
-          self.mediaPickerController?.collectionView.reloadData()
+					DispatchQueue.main.async { [weak self] in
+						self?.mediaPickerController?.collectionView.reloadData()
+					}
+
         case .denied, .restricted, .notDetermined:
           break
         }

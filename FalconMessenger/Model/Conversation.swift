@@ -16,11 +16,9 @@ class Conversation: Object {
   @objc dynamic var chatThumbnailPhotoURL: String?
   @objc dynamic var lastMessageID: String?
 	@objc dynamic var admin: String?
+
 	@objc dynamic var lastMessage: Message? {
-		let results = RealmKeychain.defaultRealm.objects(Message.self).filter("conversation.chatID = '\(chatID ?? "")'")
-		let currentConvers = results.first
-		let lastMessage = currentConvers?.conversation?.messages.sorted(byKeyPath: "timestamp", ascending: true).last
-		return lastMessage
+		return RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: lastMessageID ?? "")
 	}
 
 	let lastMessageTimestamp = RealmOptional<Int64>()
@@ -37,7 +35,7 @@ class Conversation: Object {
 	let messages = LinkingObjects(fromType: Message.self, property: "conversation")
 
 	func getTyping() -> Bool {
-		return RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID = %@", chatID ?? "").first?.isTyping.value ?? false
+		return RealmKeychain.defaultRealm.object(ofType: Conversation.self, forPrimaryKey: chatID ?? "")?.isTyping.value ?? false
 	}
 
 	override class func ignoredProperties() -> [String] {
@@ -80,23 +78,4 @@ class Conversation: Object {
 		shouldUpdateRealmRemotelyBeforeDisplaying.value = RealmKeychain.defaultRealm.object(ofType: Conversation.self,
 																																												forPrimaryKey: dictionary?["chatID"] as? String ?? "")?.shouldUpdateRealmRemotelyBeforeDisplaying.value
   }
-
-	static func convertIntoDict(conversation: Conversation) -> [String:AnyObject] {
-		var dictionary =  [String:AnyObject]()
-		dictionary["chatID"] = conversation.chatID as AnyObject
-		dictionary["chatName"] = conversation.chatName as AnyObject
-		dictionary["chatOriginalPhotoURL"] = conversation.chatPhotoURL as AnyObject
-		dictionary["chatThumbnailPhotoURL"] = conversation.chatThumbnailPhotoURL as AnyObject
-		dictionary["lastMessageID"] = conversation.lastMessageID as AnyObject
-		dictionary["isGroupChat"] = conversation.isGroupChat as AnyObject
-
-		dictionary["chatParticipantsIDs"] = conversation.chatParticipantsIDs as AnyObject
-		dictionary["admin"] = conversation.admin as AnyObject
-		dictionary["badge"] = conversation.badge as AnyObject
-		dictionary["pinned"] = conversation.pinned as AnyObject
-		dictionary["muted"] = conversation.muted as AnyObject
-		dictionary["permitted"] = conversation.permitted as AnyObject
-
-		return dictionary
-	}
 }

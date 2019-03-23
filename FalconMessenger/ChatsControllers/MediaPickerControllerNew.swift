@@ -246,9 +246,6 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
     getUrlFor(asset: asset) { (url, completed) in
       if completed {
         fileURL = url
-
-        print("after  ", fileURL)
-
         let mediaObject = ["object": data!,
                            "imageSource": self.imageSourceCamera,
                            "phAsset": asset,
