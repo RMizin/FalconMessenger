@@ -128,7 +128,7 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 		cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
 		cell.button.setTitle(themesTitles[indexPath.row], for: .normal)
 		cell.button.setTitleColor(ThemeManager.currentTheme().controlButtonTintColor, for: .normal)
-		cell.button.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
+		cell.button.backgroundColor = ThemeManager.currentTheme().controlButtonColor
 
 		if themes[indexPath.row] == ThemeManager.currentTheme() {
 			cell.accessoryType = .checkmark

@@ -31,7 +31,7 @@ class ViewBlockerContainer: UIView {
     show.contentHorizontalAlignment = .center
     show.contentVerticalAlignment = .center
     show.titleLabel?.sizeToFit()
-    show.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
+    show.backgroundColor = ThemeManager.currentTheme().controlButtonColor
     show.layer.cornerRadius = 25
     show.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     show.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
@@ -48,7 +48,7 @@ class ViewBlockerContainer: UIView {
     blockAndDelete.contentHorizontalAlignment = .center
     blockAndDelete.contentVerticalAlignment = .center
     blockAndDelete.titleLabel?.sizeToFit()
-    blockAndDelete.backgroundColor = ThemeManager.currentTheme().controlButtonsColor
+    blockAndDelete.backgroundColor = ThemeManager.currentTheme().controlButtonColor
     blockAndDelete.layer.cornerRadius = 25
     blockAndDelete.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     blockAndDelete.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)

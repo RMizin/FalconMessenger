@@ -50,7 +50,8 @@ extension ChatsTableViewController {
       let muteTitle = isConversationMuted ? "Unmute" : "Mute"
       mute.title = muteTitle
     }
-    mute.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
+
+    mute.backgroundColor = ThemeManager.currentTheme().muteRowActionBackgroundColor
     return mute
   }
   
@@ -66,7 +67,7 @@ extension ChatsTableViewController {
     
     let pinTitle = indexPath.section == 0 ? "Unpin" : "Pin"
     pin.title = pinTitle
-    pin.backgroundColor = UIColor(red: 0.18, green: 0.26, blue: 0.31, alpha: 1.0)
+    pin.backgroundColor = ThemeManager.currentTheme().pinRowActionBackgroundColor
     return pin
   }
   

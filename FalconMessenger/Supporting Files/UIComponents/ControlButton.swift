@@ -15,7 +15,7 @@ class ControlButton: UIButton {
 	override var isHighlighted: Bool {
 		didSet {
 			UIView.animate(withDuration: 0.15) {
-				self.backgroundColor = self.isHighlighted ? ThemeManager.currentTheme().controlButtonHighlightingColor : ThemeManager.currentTheme().controlButtonsColor
+				self.backgroundColor = self.isHighlighted ? ThemeManager.currentTheme().controlButtonHighlightingColor : ThemeManager.currentTheme().controlButtonColor
 			}
 		}
 	}
@@ -35,7 +35,7 @@ class ControlButton: UIButton {
 		setTitleColor(ThemeManager.currentTheme().controlButtonTintColor, for: .normal)
 	//	titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
 		titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-		backgroundColor = ThemeManager.currentTheme().controlButtonsColor
+		backgroundColor = ThemeManager.currentTheme().controlButtonColor
 	}
 
 	required init?(coder aDecoder: NSCoder) {

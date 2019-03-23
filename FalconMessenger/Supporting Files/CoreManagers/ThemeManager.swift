@@ -232,7 +232,7 @@ enum Theme: Int {
 		}
 	}
   
-  var controlButtonsColor: UIColor {
+  var controlButtonColor: UIColor {
     switch self {
     case .Default:
       return UIColor(red: 0.94, green: 0.94, blue: 0.96, alpha: 1.0)
@@ -253,7 +253,29 @@ enum Theme: Int {
 			return UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0) //F1F1F1
 		}
 	}
-  
+
+	var muteRowActionBackgroundColor: UIColor {
+		switch self {
+		case .Default:
+			return TintPalette.lightBlue
+		case .Dark:
+			return controlButtonHighlightingColor
+		case .LivingCoral:
+			return TintPalette.livingCoralLight
+		}
+	}
+
+	var pinRowActionBackgroundColor: UIColor {
+		switch self {
+		case .Default:
+			return TintPalette.blue
+		case .Dark:
+			return controlButtonColor
+		case .LivingCoral:
+			return TintPalette.livingCoral
+		}
+	}
+
   var searchBarColor: UIColor {
     switch self {
     case .Default:
@@ -499,6 +521,7 @@ enum Theme: Int {
 
 struct TintPalette {
 	static let blue = UIColor(red: 0.00, green: 0.55, blue: 1.00, alpha: 1.0)
+	static let lightBlue = UIColor(red: 0.13, green: 0.61, blue: 1.00, alpha: 1.0)
 	static let grey = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0)
 	static let red = UIColor.red
 	static let livingCoral = UIColor(red: 0.98, green: 0.45, blue: 0.41, alpha: 1.0)
