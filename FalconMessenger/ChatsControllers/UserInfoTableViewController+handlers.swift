@@ -48,7 +48,7 @@ extension UserInfoTableViewController {
 		let galleryPreview = INSPhotosViewController(photos: photos, initialPhoto: currentPhoto, referenceView: cell.icon)
 
 		galleryPreview.overlayView = overlay
-		galleryPreview.overlayView.setHidden(true, animated: false)
+		galleryPreview.overlayView.setHidden(false, animated: false)
 
 		galleryPreview.referenceViewForPhotoWhenDismissingHandler = {  photo in
 			return cell.icon
