@@ -109,7 +109,7 @@ extension ChatsTableViewController {
     let conversation = self.filteredPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
     
-    guard let index = self.pinnedConversations.index(where: { (conversation) -> Bool in
+		guard let index = self.pinnedConversations.firstIndex(where: { (conversation) -> Bool in
       return conversation.chatID == self.filteredPinnedConversations[indexPath.row].chatID
     }) else { return }
     
@@ -148,7 +148,7 @@ extension ChatsTableViewController {
     let conversation = self.filtededConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
     
-    guard let index = self.conversations.index(where: { (conversation) -> Bool in
+		guard let index = self.conversations.firstIndex(where: { (conversation) -> Bool in
       return conversation.chatID == self.filtededConversations[indexPath.row].chatID
     }) else { return }
     
@@ -186,7 +186,7 @@ extension ChatsTableViewController {
     let conversation = self.filteredPinnedConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
     
-    guard let index = self.pinnedConversations.index(where: { (conversation) -> Bool in
+		guard let index = self.pinnedConversations.firstIndex(where: { (conversation) -> Bool in
       return conversation.chatID == self.filteredPinnedConversations[indexPath.row].chatID
     }) else { return }
     
@@ -210,7 +210,7 @@ extension ChatsTableViewController {
     let conversation = self.filtededConversations[indexPath.row]
     guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID  else { return }
     
-    guard let index = self.conversations.index(where: { (conversation) -> Bool in
+		guard let index = self.conversations.firstIndex(where: { (conversation) -> Bool in
       return conversation.chatID == self.filtededConversations[indexPath.row].chatID
     }) else { return }
     

@@ -25,7 +25,7 @@ extension ChatLogController: GroupMembersManagerDelegate {
   func addMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
     
-    if let _ = members.index(where: { (memberID) -> Bool in
+		if let _ = members.firstIndex(where: { (memberID) -> Bool in
       return memberID == id }) {
     } else {
       self.conversation?.chatParticipantsIDs?.append(id)
@@ -36,7 +36,7 @@ extension ChatLogController: GroupMembersManagerDelegate {
   func removeMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
     
-    guard let memberIndex = members.index(where: { (memberID) -> Bool in
+		guard let memberIndex = members.firstIndex(where: { (memberID) -> Bool in
       return memberID == id
     }) else { return }
     

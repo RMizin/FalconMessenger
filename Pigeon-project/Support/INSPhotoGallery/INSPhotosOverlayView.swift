@@ -162,12 +162,12 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
         addSubview(navigationBar)
       var topConstraint: NSLayoutConstraint!
       if #available(iOS 11.0, *) {
-         topConstraint = NSLayoutConstraint(item: navigationBar, attribute: .top, relatedBy: .equal, toItem: self.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0)
+				topConstraint = NSLayoutConstraint(item: navigationBar as Any, attribute: .top, relatedBy: .equal, toItem: self.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0)
       } else {
-         topConstraint = NSLayoutConstraint(item: navigationBar, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0)
+				topConstraint = NSLayoutConstraint(item: navigationBar as Any, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0)
       }
-        let widthConstraint = NSLayoutConstraint(item: navigationBar, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0, constant: 0.0)
-        let horizontalPositionConstraint = NSLayoutConstraint(item: navigationBar, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+			let widthConstraint = NSLayoutConstraint(item: navigationBar as Any, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0, constant: 0.0)
+			let horizontalPositionConstraint = NSLayoutConstraint(item: navigationBar as Any, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         self.addConstraints([topConstraint,widthConstraint,horizontalPositionConstraint])
         
         if let bundlePath = Bundle(for: type(of: self)).path(forResource: "INSPhotoGallery", ofType: "bundle") {
@@ -195,8 +195,8 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
       }
         
         let bottomConstraint = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: captionLabel, attribute: .bottom, multiplier: 1.0, constant: 8.0 + bottomSafeArea)
-        let leadingConstraint = NSLayoutConstraint(item: captionLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 15.0)
-        let trailingConstraint = NSLayoutConstraint(item: captionLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 8.0 + bottomSafeArea)
+			let leadingConstraint = NSLayoutConstraint(item: captionLabel as Any, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 15.0)
+			let trailingConstraint = NSLayoutConstraint(item: captionLabel as Any, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 8.0 + bottomSafeArea)
         self.addConstraints([bottomConstraint,leadingConstraint,trailingConstraint])
     }
     
@@ -244,8 +244,8 @@ open class INSPhotosOverlayView: UIView , INSPhotosOverlayViewable {
         let bottomConstraint = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: deleteToolbar, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         let trailingConstraint = NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: deleteToolbar, attribute: .trailing, multiplier: 1.0, constant: 0.0)
         
-        let widthConstraint = NSLayoutConstraint(item: deleteToolbar, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 65)
-        let heightConstraint = NSLayoutConstraint(item: deleteToolbar, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
+			let widthConstraint = NSLayoutConstraint(item: deleteToolbar as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 65)
+			let heightConstraint = NSLayoutConstraint(item: deleteToolbar as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
         self.addConstraints([bottomConstraint,trailingConstraint,widthConstraint, heightConstraint])
     }
 }

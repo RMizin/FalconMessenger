@@ -131,7 +131,7 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
                          "fileURL" : url] as [String: AnyObject]
         }
         
-        if let _ = self.inputContainerView?.selectedMedia.index(where: { (item) -> Bool in
+				if let _ = self.inputContainerView?.selectedMedia.firstIndex(where: { (item) -> Bool in
           return item.filename == filename
         }) {
           return
@@ -260,7 +260,7 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
                          "fileURL" : url] as [String: AnyObject]
         }
         
-        if let _ = self.inputContainerView?.selectedMedia.index(where: { (item) -> Bool in
+				if let _ = self.inputContainerView?.selectedMedia.firstIndex(where: { (item) -> Bool in
           return item.filename == filename
         }) {
           return
@@ -373,7 +373,7 @@ extension MediaPickerControllerNew: ImagePickerTrayControllerDelegate {
 
   func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset, at indexPath: IndexPath) {
     
-    guard let index = self.inputContainerView?.selectedMedia.index(where: { (item) -> Bool in
+		guard let index = self.inputContainerView?.selectedMedia.firstIndex(where: { (item) -> Bool in
       return item.filename == asset.originalFilename
     }) else {
       print("returning1")

@@ -75,7 +75,7 @@ extension ChatInputContainerView: UICollectionViewDataSource, UICollectionViewDe
   
   func deselectAsset(row: Int) {
     
-      let index = mediaPickerController!.assets.index(of: selectedMedia[row].phAsset!)
+		let index = mediaPickerController!.assets.firstIndex(of: selectedMedia[row].phAsset!)
     
       let indexPath = IndexPath(item: index!, section: 2)
     

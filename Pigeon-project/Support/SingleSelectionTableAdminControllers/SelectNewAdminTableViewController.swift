@@ -227,10 +227,10 @@ class SelectNewAdminTableViewController: UITableViewController {
   
   func deselectAll(indexPath:IndexPath) {
     for user in selectedFalconUsers {
-      if let filteredUsersIndex = filteredUsers.index(of: user) {
+			if let filteredUsersIndex = filteredUsers.firstIndex(of: user) {
         filteredUsers[filteredUsersIndex].isSelected = false
       }
-      if let usersIndex = users.index(of: user) {
+			if let usersIndex = users.firstIndex(of: user) {
         users[usersIndex].isSelected = false
       }
     }
@@ -242,11 +242,11 @@ class SelectNewAdminTableViewController: UITableViewController {
     
     let user = sections[indexPath.section][indexPath.row]
     
-    if let filteredUsersIndex = filteredUsers.index(of: user) {
+		if let filteredUsersIndex = filteredUsers.firstIndex(of: user) {
       filteredUsers[filteredUsersIndex].isSelected = true
     }
     
-    if let usersIndex = users.index(of: user) {
+		if let usersIndex = users.firstIndex(of: user) {
       users[usersIndex].isSelected = true
     }
     

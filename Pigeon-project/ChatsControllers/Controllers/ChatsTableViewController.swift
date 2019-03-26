@@ -361,7 +361,7 @@ extension ChatsTableViewController: DeleteAndExitDelegate {
   
   func conversationIndex(for conversationID: String, at section: Int) -> Int? {
     let conversationsArray = section == 0 ? filteredPinnedConversations : filtededConversations
-    guard let index = conversationsArray.index(where: { (conversation) -> Bool in
+		guard let index = conversationsArray.firstIndex(where: { (conversation) -> Bool in
       guard let chatID = conversation.chatID else { return false }
       return chatID == conversationID
     }) else { return nil }
@@ -434,18 +434,18 @@ extension ChatsTableViewController: ConversationUpdatesDelegate {
   func conversations(update conversation: Conversation, reloadNeeded: Bool) {
     let chatID = conversation.chatID ?? ""
     
-    if let index = conversations.index(where: {$0.chatID == chatID}) {
+		if let index = conversations.firstIndex(where: {$0.chatID == chatID}) {
       conversations[index] = conversation
     }
-    if let index = pinnedConversations.index(where: {$0.chatID == chatID}) {
+		if let index = pinnedConversations.firstIndex(where: {$0.chatID == chatID}) {
       pinnedConversations[index] = conversation
     }
-    if let index = filtededConversations.index(where: {$0.chatID == chatID}) {
+		if let index = filtededConversations.firstIndex(where: {$0.chatID == chatID}) {
       filtededConversations[index] = conversation
       let indexPath = IndexPath(row: index, section: 1)
       if reloadNeeded { updateCell(at: indexPath) }
     }
-    if let index = filteredPinnedConversations.index(where: {$0.chatID == chatID}) {
+		if let index = filteredPinnedConversations.firstIndex(where: {$0.chatID == chatID}) {
       filteredPinnedConversations[index] = conversation
       let indexPath = IndexPath(row: index, section: 0)
       if reloadNeeded { updateCell(at: indexPath) }

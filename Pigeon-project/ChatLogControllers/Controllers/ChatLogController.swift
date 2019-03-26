@@ -275,7 +275,7 @@ class ChatLogController: UICollectionViewController {
 
   func updateMessageStatusUI(sentMessage: Message) {
     DispatchQueue.global(qos: .default).async {
-      guard let index = self.messages.index(where: { (message) -> Bool in
+			guard let index = self.messages.firstIndex(where: { (message) -> Bool in
         return message.messageUID == sentMessage.messageUID
       }) else { return }
 

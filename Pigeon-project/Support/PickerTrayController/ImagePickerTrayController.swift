@@ -299,10 +299,14 @@ public class ImagePickerTrayController: UIViewController {
             break
           case .denied, .restricted, .notDetermined:
             basicErrorAlertWith(title: basicTitleForAccessError, message: cameraAccessDeniedMessage, controller: self)
-            return
-          }
+            break
+						@unknown default:
+							fatalError()
+					}
         }
-      }
+			@unknown default:
+				fatalError()
+			}
     }
 }
 

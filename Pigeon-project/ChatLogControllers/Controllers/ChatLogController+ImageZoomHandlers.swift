@@ -59,10 +59,10 @@ extension ChatLogController {
     var initialPhotoIndex: Int!
     
     if messages[indexPath.item].localImage != nil {
-      guard let initial = photos.index(where: {$0.image == messages[indexPath.item].localImage }) else { return }
+			guard let initial = photos.firstIndex(where: {$0.image == messages[indexPath.item].localImage }) else { return }
       initialPhotoIndex = initial
     } else {
-      guard let initial = photos.index(where: {$0.messageUID == messages[indexPath.item].messageUID }) else { return }
+			guard let initial = photos.firstIndex(where: {$0.messageUID == messages[indexPath.item].messageUID }) else { return }
       initialPhotoIndex = initial
     }
     
@@ -114,12 +114,12 @@ extension ChatLogController {
     }
     galleryPreview.referenceViewForPhotoWhenDismissingHandler = { photo in
       if photo.messageUID == nil {
-        guard let indexOfCellWithLocalImage = self.messages.index(where: {$0.localImage == photo.image}) else { return nil }
+				guard let indexOfCellWithLocalImage = self.messages.firstIndex(where: {$0.localImage == photo.image}) else { return nil }
         let indexPathOfCell = IndexPath(item: indexOfCellWithLocalImage, section: 0)
         guard let cellForDismiss = self.collectionView?.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else { return nil }
         return cellForDismiss.messageImageView
       } else {
-        guard let indexOfCell = self.messages.index(where: {$0.messageUID == photo.messageUID}) else { return nil }
+				guard let indexOfCell = self.messages.firstIndex(where: {$0.messageUID == photo.messageUID}) else { return nil }
         let indexPathOfCell = IndexPath(item: indexOfCell, section: 0)
         guard let cellForDismiss = self.collectionView?.cellForItem(at: indexPathOfCell) as? BaseMediaMessageCell else { return nil }
         return cellForDismiss.messageImageView

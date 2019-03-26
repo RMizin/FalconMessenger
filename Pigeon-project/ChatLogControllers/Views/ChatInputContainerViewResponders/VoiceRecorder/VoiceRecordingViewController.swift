@@ -387,6 +387,8 @@ class VoiceRecordingViewController: UIViewController {
 					print("NoSuitableRouteForCategory")
 				case AVAudioSession.RouteChangeReason.routeConfigurationChange:
 					print("RouteConfigurationChange")
+				@unknown default:
+					fatalError()
 				}
 			}
 		}
@@ -496,8 +498,8 @@ extension VoiceRecordingViewController: AVAudioRecorderDelegate {
     do {
       soundData = try Data(contentsOf: soundFileURL)
         stackOverflowAnswer(data: soundData)
-      let mediaObject = ["audioObject": soundData ,
-                         "fileURL" : soundFileURL] as [String: AnyObject]
+			let mediaObject = ["audioObject": soundData as Any,
+												 "fileURL" : soundFileURL as Any] as [String: AnyObject]
       self.inputContainerView?.selectedMedia.append(MediaObject(dictionary: mediaObject))
       soundData = nil
       if self.inputContainerView!.selectedMedia.count - 1 >= 0 {

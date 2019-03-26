@@ -125,10 +125,8 @@ extension TransitionController: UIGestureRecognizerDelegate {
 }
 
 fileprivate extension UIPanGestureRecognizer {
-    
-    fileprivate func cancel() {
-        isEnabled = false
-        isEnabled = true
-    }
-    
+	func cancel() {
+		isEnabled = false
+		isEnabled = true
+	}
 }

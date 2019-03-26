@@ -216,7 +216,7 @@ extension Array {
 extension Collection {
   func insertionIndex(of element: Self.Iterator.Element,
                       using areInIncreasingOrder: (Self.Iterator.Element, Self.Iterator.Element) -> Bool) -> Index {
-    return index(where: { !areInIncreasingOrder($0, element) }) ?? endIndex
+		return firstIndex(where: { !areInIncreasingOrder($0, element) }) ?? endIndex
   }
 }
 
@@ -418,7 +418,9 @@ func libraryAccessChecking() -> Bool {
 
   case .notDetermined:
     return false
-  }
+	@unknown default:
+		fatalError()
+	}
 }
 
 public let statusOnline = "Online"

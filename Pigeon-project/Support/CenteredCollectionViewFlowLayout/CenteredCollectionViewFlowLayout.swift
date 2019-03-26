@@ -8,13 +8,13 @@
 
 import UIKit
 
-public extension UICollectionView {
+extension UICollectionView {
 	/// A convenient way to create a UICollectionView and configue it with a CenteredCollectionViewFlowLayout.
 	///
 	/// - Parameters:
 	///   - frame: The frame rectangle for the collection view, measured in points. The origin of the frame is relative to the superview in which you plan to add it. This frame is passed to the superclass during initialization.
 	///   - centeredCollectionViewFlowLayout: The `CenteredCollectionViewFlowLayout` for the `UICollectionView` to be configured with.
-	public convenience init(frame: CGRect = .zero, centeredCollectionViewFlowLayout: CenteredCollectionViewFlowLayout) {
+	convenience init(frame: CGRect = .zero, centeredCollectionViewFlowLayout: CenteredCollectionViewFlowLayout) {
 		self.init(frame: frame, collectionViewLayout: centeredCollectionViewFlowLayout)
 		decelerationRate = UIScrollView.DecelerationRate.fast
 	}
@@ -61,6 +61,8 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 				inset = 5//(collectionView.bounds.size.height - itemSize.height) / 2
 				collectionView.contentInset = UIEdgeInsets(top: inset, left: 0, bottom: inset, right: 0)
 				collectionView.contentOffset = CGPoint(x: 0, y: -inset)
+			@unknown default:
+				fatalError()
 			}
 			lastCollectionViewSize = currentCollectionViewSize
 			lastScrollDirection = scrollDirection
@@ -75,6 +77,8 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 			origin = CGPoint(x: proposedContentOffset.x, y: 0)
 		case .vertical:
 			origin = CGPoint(x: 0, y: proposedContentOffset.y)
+		@unknown default:
+			fatalError()
 		}
 		return CGRect(origin: origin, size: size)
 	}
@@ -93,6 +97,8 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 			proposedCenterOffset = proposedContentOffset.x + collectionView.bounds.size.width / 2
 		case .vertical:
 			proposedCenterOffset = proposedContentOffset.y + collectionView.bounds.size.height / 2
+		@unknown default:
+			fatalError()
 		}
 		
 		for attributes: UICollectionViewLayoutAttributes in layoutAttributes {
@@ -111,6 +117,8 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 				if abs(attributes.center.y - proposedCenterOffset) < abs(candidateAttributes!.center.y - proposedCenterOffset) {
 					candidateAttributes = attributes
 				}
+			@unknown default:
+				fatalError()
 			}
 		}
 		return candidateAttributes
@@ -151,6 +159,8 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 				newOffset += velocity.y > 0 ? pageHeight : -pageHeight
 			}
 			return CGPoint(x: proposedContentOffset.x, y: newOffset)
+		@unknown default:
+			fatalError()
 		}
 	}
 	
@@ -160,6 +170,8 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 			return itemSize.width + minimumLineSpacing
 		case .vertical:
 			return itemSize.height + minimumLineSpacing
+		@unknown default:
+			fatalError()
 		}
 	}
 	
@@ -183,6 +195,8 @@ open class CenteredCollectionViewFlowLayout: UICollectionViewFlowLayout {
 			pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.top
 			proposedContentOffset = CGPoint(x: 0, y: pageOffset)
 			shouldAnimate = abs(collectionView.contentOffset.y - pageOffset) > 1 ? animated : false
+		@unknown default:
+			fatalError()
 		}
 		collectionView.setContentOffset(proposedContentOffset, animated: shouldAnimate)
 	}

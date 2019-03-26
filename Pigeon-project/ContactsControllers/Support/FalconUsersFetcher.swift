@@ -106,7 +106,7 @@ class FalconUsersFetcher: NSObject {
           if let thumbnailURLString = User(dictionary: dictionary).thumbnailPhotoURL, let thumbnailURL = URL(string: thumbnailURLString) {
             SDWebImagePrefetcher.shared.prefetchURLs([thumbnailURL])
           }
-          if let index = self.users.index(where: { (user) -> Bool in
+					if let index = self.users.firstIndex(where: { (user) -> Bool in
             return user.id == User(dictionary: dictionary).id
           }) {
             self.users[index] = User(dictionary: dictionary)
@@ -117,7 +117,7 @@ class FalconUsersFetcher: NSObject {
           self.users = self.sortUsers(users: self.users)
           self.users = self.rearrangeUsers(users: self.users)
           
-          if let index = self.users.index(where: { (user) -> Bool in
+					if let index = self.users.firstIndex(where: { (user) -> Bool in
             return user.id == Auth.auth().currentUser?.uid
           }) {
             self.users.remove(at: index)

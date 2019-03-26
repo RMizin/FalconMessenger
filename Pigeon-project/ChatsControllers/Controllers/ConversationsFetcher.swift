@@ -97,7 +97,7 @@ import SDWebImage
       currentUserConversationsRemovingHandle = currentUserConversationsReference.observe(.childRemoved) { (snapshot) in
         let chatID = snapshot.key
         if self.userReference != nil {
-          guard let index = self.conversationsChangesHandle.index(where: { (element) -> Bool in
+					guard let index = self.conversationsChangesHandle.firstIndex(where: { (element) -> Bool in
             return element.chatID == chatID
           }) else { return }
           self.userReference = Database.database().reference().child("users").child(self.conversationsChangesHandle[index].chatID)
@@ -106,7 +106,7 @@ import SDWebImage
         }
         
         if self.groupChatReference != nil {
-          guard let index = self.groupConversationsChangesHandle.index(where: { (element) -> Bool in
+					guard let index = self.groupConversationsChangesHandle.firstIndex(where: { (element) -> Bool in
             return element.chatID == chatID
           }) else { return }
           self.groupChatReference = Database.database().reference().child("groupChats").child(self.groupConversationsChangesHandle[index].chatID).child(messageMetaDataFirebaseFolder)
@@ -211,7 +211,7 @@ import SDWebImage
     fileprivate func updateConversationArrays(with conversation: Conversation) {
       guard let userID = conversation.chatID else { return }
       
-      if let index = conversations.index(where: { (conversation) -> Bool in
+			if let index = conversations.firstIndex(where: { (conversation) -> Bool in
         return conversation.chatID == userID
       }) {
         update(conversation: conversation, at: index)
@@ -282,7 +282,7 @@ import SDWebImage
                                                conversationNameKey: String, conversationPhotoKey: String,
                                                chatID: String, membersIDsKey: String?, adminKey: String?) {
       
-      guard let index = conversations.index(where: { (conversation) -> Bool in
+			guard let index = conversations.firstIndex(where: { (conversation) -> Bool in
         return conversation.chatID == chatID
       }) else { return }
       
