@@ -57,13 +57,13 @@ class SharedMedia: Object {
 	}
 
 	static func get(indexPathOf message: INSPhotoViewable, in groupedArray: [[SharedMedia]]) -> IndexPath? {
-		guard let section = groupedArray.index(where: { (messages) -> Bool in
+		guard let section = groupedArray.firstIndex(where: { (messages) -> Bool in
 			for message1 in messages where message1.id == message.messageUID {
 				return true
 			}; return false
 		}) else { return nil }
 
-		guard let row = groupedArray[section].index(where: { (message1) -> Bool in
+		guard let row = groupedArray[section].firstIndex(where: { (message1) -> Bool in
 			return message1.id == message.messageUID
 		}) else { return IndexPath(row: -1, section: section) }
 

@@ -30,7 +30,7 @@ class UIIncrementSlider: UISlider {
 	}
 
 	fileprivate func setupCurrentValue(_ value: Float, in array: [Float]) {
-		let currentIndex = array.index { (item) -> Bool in
+		let currentIndex = array.firstIndex { (item) -> Bool in
 			return item == value
 		}
 		setValue(Float(currentIndex ?? 0), animated: false)

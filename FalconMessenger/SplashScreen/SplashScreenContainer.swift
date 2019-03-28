@@ -48,7 +48,9 @@ class SplashScreenContainer: UIView {
         return .touch
       case .faceID:
         return .face
-      }
+			@unknown default:
+				fatalError()
+			}
     } else {
       return authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) ? .touch : .none
     }

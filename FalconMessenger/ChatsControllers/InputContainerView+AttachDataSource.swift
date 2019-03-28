@@ -51,7 +51,7 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
   func deselectAsset(row: Int) {
 		guard let picker = mediaPickerController,
 			let asset = attachedMedia[row].phAsset,
-			let index = picker.assets.index(of: asset) else { return }
+			let index = picker.assets.firstIndex(of: asset) else { return }
 
 		let indexPath = IndexPath(item: index, section: ImagePickerTrayController.librarySectionIndex)
 		picker.collectionView.deselectItem(at: indexPath, animated: true)

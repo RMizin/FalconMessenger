@@ -20,7 +20,7 @@ extension ChatsTableViewController: TypingIndicatorDelegate {
   typealias typingUpdateCompletionHandler = (_ isCompleted: Bool, _ updatedConversations: Results<Conversation>, _ row: Int?) -> Void
   
   func update(_ conversations: Results<Conversation>, at chatID: String, with typingStatus: Bool, completion: typingUpdateCompletionHandler) {
-    guard let index = conversations.index(where: { (conversation) -> Bool in
+		guard let index = conversations.firstIndex(where: { (conversation) -> Bool in
       return conversation.chatID == chatID
     }) else {
       completion(false, conversations, nil)

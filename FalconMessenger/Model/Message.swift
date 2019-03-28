@@ -121,13 +121,13 @@ class Message: Object {
     }
 
 	static func get(indexPathOf message: Message, in groupedArray: [MessageSection]) -> IndexPath? {
-		guard let section = groupedArray.index(where: { (messages) -> Bool in
+		guard let section = groupedArray.firstIndex(where: { (messages) -> Bool in
 			for message1 in messages.messages where message1.messageUID == message.messageUID {
 				return true
 			}; return false
 		}) else { return nil }
 
-		guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
+		guard let row = groupedArray[section].messages.firstIndex(where: { (message1) -> Bool in
 			return message1.messageUID == message.messageUID
 		}) else { return nil }
 
@@ -137,13 +137,13 @@ class Message: Object {
   static func get(indexPathOf messageUID: String? = nil , localPhoto: UIImage? = nil, in groupedArray: [MessageSection]?) -> IndexPath? {
 		guard let groupedArray = groupedArray else { return nil }
     if messageUID != nil {
-      guard let section = groupedArray.index(where: { (messages) -> Bool in
+			guard let section = groupedArray.firstIndex(where: { (messages) -> Bool in
         for message1 in messages.messages where message1.messageUID == messageUID {
           return true
         }; return false
       }) else { return nil }
 
-      guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
+			guard let row = groupedArray[section].messages.firstIndex(where: { (message1) -> Bool in
         return message1.messageUID == messageUID
       }) else { return nil }
 
@@ -151,13 +151,13 @@ class Message: Object {
 
     } else if localPhoto != nil {
 
-      guard let section = groupedArray.index(where: { (messages) -> Bool in
+			guard let section = groupedArray.firstIndex(where: { (messages) -> Bool in
         for message1 in messages.messages where message1.localImage == localPhoto {
           return true
         }; return false
       }) else { return nil }
 
-      guard let row = groupedArray[section].messages.index(where: { (message1) -> Bool in
+			guard let row = groupedArray[section].messages.firstIndex(where: { (message1) -> Bool in
         return message1.localImage == localPhoto
       }) else { return nil }
 

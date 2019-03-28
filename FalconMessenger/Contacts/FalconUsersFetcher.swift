@@ -107,7 +107,7 @@ class FalconUsersFetcher: NSObject {
       guard let dictionary = snapshot.childSnapshot(forPath: "falconUsers").value as? [String: String] else { return }
       var falconUsersIDs = Array(dictionary.values)
 
-      if let index = falconUsersIDs.index(of: currentUserID) {
+			if let index = falconUsersIDs.firstIndex(of: currentUserID) {
         falconUsersIDs.remove(at: index)
       }
       self.loadData(for: falconUsersIDs)
@@ -141,7 +141,7 @@ class FalconUsersFetcher: NSObject {
           SDWebImagePrefetcher.shared.prefetchURLs([url])
         }
 
-        if let index = self.falconUsers.index(where: { (user) -> Bool in
+				if let index = self.falconUsers.firstIndex(where: { (user) -> Bool in
           return user.id == falconUser.id
         }) {
           self.falconUsers[index] = falconUser
@@ -167,7 +167,7 @@ class FalconUsersFetcher: NSObject {
     for element in falconUsersHandle {
       falconUsersReference = Database.database().reference().child("users").child(element.userID)
       falconUsersReference.removeObserver(withHandle: element.handle)
-      guard let index = falconUsersHandle.index(where: { (element1) -> Bool in
+			guard let index = falconUsersHandle.firstIndex(where: { (element1) -> Bool in
         return element.userID == element1.userID
       }) else { return }
       guard falconUsersHandle.indices.contains(index) else { return }

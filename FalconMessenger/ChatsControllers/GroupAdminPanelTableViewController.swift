@@ -214,7 +214,7 @@ class GroupAdminPanelTableViewController: UITableViewController {
       
         let user = User(dictionary: dictionary)
 				UIView.performWithoutAnimation {
-					if let userIndex = self.members.index(where: { (member) -> Bool in
+					if let userIndex = self.members.firstIndex(where: { (member) -> Bool in
 						return member.id == snapshot.key }) {
 						 self.tableView.beginUpdates()
 						self.members[userIndex] = user
@@ -237,7 +237,7 @@ class GroupAdminPanelTableViewController: UITableViewController {
     membersRemovingHandle = membersAddingReference.observe(.childRemoved) { (snapshot) in
       guard let id = snapshot.value as? String else { return }
       
-      guard let memberIndex = self.members.index(where: { (member) -> Bool in
+			guard let memberIndex = self.members.firstIndex(where: { (member) -> Bool in
         return member.id == id
       }) else { return }
       
@@ -428,7 +428,7 @@ class GroupAdminPanelTableViewController: UITableViewController {
     let membersWithNoAdmin = members.filter { (member) -> Bool in
       return member.id ?? "" != uid
     }
-    guard let index = members.index(where: { (user) -> Bool in
+		guard let index = members.firstIndex(where: { (user) -> Bool in
       return user.id == uid
     }), let currentUserName = members[index].name else { return }
 
@@ -451,7 +451,7 @@ class GroupAdminPanelTableViewController: UITableViewController {
   func leaveTheGroup() {
     ARSLineProgress.ars_showOnView(self.view)
     guard let uid = Auth.auth().currentUser?.uid else { return }
-    guard let index = members.index(where: { (user) -> Bool in
+		guard let index = members.firstIndex(where: { (user) -> Bool in
       return user.id == uid
     }) else { return }
     guard let memberName = members[index].name else { return }

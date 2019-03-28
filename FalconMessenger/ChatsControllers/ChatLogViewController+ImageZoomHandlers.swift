@@ -54,7 +54,7 @@ extension ChatLogViewController {
     var photos: [INSPhotoViewable] = setupPhotosData()
     var initialPhotoIndex: Int!
 
-		guard let initial = photos.index(where: {$0.messageUID == groupedMessages[indexPath.section].messages[indexPath.row].messageUID }) else { return nil }
+		guard let initial = photos.firstIndex(where: {$0.messageUID == groupedMessages[indexPath.section].messages[indexPath.row].messageUID }) else { return nil }
 		initialPhotoIndex = initial
 
     guard let cell = collectionView.cellForItem(at: indexPath) as? BaseMediaMessageCell else { return nil }

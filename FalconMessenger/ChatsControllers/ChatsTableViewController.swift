@@ -431,7 +431,7 @@ extension ChatsTableViewController: DeleteAndExitDelegate {
   
   func conversationIndex(for conversationID: String, at section: Int) -> Int? {
     let conversationsArray = section == 0 ? realmPinnedConversations : realmUnpinnedConversations
-		guard let index = conversationsArray?.index(where: { (conversation) -> Bool in
+		guard let index = conversationsArray?.firstIndex(where: { (conversation) -> Bool in
       guard let chatID = conversation.chatID else { return false }
       return chatID == conversationID
     }) else { return nil }

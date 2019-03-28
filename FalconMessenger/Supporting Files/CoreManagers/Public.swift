@@ -243,7 +243,7 @@ extension Array {
 extension Collection {
   func insertionIndex(of element: Self.Iterator.Element,
                       using areInIncreasingOrder: (Self.Iterator.Element, Self.Iterator.Element) -> Bool) -> Index {
-    return index(where: { !areInIncreasingOrder($0, element) }) ?? endIndex
+		return firstIndex(where: { !areInIncreasingOrder($0, element) }) ?? endIndex
   }
 }
 
@@ -502,7 +502,9 @@ func libraryAccessChecking() -> Bool {
     
   case .notDetermined:
     return false
-  }
+	@unknown default:
+		fatalError()
+	}
 }
 
 public let statusOnline = "Online"
@@ -618,7 +620,7 @@ extension Double {
 
 extension Array where Element: Equatable {
   mutating func move(_ element: Element, to newIndex: Index) {
-    if let oldIndex: Int = self.index(of: element) { self.move(from: oldIndex, to: newIndex) }
+		if let oldIndex: Int = self.firstIndex(of: element) { self.move(from: oldIndex, to: newIndex) }
   }
 }
 

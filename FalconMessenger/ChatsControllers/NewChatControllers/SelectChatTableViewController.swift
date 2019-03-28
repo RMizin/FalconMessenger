@@ -109,7 +109,9 @@ class SelectChatTableViewController: UITableViewController {
     case .authorized:
       viewPlaceholder.remove(from: self.view, priority: .high)
       return true
-    }
+		@unknown default:
+			fatalError()
+		}
   }
 
   func checkNumberOfContacts() {

@@ -205,7 +205,9 @@ public class InAppNotificationDispatcher {
             return CGAffineTransform.identity
         case .unknown:
             return CGAffineTransform(rotationAngle: CGFloat(0).degreesToRadians)
-        }
+				@unknown default:
+					fatalError()
+			}
     }
     
     private func windowFrame(for orientation: UIInterfaceOrientation, in userInterfaceIdiom: UIUserInterfaceIdiom) -> CGRect {
@@ -225,7 +227,9 @@ public class InAppNotificationDispatcher {
             return CGRect(x: 0, y: InAppNotificationBanner.top, width: UIScreen.main.bounds.size.width, height: InAppNotificationBanner.height)
         case .unknown:
             return CGRect(x: 0, y: InAppNotificationBanner.top, width: UIScreen.main.bounds.size.width, height: InAppNotificationBanner.height)
-        }
+				@unknown default:
+					fatalError()
+			}
     }
     
     // MARK: - UI Interactions

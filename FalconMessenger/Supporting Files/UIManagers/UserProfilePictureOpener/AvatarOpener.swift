@@ -191,10 +191,13 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
               break
             case .denied, .restricted, .notDetermined:
               basicErrorAlertWith(title: basicTitleForAccessError, message: photoLibraryAccessDeniedMessageProfilePicture, controller: controller)
-              return
-          }
+							@unknown default:
+								fatalError()
+					}
         }
-      }
+		@unknown default:
+			fatalError()
+		}
   }
 
  private func openCamera() {
@@ -225,7 +228,9 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
               return
           }
         }
-    }
+		@unknown default:
+			fatalError()
+	}
   }
   
   private func presentGallery() {

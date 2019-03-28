@@ -198,7 +198,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		guard let cell = collectionView.cellForItem(at: indexPath) as? SharedMediaCell else { return }
 		guard cell.sharedPhotoImageView.image != UIImage(named: "imagePlaceholder") else { return }
 		let currentElement = sharedMedia[indexPath.section][indexPath.row]
-		guard let initialPhotoIndex = viewable.index(where: {$0.messageUID == currentElement.id }) else { return }
+		guard let initialPhotoIndex = viewable.firstIndex(where: {$0.messageUID == currentElement.id }) else { return }
 		let currentPhoto = viewable[initialPhotoIndex]
 		let galleryPreview = INSPhotosViewController(photos: viewable,
 																								 initialPhoto: currentPhoto,

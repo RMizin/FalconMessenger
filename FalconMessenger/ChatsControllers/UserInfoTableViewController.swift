@@ -64,7 +64,7 @@ class UserInfoTableViewController: UITableViewController {
   
   deinit {
     print("user info deinit")
-    NotificationCenter.default.removeObserver(observer)
+		NotificationCenter.default.removeObserver(observer as Any)
   }
   
   fileprivate func addObservers() {

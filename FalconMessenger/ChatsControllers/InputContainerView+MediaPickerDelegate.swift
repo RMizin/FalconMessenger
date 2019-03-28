@@ -22,7 +22,7 @@ extension InputContainerView: MediaPickerDelegate {
   }
   
   func didSelectMediaNameSensitive(mediaObject: MediaObject) {
-    if let _ = attachedMedia.index(where: { (item) -> Bool in
+		if let _ = attachedMedia.firstIndex(where: { (item) -> Bool in
       return item.filename == mediaObject.filename!
     }) {
       return
@@ -54,7 +54,7 @@ extension InputContainerView: MediaPickerDelegate {
   }
   
   func didDeselectMedia(asset: PHAsset) {
-    guard let index = attachedMedia.index(where: { (item) -> Bool in
+		guard let index = attachedMedia.firstIndex(where: { (item) -> Bool in
       return item.filename == asset.originalFilename
     }) else {
       print("returning1")
@@ -105,8 +105,12 @@ extension InputContainerView: MediaPickerDelegate {
 
         case .denied, .restricted, .notDetermined:
           break
-        }
+				@unknown default:
+					fatalError()
+				}
       }
-    }
+		@unknown default:
+			fatalError()
+		}
   }
 }

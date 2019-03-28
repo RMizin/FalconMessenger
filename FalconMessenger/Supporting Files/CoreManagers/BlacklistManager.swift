@@ -70,7 +70,7 @@ final class BlacklistManager: NSObject {
 	func removeBannedUsers(users: [User]) -> [User] {
 		var users = users
 		blockedUsersByCurrentUser.forEach { (blockedUID) in
-			guard let index = users.index(where: { (user) -> Bool in
+			guard let index = users.firstIndex(where: { (user) -> Bool in
 				return user.id == blockedUID
 			}) else { return }
 			users.remove(at: index)

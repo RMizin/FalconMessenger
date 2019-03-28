@@ -23,7 +23,7 @@ extension Array where Element: UploadProgress {
   mutating func setProgress(_ progress: Double, id: String) {
     var array = self as [UploadProgress]
     
-    guard let index = array.index(where: { (element) -> Bool in
+		guard let index = array.firstIndex(where: { (element) -> Bool in
       return element.objectID == id
     }) else {
       let element = UploadProgress(objectID: id, progress: progress)

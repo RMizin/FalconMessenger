@@ -90,7 +90,7 @@ class ActionCell: UICollectionViewCell {
   }
   
   @objc fileprivate func callAction(sender: UIButton) {
-    guard let index = stackView.arrangedSubviews.index(of: sender) else { return }
+		guard let index = stackView.arrangedSubviews.firstIndex(of: sender) else { return }
     
     switch index {
     case 0: /* camera */

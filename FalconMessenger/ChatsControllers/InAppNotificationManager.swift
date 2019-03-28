@@ -76,7 +76,7 @@ class InAppNotificationManager: NSObject {
       if UIApplication.topViewController() is ChatLogViewController { return }
     }
    
-    if let index = conversations.index(where: { (conv) -> Bool in
+		if let index = conversations.firstIndex(where: { (conv) -> Bool in
       return conv.chatID == conversation.chatID
     }) {
       let isGroupChat = conversations[index].isGroupChat.value ?? false

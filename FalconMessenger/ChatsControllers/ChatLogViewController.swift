@@ -822,7 +822,7 @@ class ChatLogViewController: UIViewController {
       return
     }
 
-    guard let index = RealmKeychain.realmUsersArray().index(where: { (user) -> Bool in
+		guard let index = RealmKeychain.realmUsersArray().firstIndex(where: { (user) -> Bool in
       return user.id == conversation?.chatID
     }) else { return }
 

@@ -34,7 +34,7 @@ public struct INSPhotosDataSource {
     }
     
     public func indexOfPhoto(_ photo: INSPhotoViewable) -> Int? {
-        return photos.index(where: { $0 === photo})
+			return photos.firstIndex(where: { $0 === photo})
     }
 
     public func containsPhoto(_ photo: INSPhotoViewable) -> Bool {

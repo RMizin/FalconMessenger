@@ -70,7 +70,7 @@ class TypingIndicatorManager: NSObject {
     guard let currentUserID = Auth.auth().currentUser?.uid else { return }
     
     if typingIndicatorReference != nil {
-      guard let index = typingChangesHandle.index(where: { (element) -> Bool in
+			guard let index = typingChangesHandle.firstIndex(where: { (element) -> Bool in
         return element.chatID == removedChatID
       }) else { return }
   
@@ -81,7 +81,7 @@ class TypingIndicatorManager: NSObject {
     }
     
     if groupTypingIndicatorReference != nil {
-      guard let index = groupTypingChangesHandle.index(where: { (element) -> Bool in
+			guard let index = groupTypingChangesHandle.firstIndex(where: { (element) -> Bool in
         return element.chatID == removedChatID
       }) else { return }
    

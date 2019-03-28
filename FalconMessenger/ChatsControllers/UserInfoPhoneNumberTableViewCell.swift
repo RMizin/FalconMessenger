@@ -23,7 +23,9 @@ extension UIViewController: CNContactViewControllerDelegate {
 
     case .authorized:
       return true
-    }
+		@unknown default:
+			fatalError()
+		}
   }
   
   func addPhoneNumber(phone : String , name: String, surname: String) {

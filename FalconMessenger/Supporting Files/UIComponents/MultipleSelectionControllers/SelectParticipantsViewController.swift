@@ -255,11 +255,11 @@ class SelectParticipantsViewController: UIViewController {
     
     let user = filteredUsersWithSection[indexPath.section][indexPath.row]
     
-    if let filteredUsersIndex = filteredUsers.index(of: user) {
+		if let filteredUsersIndex = filteredUsers.firstIndex(of: user) {
       filteredUsers[filteredUsersIndex].isSelected = true
     }
     
-    if let usersIndex = users.index(of: user) {
+		if let usersIndex = users.firstIndex(of: user) {
       users[usersIndex].isSelected = true
     }
     
@@ -276,15 +276,15 @@ class SelectParticipantsViewController: UIViewController {
     
     let user = filteredUsersWithSection[indexPath.section][indexPath.row]
     
-    if let findex = filteredUsers.index(of: user) {
+		if let findex = filteredUsers.firstIndex(of: user) {
       filteredUsers[findex].isSelected = false
     }
     
-    if let index = users.index(of: user) {
+		if let index = users.firstIndex(of: user) {
       users[index].isSelected = false
     }
     
-    if let selectedFalconUserIndexInCollectionView = selectedFalconUsers.index(of: user) {
+		if let selectedFalconUserIndexInCollectionView = selectedFalconUsers.firstIndex(of: user) {
       selectedFalconUsers[selectedFalconUserIndexInCollectionView].isSelected = false
       selectedFalconUsers.remove(at: selectedFalconUserIndexInCollectionView)
       DispatchQueue.main.async {

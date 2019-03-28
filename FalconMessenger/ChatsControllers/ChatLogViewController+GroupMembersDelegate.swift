@@ -29,7 +29,7 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
   
   func addMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
-    if let _ = members.index(where: { (memberID) -> Bool in
+		if let _ = members.firstIndex(where: { (memberID) -> Bool in
       return memberID == id }) {
     } else {
 
@@ -43,7 +43,7 @@ extension ChatLogViewController: GroupMembersManagerDelegate {
   
   func removeMember(id: String) {
     guard let members = self.conversation?.chatParticipantsIDs else { return }
-    guard let memberIndex = members.index(where: { (memberID) -> Bool in
+		guard let memberIndex = members.firstIndex(where: { (memberID) -> Bool in
       return memberID == id
     }) else { return }
 

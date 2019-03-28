@@ -90,19 +90,19 @@ class CountriesTableViewController: UITableViewController {
     let cell = tableView.cellForRow(at: indexPath) as? CountriesTableViewCell ?? CountriesTableViewCell()
     cell.accessoryType = isSelected ? .checkmark : .none
 
-    if let index = countries.index(where: { (item) -> Bool in
+		if let index = countries.firstIndex(where: { (item) -> Bool in
       return item.name == country.name }) {
       countries[index].isSelected = isSelected
     }
 
-    if let index = filteredCountries.index(where: { (item) -> Bool in
+		if let index = filteredCountries.firstIndex(where: { (item) -> Bool in
       return item.name == country.name }) {
       filteredCountries[index].isSelected = isSelected
     }
   }
 
   fileprivate func selectCurrentCountry(with name: String, countries: [Country]) {
-    if let index = countries.index(where: { (item) -> Bool in
+		if let index = countries.firstIndex(where: { (item) -> Bool in
       return item.name == name }) {
       countries[index].isSelected = true
     }

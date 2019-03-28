@@ -123,7 +123,7 @@ extension MediaPickerControllerNew {
         //  }
         }
     
-        guard let indexForSelection = self.assets.index(where: { (phAsset) -> Bool in
+				guard let indexForSelection = self.assets.firstIndex(where: { (phAsset) -> Bool in
           return phAsset == asset
         }) else {
           print("you selected image which is not in preview, processing...")
