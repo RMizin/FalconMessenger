@@ -20,19 +20,9 @@ class UIIncrementSliderView: UIView {
 		return slider
 	}()
 
-	fileprivate let title: UILabel = {
-		let title = UILabel()
-		title.text = "Text size"
-		title.sizeToFit()
-		title.textColor = ThemeManager.currentTheme().generalTitleColor
-		title.font = UIFont.boldSystemFont(ofSize: title.font.pointSize)
-		title.translatesAutoresizingMaskIntoConstraints = false
-		return title
-	}()
-
 	fileprivate let minimumValueImage: UIImageView = {
 		let minimumValueImage = UIImageView()
-		minimumValueImage.image =  UIImage(named: "FontMinIcon")?.withRenderingMode(.alwaysTemplate)
+		minimumValueImage.image = UIImage(named: "FontMinIcon")?.withRenderingMode(.alwaysTemplate)
 		minimumValueImage.tintColor = ThemeManager.currentTheme().generalTitleColor
 		minimumValueImage.translatesAutoresizingMaskIntoConstraints = false
 		return minimumValueImage
@@ -48,33 +38,27 @@ class UIIncrementSliderView: UIView {
 
 	weak var delegate: UIIncrementSliderUpdateDelegate?
 
-
 	init(values: [Float], currentValue: Float? = 0) {
 		super.init(frame: .zero)
 		addSubview(slider)
 		addSubview(minimumValueImage)
 		addSubview(maximumValueImage)
-		addSubview(title)
 		NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
 
 		if #available(iOS 11.0, *) {
 			NSLayoutConstraint.activate([
-				title.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 30),
-				title.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 15),
 				minimumValueImage.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 15),
 				maximumValueImage.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -15)
 			])
 		} else {
 			NSLayoutConstraint.activate([
-				title.topAnchor.constraint(equalTo: topAnchor, constant: 15),
-				title.leftAnchor.constraint(equalTo: leftAnchor, constant: 15),
 				minimumValueImage.leftAnchor.constraint(equalTo: leftAnchor, constant: 15),
 				maximumValueImage.rightAnchor.constraint(equalTo: rightAnchor, constant: -15)
 			])
 		}
 
 		NSLayoutConstraint.activate([
-			slider.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10),
+			slider.topAnchor.constraint(equalTo: topAnchor),
 			slider.leftAnchor.constraint(equalTo: minimumValueImage.rightAnchor, constant: 10),
 			slider.rightAnchor.constraint(equalTo: maximumValueImage.leftAnchor, constant: -10),
 
@@ -90,7 +74,6 @@ class UIIncrementSliderView: UIView {
 		slider.initializeSlider(with: values, currentValue: currentValue ?? 0) { [weak self] actualValue in
 			self?.delegate?.incrementSliderDidUpdate(to: CGFloat(actualValue))
 		}
-		//slider.initializeSlider(with: values, currentValue: currentValue ?? 0)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -102,7 +85,6 @@ class UIIncrementSliderView: UIView {
 	}
 
 	@objc fileprivate func changeTheme() {
-		title.textColor = ThemeManager.currentTheme().generalTitleColor
 		minimumValueImage.tintColor = ThemeManager.currentTheme().generalTitleColor
 		maximumValueImage.tintColor = ThemeManager.currentTheme().generalTitleColor
 		slider.changeTheme()

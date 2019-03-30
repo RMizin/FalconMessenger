@@ -40,7 +40,7 @@ class PrivacyTableViewController: MenuControlsTableViewController {
 		if indexPath.section == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: controlButtonCellID,
 																							 for: indexPath) as? GroupAdminPanelTableViewCell ?? GroupAdminPanelTableViewCell()
-			cell.button.setTitle("Blocked Users", for: .normal)
+			cell.button.setTitle("Blacklist", for: .normal)
 			cell.button.addTarget(self, action: #selector(controlButtonClicked(_:)), for: .touchUpInside)
 			cell.selectionStyle = .none
 

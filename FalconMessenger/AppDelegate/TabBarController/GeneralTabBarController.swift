@@ -47,7 +47,6 @@ class GeneralTabBarController: UITabBarController {
 
   
   fileprivate func configureTabBar() {
-
 		UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().barTextColor],
 																										 for: .normal)
     tabBar.unselectedItemTintColor = ThemeManager.currentTheme().unselectedButtonTintColor
@@ -72,8 +71,7 @@ class GeneralTabBarController: UITabBarController {
     guard Auth.auth().currentUser == nil else { return }
     let destination = OnboardingController()
     let newNavigationController = UINavigationController(rootViewController: destination)
-    newNavigationController.navigationBar.shadowImage = UIImage()
-    newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+		newNavigationController.navigationBar.setValue(true, forKey: "hidesShadow")
     newNavigationController.modalTransitionStyle = .crossDissolve
   
     if DeviceType.isIPad {
@@ -96,12 +94,8 @@ class GeneralTabBarController: UITabBarController {
     let contactsNavigationController = UINavigationController(rootViewController: contactsController)
     let chatsNavigationController = UINavigationController(rootViewController: chatsController)
     let settingsNavigationController = UINavigationController(rootViewController: settingsController)
+		settingsNavigationController.navigationBar.setValue(true, forKey: "hidesShadow")
 
-		// move to change theme
-//		contactsNavigationController.navigationController?.navigationBar.tintColor = ThemeManager.currentTheme().barTintColor
-//		chatsNavigationController.navigationController?.navigationBar.tintColor = ThemeManager.currentTheme().barTintColor
-//		settingsNavigationController.navigationBar.tintColor = ThemeManager.currentTheme().barTintColor
-//
     if #available(iOS 11.0, *) {
       settingsNavigationController.navigationBar.prefersLargeTitles = true
       chatsNavigationController.navigationBar.prefersLargeTitles = true

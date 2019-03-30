@@ -13,7 +13,6 @@ final class AppearanceExampleMessagesFactory {
 
 	static func messages() -> [Message] {
 		guard let currentUID = Auth.auth().currentUser?.uid else { return [Message]() }
-
 		let messagesFetcher = MessagesFetcher()
 		let messageUID = "1"
 		let timestamp: Int64 = 1238924237489
@@ -34,7 +33,7 @@ final class AppearanceExampleMessagesFactory {
 																													"shortConvertedTimestamp": shortConvertedTimestamp,
 																													"estimatedFrameForText": outgoingRect,
 																													"landscapeEstimatedFrameForText": outgoingLRect]
-
+		
 		let incomingMessageText = "Falcon Messenger is a fast cloud-based messaging app."
 		let incomingRect = RealmCGRect(messagesFetcher.estimateFrameForText(incomingMessageText, orientation: .portrait), id: messageUID + "1")
 		let incomingLRect = RealmCGRect(messagesFetcher.estimateFrameForText(incomingMessageText, orientation: .landscapeLeft),

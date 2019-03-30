@@ -11,6 +11,9 @@ import UIKit
 class FalconTableViewController: UITableViewController {
 
 	fileprivate let falconNavigationItem = FalconNavigationItem()
+	override func viewDidLoad() {
+		navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+	}
 
 	override var navigationItem: FalconNavigationItem {
 		return falconNavigationItem

@@ -32,9 +32,7 @@ class AppearanceExampleCollectionView: ChatCollectionView, UICollectionViewDeleg
 
 	func updateTheme() {
 		messages = AppearanceExampleMessagesFactory.messages()
-		DispatchQueue.main.async { [weak self] in
-			self?.reloadData()
-		}
+		DispatchQueue.main.async { [weak self] in self?.reloadData() }
 	}
 
 	func fullContentSize() -> CGSize {
@@ -54,6 +52,9 @@ class AppearanceExampleCollectionView: ChatCollectionView, UICollectionViewDeleg
 
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 1
+	}
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+		return CGSize(width: frame.width, height: 25)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -76,10 +77,6 @@ class AppearanceExampleCollectionView: ChatCollectionView, UICollectionViewDeleg
 			cell.setupData(message: message, isGroupChat: false)
 			return cell
 		}
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-		return CGSize(width: frame.width, height: 30)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

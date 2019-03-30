@@ -24,6 +24,7 @@ class UIIncrementSlider: UISlider {
 		maximumTrackTintColor = ThemeManager.currentTheme().unselectedButtonTintColor
 		minimumTrackTintColor = ThemeManager.currentTheme().tintColor
 
+		thumbTintColor = ThemeManager.currentTheme().tintColor
 		addTarget(self, action: #selector(handleValueChange(sender:)), for: .valueChanged)
 		setupCurrentValue(currentValue, in: values)
 		setupDots(amount: values.count)
@@ -72,6 +73,9 @@ class UIIncrementSlider: UISlider {
 				subview.backgroundColor = minimumTrackTintColor
 			}
 		}
+		for state: UIControl.State in [.normal, .selected, .application, .reserved, .highlighted] {
+			setThumbImage(UIImage(named: "steppedSliderThumb")?.withRenderingMode(.alwaysTemplate), for: state)
+		}
 	}
 
 	@objc fileprivate func handleValueChange(sender: UISlider) {
@@ -103,6 +107,7 @@ class UIIncrementSlider: UISlider {
 		tintColor = ThemeManager.currentTheme().tintColor
 		maximumTrackTintColor = ThemeManager.currentTheme().unselectedButtonTintColor
 		minimumTrackTintColor = ThemeManager.currentTheme().tintColor
+		thumbTintColor = ThemeManager.currentTheme().tintColor
 		updateColors()
 	}
 }

@@ -30,20 +30,15 @@ enum DefaultMessageTextFontSize: Float {
 
 class AppearanceTableViewController: MenuControlsTableViewController {
 
-	let themesTitles = ["Default", "Dark", "Living Coral"]
-	let themes = [Theme.Default, Theme.Dark, Theme.LivingCoral]
-	let userDefaultsManager = UserDefaultsManager()
+	fileprivate let sectionTitles = ["Text size", "Preview", "Theme"]
+	fileprivate let themesTitles = ["Default", "Dark", "Living Coral"]
+	fileprivate let themes = [Theme.Default, Theme.Dark, Theme.LivingCoral]
+	fileprivate let userDefaultsManager = UserDefaultsManager()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationItem.title = "Appearance"
 		NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
-
-		let currentValue = userDefaultsManager.currentFloatObjectState(for: userDefaultsManager.chatLogDefaultFontSizeID)
-		let sliderView = UIIncrementSliderView(values: DefaultMessageTextFontSize.allFontSizes(), currentValue: currentValue)
-		sliderView.delegate = self
-		sliderView.frame.size.height = 120
-		tableView.tableHeaderView = sliderView
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 10.0
 	}
@@ -60,31 +55,29 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 	@objc fileprivate func changeTheme() {
 		view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
 		tableView.backgroundColor = view.backgroundColor
-
 		navigationItem.hidesBackButton = true
 		navigationItem.hidesBackButton = false
 		updateAppearanceExampleTheme()
 	}
 
 	fileprivate func updateAppearanceExampleTheme() {
-		if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? AppearanceExampleTableViewCell {
-			cell.appearanceExampleCollectionView.updateTheme()
-		}
-		DispatchQueue.main.async { [weak self] in
-			self?.tableView.reloadData()
-		}
+		guard let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? AppearanceExampleTableViewCell else { return }
+		cell.appearanceExampleCollectionView.updateTheme()
+		DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
 	}
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 2
+		return 3
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return section == 0 ? 1 : themes.count
+		return section == 0 ? 1 : section == 1 ? 1 : themes.count
 	}
 
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section == 0 {
+			return 32
+		} else if indexPath.section == 1 {
 			return UITableView.automaticDimension
 		} else {
 			return ControlButton.cellHeight
@@ -92,30 +85,37 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		if section == 0 { return "Preview" }
-		return "Theme"
+		return sectionTitles[section]
 	}
 
 	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if section == 0 { return 20 }
 		return 50
 	}
 
-	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		return 0
-	}
+//	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//		return section == 1 ? 40 : 0
+//	}
+//	override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+//		view.tintColor = .clear
+//	}
+//	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+//		return  section == 1 ? " " : ""
+//	}
 
 	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		view.tintColor = .clear
-
-		if let headerView = view as? UITableViewHeaderFooterView {
-			headerView.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-		}
+		view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
+		guard let headerView = view as? UITableViewHeaderFooterView else { return }
+		headerView.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-		guard indexPath.section == 1 else {
+		if indexPath.section == 0 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: appearanceTextSizeTableViewCellID,
+																							 for: indexPath) as? AppearanceTextSizeTableViewCell ?? AppearanceTextSizeTableViewCell()
+			cell.sliderView.delegate = self
+			return cell
+		} else if indexPath.section == 1 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: appearanceExampleTableViewCellID,
 																							 for: indexPath) as? AppearanceExampleTableViewCell ?? AppearanceExampleTableViewCell()
 			return cell
@@ -156,7 +156,6 @@ extension AppearanceTableViewController: UIIncrementSliderUpdateDelegate {
 				}
 			}
 		}
-
 		userDefaultsManager.updateObject(for: userDefaultsManager.chatLogDefaultFontSizeID, with: Float(value))
 		updateAppearanceExampleTheme()
 	}

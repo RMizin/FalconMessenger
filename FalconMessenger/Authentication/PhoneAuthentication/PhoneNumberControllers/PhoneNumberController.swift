@@ -10,12 +10,12 @@ import UIKit
 import Firebase
 import SafariServices
 import ARSLineProgress
+
 protocol VerificationDelegate: class {
   func verificationFinished(with success: Bool, error: String?)
 }
 
 class PhoneNumberController: UIViewController {
-
   let phoneNumberContainerView = PhoneNumberContainerView()
   weak var verificationDelegate: VerificationDelegate?
 
@@ -26,6 +26,7 @@ class PhoneNumberController: UIViewController {
       navigationItem.largeTitleDisplayMode = .automatic
       navigationController?.navigationBar.prefersLargeTitles = true
     }
+		navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     phoneNumberContainerView.termsAndPrivacy.delegate = self
 
     definesPresentationContext = true

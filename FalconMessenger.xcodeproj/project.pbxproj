@@ -149,6 +149,7 @@
 		4B9498741F3244CA008DA07F /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498731F3244CA008DA07F /* UserProfileController.swift */; };
 		4B9498781F324919008DA07F /* OnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9498771F324919008DA07F /* OnboardingController.swift */; };
 		4B94987D1F324ABE008DA07F /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */; };
+		4B9CBDD2224ED216004425B2 /* AppearanceTextSizeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CBDD1224ED216004425B2 /* AppearanceTextSizeTableViewCell.swift */; };
 		4BA60EB621AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA60EB521AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift */; };
 		4BA878A81FC8016300F9E3F0 /* CurrentUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */; };
 		4BAD9752206E3532008ADF6B /* SelectGroupMembersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD9751206E3532008ADF6B /* SelectGroupMembersController.swift */; };
@@ -400,6 +401,7 @@
 		4B9498731F3244CA008DA07F /* UserProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
 		4B9498771F324919008DA07F /* OnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingController.swift; sourceTree = "<group>"; };
 		4B94987C1F324ABE008DA07F /* OnboardingContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingContainerView.swift; sourceTree = "<group>"; };
+		4B9CBDD1224ED216004425B2 /* AppearanceTextSizeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceTextSizeTableViewCell.swift; sourceTree = "<group>"; };
 		4BA60EB521AFE0A100DE3035 /* SharedMediaHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharedMediaHistoryFetcher.swift; path = ChatsControllers/SharedMediaHistoryFetcher.swift; sourceTree = "<group>"; };
 		4BA878A71FC8016300F9E3F0 /* CurrentUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserTableViewCell.swift; sourceTree = "<group>"; };
 		4BAD9751206E3532008ADF6B /* SelectGroupMembersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectGroupMembersController.swift; path = ChatsControllers/NewChatControllers/SelectGroupMembersController.swift; sourceTree = "<group>"; };
@@ -538,6 +540,7 @@
 			children = (
 				4B254A612229C29800A15A03 /* AppearanceTableViewController.swift */,
 				4B43D8F4223C5B8300F45C21 /* AppearanceExampleCollectionView.swift */,
+				4B9CBDD1224ED216004425B2 /* AppearanceTextSizeTableViewCell.swift */,
 				4B43D8F6223C60CF00F45C21 /* AppearanceExampleTableViewCell.swift */,
 				4B43D8F8223C6C5700F45C21 /* AppearanceExampleMessagesFactory.swift */,
 			);
@@ -1794,6 +1797,7 @@
 				4BBBCBFB205851E100926800 /* ChatsTableViewController.swift in Sources */,
 				4B6BB01120886C5F00A90F3A /* TransitionController.swift in Sources */,
 				4BAD975B206E36C4008ADF6B /* LeaveGroupAndChangeAdminController.swift in Sources */,
+				4B9CBDD2224ED216004425B2 /* AppearanceTextSizeTableViewCell.swift in Sources */,
 				4B8CA9EC211C49B300E6A66C /* TypingBubble.swift in Sources */,
 				4B6BAFE420886C5F00A90F3A /* ParticipantTableViewCell.swift in Sources */,
 				4B8CA9EB211C49B300E6A66C /* TypingIndicator.swift in Sources */,

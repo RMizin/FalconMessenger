@@ -14,6 +14,7 @@ class MenuControlsTableViewController: UITableViewController {
 	let switchCellID = "switchCellID"
 	let controlButtonCellID = "controlButtonCellID"
 	let appearanceExampleTableViewCellID = "appearanceExampleTableViewCellID"
+	let appearanceTextSizeTableViewCellID = "appearanceTextSizeTableViewCellID"
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -33,8 +34,8 @@ class MenuControlsTableViewController: UITableViewController {
 		tableView.register(SwitchTableViewCell.self, forCellReuseIdentifier: switchCellID)
 		tableView.register(GroupAdminPanelTableViewCell.self, forCellReuseIdentifier: controlButtonCellID)
 		tableView.register(AppearanceExampleTableViewCell.self, forCellReuseIdentifier: appearanceExampleTableViewCellID)
+		tableView.register(AppearanceTextSizeTableViewCell.self, forCellReuseIdentifier: appearanceTextSizeTableViewCellID)
 	}
-
 
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return ControlButton.cellHeight

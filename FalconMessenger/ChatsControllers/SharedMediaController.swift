@@ -41,7 +41,6 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
 		collectionView?.register(SharedMediaCell.self, forCellWithReuseIdentifier: sharedMediaCellID)
 		collectionView?.register(ChatLogViewControllerSupplementaryView.self,
 														 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -70,6 +69,7 @@ class SharedMediaController: UICollectionViewController, UICollectionViewDelegat
 		guard let layout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout else { return }
 		layout.minimumLineSpacing = 1
 		layout.minimumInteritemSpacing = 1
+		layout.sectionHeadersPinToVisibleBounds = true
 
 		if #available(iOS 11.0, *) {
 			collectionView?.contentInsetAdjustmentBehavior = .always
