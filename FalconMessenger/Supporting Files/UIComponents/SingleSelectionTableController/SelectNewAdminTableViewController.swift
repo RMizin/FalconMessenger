@@ -159,17 +159,17 @@ class SelectNewAdminTableViewController: UITableViewController {
     return sectionTitles
   }
   
-  override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-    view.tintColor = ThemeManager.currentTheme().inputTextViewColor
-    if let headerTitle = view as? UITableViewHeaderFooterView {
-      headerTitle.textLabel?.textColor = ThemeManager.currentTheme().generalSubtitleColor
-      headerTitle.textLabel?.font = UIFont.systemFont(ofSize: 10)
-    }
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return 20
-  }
+	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+		view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
+		if let headerTitle = view as? UITableViewHeaderFooterView {
+			headerTitle.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+			headerTitle.textLabel?.font = UIFont.boldSystemFont(ofSize: 12)
+		}
+	}
+
+	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return 25
+	}
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     return selectCell(for: indexPath)!

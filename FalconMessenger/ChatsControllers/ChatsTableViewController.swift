@@ -59,14 +59,10 @@ class ChatsTableViewController: FalconTableViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-
-    if !isAppLoaded {
-			guard Auth.auth().currentUser != nil else { return }
-			conversationsFetcher.fetchConversations()
-			setupDataSource()
-      managePresense()
-
-    }
+		guard !isAppLoaded, Auth.auth().currentUser != nil else { return }
+		conversationsFetcher.fetchConversations()
+		setupDataSource()
+		managePresense()
   }
 
   deinit {

@@ -18,10 +18,9 @@ class OnboardingController: UIViewController {
     if #available(iOS 11.0, *) {
       navigationItem.largeTitleDisplayMode = .automatic
       navigationController?.navigationBar.prefersLargeTitles = true
+			navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
 
-    navigationController?.navigationBar.shadowImage = UIImage()
-    view.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
     view.addSubview(onboardingContainerView)
     extendedLayoutIncludesOpaqueBars = true
     definesPresentationContext = true

@@ -181,7 +181,7 @@ class AccountSettingsController: UITableViewController {
     userProfileContainerView.name.delegate = self
   }
   
-  func logoutButtonTapped () {
+  func logoutButtonTapped() {
     if DeviceType.isIPad {
       splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
     }
@@ -224,9 +224,6 @@ class AccountSettingsController: UITableViewController {
       let destination = OnboardingController()
       
       let navigationController = UINavigationController(rootViewController: destination)
-      navigationController.navigationBar.shadowImage = UIImage()
-      navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
-      
       navigationController.navigationBar.isTranslucent = false
       navigationController.modalTransitionStyle = .crossDissolve
       ARSLineProgress.hide()

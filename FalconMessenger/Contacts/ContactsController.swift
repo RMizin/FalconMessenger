@@ -28,7 +28,7 @@ class ContactsController: FalconTableViewController {
   var searchContactsController: UISearchController?
 
   let phoneNumberKit = PhoneNumberKit()
-  let viewPlaceholder = ViewPlaceholder()
+  //let viewPlaceholder = ViewPlaceholder()
   let falconUsersFetcher = FalconUsersFetcher()
   let contactsFetcher = ContactsFetcher()
 
@@ -342,15 +342,17 @@ extension ContactsController: ContactsUpdatesDelegate {
     self.contacts = contacts
     self.filteredContacts = contacts
     DispatchQueue.main.async { [weak self] in
-      self?.tableView.reloadData()
+			UIView.performWithoutAnimation {
+				self?.tableView.reloadSections([2], with: .none)
+			}
     }
   }
 
   func contacts(handleAccessStatus: Bool) {
-    guard handleAccessStatus else {
-      viewPlaceholder.add(for: view, title: .denied, subtitle: .denied, priority: .high, position: .top)
-      return
-    }
-    viewPlaceholder.remove(from: view, priority: .high)
+//    guard handleAccessStatus, (users?.count ?? 0) > 0 else {
+//      viewPlaceholder.add(for: view, title: .denied, subtitle: .denied, priority: .high, position: .top)
+//      return
+//    }
+//    viewPlaceholder.remove(from: view, priority: .high)
   }
 }

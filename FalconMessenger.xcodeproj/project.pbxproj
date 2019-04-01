@@ -117,6 +117,7 @@
 		4B7ACCBB1F3A3CC1000606E1 /* IncomingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */; };
 		4B7ACCBD1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */; };
 		4B7ACCBF1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */; };
+		4B7DB2CE224F8DA700853C76 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B7DB2CD224F8DA700853C76 /* LaunchScreen.storyboard */; };
 		4B7EA2D82203066B00002F0E /* OverlayNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2D72203066B00002F0E /* OverlayNavigationBar.swift */; };
 		4B7EA2DA2203067A00002F0E /* FalconUISlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2D92203067A00002F0E /* FalconUISlider.swift */; };
 		4B7EA2DC2203068800002F0E /* OverlayDefaultBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7EA2DB2203068800002F0E /* OverlayDefaultBottomView.swift */; };
@@ -175,7 +176,6 @@
 		4BBF79552134370C00903F56 /* SplitPlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF79502134370C00903F56 /* SplitPlaceholderViewController.swift */; };
 		4BBF79562134370C00903F56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF79512134370C00903F56 /* AppDelegate.swift */; };
 		4BBF79572134370C00903F56 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF79532134370C00903F56 /* GeneralTabBarController.swift */; };
-		4BBF795C2134375800903F56 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BBF79592134375800903F56 /* LaunchScreen.storyboard */; };
 		4BBF795D2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF795A2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift */; };
 		4BBF795E2134375800903F56 /* SplashScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF795B2134375800903F56 /* SplashScreenContainer.swift */; };
 		4BC0E6CB2111B71700720B43 /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E6CA2111B71700720B43 /* GlobalVariables.swift */; };
@@ -369,6 +369,7 @@
 		4B7ACCBA1F3A3CC1000606E1 /* IncomingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IncomingTextMessageCell.swift; path = ChatsControllers/IncomingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBC1F3A3CD9000606E1 /* OutgoingTextMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OutgoingTextMessageCell.swift; path = ChatsControllers/OutgoingTextMessageCell.swift; sourceTree = "<group>"; };
 		4B7ACCBE1F3A3E94000606E1 /* AutoSizingCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoSizingCollectionViewFlowLayout.swift; path = ChatsControllers/AutoSizingCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		4B7DB2CD224F8DA700853C76 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4B7EA2D72203066B00002F0E /* OverlayNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayNavigationBar.swift; sourceTree = "<group>"; };
 		4B7EA2D92203067A00002F0E /* FalconUISlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FalconUISlider.swift; sourceTree = "<group>"; };
 		4B7EA2DB2203068800002F0E /* OverlayDefaultBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayDefaultBottomView.swift; sourceTree = "<group>"; };
@@ -427,7 +428,6 @@
 		4BBF79502134370C00903F56 /* SplitPlaceholderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitPlaceholderViewController.swift; sourceTree = "<group>"; };
 		4BBF79512134370C00903F56 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BBF79532134370C00903F56 /* GeneralTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralTabBarController.swift; sourceTree = "<group>"; };
-		4BBF79592134375800903F56 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4BBF795A2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SplashScreenContainer+BiometricalControl.swift"; sourceTree = "<group>"; };
 		4BBF795B2134375800903F56 /* SplashScreenContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenContainer.swift; sourceTree = "<group>"; };
 		4BC0E6CA2111B71700720B43 /* GlobalVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
@@ -1253,7 +1253,7 @@
 		4BBF79582134375800903F56 /* SplashScreen */ = {
 			isa = PBXGroup;
 			children = (
-				4BBF79592134375800903F56 /* LaunchScreen.storyboard */,
+				4B7DB2CD224F8DA700853C76 /* LaunchScreen.storyboard */,
 				4BBF795B2134375800903F56 /* SplashScreenContainer.swift */,
 				4BBF795A2134375800903F56 /* SplashScreenContainer+BiometricalControl.swift */,
 			);
@@ -1621,8 +1621,8 @@
 			files = (
 				4B7F31E222203D5600B2CF37 /* notification.caf in Resources */,
 				4B7F31E322203D5600B2CF37 /* sent.caf in Resources */,
-				4BBF795C2134375800903F56 /* LaunchScreen.storyboard in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
+				4B7DB2CE224F8DA700853C76 /* LaunchScreen.storyboard in Resources */,
 				4B6BAFFC20886C5F00A90F3A /* CallingCodes.plist in Resources */,
 				4B2882321FBDDE3400B25397 /* GoogleService-Info.plist in Resources */,
 			);

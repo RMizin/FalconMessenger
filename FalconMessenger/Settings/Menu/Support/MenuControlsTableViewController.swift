@@ -41,12 +41,6 @@ class MenuControlsTableViewController: UITableViewController {
 		return ControlButton.cellHeight
 	}
 
-	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		if section == 0 { return " " }
-		guard section == 1 else { return "" }
-		return " "
-	}
-
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		if section == 0 { return " " }
 		return ""
@@ -55,23 +49,6 @@ class MenuControlsTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		if section == 0 { return 20 }
 		return 0
-	}
-
-	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if section == 0, tableView.tableHeaderView != nil { return 8 }
-		if section == 0 { return 20 }
-		guard section == 1 else { return 0 }
-		return 8
-	}
-
-	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		view.tintColor = .clear
-
-		if section == 0, tableView.tableHeaderView != nil {
-			view.tintColor = ThemeManager.currentTheme().inputTextViewColor
-		} else if section == 1 {
-			view.tintColor = ThemeManager.currentTheme().inputTextViewColor
-		}
 	}
 
 	override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
