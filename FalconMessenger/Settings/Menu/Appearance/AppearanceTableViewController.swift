@@ -87,27 +87,7 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		return sectionTitles[section]
 	}
-
-	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		return 50
-	}
-
-//	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//		return section == 1 ? 40 : 0
-//	}
-//	override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-//		view.tintColor = .clear
-//	}
-//	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-//		return  section == 1 ? " " : ""
-//	}
-
-	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
-		guard let headerView = view as? UITableViewHeaderFooterView else { return }
-		headerView.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
-	}
-
+	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 		if indexPath.section == 0 {

@@ -40,6 +40,16 @@ class MenuControlsTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return ControlButton.cellHeight
 	}
+	
+	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return 50
+	}
+	
+	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+		view.tintColor = ThemeManager.currentTheme().generalBackgroundColor
+		guard let headerView = view as? UITableViewHeaderFooterView else { return }
+		headerView.textLabel?.textColor = ThemeManager.currentTheme().generalTitleColor
+	}
 
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		if section == 0 { return " " }
