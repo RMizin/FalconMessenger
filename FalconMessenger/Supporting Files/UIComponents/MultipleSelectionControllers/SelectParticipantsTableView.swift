@@ -9,9 +9,7 @@
 import UIKit
 import SDWebImage
 
-
 extension SelectParticipantsViewController: UITableViewDelegate, UITableViewDataSource {
-  
   
   func numberOfSections(in tableView: UITableView) -> Int {
     return sectionTitles.count

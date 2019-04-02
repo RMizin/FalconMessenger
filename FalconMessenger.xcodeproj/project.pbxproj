@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0BB421FC2E9A1DB656581C19 /* libPods-FalconMessenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37F3828A6A41BDF3C211BA9F /* libPods-FalconMessenger.a */; };
 		4B01BB6821D683A500FF229B /* VoiceRecorderRespondingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01BB6721D683A500FF229B /* VoiceRecorderRespondingButton.swift */; };
 		4B01BB6A21D683BA00FF229B /* MediaPickerRespondingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01BB6921D683BA00FF229B /* MediaPickerRespondingButton.swift */; };
 		4B01BB6D21D6842D00FF229B /* RespondingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01BB6C21D6842D00FF229B /* RespondingButton.swift */; };
@@ -238,7 +239,6 @@
 		4BFAA15C2026082800DFC9E5 /* ContactDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */; };
 		4BFBB108208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFBB107208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift */; };
 		4BFD07761FB08005003791D7 /* ViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFD07751FB08005003791D7 /* ViewPlaceholder.swift */; };
-		E6A8B70EF8A742AD9D5CCF2B /* libPods-FalconMessenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65B1F802CF6D868348BF7E6D /* libPods-FalconMessenger.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -255,7 +255,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		12A07DB84FCB2E680BA20EDF /* Pods-FalconMessenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FalconMessenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger.release.xcconfig"; sourceTree = "<group>"; };
+		37F3828A6A41BDF3C211BA9F /* libPods-FalconMessenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FalconMessenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01BB6721D683A500FF229B /* VoiceRecorderRespondingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceRecorderRespondingButton.swift; path = ChatsControllers/VoiceRecorderRespondingButton.swift; sourceTree = "<group>"; };
 		4B01BB6921D683BA00FF229B /* MediaPickerRespondingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaPickerRespondingButton.swift; path = ChatsControllers/MediaPickerRespondingButton.swift; sourceTree = "<group>"; };
 		4B01BB6C21D6842D00FF229B /* RespondingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RespondingButton.swift; sourceTree = "<group>"; };
@@ -490,8 +490,8 @@
 		4BFAA15B2026082800DFC9E5 /* ContactDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactDataTableViewCell.swift; path = ChatsControllers/ContactDataTableViewCell.swift; sourceTree = "<group>"; };
 		4BFBB107208D176F004BB0B7 /* ChatsTableViewController+TypingIndicatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChatsTableViewController+TypingIndicatorDelegate.swift"; path = "ChatsControllers/ChatsTableViewController+TypingIndicatorDelegate.swift"; sourceTree = "<group>"; };
 		4BFD07751FB08005003791D7 /* ViewPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPlaceholder.swift; sourceTree = "<group>"; };
-		65B1F802CF6D868348BF7E6D /* libPods-FalconMessenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FalconMessenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D7BD86EB100754A0BF260A9C /* Pods-FalconMessenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FalconMessenger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger.debug.xcconfig"; sourceTree = "<group>"; };
+		C453937E794F82E14EFDF446 /* Pods-FalconMessenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FalconMessenger.release.xcconfig"; path = "Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger.release.xcconfig"; sourceTree = "<group>"; };
+		D58F5EB9500B57EBF08DBF80 /* Pods-FalconMessenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FalconMessenger.debug.xcconfig"; path = "Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -499,30 +499,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6A8B70EF8A742AD9D5CCF2B /* libPods-FalconMessenger.a in Frameworks */,
+				0BB421FC2E9A1DB656581C19 /* libPods-FalconMessenger.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2AF4427B37282913090A248D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				65B1F802CF6D868348BF7E6D /* libPods-FalconMessenger.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		4B0E76E039E2F5E741A90AE5 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				D7BD86EB100754A0BF260A9C /* Pods-FalconMessenger.debug.xcconfig */,
-				12A07DB84FCB2E680BA20EDF /* Pods-FalconMessenger.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		4B1A36991F49990D00B4AA0A /* InputContainerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -659,9 +642,9 @@
 			isa = PBXGroup;
 			children = (
 				4B4F452D1F32230C00A6FF96 /* FalconMessenger */,
-				2AF4427B37282913090A248D /* Frameworks */,
 				4B08E36E2088725C00C64EAA /* FalconMessenger.app */,
-				4B0E76E039E2F5E741A90AE5 /* Pods */,
+				550AF81EEA7201229B6B2FC7 /* Pods */,
+				56328DDFD0515E493FACD283 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1541,6 +1524,24 @@
 			name = CreateNewContact;
 			sourceTree = "<group>";
 		};
+		550AF81EEA7201229B6B2FC7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D58F5EB9500B57EBF08DBF80 /* Pods-FalconMessenger.debug.xcconfig */,
+				C453937E794F82E14EFDF446 /* Pods-FalconMessenger.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		56328DDFD0515E493FACD283 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				37F3828A6A41BDF3C211BA9F /* libPods-FalconMessenger.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1548,12 +1549,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B4F453F1F32230C00A6FF96 /* Build configuration list for PBXNativeTarget "FalconMessenger" */;
 			buildPhases = (
-				7183EB494791913EB6E040B1 /* [CP] Check Pods Manifest.lock */,
+				A330A7609E939547507DCE6B /* [CP] Check Pods Manifest.lock */,
 				4B4F45271F32230C00A6FF96 /* Sources */,
 				4B4F45281F32230C00A6FF96 /* Frameworks */,
 				4B4F45291F32230C00A6FF96 /* Resources */,
 				4B9AF38E1F3B9B6E00A3934D /* Embed App Extensions */,
-				53E0DEB341FA758A2EF7CBE0 /* [CP] Copy Pods Resources */,
+				FFEE0BDA247B54FAC8BCACB5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1631,7 +1632,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		53E0DEB341FA758A2EF7CBE0 /* [CP] Copy Pods Resources */ = {
+		A330A7609E939547507DCE6B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FalconMessenger-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FFEE0BDA247B54FAC8BCACB5 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1653,28 +1676,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FalconMessenger/Pods-FalconMessenger-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7183EB494791913EB6E040B1 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FalconMessenger-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2042,7 +2043,7 @@
 		};
 		4B4F45401F32230C00A6FF96 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D7BD86EB100754A0BF260A9C /* Pods-FalconMessenger.debug.xcconfig */;
+			baseConfigurationReference = D58F5EB9500B57EBF08DBF80 /* Pods-FalconMessenger.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
@@ -2073,7 +2074,7 @@
 		};
 		4B4F45411F32230C00A6FF96 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 12A07DB84FCB2E680BA20EDF /* Pods-FalconMessenger.release.xcconfig */;
+			baseConfigurationReference = C453937E794F82E14EFDF446 /* Pods-FalconMessenger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
