@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-class RealmImage: Object {
+final class RealmImage: Object {
 	@objc dynamic var id: String?
 	@objc dynamic var imageData: Data?
 

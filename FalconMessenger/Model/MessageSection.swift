@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-class MessageSection: Object {
+final class MessageSection: Object {
 
 	@objc var title: String?
 	var messages: Results<Message>!

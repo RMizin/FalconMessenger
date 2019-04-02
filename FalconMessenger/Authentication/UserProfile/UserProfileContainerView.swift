@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BioTextView: UITextView {
+final class BioTextView: UITextView {
   override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
     if action == #selector(UIResponderStandardEditActions.paste(_:)) {
       return false
@@ -17,7 +17,7 @@ class BioTextView: UITextView {
   }
 }
 
-class PasteRestrictedTextField: UITextField {
+final class PasteRestrictedTextField: UITextField {
   override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
     if action == #selector(UIResponderStandardEditActions.paste(_:)) {
       return false
@@ -26,7 +26,7 @@ class PasteRestrictedTextField: UITextField {
   }
 }
 
-class FalconProfileImageView: UIImageView {
+final class FalconProfileImageView: UIImageView {
 	override var image: UIImage? {
 		didSet {
 			NotificationCenter.default.post(name: .profilePictureDidSet, object: nil)
@@ -34,7 +34,7 @@ class FalconProfileImageView: UIImageView {
 	}
 }
 
-class UserProfileContainerView: UIView {
+final class UserProfileContainerView: UIView {
   
   lazy var profileImageView: FalconProfileImageView = {
     let profileImageView = FalconProfileImageView()

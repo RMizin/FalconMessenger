@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-class Conversation: Object {
+final class Conversation: Object {
   
   @objc dynamic var chatID: String?
   @objc dynamic var chatName: String?

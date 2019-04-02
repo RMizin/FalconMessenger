@@ -9,7 +9,7 @@
 import UIKit
 
 extension UserProfileController: AvatarOpenerDelegate {
-  func avatarOpener(avatarPickerDidPick image: UIImage) {
+	func avatarOpener(avatarPickerDidPick image: UIImage) {
     userProfileContainerView.profileImageView.showActivityIndicator()
     userProfileDataDatabaseUpdater.deleteCurrentPhoto { [weak self] (_) in
       self?.userProfileDataDatabaseUpdater.updateUserProfile(with: image, completion: { [weak self] (isUpdated) in
@@ -24,7 +24,7 @@ extension UserProfileController: AvatarOpenerDelegate {
     }
   }
   
-  func avatarOpener(didPerformDeletionAction: Bool) {
+	func avatarOpener(didPerformDeletionAction: Bool) {
     userProfileContainerView.profileImageView.showActivityIndicator()
     userProfileDataDatabaseUpdater.deleteCurrentPhoto { [weak self] (isDeleted) in
       self?.userProfileContainerView.profileImageView.hideActivityIndicator()

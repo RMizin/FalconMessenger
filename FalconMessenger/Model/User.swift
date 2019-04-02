@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-class User: Object {
+final class User: Object {
 
 	 @objc dynamic var id: String?
 	 @objc dynamic var name: String?

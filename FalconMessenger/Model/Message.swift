@@ -26,7 +26,7 @@ enum MessageType {
 
 let defaultMessage = Message(dictionary: ["timestamp": 0 as AnyObject])
 
-class Message: Object {
+final class Message: Object {
 
     @objc dynamic var messageUID: String?
 

@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-class RealmCGRect: Object {
+final class RealmCGRect: Object {
 	@objc dynamic var id: String?
 	let x =  RealmOptional<Double>()
 	let y = RealmOptional<Double>()

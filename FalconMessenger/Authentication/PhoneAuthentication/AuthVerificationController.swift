@@ -9,7 +9,7 @@
 import UIKit
 
 
-class AuthVerificationController: VerificationCodeController {
+final class AuthVerificationController: VerificationCodeController {
   
   override func viewDidLoad() {
     super.viewDidLoad()

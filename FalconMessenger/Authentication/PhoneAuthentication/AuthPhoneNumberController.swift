@@ -9,9 +9,9 @@
 import UIKit
 import ARSLineProgress
 
-class AuthPhoneNumberController: PhoneNumberController, VerificationDelegate {
+final class AuthPhoneNumberController: PhoneNumberController, VerificationDelegate {
 
-  func verificationFinished(with success: Bool, error: String?) {
+  final func verificationFinished(with success: Bool, error: String?) {
 		ARSLineProgress.hide()
     guard success, error == nil else {
       basicErrorAlertWith(title: "Error", message: error ?? "", controller: self)

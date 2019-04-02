@@ -11,7 +11,7 @@ import Firebase
 import PhoneNumberKit
 import ARSLineProgress
 
-class UserProfileController: UIViewController {
+final class UserProfileController: UIViewController {
 
   let userProfileContainerView = UserProfileContainerView()
   let avatarOpener = AvatarOpener()

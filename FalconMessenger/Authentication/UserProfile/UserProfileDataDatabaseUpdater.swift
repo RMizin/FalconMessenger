@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class UserProfileDataDatabaseUpdater: NSObject {
+final class UserProfileDataDatabaseUpdater: NSObject {
 
   typealias UpdateUserProfileCompletionHandler = (_ success: Bool) -> Void
   func updateUserProfile(with image: UIImage, completion: @escaping UpdateUserProfileCompletionHandler) {

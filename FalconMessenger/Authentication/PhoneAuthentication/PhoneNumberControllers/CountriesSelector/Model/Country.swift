@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Country: NSObject {
+final class Country: NSObject {
 
   @objc var name: String?
   var code: String?

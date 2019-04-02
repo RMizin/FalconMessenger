@@ -8,9 +8,9 @@
 
 import UIKit
 
-class PhoneNumberContainerView: UIView {
+final class PhoneNumberContainerView: UIView {
 
-  let title: UILabel = {
+	let title: UILabel = {
     let title = UILabel()
     title.translatesAutoresizingMaskIntoConstraints = false
     title.textAlignment = .center

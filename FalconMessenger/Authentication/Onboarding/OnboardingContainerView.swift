@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OnboardingContainerView: UIView {
+final class OnboardingContainerView: UIView {
 
   let logoImageView: UIImageView = {
     let logoImageView = UIImageView()

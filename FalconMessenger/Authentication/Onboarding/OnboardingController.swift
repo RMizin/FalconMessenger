@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OnboardingController: UIViewController {
+final class OnboardingController: UIViewController {
 
   let onboardingContainerView = OnboardingContainerView()
 

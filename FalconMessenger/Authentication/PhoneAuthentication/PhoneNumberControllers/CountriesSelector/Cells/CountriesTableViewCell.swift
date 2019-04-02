@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CountriesTableViewCell: UITableViewCell {
+final class CountriesTableViewCell: UITableViewCell {
 
   var name: UILabel = {
     var name = UILabel()

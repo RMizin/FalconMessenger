@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class MediaObject: NSObject {
+final class MediaObject: NSObject {
   var object: Data?
   var videoObject: Data?
   var audioObject: Data?

@@ -17,7 +17,7 @@ protocol CountryPickerDelegate: class {
 
 private let countriesTableViewCellID = "countriesTableViewCellID"
 
-class CountriesTableViewController: UITableViewController {
+final class CountriesTableViewController: UITableViewController {
 
   var countries = [Country]()
   var filteredCountries = [Country]()

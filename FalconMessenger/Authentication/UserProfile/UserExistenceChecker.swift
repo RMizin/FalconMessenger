@@ -14,8 +14,7 @@ protocol UserExistenceDelegate: class {
 	func user(isAlreadyExists: Bool, name: String?, bio: String?, image: UIImage?)
 }
 
-
-class UserExistenceChecker: NSObject {
+final class UserExistenceChecker: NSObject {
 
 	fileprivate var isNameExists: Bool?
 	fileprivate var isBioExists: Bool?

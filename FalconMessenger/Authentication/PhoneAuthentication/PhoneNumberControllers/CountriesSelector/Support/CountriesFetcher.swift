@@ -13,7 +13,7 @@ import UIKit
   @objc optional func countriesFetcher(_ fetcher: CountriesFetcher, currentCountry country: Country)
 }
 
-class CountriesFetcher: NSObject {
+final class CountriesFetcher: NSObject {
 
   weak var delegate: CountriesFetcherDelegate?
 

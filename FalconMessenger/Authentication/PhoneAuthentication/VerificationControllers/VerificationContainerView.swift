@@ -8,7 +8,7 @@
 
 import UIKit
 
-class VerificationContainerView: UIView {
+final class VerificationContainerView: UIView {
 
   let titleNumber: UILabel = {
     let titleNumber = UILabel()
