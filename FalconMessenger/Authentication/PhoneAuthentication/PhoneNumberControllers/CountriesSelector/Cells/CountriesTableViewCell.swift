@@ -10,7 +10,7 @@ import UIKit
 
 final class CountriesTableViewCell: UITableViewCell {
 
-  var name: UILabel = {
+	fileprivate var name: UILabel = {
     var name = UILabel()
     name.translatesAutoresizingMaskIntoConstraints = false
     name.font = UIFont.systemFont(ofSize: 18)
@@ -20,7 +20,7 @@ final class CountriesTableViewCell: UITableViewCell {
     return name
   }()
 
-  var dialCode: UILabel = {
+  fileprivate var dialCode: UILabel = {
     var dialCode = UILabel()
     dialCode.translatesAutoresizingMaskIntoConstraints = false
     dialCode.font = UIFont.systemFont(ofSize: 18)

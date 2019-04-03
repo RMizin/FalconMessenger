@@ -15,35 +15,35 @@ import UIKit
 
 final class CountriesFetcher: NSObject {
 
-  weak var delegate: CountriesFetcherDelegate?
+	weak var delegate: CountriesFetcherDelegate?
 
-   func fetchCountries () {
-    let path = Bundle.main.path(forResource: "CallingCodes", ofType: "plist")!
-    let url = URL(fileURLWithPath: path)
-    do {
-      let data = try Data(contentsOf: url)
-      let plist = try PropertyListSerialization.propertyList(from: data, options: .mutableContainers, format: nil)
-      guard let countriesArray = plist as? [[String: String]] else { return }
-      fetch(countriesArray)
-    } catch {
-      fatalError()
-    }
-  }
+	func fetchCountries() {
+		guard let path = Bundle.main.path(forResource: "CallingCodes", ofType: "plist") else { return }
+		let url = URL(fileURLWithPath: path)
+		do {
+			let data = try Data(contentsOf: url)
+			let plist = try PropertyListSerialization.propertyList(from: data, options: .mutableContainers, format: nil)
+			guard let countriesArray = plist as? [[String: String]] else { return }
+			fetch(countriesArray)
+		} catch {
+			fatalError()
+		}
+	}
 
-  fileprivate func fetch(_ plist: [[String: String]]) {
-    var countries = [Country]()
-    for dictionary in plist {
-      let country = Country(dictionary: dictionary)
-      countries.append(country)
-    }
-    delegate?.countriesFetcher?(self, didFetch: countries)
-    currentCountry(countries: countries)
-  }
+	fileprivate func fetch(_ plist: [[String: String]]) {
+		var countries = [Country]()
+		for dictionary in plist {
+			let country = Country(dictionary: dictionary)
+			countries.append(country)
+		}
+		delegate?.countriesFetcher?(self, didFetch: countries)
+		currentCountry(countries: countries)
+	}
 
-  fileprivate func currentCountry(countries: [Country]) {
-    let currentCountryCode = NSLocale.current.regionCode
-    for country in countries where country.code == currentCountryCode {
-      delegate?.countriesFetcher?(self, currentCountry: country)
-    }
-  }
+	fileprivate func currentCountry(countries: [Country]) {
+		let currentCountryCode = NSLocale.current.regionCode
+		for country in countries where country.code == currentCountryCode {
+			delegate?.countriesFetcher?(self, currentCountry: country)
+		}
+	}
 }
