@@ -20,36 +20,29 @@ extension InputContainerView: UICollectionViewDataSource, UICollectionViewDelega
   }
   
  @objc func removeButtonDidTap(sender: UIButton) {
-    
     guard let cell = sender.superview as? AttachCollectionViewCell,
-      let indexPath = attachCollectionView.indexPath(for: cell),
-			let picker = mediaPickerController else { return }
+      let indexPath = attachCollectionView.indexPath(for: cell) else { return }
 		let row = indexPath.row
-		guard let asset = attachedMedia[row].phAsset else { return }
 
-    let imageSourcePhotoLibrary = globalVariables.imageSourcePhotoLibrary
-  
-    if attachedMedia[row].imageSource == imageSourcePhotoLibrary {
-      if picker.assets.contains(asset) {
-        deselectAsset(row: row)
-      } else {
-        attachedMedia.remove(at: row)
-        attachCollectionView.deleteItems(at: [indexPath])
-        resetChatInputConntainerViewSettings()
-      }
-    } else {
-      if picker.assets.contains(asset) {
-        deselectAsset(row: row)
-      } else {
-        attachedMedia.remove(at: row)
-        attachCollectionView.deleteItems(at: [indexPath])
-        resetChatInputConntainerViewSettings()
-      }
-    }
+		guard let asset = attachedMedia[row].phAsset,	let picker = mediaPickerController else {
+			attachedMedia.remove(at: row)
+			attachCollectionView.deleteItems(at: [indexPath])
+			resetChatInputConntainerViewSettings()
+			return
+		}
+
+		if picker.assets.contains(asset) {
+			deselectAsset(row: row)
+		} else {
+			attachedMedia.remove(at: row)
+			attachCollectionView.deleteItems(at: [indexPath])
+			resetChatInputConntainerViewSettings()
+		}
   }
   
   func deselectAsset(row: Int) {
 		guard let picker = mediaPickerController,
+			attachedMedia.indices.contains(row),
 			let asset = attachedMedia[row].phAsset,
 			let index = picker.assets.firstIndex(of: asset) else { return }
 

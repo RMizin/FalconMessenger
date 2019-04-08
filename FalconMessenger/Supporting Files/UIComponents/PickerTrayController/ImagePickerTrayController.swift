@@ -10,39 +10,41 @@ import UIKit
 import Photos
 
 /// The media type an instance of ImagePickerSheetController can display
-public enum ImagePickerMediaType {
+enum ImagePickerMediaType {
 	case image
 	case video
 	case imageAndVideo
 }
 
-@objc public protocol ImagePickerTrayControllerDelegate: class {
-
+@objc protocol ImagePickerTrayControllerDelegate: class {
 	@objc optional func controller(_ controller: ImagePickerTrayController, willSelectAsset asset: PHAsset, at indexPath: IndexPath)
 	@objc optional func controller(_ controller: ImagePickerTrayController, didSelectAsset asset: PHAsset, at indexPath: IndexPath?)
-
 	@objc optional func controller(_ controller: ImagePickerTrayController, willDeselectAsset asset: PHAsset, at indexPath: IndexPath)
 	@objc optional func controller(_ controller: ImagePickerTrayController, didDeselectAsset asset: PHAsset, at indexPath: IndexPath)
-
 	@objc optional func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage)
 	@objc optional func controller(_ controller: ImagePickerTrayController, didTakeImage image: UIImage, with asset: PHAsset)
 	@objc optional func controller(_ controller: ImagePickerTrayController, didRecordVideoAsset asset: PHAsset)
 }
 
-public let ImagePickerTrayWillShow: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayWillShow")
-public let ImagePickerTrayDidShow: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayDidShow")
+let ImagePickerTrayWillShow: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayWillShow")
+let ImagePickerTrayDidShow: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayDidShow")
+let ImagePickerTrayWillHide: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayWillHide")
+let ImagePickerTrayDidHide: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayDidHide")
+let ImagePickerTrayFrameUserInfoKey = "ImagePickerTrayFrame"
+let ImagePickerTrayAnimationDurationUserInfoKey = "ImagePickerTrayAnimationDuration"
 
-public let ImagePickerTrayWillHide: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayWillHide")
-public let ImagePickerTrayDidHide: Notification.Name = Notification.Name(rawValue: "ch.laurinbrandner.ImagePickerTrayDidHide")
+class ImagePickerTrayController: UIViewController {
 
-public let ImagePickerTrayFrameUserInfoKey = "ImagePickerTrayFrame"
-public let ImagePickerTrayAnimationDurationUserInfoKey = "ImagePickerTrayAnimationDuration"
+	weak var delegate: ImagePickerTrayControllerDelegate?
+	var imageManager: PHCachingImageManager?
+	var assets = [PHAsset]()
 
-fileprivate let animationDuration: TimeInterval = 0.2
+	fileprivate let actionCellWidth: CGFloat = 100
+	fileprivate let animationDuration: TimeInterval = 0.2
+	fileprivate(set) var actions = [ImagePickerAction]()
+	fileprivate var transitionController: TransitionController?
 
-public class ImagePickerTrayController: UIViewController {
-
-
+	static let librarySectionIndex = 1
 
 	fileprivate(set) lazy var collectionView: UICollectionView = {
 		let layout = UICollectionViewFlowLayout()
@@ -63,9 +65,6 @@ public class ImagePickerTrayController: UIViewController {
 		return collectionView
 	}()
 
-	var imageManager: PHCachingImageManager?
-
-	var assets = [PHAsset]()
 	fileprivate lazy var requestOptions: PHImageRequestOptions = {
 		let options = PHImageRequestOptions()
 		options.deliveryMode = .opportunistic
@@ -74,40 +73,21 @@ public class ImagePickerTrayController: UIViewController {
 		return options
 	}()
 
-	public var allowsMultipleSelection = true {
+	fileprivate var allowsMultipleSelection = true {
 		didSet {
-			if isViewLoaded {
-				collectionView.allowsMultipleSelection = allowsMultipleSelection
-			}
+			guard isViewLoaded else { return }
+			collectionView.allowsMultipleSelection = allowsMultipleSelection
 		}
 	}
 
-	deinit {
-		if imageManager != nil { imageManager = nil }
-		collectionView.removeFromSuperview()
-		print("\n TRAY CONTROLLER DID DEINIT \n")
-	}
-
-	public override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-
-		NotificationCenter.default.removeObserver(self)
-	}
-
-	fileprivate let actionCellWidth: CGFloat = 100
-	public fileprivate(set) var actions = [ImagePickerAction]()
-
-	static let librarySectionIndex = 1
 	fileprivate var sections: [Int] {
-		let actionSection = (actions.count > 0) ? 1 : 0
+		let actionSection = actions.count > 0 ? 1 : 0
 		let assetSection = assets.count
 
 		return [actionSection, assetSection]
 	}
 
-	public weak var delegate: ImagePickerTrayControllerDelegate?
-
-	public var allowsInteractivePresentation: Bool {
+	fileprivate var allowsInteractivePresentation: Bool {
 		get {
 			return transitionController?.allowsInteractiveTransition ?? false
 		}
@@ -116,11 +96,9 @@ public class ImagePickerTrayController: UIViewController {
 		}
 	}
 
-	private var transitionController: TransitionController?
-
 	// MARK: - Initialization
 
-	public init() {
+	init() {
 		super.init(nibName: nil, bundle: nil)
 
 		let status = libraryAccessChecking()
@@ -137,12 +115,18 @@ public class ImagePickerTrayController: UIViewController {
 		transitioningDelegate = transitionController
 	}
 
-	public required init?(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	var heightConstraint: NSLayoutConstraint!
-	public override func loadView() {
+	deinit {
+		if imageManager != nil { imageManager = nil }
+		collectionView.removeFromSuperview()
+		print("\n TRAY CONTROLLER DID DEINIT \n")
+	}
+
+//	var heightConstraint: NSLayoutConstraint!
+	override func loadView() {
 		super.loadView()
 
 		view.addSubview(collectionView)
@@ -159,23 +143,40 @@ public class ImagePickerTrayController: UIViewController {
 		collectionView.allowsMultipleSelection = allowsMultipleSelection
 	}
 
-	public override func viewDidLoad() {
+	override func viewDidLoad() {
 		super.viewDidLoad()
 		fetchAssets()
 	}
 
-	public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 		collectionView.collectionViewLayout.invalidateLayout()
 	}
 
-	override public func viewWillLayoutSubviews() {
+	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		collectionView.collectionViewLayout.invalidateLayout()
 	}
 
-	public func add(action: ImagePickerAction) {
+	func add(action: ImagePickerAction) {
 		actions.append(action)
+	}
+
+	func fetchAssets() {
+		let options = PHFetchOptions()
+		options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+		options.fetchLimit = 100
+
+		let result = PHAsset.fetchAssets(with: options)
+		result.enumerateObjects({ asset, index, stop in
+			self.assets.append(asset)
+		})
 	}
 
 	typealias CompletionHandler = (_ success: Bool) -> Void
@@ -217,17 +218,6 @@ public class ImagePickerTrayController: UIViewController {
 		}
 	}
 
-	func fetchAssets() {
-		let options = PHFetchOptions()
-		options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-		options.fetchLimit = 100
-
-		let result = PHAsset.fetchAssets(with: options)
-		result.enumerateObjects({ asset, index, stop in
-			self.assets.append(asset)
-		})
-	}
-
 	fileprivate func requestImage(for asset: PHAsset, completion: @escaping (_ image: UIImage?) -> ()) {
 		requestOptions.isSynchronous = false
 
@@ -244,26 +234,21 @@ public class ImagePickerTrayController: UIViewController {
 			}
 		}
 	}
-
-	fileprivate func prefetchImages(for asset: PHAsset) {
-		let size = CGSize(width: 200, height: 200)
-		imageManager?.startCachingImages(for: [asset], targetSize: size, contentMode: .aspectFill, options: requestOptions)
-	}
 }
 
 // MARK: - UICollectionViewDataSource
 
 extension ImagePickerTrayController: UICollectionViewDataSource {
 
-	public func numberOfSections(in collectionView: UICollectionView) -> Int {
+	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return sections.count
 	}
 
-	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return sections[section]
 	}
 
-	public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		switch indexPath.section {
 		case 0:
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(ActionCell.self), for: indexPath) as! ActionCell
@@ -294,7 +279,7 @@ extension ImagePickerTrayController: UICollectionViewDataSource {
 
 extension ImagePickerTrayController: UICollectionViewDelegate {
     
-	public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+	func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
 		guard indexPath.section == sections.count - 1 else {
 			return false
 		}
@@ -302,25 +287,23 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
 		if assets.count > indexPath.item {
 			delegate?.controller?(self, willSelectAsset: assets[indexPath.item], at: indexPath)
 		}
-
 		return true
 	}
     
-	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if assets.count > indexPath.item {
 			delegate?.controller?(self, didSelectAsset: assets[indexPath.item], at: indexPath)
 		}
 	}
 
-	public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+	func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
 		if assets.count > indexPath.item {
 			delegate?.controller?(self, willDeselectAsset: assets[indexPath.item], at: indexPath)
 		}
-
 		return true
 	}
 
-	public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+	func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
 		if assets.count > indexPath.item {
 			delegate?.controller?(self, didDeselectAsset: assets[indexPath.item], at: indexPath)
 		}
@@ -330,13 +313,12 @@ extension ImagePickerTrayController: UICollectionViewDelegate {
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
-
-	public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		switch indexPath.section {
 		case 0:
 			return CGSize(width: actionCellWidth, height: collectionView.frame.height - 1)
 		case 1:
-			return CGSize(width: collectionView.frame.height/2.045, height: collectionView.frame.height/2.045)
+			return CGSize(width: (collectionView.frame.height/2)-1, height: (collectionView.frame.height/2)-1)
 		default:
 			return .zero
 		}
@@ -344,8 +326,7 @@ extension ImagePickerTrayController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ImagePickerTrayController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
-	public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 		if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
 			delegate?.controller?(self, didTakeImage: image)
 		}

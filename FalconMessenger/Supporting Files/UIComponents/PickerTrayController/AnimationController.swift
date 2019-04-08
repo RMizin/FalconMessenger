@@ -6,10 +6,9 @@
 //  Copyright © 2017 Laurin Brandner. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-class AnimationController: NSObject {
+final class AnimationController: NSObject {
     
     enum Transition {
         case presentation(UIPanGestureRecognizer)

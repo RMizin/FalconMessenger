@@ -83,7 +83,7 @@ class PhoneNumberController: UIViewController {
 
   var isVerificationSent = false
 
-  @objc func rightBarButtonDidTap () {
+  @objc func rightBarButtonDidTap() {
 		ARSLineProgress.show()
     if currentReachabilityStatus == .notReachable {
       verificationDelegate?.verificationFinished(with: false, error: noInternetError)
@@ -96,7 +96,7 @@ class PhoneNumberController: UIViewController {
     }
   }
 
-  func sendSMSConfirmation () {
+  func sendSMSConfirmation() {
     print("tappped sms confirmation")
     let phoneNumberForVerification = phoneNumberContainerView.countryCode.text! + phoneNumberContainerView.phoneNumber.text!
 

@@ -10,10 +10,10 @@ import UIKit
 
 class ImageCell: UICollectionViewCell {
 
-	fileprivate let videoIndicatorView = UIImageView(image: UIImage(bundledName: "ImageCell-Video"))
-	fileprivate let checkmarkView = UIImageView(image: UIImage(bundledName: "ImageCell-Selected"))
+	fileprivate let videoIndicatorView = UIImageView(image: UIImage(named: "ImageCell-Video"))
+	fileprivate let checkmarkView = UIImageView(image: UIImage(named: "ImageCell-Selected"))
 
-	let imageView: UIImageView = {
+	lazy var imageView: UIImageView = {
 			let imageView = UIImageView()
 			imageView.contentMode = .scaleAspectFill
 			imageView.layer.masksToBounds = true

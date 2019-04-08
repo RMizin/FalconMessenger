@@ -105,8 +105,6 @@
 		4B6BB00F20886C5F00A90F3A /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFC920886C5E00A90F3A /* AnimationController.swift */; };
 		4B6BB01020886C5F00A90F3A /* ImagePickerAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFCA20886C5E00A90F3A /* ImagePickerAction.swift */; };
 		4B6BB01120886C5F00A90F3A /* TransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFCC20886C5E00A90F3A /* TransitionController.swift */; };
-		4B6BB01220886C5F00A90F3A /* UIEdgeInsetsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFCE20886C5E00A90F3A /* UIEdgeInsetsExtensions.swift */; };
-		4B6BB01320886C5F00A90F3A /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFCF20886C5E00A90F3A /* UIImageExtensions.swift */; };
 		4B6BB01420886C5F00A90F3A /* ImagePickerTrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD020886C5E00A90F3A /* ImagePickerTrayController.swift */; };
 		4B6BB01520886C5F00A90F3A /* FalconTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFD220886C5E00A90F3A /* FalconTextView.swift */; };
 		4B6BB02320886C5F00A90F3A /* RoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */; };
@@ -356,8 +354,6 @@
 		4B6BAFC920886C5E00A90F3A /* AnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
 		4B6BAFCA20886C5E00A90F3A /* ImagePickerAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerAction.swift; sourceTree = "<group>"; };
 		4B6BAFCC20886C5E00A90F3A /* TransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionController.swift; sourceTree = "<group>"; };
-		4B6BAFCE20886C5E00A90F3A /* UIEdgeInsetsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEdgeInsetsExtensions.swift; sourceTree = "<group>"; };
-		4B6BAFCF20886C5E00A90F3A /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		4B6BAFD020886C5E00A90F3A /* ImagePickerTrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerTrayController.swift; sourceTree = "<group>"; };
 		4B6BAFD220886C5E00A90F3A /* FalconTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FalconTextView.swift; sourceTree = "<group>"; };
 		4B6BAFE320886C5F00A90F3A /* RoundProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundProgressView.swift; sourceTree = "<group>"; };
@@ -833,7 +829,6 @@
 			isa = PBXGroup;
 			children = (
 				4B6BAFC420886C5E00A90F3A /* Cells */,
-				4B6BAFCD20886C5E00A90F3A /* Helpers */,
 				4B6BAFC920886C5E00A90F3A /* AnimationController.swift */,
 				4B6BAFCA20886C5E00A90F3A /* ImagePickerAction.swift */,
 				4B6BAFCC20886C5E00A90F3A /* TransitionController.swift */,
@@ -849,15 +844,6 @@
 				4B6BAFC820886C5E00A90F3A /* ImageCell.swift */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		4B6BAFCD20886C5E00A90F3A /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				4B6BAFCE20886C5E00A90F3A /* UIEdgeInsetsExtensions.swift */,
-				4B6BAFCF20886C5E00A90F3A /* UIImageExtensions.swift */,
-			);
-			path = Helpers;
 			sourceTree = "<group>";
 		};
 		4B75F35D2205B5E7008FDA25 /* CollectionViewContainers */ = {
@@ -1530,7 +1516,6 @@
 				D58F5EB9500B57EBF08DBF80 /* Pods-FalconMessenger.debug.xcconfig */,
 				C453937E794F82E14EFDF446 /* Pods-FalconMessenger.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -1692,7 +1677,6 @@
 				4B91B8B01F34B2D10025C67F /* UserProfileContainerView.swift in Sources */,
 				4B5693DA20CFFAAB005EAE15 /* InAppNotificationBanner.swift in Sources */,
 				4B91B8BA1F34D80F0025C67F /* UserProfileController+keyboardHandlers.swift in Sources */,
-				4B6BB01320886C5F00A90F3A /* UIImageExtensions.swift in Sources */,
 				4BBF79572134370C00903F56 /* GeneralTabBarController.swift in Sources */,
 				4B63646D1F977FD600A5D3BF /* UserinfoHeaderTableViewCell.swift in Sources */,
 				4BC3B25E212DA10A0012C7BD /* KeyboardFrameObserversManager.swift in Sources */,
@@ -1834,7 +1818,6 @@
 				4B7EA2E0220306BB00002F0E /* OverlayVideoBottomView.swift in Sources */,
 				4BBF7942213412BD00903F56 /* CountriesTableViewController+Search.swift in Sources */,
 				4BE5712D1F4D652D009D9AB4 /* ChatLogViewController+PhotoEditorDelegate.swift in Sources */,
-				4B6BB01220886C5F00A90F3A /* UIEdgeInsetsExtensions.swift in Sources */,
 				4B6BAFF620886C5F00A90F3A /* VerificationCodeController.swift in Sources */,
 				4B88F2DA206386BA00BED797 /* GroupAdminPanelTableViewController+NameEditing.swift in Sources */,
 				4B7EA2E22203076F00002F0E /* TransitionBackgrounView.swift in Sources */,

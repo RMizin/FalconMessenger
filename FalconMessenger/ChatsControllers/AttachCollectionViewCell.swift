@@ -44,7 +44,7 @@ class AttachCollectionViewCell: UICollectionViewCell {
   }()
   
   let videoIndicatorView: UIImageView = {
-    let videoIndicatorView = UIImageView(image: UIImage(bundledName: "ImageCell-Video"))
+    let videoIndicatorView = UIImageView(image: UIImage(named: "ImageCell-Video"))
     videoIndicatorView.translatesAutoresizingMaskIntoConstraints = false
     videoIndicatorView.backgroundColor = .clear
     return videoIndicatorView

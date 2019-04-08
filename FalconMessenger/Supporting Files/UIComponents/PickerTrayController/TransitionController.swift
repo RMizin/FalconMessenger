@@ -6,14 +6,12 @@
 //  Copyright © 2017 Laurin Brandner. All rights reserved.
 //
 
-import Foundation
 import UIKit
-
 
 protocol TransitionControllerDelegate: class {
   func dismiss()
 }
-class TransitionController: NSObject {
+final class TransitionController: NSObject {
   
     weak var delegate: TransitionControllerDelegate?
     var allowsInteractiveTransition = true
