@@ -13,7 +13,7 @@ target 'FalconMessenger' do
 	pod 'Realm', :modular_headers => true
 	pod 'RealmSwift'
 
-	pod 'SDWebImage', :modular_headers => true #, :git => 'https://github.com/rs/SDWebImage', :branch => '5.x', :modular_headers => true
+	pod 'SDWebImage', :modular_headers => true
   pod 'PhoneNumberKit'
   pod 'FTPopOverMenu_Swift'
   pod 'CropViewController'

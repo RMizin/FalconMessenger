@@ -9,22 +9,23 @@
 import UIKit
 
 final class AnimationController: NSObject {
-    
-    enum Transition {
-        case presentation(UIPanGestureRecognizer)
-        case dismissal
-    }
-    
-    fileprivate let transition: Transition
-  deinit {
-    print("\n animation controller DE init \n")
-  }
-    init(transition: Transition) {
-        self.transition = transition
-        super.init()
-      print("\n animation controller init \n")
-    }
-    
+
+	fileprivate let transition: Transition
+
+	enum Transition {
+		case presentation(UIPanGestureRecognizer)
+		case dismissal
+	}
+
+	init(transition: Transition) {
+		self.transition = transition
+		super.init()
+		print("\n animation controller init \n")
+	}
+
+	deinit {
+		print("\n animation controller DE init \n")
+	}
 }
 
 extension AnimationController: UIViewControllerAnimatedTransitioning {

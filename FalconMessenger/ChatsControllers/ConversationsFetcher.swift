@@ -325,7 +325,13 @@ class ConversationsFetcher: NSObject {
     }
     
     if snapshot.key == conversationNameKey {
-      conversations[index].chatName = snapshot.value as? String
+			guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+			if conversations[index].chatID == currentUserID {
+				conversations[index].chatName = NameConstants.personalStorage
+			} else {
+				conversations[index].chatName = snapshot.value as? String
+			}
+
       delegate?.conversations(update: conversations[index], reloadNeeded: true)
     }
       

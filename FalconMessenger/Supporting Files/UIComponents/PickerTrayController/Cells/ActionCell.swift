@@ -13,7 +13,7 @@ import Photos
 let spacing = CGPoint(x: 26, y: 14)
 fileprivate let stackViewOffset: CGFloat = 6
 
-class ActionCell: UICollectionViewCell {
+final class ActionCell: UICollectionViewCell {
   
   weak var imagePickerTrayController: ImagePickerTrayController?
   

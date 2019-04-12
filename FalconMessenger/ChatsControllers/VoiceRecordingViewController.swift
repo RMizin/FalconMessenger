@@ -65,8 +65,7 @@ class VoiceRecordingViewController: UIViewController {
         recorder.updateMeters()
        
         let percentage = pow (10, (0.05 * recorder.averagePower(forChannel: 0)))
-       // print(percentage)
-        voiceRecordingContainerView.waveForm.amplitude = CGFloat(percentage*5)
+			  voiceRecordingContainerView.waveForm.amplitude = CGFloat(percentage * 5)
       }
     }
   }

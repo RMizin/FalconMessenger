@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImageCell: UICollectionViewCell {
+final class ImageCell: UICollectionViewCell {
 
 	fileprivate let videoIndicatorView = UIImageView(image: UIImage(named: "ImageCell-Video"))
 	fileprivate let checkmarkView = UIImageView(image: UIImage(named: "ImageCell-Selected"))
