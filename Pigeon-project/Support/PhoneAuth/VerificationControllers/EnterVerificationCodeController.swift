@@ -134,8 +134,8 @@ class EnterVerificationCodeController: UIViewController {
     let credential = PhoneAuthProvider.provider().credential (
       withVerificationID: unwrappedVerificationID,
       verificationCode: unwrappedVerificationCode)
-    
-    Auth.auth().signInAndRetrieveData(with: credential) { (_, error) in
+	
+   	Auth.auth().signIn(with: credential) { (_, error) in
       if error != nil {
         ARSLineProgress.hide()
         basicErrorAlertWith(title: "Error", message: error?.localizedDescription ?? "Oops! Something happened, try again later.", controller: self)
