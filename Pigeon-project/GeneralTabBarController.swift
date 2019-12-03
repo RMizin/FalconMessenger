@@ -102,6 +102,9 @@ class GeneralTabBarController: UITabBarController {
     newNavigationController.navigationBar.shadowImage = UIImage()
     newNavigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
     newNavigationController.modalTransitionStyle = .crossDissolve
+    if #available(iOS 13.0, *) {
+        newNavigationController.modalPresentationStyle = .fullScreen
+    }
     present(newNavigationController, animated: false, completion: nil)
   }
 }
