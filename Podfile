@@ -13,7 +13,7 @@ target 'Pigeon-project' do
   pod 'SDWebImage', :modular_headers => true
   pod 'PhoneNumberKit'
   pod 'FLAnimatedImage', :modular_headers => true
-  pod 'FTPopOverMenu_Swift'
+  pod 'FTPopOverMenu_Swift', '0.1.4'
   pod 'CropViewController'
 	pod 'ARSLineProgress'
 
