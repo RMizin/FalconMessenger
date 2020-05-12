@@ -118,7 +118,7 @@ DEPENDENCIES:
   - SDWebImage
 
 SPEC REPOS:
-  trunk:
+  https://github.com/cocoapods/specs.git:
     - ARSLineProgress
     - CropViewController
     - Firebase
@@ -172,4 +172,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 47058e46aeeeb070c1cfdd7e257b70ed64699032
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.5.2

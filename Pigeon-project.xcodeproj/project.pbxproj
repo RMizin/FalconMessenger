@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D84FFFE2469BA09006594AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D84FFFD2469BA09006594AC /* GoogleService-Info.plist */; };
 		0FAA5290B818B51BB8CD0A55 /* libPods-Pigeon-project.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2897810158A4718FAC892931 /* libPods-Pigeon-project.a */; };
-		127C6A912468A40F008A13C9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 127C6A902468A40F008A13C9 /* GoogleService-Info.plist */; };
 		4B4F452F1F32230C00A6FF96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */; };
 		4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F45371F32230C00A6FF96 /* Assets.xcassets */; };
 		4B4F45431F32246000A6FF96 /* GeneralTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */; };
@@ -176,7 +176,6 @@
 		4BAEE5F7212735E50045AB10 /* AvatarOpenerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAEE5B4212735E50045AB10 /* AvatarOpenerOverlay.swift */; };
 		4BB46C6A2136E6F8005405BB /* ChatLogHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */; };
 		4BB46C6C2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */; };
-		4BCB128C224ADD450046DFF3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCB128B224ADD450046DFF3 /* GoogleService-Info.plist */; };
 		4BE44DAA212B5CC600E722B8 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */; };
 /* End PBXBuildFile section */
 
@@ -194,7 +193,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		127C6A902468A40F008A13C9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0D84FFFD2469BA09006594AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		2897810158A4718FAC892931 /* libPods-Pigeon-project.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pigeon-project.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4F452B1F32230C00A6FF96 /* Pigeon-project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pigeon-project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -366,7 +365,6 @@
 		4BAEE5B4212735E50045AB10 /* AvatarOpenerOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarOpenerOverlay.swift; sourceTree = "<group>"; };
 		4BB46C692136E6F8005405BB /* ChatLogHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogHistoryFetcher.swift; sourceTree = "<group>"; };
 		4BB46C6B2136E71F005405BB /* ChatLogController+ChatHistoryFetcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatLogController+ChatHistoryFetcherDelegate.swift"; sourceTree = "<group>"; };
-		4BCB128B224ADD450046DFF3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		4BE44DA9212B5CC600E722B8 /* ContactsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsFetcher.swift; sourceTree = "<group>"; };
 		4BE9F1DE219B457C00C6768F /* Pigeon-project.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pigeon-project.entitlements"; sourceTree = "<group>"; };
 		8B9AFAE7ED3D864CA90779BE /* Pods-Pigeon-project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pigeon-project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project.release.xcconfig"; sourceTree = "<group>"; };
@@ -396,7 +394,6 @@
 		4B4F45221F32230C00A6FF96 = {
 			isa = PBXGroup;
 			children = (
-				127C6A902468A40F008A13C9 /* GoogleService-Info.plist */,
 				4B4F452D1F32230C00A6FF96 /* Pigeon-project */,
 				4B4F452C1F32230C00A6FF96 /* Products */,
 				E788FC79B73E9599A409079F /* Pods */,
@@ -427,8 +424,8 @@
 				4B4F45421F32246000A6FF96 /* GeneralTabBarController.swift */,
 				4B4F452E1F32230C00A6FF96 /* AppDelegate.swift */,
 				4B4F45371F32230C00A6FF96 /* Assets.xcassets */,
-				4BCB128B224ADD450046DFF3 /* GoogleService-Info.plist */,
 				4B4F453C1F32230C00A6FF96 /* Info.plist */,
+				0D84FFFD2469BA09006594AC /* GoogleService-Info.plist */,
 			);
 			path = "Pigeon-project";
 			sourceTree = "<group>";
@@ -1212,7 +1209,7 @@
 					4B4F452A1F32230C00A6FF96 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = HU9DD5VB42;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1140;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1255,8 +1252,7 @@
 				4BAEE5EB212735E50045AB10 /* CallingCodes.plist in Resources */,
 				4B4F45381F32230C00A6FF96 /* Assets.xcassets in Resources */,
 				4BAEE5B9212735E50045AB10 /* INSPhotoGallery.bundle in Resources */,
-				4BCB128C224ADD450046DFF3 /* GoogleService-Info.plist in Resources */,
-				127C6A912468A40F008A13C9 /* GoogleService-Info.plist in Resources */,
+				0D84FFFE2469BA09006594AC /* GoogleService-Info.plist in Resources */,
 				4BAEE52421272D890045AB10 /* typingIndicator.gif in Resources */,
 				4BAEE5BF212735E50045AB10 /* notification.caf in Resources */,
 			);
@@ -1289,7 +1285,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-resources.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/CropViewController/TOCropViewControllerBundle.bundle",
 				"${PODS_ROOT}/PhoneNumberKit/PhoneNumberKit/Resources/PhoneNumberMetadata.json",
 			);
@@ -1300,7 +1296,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pigeon-project/Pods-Pigeon-project-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1616,7 +1612,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1631,7 +1627,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P5BE2YHTGJ;
+				DEVELOPMENT_TEAM = HU9DD5VB42;
 				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = "Pigeon-project/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1640,7 +1636,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

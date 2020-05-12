@@ -96,6 +96,10 @@ class EnterPhoneNumberController: UIViewController {
     
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumberForVerification, uiDelegate: nil) { (verificationID, error) in
       if let error = error {
+        if error.localizedDescription == "TOO_LONG" || error.localizedDescription == "TOO_SHORT" {
+                basicErrorAlertWith(title: "Error", message: "There is an error with the number. Please check the number.", controller: self)
+                return
+        }
         basicErrorAlertWith(title: "Error", message: error.localizedDescription + "\nPlease try again later.", controller: self)
         return
       }

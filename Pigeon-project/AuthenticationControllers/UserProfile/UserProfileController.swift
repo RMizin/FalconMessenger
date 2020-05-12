@@ -76,7 +76,8 @@ extension UserProfileController {
    userProfileContainerView.name.resignFirstResponder()
     if userProfileContainerView.name.text?.count == 0 ||
        userProfileContainerView.name.text!.trimmingCharacters(in: .whitespaces).isEmpty {
-       userProfileContainerView.name.shake()
+        userProfileContainerView.name.attributedPlaceholder = NSAttributedString(string: "Enter name", attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+        userProfileContainerView.name.shake()
     } else {
        
       if currentReachabilityStatus == .notReachable {

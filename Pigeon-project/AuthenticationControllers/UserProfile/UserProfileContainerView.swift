@@ -59,12 +59,13 @@ class UserProfileContainerView: UIView {
     name.enablesReturnKeyAutomatically = true
     name.translatesAutoresizingMaskIntoConstraints = false
     name.textAlignment = .center
-    name.placeholder = "Enter name"
+    name.attributedPlaceholder = NSAttributedString(string: "Enter name", attributes: [NSAttributedString.Key.foregroundColor: ThemeManager.currentTheme().generalSubtitleColor])
     name.borderStyle = .none
     name.autocorrectionType = .no
     name.returnKeyType = .done
+    name.backgroundColor = .clear
     name.keyboardAppearance = ThemeManager.currentTheme().keyboardAppearance
-    name.textColor = ThemeManager.currentTheme().generalTitleColor
+    name.textColor = ThemeManager.currentTheme().generalSubtitleColor
   
     return name
   }()

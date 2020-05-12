@@ -55,7 +55,7 @@ extension ChatLogController {
   }
   
   func openSelectedPhoto(at indexPath: IndexPath) {
-    var photos: [INSPhotoViewable] = setupPhotosData()
+    let photos: [INSPhotoViewable] = setupPhotosData()
     var initialPhotoIndex: Int!
     
     if messages[indexPath.item].localImage != nil {
