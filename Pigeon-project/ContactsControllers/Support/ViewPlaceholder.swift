@@ -79,6 +79,8 @@ class ViewPlaceholder: UIView {
     placeholderPriority = priority
     self.title.text = title.rawValue
     self.subtitle.text = subtitle.rawValue
+    self.title.text = title.rawValue
+    self.subtitle.text = subtitle.rawValue
     
     if position == .center {
       self.title.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 0).isActive = true

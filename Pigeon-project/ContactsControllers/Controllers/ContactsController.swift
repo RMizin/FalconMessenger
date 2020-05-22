@@ -308,9 +308,14 @@ extension ContactsController: ContactsUpdatesDelegate {
   
   func contacts(handleAccessStatus: Bool) {
     guard handleAccessStatus else {
-      viewPlaceholder.add(for: view, title: .denied, subtitle: .denied, priority: .high, position: .top)
+        DispatchQueue.main.async { [weak self] in
+            self?.viewPlaceholder.add(for: self!.view, title: .denied, subtitle: .denied, priority: .high, position: .top)
+        }
       return
     }
-    viewPlaceholder.remove(from: view, priority: .high)
+    DispatchQueue.main.async{ [weak self] in
+        self?.viewPlaceholder.remove(from: self!.view, priority: .high)
+    }
+    
   }
 }

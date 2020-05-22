@@ -16,20 +16,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    ThemeManager.applyTheme(theme: ThemeManager.currentTheme())
-    FirebaseApp.configure()
-    Database.database().isPersistenceEnabled = true
-    userDefaults.configureInitialLaunch()
-    
-    let tabBarController = GeneralTabBarController()
-    window = UIWindow(frame: UIScreen.main.bounds)
-    window?.rootViewController = tabBarController
-    window?.makeKeyAndVisible()
-    window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-    tabBarController.presentOnboardingController()
-  
+        if #available(iOS 13.0, *){
+        var osTheme: UIUserInterfaceStyle {
+            return UIScreen.main.traitCollection.userInterfaceStyle
+            }
+            switch osTheme{
+            case .unspecified:
+                let theme = Theme.Default
+                ThemeManager.applyTheme(theme: theme)
+            case .light:
+                let theme = Theme.Default
+                ThemeManager.applyTheme(theme: theme)
+                break
+            case .dark:
+                let theme = Theme.Dark
+                ThemeManager.applyTheme(theme: theme)
+                break
+            @unknown default:
+                let theme = Theme.Default
+                ThemeManager.applyTheme(theme: theme)
+            }
+        }
+        
+        FirebaseApp.configure()
+        Database.database().isPersistenceEnabled = true
+        userDefaults.configureInitialLaunch()
+        
+        let tabBarController = GeneralTabBarController()
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
+        window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+        tabBarController.presentOnboardingController()
+        
     return true
   }
+    
   
   var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
   
@@ -54,6 +76,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
+    if #available(iOS 13.0, *){
+    var osTheme: UIUserInterfaceStyle {
+        return UIScreen.main.traitCollection.userInterfaceStyle
+        }
+        switch osTheme{
+        case .unspecified:
+            let theme = Theme.Default
+            ThemeManager.applyTheme(theme: theme)
+        case .light:
+            let theme = Theme.Default
+            ThemeManager.applyTheme(theme: theme)
+            break
+        case .dark:
+            let theme = Theme.Dark
+            ThemeManager.applyTheme(theme: theme)
+            break
+        @unknown default:
+            let theme = Theme.Default
+            ThemeManager.applyTheme(theme: theme)
+        }
+    }
+    let tabBarController = GeneralTabBarController()
+    window = UIWindow(frame: UIScreen.main.bounds)
+    window?.rootViewController = tabBarController
+    window?.makeKeyAndVisible()
+    window?.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+    tabBarController.presentOnboardingController()
+    
   }
 
   func applicationWillTerminate(_ application: UIApplication) {
