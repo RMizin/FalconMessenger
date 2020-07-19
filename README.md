@@ -7,10 +7,10 @@
 <br>
 <br>
 <p align="center"> 
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="270"/>
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="270" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="270" />
+ <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/FeaturesTitle.png" />
+ <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/Features1.png" width="270"/>
+ <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/Features2.png" width="270" />
+ <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/Features3.png" width="270" />
 </p> 
 <br>
 <br>
