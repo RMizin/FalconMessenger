@@ -4,21 +4,14 @@
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/TitleDesc.png" />
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/DOnAppStore.png" alt="App Store" /></a>
 </p> 
-
 <br>
 <br>
-![teamwork-flip](https://github.com/davidtheclark/gifs/blob/master/teamwork-flip.gif)
-
-		
-
 <p align="center"> 
-![teamwork-flip](https://github.com/davidtheclark/gifs/blob/master/teamwork-flip.gif)
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="288"/>
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="288" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="288" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="270"/>
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="270" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="270" />
 </p> 
-
 <br>
 <br>
 
@@ -30,19 +23,16 @@
 
 <br>
 <br>
+<p align="center"> 
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SomeFeaturesInAction.png" alt="App Store"/></a>	
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/auth.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/faceID.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/actions.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/themes.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/send.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/typing.gif" width="270px">
+</p> 
 
-<p align="center">
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/SomeFeaturesInAction.png" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/BlackList.png"  width="288"/>
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/TypingIndicator.png" width="288" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Themes.png" width="288" />
-</p>
-<p align="center">
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Shared.png"  width="288"/>
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/ChatLog.png" width="288" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/GroupChats.png" width="288" />
-</p>
-	
 <br>
 <br>
 
@@ -110,16 +100,10 @@ Note before next step:<i> if you don't have cocoapods installed on your computer
 		    databaseURL: 'https://your-Databse-URL.firebaseio.com'
 		});
 
-14. Run "Firebase Delpoy" in the terminal from your cloud Functions Directory to configure Cloud Functions.
+15. Run "Firebase Delpoy" in the terminal from your cloud Functions Directory to configure Cloud Functions.
 
-15. Configuring Reporting and Blacklisting//todo
 16. If you do not have paid Apple Developer Account , you might also see this error: "Your development team, "Name", does not support the Push Notifications capability". 
 	<br> To fix this, go to Project->Targets->FalconMessenger->Capabilities and Deselect Push Notifications option
-	//todo
-	
-	
-Any unexpected errors? falconmessenger.help@gmail.com
-
 <br>
 <br>
 
@@ -132,6 +116,6 @@ Any unexpected errors? falconmessenger.help@gmail.com
 <br>
 
 <p align="center">
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/LicenseTitle.png" />
-<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/License.png" alt="LICENSE.md" /></a>
+ <a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LicenseTitle.png" alt="LICENSE.md"/></a>
+<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/License.png" alt="LICENSE.md"/></a>
 </p> 
