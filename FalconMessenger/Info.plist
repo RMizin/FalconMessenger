@@ -27,7 +27,7 @@
 			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.543709574996-mhemqpku648jp5c2ef4pmddv5u3sdpfu</string>
+				<string>com.googleusercontent.apps.543709574996-a0abnp34r0bjpnjcfqrbbaufj587k3vh</string>
 			</array>
 		</dict>
 	</array>
@@ -84,5 +84,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

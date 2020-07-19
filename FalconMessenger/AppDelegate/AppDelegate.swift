@@ -7,7 +7,11 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
 import Firebase
+import FirebaseMessaging
+import FirebaseCore
 import UserNotifications
 import FirebaseAnalytics
 

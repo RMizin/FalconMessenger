@@ -37,7 +37,7 @@ extension ChatLogViewController: MessageSenderDelegate {
 					message.status = messageStatusSending
 					message.conversation = conversation
 					message.isCrooked.value = false
-					realm.create(Message.self, value: message, update: true)
+					realm.create(Message.self, value: message, update: .modified)
 
 					guard let newSectionTitle = message.shortConvertedTimestamp else { realm.cancelWrite(); return }
 

@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
 import LocalAuthentication
 
 enum Tabs: Int {
@@ -73,6 +74,10 @@ class GeneralTabBarController: UITabBarController {
     let newNavigationController = UINavigationController(rootViewController: destination)
 		newNavigationController.navigationBar.setValue(true, forKey: "hidesShadow")
     newNavigationController.modalTransitionStyle = .crossDissolve
+    newNavigationController.modalPresentationStyle = .overFullScreen
+    if #available(iOS 13.0, *) {
+        newNavigationController.isModalInPresentation = true
+    }
   
     if DeviceType.isIPad {
       splitViewController?.show(newNavigationController, sender: self)

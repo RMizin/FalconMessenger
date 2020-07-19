@@ -9,7 +9,8 @@
 import UIKit
 import AVFoundation
 import AVKit
-import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 import RealmSwift
 import SDWebImage
 

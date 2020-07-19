@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 import ARSLineProgress
 
 class AccountSettingsController: UITableViewController {
@@ -226,6 +227,11 @@ class AccountSettingsController: UITableViewController {
       let navigationController = UINavigationController(rootViewController: destination)
       navigationController.navigationBar.isTranslucent = false
       navigationController.modalTransitionStyle = .crossDissolve
+      navigationController.modalPresentationStyle = .overFullScreen
+      if #available(iOS 13.0, *) {
+          navigationController.isModalInPresentation = true
+      }
+        
       ARSLineProgress.hide()
       if DeviceType.isIPad {
         self?.splitViewController?.show(navigationController, sender: self)

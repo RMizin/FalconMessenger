@@ -7,7 +7,9 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseMessaging
 import PhoneNumberKit
 import ARSLineProgress
 
@@ -149,7 +151,7 @@ class VerificationCodeController: UIViewController {
       withVerificationID: unwrappedVerificationID,
       verificationCode: unwrappedVerificationCode)
 
-    Auth.auth().signInAndRetrieveData(with: credential) { (_, error) in
+    Auth.auth().signIn(with: credential) { (_, error) in
       if error != nil {
         ARSLineProgress.hide()
         basicErrorAlertWith(title: "Error",

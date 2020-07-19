@@ -35,7 +35,7 @@ extension ChatLogViewController: ChatLogHistoryDelegate {
 		autoreleasepool {
 			try! realm.safeWrite {
 				for message in newMessages {
-					realm.create(Message.self, value: message, update: true)
+					realm.create(Message.self, value: message, update: .modified)
 				}
 			}
 		}

@@ -29,6 +29,19 @@ struct ThemeManager {
     UINavigationBar.appearance().isTranslucent = false
     UINavigationBar.appearance().barStyle = theme.barStyle
     UINavigationBar.appearance().barTintColor = theme.barBackgroundColor
+
+    if #available(iOS 13.0, *) {
+        let coloredAppearance = UINavigationBarAppearance()
+        coloredAppearance.configureWithOpaqueBackground()
+        coloredAppearance.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+        //            coloredAppearance.shadowColor = .clear
+        coloredAppearance.titleTextAttributes = [.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
+        coloredAppearance.largeTitleTextAttributes = [.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
+        UINavigationBar.appearance().standardAppearance = coloredAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
+    }
+
+
 		UITabBar.appearance().tintColor = theme.tabBarTintColor
     UITabBar.appearance().barTintColor = theme.barBackgroundColor
     UITableViewCell.appearance().selectionColor = ThemeManager.currentTheme().cellSelectionColor

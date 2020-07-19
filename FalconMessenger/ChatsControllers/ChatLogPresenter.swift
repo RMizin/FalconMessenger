@@ -145,7 +145,7 @@ extension ChatLogPresenter: MessagesDelegate {
 					message.localImage = RealmKeychain.defaultRealm.object(ofType: RealmImage.self, forPrimaryKey: message.messageUID ?? "")
 				}
 
-				RealmKeychain.defaultRealm.create(Message.self, value: message, update: true)
+				RealmKeychain.defaultRealm.create(Message.self, value: message, update: .modified)
 			}
 
 			try! RealmKeychain.defaultRealm.commitWrite()

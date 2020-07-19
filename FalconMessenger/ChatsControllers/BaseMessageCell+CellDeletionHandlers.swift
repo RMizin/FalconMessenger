@@ -72,7 +72,7 @@ extension BaseMessageCell {
 
     let isOutgoing = message?.fromId == Auth.auth().currentUser?.uid
     var contextMenuItems = ContextMenuItems.contextMenuItems(for: .textMessage, !isOutgoing)
-    let config = FTConfiguration.shared
+    let config = chatLogController?.configureCellContextMenuView() ?? FTConfiguration()
     let expandedMenuWidth: CGFloat = 150
     let defaultMenuWidth: CGFloat = 100
     config.menuWidth = expandedMenuWidth
@@ -124,33 +124,22 @@ extension BaseMessageCell {
       contextMenuItems = ContextMenuItems.contextMenuItems(for: .sendingMessage, !isOutgoing)
     }
 
-		var cellConfig = [FTCellConfiguration]()
-		for _ in contextMenuItems {
-			let element = FTCellConfiguration()
-			element.textAlignment = .center
-			cellConfig.append(element)
-		}
+    FTPopOverMenu.showForSender(sender: bubbleView, with: contextMenuItems, menuImageArray: nil, popOverPosition: .automatic, config: config, done: { (selectedIndex) in
+        guard contextMenuItems[selectedIndex] != ContextMenuItems.reportItem else {
+            self.handleReport(indexPath: indexPath)
+            print("handlong report")
+            return
+        }
 
-		FTPopOverMenu.showForSender(sender: bubbleView,
-																with: contextMenuItems,
-																menuImageArray: nil,
-																cellConfigurationArray: cellConfig, done: { (selectedIndex) in
-      
-      guard contextMenuItems[selectedIndex] != ContextMenuItems.reportItem else {
-        self.handleReport(indexPath: indexPath)
-        print("handlong report")
-        return
-      }
-      
-      guard contextMenuItems[selectedIndex] != ContextMenuItems.deleteItem else {
-        self.handleDeletion(indexPath: indexPath)
-        print("handling deletion")
-        return
-      }
-      print("handling coly")
-      self.handleCopy(indexPath: indexPath)
-    }) { //completeion
-     self.chatLogController?.collectionView.reloadItems(at: [indexPath])
+        guard contextMenuItems[selectedIndex] != ContextMenuItems.deleteItem else {
+            self.handleDeletion(indexPath: indexPath)
+            print("handling deletion")
+            return
+        }
+        print("handling coly")
+        self.handleCopy(indexPath: indexPath)
+    }) {
+        self.chatLogController?.collectionView.reloadItems(at: [indexPath])
     }
   }
   

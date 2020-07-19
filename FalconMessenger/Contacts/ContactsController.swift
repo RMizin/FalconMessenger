@@ -192,7 +192,7 @@ class ContactsController: FalconTableViewController {
 				realm.beginWrite()
 				for user in users {
 					user.onlineStatusString = user.stringStatus(onlineStatus: user.onlineStatus)
-					realm.create(User.self, value: user, update: true)
+					realm.create(User.self, value: user, update: .modified)
 				}
 				try! realm.commitWrite()
 			}

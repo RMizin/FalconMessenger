@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 import Photos
 import AudioToolbox
 import CropViewController
@@ -443,18 +444,20 @@ class ChatLogViewController: UIViewController {
 
     collectionView.addSubview(refreshControl)
     configureRefreshControlInitialTintColor()
-    configureCellContextMenuView()
+//    configureCellContextMenuView()
     addBlockerView()
   }
 
-	func configureCellContextMenuView() {
-		let config = FTConfiguration.shared
+	func configureCellContextMenuView() -> FTConfiguration {
+		let config = FTConfiguration()
 		config.backgoundTintColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0)
 		config.borderColor = UIColor(red: 80/255, green: 80/255, blue: 80/255, alpha: 0.0)
 		config.menuWidth = 100
 		config.menuSeparatorColor = .clear
 		config.menuRowHeight = 40
 		config.cornerRadius = 25
+        config.textAlignment = .center
+        return config
 	}
 
 
@@ -1062,7 +1065,7 @@ class ChatLogViewController: UIViewController {
 	fileprivate func realmConversation(from conversation: Conversation) -> Conversation {
 		guard realm.objects(Conversation.self).filter("chatID == %@", conversation.chatID ?? "").first == nil else { return conversation }
 		try! realm.safeWrite {
-			realm.create(Conversation.self, value: conversation, update: true)
+            realm.create(Conversation.self, value: conversation, update: .modified)
 		}
 
 		let newConversation = realm.objects(Conversation.self).filter("chatID == %@", conversation.chatID ?? "").first

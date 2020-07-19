@@ -14,7 +14,7 @@ class ChatsRealmManager {
 	func update(conversation: Conversation) {
 		autoreleasepool {
 			try! RealmKeychain.defaultRealm.safeWrite {
-				RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: true)
+				RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: .modified)
 			}
 		}
 	}
@@ -29,7 +29,7 @@ class ChatsRealmManager {
 				RealmKeychain.defaultRealm.beginWrite()
 				for conversation in conversations {
 					conversation.isTyping.value = RealmKeychain.defaultRealm.object(ofType: Conversation.self, forPrimaryKey: conversation.chatID ?? "")?.isTyping.value
-					RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: true)
+					RealmKeychain.defaultRealm.create(Conversation.self, value: conversation, update: .modified)
 					if let message = conversation.lastMessageRuntime {
 						message.senderName = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.senderName
 						message.isCrooked.value = RealmKeychain.defaultRealm.object(ofType: Message.self, forPrimaryKey: message.messageUID ?? "")?.isCrooked.value
@@ -39,7 +39,7 @@ class ChatsRealmManager {
 						if message.localImage == nil {
 							message.localImage = RealmKeychain.defaultRealm.object(ofType: RealmImage.self, forPrimaryKey: message.messageUID ?? "")
 						}
-						RealmKeychain.defaultRealm.create(Message.self, value: message, update: true)
+						RealmKeychain.defaultRealm.create(Message.self, value: message, update: .modified)
 					}
 				}
 				do {

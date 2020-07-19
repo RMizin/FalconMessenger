@@ -46,7 +46,7 @@ extension ChatLogViewController: CollectionDelegate {
 		groupedMessages.last?.messages.last?.isCrooked.value = false
 		message.conversation = conversation
 		message.isCrooked.value = false
-		realm.create(Message.self, value: message, update: true)
+		realm.create(Message.self, value: message, update: .modified)
 
 		guard let newSectionTitle = message.shortConvertedTimestamp else { try! self.realm.commitWrite(); return }
 		let lastSectionTitle = groupedMessages.last?.title ?? ""

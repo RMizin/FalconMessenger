@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 import SDWebImage
 import RealmSwift
 
@@ -47,29 +48,35 @@ class ChatsTableViewController: FalconTableViewController {
     addObservers()
   }
 
-	func setupDataSource() {
-		let objects = RealmKeychain.defaultRealm.objects(Conversation.self)
-		let pinnedObjects = objects.filter("pinned == true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
-		let unpinnedObjects = objects.filter("pinned != true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
-
-		realmPinnedConversations = pinnedObjects
-		realmUnpinnedConversations = unpinnedObjects
-		realmAllConversations = objects
-	}
+    func setupDataSource() {
+        let objects = RealmKeychain.defaultRealm.objects(Conversation.self)
+        let pinnedObjects = objects.filter("pinned == true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
+        let unpinnedObjects = objects.filter("pinned != true").sorted(byKeyPath: "lastMessageTimestamp", ascending: false)
+        realmPinnedConversations = pinnedObjects
+        realmUnpinnedConversations = unpinnedObjects
+        realmAllConversations = objects
+    }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-		guard !isAppLoaded, Auth.auth().currentUser != nil else { return }
-		conversationsFetcher.fetchConversations()
-		setupDataSource()
-		managePresense()
+    initializeDataSource()
+
   }
 
+    @objc private func initializeDataSource() {
+        guard !isAppLoaded, Auth.auth().currentUser != nil else { return }
+        conversationsFetcher.fetchConversations()
+        setupDataSource()
+        managePresense()
+    }
+    
   deinit {
     NotificationCenter.default.removeObserver(self)
   }
-  
+
+
   fileprivate func addObservers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(initializeDataSource), name: .authenticationSucceeded, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(changeTheme), name: .themeUpdated, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleReloadTable), name: .messageSent, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(cleanUpController), name: NSNotification.Name(rawValue: "clearUserData"), object: nil)
