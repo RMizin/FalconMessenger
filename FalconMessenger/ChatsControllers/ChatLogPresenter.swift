@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 let chatLogPresenter = ChatLogPresenter()
 
@@ -16,27 +17,31 @@ class ChatLogPresenter: NSObject {
   fileprivate var chatLogController: ChatLogViewController?
   fileprivate var messagesFetcher: MessagesFetcher?
   
-  fileprivate func controller() -> UIViewController? {
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
-    guard let tabBarController = appDelegate.tabBarController else { return nil }
-   
-    switch tabBarController.selectedIndex {
-    case 0:
-      let controller = tabBarController.contactsController
-      return controller
-    case 1:
-      let controller = tabBarController.chatsController
-      return controller
-    case 2:
-      let controller = tabBarController.settingsController
-      return controller
-    default: return nil
-    }
-  }
+//  fileprivate func controller() -> UIViewController? {
+//    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
+//    guard let tabBarController = appDelegate.tabBarController else { return nil }
+//
+//    if DeviceType.isIPad {
+//        return appDelegate.splitViewController
+//    }
+//
+//    switch CurrentTab.shared.index {
+//    case 0:
+//      let controller = tabBarController.contactsController
+//      return controller
+//    case 1:
+//      let controller = tabBarController.chatsController
+//      return controller
+//    case 2:
+//      let controller = tabBarController.settingsController
+//      return controller
+//    default: return nil
+//    }
+//  }
 
-	fileprivate func deselectItem() {
+    fileprivate func deselectItem(controller: UIViewController) {
 		guard DeviceType.isIPad else { return }
-		guard let controller = controller() as? UITableViewController else { return }
+		guard let controller = controller as? UITableViewController else { return }
 
 		if let indexPath = controller.tableView.indexPathForSelectedRow {
 			controller.tableView.deselectRow(at: indexPath, animated: true)
@@ -52,7 +57,7 @@ class ChatLogPresenter: NSObject {
 
 	fileprivate var isChatLogAlreadyOpened = false
 
-	public func open(_ conversation: Conversation) {
+    public func open(_ conversation: Conversation, controller: UIViewController) {
 		isChatLogAlreadyOpened = false
 		chatLogController = ChatLogViewController()
 		messagesFetcher = MessagesFetcher()
@@ -61,25 +66,27 @@ class ChatLogPresenter: NSObject {
 		let newMessagesReceived = (conversation.badge.value ?? 0) > 0
 		let isEnoughData = conversation.messages.count >= 3
 
-		if !newMessagesReceived && isEnoughData {
-			let needUpdate = RealmKeychain.defaultRealm.object(ofType: Conversation.self,
-																											forPrimaryKey: conversation.chatID ?? "")?.shouldUpdateRealmRemotelyBeforeDisplaying.value
-			if let needUpdate = needUpdate, needUpdate {
-				try! RealmKeychain.defaultRealm.safeWrite {
-					RealmKeychain.defaultRealm.object(ofType: Conversation.self,
-																						forPrimaryKey: conversation.chatID ?? "")?.shouldUpdateRealmRemotelyBeforeDisplaying.value = false
-				}
-				messagesFetcher?.loadMessagesData(for: conversation)
-			} else {
-				openChatLog(for: conversation)
-			}
-			print("loading from realm")
-		}
+        if !newMessagesReceived && isEnoughData {
+            let needUpdate = RealmKeychain.defaultRealm.object(
+                ofType: Conversation.self,
+                forPrimaryKey: conversation.chatID ?? "")?.shouldUpdateRealmRemotelyBeforeDisplaying.value
+            if let needUpdate = needUpdate, needUpdate {
+                try! RealmKeychain.defaultRealm.safeWrite {
+                    RealmKeychain.defaultRealm.object(
+                        ofType: Conversation.self,
+                        forPrimaryKey: conversation.chatID ?? "")?.shouldUpdateRealmRemotelyBeforeDisplaying.value = false
+                }
+                messagesFetcher?.loadMessagesData(for: conversation, controller: controller)
+            } else {
+                openChatLog(for: conversation, controller: controller)
+            }
+            print("loading from realm")
+        }
 
-		messagesFetcher?.loadMessagesData(for: conversation)
+        messagesFetcher?.loadMessagesData(for: conversation, controller: controller)
 	}
 
-	fileprivate func openChatLog(for conversation: Conversation) {
+    fileprivate func openChatLog(for conversation: Conversation, controller: UIViewController) {
 		guard isChatLogAlreadyOpened == false else { return }
 		isChatLogAlreadyOpened = true
 		chatLogController?.hidesBottomBarWhenPushed = true
@@ -87,7 +94,7 @@ class ChatLogPresenter: NSObject {
 		chatLogController?.conversation = conversation
 		chatLogController?.getMessages()
 		chatLogController?.observeBlockChanges()
-		chatLogController?.deleteAndExitDelegate = controller() as? DeleteAndExitDelegate
+		chatLogController?.deleteAndExitDelegate = controller as? DeleteAndExitDelegate
 		if let uid = Auth.auth().currentUser?.uid, conversation.chatParticipantsIDs.contains(uid) {
 			chatLogController?.configureTitleViewWithOnlineStatus()
 		}
@@ -98,29 +105,29 @@ class ChatLogPresenter: NSObject {
 
 		if DeviceType.isIPad {
 			let navigationController = UINavigationController(rootViewController: destination)
-			controller()?.splitViewController?.showDetailViewController(navigationController, sender: self)
+            controller.showDetailViewController(navigationController, sender: self)
 		} else {
-			controller()?.navigationController?.pushViewController(destination, animated: true)
+			controller.navigationController?.pushViewController(destination, animated: true)
 		}
-		deselectItem()
+		deselectItem(controller: controller)
 	}
 }
 
 extension ChatLogPresenter: MessagesDelegate {
   
-  func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference) {
+    func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference, controller: UIViewController) {
 		print("shouldChangeMessageStatusToReadAt ")
     chatLogController?.updateMessageStatus(messageRef: reference)
   }
 
-  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation) {
+  func messages(shouldBeUpdatedTo messages: [Message], conversation: Conversation, controller: UIViewController) {
 		print("shouldBeUpdatedTo in presenter")
-		addMessagesToRealm(messages: messages, conversation: conversation)
+    addMessagesToRealm(messages: messages, conversation: conversation, controller: controller)
 	}
 
-	fileprivate func addMessagesToRealm(messages: [Message], conversation: Conversation) {
+    fileprivate func addMessagesToRealm(messages: [Message], conversation: Conversation, controller: UIViewController) {
 		guard messages.count > 0 else {
-			openChatLog(for: conversation)
+			openChatLog(for: conversation, controller: controller)
 			return
 		}
 
@@ -149,7 +156,7 @@ extension ChatLogPresenter: MessagesDelegate {
 			}
 
 			try! RealmKeychain.defaultRealm.commitWrite()
-			openChatLog(for: conversation)
+			openChatLog(for: conversation, controller: controller)
 		}
 	}
 }

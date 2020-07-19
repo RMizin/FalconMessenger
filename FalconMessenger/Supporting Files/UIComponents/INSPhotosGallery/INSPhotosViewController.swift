@@ -163,7 +163,6 @@ open class INSPhotosViewController: UIViewController, UIPageViewControllerDataSo
     modalPresentationStyle = .custom
     transitioningDelegate = self
     modalPresentationCapturesStatusBarAppearance = true
-    
     setupOverlayViewInitialItems()
   }
   

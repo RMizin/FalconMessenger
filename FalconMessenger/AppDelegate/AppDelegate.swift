@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   var window: UIWindow?
   var tabBarController: GeneralTabBarController?
 	fileprivate let snapshotLockerView = SnapshotLockerView()
+      let splitViewController = SplitViewController()
   
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
   
@@ -42,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     tabBarController = GeneralTabBarController()
     let detailViewController = SplitPlaceholderViewController()
-    let splitViewController = SplitViewController()
+
     splitViewController.viewControllers = [tabBarController, detailViewController] as! [UIViewController]
     window = UIWindow(frame: UIScreen.main.bounds)
     if DeviceType.isIPad {

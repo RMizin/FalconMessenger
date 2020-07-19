@@ -184,7 +184,9 @@ class AccountSettingsController: UITableViewController {
   
   func logoutButtonTapped() {
     if DeviceType.isIPad {
-      splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
+        UIView.performWithoutAnimation {
+            splitViewController?.showDetailViewController(SplitPlaceholderViewController(), sender: self)
+        }
     }
     
     let firebaseAuth = Auth.auth()

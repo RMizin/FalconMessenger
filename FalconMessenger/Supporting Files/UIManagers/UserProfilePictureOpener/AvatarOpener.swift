@@ -105,7 +105,7 @@ class AvatarOpener: NSObject, UIImagePickerControllerDelegate, UINavigationContr
   
   func setupOverlay(isEditButonEnabled: Bool, title: AvatarOverlayTitle) {
     overlay.setOverlayTitle(title: title)
-    overlay.navigationBar.barStyle = .blackTranslucent
+    overlay.navigationBar.barStyle = .black
     overlay.navigationBar.barTintColor = .black
 
     let item = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(toolbarTouchHandler))

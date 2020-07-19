@@ -17,6 +17,11 @@ enum Tabs: Int {
   case settings = 2
 }
 
+class CurrentTab {
+    static let shared = CurrentTab()
+    var index = 0
+
+}
 class GeneralTabBarController: UITabBarController {
   
   var onceToken = 0
@@ -26,7 +31,14 @@ class GeneralTabBarController: UITabBarController {
     splashContainer.translatesAutoresizingMaskIntoConstraints = false
     return splashContainer
   }()
-  
+
+
+    override var selectedIndex: Int {
+        didSet {
+            CurrentTab.shared.index = selectedIndex
+        }
+    }
+    
   override func viewDidLoad() {
       super.viewDidLoad()
     

@@ -8,7 +8,8 @@
 
 import UIKit
 import Contacts
-import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 import SDWebImage
 import PhoneNumberKit
 import RealmSwift
@@ -281,10 +282,10 @@ class ContactsController: FalconTableViewController {
 																			  "isGroupChat": false  as AnyObject,
 																				"chatParticipantsIDs": [currentUserID] as AnyObject]
 					let conversation = Conversation(dictionary: conversationDictionary)
-					chatLogPresenter.open(conversation)
+                    chatLogPresenter.open(conversation, controller: self)
 					return
 				}
-        chatLogPresenter.open(conversation)
+        chatLogPresenter.open(conversation, controller: self)
 
       } else if indexPath.section == 1 {
 					guard let id = users?[indexPath.row].id, let conversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", id).first else {
@@ -295,11 +296,11 @@ class ContactsController: FalconTableViewController {
 																				  "chatThumbnailPhotoURL": users?[indexPath.row].thumbnailPhotoURL as AnyObject,
 																			  	"chatParticipantsIDs": [users?[indexPath.row].id, currentUserID] as AnyObject]
 					let conversation = Conversation(dictionary: conversationDictionary)
-					chatLogPresenter.open(conversation)
+                        chatLogPresenter.open(conversation, controller: self)
 
 					return
 				}
-				chatLogPresenter.open(conversation)
+        chatLogPresenter.open(conversation, controller: self)
       } else if indexPath.section == 2 {
         let destination = ContactsDetailController()
         destination.contactName = filteredContacts[indexPath.row].givenName + " " + filteredContacts[indexPath.row].familyName

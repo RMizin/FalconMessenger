@@ -69,7 +69,7 @@ class ChatsTableViewController: FalconTableViewController {
         setupDataSource()
         managePresense()
     }
-    
+
   deinit {
     NotificationCenter.default.removeObserver(self)
   }
@@ -417,7 +417,7 @@ class ChatsTableViewController: FalconTableViewController {
       conversation = unpinnedConversation
     }
 
-    chatLogPresenter.open(conversation)
+    chatLogPresenter.open(conversation, controller: self)
   }
 }
 

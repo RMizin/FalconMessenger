@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 import AudioToolbox
 import SafariServices
 import CropViewController
@@ -121,17 +122,18 @@ class InAppNotificationManager: NSObject {
     return data
   }
   
-  fileprivate func showInAppNotification(conversation: Conversation, title: String, subtitle: String, resource: Any?, placeholder: Data?) {
-    let notification: InAppNotification = InAppNotification(resource: resource, title: title, subtitle: subtitle, data: placeholder)
-    InAppNotificationDispatcher.shared.show(notification: notification) { (_) in
-			guard let id = conversation.chatID, let realmConversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", id).first else {
-				chatLogPresenter.open(conversation)
-				return
-			}
-			chatLogPresenter.open(realmConversation)
+    fileprivate func showInAppNotification(conversation: Conversation, title: String, subtitle: String, resource: Any?, placeholder: Data?) {
+        let notification: InAppNotification = InAppNotification(resource: resource, title: title, subtitle: subtitle, data: placeholder)
+        InAppNotificationDispatcher.shared.show(notification: notification) { (_) in
+            guard let controller = UIApplication.shared.keyWindow?.rootViewController else { return }
+            guard let id = conversation.chatID, let realmConversation = RealmKeychain.defaultRealm.objects(Conversation.self).filter("chatID == %@", id).first else {
+                chatLogPresenter.open(conversation, controller: controller)
+                return
+            }
+            chatLogPresenter.open(realmConversation, controller: controller)
+        }
     }
-  }
-  
+
   fileprivate func playNotificationSound() {
     if userDefaults.currentBoolObjectState(for: userDefaults.inAppSounds) {
       SystemSoundID.playFileNamed(fileName: "notification", withExtenstion: "caf")

@@ -119,12 +119,15 @@ class AppearanceTableViewController: MenuControlsTableViewController {
 		return cell
 	}
 
-	@objc fileprivate func controlButtonClicked(_ sender: UIButton) {
-		guard let superview = sender.superview else { return }
-		let point = tableView.convert(sender.center, from: superview)
-		guard let indexPath = tableView.indexPathForRow(at: point) else { return }
-		ThemeManager.applyTheme(theme: themes[indexPath.row])
-	}
+    @objc fileprivate func controlButtonClicked(_ sender: UIButton) {
+        guard let superview = sender.superview else { return }
+        let point = tableView.convert(sender.center, from: superview)
+        guard let indexPath = tableView.indexPathForRow(at: point) else { return }
+        ThemeManager.applyTheme(theme: themes[indexPath.row])
+        if let navigationBar = navigationController?.navigationBar {
+            ThemeManager.setNavigationBarAppearance(navigationBar)
+        }
+    }
 }
 
 extension AppearanceTableViewController: UIIncrementSliderUpdateDelegate {

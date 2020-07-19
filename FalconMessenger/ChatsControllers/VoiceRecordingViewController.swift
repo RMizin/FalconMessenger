@@ -289,7 +289,7 @@ class VoiceRecordingViewController: UIViewController {
                                                       includingPropertiesForKeys: nil,
                                                       options: .skipsHiddenFiles)
       //                let files = try fileManager.contentsOfDirectory(at: documentsDirectory)
-      var recordings = files.filter({ (name: URL) -> Bool in
+      let recordings = files.filter({ (name: URL) -> Bool in
         return name.pathExtension == "m4a"
         //                    return name.hasSuffix("m4a")
       })

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 
 final class AppearanceExampleMessagesFactory {
 

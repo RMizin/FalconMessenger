@@ -34,11 +34,11 @@ struct ThemeManager {
         let coloredAppearance = UINavigationBarAppearance()
         coloredAppearance.configureWithOpaqueBackground()
         coloredAppearance.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
-        //            coloredAppearance.shadowColor = .clear
         coloredAppearance.titleTextAttributes = [.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
         coloredAppearance.largeTitleTextAttributes = [.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
         UINavigationBar.appearance().standardAppearance = coloredAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
+        UINavigationBar.appearance().compactAppearance = coloredAppearance
     }
 
 
@@ -64,6 +64,19 @@ struct ThemeManager {
       return .Default
     }
   }
+
+    static func setNavigationBarAppearance(_ naviationBar: UINavigationBar) {
+        if #available(iOS 13.0, *) {
+            let coloredAppearance = UINavigationBarAppearance()
+            coloredAppearance.configureWithOpaqueBackground()
+            coloredAppearance.backgroundColor = ThemeManager.currentTheme().generalBackgroundColor
+            coloredAppearance.titleTextAttributes = [.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
+            coloredAppearance.largeTitleTextAttributes = [.foregroundColor: ThemeManager.currentTheme().generalTitleColor]
+            naviationBar.standardAppearance = coloredAppearance
+            naviationBar.scrollEdgeAppearance = coloredAppearance
+            naviationBar.compactAppearance = coloredAppearance
+        }
+    }
 }
 
 enum Theme: Int {

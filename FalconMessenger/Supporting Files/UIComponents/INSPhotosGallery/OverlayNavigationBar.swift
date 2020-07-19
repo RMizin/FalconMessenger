@@ -12,15 +12,29 @@ class OverlayNavigationBar: UIView {
 
 	fileprivate var navigationViewHeightAnchor: NSLayoutConstraint!
 
-	var navigationBar: UINavigationBar = {
-		var navigationBar = UINavigationBar()
-		navigationBar.translatesAutoresizingMaskIntoConstraints = false
-		navigationBar.barTintColor = .clear
-		navigationBar.barStyle = .blackTranslucent
-		navigationBar.clipsToBounds = true
-		navigationBar.sizeToFit()
-		return navigationBar
-	}()
+    var navigationBar: UINavigationBar = {
+        var navigationBar = UINavigationBar()
+        navigationBar.translatesAutoresizingMaskIntoConstraints = false
+        navigationBar.barStyle = .black
+
+        navigationBar.isTranslucent = false
+        navigationBar.barStyle = .black
+        navigationBar.barTintColor = .black
+
+        if #available(iOS 13.0, *) {
+            let coloredAppearance = UINavigationBarAppearance()
+            coloredAppearance.configureWithOpaqueBackground()
+            coloredAppearance.backgroundColor = .black
+            coloredAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+            coloredAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+            navigationBar.standardAppearance = coloredAppearance
+            navigationBar.scrollEdgeAppearance = coloredAppearance
+            navigationBar.compactAppearance = coloredAppearance
+        }
+        navigationBar.clipsToBounds = true
+        navigationBar.sizeToFit()
+        return navigationBar
+    }()
 
 	var navigationItem: UINavigationItem = {
 		var navigationItem = UINavigationItem()

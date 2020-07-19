@@ -52,7 +52,7 @@ extension ChatLogViewController {
   }
 
   func openSelectedPhoto(at indexPath: IndexPath) -> UIViewController? {
-    var photos: [INSPhotoViewable] = setupPhotosData()
+    let photos: [INSPhotoViewable] = setupPhotosData()
     var initialPhotoIndex: Int!
 
 		guard let initial = photos.firstIndex(where: {$0.messageUID == groupedMessages[indexPath.section].messages[indexPath.row].messageUID }) else { return nil }

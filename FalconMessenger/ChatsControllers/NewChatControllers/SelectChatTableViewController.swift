@@ -222,11 +222,11 @@ class SelectChatTableViewController: UITableViewController {
 																			"chatThumbnailPhotoURL": falconUser.thumbnailPhotoURL as AnyObject,
 																			"chatParticipantsIDs": [falconUser.id, currentUserID] as AnyObject]
 				let conversation = Conversation(dictionary: conversationDictionary)
-				chatLogPresenter.open(conversation)
+                chatLogPresenter.open(conversation, controller: self)
 				return
 			}
 
-			chatLogPresenter.open(conversation)
+        chatLogPresenter.open(conversation, controller: self)
     }
   }
 }

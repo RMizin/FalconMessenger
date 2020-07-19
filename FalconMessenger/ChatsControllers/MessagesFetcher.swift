@@ -7,12 +7,13 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 import Photos
 
 protocol MessagesDelegate: class {
-  func messages(shouldBeUpdatedTo messages: [Message], conversation:Conversation)
-  func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference)
+    func messages(shouldBeUpdatedTo messages: [Message], conversation:Conversation, controller: UIViewController)
+    func messages(shouldChangeMessageStatusToReadAt reference: DatabaseReference, controller: UIViewController)
 }
 
 protocol CollectionDelegate: class {
@@ -55,8 +56,8 @@ class MessagesFetcher: NSObject {
     }
   }
   
-  func loadMessagesData(for conversation: Conversation) {
-    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID else { return }
+    func loadMessagesData(for conversation: Conversation, controller: UIViewController?) {
+    guard let currentUserID = Auth.auth().currentUser?.uid, let conversationID = conversation.chatID, let controller = controller else { return }
     
     var isGroupChat = Bool()
     if let groupChat = conversation.isGroupChat.value, groupChat { isGroupChat = true } else { isGroupChat = false }
@@ -73,7 +74,7 @@ class MessagesFetcher: NSObject {
           self.messages = self.sortedMessages(unsortedMessages: self.messages)
         }
         self.isInitialChatMessagesLoad = false
-        self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
+        self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation, controller: controller)
         return
       }
       
@@ -85,8 +86,8 @@ class MessagesFetcher: NSObject {
         }
        // self.messages = self.configureTails(for: self.messages, isGroupChat: isGroupChat)
         self.isInitialChatMessagesLoad = false
-        self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference)
-        self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation)
+        self.delegate?.messages(shouldChangeMessageStatusToReadAt: self.messagesReference, controller: controller)
+        self.delegate?.messages(shouldBeUpdatedTo: self.messages, conversation: conversation, controller: controller)
       })
 
     })
