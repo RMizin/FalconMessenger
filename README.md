@@ -8,9 +8,9 @@
 <br>
 <p align="center"> 
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="280"/>
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="280" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="280" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="270"/>
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="270" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="270" />
 </p> 
 <br>
 <br>
@@ -25,12 +25,12 @@
 <br>
 <p align="center"> 
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SomeFeaturesInAction.png" alt="App Store"/></a>	
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/auth.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/faceID.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/actions.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/themes.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/send.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/typing.gif" width="288px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/auth.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/faceID.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/actions.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/themes.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/send.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/typing.gif" width="270px">
 </p> 
 
 <br>
