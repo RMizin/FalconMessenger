@@ -7,15 +7,7 @@
 
 <br>
 <br>
-<p align="center"> 
-<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SomeFeaturesInAction.png" alt="App Store"/></a>	
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/auth.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/faceID.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/actions.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/themes.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/send.gif" width="288px">
-<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/typing.gif" width="288px">
-</p> 
+
 <p align="center"> 
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="288"/>
@@ -34,19 +26,16 @@
 
 <br>
 <br>
+<p align="center"> 
+<a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/SomeFeaturesInAction.png" alt="App Store"/></a>	
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/auth.gif" width="288px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/faceID.gif" width="288px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/actions.gif" width="288px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/themes.gif" width="288px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/send.gif" width="288px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/master/Screenshots/typing.gif" width="288px">
+</p> 
 
-<p align="center">
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/SomeFeaturesInAction.png" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/BlackList.png"  width="288"/>
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/TypingIndicator.png" width="288" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Themes.png" width="288" />
-</p>
-<p align="center">
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Shared.png"  width="288"/>
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/ChatLog.png" width="288" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/GroupChats.png" width="288" />
-</p>
-	
 <br>
 <br>
 
