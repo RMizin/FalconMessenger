@@ -117,5 +117,5 @@ Note before next step:<i> if you don't have cocoapods installed on your computer
 
 <p align="center">
  <a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/main/Screenshots/LicenseTitle.png" alt="LICENSE.md"/></a>
-<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/main/Screenshots/License.png" alt="LICENSE.md"/></a>
+<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/main/Screenshots/LicenseImage.png" alt="LICENSE.md"/></a>
 </p> 
