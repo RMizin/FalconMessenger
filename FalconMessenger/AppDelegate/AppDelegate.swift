@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       let splitViewController = SplitViewController()
   
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-  
+   
     ThemeManager.applyTheme(theme: ThemeManager.currentTheme())
 
 		FirebaseConfiguration.shared.setLoggerLevel(.min)
