@@ -8,9 +8,9 @@
 <br>
 <p align="center"> 
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/FeaturesTitle.png" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="288"/>
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="288" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="288" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features1.png" width="280"/>
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="280" />
+ <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="280" />
 </p> 
 <br>
 <br>
