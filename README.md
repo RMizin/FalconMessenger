@@ -114,11 +114,6 @@ Note before next step:<i> if you don't have cocoapods installed on your computer
 
 16. If you do not have paid Apple Developer Account , you might also see this error: "Your development team, "Name", does not support the Push Notifications capability". 
 	<br> To fix this, go to Project->Targets->FalconMessenger->Capabilities and Deselect Push Notifications option
-	//todo
-	
-	
-Any unexpected errors? falconmessenger.help@gmail.com
-
 <br>
 <br>
 
