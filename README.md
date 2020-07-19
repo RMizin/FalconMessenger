@@ -1,7 +1,7 @@
 
 <p align="center">
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Title.png" />
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/TitleDesc.png" />
+ <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/Title.png" />
+ <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/TitleDesc.png" />
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/DOnAppStore.png" alt="App Store" /></a>
 </p> 
 <br>
@@ -27,17 +27,17 @@
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/main/Screenshots/SomeFeaturesInAction.png" alt="App Store"/></a>	
 <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/auth.gif" width="270px">
 <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/faceID.gif" width="270px">
-<img src="https://github.com/RMizinFalconMessenger/blob/main/Screenshots/actions.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/actions.gif" width="270px">
 <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/themes.gif" width="270px">
 <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/send.gif" width="270px">
-<img src="https://github.com/RMizinFalconMessenger/blob/main/Screenshots/typing.gif" width="270px">
+<img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/typing.gif" width="270px">
 </p> 
 
 <br>
 <br>
 
 <p align="center">
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/HowTouRunTitle.png" />
+ <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/HowTouRunTitle.png" />
 </p> 
 
 1. Open the FalconMessenger.xcworkspace in Xcode.
@@ -92,7 +92,7 @@ Note before next step:<i> if you don't have cocoapods installed on your computer
 	<br>Step-by-Step guide is availible here: https://firebase.google.com/docs/functions/
 	<br>Video Guide: https://www.youtube.com/watch?v=DYfP-UIKxH0
 	
-13. Copy and Paste Cloud functions from provided [Index.js](https://github.com/RMizin/FalconMessenger/blob/master/CloudFunctions.js) file to your own Index.js file.
+13. Copy and Paste Cloud functions from provided [Index.js](https://github.com/RMizin/FalconMessenger/blob/main/CloudFunctions.js) file to your own Index.js file.
 14. Change in your index.js file DatabeseURL: to Yours
 
 		admin.initializeApp ({
@@ -108,14 +108,14 @@ Note before next step:<i> if you don't have cocoapods installed on your computer
 <br>
 
 <p align="center">
- <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/CompatibilityTitle.png" />
-<img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Compatibility.png" />
+ <img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/CompatibilityTitle.png" />
+<img src="https://github.com/RMizin/FalconMessenger/blob/main/Screenshots/Compatibility.png" />
 </p> 
 
 <br>
 <br>
 
 <p align="center">
- <a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/LicenseTitle.png" alt="LICENSE.md"/></a>
-<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/master/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/master/Screenshots/License.png" alt="LICENSE.md"/></a>
+ <a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/main/Screenshots/LicenseTitle.png" alt="LICENSE.md"/></a>
+<a target="_blank" href="https://github.com/RMizin/FalconMessenger/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/RMizin/FalconMessenger/main/Screenshots/License.png" alt="LICENSE.md"/></a>
 </p> 
