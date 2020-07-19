@@ -4,7 +4,6 @@
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/TitleDesc.png" />
 <a target="_blank" href="https://itunes.apple.com/app/id1313765714"><img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/DOnAppStore.png" alt="App Store" /></a>
 </p> 
-
 <br>
 <br>
 <p align="center"> 
@@ -13,7 +12,6 @@
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features2.png" width="288" />
  <img src="https://github.com/RMizin/Falcon/blob/master/Screenshots/Features3.png" width="288" />
 </p> 
-
 <br>
 <br>
 
