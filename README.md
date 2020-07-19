@@ -110,9 +110,8 @@ Note before next step:<i> if you don't have cocoapods installed on your computer
 		    databaseURL: 'https://your-Databse-URL.firebaseio.com'
 		});
 
-14. Run "Firebase Delpoy" in the terminal from your cloud Functions Directory to configure Cloud Functions.
+15. Run "Firebase Delpoy" in the terminal from your cloud Functions Directory to configure Cloud Functions.
 
-15. Configuring Reporting and Blacklisting//todo
 16. If you do not have paid Apple Developer Account , you might also see this error: "Your development team, "Name", does not support the Push Notifications capability". 
 	<br> To fix this, go to Project->Targets->FalconMessenger->Capabilities and Deselect Push Notifications option
 	//todo
